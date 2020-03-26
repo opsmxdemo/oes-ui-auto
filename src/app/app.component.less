@@ -1,0 +1,181 @@
+.sidebar{
+	top: 0;
+	left: 0;
+	color: #789;
+	height: 100%;
+	width: 260px;
+	z-index: 1001;
+	position: fixed;
+    background: #2f4151;
+    li{
+        cursor: pointer;
+        // &.active{
+        //     outline: none;
+        // }
+    }
+    .sidebar_header{
+        margin-bottom: 25px;
+        padding: 15.5px 25px;
+        border-bottom: 2px solid #3d4d5c;
+    }
+    .sidebar_nav{
+        a{
+            color: #789;
+            display: block;
+            font-size: 14px;
+            font-weight: 400;
+            text-decoration: none;
+            padding: 5px 15px 5px 25px;
+            border-left: 2px transparent solid;
+            &:hover{
+                background-color: rgba(60, 78, 93, 0.6);
+                border-left-color: rgba(0, 159, 255, 0.6);
+            }
+        }
+        .subnav a{
+            padding-left: 40px;
+        }
+        .active > a{
+            background-color: #3c4e5d;
+            border-left: 2px #009fff solid;
+
+        }
+        .badge{
+            display: inline-block;
+            vertical-align: 0.1em;
+            text-align: center;
+            font-weight: 300;
+            margin-left: 8px;
+            width: 15px;
+            width: 25px;
+            padding: 0 5px;
+            line-height: 17px;
+            border-radius: 10px;
+        }
+        .icon{
+            background-image: url(../assets/icons.png);
+            background-repeat: no-repeat;
+            vertical-align: -7px;
+            display: inline-block;
+            margin-right: 8px;
+            height: 20px;
+            width: 18px;
+        }
+        .ic_dashboard{
+            background-position: 0 0;
+        }
+        .ic_application{
+            background-position: 0 -36px;
+        }
+        .ic_management{
+            background-position: 0 -216px;
+        }
+        .ic_security{
+             background-position: 0 -250px;
+        }
+        .ic_system{
+            background-position: 0 -288px;
+        }
+        .ic_settings{
+            background-position: 0 -324px;
+        }
+        .ic_dev{
+            background-position: -19px -72px;
+        }
+        .ic_test{
+            background-position: -19px -103px;
+        }
+        .ic_deployment{
+            background-position: -19px -141px;
+        }
+        .ic_production{
+            background-position: -19px -180px;
+        }
+    }
+    .btn-primary, .badge-primary{
+        color: #fff;
+        background: #009bfa;
+        border-color: #009bfa;
+    }
+    .sidebar_bottom{
+        color: #789 !important;
+        text-decoration: none !important;
+        background: #293c4f;
+        position: absolute;
+        padding: 15px;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+}
+.sidebar_nav:after{
+    position: absolute;
+    height: 1px;
+    background: #789;
+    content: "";
+    left: 25px;
+    right: 15px;
+    margin: auto;
+    opacity: 0.3;
+    margin-top: 15px;
+}
+.menu_toggle{
+	cursor: pointer;
+	font-size: 19px;
+    line-height: 1;
+    margin-top: 1px;
+}
+.content_section{
+  margin-left: 260px;
+}
+
+.view_in{
+    .content_section{
+        margin-left: 60px;
+    }
+    .sidebar{
+        width: 60px;
+    }
+    .logo{
+        display: none;
+    }
+    .sidebar_header{
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .menu_toggle{
+        position: relative;
+        right: auto;
+        margin: auto;
+    }
+    .sidebar_nav a > span{
+        display: none;
+    }
+    .sidebar_nav a{
+        padding-left: 15px;
+        text-align: center;
+    }
+    .sidebar_nav .subnav a{
+        padding-left: 15px;
+    }
+    .sidebar_nav .icon{
+        margin-right: 0;
+    }
+    .sidebar_nav:after{
+        left: 15px;
+    }
+    .sidebar_bottom .fa{
+        display: none;
+    }
+} 
+a, .btn, button, .content_section, .data_list{
+	-webkit-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+.dropdown-icon-remove .dropdown-toggle::after{
+	display: none;
+}
+.maindiv{
+    padding: 0px;
+}

@@ -8,21 +8,30 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppMaterialModule } from './subModules/app-material.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { LoginComponent } from './auth/login/login.component';
+import { AuthModule } from './auth/auth.module';
+import { HeaderComponent } from './layout/header/header.component';
+import { AuthEffect } from './auth/store/auth.effects';
+import { HttpClientModule } from '@angular/common/http';
+import { ApplicationDashboardComponent } from './application-dashboard/application-dashboard.component';
+import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    HeaderComponent,
+    ApplicationDashboardComponent,
+    OesDashboardComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    AuthModule,
+    HttpClientModule,
     AppMaterialModule,
+    ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([AuthEffect])
   ],
   providers: [],
   bootstrap: [AppComponent]
