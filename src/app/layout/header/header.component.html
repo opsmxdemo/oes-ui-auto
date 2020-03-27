@@ -1,5 +1,5 @@
 <!-- header of application -->
-<div class="main-topBar d-flex">
+<div class="main-topBar d-flex" *ngIf="isAuthenticate">
     <div class="mtb_left">
       <div class="input-group input-group-search">
         <input type="text" class="form-control" placeholder="Type to search...">
@@ -9,14 +9,7 @@
       </div>
     </div>
     <!-- /.mtb_left -->
-    <div class="mtb_right ml-auto" *ngIf="!isAuthenticate">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="login"><i class="fa fa-sign-in" aria-hidden="true"></i><b> Login</b></a>
-        </li>
-      </ul>
-    </div>
-    <div class="mtb_right ml-auto" *ngIf="isAuthenticate">
+    <div class="mtb_right ml-auto">
       <div class="dropdown userSetting">
         <button class="btn p-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="userPic"><img src="../assets/user_pic.png" alt="User Pic" /></span>

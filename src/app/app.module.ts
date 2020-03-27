@@ -11,16 +11,19 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthModule } from './auth/auth.module';
 import { HeaderComponent } from './layout/header/header.component';
 import { AuthEffect } from './auth/store/auth.effects';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApplicationDashboardComponent } from './application-dashboard/application-dashboard.component';
 import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
+import { AuditComponent } from './audit/audit.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     ApplicationDashboardComponent,
-    OesDashboardComponent
+    OesDashboardComponent,
+    AuditComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,9 @@ import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
     StoreModule.forRoot(fromApp.appReducers),
     EffectsModule.forRoot([AuthEffect])
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

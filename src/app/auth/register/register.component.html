@@ -47,7 +47,7 @@
                       <!-- /.form-group -->
                       <div class="form-group mb-3">
                         <label>Confirm Password</label>
-                        <input class="form-control" placeholder="Confirm your Password"
+                        <input type="password" class="form-control" placeholder="Confirm your Password"
                           formControlName="confirmpassword" />
                         <span
                           *ngIf="!registerForm.get('confirmpassword').valid && registerForm.get('confirmpassword').touched"
