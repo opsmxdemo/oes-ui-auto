@@ -16,6 +16,7 @@ import { ApplicationDashboardComponent } from './application-dashboard/applicati
 import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
 import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,9 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     AppMaterialModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
-    EffectsModule.forRoot([AuthEffect])
+    EffectsModule.forRoot([AuthEffect]),
+    //please keep below import always in last position
+    WildcardRoutingModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

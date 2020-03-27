@@ -61,7 +61,15 @@ export function authReducer(
             return {
                 ...state,
                 authError: null,
-                authenticated:false
+                authenticated: false
+            }
+        case AuthAction.AuthActionTypes.AUTOLOGIN:
+            return {
+                ...state,
+                user: action.payload,
+                loading: false,
+                authError: null,
+                authenticated: true
             }
         default:
             return state;

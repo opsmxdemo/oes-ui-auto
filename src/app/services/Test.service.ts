@@ -4,6 +4,7 @@ import {  HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn:'root'})
 export class TestService {
+    rp:number;
     // tslint:disable-next-line: no-shadowed-variable
     constructor(
                 private httpClient: HttpClient,

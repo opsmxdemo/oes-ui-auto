@@ -9,9 +9,7 @@ import { AuditComponent } from '../audit/audit.component';
 const routes: Routes = [
   {path:'appdashboard', component:ApplicationDashboardComponent,canActivate: [AuthGuard]},
   {path:'oesdashboard', component:OesDashboardComponent,canActivate: [AuthGuard]},
-  {path:'audit', component:AuditComponent},
-  //please keep below path always in last position
-  {path:'**', redirectTo:'login'} 
+  {path:'audit', component:AuditComponent}
 ];
 
 @NgModule({

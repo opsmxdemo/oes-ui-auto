@@ -24,6 +24,10 @@ export class OesDashboardComponent implements OnInit {
         this.notification.showError('Everything is not alright','TESTAPI'); 
       }
     )
+
+    this.testservice.rp = 1234;
   }
+
+ 
 
 }

@@ -13,6 +13,9 @@
                                         </div>
                                         <!-- /.login-reg-icon -->
                                         <h3>Login to your account</h3>
+                                        <div class="textcenter">
+                                            <span *ngIf="showAuthError" class="help-block">{{authError}}</span>
+                                        </div>
                                         <form [formGroup]="loginForm">
                                             <div class="form-group mb-3">
                                                 <label>User Name</label>

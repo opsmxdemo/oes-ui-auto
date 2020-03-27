@@ -29,6 +29,8 @@ import * as AuthAction from '../store/auth.actions';
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading:Boolean;
+    authError:string;
+    showAuthError:Boolean;
 
     
 
@@ -46,7 +48,14 @@ export class LoginComponent implements OnInit {
         //fetching value from Authstate
         this.store.select('auth').subscribe(
             (response) => {
-                this.loading = response.loading
+                this.loading = response.loading;
+                this.authError = response.authError;
+                if(this.authError !== null){
+                    this.showAuthError = true; 
+                    this.loginForm.reset();
+                }else{
+                    this.showAuthError = false;
+                }
             }
           );
     }

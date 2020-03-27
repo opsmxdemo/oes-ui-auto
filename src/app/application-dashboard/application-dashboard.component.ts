@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TestService } from '../services/Test.service';
 
 @Component({
   selector: 'app-application-dashboard',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ApplicationDashboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(public test:TestService) { }
 
   ngOnInit(): void {
+    console.log('service',this.test.rp)
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
+import * as AuthAction from './auth/store/auth.actions'
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,10 @@ export class AppComponent implements OnInit {
   
   constructor( public store:Store<fromApp.AppState>){}
   ngOnInit(){
+    //Dispatching action for autoLogin functionality
+    this.store.dispatch(new AuthAction.AutoLoginStart());
+
+    //fetching data from AuthState
     this.store.select('auth').subscribe(
       (response) => {
           this.isAuthenticate = response.authenticated;
