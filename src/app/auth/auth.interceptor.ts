@@ -13,7 +13,6 @@ export class AuthInterceptor implements HttpInterceptor {
        return this.store.select('auth').pipe(
          take(1),
         switchMap((authState: fromAuth.State) => {
-            debugger
           if (authState.authenticated) {
             const copyreq = req.clone({
               setHeaders: {
