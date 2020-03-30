@@ -7,21 +7,19 @@
       </div>
       <!-- /.sidebar_header -->
       <div class="sidebar_nav">
-        <ul class="list-unstyled m-0">
-          <li routerLink="oesdashboard"  routerLinkActive="active"><a><i class="icon ic_dashboard"></i> <span>OES Dashboard</span></a></li>
-          <li class="active" routerLink="appdashboard"  routerLinkActive="active"><a><i class="icon ic_application"></i> <span>Application Dashboard <span class="badge badge-primary">5</span></span></a>
-            <ul class="subnav list-unstyled m-0">
-              <li><a href="#"><i class="icon ic_dev"></i> <span>Dev Verification</span></a></li>
-              <li><a href="#"><i class="icon ic_test"></i> <span>Test Verification</span></a></li>
-              <li><a href="#"><i class="icon ic_deployment"></i> <span>Deployment Verification</span></a></li>
-              <li><a href="#"><i class="icon ic_production"></i> <span>Production Monitoring</span></a></li>
-            </ul>
+        <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;">
+          <li routerLink="{{SideMenu.link}}"  routerLinkActive="active"><a><i class="icon {{SideMenu.link}}"></i> <span>{{SideMenu.name}} 
+            <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">
+              <span class="badge badge-primary">{{SideMenu.subMenu.length}}</span>
+            </ng-template>
+            </span></a>
+            <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">
+              <ul class="subnav list-unstyled m-0" *ngFor = "let submenu of SideMenu.subMenu">
+                <li routerLink="{{submenu.link}}"><a><i class="icon {{submenu.link}}"></i> <span>{{submenu.name}}</span></a></li>
+              </ul>
+            </ng-template>
             <!-- /.subnav -->
           </li>
-          <li><a href="#"><i class="icon ic_management"></i> <span>Policy Management</span></a></li>
-          <li><a href="#"><i class="icon ic_security"></i> <span>Security / Audit</span></a></li>
-          <li><a href="#"><i class="icon ic_system"></i> <span>System Setup</span></a></li>
-          <li><a href="#"><i class="icon ic_settings"></i> <span>User Settings</span></a></li>
         </ul>
       </div>
       <!-- /.sidebar_nav -->

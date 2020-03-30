@@ -133,5 +133,8 @@
       }
     }
   },
-  "defaultProject": "OES-UI"
+  "defaultProject": "OES-UI",
+  "cli": {
+    "analytics": "0b4920c4-66c7-4c60-843b-0fac2d85adc6"
+  }
 }

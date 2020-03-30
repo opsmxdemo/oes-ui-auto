@@ -1,7 +1,155 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Application Dashboard Component</h1>
-        </div>
-    </div>
-</div>
+                    
+                    <div class="main_content">
+                        <div class="page_title d-flex align-items-center">
+                          <h2>Application Dashboard </h2>
+
+                          <div class="page_access ml-auto">
+                            <button class="btn btn-white"><img src="../../../assets/setting_icon.png" alt="icon" /></button>
+                            <button class="btn btn-primary ml-2" data-toggle="modal" data-target="#addApplications" data-backdrop="static" data-keyboard="false"><i class="fa mr-2 fa-plus"></i> Add Application</button>
+                          </div>
+                          <!-- /.page_access ml-auto -->
+                        </div>
+                        <!-- /.page_title d-flex -->
+
+                        <div class="row no-gutters">
+                          <div class="col-sm-8">
+                            <div class="data_listArea">
+                              <ng-container *ngFor="let application of applicationData; let i=index">
+                                  <div class="data_list" (click)="selectedApplication(i,application)" [ngClass]= "{'active':selectedIndex === i}">
+                                      <div class="data_list_header d-flex align-items-center"> 
+                                        <div class="data_list_title">
+                                          <h3>{{application.name}}</h3>
+                                          <span class="datetime">Jan 10 2020 17:08 </span>
+                                        </div>
+                                        <!-- /.data_list_title -->
+                                        <div class="data_list_actionsc d-flex align-items-center ml-auto">
+                                          <div class="card_indigators mr-3 d-flex">
+                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
+                                              <img src="../../../assets/ci_check.png" class="img-fluid" alt="check" />
+                                            </button>
+                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
+                                              <img src="../../../assets/ci_close.png" class="img-fluid" alt="check" />
+                                            </button>
+                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
+                                              <img src="../../../assets/ci_minus.png" class="img-fluid" alt="check" />
+                                            </button>
+                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
+                                              <img src="../../../assets/ci_check.png" class="img-fluid" alt="check" />
+                                            </button>
+                                          </div>
+                                          <div class="status"><img src="../../../assets/status_icon.png" class="img-fluid" alt="status" /></div>
+                                          <button class="btn"><img src="../../../assets/thumb_pin.png" class="img-fluid" alt="pin" /></button>
+                                          <button class="btn p-0"><i class="fa fa-ellipsis-v"></i></button>
+                                        </div>
+                                        <!-- /.data_list_actions -->
+                                      </div>
+                                      <!-- /.data_list_header -->
+                                      <div class="data_list_body d-flex">
+                                        <div class="data_list_values text-center">
+                                          <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around">
+                                            <li>
+                                              <div class="dl_value_count">25</div>
+                                              <div class="dl_value_text">Dev Verification</div>
+                                            </li>
+                                            <li>
+                                              <div class="dl_value_count">15</div>
+                                              <div class="dl_value_text">Test Verification</div>
+                                            </li>
+                                            <li>
+                                              <div class="dl_value_count">10</div>
+                                              <div class="dl_value_text">Deployment Verification</div>
+                                            </li>
+                                            <li class="active">
+                                              <div class="dl_value_count">10</div>
+                                              <div class="dl_value_text">Production Monitoring</div>
+                                              <i class="fa fa-angle-up"></i>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <!-- /.data_list_values -->
+                                        <div class="data_list_score">
+                                          <div class="graph mt-2 text-center">
+                                            <img src="../../../assets/graph_lines.png" class="img-fluid" alt="graph lines" />
+                                          </div>
+                                          <!-- /.graph -->
+                                        </div>
+                                        <!-- /.data_list_score -->
+                                      </div>
+                                      <!-- /.data_list_body -->
+                                    </div>
+                                    <!-- /.data_list -->
+                              </ng-container>
+                             
+                            </div>
+                            <!-- /.data_listArea -->
+                          </div>
+                          <!-- /.col-sm-8 -->
+                          <div class="col-sm-4">
+                            <div class="rightBox position-sticky">
+                              <div class="rightBox_header d-flex align-items-center">
+                                <h3>{{selectedApplicationName}} > 11883</h3>
+                                <div class="btns_icon d-flex ml-auto">
+                                  <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
+                                  <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
+                                </div>
+                                <!-- /.btns_icon -->
+                              </div>
+                              <!-- /.rightBox_header -->
+                              <div class="rightBox_body">
+                                <div id="particle_chart">
+                                  <img src="../../../assets/chart_placeholder_01.png" class="img-fluid" alt="chart" />
+                                </div>
+                                <!-- /#particle_chart -->
+                                <div class="chart_ratio text-center d-flex">
+                                  <div class="chart_value cv_low flex-grow-1">
+                                    <div class="cv_heighlight">Low</div>
+                                    <!-- /.cv_heighlight -->
+                                    <div class="cv_name">Confidence</div>
+                                    <!-- /.cv_name -->
+                                  </div>
+                                  <!-- /.chart_value low -->
+                                  <div class="chart_value cv_alert flex-grow-1">
+                                    <div class="cv_heighlight">0</div>
+                                    <!-- /.cv_heighlight -->
+                                    <div class="cv_name">Alerts</div>
+                                    <!-- /.cv_name -->
+                                  </div>
+                                  <!-- /.chart_value alert -->
+                                </div>
+                                <!-- /.chart_ratio -->
+
+                                <div class="table-responsive">
+                                  <table class="table table-pet-service text-center mb-0">
+                                  <thead>
+                                    <tr>
+                                      <th>Service</th>
+                                      <th>Score</th>
+                                      <th>Metric</th>
+                                      <th>Logs</th>
+                                      <th>Status</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                    <td>{{serviceData[0]}}</td>
+                                      <td>25</td>
+                                      <td>15</td>
+                                      <td>10</td>
+                                      <td class="text-danger">FAIL</td>
+                                    </tr>
+                    
+                                  </tbody>
+                                </table>
+                                </div>
+                                <!-- /.table-responsive -->
+                              </div>
+                              <!-- /.rightBox_body -->
+                            </div>
+                            <!-- /.rightBox -->
+                          </div>
+                          <!-- /.col-sm-4 -->
+                        </div>
+                        <!-- /.row -->
+                      </div>
+                      <!-- /.main_content -->
+              
