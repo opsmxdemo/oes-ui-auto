@@ -17,6 +17,7 @@ import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
 import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
+import { LayoutEffect } from './layout/store/layout.effects';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
     AppMaterialModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
-    EffectsModule.forRoot([AuthEffect]),
+    EffectsModule.forRoot([AuthEffect,LayoutEffect]),
     //please keep below import always in last position
     WildcardRoutingModule
   ],
