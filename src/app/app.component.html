@@ -1,0 +1,50 @@
+<div class="row" >
+  <div class="col-md-12 maindiv {{addclass == true ? 'view_in' : ''}}">
+    <div class="sidebar" *ngIf="isAuthenticate">
+      <div class="sidebar_header d-flex align-items-center justify-content-between">
+        <div class="logo"><img src="../../../assets/logo.png" alt="logo"></div>
+        <div class="menu_toggle" (click)="toggleNavbar()"><i class="fa fa-bars"></i></div>
+      </div>
+      <!-- /.sidebar_header -->
+      <div class="sidebar_nav">
+        <ul class="list-unstyled m-0">
+          <li routerLink="oesdashboard"  routerLinkActive="active"><a><i class="icon ic_dashboard"></i> <span>OES Dashboard</span></a></li>
+          <li class="active" routerLink="appdashboard"  routerLinkActive="active"><a><i class="icon ic_application"></i> <span>Application Dashboard <span class="badge badge-primary">5</span></span></a>
+            <ul class="subnav list-unstyled m-0">
+              <li><a href="#"><i class="icon ic_dev"></i> <span>Dev Verification</span></a></li>
+              <li><a href="#"><i class="icon ic_test"></i> <span>Test Verification</span></a></li>
+              <li><a href="#"><i class="icon ic_deployment"></i> <span>Deployment Verification</span></a></li>
+              <li><a href="#"><i class="icon ic_production"></i> <span>Production Monitoring</span></a></li>
+            </ul>
+            <!-- /.subnav -->
+          </li>
+          <li><a href="#"><i class="icon ic_management"></i> <span>Policy Management</span></a></li>
+          <li><a href="#"><i class="icon ic_security"></i> <span>Security / Audit</span></a></li>
+          <li><a href="#"><i class="icon ic_system"></i> <span>System Setup</span></a></li>
+          <li><a href="#"><i class="icon ic_settings"></i> <span>User Settings</span></a></li>
+        </ul>
+      </div>
+      <!-- /.sidebar_nav -->
+      <a href="#" class="sidebar_bottom d-flex align-items-center justify-content-between">
+        <span>Help</span>
+        <i class="fa fa-angle-down"></i>
+      </a>
+      <!-- /.sidebar_bottom -->
+    </div>
+    <!-- /.sidebar -->
+    <div class=" {{isAuthenticate == true ? 'content_section' : 'col-md-12 col-sm-12 col-lg-12 col-xs-12'}}">
+      <app-header></app-header>
+      <br>
+      <!-- content of application -->
+      <router-outlet></router-outlet>
+    </div>
+    <!-- /.content_section -->
+  </div>
+</div>
+<!-- <div class="row" *ngIf="!isAuthenticate">
+  <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12 maindiv">
+    <app-header></app-header>
+  <br>
+  <router-outlet></router-outlet>
+  </div>
+</div> -->
