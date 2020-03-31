@@ -1,0 +1,67 @@
+{
+    "menu": [
+        {
+            "name": "OES Dashboard",
+            "id": 1,
+            "link": "oesdashboard",
+            "subMenu":[]
+        },
+        {
+            "name": "App Dashboard",
+            "id": 2,
+            "link": "appdashboard",
+            "subMenu": [
+                {
+                    "name": "Dev Verification",
+                    "id": 21,
+                    "link": "DevV"
+                },
+                {
+                    "name": "Test Verfication",
+                    "id": 22,
+                    "link": "TestV"
+                },
+                {
+                    "name": "Deployment Verification",
+                    "id": 23,
+                    "link": "DeployV"
+                },
+                {
+                    "name": "Production Monitoring",
+                    "id": 24,
+                    "link": "Monitoring"
+                }
+            ]
+        },
+        {
+            "name": "Policy Management",
+            "id": 3,
+            "link": "management",
+            "subMenu":[]
+        },
+        {
+            "name": "Security/Audit",
+            "id": 4,
+            "link": "audit",
+            "subMenu":[                
+                {
+                    "name": "ABC Monitoring",
+                    "id": 23,
+                    "link": "DeployV"
+                } 
+            ]
+        },
+        {
+            "name": "System Setup",
+            "id": 5,
+            "link": "setup",
+            "subMenu":[]
+        },
+        {
+            "name": "User Setting",
+            "id": 6,
+            "link": "setting",
+            "subMenu":[]
+        }
+    ]
+}
