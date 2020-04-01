@@ -19,7 +19,7 @@
                                       <div class="data_list_header d-flex align-items-center"> 
                                         <div class="data_list_title">
                                           <h3>{{application.name}}</h3>
-                                          <span class="datetime">Jan 10 2020 17:08 </span>
+                                          <span class="datetime">{{application.date | date:'medium'}} </span>
                                         </div>
                                         <!-- /.data_list_title -->
                                         <div class="data_list_actionsc d-flex align-items-center ml-auto">
@@ -117,7 +117,6 @@
                                   <!-- /.chart_value alert -->
                                 </div>
                                 <!-- /.chart_ratio -->
-
                                 <div class="table-responsive">
                                   <table class="table table-pet-service text-center mb-0">
                                   <thead>
@@ -130,8 +129,8 @@
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr>
-                                    <td>{{serviceData[0]}}</td>
+                                    <tr *ngFor="let service of serviceData; let i=index">
+                                    <td>{{service.name}}</td>
                                       <td>25</td>
                                       <td>15</td>
                                       <td>10</td>
