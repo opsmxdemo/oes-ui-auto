@@ -46,8 +46,7 @@ export class LayoutEffect {
         switchMap(() => {
             return this.http.get<Menu>('http://137.117.94.95:8085/oes/dynamicMenu').pipe(
                 map(resData => {
-                    console.log('Menu',resData);
-                    return new LayoutAction.SideBarFetch(resData);
+                    return new LayoutAction.SideBarFetch(resData['menu']);
                 }),
                 catchError(errorRes => {
                     return handleError(errorRes);
