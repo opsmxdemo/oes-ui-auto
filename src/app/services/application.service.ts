@@ -9,8 +9,13 @@ export class ApplicationService {
     // tslint:disable-next-line: no-shadowed-variable
     constructor(private httpClient: HttpClient) { }
     getApplicationList() {
-        return this.httpClient.get('https://35.238.22.177:8090/canaries/getAppServices').pipe(
+        return this.httpClient.get('http://137.117.94.95:8085/oes/applications').pipe(
             catchError(this.handleError)
+        );
+    }
+    getServiceList(applicationName) {
+        return this.httpClient.get('http://137.117.94.95:8085/oes/'+applicationName+'/services').pipe(
+            //catchError(this.handleError)
         );
     }
     handleError(error) {
