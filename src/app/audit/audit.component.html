@@ -1,113 +1,166 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+     
+      <!-- /.main_content -->
+    
+    </div>
+  </div>
+</div>
 <div class="main_content p-0">
-    <div class="page-content flex-grow-1">
-        <div class="audit-info px-3 d-flex bg-white">
-          <div>
-            <h4>131 <small>(100%)</small></h4>
-            <span class="text-muted">All Pipelines</span>
-          </div>
-          <div>
-            <h4>82 <small>(62%)</small></h4>
-            <span class="text-muted">Successful</span>
-          </div>
-          <div>
-            <h4>27 <small>(22%)</small></h4>
-            <span class="text-muted">Modified</span>
-          </div>
-          <div>
-            <h4 class="text-danger">10 <small>(7%)</small></h4>
-            <span class="text-muted">Failed</span>
-          </div>
+  <div class="page-content flex-grow-1">
+      <div class="audit-info px-3 d-flex bg-white">
+        <div>
+          <h4>131 <small>(100%)</small></h4>
+          <span class="text-muted">All Pipelines</span>
         </div>
-        <!-- /.page_title d-flex -->
-        
-        <div class="p-3">
-          <div class="row no-gutters">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-heading mb-form-db">
-                  <div class="form-inline">
-                    <div class="form-group mb-2">
-                      <div class="input-group input-group_search">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search">
+        <div>
+          <h4>82 <small>(62%)</small></h4>
+          <span class="text-muted">Successful</span>
+        </div>
+        <div>
+          <h4>27 <small>(22%)</small></h4>
+          <span class="text-muted">Modified</span>
+        </div>
+        <div>
+          <h4 class="text-danger">10 <small>(7%)</small></h4>
+          <span class="text-muted">Failed</span>
+        </div>
+      </div>
+      <!-- /.page_title d-flex -->
+      
+      <div class="p-3">
+        <div class="row no-gutters">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-heading mb-form-db">
+                <div class="form-inline">
+                  <div class="form-group mb-2">
+                    <div class="input-group input-group_search">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                       </div>
+                      <input type="text" class="form-control" placeholder="Search">
                     </div>
-                    <div class="form-group ml-sm-3 mb-2">
-                      <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Select a saved Filter
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-radio">
-                            <input type="radio" id="dt-range" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="dt-range">Date/Time Range</label>
-                          </div>
-                          <div class="custom-control custom-radio">
-                            <input type="radio" id="all-time" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="all-time">All Time</label>
-                          </div>
-                          <div class="custom-control custom-radio">
-                            <input type="radio" id="last-month" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="last-month">Last Month</label>
-                          </div>
-                          <div class="custom-control custom-radio">
-                            <input type="radio" id="last-week" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="last-week">Last week</label>
-                          </div>
-                          <div class="custom-control custom-radio">
-                            <input type="radio" id="last-hours" name="customRadio" class="custom-control-input" checked>
-                            <label class="custom-control-label" for="last-hours">Last 24 Hours</label>
-                          </div>
-                          <div class="custom-control custom-radio">
-                            <input type="radio" id="custom" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="custom">Custom</label>
-                          </div>
+                  </div>
+                  <div class="form-group ml-sm-3 mb-2">
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select a saved Filter
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="custom-control custom-radio">
+                          <input type="radio" id="dt-range" name="customRadio" class="custom-control-input">
+                          <label class="custom-control-label" for="dt-range">Date/Time Range</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" id="all-time" name="customRadio" class="custom-control-input">
+                          <label class="custom-control-label" for="all-time">All Time</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" id="last-month" name="customRadio" class="custom-control-input">
+                          <label class="custom-control-label" for="last-month">Last Month</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" id="last-week" name="customRadio" class="custom-control-input">
+                          <label class="custom-control-label" for="last-week">Last week</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" id="last-hours" name="customRadio" class="custom-control-input" checked>
+                          <label class="custom-control-label" for="last-hours">Last 24 Hours</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" id="custom" name="customRadio" class="custom-control-input">
+                          <label class="custom-control-label" for="custom">Custom</label>
+                        </div>
 
-                          <div class="dropdown-footer">
-                            <button class="btn btn-block btn-clear">Clear</button>
-                          </div>
-                          <!-- /.dropdown-footer -->
+                        <div class="dropdown-footer">
+                          <button class="btn btn-block btn-clear">Clear</button>
                         </div>
+                        <!-- /.dropdown-footer -->
                       </div>
                     </div>
-                    <div class="form-group mx-sm-3 mb-2">
-                      <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Select date range
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton">
-                          <div class="d-flex">
-                            <div>
-                              <h4>Date/Time Range</h4>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="all-time-range" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label" for="all-time-range">All Time</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="last-month-range" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label" for="last-month-range">Last Month</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="last-week-range" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label" for="last-week-range">Last week</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="last-hours-range" name="customRadio" class="custom-control-input" checked>
-                                <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="custom-range" name="customRadio" class="custom-control-input">
-                                <label class="custom-control-label" for="custom-range">Custom</label>
-                              </div>
+                  </div>
+                  <div class="form-group mx-sm-3 mb-2">
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select date range
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton">
+                        <div class="d-flex">
+                          <div>
+                            <h4>Date/Time Range</h4>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="all-time-range" name="customRadio" class="custom-control-input">
+                              <label class="custom-control-label" for="all-time-range">All Time</label>
                             </div>
-                            <div>
-                              <h4>Date Range</h4>  
-                              <div id="datePicker"></div>                          
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="last-month-range" name="customRadio" class="custom-control-input">
+                              <label class="custom-control-label" for="last-month-range">Last Month</label>
                             </div>
-                            <div>
-                              <h4>From</h4>             
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="last-week-range" name="customRadio" class="custom-control-input">
+                              <label class="custom-control-label" for="last-week-range">Last week</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="last-hours-range" name="customRadio" class="custom-control-input" checked>
+                              <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="custom-range" name="customRadio" class="custom-control-input">
+                              <label class="custom-control-label" for="custom-range">Custom</label>
+                            </div>
+                          </div>
+                          <div>
+                            <h4>Date Range</h4>  
+                            <div id="datePicker"></div>                          
+                          </div>
+                          <div>
+                            <h4>From</h4>             
+                            <div class="form-inline">
+                              <div class="form-group">
+                                <select class="form-control">
+                                  <option value="0">00</option>
+                                  <option value="1">01</option>
+                                  <option value="2">02</option>
+                                  <option value="3">03</option>
+                                  <option value="4">04</option>
+                                  <option value="5">05</option>
+                                  <option value="6">06</option>
+                                  <option value="7">07</option>
+                                  <option selected value="8">08</option>
+                                  <option value="9">09</option>
+                                </select>
+                              </div>
+                              <!-- /.form-group -->
+                              <div class="form-group">:</div>
+                              <div class="form-group">
+                                <select class="form-control">
+                                  <option value="0">00</option>
+                                  <option value="1">01</option>
+                                  <option value="2">02</option>
+                                  <option value="3">03</option>
+                                  <option value="4">04</option>
+                                  <option value="5">05</option>
+                                  <option selected value="6">06</option>
+                                  <option value="7">07</option>
+                                  <option value="8">08</option>
+                                  <option value="9">09</option>
+                                </select>
+                              </div>
+                              <!-- /.form-group -->
+                              <div class="form-group">
+                                <select class="form-control">
+                                  <option value="AM">AM</option>
+                                  <option value="PM">PM</option>
+                                </select>
+                              </div>
+                              <!-- /.form-group -->
+                            </div>
+                            <!-- /.form-inline -->  
+
+                            <div class="mt-3">
+                              <h4>To</h4>             
                               <div class="form-inline">
                                 <div class="form-group">
                                   <select class="form-control">
@@ -148,218 +201,173 @@
                                 </div>
                                 <!-- /.form-group -->
                               </div>
-                              <!-- /.form-inline -->  
+                              <!-- /.form-inline -->                     
+                            </div>                   
 
-                              <div class="mt-3">
-                                <h4>To</h4>             
-                                <div class="form-inline">
-                                  <div class="form-group">
-                                    <select class="form-control">
-                                      <option value="0">00</option>
-                                      <option value="1">01</option>
-                                      <option value="2">02</option>
-                                      <option value="3">03</option>
-                                      <option value="4">04</option>
-                                      <option value="5">05</option>
-                                      <option value="6">06</option>
-                                      <option value="7">07</option>
-                                      <option selected value="8">08</option>
-                                      <option value="9">09</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                  <div class="form-group">:</div>
-                                  <div class="form-group">
-                                    <select class="form-control">
-                                      <option value="0">00</option>
-                                      <option value="1">01</option>
-                                      <option value="2">02</option>
-                                      <option value="3">03</option>
-                                      <option value="4">04</option>
-                                      <option value="5">05</option>
-                                      <option selected value="6">06</option>
-                                      <option value="7">07</option>
-                                      <option value="8">08</option>
-                                      <option value="9">09</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                  <div class="form-group">
-                                    <select class="form-control">
-                                      <option value="AM">AM</option>
-                                      <option value="PM">PM</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                </div>
-                                <!-- /.form-inline -->                     
-                              </div>                   
-
-                              <div class="mt-5">
-                                <button class="btn btn-block btn-clear mb-1">Clear</button>
-                                <button class="btn btn-block btn-primary">Apply</button>
-                              </div>
-
+                            <div class="mt-5">
+                              <button class="btn btn-block btn-clear mb-1">Clear</button>
+                              <button class="btn btn-block btn-primary">Apply</button>
                             </div>
+
                           </div>
-                          <!-- /.d-flex -->
                         </div>
+                        <!-- /.d-flex -->
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-default mb-2"><i class="fa fa-redo"></i> &nbsp;Clear</button>
+                  </div>
+                  <button type="submit" class="btn btn-default mb-2"><i class="fa fa-redo"></i> &nbsp;Clear</button>
 
-                    <div class="ml-auto d-flex">
-                      <div class="form-group mx-sm-3 mb-2">
-                        <button class="btn btn-default"><i class="fa fa-filter"></i></button>
-                      </div>
-                      <div class="form-group mb-2">
-                        <div class="dropdown dropdown-icon-remove">
-                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-ellipsis-h"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" disabled checked id="pipService1">
-                              <label class="custom-control-label" for="pipService1">Pipeline / Service</label>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" disabled checked id="application">
-                              <label class="custom-control-label" for="application">Application</label>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="triggered_by">
-                              <label class="custom-control-label" for="triggered_by">Triggered By</label>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="start_time">
-                              <label class="custom-control-label" for="start_time">Start Time</label>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="end_time">
-                              <label class="custom-control-label" for="end_time">End Time</label>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="server_groups">
-                              <label class="custom-control-label" for="server_groups">Server Groups</label>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                              <input type="checkbox" class="custom-control-input" id="approved_by">
-                              <label class="custom-control-label" for="approved_by">Approved By</label>
-                            </div>
-
-                            <div class="dropdown-footer dropdown-footer-border">
-                              <button class="btn text-left btn-block btn-link">Select All</button>
-                            </div>
-                            <!-- /.dropdown-footer -->
+                  <div class="ml-auto d-flex">
+                    <div class="form-group mx-sm-3 mb-2">
+                      <button class="btn btn-default"><i class="fa fa-filter"></i></button>
+                    </div>
+                    <div class="form-group mb-2">
+                      <div class="dropdown dropdown-icon-remove">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fa fa-ellipsis-h"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" disabled checked id="pipService1">
+                            <label class="custom-control-label" for="pipService1">Pipeline / Service</label>
                           </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" disabled checked id="application">
+                            <label class="custom-control-label" for="application">Application</label>
+                          </div>
+                          <div class="dropdown-divider"></div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="triggered_by">
+                            <label class="custom-control-label" for="triggered_by">Triggered By</label>
+                          </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="start_time">
+                            <label class="custom-control-label" for="start_time">Start Time</label>
+                          </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="end_time">
+                            <label class="custom-control-label" for="end_time">End Time</label>
+                          </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="server_groups">
+                            <label class="custom-control-label" for="server_groups">Server Groups</label>
+                          </div>
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="approved_by">
+                            <label class="custom-control-label" for="approved_by">Approved By</label>
+                          </div>
+
+                          <div class="dropdown-footer dropdown-footer-border">
+                            <button class="btn text-left btn-block btn-link">Select All</button>
+                          </div>
+                          <!-- /.dropdown-footer -->
                         </div>
                       </div>
                     </div>
                   </div>
-                  <!-- /.form-inline -->
-
-                  <div class="toolpills">
-                    <div>Pipeline/Service: <span>aws-product</span> <span class="close">&times;</span></div>
-                    <div>Approve By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                    <div>Application: <span>TestApp</span> <span class="close">&times;</span></div>
-                    <div>Triggered By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                    <div>Cluster: <span>OpsMxuser-restapp</span> <span class="close">&times;</span></div>
-                    <div>Status: <span>SUCCEEDED</span> <span class="close">&times;</span></div>
-                  </div>
-                  <!-- /.toolpills -->
-
                 </div>
-                <!-- /.card-heading -->
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                    <table class="table table-filter mb-0">
-                      <thead>
-                        <tr>
-                          <th>
-                            <span><i class="fa fa-caret-right"></i> Pipeline / Service</span>
-                          </th>
-                          <th>
-                            <span>Application</span>
-                          </th>
-                          <th>
-                            <span>Start Time</span>
-                          </th>
-                          <th>
-                            <span>End Time</span>
-                          </th>
-                          <th>
-                            <span>Status</span>
-                          </th>
-                          <th>
-                            <span>Triggered By</span>
-                          </th>
-                          <th>
-                            <span>Approved By</span>
-                          </th>
-                          <th>
-                            <span>Date / Time</span>
-                          </th>
-                          <th>
-                            <span>Build Number</span>
-                          </th>
-                          <th>
-                            <span>Cluster</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>                           
-                        <tr *ngFor="let item of allPipelines.results">
-                          <td><span>{{item.pipelineName}}</span></td>
-                          <td><span>{{item.applicationName}}</span></td>
-                          <td><span>{{item.pipelineStartTime}}</span></td>
-                          <td><span>{{item.pipelineEndTime}}</span></td>
-                          <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
-                          <td><span>{{item.user}}</span></td>
-                          <td><span>{{item.manualJudgementUser}}</span></td>
-                          <td><span>{{item.manualJudgementEndTime}}</span></td>
-                          <td><span>{{item.cluster}}</span></td>                            
-                        </tr>                          
-                      </tbody>
-                    </table>
-                    <!-- /.table -->
-                  </div>
-                  <!-- /.table-responsive -->
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer table-footer px-3 py-2">
-                  <div class="form-inline">
-                    <span class="mr-2">Per page</span>
-                    <select class="form-control">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">25</option>
-                    </select>
-                    <span class="ml-3 mr-2">Showing 1 to 20 of 187</span>
-                    <input type="text" class="form-control mr-2" />
-                    <button class="btn btn-primary">Go</button>
+                <!-- /.form-inline -->
 
-                    <ul class="pagination ml-auto mb-0">
-                      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                    </ul>
-                  </div>
-                  <!-- /.per_page -->
+                <div class="toolpills">
+                  <div>Pipeline/Service: <span>aws-product</span> <span class="close">&times;</span></div>
+                  <div>Approve By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
+                  <div>Application: <span>TestApp</span> <span class="close">&times;</span></div>
+                  <div>Triggered By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
+                  <div>Cluster: <span>OpsMxuser-restapp</span> <span class="close">&times;</span></div>
+                  <div>Status: <span>SUCCEEDED</span> <span class="close">&times;</span></div>
                 </div>
-                <!-- /.card-footer -->
+                <!-- /.toolpills -->
+
               </div>
-              <!-- /.card -->
+              <!-- /.card-heading -->
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-filter mb-0">
+                    <thead>
+                      <tr>
+                        <th>
+                          <span><i class="fa fa-caret-right"></i> Pipeline / Service</span>
+                        </th>
+                        <th>
+                          <span>Application</span>
+                        </th>
+                        <th>
+                          <span>Start Time</span>
+                        </th>
+                        <th>
+                          <span>End Time</span>
+                        </th>
+                        <th>
+                          <span>Status</span>
+                        </th>
+                        <th>
+                          <span>Triggered By</span>
+                        </th>
+                        <th>
+                          <span>Approved By</span>
+                        </th>
+                        <th>
+                          <span>Date / Time</span>
+                        </th>
+                        <th>
+                          <span>Build Number</span>
+                        </th>
+                        <th>
+                          <span>Cluster</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>                           
+                      <tr *ngFor="let item of currentPage">
+                        <td><span>{{item.pipelineName}}</span></td>
+                        <td><span>{{item.applicationName}}</span></td>
+                        <td><span>{{+item.pipelineStartTime | date:'short'}}</span></td>
+                        <td><span>{{+item.pipelineEndTime | date:'short'}}</span></td>
+                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
+                        <td><span>{{item.user}}</span></td>
+                        <td><span>{{item.manualJudgementUser}}</span></td>
+                        <td><span>{{item.manualJudgementEndTime}}</span></td>
+                        <td><span>{{item.cluster}}</span></td>                            
+                      </tr>                          
+                    </tbody>
+                  </table>
+                  <!-- /.table -->
+                </div>
+                <!-- /.table-responsive -->
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer table-footer px-3 py-2">
+                <div class="form-inline">
+                  <span class="mr-2">Per page</span>
+                  <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
+                    <option value=10 >10</option>
+                    <option value=15 >15</option>
+                    <option value=20 >20</option>
+                    <option value=25 >25</option>
+                    <option value=30 >30</option>
+                  </select>
+                  <span class="ml-3 mr-2">Showing {{page.startingPoint}} to {{page.endPoint}} of {{this.results.length}}</span>
+                  <input type="text" class="form-control mr-2" />
+                  <button class="btn btn-primary">Go</button>
+
+                  <ul class="pagination ml-auto mb-0">
+                    <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                    <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}" (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
+                    <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage + 1}}</a></li>
+                    <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}" *ngIf="((page.pageNo+1)*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage + 2}}</a></li>
+                    <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
+                  </ul>
+                </div>
+                <!-- /.per_page -->
+              </div>
+              <!-- /.card-footer -->
             </div>
-            <!-- /.col-12 -->
+            <!-- /.card -->
           </div>
-            <!-- /.row -->
+          <!-- /.col-12 -->
         </div>
+          <!-- /.row -->
       </div>
-      <!-- /.page-content -->
-  </div>
-  <!-- /.main_content -->
+    </div>
+    <!-- /.page-content -->
+</div>

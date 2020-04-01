@@ -9,6 +9,7 @@ import * as AuthAction from '../store/auth.actions';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
+import {environment} from '../../../environments/environment.prod'
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
@@ -23,6 +24,8 @@ const handleError = (errorRes: any) => {
         case 'Email Exist':
             errorMessage = 'This email exist already';
             break;
+        default:
+            errorMessage = 'Error Occurred'
     }
     return of(new AuthAction.LoginFail(errorMessage));
 }
@@ -41,7 +44,7 @@ export class AuthEffect {
     authLogin = this.actions$.pipe(
         ofType(AuthAction.AuthActionTypes.LOGINSTART),
         switchMap((authData: AuthAction.LoginStart) => {
-            return this.http.post('https://35.238.22.177:8090/auth/login', { userName: authData.payload.userName, password: authData.payload.password }).pipe(
+            return this.http.post(environment.baseUrl+'auth/login', { userName: authData.payload.userName, password: authData.payload.password }).pipe(
                 map(resData => {
                     this.user = {
                         userName: authData.payload.userName,
@@ -62,7 +65,7 @@ export class AuthEffect {
     authSignUp = this.actions$.pipe(
         ofType(AuthAction.AuthActionTypes.SIGNUPSTART),
         switchMap((signUpData: AuthAction.SignUpStart) => {
-            return this.http.post('https://35.238.22.177:8090/canaries/saveCanaryUserProfile', { fullNamw: signUpData.payload.fullName, userName: signUpData.payload.userName, emailId: signUpData.payload.emailId, password: signUpData.payload.password }).pipe(
+            return this.http.post(environment.baseUrl+'canaries/saveCanaryUserProfile', { fullNamw: signUpData.payload.fullName, userName: signUpData.payload.userName, emailId: signUpData.payload.emailId, password: signUpData.payload.password }).pipe(
                 map(resData => {
                     return new AuthAction.SignUp(resData);
                 }),

@@ -18,6 +18,7 @@ import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
 import { LayoutEffect } from './layout/store/layout.effects';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { LayoutEffect } from './layout/store/layout.effects';
     AppRoutingModule,
     BrowserAnimationsModule,
     AuthModule,
+    FormsModule,
     HttpClientModule,
     AppMaterialModule,
     ToastrModule.forRoot(),
