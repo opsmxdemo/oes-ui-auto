@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import {  HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({providedIn:'root'})
 export class TestService {
@@ -12,6 +13,6 @@ export class TestService {
 
 
     getdummyapi() {
-        return this.httpClient.get('https://35.238.22.177:8090/canaries/getAppServices');
+        return this.httpClient.get(environment.baseUrl+'canaries/getAppServices');
     }
 }
