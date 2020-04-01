@@ -1,4 +1,4 @@
-<div class="row" >
+<div class="row mainrow" >
   <div class="col-md-12 maindiv {{addclass == true ? 'view_in' : ''}}">
     <div class="sidebar" *ngIf="isAuthenticate">
       <div class="sidebar_header d-flex align-items-center justify-content-between">
@@ -32,17 +32,9 @@
     <!-- /.sidebar -->
     <div class=" {{isAuthenticate == true ? 'content_section' : 'col-md-12 col-sm-12 col-lg-12 col-xs-12'}}">
       <app-header></app-header>
-      <br>
       <!-- content of application -->
       <router-outlet></router-outlet>
     </div>
     <!-- /.content_section -->
   </div>
 </div>
-<!-- <div class="row" *ngIf="!isAuthenticate">
-  <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12 maindiv">
-    <app-header></app-header>
-  <br>
-  <router-outlet></router-outlet>
-  </div>
-</div> -->

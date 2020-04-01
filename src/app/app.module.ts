@@ -19,6 +19,10 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
 import { LayoutEffect } from './layout/store/layout.effects';
 import { FormsModule } from '@angular/forms';
+import { ApplicationOnboardingComponent } from './application-onboarding/application-onboarding.component';
+import { ApplicationComponent } from './application-onboarding/application/application.component';
+import { DataSourceComponent } from './application-onboarding/data-source/data-source.component';
+import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,11 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     ApplicationDashboardComponent,
     OesDashboardComponent,
-    AuditComponent
+    AuditComponent,
+    ApplicationOnboardingComponent,
+    ApplicationComponent,
+    DataSourceComponent,
+    CloudServicesComponent
   ],
   imports: [
     BrowserModule,

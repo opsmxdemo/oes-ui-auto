@@ -1,0 +1,209 @@
+<div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+  <div class="page_access text-right py-2 px-3">
+    <button class="btn btn-default" data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static"
+      data-keyboard="false">New materic template</button>
+    <button class="btn btn-default ml-1">Cancel</button>
+    <button class="btn btn-default ml-2" disabled="disabled">Save</button>
+    <button class="btn btn-primary ml-2" disabled="disabled">Save & Finish</button>
+  </div>
+  <!-- /.page_access ml-auto -->
+  <div class="setup-content">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="sidebar-tree">
+          <ul class="tree-inset tree-active list-unstyled">
+            <li class="ti-title">
+              <i class="fas fa-check-circle"></i>
+              <span>Application Details</span>
+            </li>
+            <li class="ti-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Application Name :</span>
+              <strong>Multiclouddemo</strong>
+            </li>
+            <li class="ti-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Description :</span>
+              <strong>kubernetes cloud on spinnaker on spinnaker</strong>
+            </li>
+          </ul>
+          <!-- /.tree-inset -->
+          <ul class="tree-inset tree-active list-unstyled">
+            <li class="ti-title">
+              <i class="fas fa-check-circle"></i>
+              <span>Service 1</span>
+            </li>
+            <li class="ti-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Service Name:</span>
+              <strong>Rest Service</strong>
+            </li>
+            <li class="ti-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Log Template:</span>
+              <strong>MyFirst_Log_Temp</strong>
+            </li>
+            <li class="ti-item">
+              <i class="fas fa-check-circle"></i>
+              <span>Metric Template :</span>
+              <strong>datadog_metrictempQATest</strong>
+            </li>
+          </ul>
+          <!-- /.tree-inset -->
+          <ul class="tree-inset list-unstyled">
+            <li class="ti-title">
+              <i class="far fa-dot-circle"></i>
+              <span>Service 2</span>
+            </li>
+            <li class="ti-item">
+              <i class="far fa-dot-circle"></i>
+              <span>Service Name:</span>
+            </li>
+            <li class="ti-item">
+              <i class="far fa-dot-circle"></i>
+              <span>Log Template</span>
+            </li>
+            <li class="ti-item">
+              <i class="far fa-dot-circle"></i>
+              <span>Metrics Template:</span>
+            </li>
+          </ul>
+          <!-- /.tree-inset -->
+          <ul class="tree-inset tree-finished list-unstyled">
+            <li class="ti-title">
+              <i class="fas fa-circle"></i>
+              <span>Finish Application</span>
+            </li>
+          </ul>
+          <!-- /.tree-inset -->
+        </div>
+        <!-- /.sidebar-tree -->
+      </div>
+      <!-- /.col-sm-3 -->
+      <div class="col-sm-9">
+        <div class="p-3">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>Application Name</label>
+                <input type="text" class="form-control">
+              </div>
+              <!-- /.form-group -->
+              <div class="form-group">
+                <label>Application Description</label>
+                <textarea class="form-control" rows="3"></textarea>
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col-6 -->
+
+            <div class="col-10">
+              <hr class="ml-0 mt-3 mb-3" />
+            </div>
+            <!-- /.col-8 -->
+            <div class="col-6">
+              <div class="form-group text-muted">
+                <label>Select Service <a href="#" class="btn-link">(Add New Service)</a></label>
+                <div class="d-flex mb-3 mr-4 align-items-center">
+                  <select class="form-control">
+                    <option>Rest Service</option>
+                  </select>
+                  <a href="#" class="text-muted ml-3"><i class="fas fa-pencil-alt"></i></a>
+                </div>
+                <!-- /.d-flex -->
+
+                <div class="form-group pl-4 text-muted">
+                  <label>Select Log Template <a href="#" class="btn-link">(Add New Log Template)</a></label>
+                  <div class="d-flex align-items-center">
+                    <select class="form-control">
+                      <option>MyFirst_LogTemp</option>
+                    </select>
+                    <a href="#" class="text-muted ml-3"><i class="fas fa-pencil-alt"></i></a>
+                  </div>
+                  <!-- /.d-flex -->
+                </div>
+
+                <div class="form-group pl-4 text-muted">
+                  <label>Select Metric Template <a href="#" class="btn-link">(Add New Metric Template)</a></label>
+                  <div class="d-flex align-items-center">
+                    <select class="form-control">
+                      <option>datadog_metrictempQATest</option>
+                    </select>
+                    <a href="#" class="text-muted ml-3"><i class="fas fa-pencil-alt"></i></a>
+                  </div>
+                  <!-- /.d-flex -->
+                </div>
+              </div>
+            </div>
+            <!-- /.col-6 -->
+
+
+            <div class="col-10">
+              <hr class="ml-0 mt-3 mb-3" />
+            </div>
+            <!-- /.col-8 -->
+            <div class="col-lg-8 col-12 col-xl-6">
+              <div class="form-group">
+                <label>Group Permissions <a class="btn-link" href="#">(Add New Group)</a></label>
+                <table class="table table-outline">
+                  <thead>
+                    <tr>
+                      <th>Group</th>
+                      <th colspan="2">Permissions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Perm Group</td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="per_rw1">
+                          <label class="custom-control-label" for="per_rw1">Read & Write</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="per_ro1">
+                          <label class="custom-control-label" for="per_ro1">Read Only</label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Perm Group</td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="per_rw2">
+                          <label class="custom-control-label" for="per_rw2">Read & Write</label>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="per_ro2">
+                          <label class="custom-control-label" for="per_ro2">Read Only</label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.form-group -->
+            </div>
+            <!-- /.col-6 -->
+
+          </div>
+          <!-- /.row -->
+
+        </div>
+
+        <div class="p-3 bottom-strp-cover gray-strip text-right">
+          <button class="btn btn-default">Cancel</button>
+          <button class="btn btn-default ml-2" disabled="disabled">Save</button>
+          <button class="btn btn-primary ml-2" disabled="disabled">Save & Finish</button>
+        </div>
+      </div>
+      <!-- /.col-sm-9 -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.setup-content -->
+</div>
