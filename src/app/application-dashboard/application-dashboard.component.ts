@@ -20,11 +20,6 @@ export class ApplicationDashboardComponent implements OnInit {
     this.applicationService.getApplicationList().subscribe((response: any) => {
       console.log(response);
       this.applicationData = response;
-      //this.serviceData = response[0].services;
-      // this.applicationService.getServiceList(response[0].name).subscribe((serviceDataList: any) => {
-      //   console.log(serviceDataList);
-      //   this.serviceData = serviceDataList;
-      // });
       this.selectedApplication(0, response[0]);
     });
   }
@@ -35,7 +30,5 @@ export class ApplicationDashboardComponent implements OnInit {
       console.log(serviceDataList);
       this.serviceData = serviceDataList;
     });
-    
-    
   }
 }
