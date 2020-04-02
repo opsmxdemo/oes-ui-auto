@@ -13,8 +13,36 @@ export class AuditService{
 getAllPipelines(parameters) {
     const params  =  new HttpParams()
         .set('isLatest','false')
+        .set('isTreeView','true')
         .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
-    return this.httpClient.get('http://34.83.55.40:8050/audit/getAllDeployments',{
+    return this.httpClient.get('https://137.117.94.95:8050/audit/getAllDeployments',{
+        params :params
+    });
+}
+
+getSuccessfulPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','true')
+        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
+    return this.httpClient.get('https://137.117.94.95:8050/audit/getLastSuccessfulDeployments',{
+        params :params
+    });
+}
+
+getAllModifiedPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','false')
+        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
+    return this.httpClient.get('https://137.117.94.95:8050/audit/getPipelinesModified',{
+        params :params
+    });
+}
+
+getAllFailedPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','false')
+        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
+    return this.httpClient.get('https://137.117.94.95:8050/audit/geFailedPipelineDetails',{
         params :params
     });
 }
