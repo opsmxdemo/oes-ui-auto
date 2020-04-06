@@ -1,0 +1,71 @@
+
+      <div class="rightBox position-sticky">
+        <div class="rightBox_header d-flex align-items-center">
+          <h3>{{receivedParentMessage}}</h3>
+          <div class="btns_icon d-flex ml-auto">
+            <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
+            <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
+          </div>
+          <!-- /.btns_icon -->
+        </div>
+        <!-- /.rightBox_header -->
+        <div class="rightBox_body">
+          <div *ngIf="showRelease">
+          <div class="form-group form-inline">
+                <label for="exampleInputEmail1">Release Name
+                  :&nbsp;&nbsp;&nbsp;</label> <input type="text" class="form-control"
+                  id="releaseName">
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label>Source :</label> docker.io/opsmx11
+                </div>
+              </div>
+              <table class="table table-pet-service text-center mb-0">
+                  <thead>
+                    <tr>
+                      <th>Service Name</th>
+                      <th>Container id-tag</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr >
+                      <td>test service</td>
+                      <td>ildf8493:89</td>
+                    </tr>
+      
+                  </tbody>
+                </table>
+              <div class="bottom_btns mt-auto bg-white position-sticky text-right">
+                  <button class="btn btn-danger" style="color:#fff;" (click)="cancelRelease()">Cancel</button>
+                &nbsp;&nbsp; <button class="btn btn-primary">Promote</button>
+               </div>
+          </div>
+          <div class="table-responsive" *ngIf="!showRelease">
+            	<div class="form-group form-inline pull-right">
+                  <div class=" mt-auto bg-white position-sticky text-right">
+                        <button class="btn btn-primary" (click)="newReleaseMethod()">New Release</button>
+                      </div>
+                </div>
+            <table class="table table-pet-service text-center mb-0">
+            <thead>
+              <tr>
+                <th>Release Name</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let release of releaseData;let i = index">
+                <td>{{release.releaseName}}</td>
+                <td>{{release.date | date: 'medium'}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+          </div>
+          <!-- /.table-responsive -->
+        </div>
+        <!-- /.rightBox_body -->
+      </div>
+      <!-- /.rightBox -->
+  

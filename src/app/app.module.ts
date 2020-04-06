@@ -22,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationOnboardingComponent } from './application-onboarding/application-onboarding.component';
 import { ApplicationComponent } from './application-onboarding/application/application.component';
 import { DataSourceComponent } from './application-onboarding/data-source/data-source.component';
+import { ReleaseComponent } from './release/release.component';
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { KeysPipe } from './pipes/keys.pipe';
@@ -37,6 +38,7 @@ import { KeysPipe } from './pipes/keys.pipe';
     ApplicationComponent,
     DataSourceComponent,
     CloudServicesComponent,
+    ReleaseComponent,
     KeysPipe
   ],
   imports: [

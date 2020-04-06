@@ -39,19 +39,32 @@
                                           </div>
                                           <div class="status"><img src="../../../assets/status_icon.png" class="img-fluid" alt="status" /></div>
                                           <button class="btn"><img src="../../../assets/thumb_pin.png" class="img-fluid" alt="pin" /></button>
-                                          <button class="btn p-0"><i class="fa fa-ellipsis-v"></i></button>
+                                          <div class="form-group mb-2">
+                                              <div class="dropdown dropdown-icon-remove">
+                                                <button class="btn btn-default" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                  <i class="fa fa-ellipsis-h"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                                  <div class="custom-control custom-checkbox" *ngFor="let menu of application.appMenu; let i=index">
+                                                    <label class="custom-control-labe" (click)="getReleases(application.name,i,$event)" for="triggered_by">{{menu}}</label>
+                                                  </div>
+                                                  
+                                                  <!-- /.dropdown-footer -->
+                                                </div>
+                                              </div>
+                                            </div>
                                         </div>
                                         <!-- /.data_list_actions -->
                                       </div>
                                       <!-- /.data_list_header -->
-                                      <div class="data_list_body d-flex">
+                                      <div class="data_list_body d-flex"  >
                                         <div class="data_list_values text-center">
                                           <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around">
-                                            <li>
-                                              <div class="dl_value_count">25</div>
-                                              <div class="dl_value_text">Dev Verification</div>
+                                            <li class="active" *ngFor="let applicationInfo of application.appInfo; let i=index">
+                                              <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
+                                              <div class="dl_value_text">{{applicationInfo.applicationInfolabel}}</div>
                                             </li>
-                                            <li>
+                                            <!-- <li>
                                               <div class="dl_value_count">15</div>
                                               <div class="dl_value_text">Test Verification</div>
                                             </li>
@@ -63,7 +76,7 @@
                                               <div class="dl_value_count">10</div>
                                               <div class="dl_value_text">Production Monitoring</div>
                                               <i class="fa fa-angle-up"></i>
-                                            </li>
+                                            </li> -->
                                           </ul>
                                         </div>
                                         <!-- /.data_list_values -->
@@ -84,10 +97,13 @@
                             <!-- /.data_listArea -->
                           </div>
                           <!-- /.col-sm-8 -->
-                          <div class="col-sm-4">
+                         <div class="col-md-4" *ngIf="showReleaseTable">
+                             <app-release></app-release>
+                         </div>
+                          <div class="col-sm-4" *ngIf= "!showReleaseTable">
                             <div class="rightBox position-sticky">
                               <div class="rightBox_header d-flex align-items-center">
-                                <h3>{{selectedApplicationName}} > 11883</h3>
+                                <h3>{{selectedApplicationName}}</h3>
                                 <div class="btns_icon d-flex ml-auto">
                                   <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
                                   <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
@@ -96,9 +112,9 @@
                               </div>
                               <!-- /.rightBox_header -->
                               <div class="rightBox_body">
-                                <div id="particle_chart">
+                                <!-- <div id="particle_chart">
                                   <img src="../../../assets/chart_placeholder_01.png" class="img-fluid" alt="chart" />
-                                </div>
+                                </div> -->
                                 <!-- /#particle_chart -->
                                 <div class="chart_ratio text-center d-flex">
                                   <div class="chart_value cv_low flex-grow-1">

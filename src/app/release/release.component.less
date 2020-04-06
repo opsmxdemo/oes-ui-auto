@@ -1,0 +1,272 @@
+
+.main_content {
+	padding: 15px 25px 0;
+}
+.page-title {
+	font-size: 19px;
+	margin: 0;
+}
+.page_title {
+	border-bottom: 1px solid #e7ecf2;
+	padding: 10px 0;
+	h3 {
+		font-family: 'Open Sans', sans-serif;
+		font-weight: 400;
+		font-size: 16px;
+		color: #161f2f;
+		margin: 0;
+	}
+	h2 {
+		font-family: 'Roboto', sans-serif;
+		font-size: 18px;
+		color: #161f2f;
+		margin: 0;
+	}
+}
+.page_title_inner {
+	padding: 16px 0;
+}
+.title_icon {
+	h3 {
+		padding-left: 30px;
+		position: relative;
+		img {
+			position: absolute;
+			max-width: 20px;
+			left: 0;
+			top: 0;
+		}
+	}
+	h2 {
+		padding-left: 30px;
+		position: relative;
+		img {
+			position: absolute;
+			max-width: 20px;
+			left: 0;
+			top: 0;
+		}
+	}
+}
+.input-group-text {
+	outline: none !important;
+}
+
+// css for leftside cards
+.data_listArea {
+	padding: 15px 0;
+}
+.data_list {
+	border: 1px #e6e6e6 solid;
+	border-left: 4px solid transparent;
+	margin-bottom: 15px;
+	border-radius: 5px;
+	background: #fff;
+}
+.data_list.active {
+	-webkit-box-shadow: 0 0 0 2px #2c9bf9, 0 2px 11px rgba(0, 0, 0, 0.43);
+	box-shadow: 0 0 0 2px #2c9bf9, 0 2px 11px rgba(0, 0, 0, 0.43);
+	background: #f4f4f4;
+}
+.data_list_header {
+	padding: 8px 15px;
+	border-bottom: 1px solid #dce0e4;
+	line-height: 1;
+}
+.data_list_title {
+	h3 {
+		font-family: 'Avenir';
+		font-weight: 600;
+		margin-bottom: 0;
+		font-size: 16px;
+		color: #333;
+	}
+	.datetime {
+		color: #666;
+		font-size: 11px;
+		font-family: 'Open Sans', sans-serif;
+	}
+}
+.popover-body {
+	color: #036;
+	line-height: 1;
+	font-size: 12px;
+	font-weight: 600;
+	font-family: 'Open Sans', sans-serif;
+}
+.popover {
+	border: none;
+	-webkit-box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2);
+	box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2);
+}
+.data_list_body {
+	padding: 10px 15px;
+	>div {
+		min-width: 50%;
+		-webkit-flex: 0 0 50%;
+		-moz-flex: 0 0 50%;
+		-ms-flex: 0 0 50%;
+		-o-flex: 0 0 50%;
+		flex: 0 0 50%;
+	}
+	li {
+		color: #999;
+		padding: 0 5px;
+		line-height: 1;
+		font-size: 12px;
+		font-family: 'Avenir';
+		font-weight: normal;
+		i {
+			display: none;
+			font-size: 1.2em;
+		}
+		.dl_value_count {
+			font-size: 1.85em;
+			font-family: 'Open Sans', sans-serif;
+			font-weight: 600;
+			margin-bottom: 3px;
+		}
+	}
+	li.active {
+		color: #152330;
+		.dl_value_count {
+			font-weight: 700;
+		}
+	}
+}
+.data_list_values {
+	li {
+		max-width: 80px;
+	}
+	li.active {
+		i {
+			display: inline-block;
+		}
+	}
+}
+.data_list_score {
+	li {
+		max-width: 80px;
+		color: #152330;
+	}
+	margin-left: 5px;
+	padding-left: 10px;
+	border-left: 2px solid #dce0e4;
+	li.active {
+		.dl_value_count {
+			font-size: 2.5em;
+		}
+	}
+}
+// css for rightside boxes
+.rightBox {
+	-webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+	margin-right: -25px;
+	margin-left: 25px;
+	background: #fff;
+	min-height: 100vh;
+	z-index: 30;
+	top: 0;
+	>div {
+		padding: 15px 22px;
+	}
+}
+.rightBox_header {
+	background: #e0e7eb;
+	font-size: 13px;
+	color: #333;
+	h3 {
+		font-weight: 400;
+		font-size: 14px;
+		margin: 0;
+	}
+	.btns_icon {
+		img {
+			width: 15px;
+			display: block;
+		}
+	}
+}
+.chart_ratio {
+	overflow: hidden;
+	height: 65px;
+	line-height: 1;
+	font-size: 13px;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	border: 1px solid #b7b6b6;
+}
+.chart_value {
+	padding-top: 15px;
+}
+.cv_low {
+	background: #ffcfd2;
+	color: #322728;
+	.cv_heighlight {
+		color: #d90000;
+	}
+}
+.cv_alert {
+	color: #005320;
+	.cv_heighlight {
+		color: #00a025;
+	}
+}
+.cv_heighlight {
+	font-weight: 700;
+	font-size: 1.5em;
+}
+.table {
+	font-family: 'Open Sans', sans-serif;
+}
+.table-pet-service {
+	font-size: 13px;
+	th {
+		padding: 8px 4px;
+		border: none !important;
+		&:first-child {
+			text-align: left;
+		}
+	}
+	td {
+		padding: 8px 4px;
+		&:first-child {
+			text-align: left;
+		}
+	}
+}
+.table-sm-text {
+	font-size: 13px;
+}
+.table-no-bordered {
+	td {
+		border: none;
+	}
+}
+.table-font-weight-600 {
+	td {
+		font-weight: 600;
+	}
+}
+.not-attempt {
+	td {
+		background: #dee2e6;
+	}
+}
+.table-avenir {
+	td {
+		font-family: 'Avenir Book';
+		font-weight: normal;
+	}
+	.active-service {
+		td {
+			font-family: 'Avenir';
+			font-weight: 600;
+		}
+	}
+}
+.not-attempt-text {
+	color: #999;
+}
+
