@@ -23,6 +23,7 @@ import { ApplicationOnboardingComponent } from './application-onboarding/applica
 import { ApplicationComponent } from './application-onboarding/application/application.component';
 import { DataSourceComponent } from './application-onboarding/data-source/data-source.component';
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { KeysPipe } from './pipes/keys.pipe';
 
 @NgModule({
@@ -47,6 +48,7 @@ import { KeysPipe } from './pipes/keys.pipe';
     ReactiveFormsModule,
     HttpClientModule,
     AppMaterialModule,
+    Ng2SearchPipeModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
     EffectsModule.forRoot([AuthEffect,LayoutEffect]),

@@ -22,6 +22,7 @@ export class AuditComponent implements OnInit {
   }
   perPageData:number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
   currentPage = [''];       //this use to store array of results exist in current page.
+  searchData:any = null; // this is use to fetch value from search field.
   
   ngOnInit(): void {
     this.auditService.getAllPipelines(this.parameters).subscribe(

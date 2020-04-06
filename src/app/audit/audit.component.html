@@ -31,7 +31,7 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                       </div>
-                      <input type="text" class="form-control" placeholder="Search">
+                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
                     </div>
                   </div>
                   <div class="form-group ml-sm-3 mb-2">
@@ -282,8 +282,8 @@
                       </tr>
                     </thead>
                     <tbody>                           
-                      <tr *ngFor="let item of currentPage">
-                        <td *ngFor = "let itenValue of item | keys "><span>{{item[itenValue]}}</span></td>
+                      <tr *ngFor="let item of currentPage | filter:searchData ">
+                        <td *ngFor = "let itenValue of item | keys"><span>{{item[itenValue]}}</span></td>
                       </tr>                          
                     </tbody>
                   </table>
