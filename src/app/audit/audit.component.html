@@ -276,49 +276,14 @@
                   <table class="table table-filter mb-0">
                     <thead>
                       <tr>
-                        <th>
-                          <span><i class="fa fa-caret-right"></i> Pipeline / Service</span>
-                        </th>
-                        <th>
-                          <span>Application</span>
-                        </th>
-                        <th>
-                          <span>Start Time</span>
-                        </th>
-                        <th>
-                          <span>End Time</span>
-                        </th>
-                        <th>
-                          <span>Status</span>
-                        </th>
-                        <th>
-                          <span>Triggered By</span>
-                        </th>
-                        <th>
-                          <span>Approved By</span>
-                        </th>
-                        <th>
-                          <span>Date / Time</span>
-                        </th>
-                        <th>
-                          <span>Build Number</span>
-                        </th>
-                        <th>
-                          <span>Cluster</span>
+                        <th *ngFor = "let tableHeader of results[0] | keys ">
+                          <span><i class="fa fa-caret-right"></i>{{results[0][tableHeader]}}</span>
                         </th>
                       </tr>
                     </thead>
                     <tbody>                           
                       <tr *ngFor="let item of currentPage">
-                        <td><span>{{item.pipelineName}}</span></td>
-                        <td><span>{{item.applicationName}}</span></td>
-                        <td><span>{{+item.pipelineStartTime | date:'short'}}</span></td>
-                        <td><span>{{+item.pipelineEndTime | date:'short'}}</span></td>
-                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
-                        <td><span>{{item.user}}</span></td>
-                        <td><span>{{item.manualJudgementUser}}</span></td>
-                        <td><span>{{item.manualJudgementEndTime}}</span></td>
-                        <td><span>{{item.cluster}}</span></td>                            
+                        <td *ngFor = "let itenValue of item | keys "><span>{{item[itenValue]}}</span></td>
                       </tr>                          
                     </tbody>
                   </table>
