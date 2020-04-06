@@ -18,11 +18,13 @@ import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
 import { LayoutEffect } from './layout/store/layout.effects';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationOnboardingComponent } from './application-onboarding/application-onboarding.component';
 import { ApplicationComponent } from './application-onboarding/application/application.component';
 import { DataSourceComponent } from './application-onboarding/data-source/data-source.component';
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { KeysPipe } from './pipes/keys.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { CloudServicesComponent } from './application-onboarding/cloud-services/
     ApplicationOnboardingComponent,
     ApplicationComponent,
     DataSourceComponent,
-    CloudServicesComponent
+    CloudServicesComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,
@@ -42,8 +45,10 @@ import { CloudServicesComponent } from './application-onboarding/cloud-services/
     BrowserAnimationsModule,
     AuthModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     AppMaterialModule,
+    Ng2SearchPipeModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
     EffectsModule.forRoot([AuthEffect,LayoutEffect]),

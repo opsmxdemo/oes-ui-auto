@@ -1,7 +1,5 @@
 <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
   <div class="page_access text-right py-2 px-3">
-    <button class="btn btn-default" data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static"
-      data-keyboard="false">New materic template</button>
     <button class="btn btn-default ml-1">Cancel</button>
     <button class="btn btn-default ml-2" disabled="disabled">Save</button>
     <button class="btn btn-primary ml-2" disabled="disabled">Save & Finish</button>
@@ -11,20 +9,20 @@
     <div class="row">
       <div class="col-sm-3">
         <div class="sidebar-tree">
-          <ul class="tree-inset tree-active list-unstyled">
+          <ul class="tree-inset  list-unstyled {{createApplicationForm.value.name !== ''?'tree-active':''}}">
             <li class="ti-title">
-              <i class="fas fa-check-circle"></i>
+              <i class="{{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
               <span>Application Details</span>
             </li>
             <li class="ti-item">
-              <i class="fas fa-check-circle"></i>
+              <i class="{{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
               <span>Application Name :</span>
-              <strong>Multiclouddemo</strong>
+              <strong>{{createApplicationForm.value.name}}</strong>
             </li>
             <li class="ti-item">
-              <i class="fas fa-check-circle"></i>
+              <i class="{{createApplicationForm.value.desc !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
               <span>Description :</span>
-              <strong>kubernetes cloud on spinnaker on spinnaker</strong>
+              <strong>{{createApplicationForm.value.desc}}</strong>
             </li>
           </ul>
           <!-- /.tree-inset -->
@@ -50,9 +48,9 @@
             </li>
           </ul>
           <!-- /.tree-inset -->
-          <ul class="tree-inset list-unstyled">
+          <ul class="tree-inset tree-active list-unstyled">
             <li class="ti-title">
-              <i class="far fa-dot-circle"></i>
+              <i class="far fa-check-circle"></i>
               <span>Service 2</span>
             </li>
             <li class="ti-item">
@@ -66,6 +64,20 @@
             <li class="ti-item">
               <i class="far fa-dot-circle"></i>
               <span>Metrics Template:</span>
+            </li>
+          </ul>
+          <!-- /.tree-inset -->
+          <ul class="tree-inset list-unstyled tree-active"
+            *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
+            <li class="ti-title">
+              <i class="fas fa-check-circle"></i>
+              <span>Group Permissions Details</span>
+            </li>
+            <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
+              <i class="{{group.permission !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+              <span>{{group.userGroup}} :</span>
+              <strong
+                *ngIf="group.permission !== ''? true:false">{{group.permission == 1?'Read Only':'Read & Write'}}</strong>
             </li>
           </ul>
           <!-- /.tree-inset -->
@@ -84,16 +96,25 @@
         <div class="p-3">
           <div class="row">
             <div class="col-6">
-              <div class="form-group">
-                <label>Application Name</label>
-                <input type="text" class="form-control">
-              </div>
-              <!-- /.form-group -->
-              <div class="form-group">
-                <label>Application Description</label>
-                <textarea class="form-control" rows="3"></textarea>
-              </div>
-              <!-- /.form-group -->
+              <form [formGroup]="createApplicationForm">
+                <div class="form-group">
+                  <label>Application Name</label>
+                  <input type="text" class="form-control" formControlName="name">
+                  <span *ngIf="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched"
+                    class="help-block">
+                    <span *ngIf="createApplicationForm.get('name').errors['required']">Application Name is
+                      required</span>
+                    <span *ngIf="createApplicationForm.get('name').errors['nameMatches']">Application
+                      exists with same name. Please choose a unique application name</span>
+                  </span>
+                </div>
+                <!-- /.form-group -->
+                <div class="form-group">
+                  <label>Application Description</label>
+                  <textarea class="form-control" rows="3" formControlName="desc"></textarea>
+                </div>
+                <!-- /.form-group -->
+              </form>
             </div>
             <!-- /.col-6 -->
 
@@ -192,7 +213,47 @@
 
           </div>
           <!-- /.row -->
+        </div>
 
+        <div class="row">
+          <div class="col-md-12">
+            <form [formGroup]="groupPermissionForm">
+              <div class="col-10">
+                <hr class="ml-0 mt-3 mb-3" />
+              </div>
+              <div class="col-md-12" formArrayName="userGroups">
+                <div class="row"
+                  *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
+                  <div class="col-md-12" [formGroupName]="i">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <input type="text" class="form-control" formControlName="userGroup"
+                          style="border: none;background-color: transparent;">
+                      </div>
+                      <div class="col-md-2">
+                        <select class="form-control" formControlName="permission">
+                          <option value="1">Read Only</option>
+                          <option value="2">Read & Write</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2">
+                        <button mat-icon-button class="formarray_btn" (click)="removeGroup(i)">
+                          <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                        <button mat-icon-button *ngIf="groupPermissionForm.get('userGroups')['controls'].length === i+1 ? true : false" class="formarray_btn" (click)="addGroup()">
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <br>
+                  </div>
+                </div>
+              </div>
+              <div class="col-10">
+                <hr class="ml-0 mt-3 mb-3" />
+              </div>
+            </form>
+          </div>
         </div>
 
         <div class="p-3 bottom-strp-cover gray-strip text-right">
