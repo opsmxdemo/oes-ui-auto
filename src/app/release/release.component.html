@@ -1,7 +1,7 @@
 
       <div class="rightBox position-sticky">
         <div class="rightBox_header d-flex align-items-center">
-          <h3>{{receivedParentMessage}}</h3>
+          <h3>{{application}}</h3>
           <div class="btns_icon d-flex ml-auto">
             <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
             <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
@@ -18,7 +18,7 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <label>Source :</label> docker.io/opsmx11
+                  <label>Source :</label> {{newReleaseData.source}}
                 </div>
               </div>
               <table class="table table-pet-service text-center mb-0">
@@ -29,9 +29,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr >
-                      <td>test service</td>
-                      <td>ildf8493:89</td>
+                    <tr *ngFor="let newRelease of newReleaseData.services;let i= index">
+                      <td>	<div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="{{newRelease.serviceName}}">
+                          <label class="custom-control-label" for="{{newRelease.serviceName}}">{{newRelease.serviceName}}</label>
+                        </div></td>
+                      <td>
+                          <select class="form-control">
+                            <option *ngFor="let containers of newRelease.containerTags" [value]="containers.containerTag">{{containers.containerTag}}</option>
+                          </select>
+                      </td>
                     </tr>
       
                   </tbody>

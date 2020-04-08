@@ -6,6 +6,7 @@ import { throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
+    public childApplication: string;
     // tslint:disable-next-line: no-shadowed-variable
     constructor(private httpClient: HttpClient) { }
     getApplicationList() {
@@ -16,6 +17,16 @@ export class ApplicationService {
     getServiceList(applicationName) {
         return this.httpClient.get('http://137.117.94.95:8085/oes/'+applicationName+'/services').pipe(
             //catchError(this.handleError)
+        );
+    }
+    getReleaseList() {
+        return this.httpClient.get('../../assets/data/releaseList.json').pipe(
+            catchError(this.handleError)
+        );
+    }
+    doRelease() {
+        return this.httpClient.get('../../assets/data/newRelease.json').pipe(
+            catchError(this.handleError)
         );
     }
     handleError(error) {

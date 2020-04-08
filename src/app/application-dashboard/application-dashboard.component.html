@@ -60,9 +60,10 @@
                                       <div class="data_list_body d-flex"  >
                                         <div class="data_list_values text-center">
                                           <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around">
-                                            <li class="active" *ngFor="let applicationInfo of application.appInfo; let i=index">
+                                            <li *ngFor="let applicationInfo of application.appInfo; let i=index">
                                               <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
                                               <div class="dl_value_text">{{applicationInfo.applicationInfolabel}}</div>
+                                              <i class="fa fa-angle-up"></i>
                                             </li>
                                             <!-- <li>
                                               <div class="dl_value_count">15</div>

@@ -15,7 +15,8 @@ export class ApplicationDashboardComponent implements OnInit {
   public serviceData: any[] = [];
   public selectedApplicationName: string;
   showReleaseTable = false;
-  //public messageToRelease: string;
+  // public messageToRelease: string;
+  public message: string;
 
   constructor(private applicationService: ApplicationService) { }
 
@@ -36,7 +37,8 @@ export class ApplicationDashboardComponent implements OnInit {
     });
   }
   public getReleases(application: string, index: number, event: Event) {
-    //this.messageToRelease = application;
+    this.message = application;
+    this.applicationService.childApplication = application;
     this.showReleaseTable = true;
     console.log(this.showReleaseTable);
     event.stopPropagation();

@@ -1,0 +1,51 @@
+{
+    "source": "docker.io/opsmx11",
+    "services": [{
+    "serviceName": "clouddriver",
+    "containerTags": 
+      [{
+        "containerTag": "6.4.0",
+        "containerId": "7b9bf9a0192se"
+      },
+      {
+        "containerTag": "5.7.8",
+        "containerId": "e00754f6e0c5"
+      },
+      {
+        "containerTag": "5.1.6",
+        "containerId": "80ddb22e4c14"
+      }]
+  },
+  {
+    "serviceName": "clouddriver2",
+    "containerTags": 
+      [{
+        "containerTag": "6.6.0",
+        "containerId": "7b9bf9a0192se"
+      },
+      {
+        "containerTag": "5.5.8",
+        "containerId": "e00754f6e0c5"
+      },
+      {
+        "containerTag": "5.5.6",
+        "containerId": "80ddb22e4c14"
+      }]
+  },
+  {
+    "serviceName": "clouddriver3",
+    "containerTags": 
+      [{
+        "containerTag": "2.6.0",
+        "containerId": "7b9bf9a0192se"
+      },
+      {
+        "containerTag": "2.5.8",
+        "containerId": "e00754f6e0c5"
+      },
+      {
+        "containerTag": "2.5.6",
+        "containerId": "80ddb22e4c14"
+      }]
+  }]
+      }
