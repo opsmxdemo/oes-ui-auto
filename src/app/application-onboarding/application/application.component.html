@@ -7,6 +7,9 @@
   <!-- /.page_access ml-auto -->
   <div class="setup-content">
     <div class="row">
+
+      <!-- ###################### Tree Section Starts #####################################-->
+
       <div class="col-sm-3">
         <div class="sidebar-tree">
           <ul class="tree-inset  list-unstyled {{createApplicationForm.value.name !== ''?'tree-active':''}}">
@@ -24,66 +27,53 @@
               <span>Description :</span>
               <strong>{{createApplicationForm.value.desc}}</strong>
             </li>
+            <br>
+            <br>
           </ul>
           <!-- /.tree-inset -->
-          <ul class="tree-inset tree-active list-unstyled">
+          <ul class="tree-inset list-unstyled {{serviceArr.serviceName !== '' ? 'tree-active' : ''}}" *ngFor="let serviceArr of servicesForm.value.services; let i = index">
             <li class="ti-title">
-              <i class="fas fa-check-circle"></i>
-              <span>Service 1</span>
+              <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+              <span>Service {{i+1}}</span>
             </li>
-            <li class="ti-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Service Name:</span>
-              <strong>Rest Service</strong>
+            <br>
+            <li class="ti-subtitle">
+              <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+              <span>Service name</span>
+              <strong>{{serviceArr.serviceName}}</strong>
             </li>
-            <li class="ti-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Log Template:</span>
-              <strong>MyFirst_Log_Temp</strong>
+           
+              <li class="ti-subitemtitle" *ngFor = "let pipeline of serviceArr.pipeline">
+                <i class="{{pipeline.pipelineType !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span>Service Pipeline</span>
+                <strong>{{pipeline.pipelineType}}</strong>
+              </li>
+            
+            <li class="ti-item" *ngFor = "let pipelineData of serviceArr.pipeline[0].pipelineParameter">
+                <i class="{{pipelineData.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span>{{pipelineData.label}}:</span>
+                <strong>{{pipelineData.value}}</strong>
             </li>
-            <li class="ti-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Metric Template :</span>
-              <strong>datadog_metrictempQATest</strong>
-            </li>
+            <br>
+            <br>
           </ul>
           <!-- /.tree-inset -->
-          <ul class="tree-inset tree-active list-unstyled">
-            <li class="ti-title">
-              <i class="far fa-check-circle"></i>
-              <span>Service 2</span>
-            </li>
-            <li class="ti-item">
-              <i class="far fa-dot-circle"></i>
-              <span>Service Name:</span>
-            </li>
-            <li class="ti-item">
-              <i class="far fa-dot-circle"></i>
-              <span>Log Template</span>
-            </li>
-            <li class="ti-item">
-              <i class="far fa-dot-circle"></i>
-              <span>Metrics Template:</span>
-            </li>
-          </ul>
-          <!-- /.tree-inset -->
-          <ul class="tree-inset list-unstyled tree-active"
+          <ul class="tree-inset list-unstyled {{groupPermissionForm.value.userGroups[0].userGroup !== '' ? 'tree-active' : ''}}"
             *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
             <li class="ti-title">
-              <i class="fas fa-check-circle"></i>
+              <i class="{{groupPermissionForm.value.userGroups[0].userGroup !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
               <span>Group Permissions Details</span>
             </li>
             <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
               <i class="{{group.permission !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
               <span>{{group.userGroup}} :</span>
-              <strong
-                *ngIf="group.permission !== ''? true:false">{{group.permission == 1?'Read Only':'Read & Write'}}</strong>
+              <strong *ngIf="group.permission !== ''? true:false">{{group.permission}}</strong>
             </li>
           </ul>
           <!-- /.tree-inset -->
           <ul class="tree-inset tree-finished list-unstyled">
             <li class="ti-title">
-              <i class="fas fa-circle"></i>
+              <i class="{{groupPermissionForm.valid && createApplicationForm.valid && servicesForm.valid ? 'far fa-circle' : 'fas fa-circle'}}fas fa-circle"></i>
               <span>Finish Application</span>
             </li>
           </ul>
@@ -92,9 +82,15 @@
         <!-- /.sidebar-tree -->
       </div>
       <!-- /.col-sm-3 -->
+
+      <!-- ###################### Tree Section Starts #####################################-->
+
       <div class="col-sm-9">
         <div class="p-3">
           <div class="row">
+
+            <!-- ###################### Application Section Starts #####################################-->
+
             <div class="col-6">
               <form [formGroup]="createApplicationForm">
                 <div class="form-group">
@@ -118,55 +114,142 @@
             </div>
             <!-- /.col-6 -->
 
+            <!-- ###################### Application Section Ends #####################################-->
+
+            <!-- ###################### Services Section Starts #####################################-->
+
             <div class="col-10">
               <hr class="ml-0 mt-3 mb-3" />
             </div>
             <!-- /.col-8 -->
             <div class="col-6">
-              <div class="form-group text-muted">
-                <label>Select Service <a href="#" class="btn-link">(Add New Service)</a></label>
-                <div class="d-flex mb-3 mr-4 align-items-center">
-                  <select class="form-control">
-                    <option>Rest Service</option>
-                  </select>
-                  <a href="#" class="text-muted ml-3"><i class="fas fa-pencil-alt"></i></a>
-                </div>
-                <!-- /.d-flex -->
-
-                <div class="form-group pl-4 text-muted">
-                  <label>Select Log Template <a href="#" class="btn-link">(Add New Log Template)</a></label>
-                  <div class="d-flex align-items-center">
-                    <select class="form-control">
-                      <option>MyFirst_LogTemp</option>
-                    </select>
-                    <a href="#" class="text-muted ml-3"><i class="fas fa-pencil-alt"></i></a>
-                  </div>
+              <form [formGroup]="servicesForm">
+                <div class="form-group service_section">
+                  <label>Services <a href="#" class="btn-link">(Add New Service)</a></label>
+                 
                   <!-- /.d-flex -->
-                </div>
 
-                <div class="form-group pl-4 text-muted">
-                  <label>Select Metric Template <a href="#" class="btn-link">(Add New Metric Template)</a></label>
-                  <div class="d-flex align-items-center">
-                    <select class="form-control">
-                      <option>datadog_metrictempQATest</option>
-                    </select>
-                    <a href="#" class="text-muted ml-3"><i class="fas fa-pencil-alt"></i></a>
+                  <div class="col-12" formArrayName="services">
+                    <div class="row" *ngFor="let serviceArr of servicesForm.get('services')['controls']; let i=index">
+                      <div class="col-12 " [formGroupName]="i">
+                        <div class="col-12 ">
+                          <hr class="ml-0 mt-3 mb-3" />
+                        </div>
+                        <div class="form-group pl-4 text-muted">
+                          <label>Service Name</label>
+                          <div class="d-flex mb-3 mr-4 align-items-center">
+                            <input type="text" class="form-control" formControlName="serviceName">
+                            <a class="text-muted ml-3 formarray_btn" (click)="addService()"><i class="fas fa-plus"></i></a>
+                          </div>
+                          <!-- /.d-flex -->
+                        </div>
+
+                        <div class="col-12 " formArrayName="pipeline">
+                          <div class="row"
+                            *ngFor="let pipelineArr of serviceArr.get('pipeline')['controls'];let j=index">
+                            <div class="col-12 " [formGroupName]="j">
+                              <div class="form-group pl-5 text-muted">
+                                <label>Select Service Pipeline</label>
+                                <div class="d-flex mb-3 mr-5 align-items-center">
+                                  <select class="form-control" formControlName="pipelineType" (change)="onPipelineSelect(i,j)">
+                                    <option *ngFor="let pipelineData of pipelineExists" value="{{pipelineData.value}}">{{pipelineData.value}}</option>
+                                  </select>
+                                  <a class="text-muted ml-3 formarray_btn"><i class="fas fa-plus"></i></a>
+                                </div>
+                                <!-- /.d-flex -->
+                              </div>
+                              <div class="col-12 " formArrayName="pipelineParameter">
+                                <div class="row" *ngFor="let pipelineParameterArr of pipelineArr.get('pipelineParameter')['controls'];let k=index">
+                                  <div class="col-12 " [formGroupName]="k">
+                                    <div class="form-group pl-6 text-muted">
+                                      <label>{{pipelineParameterArr.get('label').value}}</label>
+                                      <div class="d-flex mb-3 mr-6 align-items-center" *ngIf="pipelineParameterArr.get('label').value !== 'Environment'">
+                                        <input type="text" class="form-control" formControlName="value">
+                                      </div>
+                                      <div class="d-flex mb-3 mr-6 align-items-center" *ngIf="pipelineParameterArr.get('label').value === 'Environment'">
+                                        <select class="form-control" formControlName="value">
+                                          <option *ngFor="let environmentData of environmentExists" value="{{environmentData.value}}">{{environmentData.value}}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <!-- /.d-flex -->
                 </div>
-              </div>
+              </form>
             </div>
             <!-- /.col-6 -->
 
+            <!-- ###################### Services Section Ends #####################################-->
+
+            <!-- ###################### Group Permission Section Starts ###########################-->
 
             <div class="col-10">
               <hr class="ml-0 mt-3 mb-3" />
             </div>
             <!-- /.col-8 -->
             <div class="col-lg-8 col-12 col-xl-6">
-              <div class="form-group">
-                <label>Group Permissions <a class="btn-link" href="#">(Add New Group)</a></label>
-                <table class="table table-outline">
+              <div class="form-group group_permission">
+                <label>Group Permissions <a class="btn-link" (click)="addGroup()">(Add New Group)</a></label>
+                <div class="row" *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
+                  <div class="col-12">
+                    <form [formGroup]="groupPermissionForm">
+                      <div class="col-12">
+                        <hr class="ml-0 mt-3 mb-3" />
+                      </div>
+                      <div class="col-12" formArrayName="userGroups">
+                        <div class="row">
+                          <div class="col-12" class="table table-outline permission_section_heading">
+                            <div class="row">
+                              <div class="col-4"><strong>Group</strong></div>
+                              <div class="col-6"><strong>Permissions</strong></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <hr class="ml-0 mt-3 mb-3" />
+                          </div>
+                        </div>
+                        <div class="row"
+                          *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
+                          <div class="col-md-12 permission_Section_content" [formGroupName]="i">
+                            <div class="row">
+                              <div class="col-md-4">
+                                <input type="text" class="form-control" formControlName="userGroup">
+                              </div>
+                              <div class="col-md-5">
+                                <select class="form-control" formControlName="permission">
+                                  <option value="Read Only">Read Only</option>
+                                  <option value="Read & Write">Read & Write</option>
+                                  <option value="Read,Write & Execute">Read,Write & Execute</option>
+                                </select>
+                              </div>
+                              <div class="col-md-3">
+                                <button mat-icon-button class="formarray_btn" (click)="removeGroup(i)">
+                                  <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <button mat-icon-button
+                                  *ngIf="groupPermissionForm.get('userGroups')['controls'].length === i+1 ? true : false"
+                                  class="formarray_btn" (click)="addGroup()">
+                                  <i class="fas fa-plus" aria-hidden="true"></i>
+                                </button>
+                              </div>
+                            </div>
+                            <br>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- <table class="table table-outline">
                   <thead>
                     <tr>
                       <th>Group</th>
@@ -205,56 +288,19 @@
                       </td>
                     </tr>
                   </tbody>
-                </table>
+                </table> -->
               </div>
               <!-- /.form-group -->
             </div>
             <!-- /.col-6 -->
 
+            <!-- ###################### Group Permission Section Ends ###########################-->
+
           </div>
           <!-- /.row -->
         </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <form [formGroup]="groupPermissionForm">
-              <div class="col-10">
-                <hr class="ml-0 mt-3 mb-3" />
-              </div>
-              <div class="col-md-12" formArrayName="userGroups">
-                <div class="row"
-                  *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
-                  <div class="col-md-12" [formGroupName]="i">
-                    <div class="row">
-                      <div class="col-md-2">
-                        <input type="text" class="form-control" formControlName="userGroup"
-                          style="border: none;background-color: transparent;">
-                      </div>
-                      <div class="col-md-2">
-                        <select class="form-control" formControlName="permission">
-                          <option value="1">Read Only</option>
-                          <option value="2">Read & Write</option>
-                        </select>
-                      </div>
-                      <div class="col-md-2">
-                        <button mat-icon-button class="formarray_btn" (click)="removeGroup(i)">
-                          <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                        <button mat-icon-button *ngIf="groupPermissionForm.get('userGroups')['controls'].length === i+1 ? true : false" class="formarray_btn" (click)="addGroup()">
-                          <i class="fa fa-plus" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                </div>
-              </div>
-              <div class="col-10">
-                <hr class="ml-0 mt-3 mb-3" />
-              </div>
-            </form>
-          </div>
-        </div>
+
 
         <div class="p-3 bottom-strp-cover gray-strip text-right">
           <button class="btn btn-default">Cancel</button>

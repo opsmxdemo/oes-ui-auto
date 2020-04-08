@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
 import * as AuthAction from './auth/store/auth.actions';
 import * as LayoutAction from './layout/store/layout.actions';
+import * as AppOnboardingAction from './application-onboarding/store/onBoarding.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 
 @Component({
@@ -24,6 +25,9 @@ export class AppComponent implements OnInit {
 
     //Dispatching action for autoLogin functionality
     this.store.dispatch(new AuthAction.AutoLoginStart());
+
+    //Dispatching action for pipelineData functionality
+    this.store.dispatch(AppOnboardingAction.loadApp());
 
     //fetching data from AuthState
     this.store.select('auth').subscribe(

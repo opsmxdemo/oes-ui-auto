@@ -25,6 +25,7 @@ import { DataSourceComponent } from './application-onboarding/data-source/data-s
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { KeysPipe } from './pipes/keys.pipe';
+import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBoarding.effects';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,7 @@ import { KeysPipe } from './pipes/keys.pipe';
     Ng2SearchPipeModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
-    EffectsModule.forRoot([AuthEffect,LayoutEffect]),
+    EffectsModule.forRoot([AuthEffect,LayoutEffect,ApplicationOnBoardingEffect]),
     //please keep below import always in last position
     WildcardRoutingModule
   ],
