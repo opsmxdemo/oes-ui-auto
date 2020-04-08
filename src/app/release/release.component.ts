@@ -9,7 +9,7 @@ import {ApplicationService} from '../services/application.service';
 export class ReleaseComponent implements OnInit {
   public releaseData: any[] = [];
   public newReleaseData: any[] = [];
-  private application: string;
+  public application: string;
   showRelease = false;
 
   @Input() childMessage: string;
