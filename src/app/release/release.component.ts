@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {ReleaseService} from '../services/release.service';
-import { isBoolean } from 'util';
+import {ApplicationService} from '../services/application.service';
 
 @Component({
   selector: 'app-release',
@@ -9,18 +8,27 @@ import { isBoolean } from 'util';
 })
 export class ReleaseComponent implements OnInit {
   public releaseData: any[] = [];
+  public newReleaseData: any[] = [];
+  private application: string;
   showRelease = false;
- // @Input() receivedParentMessage: string;
-  constructor(private releaseService: ReleaseService) { }
+
+  @Input() childMessage: string;
+
+  constructor(private applicationService: ApplicationService) { }
 
   ngOnInit(): void {
-    this.releaseService.getReleaseList().subscribe((response: any) => {
+    this.applicationService.getReleaseList().subscribe((response: any) => {
       console.log(response);
       this.releaseData = response;
     });
+    this.application = this.applicationService.childApplication;
   }
   public newReleaseMethod() {
     this.showRelease = true;
+    this.applicationService.doRelease().subscribe((response: any) => {
+      console.log(response);
+      this.newReleaseData = response;
+    });
   }
   public cancelRelease(){
     this.showRelease = false;
