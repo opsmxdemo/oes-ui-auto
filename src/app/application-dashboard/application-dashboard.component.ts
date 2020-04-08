@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
+import { ReleaseComponent } from '../release/release.component';
 
 @Component({
   selector: 'app-application-dashboard',
@@ -13,6 +14,9 @@ export class ApplicationDashboardComponent implements OnInit {
   public selectedIndex: number = 0;
   public serviceData: any[] = [];
   public selectedApplicationName: string;
+  showReleaseTable = false;
+  // public messageToRelease: string;
+  public message: string;
 
   constructor(private applicationService: ApplicationService) { }
 
@@ -26,9 +30,17 @@ export class ApplicationDashboardComponent implements OnInit {
   public selectedApplication(index: number, app: any) {
     this.selectedIndex = index;
     this.selectedApplicationName = app.name;
+    this.showReleaseTable = false;
     this.applicationService.getServiceList(app.name).subscribe((serviceDataList: any) => {
       console.log(serviceDataList);
       this.serviceData = serviceDataList;
     });
+  }
+  public getReleases(application: string, index: number, event: Event) {
+    this.message = application;
+    this.applicationService.childApplication = application;
+    this.showReleaseTable = true;
+    console.log(this.showReleaseTable);
+    event.stopPropagation();
   }
 }
