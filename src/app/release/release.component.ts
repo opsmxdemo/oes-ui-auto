@@ -8,7 +8,7 @@ import {ApplicationService} from '../services/application.service';
 })
 export class ReleaseComponent implements OnInit {
   public releaseData: any[] = [];
-  public newReleaseData: any[] = [];
+  public newReleaseData: any = null;
   public application: string;
   showRelease = false;
 
