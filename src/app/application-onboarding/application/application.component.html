@@ -139,7 +139,8 @@
                           <label>Service Name</label>
                           <div class="d-flex mb-3 mr-4 align-items-center">
                             <input type="text" class="form-control" formControlName="serviceName">
-                            <a class="text-muted ml-3 formarray_btn" (click)="addService()"><i class="fas fa-plus"></i></a>
+                            <a class="text-muted ml-3 formarray_btn" (click)="deleteService(i)" *ngIf ="servicesForm.get('services')['controls'].length > 1 ? true : false"><i class="fas fa-trash"></i></a>
+                            <a class="text-muted ml-3 formarray_btn" (click)="addService()" *ngIf ="servicesForm.get('services')['controls'].length === i+1 ? true : false"><i class="fas fa-plus"></i></a>
                           </div>
                           <!-- /.d-flex -->
                         </div>

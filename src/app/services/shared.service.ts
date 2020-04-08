@@ -15,6 +15,6 @@ export class SharedService {
 
     //Below function is use to fetch pipeline parameters and put it in serviceForm .i.e, ApplicationComponent
     getPipelineParameters() {
-        return this.httpClient.get('http://localhost:3000/pipelineParameter');
+        return this.httpClient.get('../../assets/data/applicationOnboarding.json');
     }
 }

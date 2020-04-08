@@ -144,4 +144,9 @@ export class ApplicationComponent implements OnInit {
     );
   }
 
+  //Below function is use to delete existing service fron Service Section
+  deleteService(index){
+    (<FormArray>this.servicesForm.get('services')).removeAt(index);
+  }
+
 }

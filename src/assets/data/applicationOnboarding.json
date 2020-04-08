@@ -1,0 +1,39 @@
+{
+    "templateData":[
+    {
+        "label":"Pipeline Name",
+        "value":"DEV_Demo pipeline"
+    },
+    {
+        "label":"Pipeline ID",
+        "value":"IPSE234QA"
+    },
+    {
+        "label":"Pipeline Parameter",
+        "value":"Any string"
+    },
+    {
+        "label":"Environment",
+        "value":""
+    }
+],
+
+    "pipelineExist":[
+        {
+            "value":"Pipeline-template1",
+            "id":1
+        },
+        {
+            "value":"Pipeline-template2",
+            "id":2
+        },
+        {
+            "value":"Pipeline-template3",
+            "id":3
+        },
+        {
+            "value":"Pipeline-template4",
+            "id":4
+        }
+    ]
+}

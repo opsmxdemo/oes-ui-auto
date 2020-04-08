@@ -46,7 +46,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadApp),
             switchMap(() => {
-                return this.http.get<Pipeline>('http://localhost:3000/pipeline').pipe(
+                return this.http.get<Pipeline>('../../../assets/data/applicationOnboarding.json').pipe(
                     map(resdata => {
                         return OnboardingAction.fetchPipeline({pipelineData:resdata});
                     }),
