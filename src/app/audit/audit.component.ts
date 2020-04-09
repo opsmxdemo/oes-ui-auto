@@ -10,7 +10,8 @@ export class AuditComponent implements OnInit {
 
   constructor(public auditService: AuditService) { }
 
-  parameters: any;
+  authResponse : any = null;
+  token: any = null;
   allPipelines: any = null; //this is use to stroe response in Object format.
   results = [''];           //this contain result array fetched from response.
   page = {                  //this is use to support pagination in audit page.
@@ -23,22 +24,44 @@ export class AuditComponent implements OnInit {
   perPageData: number = 20; //this is use to populate value in perPage dropdown exist in pagination.
   currentPage = [''];       //this use to store array of results exist in current page.
   searchData: any = null;   // this is use to fetch value from search field.
-
+  groupCountList : any = null;
+  
   ngOnInit(): void {
-    this.auditService.getAllPipelines(this.parameters).subscribe(
+    this.auditService.autheticate().subscribe(
       (response) => {
-        this.allPipelines = response;
-        this.results = this.allPipelines.results;
-        this.results.forEach((element, index) => {
-          if (this.page.endPoint >= index) {
-            this.currentPage.push(element);
+        this.authResponse = response;
+        this.token = this.authResponse.authToken;
+        this.auditService.getAllPipelines(this.token).subscribe(
+          (response) => {
+            this.allPipelines = response;
+            //this.results = this.allPipelines.results;
+            this.results = this.allPipelines.results.splice(1,this.allPipelines.results.length);
+            this.results.forEach((element, index) => {
+              if (this.page.endPoint >= index) {
+                this.currentPage.push(element);
+              }
+            });
+          },
+          (error) => {
+            console.log(error);
           }
-        });
+        )
       },
       (error) => {
         console.log(error);
       }
     )
+    
+    this.auditService.getPipelineGroupCounts().subscribe(
+      (response) => {
+        this.groupCountList = response;        
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+    
+    
 
   }
 
