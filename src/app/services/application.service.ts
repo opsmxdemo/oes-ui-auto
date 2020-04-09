@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import {environment} from '../../environments/environment.prod';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
@@ -10,22 +11,22 @@ export class ApplicationService {
     // tslint:disable-next-line: no-shadowed-variable
     constructor(private httpClient: HttpClient) { }
     getApplicationList() {
-        return this.httpClient.get('http://137.117.94.95:8085/oes/applications').pipe(
+        return this.httpClient.get(environment.oesUrl + '/oes/applications').pipe(
             catchError(this.handleError)
         );
     }
     getServiceList(applicationName) {
-        return this.httpClient.get('http://137.117.94.95:8085/oes/'+applicationName+'/services').pipe(
-            //catchError(this.handleError)
-        );
-    }
-    getReleaseList() {
-        return this.httpClient.get('../../assets/data/releaseList.json').pipe(
+        return this.httpClient.get(environment.oesUrl + '/oes/applications/' + applicationName + '/services').pipe(
             catchError(this.handleError)
         );
     }
-    doRelease() {
-        return this.httpClient.get('../../assets/data/newRelease.json').pipe(
+    getReleaseList(applicationName) {
+        return this.httpClient.get(environment.oesUrl + '/oes/applications/' + applicationName + '/releases').pipe(
+            catchError(this.handleError)
+        );
+    }
+    doNewRelease(applicationName) {
+        return this.httpClient.get(environment.oesUrl + '/oes/applications/' + applicationName + '/releases/newRelease').pipe(
             catchError(this.handleError)
         );
     }

@@ -39,54 +39,39 @@
                                           </div>
                                           <div class="status"><img src="../../../assets/status_icon.png" class="img-fluid" alt="status" /></div>
                                           <button class="btn"><img src="../../../assets/thumb_pin.png" class="img-fluid" alt="pin" /></button>
-                                          <div class="form-group mb-2">
-                                              <div class="dropdown dropdown-icon-remove">
-                                                <button class="btn btn-default" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                  <i class="fa fa-ellipsis-h"></i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                  <div class="custom-control custom-checkbox" *ngFor="let menu of application.appMenu; let i=index">
-                                                    <label class="custom-control-labe" (click)="getReleases(application.name,i,$event)" for="triggered_by">{{menu}}</label>
-                                                  </div>
-                                                  
-                                                  <!-- /.dropdown-footer -->
-                                                </div>
-                                              </div>
+                                          <div class="dropdown dropdown-icon-remove">
+                                            <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                              <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" >
+                                              <a *ngFor="let menu of application.appMenu; let i=index" class="dropdown-item showElementHover"  (click)="getReleases(application.name,i,$event)" >{{menu}}</a>
+                                              <!-- <a class="dropdown-item" href="#">Services</a>
+                                              <a class="dropdown-item" href="#">Edit</a>
+                                              <div class="dropdown-divider"></div>
+                                              <a class="dropdown-item" href="#">Delete</a> -->
                                             </div>
+                                          </div>                
                                         </div>
                                         <!-- /.data_list_actions -->
                                       </div>
                                       <!-- /.data_list_header -->
                                       <div class="data_list_body d-flex"  >
                                         <div class="data_list_values text-center">
-                                          <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around">
-                                            <li *ngFor="let applicationInfo of application.appInfo; let i=index">
+                                          <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around" >
+                                            <li *ngFor="let applicationInfo of application.appInfo; let i=index" [ngClass]= "{'active':selectedIndex === i}">
                                               <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
                                               <div class="dl_value_text">{{applicationInfo.applicationInfolabel}}</div>
-                                              <i class="fa fa-angle-up"></i>
+                                              <span *ngIf="selectedIndex === i"><i  class="fa fa-angle-up"></i></span>
                                             </li>
-                                            <!-- <li>
-                                              <div class="dl_value_count">15</div>
-                                              <div class="dl_value_text">Test Verification</div>
-                                            </li>
-                                            <li>
-                                              <div class="dl_value_count">10</div>
-                                              <div class="dl_value_text">Deployment Verification</div>
-                                            </li>
-                                            <li class="active">
-                                              <div class="dl_value_count">10</div>
-                                              <div class="dl_value_text">Production Monitoring</div>
-                                              <i class="fa fa-angle-up"></i>
-                                            </li> -->
                                           </ul>
                                         </div>
                                         <!-- /.data_list_values -->
-                                        <div class="data_list_score">
+                                        <!-- <div class="data_list_score">
                                           <div class="graph mt-2 text-center">
                                             <img src="../../../assets/graph_lines.png" class="img-fluid" alt="graph lines" />
-                                          </div>
+                                          </div> -->
                                           <!-- /.graph -->
-                                        </div>
+                                        <!-- </div> -->
                                         <!-- /.data_list_score -->
                                       </div>
                                       <!-- /.data_list_body -->
