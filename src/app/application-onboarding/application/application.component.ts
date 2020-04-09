@@ -6,6 +6,7 @@ import { PipelineTemplate } from 'src/app/models/applicationOnboarding/pipelineT
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
+import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 
 @Component({
   selector: 'app-application',
@@ -22,7 +23,8 @@ export class ApplicationComponent implements OnInit {
   environmentExists=[ {id:1,value:'Stage'},                       // For populating the Environment dropdown exist in each pipeline
                       {id:2,value:'Prod'},
                       {id:3,value:'Dev'}
-                    ]
+                    ];
+  mainForm:CreateApplication=null;                                // It contain data of all 3 forms which send to backend after successful submission.
 
   constructor(public sharedService: SharedService,
               public store:Store<fromApp.AppState>) { }
@@ -32,17 +34,12 @@ export class ApplicationComponent implements OnInit {
     // defining reactive form approach for createApplicationForm
     this.createApplicationForm = new FormGroup({
       name: new FormControl('', Validators.required, this.valitateApplicationName.bind(this)),
-      desc: new FormControl(''),
+      description: new FormControl('')
     });
 
     // defining reactive form for Permission Section
     this.groupPermissionForm = new FormGroup({
-      userGroups: new FormArray([
-        new FormGroup({
-          userGroup: new FormControl('', Validators.required),
-          permission: new FormControl('', Validators.required),
-        })
-      ])
+      userGroups: new FormArray([])
     });
 
     // defining reactive form for Services Section
@@ -50,6 +47,7 @@ export class ApplicationComponent implements OnInit {
       services: new FormArray([
         new FormGroup({
           serviceName: new FormControl('', Validators.required),
+          environment: new FormControl(''),
           pipeline: new FormArray([
             new FormGroup({
               pipelineType: new FormControl('', Validators.required),
@@ -93,7 +91,7 @@ export class ApplicationComponent implements OnInit {
   addGroup() {
     (<FormArray>this.groupPermissionForm.get('userGroups')).push(
       new FormGroup({
-        userGroup: new FormControl('', [Validators.required]),
+        userGroup: new FormControl('', Validators.required),
         permission: new FormControl('', Validators.required),
       })
     );
@@ -118,7 +116,6 @@ export class ApplicationComponent implements OnInit {
           this.fetchedPipelineTemplateParameters.forEach(element => {
             mainData.push(
               new FormGroup({
-                id: new FormControl(element.id, Validators.required),
                 value: new FormControl(element.value, Validators.required),
                 label: new FormControl(element.label, Validators.required)
               })
@@ -134,6 +131,7 @@ export class ApplicationComponent implements OnInit {
     (<FormArray>this.servicesForm.get('services')).push(
       new FormGroup({
         serviceName: new FormControl('', Validators.required),
+        environment: new FormControl(''),
         pipeline: new FormArray([
           new FormGroup({
             pipelineType: new FormControl('', Validators.required),
@@ -147,6 +145,25 @@ export class ApplicationComponent implements OnInit {
   //Below function is use to delete existing service fron Service Section
   deleteService(index){
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
+  }
+
+  //Below function is use to submit whole form and send request to backend
+  SubmitForm(){
+    if(this.createApplicationForm.valid && this.servicesForm && this.groupPermissionForm.valid){
+      
+      // Saving all 3 forms data into one
+      this.mainForm = this.createApplicationForm.value;
+      this.mainForm.services = this.servicesForm.value.services;
+      this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
+
+     
+      console.log("mainform",JSON.stringify(this.mainForm));
+      
+    }else{
+      this.createApplicationForm.markAllAsTouched();
+      this.servicesForm.markAllAsTouched();
+      this.groupPermissionForm.markAllAsTouched();
+    }
   }
 
 }
