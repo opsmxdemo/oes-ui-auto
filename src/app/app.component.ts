@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new AuthAction.AutoLoginStart());
 
     //Dispatching action for pipelineData functionality
-    this.store.dispatch(AppOnboardingAction.loadApp());
+    //this.store.dispatch(AppOnboardingAction.loadApp());
 
     //fetching data from AuthState
     this.store.select('auth').subscribe(
