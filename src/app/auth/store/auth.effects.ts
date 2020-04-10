@@ -146,7 +146,7 @@ export class AuthEffect {
             });
             Toast.fire({
                 icon: 'success',
-                title: 'You are logedIn successfully!!'
+                title: 'You are logged in successfully!!'
             });
             this.router.navigate(['/appdashboard'])
         })
