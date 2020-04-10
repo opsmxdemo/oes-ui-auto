@@ -9,6 +9,7 @@ import * as OnboardingAction from './onBoarding.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
+import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -41,10 +42,9 @@ export class ApplicationOnBoardingEffect {
     ) { }
 
     // Below effect is use for fetch pipline dropdown data.
-    
-    authLogin = createEffect(() =>
+    onAppLoads = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadApp),
+            ofType(OnboardingAction.loadApp,OnboardingAction.enableEditMode),
             switchMap(() => {
                 return this.http.get<Pipeline>('../../../assets/data/applicationOnboarding.json').pipe(
                     map(resdata => {
@@ -58,5 +58,21 @@ export class ApplicationOnBoardingEffect {
         )
     )
     
+     // Below effect is use for fetch pipline dropdown data.
+     onEditApplication = createEffect(() =>
+     this.actions$.pipe(
+         ofType(OnboardingAction.enableEditMode),
+         switchMap(action => {
+             return this.http.get<CreateApplication>('http://localhost:3000/'+action.applicationName).pipe(
+                 map(resdata => {
+                     return OnboardingAction.fetchAppData({appData:resdata})
+                 }),
+                 catchError(errorRes => {
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
 
 }
