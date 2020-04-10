@@ -12,20 +12,18 @@ export class ReleaseComponent implements OnInit {
   public application: string;
   showRelease = false;
 
-  @Input() childMessage: string;
-
   constructor(private applicationService: ApplicationService) { }
 
   ngOnInit(): void {
-    this.applicationService.getReleaseList().subscribe((response: any) => {
+    this.application = this.applicationService.childApplication;
+    this.applicationService.getReleaseList(this.application).subscribe((response: any) => {
       console.log(response);
       this.releaseData = response;
     });
-    this.application = this.applicationService.childApplication;
   }
   public newReleaseMethod() {
     this.showRelease = true;
-    this.applicationService.doRelease().subscribe((response: any) => {
+    this.applicationService.doNewRelease(this.application).subscribe((response: any) => {
       console.log(response);
       this.newReleaseData = response;
     });

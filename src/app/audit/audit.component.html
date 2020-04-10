@@ -2,19 +2,19 @@
   <div class="page-content flex-grow-1">
       <div class="audit-info px-3 d-flex bg-white">
         <div>
-          <h4>131 <small>(100%)</small></h4>
+          <h4>{{groupCountList.allPipelines}}<small>(100%)</small></h4>
           <span class="text-muted">All Pipelines</span>
         </div>
         <div>
-          <h4>82 <small>(62%)</small></h4>
+          <h4>{{groupCountList.successPipelies}}<small>({{((groupCountList.successPipelies / groupCountList.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
           <span class="text-muted">Successful</span>
         </div>
         <div>
-          <h4>27 <small>(22%)</small></h4>
+          <h4>{{groupCountList.modifiedPipelines}}<small>({{((groupCountList.successPipelies / groupCountList.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
           <span class="text-muted">Modified</span>
         </div>
         <div>
-          <h4 class="text-danger">10 <small>(7%)</small></h4>
+          <h4 class="text-danger">{{groupCountList.failedPipelines}}<small>({{((groupCountList.failedPipelines / groupCountList.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
           <span class="text-muted">Failed</span>
         </div>
       </div>
@@ -26,7 +26,7 @@
             <div class="card">
               <div class="card-heading mb-form-db">
                 <div class="form-inline">
-                  <div class="form-group mb-2">
+                  <div class="form-group mb-2">                    
                     <div class="input-group input-group_search">
                       <div class="input-group-prepend">
                         <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -35,42 +35,12 @@
                     </div>
                   </div>
                   <div class="form-group ml-sm-3 mb-2">
-                    <div class="dropdown">
-                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select a saved Filter
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <div class="custom-control custom-radio">
-                          <input type="radio" id="dt-range" name="customRadio" class="custom-control-input">
-                          <label class="custom-control-label" for="dt-range">Date/Time Range</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" id="all-time" name="customRadio" class="custom-control-input">
-                          <label class="custom-control-label" for="all-time">All Time</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" id="last-month" name="customRadio" class="custom-control-input">
-                          <label class="custom-control-label" for="last-month">Last Month</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" id="last-week" name="customRadio" class="custom-control-input">
-                          <label class="custom-control-label" for="last-week">Last week</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" id="last-hours" name="customRadio" class="custom-control-input" checked>
-                          <label class="custom-control-label" for="last-hours">Last 24 Hours</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                          <input type="radio" id="custom" name="customRadio" class="custom-control-input">
-                          <label class="custom-control-label" for="custom">Custom</label>
-                        </div>
-
-                        <div class="dropdown-footer">
-                          <button class="btn btn-block btn-clear">Clear</button>
-                        </div>
-                        <!-- /.dropdown-footer -->
-                      </div>
-                    </div>
+                    <select class="form-control">
+                      <option>Select saved filter</option>
+                      <option>Failed-pipelines</option>
+                      <option>passed-pipelines</option>
+                      <option>Successful pipelines by Sumeet Kulkarni</option>
+                    </select>
                   </div>
                   <div class="form-group mx-sm-3 mb-2">
                     <div class="dropdown">
@@ -271,9 +241,8 @@
 
               </div>
               <!-- /.card-heading -->
-              <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="table table-filter mb-0">
+              <div class="card-body p-0">                
+                  <!--<table class="table table-filter mb-0">
                     <thead>
                       <tr>
                         <th *ngFor = "let tableHeader of results[0] | keys ">
@@ -286,10 +255,50 @@
                         <td *ngFor = "let itenValue of item | keys"><span>{{item[itenValue]}}</span></td>
                       </tr>                          
                     </tbody>
+                  </table> -->
+                  <table class="table table-sticky mb-0">
+                    <thead>
+                      <tr>
+                        <th>
+                          <span><i class="fa fa-caret-right"></i>{{allPipelines.results[0]?.pipelineName}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.applicationName}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.pipelineStartTime}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.pipelineEndTime}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.pipelineStatus}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.user}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.manualJudgementUser}}</span>
+                        </th>
+                        <th>
+                          <span>{{allPipelines.results[0]?.manualJudgementEndTime}}</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of currentPage | filter:searchData">
+                        <td><span>{{item.pipelineName}}</span></td>
+                        <td><span>{{item.applicationName}}</span></td>
+                        <td><span>{{+item.pipelineStartTime | date:'medium'}}</span></td>
+                        <td><span>{{+item.pipelineEndTime | date:'medium'}}</span></td>
+                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
+                        <td><span>{{item.user}}</span></td>
+                        <td><span>{{item.manualJudgementUser}}</span></td>
+                        <td><span>{{+item.manualJudgementEndTime | date:'medium'}}</span></td>                                                  
+                      </tr>                          
+                    </tbody>
                   </table>
-                  <!-- /.table -->
-                </div>
-                <!-- /.table-responsive -->
+                  <!-- /.table -->                
               </div>
               <!-- /.card-body -->
               <div class="card-footer table-footer px-3 py-2">

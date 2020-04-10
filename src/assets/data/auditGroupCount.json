@@ -1,0 +1,6 @@
+{
+    "allPipelines" : 50,
+    "successPipelies":25,
+    "modifiedPipelines":4,
+    "failedPipelines":29
+ }
