@@ -1,14 +1,47 @@
 [
     {
       "releaseName": "release 1.18.5",
-      "date": 1583907587000
+      "date": 1583907587000,
+      "services": [
+        {
+          "serviceName": "clouddriver11",
+          "latestImageId": "6.4.0"
+          
+        },
+        {
+          "serviceName": "clouddriver11",
+          "latestImageId": "6.4.0"
+          
+        }]
     },
     {
       "releaseName": "release 1.17.6",
-      "date": 1583821187000
+      "date": 1583821187000,
+      "services": [
+        {
+          "serviceName": "clouddriver1122",
+          "latestImageId": "6.4.0"
+          
+        },
+        {
+          "serviceName": "clouddriver1122",
+          "latestImageId": "6.4.0"
+          
+        }]
     },
     {
       "releaseName": "release 1.16.8",
-      "date": 1583803187000
+      "date": 1583803187000,
+      "services": [
+        {
+          "serviceName": "clouddriver1133",
+          "latestImageId": "6.4.0"
+          
+        },
+        {
+          "serviceName": "clouddriver1133",
+          "latestImageId": "6.4.0"
+          
+        }]
     }
   ]

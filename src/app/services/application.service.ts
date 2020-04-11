@@ -21,12 +21,17 @@ export class ApplicationService {
         );
     }
     getReleaseList(applicationName) {
-        return this.httpClient.get(environment.oesUrl + '/oes/applications/' + applicationName + '/releases').pipe(
+        return this.httpClient.get('../../assets/data/releaseList.json').pipe(
             catchError(this.handleError)
         );
     }
     doNewRelease(applicationName) {
         return this.httpClient.get(environment.oesUrl + '/oes/applications/' + applicationName + '/releases/newRelease').pipe(
+            catchError(this.handleError)
+        );
+    }
+    promoteRelease(releaseData) {
+        return this.httpClient.post(environment.oesUrl + '/oes/applications/releases/promote', releaseData).pipe(
             catchError(this.handleError)
         );
     }

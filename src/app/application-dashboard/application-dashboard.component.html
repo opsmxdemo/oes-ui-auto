@@ -23,7 +23,7 @@
                                         </div>
                                         <!-- /.data_list_title -->
                                         <div class="data_list_actionsc d-flex align-items-center ml-auto">
-                                          <div class="card_indigators mr-3 d-flex">
+                                          <!-- <div class="card_indigators mr-3 d-flex">
                                             <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
                                               <img src="../../../assets/ci_check.png" class="img-fluid" alt="check" />
                                             </button>
@@ -36,20 +36,16 @@
                                             <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
                                               <img src="../../../assets/ci_check.png" class="img-fluid" alt="check" />
                                             </button>
-                                          </div>
-                                          <div class="status"><img src="../../../assets/status_icon.png" class="img-fluid" alt="status" /></div>
-                                          <button class="btn"><img src="../../../assets/thumb_pin.png" class="img-fluid" alt="pin" /></button>
+                                          </div> -->
+                                          <!-- <div class="status"><img src="../../../assets/status_icon.png" class="img-fluid" alt="status" /></div>
+                                          <button class="btn"><img src="../../../assets/thumb_pin.png" class="img-fluid" alt="pin" /></button> -->
                                           <div class="dropdown dropdown-icon-remove">
-                                            <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-default px-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                               <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" >
-                                              <a *ngFor="let menu of application.appMenu; let i=index" class="dropdown-item showElementHover"  (click)="getReleases(application.name,i,$event)" >{{menu}}</a>
-                                              <!-- <a class="dropdown-item" href="#">Services</a>
-                                              <a class="dropdown-item" href="#">Edit</a>
-                                              <div class="dropdown-divider"></div>
-                                              <a class="dropdown-item" href="#">Delete</a> -->
-                                            </div>
+                                              <a *ngFor="let menu of application.appMenu; let i=index" class="dropdown-item showElementHover"  (click)="getReleases(menu,application.name,i,$event)" >{{menu}}</a>
+                                              </div>
                                           </div>                
                                         </div>
                                         <!-- /.data_list_actions -->
@@ -58,10 +54,10 @@
                                       <div class="data_list_body d-flex"  >
                                         <div class="data_list_values text-center">
                                           <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around" >
-                                            <li *ngFor="let applicationInfo of application.appInfo; let i=index" [ngClass]= "{'active':selectedIndex === i}">
+                                            <li class="showElementHover" *ngFor="let applicationInfo of application.appInfo; let i=index" [ngClass]= "{'active':application.name === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType}">
                                               <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
-                                              <div class="dl_value_text">{{applicationInfo.applicationInfolabel}}</div>
-                                              <span *ngIf="selectedIndex === i"><i  class="fa fa-angle-up"></i></span>
+                                              <div class="dl_value_text" (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">{{applicationInfo.applicationInfolabel}} </div>
+                                              <span *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.name === selectedApplicationName"><i  class="fa fa-angle-up"></i></span>
                                             </li>
                                           </ul>
                                         </div>
@@ -90,10 +86,10 @@
                             <div class="rightBox position-sticky">
                               <div class="rightBox_header d-flex align-items-center">
                                 <h3>{{selectedApplicationName}}</h3>
-                                <div class="btns_icon d-flex ml-auto">
+                                <!-- <div class="btns_icon d-flex ml-auto">
                                   <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
                                   <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
-                                </div>
+                                </div> -->
                                 <!-- /.btns_icon -->
                               </div>
                               <!-- /.rightBox_header -->
@@ -102,22 +98,7 @@
                                   <img src="../../../assets/chart_placeholder_01.png" class="img-fluid" alt="chart" />
                                 </div> -->
                                 <!-- /#particle_chart -->
-                                <div class="chart_ratio text-center d-flex">
-                                  <div class="chart_value cv_low flex-grow-1">
-                                    <div class="cv_heighlight">Low</div>
-                                    <!-- /.cv_heighlight -->
-                                    <div class="cv_name">Confidence</div>
-                                    <!-- /.cv_name -->
-                                  </div>
-                                  <!-- /.chart_value low -->
-                                  <div class="chart_value cv_alert flex-grow-1">
-                                    <div class="cv_heighlight">0</div>
-                                    <!-- /.cv_heighlight -->
-                                    <div class="cv_name">Alerts</div>
-                                    <!-- /.cv_name -->
-                                  </div>
-                                  <!-- /.chart_value alert -->
-                                </div>
+                               
                                 <!-- /.chart_ratio -->
                                 <div class="table-responsive">
                                   <table class="table table-pet-service text-center mb-0">
