@@ -16,7 +16,7 @@ import { CreateApplication } from 'src/app/models/applicationOnboarding/createAp
 const handleError = (errorRes: any) => {
     let errorMessage = 'An unknown error occurred';
     if (!errorRes.error) {
-        return of(OnboardingAction.errorOccured({errorMessage}));
+        return of(OnboardingAction.errorOccured({ errorMessage }));
     }
     switch (errorRes.error.message) {
         case 'Authentication Error':
@@ -29,7 +29,7 @@ const handleError = (errorRes: any) => {
             errorMessage = 'Error Occurred';
             break;
     }
-    return of(OnboardingAction.errorOccured({errorMessage}));
+    return of(OnboardingAction.errorOccured({ errorMessage }));
 }
 
 @Injectable()
@@ -44,11 +44,11 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch pipline dropdown data.
     onAppLoads = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadApp,OnboardingAction.enableEditMode),
+            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             switchMap(() => {
                 return this.http.get<Pipeline>('../../../assets/data/applicationOnboarding.json').pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchPipeline({pipelineData:resdata});
+                        return OnboardingAction.fetchPipeline({ pipelineData: resdata });
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);
@@ -57,22 +57,61 @@ export class ApplicationOnBoardingEffect {
             })
         )
     )
-    
-     // Below effect is use for fetch pipline dropdown data.
-     onEditApplication = createEffect(() =>
-     this.actions$.pipe(
-         ofType(OnboardingAction.enableEditMode),
-         switchMap(action => {
-             return this.http.get<CreateApplication>('http://localhost:3000/'+action.applicationName).pipe(
-                 map(resdata => {
-                     return OnboardingAction.fetchAppData({appData:resdata})
-                 }),
-                 catchError(errorRes => {
-                     return handleError(errorRes);
-                 })
-             );
-         })
-     )
- )
+
+    // Below effect is use for fetch pipline dropdown data.
+    onEditApplication = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.enableEditMode),
+            switchMap(action => {
+                return this.http.get<CreateApplication>('http://localhost:3000/' + action.applicationName).pipe(
+                    map(resdata => {
+                        return OnboardingAction.fetchAppData({ appData: resdata })
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for saved data in create application phase
+    onsavedCreateApplicationData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.createApplication),
+            switchMap(action => {
+                return this.http.post<CreateApplication>('http://localhost:3000/', action.appData).pipe(
+                    map(resdata => {
+                        return OnboardingAction.dataSaved();
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    //Below effect is use to redirect to application onboardind page in create& edit phase
+    apponboardingRedirect = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            tap(() => {
+                this.router.navigate(['/setup'])
+            })
+        ), { dispatch: false }
+    )
+
+    //Below effect is use to redirect to application dashboard page after successfull submission
+    appdashboardRedirect = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.dataSaved),
+            tap(() => {
+                this.router.navigate(['/appdashboard'])
+            })
+        ), { dispatch: false }
+    )
+
+
 
 }
