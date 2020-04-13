@@ -21,7 +21,7 @@ export class ApplicationService {
         );
     }
     getReleaseList(applicationName) {
-        return this.httpClient.get('../../assets/data/releaseList.json').pipe(
+        return this.httpClient.get(environment.oesUrl + '/oes/applications/' + applicationName + '/releases').pipe(
             catchError(this.handleError)
         );
     }
@@ -30,8 +30,8 @@ export class ApplicationService {
             catchError(this.handleError)
         );
     }
-    promoteRelease(releaseData) {
-        return this.httpClient.post(environment.oesUrl + '/oes/applications/releases/promote', releaseData).pipe(
+    promoteRelease(releaseData, applicationName) {
+        return this.httpClient.post(environment.oesUrl + '/oes/applications/' + applicationName + '/releases/newRelease', releaseData).pipe(
             catchError(this.handleError)
         );
     }

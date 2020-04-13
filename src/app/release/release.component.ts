@@ -22,6 +22,7 @@ export class ReleaseComponent implements OnInit {
   public application: string;
   public releaseServicObj: ReleaseServices;
   public releaseEnvironmentObj: ReleaseEnvironment;
+  public selectedServiceIndex: string;
   public promoteData: any = {
     releaseName: '',
     source: '',
@@ -29,10 +30,15 @@ export class ReleaseComponent implements OnInit {
     environmentList: []
   };
   showRelease = false;
+  expandedIndex: number;
+  ParentList: any[];
+  ChildList: any[];
 
   constructor(private applicationService: ApplicationService) { }
 
   ngOnInit(): void {
+    this.expandedIndex = -1;
+    //this.releaseData = [];
     this.application = this.applicationService.childApplication;
     this.applicationService.getReleaseList(this.application).subscribe((response: any) => {
       console.log(response);
@@ -51,9 +57,13 @@ export class ReleaseComponent implements OnInit {
   public cancelRelease(){
     this.showRelease = false;
   }
-  public getTabService(data, index) {
-   // this.selectedServiceIndex = index;
+  public getChildDetails(data, index) {
+    this.selectedServiceIndex = index;
   }
+  public Collaps(index: number, childData: any) {
+    this.expandedIndex = index === this.expandedIndex ? -1 : index;
+    this.ChildList = childData.services;
+    }
   public promoteRelease() {
     this.promoteData.serviceList = [];
     this.promoteData.environmentList = [];
@@ -74,7 +84,7 @@ export class ReleaseComponent implements OnInit {
     });
    // this.promoteData.source = JSON.stringify(this.newReleaseData.source);
     console.log(this.promoteData);
-    this.applicationService.promoteRelease(this.promoteData).subscribe((response: any) => {
+    this.applicationService.promoteRelease(this.promoteData,this.application).subscribe((response: any) => {
       console.log(response);
     });
   }

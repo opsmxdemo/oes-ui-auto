@@ -5,7 +5,7 @@
 
                           <div class="page_access ml-auto">
                             <button class="btn btn-white"><img src="../../../assets/setting_icon.png" alt="icon" /></button>
-                            <button class="btn btn-primary ml-2" data-toggle="modal" data-target="#addApplications" data-backdrop="static" data-keyboard="false"><i class="fa mr-2 fa-plus"></i> Add Application</button>
+                            <button class="btn btn-primary ml-2" (click)="addNewApplication()"  data-backdrop="static" data-keyboard="false"><i class="fa mr-2 fa-plus"></i> Add Application</button>
                           </div>
                           <!-- /.page_access ml-auto -->
                         </div>
@@ -101,23 +101,22 @@
                                
                                 <!-- /.chart_ratio -->
                                 <div class="table-responsive">
-                                  <table class="table table-pet-service text-center mb-0">
+                                  <table class="table table-pet-service mb-0">
                                   <thead>
                                     <tr>
                                       <th>Service</th>
                                       <th>Score</th>
-                                      <th>Metric</th>
-                                      <th>Logs</th>
+                                      <!-- <th>Metric</th>
+                                      <th>Logs</th> -->
                                       <th>Status</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr *ngFor="let service of serviceData; let i=index">
                                     <td>{{service.name}}</td>
-                                      <td>25</td>
-                                      <td>15</td>
-                                      <td>10</td>
-                                      <td class="text-danger">FAIL</td>
+                                      <td>{{service.score}}</td>
+                  
+                                      <td [ngClass]= "{'text-danger':service.status == 'FAIL','text-success':service.status == 'PASS'}">{{service.status}}</td>
                                     </tr>
                     
                                   </tbody>
