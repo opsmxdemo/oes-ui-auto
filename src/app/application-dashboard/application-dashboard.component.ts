@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
 import { ReleaseComponent } from '../release/release.component';
 import { stringify } from 'querystring';
+import * as fromApp from '../store/app.reducer';
+import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-application-dashboard',
@@ -20,7 +23,7 @@ export class ApplicationDashboardComponent implements OnInit {
   // public messageToRelease: string;
   public message: string;
 
-  constructor(private applicationService: ApplicationService) { }
+  constructor(private applicationService: ApplicationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
     this.applicationService.getApplicationList().subscribe((response: any) => {
@@ -57,6 +60,10 @@ export class ApplicationDashboardComponent implements OnInit {
     } else {
 
     }
+  }
+
+  public addNewApplication() {
+   this.store.dispatch(AppOnboardingAction.loadApp());
   }
 
 }

@@ -13,29 +13,29 @@
           <div *ngIf="showRelease">
               <div class="form-group form-inline">
                 <label for="exampleInputReleaseName">Release Name
-                  :&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="promoteData.releaseName" class="form-control"
+                  &nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="promoteData.releaseName" class="form-control"
                   id="releaseName">
               </div>
               <div class="form-group form-inline">
                 <label for="exampleInputJiraid">Jira Id
-                  :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="promoteData.jiraId" class="form-control"
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="promoteData.jiraId" class="form-control"
                   id="jiraId">
               </div>
               <div class="form-group form-inline" *ngFor="let environment of newReleaseData.env;let i=index">
                 <label for="exampleInputEnvironment">{{environment.key}}
-                  :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="environment.val" class="form-control"
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="environment.val" class="form-control"
                   id="environment">
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <label>Source :</label> {{newReleaseData.source}}
+                  <label>Source </label> {{newReleaseData.source}}
                 </div>
               </div>
-              <table class="table table-pet-service text-center mb-0">
+              <table class="table table-pet-service mb-0">
                   <thead>
                     <tr>
                       <th>Service Name</th>
-                      <th>Container id-tag</th>
+                      <th>Container id</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -64,18 +64,30 @@
                         <button class="btn btn-primary" (click)="newReleaseMethod()">New Release</button>
                       </div>
                 </div>
-            <table class="table table-pet-service text-center mb-0">
+            <table class="table table-pet-service mb-0">
             <thead>
               <tr>
                 <th>Release Name</th>
                 <th>Date</th>
+                <th>Status</th>
               </tr>
             </thead>
-            <tbody *ngFor="let release of releaseData;let i = index">
-              <tr data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                <td>{{release.releaseName}}</td>
+            <tbody *ngFor="let release of releaseData;let $index = index">
+              <tr (click)="Collaps($index,release)">
+                <td><i class="fa" [ngClass]="{'fa-angle-up': $index != expandedIndex, 'fa-angle-down': $index === expandedIndex}"></i>    {{release.releaseName}}</td>
                 <td>{{release.date | date: 'medium'}}</td>
+                <td [ngClass]= "{'text-danger':release.status == 'FAILED','text-success':release.status == 'SUCCESS'}">{{release.status}}</td>
               </tr>
+                <ng-container *ngIf="$index === expandedIndex">
+               <tr>
+                  <th>Service</th>
+                  <th>Image Id</th>
+                </tr>
+                <tr *ngFor="let rel of ChildList;let i = index">
+                <td>{{rel.serviceName}}</td>
+                <td>{{rel.imageId}}</td>
+                </tr>
+                </ng-container>
                   <!-- <tr class="collapse" id="collapseExample" *ngFor="let services of release.services;let i = index">
                         <td>{{services.serviceName}}</td>
                         <td>{{services.latestImageId}}</td>
