@@ -14,7 +14,7 @@ export const initialState: State = {
     authError: null,
     loading: null,
     authenticated: false,
-    samlResponse: 'dummy'
+    samlResponse:'dummy'
 }
 
 export function authReducer(
@@ -73,11 +73,11 @@ export function authReducer(
                 authError: null,
                 authenticated: true
             }
-        case AuthAction.AuthActionTypes.SAMLLOGINRESPONSE:
-            return {
-                ...state,
-                samlResponse: action.payload
-            }
+            case AuthAction.AuthActionTypes.SAMLLOGINRESPONSE:
+                return {
+                    ...state,
+                    samlResponse: action.payload
+                }  
         default:
             return state;
     }

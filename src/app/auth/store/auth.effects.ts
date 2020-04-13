@@ -152,4 +152,24 @@ export class AuthEffect {
         })
     )
 
+       //Below effect is use to Suport SmalLogin
+       @Effect()
+       samlLogin = this.actions$.pipe(
+           ofType(AuthAction.AuthActionTypes.SAMLLOGINSTART),
+           switchMap(() => {
+               return this.http.get(environment.samlUrl+'auth/user', {observe: 'response'})
+                .pipe(
+                   tap(resp => console.log('responseheader', resp)),
+                   map(resData => {
+                       console.log('response',resData);
+                      
+                       return new AuthAction.SamlLoginResponse(resData.body);
+                   }),
+                   catchError(errorRes => {
+                       return handleError(errorRes);
+                   })
+               );
+           })
+       );
+
 }

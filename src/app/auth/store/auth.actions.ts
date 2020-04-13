@@ -9,7 +9,10 @@ export enum AuthActionTypes {
     SIGNUPSTART = '[Auth] SignUpStart',
     LOGOUT = '[Auth] Logout',
     AUTOLOGINSTART = '[Auth] AutoLoginStart',
-    AUTOLOGIN = '[Auth] AutoLogin'
+    AUTOLOGIN = '[Auth] AutoLogin',
+
+    SAMLLOGINSTART = '[Auth] SamlLoginStart',
+    SAMLLOGINRESPONSE = '[Auth] SamlLoginResponse'
 }
 
 
@@ -54,6 +57,15 @@ export class AutoLogin implements Action {
     constructor(public payload: any) { }
 }
 
+export class SamlLoginStart implements Action {
+    readonly type = AuthActionTypes.SAMLLOGINSTART;
+}
+
+export class SamlLoginResponse implements Action {
+    readonly type = AuthActionTypes.SAMLLOGINRESPONSE;
+    constructor(public payload: any){}
+}
+
 
 
 export type AuthActions = LoginFail |
@@ -63,4 +75,6 @@ export type AuthActions = LoginFail |
     SignUp |
     Logout |
     AutoLogin |
-    AutoLoginStart;
+    AutoLoginStart |
+    SamlLoginStart |
+    SamlLoginResponse;
