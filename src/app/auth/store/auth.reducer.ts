@@ -6,13 +6,15 @@ export interface State {
     authError: string;
     loading: Boolean;
     authenticated: boolean;
+    samlResponse: any;
 }
 
 export const initialState: State = {
     user: null,
     authError: null,
     loading: null,
-    authenticated: false
+    authenticated: false,
+    samlResponse:'dummy'
 }
 
 export function authReducer(
@@ -71,6 +73,11 @@ export function authReducer(
                 authError: null,
                 authenticated: true
             }
+            case AuthAction.AuthActionTypes.SAMLLOGINRESPONSE:
+                return {
+                    ...state,
+                    samlResponse: action.payload
+                }
         default:
             return state;
     }
