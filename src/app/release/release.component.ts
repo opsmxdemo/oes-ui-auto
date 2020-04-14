@@ -4,7 +4,8 @@ import { environment } from 'src/environments/environment';
 import { isTemplateMiddle } from 'typescript';
 class ReleaseServices {
   serviceName = '';
-  containerId = '';
+  tag = '';
+  image = '';
 }
 class ReleaseEnvironment {
   keyName = '';
@@ -71,10 +72,12 @@ export class ReleaseComponent implements OnInit {
          if (item.isChecked) {
         this.releaseServicObj = new ReleaseServices();
         this.releaseServicObj.serviceName = item.serviceName;
-        this.releaseServicObj.containerId = item.latestImageId;
+        this.releaseServicObj.tag = item.latestTag;
+        this.releaseServicObj.image = item.image;
         this.promoteData.serviceList.push(this.releaseServicObj);
       }
          this.promoteData.source = this.newReleaseData.source;
+        // this.promoteData.image = this.newReleaseData.image;
     });
     this.newReleaseData.env.forEach(item => {
       this.releaseEnvironmentObj = new ReleaseEnvironment();
