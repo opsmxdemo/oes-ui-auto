@@ -11,10 +11,10 @@ import { CloudServicesComponent } from '../application-onboarding/cloud-services
 
 
 const routes: Routes = [
-  {path:'appdashboard', component:ApplicationDashboardComponent,canActivate: [AuthGuard]},
+  {path:'appdashboard', component:ApplicationDashboardComponent},
   {path:'oesdashboard', component:OesDashboardComponent,canActivate: [AuthGuard]},
   {path:'audit', component:AuditComponent},
-  {path:'setup', component:ApplicationOnboardingComponent,children: [
+  {path:'setup', component:ApplicationOnboardingComponent,canActivate: [AuthGuard],children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
     {path: '' , component: ApplicationComponent},
     {path: 'datasource' , component: DataSourceComponent},

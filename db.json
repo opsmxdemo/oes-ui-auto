@@ -1,67 +1,62 @@
 {
-    "menu": [
-        {
-            "name": "OES Dashboard",
-            "id": 1,
-            "link": "oesdashboard",
-            "subMenu":[]
-        },
-        {
-            "name": "App Dashboard",
-            "id": 2,
-            "link": "appdashboard",
-            "subMenu": [
-                {
-                    "name": "Dev Verification",
-                    "id": 21,
-                    "link": "DevV"
-                },
-                {
-                    "name": "Test Verfication",
-                    "id": 22,
-                    "link": "TestV"
-                },
-                {
-                    "name": "Deployment Verification",
-                    "id": 23,
-                    "link": "DeployV"
-                },
-                {
-                    "name": "Production Monitoring",
-                    "id": 24,
-                    "link": "Monitoring"
-                }
-            ]
-        },
-        {
-            "name": "Policy Management",
-            "id": 3,
-            "link": "management",
-            "subMenu":[]
-        },
-        {
-            "name": "Security/Audit",
-            "id": 4,
-            "link": "audit",
-            "subMenu":[                
-                {
-                    "name": "ABC Monitoring",
-                    "id": 23,
-                    "link": "DeployV"
-                } 
-            ]
-        },
-        {
-            "name": "System Setup",
-            "id": 5,
-            "link": "setup",
-            "subMenu":[]
-        },
-        {
-            "name": "User Setting",
-            "id": 6,
-            "link": "setting",
-            "subMenu":[]
-        }
-    ]
+    "menu":{
+        "menu": [
+            {
+                "name": "OES Dashboard",
+                "id": 1,
+                "link": "oesdashboard",
+                "subMenu":[],
+                "disabled":true
+            },
+            {
+                "name": "App Dashboard",
+                "id": 2,
+                "link": "appdashboard",
+                "subMenu": [
+                    {
+                        "name": "Dev Verification",
+                        "id": 21,
+                        "link": "DevV",
+                        "disabled":true
+                    },
+                    {
+                        "name": "Production Monitoring",
+                        "id": 24,
+                        "link": "Monitoring",
+                        "disabled":true
+                    }
+                ],
+                "disabled":false
+            },
+            {
+                "name": "Policy Management",
+                "id": 3,
+                "link": "management",
+                "subMenu":[],
+                "disabled":true
+            },
+            {
+                "name": "Security/Audit",
+                "id": 4,
+                "link": "audit",
+                "subMenu":[],
+                "disabled":false
+            },
+            {
+                "name": "System Setup",
+                "id": 5,
+                "link": "setup",
+                "subMenu":[],
+                "disabled":false
+            },
+            {
+                "name": "User Setting",
+                "id": 6,
+                "link": "setting",
+                "subMenu":[],
+                "disabled":true
+            }
+        ]
+    }
+    
 }

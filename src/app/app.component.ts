@@ -5,6 +5,9 @@ import * as AuthAction from './auth/store/auth.actions';
 import * as LayoutAction from './layout/store/layout.actions';
 import * as AppOnboardingAction from './application-onboarding/store/onBoarding.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
+import { Router } from '@angular/router';
+import {environment} from '../environments/environment.prod'
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -19,12 +22,12 @@ export class AppComponent implements OnInit {
   
   constructor( public store:Store<fromApp.AppState>){}
   ngOnInit(){
-    
+
     //Dispatching action to fetch Sidebar Menu
     this.store.dispatch(new LayoutAction.LoadPage());
 
     //Dispatching action for autoLogin functionality
-    this.store.dispatch(new AuthAction.AutoLoginStart());
+    this.store.dispatch(new AuthAction.LoginStart());
 
     //Dispatching action for pipelineData functionality
     //this.store.dispatch(AppOnboardingAction.loadApp());
@@ -33,6 +36,13 @@ export class AppComponent implements OnInit {
     this.store.select('auth').subscribe(
       (response) => {
           this.isAuthenticate = response.authenticated;
+          if(response.authResponse === null){
+              var browserUrl = window.location.href;
+                        var arr = browserUrl.split("/");
+                        var resultUrl = arr[0] + "//" + arr[2] + "/appdashboard";
+                        var encodedUrl = encodeURIComponent(resultUrl);
+                        this.loginRedirect(encodedUrl)
+          }
       }
     );
 
@@ -43,6 +53,11 @@ export class AppComponent implements OnInit {
       }
     );
   }
+
+  loginRedirect(callback): void {
+    window.location.href = `${environment.samlUrl}auth/redirectauto?to=${callback}`;
+  }
+
   toggleNavbar(){
     this.addclass = !this.addclass;
   }

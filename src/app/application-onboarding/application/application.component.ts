@@ -147,6 +147,8 @@ export class ApplicationComponent implements OnInit {
           pipeline: new FormArray([
             new FormGroup({
               pipelineType: new FormControl('', Validators.required),
+              cloudAccount: new FormControl('', Validators.required),
+              dockerImageName: new FormControl('', Validators.required),
               pipelineParameter: new FormArray([])
             })
           ])
@@ -234,6 +236,8 @@ export class ApplicationComponent implements OnInit {
         pipeline: new FormArray([
           new FormGroup({
             pipelineType: new FormControl('', Validators.required),
+            cloudAccount: new FormControl('', Validators.required),
+            dockerImageName: new FormControl('', Validators.required),
             pipelineParameter: new FormArray([])
           })
         ])
@@ -249,7 +253,7 @@ export class ApplicationComponent implements OnInit {
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
     if (this.createApplicationForm.valid && this.servicesForm && this.environmentForm.valid && this.groupPermissionForm.valid) {
-
+      
       // Saving all 3 forms data into one
       this.mainForm = this.createApplicationForm.value;
       this.mainForm.services = this.servicesForm.value.services;

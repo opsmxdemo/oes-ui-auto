@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isAuthenticate: Boolean;
+  username:string;
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }
@@ -20,14 +21,14 @@ export class HeaderComponent implements OnInit {
     this.store.select('auth').subscribe(
       (response) => {
           this.isAuthenticate = response.authenticated;
+          this.username = response.user;
       }
     );
   }
 
   onLogout(){
-    localStorage.removeItem('userData');
     this.store.dispatch(new AuthAction.Logout())
-    this.router.navigate(['/login']);
+    // this.router.navigate(['/login']);
   }
 
 }

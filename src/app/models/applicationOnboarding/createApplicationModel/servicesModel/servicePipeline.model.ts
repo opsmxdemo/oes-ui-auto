@@ -2,6 +2,8 @@ import { PipelineTemplate } from '../../pipelineTemplate/pipelineTemplate.model'
 
 export class ServicePipeline {
     pipelineType: string;
+    cloudAccount: string;
+    dockerImageName: string;
     pipelineParameter:PipelineTemplate[];
 
     constructor(data: any) {
