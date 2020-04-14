@@ -12,30 +12,31 @@
         <div class="rightBox_body">
           <div *ngIf="showRelease">
               <div class="form-group form-inline">
-                <label for="exampleInputReleaseName">Release Name
-                  &nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="promoteData.releaseName" class="form-control"
+                <label class="release-label" for="exampleInputReleaseName">Release Name
+                 </label> <input type="text" [(ngModel)]="promoteData.releaseName" class="form-control"
                   id="releaseName">
               </div>
               <div class="form-group form-inline">
-                <label for="exampleInputJiraid">Jira Id
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="promoteData.jiraId" class="form-control"
+                <label class="release-label" for="exampleInputJiraid">Jira Id
+                  </label> <input type="text" [(ngModel)]="promoteData.jiraId" class="form-control"
                   id="jiraId">
               </div>
               <div class="form-group form-inline" *ngFor="let environment of newReleaseData.env;let i=index">
-                <label for="exampleInputEnvironment">{{environment.key}}
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" [(ngModel)]="environment.val" class="form-control"
+                <label class="release-label" for="exampleInputEnvironment">{{environment.key}}
+                </label> <input type="text" [(ngModel)]="environment.val" class="form-control"
                   id="environment">
               </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <label>Source </label> {{newReleaseData.source}}
-                </div>
+              <div class="form-group form-inline">
+                
+                  <label class="release-label">Source </label> <span class="form-control"> {{newReleaseData.source}} </span>
+                
               </div>
               <table class="table table-pet-service mb-0">
                   <thead>
                     <tr>
                       <th>Service Name</th>
-                      <th>Container id</th>
+                      <th>Image</th>
+                      <th>Container tag</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -44,9 +45,10 @@
                           <input type="checkbox" [(ngModel)]="newRelease.isChecked" class="custom-control-input" id="{{newRelease.serviceName}}">
                           <label class="custom-control-label" for="{{newRelease.serviceName}}">{{newRelease.serviceName}}</label>
                         </div></td>
-                      <td>
-                          <select class="form-control"  [(ngModel)]="newRelease.latestImageId">
-                            <option *ngFor="let containers of newRelease.images" [value]="newRelease.latestImageId">{{containers.tags}}</option>
+                      <td><div  [(ngModel)]="newRelease.image">{{newRelease.image}}</div></td>
+                        <td>
+                          <select class="form-control"  [(ngModel)]="newRelease.latestTag">
+                            <option *ngFor="let containers of newRelease.tags" [value]="newRelease.latestTag">{{containers.tag}}</option>
                           </select>
                       </td>
                     </tr>
@@ -76,21 +78,23 @@
               <tr (click)="Collaps($index,release)">
                 <td><i class="fa" [ngClass]="{'fa-angle-up': $index != expandedIndex, 'fa-angle-down': $index === expandedIndex}"></i>    {{release.releaseName}}</td>
                 <td>{{release.date | date: 'medium'}}</td>
-                <td [ngClass]= "{'text-danger':release.status == 'FAILED','text-success':release.status == 'SUCCESS'}">{{release.status}}</td>
+                <td [ngClass]= "{'text-danger':release.status == 'FAILED','text-success':release.status == 'SUCCESS'}" *ngIf="release.status !== undefined">{{release.status}}</td>
+                <td *ngIf="release.status === undefined">N/A</td>
+                
               </tr>
                 <ng-container *ngIf="$index === expandedIndex">
                <tr>
                   <th>Service</th>
-                  <th>Image Id</th>
+                  <th>Image</th>
                 </tr>
                 <tr *ngFor="let rel of ChildList;let i = index">
                 <td>{{rel.serviceName}}</td>
-                <td>{{rel.imageId}}</td>
+                <td>{{rel.image}}</td>
                 </tr>
                 </ng-container>
                   <!-- <tr class="collapse" id="collapseExample" *ngFor="let services of release.services;let i = index">
                         <td>{{services.serviceName}}</td>
-                        <td>{{services.latestImageId}}</td>
+                        <td>{{services.latestTag}}</td>
                   </tr> -->
                      
              

@@ -54,12 +54,13 @@ export class ApplicationDashboardComponent implements OnInit {
     this.showAppDataType = labelType;
     if (labelType === 'Services') {
       this.selectedApplication(index, app);
-      event.stopPropagation();
+     
     } else if (labelType === 'Releases') {
       this.getReleases(labelType, app.name, index, event);
     } else {
 
     }
+    event.stopPropagation();
   }
 
   public addNewApplication() {
