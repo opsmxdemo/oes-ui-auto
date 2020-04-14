@@ -25,8 +25,64 @@ export class AuditComponent implements OnInit {
   currentPage = [''];       //this use to store array of results exist in current page.
   searchData: any = null;   // this is use to fetch value from search field.
   groupCountList : any = null;
+  isAllPipelines :any;      //this is to show or hide the all pipelines div
+
+
+  allSuccessfullPipelines : any = null;
+  successfulResults = [''];
+  successpage = {                  //this is use to support pagination in audit page.
+    startingPoint:0,
+    endPoint:20,
+    pageSize:20,
+    currentPage:1,
+    pageNo:1,
+  }
+  successperPageData:number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
+  successcurrentPage = ['']; 
+  isSuccessPipelines :any;
+  keyArray : any;
+  valueArray: any;
+  editAllObj ={
+    "key" : "",
+		"displayValue" : "",
+		"displayAllowed": false,
+		"isSelectedToDisplay":true
+  };
+  allSuccessDisplayTrueValues = [''];
+  allSuccessDisplayFalseValues : any = null;
+
+  allModifiedPipelines : any = null;
+  modifiedResults = [''];
+  modifiedpage = {                  //this is use to support pagination in audit page.
+    startingPoint:0,
+    endPoint:20,
+    pageSize:20,
+    currentPage:1,
+    pageNo:1,
+  }
+  modifiedperPageData:number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
+  modifiedcurrentPage = ['']; 
+  isModifiedPipelines :any;
+
+  failedPipelines : any = null;
+  failedResults = [''];
+  failedpage = {                  //this is use to support pagination in audit page.
+    startingPoint:0,
+    endPoint:20,
+    pageSize:20,
+    currentPage:1,
+    pageNo:1,
+  }
+  failedperPageData:number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
+  failedcurrentPage = ['']; 
+  isFailedPipelines :any;
+ 
   
   ngOnInit(): void {
+    this.isAllPipelines = false;
+    this.isSuccessPipelines = false;
+    this.isModifiedPipelines = false;
+    this.isFailedPipelines = false;
     this.auditService.autheticate().subscribe(
       (response) => {
         this.authResponse = response;
@@ -36,6 +92,7 @@ export class AuditComponent implements OnInit {
             this.allPipelines = response;
             //this.results = this.allPipelines.results;
             this.results = this.allPipelines.results.splice(1,this.allPipelines.results.length);
+            this.isAllPipelines = true;
             this.results.forEach((element, index) => {
               if (this.page.endPoint >= index) {
                 this.currentPage.push(element);
@@ -63,6 +120,124 @@ export class AuditComponent implements OnInit {
     
     
 
+  }
+
+  /*showAllPipelies() {
+    this.isSuccessPipelines = false;
+    this.isFailedPipelines = false;
+    this.isModifiedPipelines = false;
+    this.auditService.getAllPipelines(this.parameters).subscribe(
+      (response) => {
+        this.allPipelines = response;
+        this.results = this.allPipelines.results.splice(1,this.allPipelines.results.length);;
+        this.isAllPipelines = true;
+        this.results.forEach((element,index) => {
+          if(this.page.endPoint >= index){
+            this.currentPage.push(element);
+          }
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }*/
+  
+  showSuccessfulPipelines(){
+    this.isAllPipelines = false;
+    this.isFailedPipelines = false;
+    this.isModifiedPipelines = false;
+    this.auditService.getSuccessfulPipelines().subscribe(
+      (response) => {
+        console.log(response);
+        this.allSuccessfullPipelines = response;
+        this.keyArray = Object.keys(this.allSuccessfullPipelines.results[0]);
+		    this.valueArray = Object.values(this.allSuccessfullPipelines.results[0]);
+        //var arr = [];
+        
+        this.allSuccessfullPipelines.results[0].forEach((element) => {
+			    this.editAllObj.displayAllowed = true;
+			    switch(element){
+            case 'buildArtifacts' : this.editAllObj.displayAllowed = false;
+            case 'pipelineConfigId': this.editAllObj.displayAllowed = false;
+            case 'serverGroups': this.editAllObj.displayAllowed = false; 
+            case 'image': this.editAllObj.displayAllowed = false;
+            case 'eventId': this.editAllObj.displayAllowed = false; 
+            case 'pipelineTreeView':this.editAllObj.displayAllowed = false; 
+			    }
+			    this.editAllObj = {
+					  "key" : element,
+					  "displayValue" : "abc",
+					  "displayAllowed": this.editAllObj.displayAllowed,
+					  "isSelectedToDisplay":true
+          };
+          //arr.push(editAllObj);
+			    //this.allSuccessDisplayTrueValues.push(this.editAllObj);
+        });
+        
+       
+        this.allSuccessDisplayFalseValues = [          
+          { id: "buildArtifacts", displayAllowed:false},         
+          { id: "pipelineStatus", displayAllowed:false}
+        ];
+        this.successfulResults = this.allSuccessfullPipelines.results.splice(1,this.allSuccessfullPipelines.results.length);;
+        this.isSuccessPipelines = true;
+        this.successfulResults.forEach((element,index) => {
+          if(this.successpage.endPoint >= index){
+            this.successcurrentPage.push(element);
+          }
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+  showModifiedPipelines(){
+    this.isAllPipelines = false;
+    this.isSuccessPipelines = false;
+    this.isFailedPipelines = false;
+    this.auditService.getAllModifiedPipelines().subscribe(
+      (response) => {
+        console.log(response);
+        this.allModifiedPipelines = response;
+        this.modifiedResults = this.allModifiedPipelines.results.splice(1,this.allModifiedPipelines.results.length);;
+        this.isModifiedPipelines = true;
+        this.modifiedResults.forEach((element,index) => {
+          if(this.modifiedpage.endPoint >= index){
+            this.modifiedcurrentPage.push(element);
+          }
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+  }
+
+
+ 
+  showFailedPipelines(){
+    this.isAllPipelines = false;
+    this.isSuccessPipelines = false;
+    this.isModifiedPipelines = false;
+    this.auditService.getAllFailedPipelines().subscribe(
+      (response) => {
+        console.log(response);
+        this.failedPipelines = response;        
+        this.failedResults = this.failedPipelines.results.splice(1,this.failedPipelines.results.length);;
+        this.isFailedPipelines = true;
+        this.failedResults.forEach((element,index) => {
+          if(this.failedpage.endPoint >= index){
+            this.failedcurrentPage.push(element);
+          }
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
   }
 
   //Below function is used to implement pagination
