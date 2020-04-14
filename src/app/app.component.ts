@@ -20,36 +20,28 @@ export class AppComponent implements OnInit {
   isAuthenticate = false;
   Sidebar:Menu;
   
-  constructor( public store:Store<fromApp.AppState>,
-    public router:Router){}
+  constructor( public store:Store<fromApp.AppState>){}
   ngOnInit(){
-    console.log('loaction',window.location.href);
-    console.log('loaction router',this.router.url);
-    
 
     //Dispatching action to fetch Sidebar Menu
     this.store.dispatch(new LayoutAction.LoadPage());
 
     //Dispatching action for autoLogin functionality
-    this.store.dispatch(new AuthAction.SamlLoginStart());
+    this.store.dispatch(new AuthAction.LoginStart());
 
     //Dispatching action for pipelineData functionality
-    this.store.dispatch(AppOnboardingAction.loadApp());
+    //this.store.dispatch(AppOnboardingAction.loadApp());
 
     //fetching data from AuthState
-    this.store.select('auth').pipe(take(2)).subscribe(
+    this.store.select('auth').subscribe(
       (response) => {
           this.isAuthenticate = response.authenticated;
-          if(response.samlResponse === null){
-            if(localStorage.getItem('val') !== 'true'){
-              localStorage.setItem('val','true')
+          if(response.authResponse === null){
               var browserUrl = window.location.href;
                         var arr = browserUrl.split("/");
                         var resultUrl = arr[0] + "//" + arr[2] + "/appdashboard";
                         var encodedUrl = encodeURIComponent(resultUrl);
                         this.loginRedirect(encodedUrl)
-            }
-            
           }
       }
     );

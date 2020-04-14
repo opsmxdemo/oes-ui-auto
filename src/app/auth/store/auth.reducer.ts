@@ -2,19 +2,15 @@ import * as AuthAction from './auth.actions';
 
 
 export interface State {
-    user: any;
-    authError: string;
-    loading: Boolean;
+    user: string;
     authenticated: boolean;
-    samlResponse: any;
+    authResponse: any;
 }
 
 export const initialState: State = {
     user: null,
-    authError: null,
-    loading: null,
     authenticated: false,
-    samlResponse:'dummy'
+    authResponse: 'dummy'
 }
 
 export function authReducer(
@@ -22,62 +18,25 @@ export function authReducer(
     action: AuthAction.AuthActions
 ) {
     switch (action.type) {
-        case AuthAction.AuthActionTypes.LOGINFAIL:
+
+        case AuthAction.AuthActionTypes.LOGINRESPONSE:
             return {
                 ...state,
-                authError: action.payload,
-                user: null,
-                loading: false,
-                authenticated: false
+                authResponse: action.payload
             }
-        case AuthAction.AuthActionTypes.LOGINSTART:
-            return {
-                ...state,
-                authError: null,
-                loading: true,
-                authenticated: false
-            }
-        case AuthAction.AuthActionTypes.LOGIN:
+        case AuthAction.AuthActionTypes.AUTHENTICATIONSUCCESS:
             return {
                 ...state,
                 user: action.payload,
-                loading: false,
-                authError: null,
-                authenticated: true
+                authenticated:true,
+                authResponse:'dummy'
             }
-        case AuthAction.AuthActionTypes.SIGNUP:
-            return {
-                ...state,
-                loading: false,
-                authError: null,
-                authenticated: false
-            }
-        case AuthAction.AuthActionTypes.SIGNUPSTART:
-            return {
-                ...state,
-                loading: true,
-                authError: null,
-                authenticated: false
-            }
-        case AuthAction.AuthActionTypes.LOGOUT:
-            return {
-                ...state,
-                authError: null,
-                authenticated: false
-            }
-        case AuthAction.AuthActionTypes.AUTOLOGIN:
-            return {
-                ...state,
-                user: action.payload,
-                loading: false,
-                authError: null,
-                authenticated: true
-            }
-            case AuthAction.AuthActionTypes.SAMLLOGINRESPONSE:
+            case AuthAction.AuthActionTypes.LOGOUT:
                 return {
                     ...state,
-                    samlResponse: action.payload
-                }  
+                    authenticated:false,
+                    authResponse:null
+                }
         default:
             return state;
     }

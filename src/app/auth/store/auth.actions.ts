@@ -2,79 +2,34 @@ import { Action } from '@ngrx/store';
 
 
 export enum AuthActionTypes {
+
     LOGINSTART = '[Auth] LoginStart',
-    LOGIN = '[Auth] Login',
-    LOGINFAIL = '[Auth] LoginFail',
-    SIGNUP = '[Auth] SignUp',
-    SIGNUPSTART = '[Auth] SignUpStart',
-    LOGOUT = '[Auth] Logout',
-    AUTOLOGINSTART = '[Auth] AutoLoginStart',
-    AUTOLOGIN = '[Auth] AutoLogin',
-
-    SAMLLOGINSTART = '[Auth] SamlLoginStart',
-    SAMLLOGINRESPONSE = '[Auth] SamlLoginResponse'
-}
-
-
-export class LoginFail implements Action {
-    readonly type = AuthActionTypes.LOGINFAIL;
-    constructor(public payload: string) { }
+    AUTHENTICATIONSUCCESS = '[Auth] AuthenticationSuccess',
+    LOGINRESPONSE = '[Auth] LoginResponse',
+    LOGOUT = '[Auth] Logout'
 }
 
 export class LoginStart implements Action {
     readonly type = AuthActionTypes.LOGINSTART;
-    constructor(public payload: {
-        userName: string,
-        password: string
-    }) { }
 }
 
-export class Login implements Action {
-    readonly type = AuthActionTypes.LOGIN;
-    constructor(public payload: any) { }
+export class LoginResponse implements Action {
+    readonly type = AuthActionTypes.LOGINRESPONSE;
+    constructor(public payload: any){}
 }
 
-export class SignUpStart implements Action {
-    readonly type = AuthActionTypes.SIGNUPSTART;
-    constructor(public payload: { fullName: string, emailId: string, userName: string, password: String }) { }
-}
-
-export class SignUp implements Action {
-    readonly type = AuthActionTypes.SIGNUP;
-    constructor(public payload: any) { }
+export class AuthenticationSuccess implements Action {
+    readonly type = AuthActionTypes.AUTHENTICATIONSUCCESS;
+    constructor(public payload: string){}
 }
 
 export class Logout implements Action {
     readonly type = AuthActionTypes.LOGOUT;
 }
 
-export class AutoLoginStart implements Action {
-    readonly type = AuthActionTypes.AUTOLOGINSTART;
-}
-
-export class AutoLogin implements Action {
-    readonly type = AuthActionTypes.AUTOLOGIN;
-    constructor(public payload: any) { }
-}
-
-export class SamlLoginStart implements Action {
-    readonly type = AuthActionTypes.SAMLLOGINSTART;
-}
-
-export class SamlLoginResponse implements Action {
-    readonly type = AuthActionTypes.SAMLLOGINRESPONSE;
-    constructor(public payload: any){}
-}
 
 
-
-export type AuthActions = LoginFail |
-    LoginStart |
-    Login |
-    SignUpStart |
-    SignUp |
-    Logout |
-    AutoLogin |
-    AutoLoginStart |
-    SamlLoginStart |
-    SamlLoginResponse;
+export type AuthActions = LoginStart 
+                        | LoginResponse
+                        | AuthenticationSuccess
+                        | Logout;
