@@ -27,5 +27,31 @@ getPipelineGroupCounts() {
     return this.httpClient.get('../../assets/data/auditGroupCount.json');
 }
 
+getSuccessfulPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','true')
+        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
+    return this.httpClient.get('https://137.117.94.95:8050/audit/getLastSuccessfulDeployments',{
+        params :params
+    });
+}
+
+getAllModifiedPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','false')
+        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
+    return this.httpClient.get('https://137.117.94.95:8050/audit/getPipelinesModified',{
+        params :params
+    });
+}
+
+getAllFailedPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','false')
+        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
+    return this.httpClient.get('https://137.117.94.95:8050/audit/geFailedPipelineDetails',{
+        params :params
+    });
+}
 
 }

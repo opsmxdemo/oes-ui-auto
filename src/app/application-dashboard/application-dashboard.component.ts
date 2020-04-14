@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
 import { ReleaseComponent } from '../release/release.component';
+import { stringify } from 'querystring';
+import * as fromApp from '../store/app.reducer';
+import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-application-dashboard',
@@ -11,14 +15,15 @@ import { ReleaseComponent } from '../release/release.component';
 export class ApplicationDashboardComponent implements OnInit {
 
   public applicationData: any[] = [];
-  public selectedIndex: number = 0;
+  selectedIndex = 0;
   public serviceData: any[] = [];
   public selectedApplicationName: string;
+  showAppDataType = 'Services';
   showReleaseTable = false;
   // public messageToRelease: string;
   public message: string;
 
-  constructor(private applicationService: ApplicationService) { }
+  constructor(private applicationService: ApplicationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
     this.applicationService.getApplicationList().subscribe((response: any) => {
@@ -28,6 +33,7 @@ export class ApplicationDashboardComponent implements OnInit {
     });
   }
   public selectedApplication(index: number, app: any) {
+    this.showAppDataType = 'Services';
     this.selectedIndex = index;
     this.selectedApplicationName = app.name;
     this.showReleaseTable = false;
@@ -36,11 +42,29 @@ export class ApplicationDashboardComponent implements OnInit {
       this.serviceData = serviceDataList;
     });
   }
-  public getReleases(application: string, index: number, event: Event) {
+  public getReleases(menu: string, application: string, index: number, event: Event) {
     this.message = application;
     this.applicationService.childApplication = application;
+    this.showAppDataType = menu;
     this.showReleaseTable = true;
     console.log(this.showReleaseTable);
     event.stopPropagation();
   }
+  public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
+    this.showAppDataType = labelType;
+    if (labelType === 'Services') {
+      this.selectedApplication(index, app);
+     
+    } else if (labelType === 'Releases') {
+      this.getReleases(labelType, app.name, index, event);
+    } else {
+
+    }
+    event.stopPropagation();
+  }
+
+  public addNewApplication() {
+   this.store.dispatch(AppOnboardingAction.loadApp());
+  }
+
 }

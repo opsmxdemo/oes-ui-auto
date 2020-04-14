@@ -30,6 +30,11 @@ export class ApplicationService {
             catchError(this.handleError)
         );
     }
+    promoteRelease(releaseData, applicationName) {
+        return this.httpClient.post(environment.oesUrl + '/oes/applications/' + applicationName + '/releases/newRelease', releaseData).pipe(
+            catchError(this.handleError)
+        );
+    }
     handleError(error) {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
