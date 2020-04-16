@@ -27,7 +27,6 @@ export class ApplicationDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.applicationService.getApplicationList().subscribe((response: any) => {
-      console.log(response);
       this.applicationData = response;
       this.selectedApplication(0, response[0]);
     });
@@ -38,25 +37,23 @@ export class ApplicationDashboardComponent implements OnInit {
     this.selectedApplicationName = app.name;
     this.showReleaseTable = false;
     this.applicationService.getServiceList(app.name).subscribe((serviceDataList: any) => {
-      console.log(serviceDataList);
       this.serviceData = serviceDataList;
     });
   }
-  public getReleases(menu: string, application: string, index: number, event: Event) {
+  public getReleases(menu: string, application: any, index: number, event: Event) {
     this.message = application;
-    this.applicationService.childApplication = application;
+    this.applicationService.childApplication = application.name;
+    this.selectedApplicationName = application.name;
     this.showAppDataType = menu;
     this.showReleaseTable = true;
-    console.log(this.showReleaseTable);
     event.stopPropagation();
   }
   public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
     this.showAppDataType = labelType;
     if (labelType === 'Services') {
       this.selectedApplication(index, app);
-     
     } else if (labelType === 'Releases') {
-      this.getReleases(labelType, app.name, index, event);
+      this.getReleases(labelType, app, index, event);
     } else {
 
     }
