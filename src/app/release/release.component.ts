@@ -39,10 +39,8 @@ export class ReleaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.expandedIndex = -1;
-    //this.releaseData = [];
     this.application = this.applicationService.childApplication;
     this.applicationService.getReleaseList(this.application).subscribe((response: any) => {
-      console.log(response);
       this.releaseData = response;
     });
   }
@@ -77,7 +75,6 @@ export class ReleaseComponent implements OnInit {
         this.promoteData.serviceList.push(this.releaseServicObj);
       }
          this.promoteData.source = this.newReleaseData.source;
-        // this.promoteData.image = this.newReleaseData.image;
     });
     this.newReleaseData.env.forEach(item => {
       this.releaseEnvironmentObj = new ReleaseEnvironment();
@@ -85,10 +82,7 @@ export class ReleaseComponent implements OnInit {
       this.releaseEnvironmentObj.valName = item.val;
       this.promoteData.environmentList.push(this.releaseEnvironmentObj);
     });
-   // this.promoteData.source = JSON.stringify(this.newReleaseData.source);
-    console.log(this.promoteData);
     this.applicationService.promoteRelease(this.promoteData,this.application).subscribe((response: any) => {
-      console.log(response);
     });
   }
 
