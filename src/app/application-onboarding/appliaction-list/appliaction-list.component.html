@@ -1,0 +1,138 @@
+<div class="main_content p-0">
+    <div class="page-content">
+        <div class="row no-gutters row-fit-vh">
+          <div class="col-sm-12 d-flex flex-column">
+            <div class="h-100 d-flex flex-column">
+              <div class="tab-content h-100 flex-grow-1">
+                <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                    <div class="page_access text-right p-3">
+                      <button class="btn btn-default" (click)="createApplication()">New Application</button>
+                    </div>
+                    <!-- /.page_access ml-auto -->
+                    <div class="gray-strip">
+                      
+                    </div>
+                    <!-- /.gray-strip -->
+                    <div class="d-flex w-100 h-100 custom_height">
+                      <div class="no_content m-auto">
+                        <img src="../../../assets/blank-123.png" class="hr-image" alt="blank" />
+                        <p><strong>Create New Application</strong></p>
+                        <p>Use application for continuous verification and production monitoring <br><small>(To create application, add at least 1 Cloud service and 1 Data source)</small></p>
+                      </div>
+                      <!-- /.no_content -->
+                    </div>
+                  </div>
+                <div *ngIf="!tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                  <div class="page_access d-flex text-right p-3">
+                    <div class="mr-auto">
+                      <div class="input-group input-group_search">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" />
+                      </div>
+                    </div>
+
+                    <button class="btn btn-default" (click)="createApplication()">New Application</button>
+                  </div>
+                  <!-- /.page_access ml-auto -->
+                  
+                  <div class="table-content">
+                    <table class="table table-sticky table-striped mb-0">
+                      <thead>
+                        <tr>
+                          <th class="font-weight-bold">APPLICATION NAME</th>
+                          <th class="font-weight-bold">DESCRIPTION</th>
+                          <th class="font-weight-bold">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>prometheus</td>
+                          <td>http://af15dd0d3db8e11e9b49</td>
+                          <td>
+                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ElasticCredentials</td>
+                          <td>http://35.228.154.59:9200</td>
+                          <td>
+                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>DemoApplication</td>
+                          <td>http://af15dd0d3db8e11e9b49</td>
+                          <td>
+                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>DemoElasticCredentials</td>
+                          <td>http://35.228.154.59:9200</td>
+                          <td>
+                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Test Application</td>
+                          <td>Test Application is use to test in prod env.</td>
+                          <td>
+                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>DEV Application</td>
+                          <td>Application is created for dev environment</td>
+                          <td>
+                            <a class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="table-footer gray-strip px-3 py-2">
+                      <div class="form-inline">
+                        <span class="mr-2">Per page</span>
+                        <select class="form-control">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">25</option>
+                        </select>
+                        <span class="ml-3 mr-2">Showing 1 to 20 of 187</span>
+                        <input type="text" class="form-control mr-2" />
+                        <button class="btn btn-primary">Go</button>
+
+                        <ul class="pagination ml-auto mb-0">
+                          <li class="page-item"><a class="page-link"  >Previous</a></li>
+                          <li class="page-item active"><a class="page-link"  >1</a></li>
+                          <li class="page-item"><a class="page-link"  >2</a></li>
+                          <li class="page-item"><a class="page-link"  >3</a></li>
+                          <li class="page-item"><a class="page-link"  >Next</a></li>
+                        </ul>
+                      </div>
+                      <!-- /.per_page -->
+                    </div>
+                    <!-- /.table-footer px-3 py-2 -->
+                  </div>
+                  <!-- /.table-content -->
+                </div>
+              </div>
+            </div>
+            <!-- /.tab-lined -->
+          </div>
+          <!-- /.col-sm-8 -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.page-content -->
+  </div>
+  <!-- /.main_content -->

@@ -10,11 +10,6 @@ export class SharedService {
 
     //Below function is use to validate Application name exist or not through api.i.e, ApplicationComponent
     validateApplicationName(name: string, type: string) {
-        return this.httpClient.get('http://localhost:3000/checkName');
-    }
-
-    //Below function is use to fetch pipeline parameters and put it in serviceForm .i.e, ApplicationComponent
-    getPipelineParameters() {
-        return this.httpClient.get('../../assets/data/applicationOnboarding.json');
+        return this.httpClient.get(environment.samlUrl+'oes/appOnboarding/nameCheck/'+name);
     }
 }

@@ -27,6 +27,7 @@ import { CloudServicesComponent } from './application-onboarding/cloud-services/
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBoarding.effects';
+import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBo
     DataSourceComponent,
     CloudServicesComponent,
     ReleaseComponent,
-    KeysPipe
+    KeysPipe,
+    AppliactionListComponent
   ],
   imports: [
     BrowserModule,

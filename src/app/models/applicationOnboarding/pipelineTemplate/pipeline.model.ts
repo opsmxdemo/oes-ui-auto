@@ -1,11 +1,16 @@
+import { PipelineTemplate } from './pipelineTemplate.model';
 
 export class Pipeline {
-    value: string;
-    id: number;
-
+    name: string;
+    variables:PipelineTemplate[];
+    
     constructor(data: any) {
         data = data || {};
-        this.value = data.value;
-        this.id = data.id;
+        this.name = data.name;
+        this.variables=[];
+        data.variables.forEach(element => {
+            this.variables.push(new PipelineTemplate(element));
+        });
+        
     }
 }
