@@ -3,6 +3,7 @@ import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/
 import { Action, createReducer, on } from '@ngrx/store';
 import * as OnboardingAction from './onBoarding.actions';
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
+import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 
 
 export interface State {
@@ -10,14 +11,15 @@ export interface State {
     erroeMessage: string;
     editMode:boolean;
     applicationData:CreateApplication;
+    cloudAccountExist:CloudAccount
 }
 
 export const initialState: State = {
     pipelineData: null,
     erroeMessage:null,
     editMode:false,
-    applicationData:null
-
+    applicationData:null,
+    cloudAccountExist:null
 }
 
 export function AppOnboardingReducer(
@@ -53,6 +55,12 @@ export function AppOnboardingReducer(
             (state,action) => ({
                 ...state,
                 applicationData:action.appData
+            })
+        ),
+        on(OnboardingAction.fetchCloudAccount,
+            (state,action) => ({
+                ...state,
+                cloudAccountExist:action.cloudAccount
             })
         )
     )(onboardingState,onboardingAction);

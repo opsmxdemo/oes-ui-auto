@@ -1,13 +1,17 @@
 
 export class PipelineTemplate {
-    value: string;
-    id: number;
-    label:string;
+    defaultValue: string;
+    description:string
+    type: string;
+    name:string;
+    value:string;
 
     constructor(data: any) {
         data = data || {};
+        this.defaultValue = data.defaultValue;
+        this.description = data.description;
+        this.type = data.type;
+        this.name = data.name;
         this.value = data.value;
-        this.id = data.id;
-        this.label = this.label;
     }
 }

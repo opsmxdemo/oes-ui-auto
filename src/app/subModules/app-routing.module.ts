@@ -8,15 +8,17 @@ import { ApplicationOnboardingComponent } from '../application-onboarding/applic
 import { ApplicationComponent } from '../application-onboarding/application/application.component';
 import { DataSourceComponent } from '../application-onboarding/data-source/data-source.component';
 import { CloudServicesComponent } from '../application-onboarding/cloud-services/cloud-services.component';
+import { AppliactionListComponent } from '../application-onboarding/appliaction-list/appliaction-list.component';
 
 
 const routes: Routes = [
   {path:'appdashboard', component:ApplicationDashboardComponent},
   {path:'oesdashboard', component:OesDashboardComponent,canActivate: [AuthGuard]},
   {path:'audit', component:AuditComponent},
-  {path:'setup', component:ApplicationOnboardingComponent,canActivate: [AuthGuard],children: [
+  {path:'setup', component:ApplicationOnboardingComponent,children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
-    {path: '' , component: ApplicationComponent},
+    {path: '' , component: AppliactionListComponent},
+    {path: 'application' , component: ApplicationComponent},
     {path: 'datasource' , component: DataSourceComponent},
     {path: 'cloudservices' , component: CloudServicesComponent},
   ]},

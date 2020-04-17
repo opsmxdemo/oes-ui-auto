@@ -1,35 +1,94 @@
 {
-    "templateData":[
+  "applicationData": [
     {
-        "label":"Pipeline Name",
-        "value":"DEV_Demo pipeline"
+      "name": "DEV Application",
+      "description": "Application is created for dev environment",
+      "status": "ACTIVE"
     },
     {
-        "label":"Pipeline ID",
-        "value":"IPSE234QA"
+      "name": "Test Application",
+      "description": "Test Application is use to test in prod env.",
+      "status": "ACTIVE"
     },
     {
-        "label":"Pipeline Parameter",
-        "value":"Any string"
+      "name": "DemoElasticCredentials",
+      "description": "http://35.228.154.59:9200",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "DemoApplication",
+      "description": "http://af15dd0d3db8e11e9b49",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "ElasticCredentials",
+      "description": "http://35.228.154.59:9200",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "prometheus",
+      "description": "http://af15dd0d3db8e11e9b49",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "DEV Application",
+      "description": "Application is created for dev environment",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "Test Application",
+      "description": "Test Application is use to test in prod env.",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "DemoElasticCredentials",
+      "description": "http://35.228.154.59:9200",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "DemoApplication",
+      "description": "http://af15dd0d3db8e11e9b49",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "ElasticCredentials",
+      "description": "http://35.228.154.59:9200",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "prometheus",
+      "description": "http://af15dd0d3db8e11e9b49",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "DEV Application",
+      "description": "Application is created for dev environment",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "Test Application",
+      "description": "Test Application is use to test in prod env.",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "DemoElasticCredentials",
+      "description": "http://35.228.154.59:9200",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "DemoApplication",
+      "description": "http://af15dd0d3db8e11e9b49",
+      "status": "INACTIVE"
+    },
+    {
+      "name": "ElasticCredentials",
+      "description": "http://35.228.154.59:9200",
+      "status": "ACTIVE"
+    },
+    {
+      "name": "prometheus",
+      "description": "http://af15dd0d3db8e11e9b49",
+      "status": "INACTIVE"
     }
-],
-
-    "pipelineExist":[
-        {
-            "value":"Pipeline-template1",
-            "id":1
-        },
-        {
-            "value":"Pipeline-template2",
-            "id":2
-        },
-        {
-            "value":"Pipeline-template3",
-            "id":3
-        },
-        {
-            "value":"Pipeline-template4",
-            "id":4
-        }
-    ]
+  ]
 }

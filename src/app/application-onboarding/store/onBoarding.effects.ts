@@ -1,4 +1,4 @@
-import { Effect, ofType, createEffect } from '@ngrx/effects';
+import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
+import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
+import {environment} from '../../../environments/environment.prod'
 
 
 //below function is use to fetch error and return appropriate comments
@@ -42,13 +44,13 @@ export class ApplicationOnBoardingEffect {
     ) { }
 
     // Below effect is use for fetch pipline dropdown data.
-    onAppLoads = createEffect(() =>
+    fetchPipeline = createEffect(() =>
         this.actions$.pipe(
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             switchMap(() => {
-                return this.http.get<Pipeline>('../../../assets/data/applicationOnboarding.json').pipe(
+                return this.http.get<Pipeline>(environment.samlUrl+'oes/appOnboarding/pipelineTemplates').pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchPipeline({ pipelineData: resdata });
+                        return OnboardingAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);
@@ -58,7 +60,25 @@ export class ApplicationOnBoardingEffect {
         )
     )
 
-    // Below effect is use for fetch pipline dropdown data.
+    // Below effect is use for fetch cloudAccount dropdown data.
+    fetchCloudAccount = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            switchMap(() => {
+                return this.http.get<CloudAccount>(environment.samlUrl+'oes/appOnboarding/cloudAccounts').pipe(
+                    map(resdata => {
+                        return OnboardingAction.fetchCloudAccount({cloudAccount:resdata['data']})
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+
+    // Below effect is use for fetch Application data on edit mode.
     onEditApplication = createEffect(() =>
         this.actions$.pipe(
             ofType(OnboardingAction.enableEditMode),
@@ -97,7 +117,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             tap(() => {
-                this.router.navigate(['/setup'])
+                this.router.navigate(['/setup/application'])
             })
         ), { dispatch: false }
     )

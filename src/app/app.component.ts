@@ -1,26 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
 import * as AuthAction from './auth/store/auth.actions';
 import * as LayoutAction from './layout/store/layout.actions';
-import * as AppOnboardingAction from './application-onboarding/store/onBoarding.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
-import { Router } from '@angular/router';
 import {environment} from '../environments/environment.prod'
-import { take } from 'rxjs/operators';
+import * as $ from 'jquery';
+import 'bootstrap';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit,AfterViewChecked {
   title = 'OES-UI';
   addclass = false;
   isAuthenticate = false;
   Sidebar:Menu;
   
   constructor( public store:Store<fromApp.AppState>){}
+  // For tooltip
+  ngAfterViewChecked(){
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="dropdown"]').dropdown();
+  }
   ngOnInit(){
 
     //Dispatching action to fetch Sidebar Menu
