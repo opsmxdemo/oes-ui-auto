@@ -23,6 +23,7 @@ export class AppComponent implements OnInit,AfterViewChecked {
   // For tooltip
   ngAfterViewChecked(){
     $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="dropdown"]').dropdown();
   }
   ngOnInit(){
 

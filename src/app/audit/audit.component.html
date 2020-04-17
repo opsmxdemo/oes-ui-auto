@@ -2,19 +2,19 @@
   <div class="page-content flex-grow-1">
       <div class="audit-info px-3 d-flex bg-white">
         <div>
-          <h4>{{groupCountList.allPipelines}}<small>(100%)</small></h4>
+          <h4>{{groupCountList?.allPipelines}}<small>(100%)</small></h4>
           <span class="text-muted">All Pipelines</span>
         </div>
         <div (click)="showSuccessfulPipelines()">
-          <h4>{{groupCountList.successPipelies}}<small>({{((groupCountList.successPipelies / groupCountList.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
+          <h4>{{groupCountList?.successPipelies}}<small>({{((groupCountList?.successPipelies / groupCountList?.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
           <span class="text-muted">Successful</span>
         </div>
         <div (click)=showModifiedPipelines()>
-          <h4>{{groupCountList.modifiedPipelines}}<small>({{((groupCountList.successPipelies / groupCountList.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
+          <h4>{{groupCountList?.modifiedPipelines}}<small>({{((groupCountList?.successPipelies / groupCountList?.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
           <span class="text-muted">Modified</span>
         </div>
         <div (click)=showFailedPipelines()>
-          <h4 class="text-danger">{{groupCountList.failedPipelines}}<small>({{((groupCountList.failedPipelines / groupCountList.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
+          <h4 class="text-danger">{{groupCountList?.failedPipelines}}<small>({{((groupCountList?.failedPipelines / groupCountList?.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
           <span class="text-muted">Failed</span>
         </div>
       </div>
@@ -496,14 +496,14 @@
                           <i class="fa fa-ellipsis-h"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allSuccessDisplayTrueValues">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="pipService1">
-                            <label class="custom-control-label" for="pipService1">{{item.displayValue}}</label>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allSuccessCustomFalseValues">
+                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
                           </div>                          
                           <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allSuccessDisplayFalseValues">
-                            <input type="checkbox" class="custom-control-input" id="triggered_by">
-                            <label class="custom-control-label" for="triggered_by">{{item.id}}</label>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allSuccessCustomAllowedValues" (click)="onSuccessPipelineChange(item)">
+                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
                           </div>
                           <div class="dropdown-footer dropdown-footer-border">
                             <button class="btn text-left btn-block btn-link">Select All</button>
@@ -546,29 +546,49 @@
                   <table class="table table-sticky mb-0">
                     <thead>
                       <tr>
+                        <th *ngFor= "let i of allSuccessDisplayTrueValues">
+                          <span>{{i.displayValue}}</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>                           
+                      <tr *ngFor="let item of successcurrentPage | filter:searchData">
+                        <td *ngFor= "let i of allSuccessDisplayTrueValues">
+                          <div *ngIf="i.key == 'pipelineStartTime' || i.key == 'pipelineEndTime' || i.key == 'manualJudgementEndTime'; then thenBlock else elseBlock"></div>
+                          <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
+                          <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
+                        </td>
+                      </tr>                         
+                    </tbody>
+                  </table>
+
+                 
+                  <!--<table class="table table-sticky mb-0">
+                    <thead>
+                      <tr>
                         <th>
-                          <span><i class="fa fa-caret-right"></i>{{allPipelines.results[0]?.pipelineName}}</span>
+                          <span><i class="fa fa-caret-right"></i>{{allSuccessfullPipelines.results[0]?.pipelineName}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.applicationName}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.applicationName}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.pipelineStartTime}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.pipelineStartTime}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.pipelineEndTime}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.pipelineEndTime}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.pipelineStatus}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.pipelineStatus}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.user}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.user}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementUser}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.manualJudgementUser}}</span>
                         </th>
                         <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementEndTime}}</span>
+                          <span>{{allSuccessfullPipelines.results[0]?.manualJudgementEndTime}}</span>
                         </th>
                       </tr>
                     </thead>
@@ -585,7 +605,7 @@
                       </tr>                          
                     </tbody>
                   </table>
-                  <!-- /.table -->                
+                  <!-- /.table -->           
               </div>
               <!-- /.card-body -->
               <div class="card-footer table-footer px-3 py-2">

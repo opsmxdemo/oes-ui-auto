@@ -44,12 +44,13 @@ export class AuditComponent implements OnInit {
   valueArray: any;
   editAllObj ={
     "key" : "",
-		"displayValue" : "",
+		"displayValue" : null,
 		"displayAllowed": false,
-		"isSelectedToDisplay":true
+		"isCustomAllowed":true
   };
-  allSuccessDisplayTrueValues = [''];
-  allSuccessDisplayFalseValues : any = null;
+  allSuccessCustomAllowedValues : any = [];
+  allSuccessCustomFalseValues : any = [];
+  allSuccessDisplayTrueValues :any =[];
 
   allModifiedPipelines : any = null;
   modifiedResults = [''];
@@ -77,8 +78,13 @@ export class AuditComponent implements OnInit {
   failedcurrentPage = ['']; 
   isFailedPipelines :any;
  
+  //list_items : any =[];
   
   ngOnInit(): void {
+
+    //this.list_items = [{name:'abc',code:'123'},{name:'def',code:'456'}];
+
+  // keys = Object.keys(this.list_items[0]);
     this.isAllPipelines = false;
     this.isSuccessPipelines = false;
     this.isModifiedPipelines = false;
@@ -143,43 +149,51 @@ export class AuditComponent implements OnInit {
     )
   }*/
   
+  
   showSuccessfulPipelines(){
     this.isAllPipelines = false;
     this.isFailedPipelines = false;
     this.isModifiedPipelines = false;
+    //this.allSuccessCustomAllowedValues =[];
     this.auditService.getSuccessfulPipelines().subscribe(
       (response) => {
         console.log(response);
-        this.allSuccessfullPipelines = response;
-        this.keyArray = Object.keys(this.allSuccessfullPipelines.results[0]);
-		    this.valueArray = Object.values(this.allSuccessfullPipelines.results[0]);
-        //var arr = [];
-        
-        this.allSuccessfullPipelines.results[0].forEach((element) => {
-			    this.editAllObj.displayAllowed = true;
-			    switch(element){
+        this.allSuccessfullPipelines = response;        
+        this.allSuccessCustomAllowedValues = [];
+        this.allSuccessCustomFalseValues = [];
+        this.allSuccessDisplayTrueValues = [];
+        Object.entries(this.allSuccessfullPipelines.results[0]).forEach(entry => {
+          let key = entry[0];
+          let value = entry[1];
+          this.editAllObj.displayAllowed = true;
+          this.editAllObj.isCustomAllowed = true;
+			    switch(key){
             case 'buildArtifacts' : this.editAllObj.displayAllowed = false;
             case 'pipelineConfigId': this.editAllObj.displayAllowed = false;
             case 'serverGroups': this.editAllObj.displayAllowed = false; 
             case 'image': this.editAllObj.displayAllowed = false;
             case 'eventId': this.editAllObj.displayAllowed = false; 
-            case 'pipelineTreeView':this.editAllObj.displayAllowed = false; 
-			    }
+            case 'pipelineTreeView':this.editAllObj.displayAllowed = false;
+            case 'applicationName' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineName' :this.editAllObj.isCustomAllowed = false;
+            case 'user' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineStatus' :this.editAllObj.isCustomAllowed = false;
+          }          
 			    this.editAllObj = {
-					  "key" : element,
-					  "displayValue" : "abc",
+					  "key" : key,
+					  "displayValue" : value,
 					  "displayAllowed": this.editAllObj.displayAllowed,
-					  "isSelectedToDisplay":true
+					  "isCustomAllowed":this.editAllObj.isCustomAllowed
           };
-          //arr.push(editAllObj);
-			    //this.allSuccessDisplayTrueValues.push(this.editAllObj);
+          if(this.editAllObj.displayAllowed && this.editAllObj.isCustomAllowed){
+            this.allSuccessCustomAllowedValues.push(this.editAllObj);
+          }else if(this.editAllObj.displayAllowed && !this.editAllObj.isCustomAllowed){ 
+            this.allSuccessCustomFalseValues.push(this.editAllObj);
+          }
+          
         });
-        
-       
-        this.allSuccessDisplayFalseValues = [          
-          { id: "buildArtifacts", displayAllowed:false},         
-          { id: "pipelineStatus", displayAllowed:false}
-        ];
+        this.allSuccessCustomFalseValues.forEach(val => this.allSuccessDisplayTrueValues.push(Object.assign({}, val)));
+        this.allSuccessCustomAllowedValues.forEach(val => this.allSuccessDisplayTrueValues.push(Object.assign({}, val)));
         this.successfulResults = this.allSuccessfullPipelines.results.splice(1,this.allSuccessfullPipelines.results.length);;
         this.isSuccessPipelines = true;
         this.successfulResults.forEach((element,index) => {
@@ -192,6 +206,13 @@ export class AuditComponent implements OnInit {
         console.log(error);
       }
     )
+  }
+
+  onSuccessPipelineChange(item){
+    let indextoDelete = this.allSuccessDisplayTrueValues.findIndex(x => x.key==item.key);
+    if(indextoDelete > -1){
+      this.allSuccessDisplayTrueValues.splice(indextoDelete,1);
+    }    
   }
 
   showModifiedPipelines(){
@@ -222,7 +243,7 @@ export class AuditComponent implements OnInit {
     this.isAllPipelines = false;
     this.isSuccessPipelines = false;
     this.isModifiedPipelines = false;
-    this.auditService.getAllFailedPipelines().subscribe(
+    this.auditService.getauditapplications().subscribe(
       (response) => {
         console.log(response);
         this.failedPipelines = response;        
@@ -304,4 +325,5 @@ export class AuditComponent implements OnInit {
   }
 
 }
+
 

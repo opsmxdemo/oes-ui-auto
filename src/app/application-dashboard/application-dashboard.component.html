@@ -15,7 +15,7 @@
                           <div class="col-sm-8">
                             <div class="data_listArea">
                               <ng-container *ngFor="let application of applicationData; let i=index">
-                                  <div class="data_list" (click)="selectedApplication(i,application)" [ngClass]= "{'active':selectedIndex === i}">
+                                  <div class="data_list" (click)="selectedApplication(i,application)" [ngClass]= "{'active':application.name === selectedApplicationName}">
                                       <div class="data_list_header d-flex align-items-center"> 
                                         <div class="data_list_title">
                                           <h3>{{application.name}}</h3>
@@ -23,22 +23,6 @@
                                         </div>
                                         <!-- /.data_list_title -->
                                         <div class="data_list_actionsc d-flex align-items-center ml-auto">
-                                          <!-- <div class="card_indigators mr-3 d-flex">
-                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
-                                              <img src="../../../assets/ci_check.png" class="img-fluid" alt="check" />
-                                            </button>
-                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
-                                              <img src="../../../assets/ci_close.png" class="img-fluid" alt="check" />
-                                            </button>
-                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
-                                              <img src="../../../assets/ci_minus.png" class="img-fluid" alt="check" />
-                                            </button>
-                                            <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
-                                              <img src="../../../assets/ci_check.png" class="img-fluid" alt="check" />
-                                            </button>
-                                          </div> -->
-                                          <!-- <div class="status"><img src="../../../assets/status_icon.png" class="img-fluid" alt="status" /></div>
-                                          <button class="btn"><img src="../../../assets/thumb_pin.png" class="img-fluid" alt="pin" /></button> -->
                                           <div class="dropdown dropdown-icon-remove">
                                             <button class="btn btn-default px-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                               <i class="fas fa-ellipsis-v"></i>
@@ -54,10 +38,11 @@
                                       <div class="data_list_body d-flex"  >
                                         <div class="data_list_values text-center">
                                           <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around" >
-                                            <li class="showElementHover" *ngFor="let applicationInfo of application.appInfo; let i=index" [ngClass]= "{'active':application.name === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType}">
-                                              <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
-                                              <div class="dl_value_text" (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">{{applicationInfo.applicationInfolabel}} </div>
-                                              <span *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.name === selectedApplicationName"><i  class="fa fa-angle-up"></i></span>
+                                            <li class="showElementHover" *ngFor="let applicationInfo of application.appInfo; let i=index"  [ngClass]= "{'active':application.name === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}" 
+                                             (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
+                                              <div  class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
+                                              <div class="dl_value_text" >{{applicationInfo.applicationInfolabel}} </div>
+                                              <span *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.name === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i  class="fa fa-angle-up"></i></span>
                                             </li>
                                           </ul>
                                         </div>
