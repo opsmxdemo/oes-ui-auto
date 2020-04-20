@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as OnboardingActions from '../store/onBoarding.actions';
@@ -25,8 +25,6 @@ export class AppliactionListComponent implements OnInit {
   }
   currentPage = [];                                                                  // this use to store array of data exists in current page.
   appListLength: number = null;                                                        // It use to store AppList array length
-
-  @ViewChild('searchField', {static: false}) searchField;
 
   constructor(public store: Store<fromApp.AppState>) { }
   
