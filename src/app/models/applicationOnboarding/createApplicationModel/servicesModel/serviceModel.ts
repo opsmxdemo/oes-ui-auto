@@ -3,15 +3,15 @@ import { ServicePipeline } from './servicePipeline.model';
 export class Service {
     serviceName: string;
     status: string;
-    pipeline:ServicePipeline[];
+    pipelines:ServicePipeline[];
 
     constructor(data: any) {
         data = data || {};
         this.serviceName = data.serviceName;
         this.status = data.status;
-        this.pipeline=[];
-        data.pipeline.forEach(element => {
-            this.pipeline.push(new ServicePipeline(element));
+        this.pipelines=[];
+        data.pipelines.forEach(element => {
+            this.pipelines.push(new ServicePipeline(element));
         });
     }
 }

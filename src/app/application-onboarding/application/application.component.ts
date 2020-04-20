@@ -62,25 +62,25 @@ export class ApplicationComponent implements OnInit {
                   new FormGroup({
                     serviceName: new FormControl(serviceArr.serviceName, Validators.required),
                     status: new FormControl(serviceArr.status),
-                    pipeline: new FormArray([])
+                    pipelines: new FormArray([])
                   })
                 );
                 //populating pipeline array
-                serviceArr.pipeline.forEach((pipelineArr, pipelineIndex) => {
+                serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
                   const serviceArray = this.servicesForm.get('services') as FormArray;
-                  const pipelineArray = serviceArray.at(serviceindex).get('pipeline') as FormArray;
+                  const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
                   pipelineArray.push(
                     new FormGroup({
                       pipelinetemplate: new FormControl({ value: pipelineArr.pipelinetemplate, disabled: true }),
                       cloudAccount: new FormControl({ value: pipelineArr.cloudAccount.name, disabled: true }),
                       dockerImageName: new FormControl({ value: pipelineArr.dockerImageName, disabled: true }),
-                      pipelineParameter: new FormArray([])
+                      pipelineParameters: new FormArray([])
                     })
                   )
 
                   //populating pipelieParameter array
-                  pipelineArr.pipelineParameter.forEach(pipelineParameterArr => {
-                    const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameter') as FormArray;
+                  pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
+                    const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
                     pipelineParameter.push(
                       new FormGroup({
                         value: new FormControl({ value: pipelineParameterArr.value, disabled: true }),
@@ -146,7 +146,7 @@ export class ApplicationComponent implements OnInit {
     )
     //for testing purpose pipelineExist
     //this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: 'TestApplication' }));
-    this.store.dispatch(OnboardingActions.loadApp());
+    //this.store.dispatch(OnboardingActions.loadApp());
   }
 
   // Below function is use to define all forms exist in application On boarding component
@@ -173,12 +173,12 @@ export class ApplicationComponent implements OnInit {
         new FormGroup({
           serviceName: new FormControl('', Validators.required),
           status: new FormControl('New'),
-          pipeline: new FormArray([
+          pipelines: new FormArray([
             new FormGroup({
               pipelinetemplate: new FormControl('', Validators.required),
               cloudAccount: new FormControl('', Validators.required),
               dockerImageName: new FormControl('', Validators.required),
-              pipelineParameter: new FormArray([])
+              pipelineParameters: new FormArray([])
             })
           ])
         })
@@ -237,8 +237,8 @@ export class ApplicationComponent implements OnInit {
   onPipelineSelect(service_index: number, pipeline_parameter_index: number, selectedTemplate: string) {
 
     const arrayControl = this.servicesForm.get('services') as FormArray;
-    const innerarrayControl = arrayControl.at(service_index).get('pipeline') as FormArray;
-    const mainData = innerarrayControl.at(pipeline_parameter_index).get('pipelineParameter') as FormArray;
+    const innerarrayControl = arrayControl.at(service_index).get('pipelines') as FormArray;
+    const mainData = innerarrayControl.at(pipeline_parameter_index).get('pipelineParameters') as FormArray;
 
     //clearing existing element of array
     mainData.clear();
@@ -265,12 +265,12 @@ export class ApplicationComponent implements OnInit {
       new FormGroup({
         serviceName: new FormControl('', Validators.required),
         status: new FormControl('New'),
-        pipeline: new FormArray([
+        pipelines: new FormArray([
           new FormGroup({
             pipelinetemplate: new FormControl('', Validators.required),
             cloudAccount: new FormControl('', Validators.required),
             dockerImageName: new FormControl('', Validators.required),
-            pipelineParameter: new FormArray([])
+            pipelineParameters: new FormArray([])
           })
         ])
       })
@@ -330,7 +330,7 @@ export class ApplicationComponent implements OnInit {
   //Below function is use to fetch proper value from pipelineExist array and return in result in string format. i.e, related to pipeline templateParameter section
   getProperValue(serviceIndex, pipelineIndex, pipelineTemplateIndex) {
 
-    const pipelineServiceName = this.servicesForm.value.services[serviceIndex].pipeline[pipelineIndex].pipelinetemplate;
+    const pipelineServiceName = this.servicesForm.value.services[serviceIndex].pipelines[pipelineIndex].pipelinetemplates;
     let placeholder = ''
     for (const key in this.pipelineExists) {
       if (this.pipelineExists[key].name === pipelineServiceName) {
@@ -357,11 +357,11 @@ export class ApplicationComponent implements OnInit {
           }
         })
         this.editServiceForm['services'].forEach((ServiceArr, i) => {
-          ServiceArr.pipeline.forEach((PipelineArr, j) => {
+          ServiceArr.pipelines.forEach((PipelineArr, j) => {
             if (typeof (PipelineArr.cloudAccount) === 'string') {
               PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
             }
-            PipelineArr.pipelineParameter.forEach((DataArr, k) => {
+            PipelineArr.pipelineParameters.forEach((DataArr, k) => {
               if (DataArr.value === '') {
                 DataArr.value = this.getProperValue(i, j, k)
               }
@@ -388,11 +388,11 @@ export class ApplicationComponent implements OnInit {
         this.mainForm = this.createApplicationForm.value;
         // Below is configuration related to service section
         this.servicesForm.value.services.forEach((ServiceArr, i) => {
-          ServiceArr.pipeline.forEach((PipelineArr, j) => {
+          ServiceArr.pipelines.forEach((PipelineArr, j) => {
             if (typeof (PipelineArr.cloudAccount) === 'string') {
               PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
             }
-            PipelineArr.pipelineParameter.forEach((DataArr, k) => {
+            PipelineArr.pipelineParameters.forEach((DataArr, k) => {
               if (DataArr.value === '') {
                 DataArr.value = this.getProperValue(i, j, k)
               }
