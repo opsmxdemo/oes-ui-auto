@@ -154,9 +154,9 @@
                               class="help-block">Service name is required</span>
                             <!-- /.d-flex -->
                           </div>
-                          <div class="col-12 " formArrayName="pipeline">
+                          <div class="col-12 " formArrayName="pipelines">
                             <div class="row"
-                              *ngFor="let pipelineArr of serviceArr.get('pipeline')['controls'];let j=index">
+                              *ngFor="let pipelineArr of serviceArr.get('pipelines')['controls'];let j=index">
                               <div class="col-12 " [formGroupName]="j">
                                 <div class="form-group mb-3 pl-5 text-muted">
                                   <label>Select Service Pipeline</label>
@@ -187,8 +187,8 @@
                                   <span *ngIf="!pipelineArr.get('dockerImageName').valid && pipelineArr.get('dockerImageName').touched"
                                   class="help-block">Docker Image Name is required</span>
                                 </div>
-                                <div class="col-12 " formArrayName="pipelineParameter">
-                                  <div class="row" *ngFor="let pipelineParameterArr of pipelineArr.get('pipelineParameter')['controls']; let k=index">
+                                <div class="col-12 " formArrayName="pipelineParameters">
+                                  <div class="row" *ngFor="let pipelineParameterArr of pipelineArr.get('pipelineParameters')['controls']; let k=index">
                                     <div class="col-12 " [formGroupName]="k">
                                       <div class="form-group mb-3 pl-6 text-muted">
                                         <label>{{pipelineParameterArr.get('name').value}}</label>
