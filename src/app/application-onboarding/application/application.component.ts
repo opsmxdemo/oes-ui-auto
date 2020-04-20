@@ -145,7 +145,7 @@ export class ApplicationComponent implements OnInit {
       }
     )
     //for testing purpose pipelineExist
-    this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: 'TestApplication' }));
+    //this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: 'TestApplication' }));
     //this.store.dispatch(OnboardingActions.loadApp());
   }
 
