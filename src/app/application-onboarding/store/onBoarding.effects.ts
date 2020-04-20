@@ -12,6 +12,7 @@ import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import {environment} from '../../../environments/environment.prod'
+import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -103,6 +104,23 @@ export class ApplicationOnBoardingEffect {
                 return this.http.post<CreateApplication>('http://localhost:3000/', action.appData).pipe(
                     map(resdata => {
                         return OnboardingAction.dataSaved();
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch data related to Application List page
+    fetchAppListData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.loadAppList),
+            switchMap(() => {
+                return this.http.get<ApplicationList>('../../../assets/data/applicationOnboarding.json').pipe(
+                    map(resdata => {
+                        return OnboardingAction.fetchAppList({Applist:resdata['applicationData']});
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);

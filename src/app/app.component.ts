@@ -22,7 +22,9 @@ export class AppComponent implements OnInit,AfterViewChecked {
   constructor( public store:Store<fromApp.AppState>){}
   // For tooltip
   ngAfterViewChecked(){
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger : 'hover'
+   });
     $('[data-toggle="dropdown"]').dropdown();
   }
   ngOnInit(){

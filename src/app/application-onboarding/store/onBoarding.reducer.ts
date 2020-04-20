@@ -4,22 +4,25 @@ import { Action, createReducer, on } from '@ngrx/store';
 import * as OnboardingAction from './onBoarding.actions';
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
+import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 
 
 export interface State {
     pipelineData: Pipeline;
     erroeMessage: string;
-    editMode:boolean;
-    applicationData:CreateApplication;
-    cloudAccountExist:CloudAccount
+    editMode: boolean;
+    applicationData: CreateApplication;
+    cloudAccountExist: CloudAccount;
+    applicationList: ApplicationList[]
 }
 
 export const initialState: State = {
     pipelineData: null,
-    erroeMessage:null,
-    editMode:false,
-    applicationData:null,
-    cloudAccountExist:null
+    erroeMessage: null,
+    editMode: false,
+    applicationData: null,
+    cloudAccountExist: null,
+    applicationList: null
 }
 
 export function AppOnboardingReducer(
@@ -61,6 +64,18 @@ export function AppOnboardingReducer(
             (state,action) => ({
                 ...state,
                 cloudAccountExist:action.cloudAccount
+            })
+        ),
+        on(OnboardingAction.fetchAppList,
+            (state,action) => ({
+                ...state,
+                applicationList: action.Applist
+            })
+        ),
+        on(OnboardingAction.appDelete,
+            (state,action) => ({
+                ...state,
+                applicationList: state.applicationList.filter((applist,index) => index !== action.index)
             })
         )
     )(onboardingState,onboardingAction);

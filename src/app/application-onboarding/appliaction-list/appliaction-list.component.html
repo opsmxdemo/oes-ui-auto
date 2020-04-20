@@ -13,7 +13,7 @@
                       
                     </div>
                     <!-- /.gray-strip -->
-                    <div class="d-flex w-100 h-100 custom_height">
+                    <div class="d-flex w-100 h-100">
                       <div class="no_content m-auto">
                         <img src="../../../assets/blank-123.png" class="hr-image" alt="blank" />
                         <p><strong>Create New Application</strong></p>
@@ -29,7 +29,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                         </div>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()"/>
                       </div>
                     </div>
 
@@ -43,56 +43,18 @@
                         <tr>
                           <th class="font-weight-bold">APPLICATION NAME</th>
                           <th class="font-weight-bold">DESCRIPTION</th>
+                          <th class="font-weight-bold">STATUS</th>
                           <th class="font-weight-bold">ACTION</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>prometheus</td>
-                          <td>http://af15dd0d3db8e11e9b49</td>
+                        <tr *ngFor="let listData of currentPage | filter:searchData; let i=index">
+                          <td>{{listData.name}}</td>
+                          <td>{{listData.description}}</td>
+                          <td>{{listData.status}}</td>
                           <td>
                             <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>ElasticCredentials</td>
-                          <td>http://35.228.154.59:9200</td>
-                          <td>
-                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>DemoApplication</td>
-                          <td>http://af15dd0d3db8e11e9b49</td>
-                          <td>
-                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>DemoElasticCredentials</td>
-                          <td>http://35.228.154.59:9200</td>
-                          <td>
-                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Test Application</td>
-                          <td>Test Application is use to test in prod env.</td>
-                          <td>
-                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a   class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>DEV Application</td>
-                          <td>Application is created for dev environment</td>
-                          <td>
-                            <a class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                            <a class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                            <a (click)="appDelete(i)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                           </td>
                         </tr>
                       </tbody>
@@ -100,23 +62,23 @@
                     <div class="table-footer gray-strip px-3 py-2">
                       <div class="form-inline">
                         <span class="mr-2">Per page</span>
-                        <select class="form-control">
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">25</option>
+                        <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
+                          <option value="10">10</option>
+                          <option value="15">15</option>
+                          <option value="20">20</option>
+                          <option value="25">25</option>
+                         
                         </select>
-                        <span class="ml-3 mr-2">Showing 1 to 20 of 187</span>
+                        <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to {{page.endPoint < appListLength?page.endPoint:appListLength}} of {{appListLength}}</span>
                         <input type="text" class="form-control mr-2" />
                         <button class="btn btn-primary">Go</button>
 
                         <ul class="pagination ml-auto mb-0">
-                          <li class="page-item"><a class="page-link"  >Previous</a></li>
-                          <li class="page-item active"><a class="page-link"  >1</a></li>
-                          <li class="page-item"><a class="page-link"  >2</a></li>
-                          <li class="page-item"><a class="page-link"  >3</a></li>
-                          <li class="page-item"><a class="page-link"  >Next</a></li>
+                          <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                          <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}" (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
+                          <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < appListLength || page.currentPage+1 == page.pageNo ? true : false" (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage+1}}</a></li>
+                          <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}" *ngIf="((page.pageNo+1)*page.pageSize) < appListLength ? true : false" (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a></li>
+                          <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
                         </ul>
                       </div>
                       <!-- /.per_page -->
