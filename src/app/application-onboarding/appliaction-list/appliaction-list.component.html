@@ -43,7 +43,6 @@
                         <tr>
                           <th class="font-weight-bold">APPLICATION NAME</th>
                           <th class="font-weight-bold">DESCRIPTION</th>
-                          <th class="font-weight-bold">STATUS</th>
                           <th class="font-weight-bold">ACTION</th>
                         </tr>
                       </thead>
@@ -51,7 +50,6 @@
                         <tr *ngFor="let listData of currentPage | filter:searchData; let i=index">
                           <td>{{listData.name}}</td>
                           <td>{{listData.description}}</td>
-                          <td>{{listData.status}}</td>
                           <td>
                             <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                             <a (click)="appDelete(i)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
