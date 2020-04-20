@@ -26,9 +26,9 @@ export class ApplicationComponent implements OnInit {
   pipelineExists: Pipeline;                                       // For populating the pipeline Type dropdown exist in services section.
   mainForm: CreateApplication = null;                             // It contain data of all 3 forms which send to backend after successful submission.
   cloudAccountExist: CloudAccount;                                // It contain data of all cloud Account exist.  
-  editMode: boolean = false                                        // It use to define form is in edit phase
-  appData: CreateApplication = null;                               // It use to hold application fetch from api.                                         
-  editServiceForm: Service;                                        // It is use to save edit Service form data
+  editMode: boolean = false                                       // It use to define form is in edit phase
+  appData: CreateApplication = null;                              // It use to hold application fetch from api.                                         
+  editServiceForm: Service;                                       // It is use to save edit Service form data
 
   constructor(public sharedService: SharedService,
     public store: Store<fromApp.AppState>) { }
