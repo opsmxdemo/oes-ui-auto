@@ -2,19 +2,19 @@
   <div class="page-content flex-grow-1">
       <div class="audit-info px-3 d-flex bg-white">
         <div>
-          <h4>{{groupCountList?.allPipelines}}<small>(100%)</small></h4>
+          <h4>{{groupCountList?.totalPipelinesCount}}<!--<small>(100%)</small>--></h4>
           <span class="text-muted">All Pipelines</span>
         </div>
         <div (click)="showSuccessfulPipelines()">
-          <h4>{{groupCountList?.successPipelies}}<small>({{((groupCountList?.successPipelies / groupCountList?.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
+          <h4>{{groupCountList?.totalSuccessfulPipelinesCount}}<!--<small>({{((groupCountList?.totalSuccessfulPipelinesCount / groupCountList?.totalPipelinesCount) * 100 ).toFixed(2)}} %)</small>--></h4>
           <span class="text-muted">Successful</span>
         </div>
         <div (click)=showModifiedPipelines()>
-          <h4>{{groupCountList?.modifiedPipelines}}<small>({{((groupCountList?.successPipelies / groupCountList?.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
+          <h4>{{groupCountList?.totalPipelinesCount}}<!--<small>({{((groupCountList?.successPipelies / groupCountList?.totalPipelinesCount) * 100 ).toFixed(2)}} %)</small>--></h4>
           <span class="text-muted">Modified</span>
         </div>
         <div (click)=showFailedPipelines()>
-          <h4 class="text-danger">{{groupCountList?.failedPipelines}}<small>({{((groupCountList?.failedPipelines / groupCountList?.allPipelines) * 100 ).toFixed(2)}} %)</small></h4>
+          <h4 class="text-danger">{{groupCountList?.totalFailedPipelinesCount}}<!--<small>({{((groupCountList?.failedPipelines / groupCountList?.totalPipelinesCount) * 100 ).toFixed(2)}} %)</small>--></h4>
           <span class="text-muted">Failed</span>
         </div>
       </div>

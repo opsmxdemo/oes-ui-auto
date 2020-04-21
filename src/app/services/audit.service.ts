@@ -11,50 +11,58 @@ export class AuditService{
 ) { }
 
 
-autheticate(){ 
-    return this.httpClient.post(environment.auditUrl+'user/authenticate',{username: "OpsMxUser", password: "OpsMx@123"});
-}
-
-getAllPipelines(token) {
+/*getAllPipelines(token) {
     const params  =  new HttpParams()
         .set('isLatest','false')
         .set('isTreeView','true')
-        .set('authToken',token);
     return this.httpClient.get('https://137.117.94.95:8050/audit/getAllDeployments',{params: params});
-}
+}*/
 
 getPipelineGroupCounts() {   
-    return this.httpClient.get('../../assets/data/auditGroupCount.json');
+    //return this.httpClient.get('../../assets/data/auditGroupCount.json');
+    return this.httpClient.get('http://137.117.94.95:8084/oes/audit/pipelinescount');
 }
 
 /*getSuccessfulPipelines() {
     return this.httpClient.get('../../assets/data/successfullPipelines.json');
 }*/
 
-getSuccessfulPipelines() {    
+getauditapplications() {    
     return this.httpClient.get('http://137.117.94.95:8084/oes/audit/applications');
 }
 
+getAllPipelines() {
+    const params  =  new HttpParams()
+        .set('isLatest','false')
+        .set('isTreeView','true');
+    return this.httpClient.get('http://137.117.94.95:8084/oes/audit/allDeployments',{params: params});
+}
+
+
 getAllModifiedPipelines() {
     const params  =  new HttpParams()
-        .set('isTreeView','false')
-        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
-    return this.httpClient.get('https://137.117.94.95:8050/audit/getPipelinesModified',{
+        .set('isTreeView','true');
+    return this.httpClient.get('http://137.117.94.95:8084/oes/audit/pipelinesModified',{
         params :params
     });
 }
 
 getAllFailedPipelines() {
     const params  =  new HttpParams()
-        .set('isTreeView','false')
-        .set('authToken','SESSION=ZTNiZTc4OWItMTc0Ni00M2NiLWE5Y2QtNTJmNmMyYzBkYWU3');
-    return this.httpClient.get('https://137.117.94.95:8050/audit/geFailedPipelineDetails',{
+        .set('isTreeView','true');
+    return this.httpClient.get('http://137.117.94.95:8084/oes/audit/failedPipelineDetails',{
         params :params
     });
 }
 
 	
-getauditapplications() {
-        return this.httpClient.get('http://137.117.94.95:8084/oes/audit/getLastSuccessfulDeployments');
+
+getSuccessfulPipelines() {
+    const params  =  new HttpParams()
+        .set('isTreeView','true');
+    return this.httpClient.get('http://137.117.94.95:8084/oes/audit/lastSuccessfulDeployments',{
+        params :params
+    });
 }
+
 }
