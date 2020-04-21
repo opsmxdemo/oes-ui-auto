@@ -2029,3 +2029,35 @@ td .table-sm input, td .table-sm select, td .table-sm{
 {
 	color: #6c757d;
 }
+.customToast-img{
+	background-image: url('./assets/images/toast_errorIcon.png');
+    background-size: 55px 42px !important;
+}
+.toast-error {
+    background-color: #fff2f2 !important;
+    color: #e66171 !important;
+    border: 3px solid #ffaeb6 !important;
+    .customToast-img();
+}
+.toast-success {
+    background-color: #d2f7e0 !important;
+    color: #28942c !important;
+    border: 3px solid #66c285 !important;
+    .customToast-img();
+}
+.toast-info {
+    background-color: #e9f7ff !important;
+    color: #58a5cc !important;
+    border: 3px solid #a1e0ff !important;
+    .customToast-img();
+}
+.toast-warning {
+    background-color: #fff7e2 !important;
+    color: #f9a72b !important;
+    border: 3px solid #ffc266 !important;
+    .customToast-img();
+}
+.toast-container .ngx-toastr {
+    padding: 15px 15px 15px 86px;
+    width: 400px;
+}
