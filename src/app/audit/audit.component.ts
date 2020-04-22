@@ -8,13 +8,11 @@ import { AuditService } from '../services/audit.service';
 })
 export class AuditComponent implements OnInit {
 
-  constructor(public auditService: AuditService) { }
-
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
 
-  authResponse: any = null;
-  token: any = null;
-  allPipelines: any = null; //this is use to store response in Object format.
+  constructor(public auditService: AuditService) { }
+
+  allPipelines: any = null; //this is use to stroe response in Object format.
   results = [''];           //this contain result array fetched from response.
   page = {                  //this is use to support pagination in audit page.
     startingPoint: 0,
@@ -76,72 +74,27 @@ export class AuditComponent implements OnInit {
     currentPage: 1,
     pageNo: 1,
   }
-  failedperPageData: number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
-  failedcurrentPage = [''];
-  isFailedPipelines: any;
+  failedperPageData:number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
+  failedcurrentPage = ['']; 
+  isFailedPipelines :any;
   dateDropdownOpen = true;
-  //list_items : any =[];
-
+ 
+  
+  
   ngOnInit(): void {
-
-
-    //this.list_items = [{name:'abc',code:'123'},{name:'def',code:'456'}];
-
-    // keys = Object.keys(this.list_items[0]);
     this.isAllPipelines = false;
     this.isSuccessPipelines = false;
     this.isModifiedPipelines = false;
     this.isFailedPipelines = false;
-    this.auditService.autheticate().subscribe(
-      (response) => {
-        this.authResponse = response;
-        this.token = this.authResponse.authToken;
-        this.auditService.getAllPipelines(this.token).subscribe(
-          (response) => {
-            this.allPipelines = response;
-            //this.results = this.allPipelines.results;
-            this.results = this.allPipelines.results.splice(1, this.allPipelines.results.length);
-            this.isAllPipelines = true;
-            this.results.forEach((element, index) => {
-              if (this.page.endPoint >= index) {
-                this.currentPage.push(element);
-              }
-            });
-          },
-          (error) => {
-            console.log(error);
-          }
-        )
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
 
-    this.auditService.getPipelineGroupCounts().subscribe(
-      (response) => {
-        this.groupCountList = response;
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
-
-
-
-  }
-
-  /*showAllPipelies() {
-    this.isSuccessPipelines = false;
-    this.isFailedPipelines = false;
-    this.isModifiedPipelines = false;
-    this.auditService.getAllPipelines(this.parameters).subscribe(
+    this.auditService.getAllPipelines().subscribe(
       (response) => {
         this.allPipelines = response;
-        this.results = this.allPipelines.results.splice(1,this.allPipelines.results.length);;
+        //this.results = this.allPipelines.results;
+        this.results = this.allPipelines.results.splice(1,this.allPipelines.results.length);
         this.isAllPipelines = true;
-        this.results.forEach((element,index) => {
-          if(this.page.endPoint >= index){
+        this.results.forEach((element, index) => {
+          if (this.page.endPoint >= index) {
             this.currentPage.push(element);
           }
         });
@@ -149,11 +102,19 @@ export class AuditComponent implements OnInit {
       (error) => {
         console.log(error);
       }
-    )
-  }*/
+    )   
+    this.auditService.getPipelineGroupCounts().subscribe(
+      (response) => {
+        this.groupCountList = response;
+      },
+      (error) => {
+        console.log(error);
+      }
+    )   
 
-
-  showSuccessfulPipelines() {
+  }  
+  
+  showSuccessfulPipelines(){
     this.isAllPipelines = false;
     this.isFailedPipelines = false;
     this.isModifiedPipelines = false;
@@ -248,7 +209,7 @@ export class AuditComponent implements OnInit {
     this.isAllPipelines = false;
     this.isSuccessPipelines = false;
     this.isModifiedPipelines = false;
-    this.auditService.getauditapplications().subscribe(
+    this.auditService.getAllFailedPipelines().subscribe(
       (response) => {
         console.log(response);
         this.failedPipelines = response;
@@ -306,7 +267,7 @@ export class AuditComponent implements OnInit {
     }
   }
 
-  //Below function is execute on change of perPage dropdown value
+  //Below function is execute on change of perPage deopdown value
   onChangePerPageData() {
     this.page.pageSize = +this.perPageData;
     if ((this.page.startingPoint + this.page.pageSize) < this.results.length) {
@@ -360,5 +321,6 @@ export class AuditComponent implements OnInit {
   }
 
 }
+
 
 
