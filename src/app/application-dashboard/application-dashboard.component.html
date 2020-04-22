@@ -85,7 +85,10 @@
                                 <!-- /#particle_chart -->
                                
                                 <!-- /.chart_ratio -->
-                                <div class="table-responsive">
+                                <div *ngIf="serviceErrorMessage != ''" class="alert alert-danger" role="alert" >
+                                  <p>{{serviceErrorMessage}}</p>
+                                </div>
+                                <div class="table-responsive" *ngIf="serviceData.length>0">
                                   <table class="table table-pet-service mb-0">
                                   <thead>
                                     <tr>
@@ -101,7 +104,7 @@
                                     <td>{{service.name}}</td>
                                       <td>{{service.score}}</td>
                   
-                                      <td [ngClass]= "{'text-danger':service.status == 'FAIL','text-success':service.status == 'PASS'}">{{service.status}}</td>
+                                      <td [ngClass]= "{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
                                     </tr>
                     
                                   </tbody>
