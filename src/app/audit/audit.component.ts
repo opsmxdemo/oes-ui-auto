@@ -26,7 +26,9 @@ export class AuditComponent implements OnInit {
   searchData: any = null;   // this is use to fetch value from search field.
   groupCountList: any = null;
   isAllPipelines: any;      //this is to show or hide the all pipelines div
-
+  allPipelineCustomAllowedValues :any = [];
+  allPipelineCustomFalseValues : any= [];
+  allPipelineDisplayTrueValues : any= [];
 
   allSuccessfullPipelines: any = null;
   successfulResults = [''];
@@ -64,6 +66,9 @@ export class AuditComponent implements OnInit {
   modifiedperPageData: number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
   modifiedcurrentPage = [''];
   isModifiedPipelines: any;
+  allModifiedCustomAllowedValues :any = [];
+  allModifiedCustomFalseValues :any = [];
+  allModifiedDisplayTrueValues :any = [];
 
   failedPipelines: any = null;
   failedResults = [''];
@@ -77,6 +82,9 @@ export class AuditComponent implements OnInit {
   failedperPageData:number = 20;  //this is use to populate value in perPage dropdown exist in pagination.
   failedcurrentPage = ['']; 
   isFailedPipelines :any;
+  allFailedCustomAllowedValues : any = [];
+  allFailedCustomFalseValues : any = [];
+  allFailedDisplayTrueValues : any = [];
   dateDropdownOpen = true;
  
   
@@ -90,7 +98,41 @@ export class AuditComponent implements OnInit {
     this.auditService.getAllPipelines().subscribe(
       (response) => {
         this.allPipelines = response;
-        //this.results = this.allPipelines.results;
+        this.allPipelineCustomAllowedValues = [];
+        this.allPipelineCustomFalseValues = [];
+        this.allPipelineDisplayTrueValues = [];
+        Object.entries(this.allPipelines.results[0]).forEach(entry => {
+          let key = entry[0];
+          let value = entry[1];
+          this.editAllObj.displayAllowed = true;
+          this.editAllObj.isCustomAllowed = true;
+          switch(key){
+            case 'buildArtifacts' : this.editAllObj.displayAllowed = false;
+            case 'pipelineConfigId': this.editAllObj.displayAllowed = false;
+            case 'serverGroups': this.editAllObj.displayAllowed = false; 
+            case 'image': this.editAllObj.displayAllowed = false;
+            case 'eventId': this.editAllObj.displayAllowed = false; 
+            case 'pipelineTreeView':this.editAllObj.displayAllowed = false;
+            case 'applicationName' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineName' :this.editAllObj.isCustomAllowed = false;
+            case 'user' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineStatus' :this.editAllObj.isCustomAllowed = false;
+          }          
+          this.editAllObj = {
+            "key" : key,
+            "displayValue" : value,
+            "displayAllowed": this.editAllObj.displayAllowed,
+            "isCustomAllowed":this.editAllObj.isCustomAllowed
+          };
+          if(this.editAllObj.displayAllowed && this.editAllObj.isCustomAllowed){
+            this.allPipelineCustomAllowedValues.push(this.editAllObj);
+          }else if(this.editAllObj.displayAllowed && !this.editAllObj.isCustomAllowed){ 
+            this.allPipelineCustomFalseValues.push(this.editAllObj);
+          }
+          
+        });
+        this.allPipelineCustomFalseValues.forEach(val => this.allPipelineDisplayTrueValues.push(Object.assign({}, val)));
+        this.allPipelineCustomAllowedValues.forEach(val => this.allPipelineDisplayTrueValues.push(Object.assign({}, val)));
         this.results = this.allPipelines.results.splice(1,this.allPipelines.results.length);
         this.isAllPipelines = true;
         this.results.forEach((element, index) => {
@@ -113,7 +155,13 @@ export class AuditComponent implements OnInit {
     )   
 
   }  
-  
+  onAllPipelineChange(item){
+    let indextoDelete = this.allPipelineDisplayTrueValues.findIndex(x => x.key==item.key);
+    if(indextoDelete > -1){
+      this.allPipelineDisplayTrueValues.splice(indextoDelete,1);
+    }    
+  }
+
   showSuccessfulPipelines(){
     this.isAllPipelines = false;
     this.isFailedPipelines = false;
@@ -187,12 +235,42 @@ export class AuditComponent implements OnInit {
     this.isFailedPipelines = false;
     this.auditService.getAllModifiedPipelines().subscribe(
       (response) => {
-        console.log(response);
-        this.allModifiedPipelines = response;
-        this.modifiedResults = this.allModifiedPipelines.results.splice(1, this.allModifiedPipelines.results.length);;
+                this.allModifiedPipelines = response;        
+        this.allModifiedCustomAllowedValues = [];
+        this.allModifiedCustomFalseValues = [];
+        this.allModifiedDisplayTrueValues = [];
+        Object.entries(this.allModifiedPipelines.results[0]).forEach(entry => {
+          let key = entry[0];
+          let value = entry[1];
+          this.editAllObj.displayAllowed = true;
+          this.editAllObj.isCustomAllowed = true;
+			    switch(key){            
+            case 'pipelineConfigId': this.editAllObj.displayAllowed = false;             
+            case 'pipelineTreeView':this.editAllObj.displayAllowed = false;
+            case 'applicationName' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineName' :this.editAllObj.isCustomAllowed = false;
+            case 'user' :this.editAllObj.isCustomAllowed = false;
+            case 'updateTimestamp' :this.editAllObj.isCustomAllowed = false;
+          }          
+			    this.editAllObj = {
+					  "key" : key,
+					  "displayValue" : value,
+					  "displayAllowed": this.editAllObj.displayAllowed,
+					  "isCustomAllowed":this.editAllObj.isCustomAllowed
+          };
+          if(this.editAllObj.displayAllowed && this.editAllObj.isCustomAllowed){
+            this.allModifiedCustomAllowedValues.push(this.editAllObj);
+          }else if(this.editAllObj.displayAllowed && !this.editAllObj.isCustomAllowed){ 
+            this.allModifiedCustomFalseValues.push(this.editAllObj);
+          }
+          
+        });
+        this.allModifiedCustomFalseValues.forEach(val => this.allModifiedDisplayTrueValues.push(Object.assign({}, val)));
+        this.allModifiedCustomAllowedValues.forEach(val => this.allModifiedDisplayTrueValues.push(Object.assign({}, val)));
+        this.modifiedResults = this.allModifiedPipelines.results.splice(1,this.allModifiedPipelines.results.length);;
         this.isModifiedPipelines = true;
-        this.modifiedResults.forEach((element, index) => {
-          if (this.modifiedpage.endPoint >= index) {
+        this.modifiedResults.forEach((element,index) => {
+          if(this.modifiedpage.endPoint >= index){
             this.modifiedcurrentPage.push(element);
           }
         });
@@ -203,7 +281,13 @@ export class AuditComponent implements OnInit {
     )
   }
 
-
+  onModifiedPipelineChange(item){
+    let indextoDelete = this.allModifiedDisplayTrueValues.findIndex(x => x.key==item.key);
+    if(indextoDelete > -1){
+      this.allModifiedDisplayTrueValues.splice(indextoDelete,1);
+    }    
+  }
+ 
 
   showFailedPipelines() {
     this.isAllPipelines = false;
@@ -211,12 +295,48 @@ export class AuditComponent implements OnInit {
     this.isModifiedPipelines = false;
     this.auditService.getAllFailedPipelines().subscribe(
       (response) => {
-        console.log(response);
-        this.failedPipelines = response;
-        this.failedResults = this.failedPipelines.results.splice(1, this.failedPipelines.results.length);;
+        this.failedPipelines = response; 
+        this.allFailedCustomAllowedValues = [];
+        this.allFailedCustomFalseValues = [];
+        this.allFailedDisplayTrueValues = [];
+        Object.entries(this.failedPipelines.results[0]).forEach(entry => {
+          let key = entry[0];
+          let value = entry[1];
+          this.editAllObj.displayAllowed = true;
+          this.editAllObj.isCustomAllowed = true;
+			    switch(key){
+            case 'buildArtifacts' : this.editAllObj.displayAllowed = false;
+            case 'pipelineConfigId': this.editAllObj.displayAllowed = false;
+            case 'serverGroups': this.editAllObj.displayAllowed = false; 
+            case 'image': this.editAllObj.displayAllowed = false;
+            case 'eventId': this.editAllObj.displayAllowed = false; 
+            case 'pipelineTreeView':this.editAllObj.displayAllowed = false;
+            case 'buildNumber':this.editAllObj.displayAllowed = false;
+            case 'buildNumber':this.editAllObj.displayAllowed = false;
+            case 'applicationName' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineName' :this.editAllObj.isCustomAllowed = false;
+            case 'user' :this.editAllObj.isCustomAllowed = false;
+            case 'pipelineStatus' :this.editAllObj.isCustomAllowed = false;
+          }          
+			    this.editAllObj = {
+					  "key" : key,
+					  "displayValue" : value,
+					  "displayAllowed": this.editAllObj.displayAllowed,
+					  "isCustomAllowed":this.editAllObj.isCustomAllowed
+          };
+          if(this.editAllObj.displayAllowed && this.editAllObj.isCustomAllowed){
+            this.allFailedCustomAllowedValues.push(this.editAllObj);
+          }else if(this.editAllObj.displayAllowed && !this.editAllObj.isCustomAllowed){ 
+            this.allFailedCustomFalseValues.push(this.editAllObj);
+          }
+          
+        });
+        this.allFailedCustomFalseValues.forEach(val => this.allFailedDisplayTrueValues.push(Object.assign({}, val)));
+        this.allFailedCustomAllowedValues.forEach(val => this.allFailedDisplayTrueValues.push(Object.assign({}, val)));
+        this.failedResults = this.failedPipelines.results.splice(1,this.failedPipelines.results.length);;
         this.isFailedPipelines = true;
-        this.failedResults.forEach((element, index) => {
-          if (this.failedpage.endPoint >= index) {
+        this.failedResults.forEach((element,index) => {
+          if(this.failedpage.endPoint >= index){
             this.failedcurrentPage.push(element);
           }
         });
@@ -227,6 +347,12 @@ export class AuditComponent implements OnInit {
     )
   }
 
+  onFailedPipelineChange(item){
+    let indextoDelete = this.allFailedDisplayTrueValues.findIndex(x => x.key==item.key);
+    if(indextoDelete > -1){
+      this.allFailedDisplayTrueValues.splice(indextoDelete,1);
+    }    
+  }
   //Below function is used to implement pagination
   renderPage() {
     this.currentPage = [];

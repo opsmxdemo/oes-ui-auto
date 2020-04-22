@@ -188,36 +188,15 @@
                           <i class="fa fa-ellipsis-h"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="pipService1">
-                            <label class="custom-control-label" for="pipService1">Pipeline / Service</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="application">
-                            <label class="custom-control-label" for="application">Application</label>
-                          </div>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allPipelineCustomFalseValues">
+                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
+                          </div>                          
                           <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="triggered_by">
-                            <label class="custom-control-label" for="triggered_by">Triggered By</label>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allPipelineCustomAllowedValues" (click)="onSuccessPipelineChange(item)">
+                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
                           </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="start_time">
-                            <label class="custom-control-label" for="start_time">Start Time</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="end_time">
-                            <label class="custom-control-label" for="end_time">End Time</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="server_groups">
-                            <label class="custom-control-label" for="server_groups">Server Groups</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="approved_by">
-                            <label class="custom-control-label" for="approved_by">Approved By</label>
-                          </div>
-
                           <div class="dropdown-footer dropdown-footer-border">
                             <button class="btn text-left btn-block btn-link">Select All</button>
                           </div>
@@ -242,62 +221,25 @@
               </div>
               <!-- /.card-heading -->
               <div class="card-body p-0">                
-                  <!--<table class="table table-filter mb-0">
-                    <thead>
-                      <tr>
-                        <th *ngFor = "let tableHeader of results[0] | keys ">
-                          <span><i class="fa fa-caret-right"></i>{{results[0][tableHeader]}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>                           
-                      <tr *ngFor="let item of currentPage | filter:searchData ">
-                        <td *ngFor = "let itenValue of item | keys"><span>{{item[itenValue]}}</span></td>
-                      </tr>                          
-                    </tbody>
-                  </table> -->
-                  <table class="table table-sticky mb-0">
-                    <thead>
-                      <tr>
-                        <th>
-                          <span><i class="fa fa-caret-right"></i>{{allPipelines.results[0]?.pipelineName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.applicationName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineStartTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineEndTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineStatus}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.user}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementUser}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementEndTime}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let item of currentPage | filter:searchData">
-                        <td><span>{{item.pipelineName}}</span></td>
-                        <td><span>{{item.applicationName}}</span></td>
-                        <td><span>{{+item.pipelineStartTime | date:'medium'}}</span></td>
-                        <td><span>{{+item.pipelineEndTime | date:'medium'}}</span></td>
-                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
-                        <td><span>{{item.user}}</span></td>
-                        <td><span>{{item.manualJudgementUser}}</span></td>
-                        <td><span>{{+item.manualJudgementEndTime | date:'medium'}}</span></td>                                                  
-                      </tr>                          
-                    </tbody>
-                  </table>
+                 
+                <table class="table table-sticky mb-0">
+                  <thead>
+                    <tr>
+                      <th *ngFor= "let i of allPipelineDisplayTrueValues">
+                        <span>{{i.displayValue}}</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>                           
+                    <tr *ngFor="let item of currentPage | filter:searchData">
+                      <td *ngFor= "let i of allPipelineDisplayTrueValues">
+                        <div *ngIf="i.key == 'pipelineStartTime' || i.key == 'pipelineEndTime' || i.key == 'manualJudgementEndTime'; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
+                        <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
+                      </td>
+                    </tr>                         
+                  </tbody>
+                </table>  
                   <!-- /.table -->                
               </div>
               <!-- /.card-body -->
@@ -565,52 +507,7 @@
                         </td>
                       </tr>                         
                     </tbody>
-                  </table>
-
-                 
-                  <!--<table class="table table-sticky mb-0">
-                    <thead>
-                      <tr>
-                        <th>
-                          <span><i class="fa fa-caret-right"></i>{{allSuccessfullPipelines.results[0]?.pipelineName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.applicationName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.pipelineStartTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.pipelineEndTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.pipelineStatus}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.user}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.manualJudgementUser}}</span>
-                        </th>
-                        <th>
-                          <span>{{allSuccessfullPipelines.results[0]?.manualJudgementEndTime}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let item of currentPage | filter:searchData">
-                        <td><span>{{item.pipelineName}}</span></td>
-                        <td><span>{{item.applicationName}}</span></td>
-                        <td><span>{{+item.pipelineStartTime | date:'medium'}}</span></td>
-                        <td><span>{{+item.pipelineEndTime | date:'medium'}}</span></td>
-                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
-                        <td><span>{{item.user}}</span></td>
-                        <td><span>{{item.manualJudgementUser}}</span></td>
-                        <td><span>{{+item.manualJudgementEndTime | date:'medium'}}</span></td>                                                  
-                      </tr>                          
-                    </tbody>
-                  </table>
-                  <!-- /.table -->           
+                  </table>      
               </div>
               <!-- /.card-body -->
               <div class="card-footer table-footer px-3 py-2">
@@ -806,36 +703,15 @@
                           <i class="fa fa-ellipsis-h"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="pipService1">
-                            <label class="custom-control-label" for="pipService1">Pipeline / Service</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="application">
-                            <label class="custom-control-label" for="application">Application</label>
-                          </div>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allModifiedCustomFalseValues">
+                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
+                          </div>                          
                           <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="triggered_by">
-                            <label class="custom-control-label" for="triggered_by">Triggered By</label>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allModifiedCustomAllowedValues" (click)="onModifiedPipelineChange(item)">
+                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
                           </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="start_time">
-                            <label class="custom-control-label" for="start_time">Start Time</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="end_time">
-                            <label class="custom-control-label" for="end_time">End Time</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="server_groups">
-                            <label class="custom-control-label" for="server_groups">Server Groups</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="approved_by">
-                            <label class="custom-control-label" for="approved_by">Approved By</label>
-                          </div>
-
                           <div class="dropdown-footer dropdown-footer-border">
                             <button class="btn text-left btn-block btn-link">Select All</button>
                           </div>
@@ -860,62 +736,24 @@
               </div>
               <!-- /.card-heading -->
               <div class="card-body p-0">                
-                  <!--<table class="table table-filter mb-0">
-                    <thead>
-                      <tr>
-                        <th *ngFor = "let tableHeader of results[0] | keys ">
-                          <span><i class="fa fa-caret-right"></i>{{results[0][tableHeader]}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>                           
-                      <tr *ngFor="let item of currentPage | filter:searchData ">
-                        <td *ngFor = "let itenValue of item | keys"><span>{{item[itenValue]}}</span></td>
-                      </tr>                          
-                    </tbody>
-                  </table> -->
-                  <table class="table table-sticky mb-0">
-                    <thead>
-                      <tr>
-                        <th>
-                          <span><i class="fa fa-caret-right"></i>{{allPipelines.results[0]?.pipelineName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.applicationName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineStartTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineEndTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineStatus}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.user}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementUser}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementEndTime}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let item of currentPage | filter:searchData">
-                        <td><span>{{item.pipelineName}}</span></td>
-                        <td><span>{{item.applicationName}}</span></td>
-                        <td><span>{{+item.pipelineStartTime | date:'medium'}}</span></td>
-                        <td><span>{{+item.pipelineEndTime | date:'medium'}}</span></td>
-                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
-                        <td><span>{{item.user}}</span></td>
-                        <td><span>{{item.manualJudgementUser}}</span></td>
-                        <td><span>{{+item.manualJudgementEndTime | date:'medium'}}</span></td>                                                  
-                      </tr>                          
-                    </tbody>
-                  </table>
+                <table class="table table-sticky mb-0">
+                  <thead>
+                    <tr>
+                      <th *ngFor= "let i of allModifiedDisplayTrueValues">
+                        <span>{{i.displayValue}}</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>                           
+                    <tr *ngFor="let item of modifiedcurrentPage | filter:searchData">
+                      <td *ngFor= "let i of allModifiedDisplayTrueValues">
+                        <div *ngIf="i.key == 'updateTimestamp'; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
+                        <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
+                      </td>
+                    </tr>                         
+                  </tbody>
+                </table>  
                   <!-- /.table -->                
               </div>
               <!-- /.card-body -->
@@ -1112,36 +950,15 @@
                           <i class="fa fa-ellipsis-h"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="pipService1">
-                            <label class="custom-control-label" for="pipService1">Pipeline / Service</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="application">
-                            <label class="custom-control-label" for="application">Application</label>
-                          </div>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allFailedCustomFalseValues">
+                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
+                          </div>                          
                           <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="triggered_by">
-                            <label class="custom-control-label" for="triggered_by">Triggered By</label>
+                          <div class="custom-control custom-checkbox" *ngFor="let item of allFailedCustomAllowedValues" (click)="onFailedPipelineChange(item)">
+                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
+                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
                           </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="start_time">
-                            <label class="custom-control-label" for="start_time">Start Time</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="end_time">
-                            <label class="custom-control-label" for="end_time">End Time</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="server_groups">
-                            <label class="custom-control-label" for="server_groups">Server Groups</label>
-                          </div>
-                          <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="approved_by">
-                            <label class="custom-control-label" for="approved_by">Approved By</label>
-                          </div>
-
                           <div class="dropdown-footer dropdown-footer-border">
                             <button class="btn text-left btn-block btn-link">Select All</button>
                           </div>
@@ -1166,62 +983,24 @@
               </div>
               <!-- /.card-heading -->
               <div class="card-body p-0">                
-                  <!--<table class="table table-filter mb-0">
-                    <thead>
-                      <tr>
-                        <th *ngFor = "let tableHeader of results[0] | keys ">
-                          <span><i class="fa fa-caret-right"></i>{{results[0][tableHeader]}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>                           
-                      <tr *ngFor="let item of currentPage | filter:searchData ">
-                        <td *ngFor = "let itenValue of item | keys"><span>{{item[itenValue]}}</span></td>
-                      </tr>                          
-                    </tbody>
-                  </table> -->
-                  <table class="table table-sticky mb-0">
-                    <thead>
-                      <tr>
-                        <th>
-                          <span><i class="fa fa-caret-right"></i>{{allPipelines.results[0]?.pipelineName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.applicationName}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineStartTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineEndTime}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.pipelineStatus}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.user}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementUser}}</span>
-                        </th>
-                        <th>
-                          <span>{{allPipelines.results[0]?.manualJudgementEndTime}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let item of currentPage | filter:searchData">
-                        <td><span>{{item.pipelineName}}</span></td>
-                        <td><span>{{item.applicationName}}</span></td>
-                        <td><span>{{+item.pipelineStartTime | date:'medium'}}</span></td>
-                        <td><span>{{+item.pipelineEndTime | date:'medium'}}</span></td>
-                        <td><span class="text-uppercase text-success">{{item.pipelineStatus}}</span></td>
-                        <td><span>{{item.user}}</span></td>
-                        <td><span>{{item.manualJudgementUser}}</span></td>
-                        <td><span>{{+item.manualJudgementEndTime | date:'medium'}}</span></td>                                                  
-                      </tr>                          
-                    </tbody>
-                  </table>
+                <table class="table table-sticky mb-0">
+                  <thead>
+                    <tr>
+                      <th *ngFor= "let i of allFailedDisplayTrueValues">
+                        <span>{{i.displayValue}}</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>                           
+                    <tr *ngFor="let item of failedcurrentPage | filter:searchData">
+                      <td *ngFor= "let i of allFailedDisplayTrueValues">
+                        <div *ngIf="i.key == 'pipelineStartTime' || i.key == 'pipelineEndTime' || i.key == 'manualJudgementEndTime'; then thenBlock else elseBlock"></div>
+                        <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
+                        <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
+                      </td>
+                    </tr>                         
+                  </tbody>
+                </table>                   
                   <!-- /.table -->                
               </div>
               <!-- /.card-body -->
