@@ -8,9 +8,9 @@
       <!-- /.sidebar_header -->
       <div class="sidebar_nav">
         <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;">
-          <li routerLink="{{SideMenu.link}}"  routerLinkActive="active"><a><i class="icon {{SideMenu.link}}"></i> <span>{{SideMenu.name}} 
-            <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">
-              <span class="badge badge-primary">{{SideMenu.subMenu.length}}</span>
+          <li class="{{SideMenu.disabled === true? 'disabled_menu':''}}" routerLink="{{SideMenu.link}}" routerLinkActive="active"><a><i class="icon {{SideMenu.link}}"></i> <span>{{SideMenu.name }} 
+            <ng-template [ngIf]="SideMenu.name === 'Applications' ?true:false">
+              <span class="badge badge-primary">{{applicationCount}}</span>
             </ng-template>
             </span></a>
             <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">

@@ -8,17 +8,19 @@
       </div>
     </div>
   </div>
-    <!-- /.mtb_left -->
-    <div class="mtb_right ml-4">
-      <div class="dropdown userSetting">
-        <button class="btn p-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="userPic"><img src="../../assets/images/user_pic.png" alt="User Pic" /></span>
-          {{username}}
-        </button>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" (click)="onLogout()">Logout</a>
-        </div>
+  <!-- /.mtb_left -->
+  <div class="mtb_right ml-4">
+    <div class="dropdown userSetting">
+      <button class="btn p-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <span class="userPic"><span class="userImg"
+            [style.background-color]="imgcolor"><b>{{firstAlphabet[0] | uppercase}}</b></span></span>
+        {{username}}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" (click)="onLogout()">Logout</a>
       </div>
     </div>
-    <!-- /.mtb_right -->
   </div>
+  <!-- /.mtb_right -->
+</div>

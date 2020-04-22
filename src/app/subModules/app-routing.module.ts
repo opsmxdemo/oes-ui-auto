@@ -13,9 +13,9 @@ import { AppliactionListComponent } from '../application-onboarding/appliaction-
 
 const routes: Routes = [
   {path:'appdashboard', component:ApplicationDashboardComponent},
-  {path:'oesdashboard', component:OesDashboardComponent,canActivate: [AuthGuard]},
+  {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
-  {path:'setup', component:ApplicationOnboardingComponent,children: [
+  {path:'setup', component:ApplicationOnboardingComponent, canActivate: [AuthGuard], children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
     {path: '' , component: AppliactionListComponent},
     {path: 'application' , component: ApplicationComponent},
