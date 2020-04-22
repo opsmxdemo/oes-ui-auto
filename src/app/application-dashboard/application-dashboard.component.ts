@@ -4,6 +4,7 @@ import { ReleaseComponent } from '../release/release.component';
 import { stringify } from 'querystring';
 import * as fromApp from '../store/app.reducer';
 import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
+import * as LayoutAction from '../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -18,6 +19,7 @@ export class ApplicationDashboardComponent implements OnInit {
   selectedIndex = 0;
   public serviceData: any[] = [];
   public selectedApplicationName: string;
+  public serviceErrorMessage: string;
   showAppDataType = 'Services';
   showReleaseTable = false;
   // public messageToRelease: string;
@@ -27,6 +29,7 @@ export class ApplicationDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.applicationService.getApplicationList().subscribe((response: any) => {
+      this.store.dispatch(new LayoutAction.ApplicationData(response.length));
       this.applicationData = response;
       this.selectedApplication(0, response[0]);
     });
@@ -36,8 +39,12 @@ export class ApplicationDashboardComponent implements OnInit {
     this.selectedIndex = index;
     this.selectedApplicationName = app.name;
     this.showReleaseTable = false;
+    this.serviceErrorMessage = '';
     this.applicationService.getServiceList(app.name).subscribe((serviceDataList: any) => {
       this.serviceData = serviceDataList;
+      if (serviceDataList.length === 0) {
+        this.serviceErrorMessage = 'No services found in this application'; 
+      }
     });
   }
   public getReleases(menu: string, application: any, index: number, event: Event) {
