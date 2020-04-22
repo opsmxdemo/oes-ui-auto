@@ -13,10 +13,12 @@ export class OesDashboardComponent implements OnInit {
   constructor(public testservice: TestService,
               public notification: NotificationService) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
+    
     this.testservice.getdummyapi().subscribe(
       (response) => {
         console.log('test',response);
+        
         this.notification.showSuccess('Everything is alright','TESTAPI');
       },
       (error) => {

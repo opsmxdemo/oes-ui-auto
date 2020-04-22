@@ -5,7 +5,8 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 export enum LayoutActionTypes {
     LOADPAGE = '[Layout] LoadPage',
     SIDEBAR_FETCH = '[Layout] SideBar Fetch',
-    ERROR_RESPONSE = '[Layout] Error Response'
+    ERROR_RESPONSE = '[Layout] Error Response',
+    APPLICATIONDATA = '[Layout] Appliaction Data'
 }
 
 export class LoadPage implements Action {
@@ -22,6 +23,12 @@ export class ErrorResponse implements Action {
     constructor(public payload:string){}
 }
 
+export class ApplicationData implements Action {
+    readonly type = LayoutActionTypes.APPLICATIONDATA
+    constructor(public payload:number){}
+}
+
 export type LayoutActions = LoadPage   
                         |   SideBarFetch
-                        |   ErrorResponse;
+                        |   ErrorResponse
+                        |   ApplicationData;

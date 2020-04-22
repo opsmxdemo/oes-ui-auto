@@ -4,10 +4,12 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 
 export interface State {
     menu: Menu;
+    appliactionData: number;
 }
 
 export const initialState: State = {
-    menu: null
+    menu: null,
+    appliactionData: null
 }
 
 export function layoutReducer(
@@ -23,6 +25,11 @@ export function layoutReducer(
             return {
                 ...state,
                 menu: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.APPLICATIONDATA:
+            return {
+                ...state,
+                appliactionData: action.payload
             }
         default:
             return state;

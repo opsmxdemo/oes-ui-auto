@@ -12,23 +12,47 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   isAuthenticate: Boolean;
   username:string;
+  imgcolor:string = '#00796b';
+  firstAlphabet:any;
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }
 
   ngOnInit() {
+    this.getRandomColor();
     //fetching data from Auth state
     this.store.select('auth').subscribe(
       (response) => {
+        debugger
+        if(response.authenticated){
           this.isAuthenticate = response.authenticated;
           this.username = response.user;
+          this.firstAlphabet = response.user.split('');
+          console.log("alpha",this.firstAlphabet);
+        }
       }
     );
   }
 
   onLogout(){
     this.store.dispatch(new AuthAction.Logout())
-    // this.router.navigate(['/login']);
+  }
+
+  //Below function is use to get random color for user image
+  getRandomColor() {
+    var characters = "0123456789ABCDEF";
+    var color = '#';
+  
+    for (var i = 0; i < 6; i++) {
+      color += characters[this.getRandomNumber(0, 15)];
+    }
+    this.imgcolor = color;
+  }
+  
+  // Below function is use to generate random number for getcolor method.
+  getRandomNumber(low, high) {
+    var r = Math.floor(Math.random() * (high - low + 1)) + low;
+    return r;
   }
 
 }
