@@ -4,12 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import {environment} from '../../environments/environment.prod';
+import {NotificationService} from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
     public childApplication: string;
     // tslint:disable-next-line: no-shadowed-variable
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient, public notifications: NotificationService) { }
     getApplicationList() {
         return this.httpClient.get(environment.oesUrl + 'oes/dashboard/applications').pipe(
             catchError(this.handleError)
@@ -43,6 +44,7 @@ export class ApplicationService {
         } else {
             // server-side error
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+            this.notifications.showError('error',errorMessage);
         }
         console.log(errorMessage);
         return throwError(errorMessage);

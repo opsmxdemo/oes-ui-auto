@@ -1,7 +1,8 @@
 
       <div class="rightBox position-sticky">
         <div class="rightBox_header d-flex align-items-center">
-          <h3>{{application}}</h3>
+          <h3>{{releaseDataFromParent[0].appName}}</h3>
+          <!-- {{releaseDataFromParent}} -->
           <!-- <div class="btns_icon d-flex ml-auto">
             <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
             <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
@@ -74,7 +75,7 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody *ngFor="let release of releaseData;let $index = index">
+            <tbody *ngFor="let release of releaseDataFromParent;let $index = index">
               <tr (click)="Collaps($index,release)">
                 <td><i class="fa" [ngClass]="{'fa-angle-up': $index != expandedIndex, 'fa-angle-down': $index === expandedIndex}"></i>    {{release.releaseName}}</td>
                 <td>{{release.date | date: 'medium'}}</td>

@@ -11,9 +11,9 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isAuthenticate: Boolean;
-  username:string;
-  imgcolor:string = '#00796b';
-  firstAlphabet:any;
+  username: string;
+  imgcolor: string = '#00796b';
+  firstAlphabet: any;
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
     //fetching data from Auth state
     this.store.select('auth').subscribe(
       (response) => {
-        debugger
+      //  debugger
         if(response.authenticated){
           this.isAuthenticate = response.authenticated;
           this.username = response.user;

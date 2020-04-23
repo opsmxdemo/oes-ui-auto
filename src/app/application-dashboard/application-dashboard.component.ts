@@ -22,19 +22,23 @@ export class ApplicationDashboardComponent implements OnInit {
   public serviceErrorMessage: string;
   showAppDataType = 'Services';
   showReleaseTable = false;
-  // public messageToRelease: string;
-  public message: string;
+  public spinnerService = true;
+  public parentReleaseData: any;
 
+
+  // tslint:disable-next-line:max-line-length
   constructor(private applicationService: ApplicationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
     this.applicationService.getApplicationList().subscribe((response: any) => {
       this.store.dispatch(new LayoutAction.ApplicationData(response.length));
       this.applicationData = response;
+      this.spinnerService = false;
       this.selectedApplication(0, response[0]);
     });
   }
   public selectedApplication(index: number, app: any) {
+    this.spinnerService = true;
     this.showAppDataType = 'Services';
     this.selectedIndex = index;
     this.selectedApplicationName = app.name;
@@ -42,17 +46,23 @@ export class ApplicationDashboardComponent implements OnInit {
     this.serviceErrorMessage = '';
     this.applicationService.getServiceList(app.name).subscribe((serviceDataList: any) => {
       this.serviceData = serviceDataList;
+      this.spinnerService = false;
       if (serviceDataList.length === 0) {
         this.serviceErrorMessage = 'No services found in this application'; 
       }
     });
   }
   public getReleases(menu: string, application: any, index: number, event: Event) {
-    this.message = application;
+    this.spinnerService = true;
     this.applicationService.childApplication = application.name;
     this.selectedApplicationName = application.name;
     this.showAppDataType = menu;
     this.showReleaseTable = true;
+    this.applicationService.getReleaseList(application.name).subscribe((releaseList: any) => {
+      this.parentReleaseData = releaseList;
+      this.parentReleaseData[0].appName = application.name;
+      this.spinnerService = false;
+    });
     event.stopPropagation();
   }
   public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
