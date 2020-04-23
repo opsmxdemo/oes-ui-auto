@@ -23,12 +23,10 @@ export class HeaderComponent implements OnInit {
     //fetching data from Auth state
     this.store.select('auth').subscribe(
       (response) => {
-      //  debugger
         if(response.authenticated){
           this.isAuthenticate = response.authenticated;
           this.username = response.user;
           this.firstAlphabet = response.user.split('');
-          console.log("alpha",this.firstAlphabet);
         }
       }
     );

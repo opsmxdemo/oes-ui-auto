@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as OnboardingAction from './onBoarding.actions';
@@ -13,6 +13,7 @@ import { CreateApplication } from 'src/app/models/applicationOnboarding/createAp
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import {environment} from '../../../environments/environment.prod'
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import { NotificationService } from 'src/app/services/notification.service';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -41,7 +42,8 @@ export class ApplicationOnBoardingEffect {
     constructor(public actions$: Actions,
         public http: HttpClient,
         public store: Store<fromApp.AppState>,
-        public router: Router
+        public router: Router,
+        public toastr: NotificationService
     ) { }
 
     // Below effect is use for fetch pipline dropdown data.
@@ -84,7 +86,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>('http://localhost:3000/' + action.applicationName).pipe(
+                return this.http.get<CreateApplication>(environment.samlUrl+'oes/appOnboarding/editApplication?applicationName=' + action.applicationName).pipe(
                     map(resdata => {
                         return OnboardingAction.fetchAppData({ appData: resdata })
                     }),
@@ -101,7 +103,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.createApplication),
             switchMap(action => {
-                return this.http.post<CreateApplication>('http://localhost:3000/', action.appData).pipe(
+                return this.http.post<CreateApplication>(environment.samlUrl+'oes/appOnboarding/createApplication', action.appData).pipe(
                     map(resdata => {
                         return OnboardingAction.dataSaved();
                     }),
@@ -118,9 +120,9 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadAppList),
             switchMap(() => {
-                return this.http.get<ApplicationList>('../../../assets/data/applicationOnboarding.json').pipe(
+                return this.http.get<ApplicationList>(environment.samlUrl+'oes/appOnboarding/applicationList').pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchAppList({Applist:resdata['applicationData']});
+                        return OnboardingAction.fetchAppList({Applist:resdata['data']});
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);
@@ -144,8 +146,10 @@ export class ApplicationOnBoardingEffect {
     appdashboardRedirect = createEffect(() =>
         this.actions$.pipe(
             ofType(OnboardingAction.dataSaved),
-            tap(() => {
-                this.router.navigate(['/appdashboard'])
+            withLatestFrom(this.store.select('appOnboarding')),
+            tap(([actiondata,appOnboardingState]) => {
+                this.toastr.showSuccess('Data saved successfully !!','SUCCESS')
+                this.router.navigate([appOnboardingState.parentPage]);
             })
         ), { dispatch: false }
     )

@@ -4,6 +4,7 @@ import * as fromApp from '../../store/app.reducer';
 import * as OnboardingActions from '../store/onBoarding.actions';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import * as $ from 'jquery';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-appliaction-list',
@@ -13,7 +14,7 @@ import * as $ from 'jquery';
 
 export class AppliactionListComponent implements OnInit {
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
-  appListData: ApplicationList []= null;                                                 // It use to store Applist data fetched from state.
+  appListData: ApplicationList []= null;                                               // It use to store Applist data fetched from state.
   searchData: string = '';                                                             // this is use to fetch value from search field.
   perPageData: number = 10;                                                            // this is use to populate value in perPage dropdown exist in pagination.
   page = {                                                                             // this is use to support pagination in audit page.
@@ -23,10 +24,11 @@ export class AppliactionListComponent implements OnInit {
     currentPage: 1,
     pageNo: 1,
   }
-  currentPage = [];                                                                  // this use to store array of data exists in current page.
+  currentPage = [];                                                                    // this use to store array of data exists in current page.
   appListLength: number = null;                                                        // It use to store AppList array length
 
-  constructor(public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromApp.AppState>,
+              public toastr: NotificationService) { }
   
   ngOnInit(): void {
     // dispatching action to fetch application data from API
@@ -61,13 +63,13 @@ export class AppliactionListComponent implements OnInit {
 
   // Below function is use to redirect to create application page
   createApplication() {
-    this.store.dispatch(OnboardingActions.loadApp());
+    this.store.dispatch(OnboardingActions.loadApp({page:'/setup'}));
   }
 
   //Below function is used to implement pagination
   renderPage() {
     this.currentPage = [];
-    if(this.page.endPoint < this.appListLength){
+    if(this.page.endPoint < this.appListLength-1){
       for (let i = this.page.startingPoint; i < this.page.endPoint; i++) {
         this.currentPage.push(this.appListData[i]);
       }
@@ -136,7 +138,14 @@ export class AppliactionListComponent implements OnInit {
   //Below function is use to delete application fron existing list
   appDelete(index){
     $("[data-toggle='tooltip']").tooltip('hide');
+    this.toastr.showSuccess('Application is deleted successfully!!','SUCCESS')
     this.store.dispatch(OnboardingActions.appDelete({index}));
+  }
+
+  // Below function is use for edit application
+  editApplication(index){
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: this.appListData[index].name,page:'/setup'}));
   }
 
 }

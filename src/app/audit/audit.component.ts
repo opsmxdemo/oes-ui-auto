@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AuditService } from '../services/audit.service';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-audit',
@@ -90,6 +91,7 @@ export class AuditComponent implements OnInit {
   
   
   ngOnInit(): void {
+
     this.isAllPipelines = false;
     this.isSuccessPipelines = false;
     this.isModifiedPipelines = false;
@@ -171,8 +173,6 @@ export class AuditComponent implements OnInit {
       (response) => {
         console.log(response);
         this.allSuccessfullPipelines = response;
-        //for testing purpose
-        this.datecompare();
         this.allSuccessCustomAllowedValues = [];
         this.allSuccessCustomFalseValues = [];
         this.allSuccessDisplayTrueValues = [];
@@ -416,23 +416,6 @@ export class AuditComponent implements OnInit {
     this.renderPage();
   }
 
-
-  //below function is use to compare date d.getHours() - 2
-  datecompare() {
-    let val = new Date(1584626198001);
-    console.log("date", val);
-    val.setDate(val.getDate() - 2);
-    console.log("date1", val);
-    this.allSuccessfullPipelines.results.forEach((el, index) => {
-      if (new Date(+el.createdTime) >= val) {
-        console.log("true", index);
-      } else {
-        console.log("false", index);
-      }
-    })
-
-  }
-
   // Below function is use to hide datedropdown popup on click f apply.
   dateDropdown(event) {
     if(event.target.id === 'applybtn'){
@@ -442,10 +425,43 @@ export class AuditComponent implements OnInit {
 
   // Below function is use to collect all value of datedropdown
   dateForm(value:any){
-    console.log("value",value);
-    
+    const todayDate = new Date();
+    let firstDay:Date = null;
+    let lastday:Date = null;
+    switch (value.customRadio) {
+      case 'allTime': 
+        return todayDate;
+      case 'lastMonth':
+        firstDay = new Date(todayDate.getFullYear(), todayDate.getMonth()-1, 1);
+        lastday = new Date(todayDate.getFullYear(), todayDate.getMonth(), 0);
+        alert(firstDay+"==="+lastday);
+        break;
+      case 'lastWeek':
+        firstDay = new Date((todayDate.setDate(todayDate.getDate() - todayDate.getDay()-6)));
+        lastday = new Date(todayDate.setDate(todayDate.getDate() - todayDate.getDay()+7));
+        alert(firstDay+"==="+lastday);
+        break;
+      case 'last24Hour':
+        firstDay = new Date(todayDate.setHours(todayDate.getHours() - 24));
+        lastday = new Date();
+        alert(firstDay+"==="+lastday);
+        break;
+      case 'custom': 
+        return "yet to implement"
+    }
+    // let val = new Date(1584626198001);
+    // console.log("firstday", firstDay);
+    // console.log("lastday", lastday);
+    // val.setDate(val.getDate() - 2);
+    // console.log("date1", val);
+    // this.allSuccessfullPipelines.results.forEach((el, index) => {
+    //   if (new Date(+el.createdTime) >= val) {
+    //     console.log("true", index);
+    //   } else {
+    //     console.log("false", index);
+    //   }
+    // })
   }
-
 }
 
 
