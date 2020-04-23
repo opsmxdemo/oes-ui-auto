@@ -18,12 +18,14 @@ class ReleaseEnvironment {
   styleUrls: ['./release.component.less']
 })
 export class ReleaseComponent implements OnInit {
+  @Input() releaseDataFromParent: any;
   public releaseData: any[] = [];
   public newReleaseData: any = null;
   public application: string;
   public releaseServicObj: ReleaseServices;
   public releaseEnvironmentObj: ReleaseEnvironment;
   public selectedServiceIndex: string;
+  public spinnerService = false;
   public promoteData: any = {
     releaseName: '',
     source: '',
@@ -39,18 +41,18 @@ export class ReleaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.expandedIndex = -1;
-    this.application = this.applicationService.childApplication;
-    this.applicationService.getReleaseList(this.application).subscribe((response: any) => {
-      this.releaseData = response;
-    });
+    this.application = this.releaseDataFromParent[0].appName;
+    this.releaseData = this.releaseDataFromParent;
   }
   public newReleaseMethod() {
+    this.spinnerService = true;
     this.showRelease = true;
     this.applicationService.doNewRelease(this.application).subscribe((response: any) => {
         response.services.forEach(item => {
         item.isChecked = false;
       });
         this.newReleaseData = response;
+        this.spinnerService = false;
     });
   }
   public cancelRelease(){
