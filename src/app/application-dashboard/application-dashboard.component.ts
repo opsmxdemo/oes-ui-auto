@@ -61,7 +61,7 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
   public addNewApplication() {
-   this.store.dispatch(AppOnboardingAction.loadApp());
+   this.store.dispatch(AppOnboardingAction.loadApp({page:'appdashboard'}));
   }
 
 }

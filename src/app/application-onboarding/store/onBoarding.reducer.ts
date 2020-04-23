@@ -11,6 +11,7 @@ export interface State {
     pipelineData: Pipeline;
     erroeMessage: string;
     editMode: boolean;
+    parentPage: string;
     applicationData: CreateApplication;
     cloudAccountExist: CloudAccount;
     applicationList: ApplicationList[]
@@ -20,6 +21,7 @@ export const initialState: State = {
     pipelineData: null,
     erroeMessage: null,
     editMode: false,
+    parentPage: null,
     applicationData: null,
     cloudAccountExist: null,
     applicationList: null
@@ -31,9 +33,10 @@ export function AppOnboardingReducer(
     return createReducer(
         initialState,
         on(OnboardingAction.loadApp,
-            state => ({
+            (state, action) => ({
                 ...state,
-                editMode:false
+                editMode:false,
+                parentPage: action.page
             })
         ),
         on(OnboardingAction.fetchPipeline,
@@ -51,7 +54,8 @@ export function AppOnboardingReducer(
         on(OnboardingAction.enableEditMode,
             (state,action) => ({
                 ...state,
-                editMode:action.editMode
+                editMode:action.editMode,
+                parentPage: action.page
             })    
         ),
         on(OnboardingAction.fetchAppData,

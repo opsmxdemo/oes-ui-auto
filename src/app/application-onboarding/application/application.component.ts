@@ -10,6 +10,8 @@ import { CreateApplication } from 'src/app/models/applicationOnboarding/createAp
 import * as OnboardingActions from '../store/onBoarding.actions';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { Service } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/serviceModel';
+import { Router } from '@angular/router';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-application',
@@ -28,16 +30,19 @@ export class ApplicationComponent implements OnInit {
   cloudAccountExist: CloudAccount;                                // It contain data of all cloud Account exist.  
   editMode: boolean = false                                       // It use to define form is in edit phase
   appData: CreateApplication = null;                              // It use to hold application fetch from api.                                         
-  editServiceForm: Service;                                       // It is use to save edit Service form data
+  editServiceForm: Service;                                       // It is use to save edit Service form data.
+  parentPage: string = null;                                      // It is use to redirect the parent page after clicking cancel.
 
   constructor(public sharedService: SharedService,
-    public store: Store<fromApp.AppState>) { }
+              public store: Store<fromApp.AppState>,
+              public router: Router) { }
 
   ngOnInit() {
 
     // fetching data from store and check editMode mode is enable or disabled
     this.store.select('appOnboarding').subscribe(
       (responseData) => {
+        this.parentPage = responseData.parentPage;
         //checking is editMode enabled
         if (responseData.editMode) {
           this.appData = responseData.applicationData;
@@ -144,9 +149,9 @@ export class ApplicationComponent implements OnInit {
         }
       }
     )
-    //for testing purpose pipelineExist
-    //this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: 'TestApplication' }));
-    //this.store.dispatch(OnboardingActions.loadApp());
+
+    //this.store.dispatch(OnboardingActions.enableEditMode({editMode:true,applicationName:'DemoApplicationoesasdfasdfasdf',page:'setup'}));
+    
   }
 
   // Below function is use to define all forms exist in application On boarding component
@@ -192,8 +197,8 @@ export class ApplicationComponent implements OnInit {
 
       this.sharedService.validateApplicationName(control.value, 'application').subscribe(
         (response) => {
-          if (response['nameExist'] === true) {
-            resolve({ 'nameMatches': true });
+          if (response['applicationExist'] === true) {
+            resolve({ 'applicationExist': true });
           } else {
             resolve(null);
           }
@@ -215,6 +220,7 @@ export class ApplicationComponent implements OnInit {
 
   // Below function is use to remove exist permission group 
   removeGroup(index) {
+    $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.groupPermissionForm.get('userGroups')).removeAt(index);
   }
 
@@ -230,6 +236,7 @@ export class ApplicationComponent implements OnInit {
 
   // Below function is use to remove exist environment 
   removeEnvironment(index) {
+    $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.environmentForm.get('environments')).removeAt(index);
   }
 
@@ -287,6 +294,7 @@ export class ApplicationComponent implements OnInit {
         }
       })
     }
+    $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
   }
 
@@ -329,8 +337,7 @@ export class ApplicationComponent implements OnInit {
 
   //Below function is use to fetch proper value from pipelineExist array and return in result in string format. i.e, related to pipeline templateParameter section
   getProperValue(serviceIndex, pipelineIndex, pipelineTemplateIndex) {
-
-    const pipelineServiceName = this.servicesForm.value.services[serviceIndex].pipelines[pipelineIndex].pipelinetemplates;
+    const pipelineServiceName = this.servicesForm.value.services[serviceIndex].pipelines[pipelineIndex].pipelinetemplate;
     let placeholder = ''
     for (const key in this.pipelineExists) {
       if (this.pipelineExists[key].name === pipelineServiceName) {
@@ -341,11 +348,29 @@ export class ApplicationComponent implements OnInit {
     return placeholder
   }
 
+  // Below function is use to redirect to parent page after click on cancel btn
+  cancelForm(){
+    this.router.navigate([this.parentPage])
+  }
+
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    // Execute when user editing application data
+    // Execute when user editing application data ########### EDIT APPLICATION MODE ############
     if (this.editMode) {
-      if (this.createApplicationForm.valid && this.servicesForm && this.environmentForm.valid && this.groupPermissionForm.valid) {
+      const existServiceLength = this.editServiceForm['services'].length;
+      let serviceFormValidation = null;
+      // Below logic check whether newely added service is valid or not
+      if (this.servicesForm.value.services.length > existServiceLength){
+        for (let i=existServiceLength; i< this.servicesForm.value.services.length ; i++){
+          const arrayControl = this.servicesForm.get('services') as FormArray;
+          const innerarrayControl = arrayControl.at(i)
+          innerarrayControl.markAllAsTouched();
+          serviceFormValidation = innerarrayControl.valid;
+        }
+      }else{
+        serviceFormValidation = true;
+      }
+      if (serviceFormValidation && this.environmentForm.valid && this.groupPermissionForm.valid) {
         // Saving all 4 forms data into one
         //#############CreateApplicationForm###############
         this.mainForm = this.createApplicationForm.value;
@@ -377,10 +402,11 @@ export class ApplicationComponent implements OnInit {
 
         console.log("editform", JSON.stringify(this.mainForm));
       } else {
-        this.validForms();
+        this.environmentForm.markAllAsTouched();
+        this.groupPermissionForm.markAllAsTouched();
       }
     }
-    // Execute when user creating application data.
+    // Execute when user creating application data. ######### CREATE APPLICATION MODE ###############
     else {
       if (this.createApplicationForm.valid && this.servicesForm && this.environmentForm.valid && this.groupPermissionForm.valid) {
 
@@ -402,7 +428,9 @@ export class ApplicationComponent implements OnInit {
         this.mainForm.services = this.servicesForm.value.services;
         this.mainForm.environment = this.environmentForm.value.environments;
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
-        console.log("mainform", JSON.stringify(this.mainForm));
+        console.log("editform", JSON.stringify(this.mainForm));
+        //Below action is use to save created form in database
+        this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
       } else {
         this.validForms();
       }
