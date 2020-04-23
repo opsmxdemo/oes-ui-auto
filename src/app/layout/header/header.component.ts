@@ -11,9 +11,9 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isAuthenticate: Boolean;
-  username:string;
-  imgcolor:string = '#00796b';
-  firstAlphabet:any;
+  username: string;
+  imgcolor: string = '#00796b';
+  firstAlphabet: any;
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }

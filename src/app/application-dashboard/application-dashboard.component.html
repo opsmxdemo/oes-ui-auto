@@ -1,121 +1,128 @@
-                    
-                    <div class="main_content">
-                        <div class="page_title d-flex align-items-center">
-                          <h2>Application Dashboard </h2>
+<div class="main_content">
+  <div class="page_title d-flex align-items-center">
+    <h2>Application Dashboard </h2>
+    <div class="page_access ml-auto">
+      <!-- <button class="btn btn-white"><img src="../../../assets/setting_icon.png" alt="icon" /></button> -->
+      <button class="btn btn-primary ml-2" (click)="addNewApplication()" data-backdrop="static" data-keyboard="false"><i
+          class="fa mr-2 fa-plus"></i> Add Application</button>
+    </div>
+    <!-- /.page_access ml-auto -->
+  </div>
+  <!-- /.page_title d-flex -->
 
-                          <div class="page_access ml-auto">
-                            <!-- <button class="btn btn-white"><img src="../../../assets/setting_icon.png" alt="icon" /></button> -->
-                            <button class="btn btn-primary ml-2" (click)="addNewApplication()"  data-backdrop="static" data-keyboard="false"><i class="fa mr-2 fa-plus"></i> Add Application</button>
-                          </div>
-                          <!-- /.page_access ml-auto -->
-                        </div>
-                        <!-- /.page_title d-flex -->
-
-                        <div class="row no-gutters">
-                          <div class="col-sm-8">
-                            <div class="data_listArea">
-                              <ng-container *ngFor="let application of applicationData; let i=index">
-                                  <div class="data_list" (click)="selectedApplication(i,application)" [ngClass]= "{'active':application.name === selectedApplicationName}">
-                                      <div class="data_list_header d-flex align-items-center"> 
-                                        <div class="data_list_title">
-                                          <h3>{{application.name}}</h3>
-                                          <span class="datetime">{{application.date | date:'medium'}} </span>
-                                        </div>
-                                        <!-- /.data_list_title -->
-                                        <div class="data_list_actionsc d-flex align-items-center ml-auto">
-                                          <div class="dropdown dropdown-icon-remove">
-                                            <button class="btn btn-default px-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                              <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" >
-                                              <a *ngFor="let menu of application.appMenu; let i=index" class="dropdown-item showElementHover"  (click)="getReleases(menu,application.name,i,$event)" >{{menu}}</a>
-                                              </div>
-                                          </div>                
-                                        </div>
-                                        <!-- /.data_list_actions -->
-                                      </div>
-                                      <!-- /.data_list_header -->
-                                      <div class="data_list_body d-flex"  >
-                                        <div class="data_list_values text-center">
-                                          <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around" >
-                                            <li class="showElementHover" *ngFor="let applicationInfo of application.appInfo; let i=index"  [ngClass]= "{'active':application.name === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}" 
-                                             (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
-                                              <div  class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
-                                              <div class="dl_value_text" >{{applicationInfo.applicationInfolabel}} </div>
-                                              <span *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.name === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i  class="fa fa-angle-up"></i></span>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <!-- /.data_list_values -->
-                                        <!-- <div class="data_list_score">
+  <div class="row no-gutters">
+    <div class="col-sm-8">
+      <div class="data_listArea">
+        <ng-container *ngFor="let application of applicationData; let i=index">
+          <div class="data_list" (click)="selectedApplication(i,application)"
+            [ngClass]="{'active':application.name === selectedApplicationName}">
+            <div class="data_list_header d-flex align-items-center">
+              <div class="data_list_title">
+                <h3>{{application.name}}</h3>
+                <span class="datetime">{{application.date | date:'medium'}} </span>
+              </div>
+              <!-- /.data_list_title -->
+              <div class="data_list_actionsc d-flex align-items-center ml-auto">
+                <div class="dropdown dropdown-icon-remove">
+                  <button class="btn btn-default px-2" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <a *ngFor="let menu of application.appMenu; let i=index" class="dropdown-item showElementHover"
+                      (click)="getReleases(menu,application.name,i,$event)">{{menu}}</a>
+                  </div>
+                </div>
+              </div>
+              <!-- /.data_list_actions -->
+            </div>
+            <!-- /.data_list_header -->
+            <div class="data_list_body d-flex">
+              <div class="data_list_values text-center">
+                <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around">
+                  <li class="showElementHover" *ngFor="let applicationInfo of application.appInfo; let i=index"
+                    [ngClass]="{'active':application.name === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
+                    (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
+                    <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
+                    <div class="dl_value_text">{{applicationInfo.applicationInfolabel}} </div>
+                    <span
+                      *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.name === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
+                        class="fa fa-angle-up"></i></span>
+                  </li>
+                </ul>
+              </div>
+              <!-- /.data_list_values -->
+              <!-- <div class="data_list_score">
                                           <div class="graph mt-2 text-center">
                                             <img src="../../../assets/graph_lines.png" class="img-fluid" alt="graph lines" />
                                           </div> -->
-                                          <!-- /.graph -->
-                                        <!-- </div> -->
-                                        <!-- /.data_list_score -->
-                                      </div>
-                                      <!-- /.data_list_body -->
-                                    </div>
-                                    <!-- /.data_list -->
-                              </ng-container>
-                             
-                            </div>
-                            <!-- /.data_listArea -->
-                          </div>
-                          <!-- /.col-sm-8 -->
-                         <div class="col-md-4" *ngIf="showReleaseTable">
-                             <app-release></app-release>
-                         </div>
-                          <div class="col-sm-4" *ngIf= "!showReleaseTable">
-                            <div class="rightBox position-sticky">
-                              <div class="rightBox_header d-flex align-items-center">
-                                <h3>{{selectedApplicationName}}</h3>
-                                <!-- <div class="btns_icon d-flex ml-auto">
+              <!-- /.graph -->
+              <!-- </div> -->
+              <!-- /.data_list_score -->
+            </div>
+            <!-- /.data_list_body -->
+          </div>
+          <!-- /.data_list -->
+        </ng-container>
+
+      </div>
+      <!-- /.data_listArea -->
+    </div>
+    <!-- /.col-sm-8 -->
+    <div class="col-md-4" *ngIf="showReleaseTable">
+      <app-release [releaseDataFromParent]="parentReleaseData"></app-release>
+    </div>
+    <div class="col-sm-4" *ngIf="!showReleaseTable && applicationData.length != 0">
+      <div class="rightBox position-sticky">
+        <div class="rightBox_header d-flex align-items-center">
+          <h3>{{selectedApplicationName}}</h3>
+          <!-- <div class="btns_icon d-flex ml-auto">
                                   <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
                                   <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
                                 </div> -->
-                                <!-- /.btns_icon -->
-                              </div>
-                              <!-- /.rightBox_header -->
-                              <div class="rightBox_body">
-                                <!-- <div id="particle_chart">
+          <!-- /.btns_icon -->
+        </div>
+        <!-- /.rightBox_header -->
+        <div class="rightBox_body">
+          <!-- <div id="particle_chart">
                                   <img src="../../../assets/chart_placeholder_01.png" class="img-fluid" alt="chart" />
                                 </div> -->
-                                <!-- /#particle_chart -->
-                               
-                                <!-- /.chart_ratio -->
-                                <div class="table-responsive">
-                                  <table class="table table-pet-service mb-0">
-                                  <thead>
-                                    <tr>
-                                      <th>Service</th>
-                                      <th>Score</th>
-                                      <!-- <th>Metric</th>
-                                      <th>Logs</th> -->
-                                      <th>Status</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr *ngFor="let service of serviceData; let i=index">
-                                    <td>{{service.name}}</td>
-                                      <td>{{service.score}}</td>
-                  
-                                      <td [ngClass]= "{'text-danger':service.status == 'FAIL','text-success':service.status == 'PASS'}">{{service.status}}</td>
-                                    </tr>
-                    
-                                  </tbody>
-                                </table>
-                                </div>
-                                <!-- /.table-responsive -->
-                              </div>
-                              <!-- /.rightBox_body -->
-                            </div>
-                            <!-- /.rightBox -->
-                          </div>
-                          <!-- /.col-sm-4 -->
-                        </div>
-                        <!-- /.row -->
-                      </div>
-                      <!-- /.main_content -->
-              
+          <!-- /#particle_chart -->
+
+          <!-- /.chart_ratio -->
+          <div *ngIf="serviceErrorMessage != ''" class="alert alert-danger" role="alert">
+            <p>{{serviceErrorMessage}}</p>
+          </div>
+          <div class="table-responsive" *ngIf="serviceData.length>0">
+            <table class="table table-pet-service mb-0">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let service of serviceData; let i=index">
+                  <td>{{service.name}}</td>
+                  <td>{{service.score}}</td>
+
+                  <td
+                    [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">
+                    {{service.status}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.table-responsive -->
+        </div>
+        <!-- /.rightBox_body -->
+      </div>
+      <!-- /.rightBox -->
+    </div>
+    <!-- /.col-sm-4 -->
+  </div>
+  <!-- /.row -->
+</div>
+<!-- /.main_content -->
+
