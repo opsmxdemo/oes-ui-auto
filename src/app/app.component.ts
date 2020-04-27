@@ -3,6 +3,8 @@ import { Store } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
 import * as AuthAction from './auth/store/auth.actions';
 import * as LayoutAction from './layout/store/layout.actions';
+import * as AuditActions from './audit/store/audit.actions';
+import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import { environment } from '../environments/environment.prod'
 import * as $ from 'jquery';
@@ -36,9 +38,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
     //Dispatching action for autoLogin functionality
     this.store.dispatch(new AuthAction.LoginStart());
 
-    //Dispatching action for pipelineData functionality
-    //this.store.dispatch(AppOnboardingAction.loadApp());
-
     //fetching data from AuthState
     this.store.select('auth').subscribe(
       (response) => {
@@ -49,6 +48,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
           var resultUrl = arr[0] + "//" + arr[2] + "/appdashboard";
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
+        }else{
+          //Dispatching action to fetch application data from API
+          this.store.dispatch(OnboardingActions.loadAppList());
+
+          //Dispatching action to fetch audit initial data
+          this.store.dispatch(AuditActions.loadAudit());
         }
       }
     );

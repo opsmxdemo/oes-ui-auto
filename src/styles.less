@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~saturn-datepicker/bundle.css';
     
 @font-face {
 font-family: 'Avenir';
@@ -1347,24 +1350,26 @@ td.cell-child{
 .dropdown-menu-picker .form-inline .form-group select{
 	width: 55px;
 }
-.toolpills div{
-	-ms-text-overflow: ellipsis;
+.toolpills > div{
+	display: inline-block;
+	margin-right: 5px;
+	margin-bottom: 8px;
+}
+.toolpills .btn{
 	border: 1px #e6e6e6 solid;
 	padding: 3px 18px 3px 5px;
-	text-overflow: ellipsis;
-	text-decoration: none;
-	display: inline-block;
-	background: #f7f9f8;
-	white-space: nowrap;
+	background: #f7f9f8 !important;
 	border-radius: 2px;
 	position: relative;
-	overflow: hidden;
-	max-width: 200px;
 	font-size: 12px;
-	color: #9b9b9b;
+	color: #9b9b9b !important;
 }
-.toolpills div span{
-	color: #323232;
+.toolpills .btn span{
+	font-weight: 500;
+	color: #323232 !important;
+}
+.toolpills .btn.dropdown-toggle::after{
+	vertical-align: 0;
 }
 .toolpills div span.close{
 	position: absolute;
@@ -2060,4 +2065,12 @@ td .table-sm input, td .table-sm select, td .table-sm{
 .toast-container .ngx-toastr {
     padding: 15px 15px 15px 86px;
     width: 400px;
+}
+.table-dark-head th{
+	color: #252531;
+	font-weight: 600;
+	border-bottom-width: 1px !important;
+}
+.mat-calendar-body-selected {
+    background-color: #009bfa !important;
 }

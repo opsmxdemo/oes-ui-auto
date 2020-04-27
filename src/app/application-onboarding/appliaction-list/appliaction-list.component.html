@@ -15,7 +15,7 @@
                     <!-- /.gray-strip -->
                     <div class="d-flex w-100 h-100">
                       <div class="no_content m-auto">
-                        <img src="../../../assets/blank-123.png" class="hr-image" alt="blank" />
+                        <img src="../../../assets/images//blank-123.png" class="hr-image" alt="blank" />
                         <p><strong>Create New Application</strong></p>
                         <p>Use application for continuous verification and production monitoring <br><small>(To create application, add at least 1 Cloud service and 1 Data source)</small></p>
                       </div>
@@ -43,17 +43,17 @@
                         <tr>
                           <th class="font-weight-bold">APPLICATION NAME</th>
                           <th class="font-weight-bold">DESCRIPTION</th>
-                          <th class="font-weight-bold">ACTION</th>
+                          <!-- <th class="font-weight-bold">ACTION</th> -->
                         </tr>
                       </thead>
                       <tbody>
                         <tr *ngFor="let listData of currentPage | filter:searchData; let i=index">
                           <td>{{listData.name}}</td>
                           <td>{{listData.description}}</td>
-                          <td *ngIf = "listData.status === 'ACTIVE' ? true : false">
-                            <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editApplication(i)"><i class="fas fa-pencil-alt"></i></a>
-                            <a (click)="appDelete(i)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td>
+                          <!-- <td>
+                            <a *ngIf = "listData.status === 'ACTIVE' ? true : false"  class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editApplication(i)"><i class="fas fa-pencil-alt"></i></a>
+                            <a *ngIf = "listData.status === 'ACTIVE' ? true : false" (click)="appDelete(i)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td> -->
                         </tr>
                       </tbody>
                     </table>

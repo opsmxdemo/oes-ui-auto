@@ -1,1145 +1,463 @@
 <div class="main_content p-0">
   <div class="page-content flex-grow-1">
-      <div class="audit-info px-3 d-flex bg-white">
-        <div>
-          <h4>{{groupCountList?.totalPipelinesCount}}<!--<small>(100%)</small>--></h4>
-          <span class="text-muted">All Pipelines</span>
-        </div>
-        <div (click)="showSuccessfulPipelines()">
-          <h4>{{groupCountList?.totalSuccessfulPipelinesCount}}<!--<small>({{((groupCountList?.totalSuccessfulPipelinesCount / groupCountList?.totalPipelinesCount) * 100 ).toFixed(2)}} %)</small>--></h4>
-          <span class="text-muted">Successful</span>
-        </div>
-        <div (click)=showModifiedPipelines()>
-          <h4>{{groupCountList?.totalPipelinesCount}}<!--<small>({{((groupCountList?.successPipelies / groupCountList?.totalPipelinesCount) * 100 ).toFixed(2)}} %)</small>--></h4>
-          <span class="text-muted">Modified</span>
-        </div>
-        <div (click)=showFailedPipelines()>
-          <h4 class="text-danger">{{groupCountList?.totalFailedPipelinesCount}}<!--<small>({{((groupCountList?.failedPipelines / groupCountList?.totalPipelinesCount) * 100 ).toFixed(2)}} %)</small>--></h4>
-          <span class="text-muted">Failed</span>
-        </div>
+    <div class="audit-info px-3 d-flex bg-white">
+      <div>
+        <h4>{{pipelineCount !== null ? pipelineCount.totalPipelinesCount : 0}}</h4>
+        <span class="text-muted">All Pipelines</span>
       </div>
-      <!-- /.page_title d-flex -->
-      
-      <div class="p-3">
-        <div class="row no-gutters">
-          <div class="col-12">
-            <div class="card" *ngIf="isAllPipelines">
-              <div class="card-heading mb-form-db">
-                <div class="form-inline">
-                  <div class="form-group mb-2">                    
-                    <div class="input-group input-group_search">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
-                    </div>
-                  </div>
-                  <div class="form-group ml-sm-3 mb-2">
-                    <select class="form-control">
-                      <option>Select saved filter</option>
-                      <option>Failed-pipelines</option>
-                      <option>passed-pipelines</option>
-                      <option>Successful pipelines by Sumeet Kulkarni</option>
-                    </select>
-                  </div>
-                  <div class="form-group mx-sm-3 mb-2">
-                    <div class="dropdown">
-                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select date range
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton">
-                        <div class="d-flex">
-                          <div>
-                            <h4>Date/Time Range</h4>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="all-time-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="all-time-range">All Time</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-month-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="last-month-range">Last Month</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-week-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="last-week-range">Last week</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-hours-range" name="customRadio" class="custom-control-input" checked>
-                              <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="custom-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="custom-range">Custom</label>
-                            </div>
-                          </div>
-                          <div>
-                            <h4>Date Range</h4>  
-                            <div id="datePicker"></div>                          
-                          </div>
-                          <div>
-                            <h4>From</h4>             
-                            <div class="form-inline">
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="0">00</option>
-                                  <option value="1">01</option>
-                                  <option value="2">02</option>
-                                  <option value="3">03</option>
-                                  <option value="4">04</option>
-                                  <option value="5">05</option>
-                                  <option value="6">06</option>
-                                  <option value="7">07</option>
-                                  <option selected value="8">08</option>
-                                  <option value="9">09</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                              <div class="form-group">:</div>
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="0">00</option>
-                                  <option value="1">01</option>
-                                  <option value="2">02</option>
-                                  <option value="3">03</option>
-                                  <option value="4">04</option>
-                                  <option value="5">05</option>
-                                  <option selected value="6">06</option>
-                                  <option value="7">07</option>
-                                  <option value="8">08</option>
-                                  <option value="9">09</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="AM">AM</option>
-                                  <option value="PM">PM</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                            </div>
-                            <!-- /.form-inline -->  
-
-                            <div class="mt-3">
-                              <h4>To</h4>             
-                              <div class="form-inline">
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option selected value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">:</div>
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option selected value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="AM">AM</option>
-                                    <option value="PM">PM</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                              </div>
-                              <!-- /.form-inline -->                     
-                            </div>                   
-
-                            <div class="mt-5">
-                              <button class="btn btn-block btn-clear mb-1">Clear</button>
-                              <button class="btn btn-block btn-primary">Apply</button>
-                            </div>
-
-                          </div>
-                        </div>
-                        <!-- /.d-flex -->
-                      </div>
-                    </div>
-                  </div>
-                  <button type="submit" class="btn btn-default mb-2"><i class="fa fa-redo"></i> &nbsp;Clear</button>
-
-                  <div class="ml-auto d-flex">
-                    <div class="form-group mx-sm-3 mb-2">
-                      <span data-toggle="tooltip" data-placement="top" title="Create New Filter"><button class="btn btn-default" data-toggle="modal" data-target="#pipelineFilter" data-backdrop="static" data-keyboard="false"><i class="fa fa-filter"></i></button></span>
-                    </div>
-                    <div class="form-group mb-2">
-                      <div class="dropdown dropdown-icon-remove">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-h"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allPipelineCustomFalseValues">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>                          
-                          <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allPipelineCustomAllowedValues" (click)="onSuccessPipelineChange(item)">
-                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>
-                          <div class="dropdown-footer dropdown-footer-border">
-                            <button class="btn text-left btn-block btn-link">Select All</button>
-                          </div>
-                          <!-- /.dropdown-footer -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.form-inline -->
-
-                <div class="toolpills">
-                  <div>Pipeline/Service: <span>aws-product</span> <span class="close">&times;</span></div>
-                  <div>Approve By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Application: <span>TestApp</span> <span class="close">&times;</span></div>
-                  <div>Triggered By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Cluster: <span>OpsMxuser-restapp</span> <span class="close">&times;</span></div>
-                  <div>Status: <span>SUCCEEDED</span> <span class="close">&times;</span></div>
-                </div>
-                <!-- /.toolpills -->
-
-              </div>
-              <!-- /.card-heading -->
-              <div class="card-body p-0">                
-                 
-                <table class="table table-sticky mb-0">
-                  <thead>
-                    <tr>
-                      <th *ngFor= "let i of allPipelineDisplayTrueValues">
-                        <span>{{i.displayValue}}</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>                           
-                    <tr *ngFor="let item of currentPage | filter:searchData">
-                      <td *ngFor= "let i of allPipelineDisplayTrueValues">
-                        <div *ngIf="i.key == 'pipelineStartTime' || i.key == 'pipelineEndTime' || i.key == 'manualJudgementEndTime'; then thenBlock else elseBlock"></div>
-                        <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
-                        <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
-                      </td>
-                    </tr>                         
-                  </tbody>
-                </table>  
-                  <!-- /.table -->                
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer table-footer px-3 py-2">
-                <div class="form-inline">
-                  <span class="mr-2">Per page</span>
-                  <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
-                    <option value=10 >10</option>
-                    <option value=15 >15</option>
-                    <option value=20 >20</option>
-                    <option value=25 >25</option>
-                    <option value=30 >30</option>
-                  </select>
-                  <span class="ml-3 mr-2">Showing {{page.startingPoint}} to {{page.endPoint}} of {{this.results.length}}</span>
-                  <input type="text" class="form-control mr-2" />
-                  <button class="btn btn-primary">Go</button>
-
-                  <ul class="pagination ml-auto mb-0">
-                    <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
-                    <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}" (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
-                    <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage + 1}}</a></li>
-                    <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}" *ngIf="((page.pageNo+1)*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage + 2}}</a></li>
-                    <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
-                  </ul>
-                </div>
-                <!-- /.per_page -->
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-
-
-            <div class="card" *ngIf="isSuccessPipelines">
-              
-              <div class="card-heading mb-form-db">
-                <div class="form-inline">
-                  <div class="form-group mb-2">                    
-                    <div class="input-group input-group_search">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
-                    </div>
-                  </div>
-                  <div class="form-group ml-sm-3 mb-2">
-                    <select class="form-control">
-                      <option>Select saved filter</option>
-                      <option>Failed-pipelines</option>
-                      <option>passed-pipelines</option>
-                      <option>Successful pipelines by Sumeet Kulkarni</option>
-                    </select>
-                  </div>
-                  <div class="form-group mx-sm-3 mb-2">
-                    <div class="dropdown">
-                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded='false' #datedropdownbtn>
-                        Select date range
-                      </button>
-                      <form (submit)="dateForm(dForm.value)" #dForm="ngForm">
-                        <div *ngIf="dateDropdownOpen"  class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton" (click)="dateDropdown($event)">
-                          <div class="d-flex">
-                            <div>
-                              <h4>Date/Time Range</h4>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="all-time-range" name="customRadio" class="custom-control-input" value="allTime" ngModel>
-                                <label class="custom-control-label" for="all-time-range">All Time</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="last-month-range" name="customRadio" class="custom-control-input" value="lastMonth" ngModel>
-                                <label class="custom-control-label" for="last-month-range">Last Month</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="last-week-range" name="customRadio" class="custom-control-input" value="lastWeek" ngModel>
-                                <label class="custom-control-label" for="last-week-range">Last week</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="last-hours-range" name="customRadio" class="custom-control-input" checked value="last24Hour" ngModel>
-                                <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
-                              </div>
-                              <div class="custom-control custom-radio">
-                                <input type="radio" id="custom-range" name="customRadio" class="custom-control-input" value="custom" ngModel>
-                                <label class="custom-control-label" for="custom-range">Custom</label>
-                              </div>
-                            </div>
-                            <div>
-                              <h4>Date Range</h4>  
-                              <div id="datePicker"></div>                          
-                            </div>
-                            <div>
-                              <h4>From</h4>             
-                              <div class="form-inline">
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option selected value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">:</div>
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option selected value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="AM">AM</option>
-                                    <option value="PM">PM</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                              </div>
-                              <!-- /.form-inline -->  
-  
-                              <div class="mt-3">
-                                <h4>To</h4>             
-                                <div class="form-inline">
-                                  <div class="form-group">
-                                    <select class="form-control">
-                                      <option value="0">00</option>
-                                      <option value="1">01</option>
-                                      <option value="2">02</option>
-                                      <option value="3">03</option>
-                                      <option value="4">04</option>
-                                      <option value="5">05</option>
-                                      <option value="6">06</option>
-                                      <option value="7">07</option>
-                                      <option selected value="8">08</option>
-                                      <option value="9">09</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                  <div class="form-group">:</div>
-                                  <div class="form-group">
-                                    <select class="form-control">
-                                      <option value="0">00</option>
-                                      <option value="1">01</option>
-                                      <option value="2">02</option>
-                                      <option value="3">03</option>
-                                      <option value="4">04</option>
-                                      <option value="5">05</option>
-                                      <option selected value="6">06</option>
-                                      <option value="7">07</option>
-                                      <option value="8">08</option>
-                                      <option value="9">09</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                  <div class="form-group">
-                                    <select class="form-control">
-                                      <option value="AM">AM</option>
-                                      <option value="PM">PM</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                </div>
-                                <!-- /.form-inline -->                     
-                              </div>                   
-  
-                              <div class="mt-5">
-                                <button class="btn btn-block btn-clear mb-1">Clear</button>
-                                <button class="btn btn-block btn-primary" id="applybtn">Apply</button>
-                              </div>
-  
-                            </div>
-                          </div>
-                          <!-- /.d-flex -->
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                  <button type="submit" class="btn btn-default mb-2"><i class="fa fa-redo"></i> &nbsp;Clear</button>
-
-                  <div class="ml-auto d-flex">
-                    <div class="form-group mx-sm-3 mb-2">
-                      <span data-toggle="tooltip" data-placement="top" title="Create New Filter"><button class="btn btn-default" data-toggle="modal" data-target="#pipelineFilter" data-backdrop="static" data-keyboard="false"><i class="fa fa-filter"></i></button></span>
-                    </div>
-                    <div class="form-group mb-2">
-                      <div class="dropdown dropdown-icon-remove">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-h"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allSuccessCustomFalseValues">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>                          
-                          <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allSuccessCustomAllowedValues" (click)="onSuccessPipelineChange(item)">
-                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>
-                          <div class="dropdown-footer dropdown-footer-border">
-                            <button class="btn text-left btn-block btn-link">Select All</button>
-                          </div>
-                          <!-- /.dropdown-footer -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.form-inline -->
-
-                <div class="toolpills">
-                  <div>Pipeline/Service: <span>aws-product</span> <span class="close">&times;</span></div>
-                  <div>Approve By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Application: <span>TestApp</span> <span class="close">&times;</span></div>
-                  <div>Triggered By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Cluster: <span>OpsMxuser-restapp</span> <span class="close">&times;</span></div>
-                  <div>Status: <span>SUCCEEDED</span> <span class="close">&times;</span></div>
-                </div>
-                <!-- /.toolpills -->
-
-              </div>
-              <!-- /.card-heading -->
-              <div class="card-body p-0">                
-                  <!--<table class="table table-filter mb-0">
-                    <thead>
-                      <tr>
-                        <th *ngFor = "let tableHeader of results[0] | keys ">
-                          <span><i class="fa fa-caret-right"></i>{{results[0][tableHeader]}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>                           
-                      <tr *ngFor="let item of currentPage | filter:searchData ">
-                        <td *ngFor = "let itenValue of item | keys"><span>{{item[itenValue]}}</span></td>
-                      </tr>                          
-                    </tbody>
-                  </table> -->
-                  <table class="table table-sticky mb-0">
-                    <thead>
-                      <tr>
-                        <th *ngFor= "let i of allSuccessDisplayTrueValues">
-                          <span>{{i.displayValue}}</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>                           
-                      <tr *ngFor="let item of successcurrentPage | filter:searchData">
-                        <td *ngFor= "let i of allSuccessDisplayTrueValues">
-                          <div *ngIf="i.key == 'pipelineStartTime' || i.key == 'pipelineEndTime' || i.key == 'manualJudgementEndTime'; then thenBlock else elseBlock"></div>
-                          <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
-                          <ng-template #elseBlock>
-                            <span *ngIf="i.key === 'createdTime'?false:true">{{item[i.key]}}</span>
-                            <span *ngIf="i.key !== 'createdTime'?false:true">{{+item[i.key] | date:'medium'}}</span>
-                          </ng-template>
-                        </td>
-                      </tr>                         
-                    </tbody>
-                  </table>      
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer table-footer px-3 py-2">
-                <div class="form-inline">
-                  <span class="mr-2">Per page</span>
-                  <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
-                    <option value=10 >10</option>
-                    <option value=15 >15</option>
-                    <option value=20 >20</option>
-                    <option value=25 >25</option>
-                    <option value=30 >30</option>
-                  </select>
-                  <span class="ml-3 mr-2">Showing {{page.startingPoint}} to {{page.endPoint}} of {{this.results.length}}</span>
-                  <input type="text" class="form-control mr-2" />
-                  <button class="btn btn-primary">Go</button>
-
-                  <ul class="pagination ml-auto mb-0">
-                    <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
-                    <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}" (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
-                    <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage + 1}}</a></li>
-                    <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}" *ngIf="((page.pageNo+1)*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage + 2}}</a></li>
-                    <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
-                  </ul>
-                </div>
-                <!-- /.per_page -->
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-
-            <div class="card" *ngIf="isModifiedPipelines">
-              <div class="card-heading mb-form-db">
-                <div class="form-inline">
-                  <div class="form-group mb-2">                    
-                    <div class="input-group input-group_search">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
-                    </div>
-                  </div>
-                  <div class="form-group ml-sm-3 mb-2">
-                    <select class="form-control">
-                      <option>Select saved filter</option>
-                      <option>Failed-pipelines</option>
-                      <option>passed-pipelines</option>
-                      <option>Successful pipelines by Sumeet Kulkarni</option>
-                    </select>
-                  </div>
-                  <div class="form-group mx-sm-3 mb-2">
-                    <div class="dropdown">
-                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select date range
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton">
-                        <div class="d-flex">
-                          <div>
-                            <h4>Date/Time Range</h4>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="all-time-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="all-time-range">All Time</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-month-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="last-month-range">Last Month</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-week-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="last-week-range">Last week</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-hours-range" name="customRadio" class="custom-control-input" checked>
-                              <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="custom-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="custom-range">Custom</label>
-                            </div>
-                          </div>
-                          <div>
-                            <h4>Date Range</h4>  
-                            <div id="datePicker"></div>                          
-                          </div>
-                          <div>
-                            <h4>From</h4>             
-                            <div class="form-inline">
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="0">00</option>
-                                  <option value="1">01</option>
-                                  <option value="2">02</option>
-                                  <option value="3">03</option>
-                                  <option value="4">04</option>
-                                  <option value="5">05</option>
-                                  <option value="6">06</option>
-                                  <option value="7">07</option>
-                                  <option selected value="8">08</option>
-                                  <option value="9">09</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                              <div class="form-group">:</div>
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="0">00</option>
-                                  <option value="1">01</option>
-                                  <option value="2">02</option>
-                                  <option value="3">03</option>
-                                  <option value="4">04</option>
-                                  <option value="5">05</option>
-                                  <option selected value="6">06</option>
-                                  <option value="7">07</option>
-                                  <option value="8">08</option>
-                                  <option value="9">09</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="AM">AM</option>
-                                  <option value="PM">PM</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                            </div>
-                            <!-- /.form-inline -->  
-
-                            <div class="mt-3">
-                              <h4>To</h4>             
-                              <div class="form-inline">
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option selected value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">:</div>
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option selected value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="AM">AM</option>
-                                    <option value="PM">PM</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                              </div>
-                              <!-- /.form-inline -->                     
-                            </div>                   
-
-                            <div class="mt-5">
-                              <button class="btn btn-block btn-clear mb-1">Clear</button>
-                              <button class="btn btn-block btn-primary">Apply</button>
-                            </div>
-
-                          </div>
-                        </div>
-                        <!-- /.d-flex -->
-                      </div>
-                    </div>
-                  </div>
-                  <button type="submit" class="btn btn-default mb-2"><i class="fa fa-redo"></i> &nbsp;Clear</button>
-
-                  <div class="ml-auto d-flex">
-                    <div class="form-group mx-sm-3 mb-2">
-                      <span data-toggle="tooltip" data-placement="top" title="Create New Filter"><button class="btn btn-default" data-toggle="modal" data-target="#pipelineFilter" data-backdrop="static" data-keyboard="false"><i class="fa fa-filter"></i></button></span>
-                    </div>
-                    <div class="form-group mb-2">
-                      <div class="dropdown dropdown-icon-remove">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-h"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allModifiedCustomFalseValues">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>                          
-                          <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allModifiedCustomAllowedValues" (click)="onModifiedPipelineChange(item)">
-                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>
-                          <div class="dropdown-footer dropdown-footer-border">
-                            <button class="btn text-left btn-block btn-link">Select All</button>
-                          </div>
-                          <!-- /.dropdown-footer -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.form-inline -->
-
-                <div class="toolpills">
-                  <div>Pipeline/Service: <span>aws-product</span> <span class="close">&times;</span></div>
-                  <div>Approve By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Application: <span>TestApp</span> <span class="close">&times;</span></div>
-                  <div>Triggered By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Cluster: <span>OpsMxuser-restapp</span> <span class="close">&times;</span></div>
-                  <div>Status: <span>SUCCEEDED</span> <span class="close">&times;</span></div>
-                </div>
-                <!-- /.toolpills -->
-
-              </div>
-              <!-- /.card-heading -->
-              <div class="card-body p-0">                
-                <table class="table table-sticky mb-0">
-                  <thead>
-                    <tr>
-                      <th *ngFor= "let i of allModifiedDisplayTrueValues">
-                        <span>{{i.displayValue}}</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>                           
-                    <tr *ngFor="let item of modifiedcurrentPage | filter:searchData">
-                      <td *ngFor= "let i of allModifiedDisplayTrueValues">
-                        <div *ngIf="i.key == 'updateTimestamp'; then thenBlock else elseBlock"></div>
-                        <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
-                        <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
-                      </td>
-                    </tr>                         
-                  </tbody>
-                </table>  
-                  <!-- /.table -->                
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer table-footer px-3 py-2">
-                <div class="form-inline">
-                  <span class="mr-2">Per page</span>
-                  <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
-                    <option value=10 >10</option>
-                    <option value=15 >15</option>
-                    <option value=20 >20</option>
-                    <option value=25 >25</option>
-                    <option value=30 >30</option>
-                  </select>
-                  <span class="ml-3 mr-2">Showing {{page.startingPoint}} to {{page.endPoint}} of {{this.results.length}}</span>
-                  <input type="text" class="form-control mr-2" />
-                  <button class="btn btn-primary">Go</button>
-
-                  <ul class="pagination ml-auto mb-0">
-                    <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
-                    <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}" (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
-                    <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage + 1}}</a></li>
-                    <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}" *ngIf="((page.pageNo+1)*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage + 2}}</a></li>
-                    <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
-                  </ul>
-                </div>
-                <!-- /.per_page -->
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-
-            <div class="card" *ngIf="isFailedPipelines">
-              <div class="card-heading mb-form-db">
-                <div class="form-inline">
-                  <div class="form-group mb-2">                    
-                    <div class="input-group input-group_search">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                      </div>
-                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
-                    </div>
-                  </div>
-                  <div class="form-group ml-sm-3 mb-2">
-                    <select class="form-control">
-                      <option>Select saved filter</option>
-                      <option>Failed-pipelines</option>
-                      <option>passed-pipelines</option>
-                      <option>Successful pipelines by Sumeet Kulkarni</option>
-                    </select>
-                  </div>
-                  <div class="form-group mx-sm-3 mb-2">
-                    <div class="dropdown">
-                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select date range
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton">
-                        <div class="d-flex">
-                          <div>
-                            <h4>Date/Time Range</h4>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="all-time-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="all-time-range">All Time</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-month-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="last-month-range">Last Month</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-week-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="last-week-range">Last week</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="last-hours-range" name="customRadio" class="custom-control-input" checked>
-                              <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                              <input type="radio" id="custom-range" name="customRadio" class="custom-control-input">
-                              <label class="custom-control-label" for="custom-range">Custom</label>
-                            </div>
-                          </div>
-                          <div>
-                            <h4>Date Range</h4>  
-                            <div id="datePicker"></div>                          
-                          </div>
-                          <div>
-                            <h4>From</h4>             
-                            <div class="form-inline">
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="0">00</option>
-                                  <option value="1">01</option>
-                                  <option value="2">02</option>
-                                  <option value="3">03</option>
-                                  <option value="4">04</option>
-                                  <option value="5">05</option>
-                                  <option value="6">06</option>
-                                  <option value="7">07</option>
-                                  <option selected value="8">08</option>
-                                  <option value="9">09</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                              <div class="form-group">:</div>
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="0">00</option>
-                                  <option value="1">01</option>
-                                  <option value="2">02</option>
-                                  <option value="3">03</option>
-                                  <option value="4">04</option>
-                                  <option value="5">05</option>
-                                  <option selected value="6">06</option>
-                                  <option value="7">07</option>
-                                  <option value="8">08</option>
-                                  <option value="9">09</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                              <div class="form-group">
-                                <select class="form-control">
-                                  <option value="AM">AM</option>
-                                  <option value="PM">PM</option>
-                                </select>
-                              </div>
-                              <!-- /.form-group -->
-                            </div>
-                            <!-- /.form-inline -->  
-
-                            <div class="mt-3">
-                              <h4>To</h4>             
-                              <div class="form-inline">
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option selected value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">:</div>
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="0">00</option>
-                                    <option value="1">01</option>
-                                    <option value="2">02</option>
-                                    <option value="3">03</option>
-                                    <option value="4">04</option>
-                                    <option value="5">05</option>
-                                    <option selected value="6">06</option>
-                                    <option value="7">07</option>
-                                    <option value="8">08</option>
-                                    <option value="9">09</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                                <div class="form-group">
-                                  <select class="form-control">
-                                    <option value="AM">AM</option>
-                                    <option value="PM">PM</option>
-                                  </select>
-                                </div>
-                                <!-- /.form-group -->
-                              </div>
-                              <!-- /.form-inline -->                     
-                            </div>                   
-
-                            <div class="mt-5">
-                              <button class="btn btn-block btn-clear mb-1">Clear</button>
-                              <button class="btn btn-block btn-primary">Apply</button>
-                            </div>
-
-                          </div>
-                        </div>
-                        <!-- /.d-flex -->
-                      </div>
-                    </div>
-                  </div>
-                  <button type="submit" class="btn btn-default mb-2"><i class="fa fa-redo"></i> &nbsp;Clear</button>
-
-                  <div class="ml-auto d-flex">
-                    <div class="form-group mx-sm-3 mb-2">
-                      <span data-toggle="tooltip" data-placement="top" title="Create New Filter"><button class="btn btn-default" data-toggle="modal" data-target="#pipelineFilter" data-backdrop="static" data-keyboard="false"><i class="fa fa-filter"></i></button></span>
-                    </div>
-                    <div class="form-group mb-2">
-                      <div class="dropdown dropdown-icon-remove">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-h"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allFailedCustomFalseValues">
-                            <input type="checkbox" class="custom-control-input" disabled checked id="{{item.key}}">
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>                          
-                          <div class="dropdown-divider"></div>
-                          <div class="custom-control custom-checkbox" *ngFor="let item of allFailedCustomAllowedValues" (click)="onFailedPipelineChange(item)">
-                            <input type="checkbox" class="custom-control-input" id="{{item.key}}"  >
-                            <label class="custom-control-label" for="">{{item.displayValue}}</label>
-                          </div>
-                          <div class="dropdown-footer dropdown-footer-border">
-                            <button class="btn text-left btn-block btn-link">Select All</button>
-                          </div>
-                          <!-- /.dropdown-footer -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.form-inline -->
-
-                <div class="toolpills">
-                  <div>Pipeline/Service: <span>aws-product</span> <span class="close">&times;</span></div>
-                  <div>Approve By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Application: <span>TestApp</span> <span class="close">&times;</span></div>
-                  <div>Triggered By: <span>OpsMxuser</span> <span class="close">&times;</span></div>
-                  <div>Cluster: <span>OpsMxuser-restapp</span> <span class="close">&times;</span></div>
-                  <div>Status: <span>SUCCEEDED</span> <span class="close">&times;</span></div>
-                </div>
-                <!-- /.toolpills -->
-
-              </div>
-              <!-- /.card-heading -->
-              <div class="card-body p-0">                
-                <table class="table table-sticky mb-0">
-                  <thead>
-                    <tr>
-                      <th *ngFor= "let i of allFailedDisplayTrueValues">
-                        <span>{{i.displayValue}}</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>                           
-                    <tr *ngFor="let item of failedcurrentPage | filter:searchData">
-                      <td *ngFor= "let i of allFailedDisplayTrueValues">
-                        <div *ngIf="i.key == 'pipelineStartTime' || i.key == 'pipelineEndTime' || i.key == 'manualJudgementEndTime'; then thenBlock else elseBlock"></div>
-                        <ng-template #thenBlock><span>{{+item[i.key] | date:'medium'}}</span></ng-template>
-                        <ng-template #elseBlock><span>{{item[i.key]}}</span></ng-template>
-                      </td>
-                    </tr>                         
-                  </tbody>
-                </table>                   
-                  <!-- /.table -->                
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer table-footer px-3 py-2">
-                <div class="form-inline">
-                  <span class="mr-2">Per page</span>
-                  <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
-                    <option value=10 >10</option>
-                    <option value=15 >15</option>
-                    <option value=20 >20</option>
-                    <option value=25 >25</option>
-                    <option value=30 >30</option>
-                  </select>
-                  <span class="ml-3 mr-2">Showing {{page.startingPoint}} to {{page.endPoint}} of {{this.results.length}}</span>
-                  <input type="text" class="form-control mr-2" />
-                  <button class="btn btn-primary">Go</button>
-
-                  <ul class="pagination ml-auto mb-0">
-                    <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
-                    <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}" (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
-                    <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage + 1}}</a></li>
-                    <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}" *ngIf="((page.pageNo+1)*page.pageSize) < results.length ? true : false" (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage + 2}}</a></li>
-                    <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
-                  </ul>
-                </div>
-                <!-- /.per_page -->
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
+      <div>
+        <h4>{{pipelineCount !== null ? pipelineCount.totalPipelinesRunCount : 0}}</h4>
+        <span class="text-muted">Pipeline Runs</span>
+      </div>
+      <!-- <div>
+            <h4>{{pipelineCount !== null ? pipelineCount.totalPipelinesCount : 0}}</h4>
+            <span class="text-muted">Modified</span>
           </div>
-          <!-- /.col-12 -->
-        </div>
-          <!-- /.row -->
-      </div>
+          <div>
+            <h4 class="text-danger">{{pipelineCount !== null ? pipelineCount.totalFailedPipelinesCount : 0}}</h4>
+            <span class="text-muted">Failed</span>
+          </div> -->
     </div>
-    <!-- /.page-content -->
-</div>
+    <!-- /.page_title d-flex -->
 
+    <div class="p-3">
+      <div class="row no-gutters">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-heading mb-form-db">
+              <div class="form-inline">
+                <div class="form-group ml-sm-2 mb-2">
+                  <select class="form-control">
+                    <option>Application Name</option>
+                    <option></option>
+                  </select>
+                </div>
+                <div class="form-group ml-sm-2 mb-2">
+                  <select class="form-control">
+                    <option>Cloud Provider</option>
+                    <option></option>
+                  </select>
+                </div>
+                <div class="form-group ml-sm-2 mb-2">
+                  <select class="form-control" style="width: 150px;">
+                    <option>Select saved filter</option>
+                    <option>Failed-pipelines</option>
+                    <option>passed-pipelines</option>
+                    <option>Successful pipelines by Sumeet Kulkarni</option>
+                  </select>
+                </div>
+                <div class="form-group ml-sm-2 mb-2">
+                  <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select date range
+                    </button>
+                    <form (submit)="dateForm(dForm.value)" #dForm="ngForm">
+                      <div  class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton" (click)="dateDropdown($event)">
+                        <div class="d-flex">
+                          <div>
+                            <h4>Date/Time Range</h4>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="all-time-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" value="allTime" ngModel>
+                              <label class="custom-control-label" for="all-time-range">All Time</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="last-month-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" value="lastMonth" ngModel>
+                              <label class="custom-control-label" for="last-month-range">Last Month</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="last-week-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" value="lastWeek" ngModel>
+                              <label class="custom-control-label" for="last-week-range">Last week</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="last-hours-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" checked value="last24Hour" ngModel>
+                              <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                              <input type="radio" id="custom-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" value="custom" ngModel>
+                              <label class="custom-control-label" for="custom-range">Custom</label>
+                            </div>
+                          </div>
+                          <div>
+                            <h4>Date Range</h4>  
+                            <span class="code" *ngIf="inlineRange">
+                              {{ inlineRange.begin | date }} to
+                              {{ inlineRange.end | date }}
+                            </span>
+                            <div class="inlineCalendarContainer {{disableDatepicker === true?'div-disabled':''}}" (click)="datepicker($event)">
+                              <sat-calendar [rangeMode]="true"
+                                            (dateRangesChange)="inlineRangeChange($event)">
+                              </sat-calendar>
+                            </div>                      
+                          </div>
+                          <div class="{{disableDatepicker === true?'div-disabled':''}}">
+                            <h4>From</h4>
+                              <div class="form-inline">
+                                <div class="form-group">
+                                  <select class="form-control" name="firstdayHours" id="firstdayHours" ngModel>
+                                    <option value="">00</option>
+                                    <option *ngFor = "let time of timerHour;let i = index" value="{{i+1}}" selected>{{time}}</option>
+                                    <option value="11">11</option>
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                                <div class="form-group">:</div>
+                                <div class="form-group">
+                                  <select class="form-control" name="firstdayMinutes" id="firstdayMinutes" ngModel>
+                                    <option value="">00</option>
+                                    <option *ngFor = "let time of timerMinute;let i = index" value="{{i+1}}">{{time}}</option>
+                                    <option value="59">59</option>
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                                <div class="form-group">
+                                  <select class="form-control" name="firstdayMeridiem" id="firstdayMeridiem" ngModel>
+                                    <option value="">AM</option>
+                                    <option value="PM">PM</option>
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                              </div>
+                            <!-- /.form-inline -->  
 
+                            <div class="mt-3">
+                              <h4>To</h4>             
+                              <div class="form-inline">
+                                <div class="form-group">
+                                  <select class="form-control" name="lastdayHours" id="lastdayHours" ngModel>
+                                    <option value="00">00</option>
+                                    <option *ngFor = "let time of timerHour;let i = index" value="{{i+1}}" selected>{{time}}</option>
+                                    <option value="">11</option>
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                                <div class="form-group">:</div>
+                                <div class="form-group">
+                                  <select class="form-control" name="lastdayMinutes" id="lastdayMinutes" ngModel>
+                                    <option value="00">00</option>
+                                    <option *ngFor = "let time of timerMinute;let i = index" value="{{i}}">{{time}}</option>
+                                    <option value="">59</option>
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                                <div class="form-group">
+                                  <select class="form-control" name="lastdayMeridiem" id="lastdayMeridiem" ngModel>
+                                    <option value="AM">AM</option>
+                                    <option value="">PM</option>
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
+                              </div>
+                              <!-- /.form-inline -->                     
+                            </div>                   
 
-  <!-- Modal -->
-  <div class="modal bd-example-modal-lg fade" id="pipelineFilter" tabindex="-1" role="dialog" aria-labelledby="pipelineFilterLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Create a New Filter</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="row">
-              <div class="form-group col-6 text-muted">
-                <label>New Filter Name</label>
-                <input type="text" class="form-control" autofocus="true" />
+                            <div class="mt-5">
+                              <button class="btn btn-block btn-clear mb-1">Clear</button>
+                              <button class="btn btn-block btn-primary" id="applybtn" type="submit">Apply</button>
+                            </div>
+
+                          </div>
+                        </div>
+                        <!-- /.d-flex -->
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="form-group ml-sm-2 mb-2">
+                  <select class="form-control">
+                    <option>Build Number</option>
+                  </select>
+                </div>
+                <div class="form-group ml-sm-2 mb-2">
+                  <div class="form-group">
+                    <!-- <button class="btn btn-default" data-toggle="modal" data-target="#pipelineFilter" data-backdrop="static" data-keyboard="false"><img src="images/filter-icon.png" alt="icon" /></button> -->
+                    <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
+                      title="Add More Filters">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="../../assets/images/filter-icon.png" alt="icon" />
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                        aria-labelledby="dropdownMenuButton">
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="application" checked>
+                          <label class="custom-control-label" for="application">Application</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="triggered_by" checked>
+                          <label class="custom-control-label" for="triggered_by">Triggered By</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="pipeline_service" checked>
+                          <label class="custom-control-label" for="pipeline_service">Pipeline / Service</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="status" checked>
+                          <label class="custom-control-label" for="status">Status</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="approved_by" checked>
+                          <label class="custom-control-label" for="approved_by">Approved By</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="cluster" checked>
+                          <label class="custom-control-label" for="cluster">Cluster</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="artifacts_deployed">
+                          <label class="custom-control-label" for="artifacts_deployed">Artifacts Deployed</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="build_number">
+                          <label class="custom-control-label" for="build_number">Build Number</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="cloud_provider">
+                          <label class="custom-control-label" for="cloud_provider">Cloud Provider</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input" id="server_group_zone">
+                          <label class="custom-control-label" for="server_group_zone">Server Group / Zone</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mx-sm-2 mb-2">
+                  <div class="btn-group dropdown-icon-remove" role="group"
+                    aria-label="Button group with nested dropdown">
+                    <div class="btn-group" role="group">
+                      <button id="btnGroupDrop1" type="button" class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Save Filter
+                      </button>
+                      <div class="dropdown-menu p-0 dropdown-save-filter" aria-labelledby="btnGroupDrop1">
+                        <div class="dropdown-menu-header py-3 px-3 d-flex align-items-center">
+                          <h6>Save New Filter</h6>
+                          <button type="button" class="close ml-auto">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </div>
+                        <!-- /.dropdown-menu-header -->
+                        <div class="dropdown-menu-body mt-3 mb-2 px-3">
+                          <div class="form-row align-items-center">
+                            <div class="col-auto">
+                              <input type="text" class="form-control mb-2" />
+                            </div>
+                            <div class="col-auto">
+                              <button type="submit" class="btn btn-outline-secondary mb-2">Save</button>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.dropdown-menu-body -->
+                      </div>
+                    </div>
+                    <div class="btn-group" role="group" data-toggle="tooltip" data-placement="top"
+                      title="Saved Filters">
+                      <button id="btnGroupDrop1" type="button" class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-h"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                        <li class="dropdown-item d-flex align-items-center">Failed Pipelines <button
+                            class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
+                        <li class="dropdown-item d-flex align-items-center">Successful Pipelines <button
+                            class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
+                        <li class="dropdown-item d-flex align-items-center">P/L saved by John Doe <button
+                            class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
+                        <li class="dropdown-item d-flex align-items-center">Terminated Pipelines <button
+                            class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-default mb-2"><img src="../../assets/images/code-icon.png"
+                    alt="icon" style="display: block; margin: 4px 0px;" /></button>
+
+                <div class="ml-auto d-flex">
+                  <div class="form-group mx-sm-3 mb-2">
+                    <div class="input-group input-group_search">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+                      </div>
+                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData" (keyup)="onSearch()">
+                    </div>
+                  </div>
+                  <div class="form-group mb-2">
+                    <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
+                      title="Show/Hide Columns">
+                      <button class="btn btn-default dropdown-toggle" type="button" #CustomColumn
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-icon-rotate fa-bars"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                        aria-labelledby="dropdownMenuButton">
+                        <form #customizeColumnForm="ngForm">
+                          <div class="custom-control custom-checkbox" *ngFor = "let columnName of currentHeaderKeys; let i=index">
+                            <input type="checkbox"  class="custom-control-input" (change)="customizeColumn($event,i)" [disabled]="i<3" [checked]="showColumn[i] === 'true'" id="{{columnName}}">
+                            <label class="custom-control-label" for="{{columnName}}">{{currentTableHeader[columnName]}}</label>
+                          </div>
+                          <div class="dropdown-footer dropdown-footer-border">
+                            <button class="btn text-left btn-block btn-link" (click)="customizeColumn($event,'selectAll')">Select All</button>
+                          </div>
+                        </form>
+                        <!-- /.dropdown-footer -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="clearfix col-12"><br></div>
-              <div class="form-group col-6 text-muted">
-                <label>Application</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
+              <!-- /.form-inline -->
+
+              <div class="toolpills">
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Pipeline/Service: <span>aws-product</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                    aria-labelledby="dropdownMenuButton">
+                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
+                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
+                    <a href="#" class="dropdown-item">John Carter</a>
+                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Approve By: <span>OpsMxuser</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                    aria-labelledby="dropdownMenuButton">
+                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
+                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
+                    <a href="#" class="dropdown-item">John Carter</a>
+                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Application: <span>TestApp</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                    aria-labelledby="dropdownMenuButton">
+                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
+                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
+                    <a href="#" class="dropdown-item">John Carter</a>
+                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Triggered By: <span>OpsMxuser</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                    aria-labelledby="dropdownMenuButton">
+                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
+                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
+                    <a href="#" class="dropdown-item">John Carter</a>
+                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Cluster: <span>OpsMxuser-restapp</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                    aria-labelledby="dropdownMenuButton">
+                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
+                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
+                    <a href="#" class="dropdown-item">John Carter</a>
+                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Status: <span>SUCCEEDED</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
+                    aria-labelledby="dropdownMenuButton">
+                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
+                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
+                    <a href="#" class="dropdown-item">John Carter</a>
+                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
+                  </div>
+                </div>
               </div>
-              <div class="form-group col-6 text-muted">
-                <label>Triggered By</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Pipeline / Service</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Status</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Approved By</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Cluster</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Artifacts Deployed</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Build Number</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Cloud Provider</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group col-6 text-muted">
-                <label>Server Groups / Zone</label>
-                <select class="form-control">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
+              <!-- /.toolpills -->
+
             </div>
-            <!-- /.row -->   
-          </form>
+            <!-- /.card-heading -->
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-sticky table-collaps table-dark-head mb-0">
+                  <thead>
+                    <tr>
+                      <ng-container *ngFor="let key of currentHeaderKeys; let i=index">
+                        <th *ngIf="showColumn[i] === 'true'">{{currentTableHeader[key]}}</th>
+                      </ng-container>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let pageData of currentPage | filter:searchData; let i=index">
+                      <ng-container *ngFor="let dataKey of currentHeaderKeys; let j=index">
+                        <td *ngIf="showColumn[j] === 'true'">
+                          <div *ngIf="dataKey.includes('Time'); then thenBlock else elseBlock"></div>
+                          <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
+                          <ng-template #elseBlock><span>{{pageData[dataKey]}}</span></ng-template>
+                        </td>
+                      </ng-container>
+                  </tbody>
+                </table>
+                <!-- /.table -->
+              </div>
+              <!-- /.table-responisve -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer table-footer px-3 py-2">
+              <div class="form-inline">
+                <span class="mr-2">Per page</span>
+                <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                  <option value="25">25</option>
+
+                </select>
+                <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
+                  {{page.endPoint < currentDatalength && page.endPoint > page.startingPoint ? page.endPoint:currentDatalength}} of
+                  {{currentDatalength}}</span>
+                <input type="text" class="form-control mr-2" />
+                <button class="btn btn-primary">Go</button>
+
+                <ul class="pagination ml-auto mb-0">
+                  <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                  <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
+                    (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
+                  <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
+                    *ngIf="(page.pageNo*page.pageSize) < currentDatalength || page.currentPage+1 == page.pageNo ? true : false"
+                    (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage+1}}</a></li>
+                  <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}"
+                    *ngIf="((page.pageNo+1)*page.pageSize) < currentDatalength || page.currentPage+2 == page.pageNo ? true : false"
+                    (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a></li>
+                  <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
+                </ul>
+              </div>
+              <!-- /.per_page -->
+            </div>
+            <!-- /.card-footer -->
+          </div>
+          <!-- /.card -->
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
-          <button type="submit" class="btn btn-default">Save</button>
-          <button type="submit" class="btn  btn-primary">Save & Apply</button>
-        </div>
-        <!-- /.modal-footer -->
+        <!-- /.col-12 -->
       </div>
+      <!-- /.row -->
     </div>
   </div>
+  <!-- /.page-content -->
+</div>

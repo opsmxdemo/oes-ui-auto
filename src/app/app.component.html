@@ -15,7 +15,7 @@
             </span></a>
             <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">
               <ul class="subnav list-unstyled m-0" *ngFor = "let submenu of SideMenu.subMenu">
-                <li routerLink="{{submenu.link}}"><a><i class="icon {{submenu.link}}"></i> <span>{{submenu.name}}</span></a></li>
+                <li class="{{submenu.disabled === true? 'disabled_menu':''}}" routerLink="{{submenu.link}}"><a><i class="icon {{submenu.link}}"></i> <span>{{submenu.name}}</span></a></li>
               </ul>
             </ng-template>
             <!-- /.subnav -->
