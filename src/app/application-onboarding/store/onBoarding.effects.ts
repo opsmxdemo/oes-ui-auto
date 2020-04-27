@@ -56,6 +56,7 @@ export class ApplicationOnBoardingEffect {
                         return OnboardingAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
                     catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -73,6 +74,7 @@ export class ApplicationOnBoardingEffect {
                         return OnboardingAction.fetchCloudAccount({cloudAccount:resdata['data']})
                     }),
                     catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -91,6 +93,7 @@ export class ApplicationOnBoardingEffect {
                         return OnboardingAction.fetchAppData({ appData: resdata })
                     }),
                     catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -108,6 +111,7 @@ export class ApplicationOnBoardingEffect {
                         return OnboardingAction.dataSaved();
                     }),
                     catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -125,6 +129,7 @@ export class ApplicationOnBoardingEffect {
                         return OnboardingAction.fetchAppList({Applist:resdata['data']});
                     }),
                     catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );

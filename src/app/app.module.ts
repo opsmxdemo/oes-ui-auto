@@ -28,6 +28,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBoarding.effects';
 import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
+import { AuditEffect } from './audit/store/audit.effects';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,7 @@ import { AppliactionListComponent } from './application-onboarding/appliaction-l
     Ng2SearchPipeModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
-    EffectsModule.forRoot([AuthEffect,LayoutEffect,ApplicationOnBoardingEffect]),
+    EffectsModule.forRoot([AuthEffect,LayoutEffect,ApplicationOnBoardingEffect,AuditEffect]),
     //please keep below import always in last position
     WildcardRoutingModule
   ],

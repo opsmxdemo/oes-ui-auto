@@ -31,6 +31,7 @@ export class AppliactionListComponent implements OnInit {
               public toastr: NotificationService) { }
   
   ngOnInit(): void {
+
     // dispatching action to fetch application data from API
     this.store.dispatch(OnboardingActions.loadAppList());
 
