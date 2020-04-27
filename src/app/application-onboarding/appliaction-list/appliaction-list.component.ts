@@ -32,9 +32,6 @@ export class AppliactionListComponent implements OnInit {
   
   ngOnInit(): void {
 
-    // dispatching action to fetch application data from API
-    this.store.dispatch(OnboardingActions.loadAppList());
-
     //fetching data from state
     this.store.select('appOnboarding').subscribe(
       (response) => {

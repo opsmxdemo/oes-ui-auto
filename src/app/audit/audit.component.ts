@@ -29,6 +29,7 @@ export class AuditComponent implements OnInit {
   }
   currentDatalength: number = null;                                                    // It is used to store length of current table data.
   currentTableHeader = [''];                                                           // It is used to store column key of current table to be displayed.
+  currentHeaderKeys = [];                                                              // It is used to store keys of current table content.
   showColumn = [];                                                                     // It is used to show or hide the table column on basics of user selection. 
   inlineRange: any = null;                                                             // It is used to store selectd customize date range.
   disableDatepicker = true;                                                            // It is use to disabled datepicker present in date filter.
@@ -39,8 +40,6 @@ export class AuditComponent implements OnInit {
   constructor(public store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
-    // Dispatching loadAudit action to fetch initial data
-    this.store.dispatch(AuditActions.loadAudit());
 
     // Fetching data from state
     this.store.select('audit').subscribe(
@@ -50,11 +49,10 @@ export class AuditComponent implements OnInit {
           this.allpipelineData = auditData.allPipelineData;
           this.currentDatalength = this.allpipelineData['results'].length;
           this.currentTableContent = this.allpipelineData['results'];
-          this.currentTableHeader = this.allpipelineData['results'][0];
+          this.currentTableHeader = this.allpipelineData['headers'];
           this.currentApi = this.allpipelineData['results'];
           this.renderPage();
-          console.log("allpipeline", this.allpipelineData);
-          console.log('length', this.currentDatalength);
+          this.createHeaders(this.allpipelineData['headerOrder']);
           this.showHideColumn();
         }
       }
@@ -71,6 +69,16 @@ export class AuditComponent implements OnInit {
         }
       }
     }
+  }
+
+  // Below function is use for preparing headers order fetched from backend.
+  createHeaders(currentObj){
+    let mainObj=[null];
+    for (const key in currentObj) {
+      const index = currentObj[key]-1;
+        mainObj[index] = key;
+    }
+    this.currentHeaderKeys = mainObj;
   }
 
   //################### Filter logic start ################################
@@ -96,8 +104,6 @@ export class AuditComponent implements OnInit {
 
   // Below function is use to collect all value of datedropdown
   dateForm(value: any) {
-    console.log("meridiem",value);
-    
     this.currentTableContent = this.currentApi
     const todayDate = new Date();
     let firstDay: any = null;
@@ -177,7 +183,8 @@ export class AuditComponent implements OnInit {
 
   // Below function is use to filter data on basis of selected date in dateSelection popup.
   filterDate(firstDay, lastday) {
-    alert(firstDay+'-------To------'+lastday);
+    this.currentTableContent = this.allpipelineData['results'];
+    this.currentDatalength = this.currentTableContent.length;
     let test = this.currentTableContent.filter(el => {
       const date = new Date(+el.pipelineStartTime);
       if (firstDay <= date || firstDay === null) {
@@ -195,11 +202,10 @@ export class AuditComponent implements OnInit {
   // Below function is use to show or hide column on user demand
   showHideColumn() {
     if (this.showColumn.length === 0) {
-      for (const key in this.currentTableHeader) {
+      for (const key in this.currentHeaderKeys) {
         this.showColumn.push('true');
       }
     }
-    this.showColumn[4] = 'false';
   }
 
   // Below function is use to fetch value of hidden column from hide/show column filter
@@ -212,7 +218,7 @@ export class AuditComponent implements OnInit {
       }
     } else {
       this.showColumn = [];
-      for (const key in this.currentTableHeader) {
+      for (const key in this.currentHeaderKeys) {
         this.showColumn.push('true');
       }
     }
@@ -251,7 +257,7 @@ export class AuditComponent implements OnInit {
 
   // Below function is execute on click of page next btn
   pageNext() {
-    if (this.page.endPoint < this.currentDatalength - 1) {
+    if (this.page.endPoint < this.currentDatalength) {
       this.page.pageNo += 1;
       this.page.currentPage = this.page.pageNo;
       if ((this.page.endPoint + this.page.pageSize) < this.currentDatalength) {
@@ -259,7 +265,7 @@ export class AuditComponent implements OnInit {
         this.page.endPoint += this.page.pageSize;
       } else if (this.page.endPoint < this.currentDatalength) {
         this.page.startingPoint = this.page.endPoint;
-        this.page.endPoint = this.currentDatalength - 1;
+        this.page.endPoint = this.currentDatalength;
       }
       this.renderPage();
     }
@@ -283,7 +289,6 @@ export class AuditComponent implements OnInit {
 
   // Below function is executes on click of page btn exist in pagination
   showPage(currentPage) {
-    debugger
     this.page.pageNo = currentPage;
     this.page.startingPoint = (currentPage - 1) * this.page.pageSize;
     if (currentPage * this.page.pageSize < this.currentDatalength) {
