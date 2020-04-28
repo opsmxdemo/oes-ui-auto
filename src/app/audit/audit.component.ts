@@ -16,7 +16,6 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
   @ViewChild('CustomColumn') CustomColumn: ElementRef;
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
   @ViewChild('dForm') dateSearchForm: NgForm;
-  @ViewChild('datepickerElement') datepickeEl: ElementRef;
 
   pipelineCount: PipelineCount = null;                                                 // It use to store pipelineCount data.
   pipelineCountName = 'All Pipelines';                                                 // It is use to store current tab pipelineName.
