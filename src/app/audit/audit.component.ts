@@ -1,20 +1,25 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer';
 import * as AuditActions from './store/audit.actions';
 import { PipelineCount } from '../models/audit/pipelineCount.model';
+import { NotificationService } from '../services/notification.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-audit',
   templateUrl: './audit.component.html',
   styleUrls: ['./audit.component.less']
 })
-export class AuditComponent implements OnInit {
+export class AuditComponent implements OnInit,AfterViewInit{
 
   @ViewChild('CustomColumn') CustomColumn: ElementRef;
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
+  @ViewChild('dForm') dateSearchForm: NgForm;
 
   pipelineCount: PipelineCount = null;                                                 // It use to store pipelineCount data.
+  pipelineCountName = 'All Pipelines';                                                 // It is use to store current tab pipelineName.
+  pipelineCountValue = 0;                                                              // It is use to store current pipeline count.
   allpipelineData: any = null;                                                         // It is use to store all pipeline data.
   currentTableContent: any = null;                                                     // It is use to store current table content.
   currentPage = [''];                                                                  // It is use to store current page data.
@@ -33,24 +38,46 @@ export class AuditComponent implements OnInit {
   showColumn = [];                                                                     // It is used to show or hide the table column on basics of user selection. 
   inlineRange: any = null;                                                             // It is used to store selectd customize date range.
   disableDatepicker = true;                                                            // It is use to disabled datepicker present in date filter.
-  timerHour = ['01','02','03','04','05','06','07','08','09','10'];                     // It is use to store timer value in hours used in customize date filter.
+  timerHour = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];            // It is use to store timer value in hours used in customize date filter.
   timerMinute = [];                                                                    // It is use to store timer value in minute used in customize date filter.
-  currentApi: any = null;
+  currentTabData: any = null;                                                          // It is use to store current tab data to populate dynamic table
 
-  constructor(public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromApp.AppState>,
+              public notification: NotificationService) { }
+
+  ngAfterViewInit(){
+    // Setting initial value of dateFilter form
+    setTimeout(() => {
+      this.dateSearchForm.setValue({
+        customRadio:'allTime',
+        firstdayHours: "",
+        firstdayMinutes: "",
+        firstdayMeridiem: "",
+        lastdayHours: "",
+        lastdayMinutes: "",
+        lastdayMeridiem: ""
+      })
+    })
+  }
 
   ngOnInit() {
+
+    //Dispatching action to fetch data from api related to rest of tab exist in Audit
+    this.store.dispatch(AuditActions.loadFinalData());
 
     // Fetching data from state
     this.store.select('audit').subscribe(
       (auditData) => {
-        if (auditData.allPipelineData !== null) {
+        if (auditData.pipelineCount !== null){
           this.pipelineCount = auditData.pipelineCount;
+          this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
+        }
+        if (auditData.allPipelineData !== null) {
           this.allpipelineData = auditData.allPipelineData;
           this.currentDatalength = this.allpipelineData['results'].length;
           this.currentTableContent = this.allpipelineData['results'];
           this.currentTableHeader = this.allpipelineData['headers'];
-          this.currentApi = this.allpipelineData['results'];
+          this.currentTabData = this.allpipelineData;
           this.renderPage();
           this.createHeaders(this.allpipelineData['headerOrder']);
           this.showHideColumn();
@@ -59,12 +86,12 @@ export class AuditComponent implements OnInit {
     )
 
     // populating timerMinute variable
-    if(this.timerMinute.length === 0){
-      for(let i=1; i<59; i++){
+    if (this.timerMinute.length === 0) {
+      for (let i = 1; i < 59; i++) {
         const val = i.toString();
-        if(i<10){
-          this.timerMinute.push('0'+val);
-        }else{
+        if (i < 10) {
+          this.timerMinute.push('0' + val);
+        } else {
           this.timerMinute.push(val);
         }
       }
@@ -72,25 +99,92 @@ export class AuditComponent implements OnInit {
   }
 
   // Below function is use for preparing headers order fetched from backend.
-  createHeaders(currentObj){
-    let mainObj=[null];
+  createHeaders(currentObj) {
+    let mainObj = [null];
     for (const key in currentObj) {
-      const index = currentObj[key]-1;
-        mainObj[index] = key;
+      const index = currentObj[key] - 1;
+      mainObj[index] = key;
     }
     this.currentHeaderKeys = mainObj;
   }
 
+  //################### Multiple Table Logic start ########################
+
+  // Below function is execute on click on tabs exist in navigation area
+  onChangeTab(event) {
+    this.currentTableContent = [];
+    const currentData = event.target.id;
+    this.store.select('audit').subscribe(
+      (responseData) => {
+        switch (currentData) {
+          case 'allPipeline':
+            this.currentTabData = responseData.allRunningPipelineData;
+            this.pipelineCountName = 'Pipeline Runs';
+            this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
+            break;
+          case 'Pipeline':
+            this.currentTabData = responseData.allPipelineData;
+            this.pipelineCountName = 'All Pipelines';
+            this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
+            break;
+          // case 'lastSuccessfulDeployment':
+          //   this.currentTabData = responseData.lastSuccessfulDeploymentData;
+          //   break;
+          // case 'failedPipeline':
+          //   this.currentTabData = responseData.failedPipelineData;
+          //   break;
+        }
+        //updating page values;
+        this.page = {                                                                             
+          startingPoint: 0,
+          endPoint: 15,
+          pageSize: 15,
+          currentPage: 1,
+          pageNo: 1,
+        }
+        if (this.currentTabData !== null) {
+          this.currentTableContent = this.currentTabData['results'];
+          this.currentDatalength = this.currentTableContent.length;
+          this.currentTableHeader = this.currentTabData['headers'];
+          this.createHeaders(this.currentTabData['headerOrder']);
+          this.showHideColumn();
+          // setting date form values present in date search
+          this.dateSearchForm.setValue({
+            customRadio:'allTime',
+            firstdayHours: "",
+            firstdayMinutes: "",
+            firstdayMeridiem: "",
+            lastdayHours: "",
+            lastdayMinutes: "",
+            lastdayMeridiem: ""
+          })
+        }
+      }
+    )
+    this.renderPage();
+  }
+
+  // Below function is use to apply appropriate class on basics of status
+  getClass(status){
+    if(status === 'SUCCEEDED'){
+      return 'successStatus'
+    }else{
+      return 'failStatus'
+    }
+  }
+
+  //################### Multiple Table Logic ends ########################
+
   //################### Filter logic start ################################
 
   // Below function is execute on search
-  onSearch(){
-    if(this.searchData !== ''){
+  onSearch() {
+    if (this.searchData !== '') {
       this.currentPage = [];
       for (let i = 0; i < this.currentDatalength; i++) {
         this.currentPage.push(this.currentTableContent[i]);
       }
-    }else{
+    } else {
       this.renderPage();
     }
   }
@@ -104,10 +198,11 @@ export class AuditComponent implements OnInit {
 
   // Below function is use to collect all value of datedropdown
   dateForm(value: any) {
-    this.currentTableContent = this.currentApi
+    this.currentTableContent = this.currentTabData['results']
     const todayDate = new Date();
     let firstDay: any = null;
     let lastday: any = null;
+    
     switch (value.customRadio) {
       case 'allTime':
         firstDay = null;
@@ -139,15 +234,15 @@ export class AuditComponent implements OnInit {
         break;
       case 'custom':
         this.disableDatepicker = false;
-        if(this.inlineRange !== null){
-          firstDay = this.calculateCustonizeDate(+value.firstdayHours,+value.firstdayMinutes,value.firstdayMeridiem,'firstday');
+        if (this.inlineRange !== null) {
+          firstDay = this.calculateCustonizeDate(+value.firstdayHours, +value.firstdayMinutes, value.firstdayMeridiem, 'firstday');
           lastday = this.calculateCustonizeDate(value.lastdayHours === '' ? 11 : +value.lastdayHours,
-                                              value.lastdayMinutes === '' ? 59 : +value.lastdayMinutes,
-                                              value.lastdayMeridiem,'lastday');
+            value.lastdayMinutes === '' ? 59 : +value.lastdayMinutes,
+            value.lastdayMeridiem, 'lastday');
         }
         break;
     }
-    if(lastday !== null){
+    if (lastday !== null) {
       this.filterDate(firstDay, lastday);
     }
   }
@@ -158,17 +253,17 @@ export class AuditComponent implements OnInit {
   }
 
   // Below function is use to calculate exact time and return customize date with time.
-  calculateCustonizeDate(hours,min,meridiem,day){
+  calculateCustonizeDate(hours, min, meridiem, day) {
     let finalTime = null;
-    if(day === 'firstday'){
+    if (day === 'firstday') {
       let totalhour = null;
-      totalhour = (meridiem === '' ? hours : hours+12 );
+      totalhour = (meridiem === '' ? hours : hours + 12);
       finalTime = this.inlineRange.begin;
       finalTime = new Date(finalTime.setHours(totalhour));
       finalTime = new Date(finalTime.setMinutes(min));
-    }else{
+    } else {
       let totalhour = null;
-      totalhour = (meridiem === '' ? hours+12 : hours );
+      totalhour = (meridiem === '' ? hours + 12 : hours);
       finalTime = this.inlineRange.end;
       finalTime = new Date(finalTime.setHours(totalhour));
       finalTime = new Date(finalTime.setMinutes(min));
@@ -183,28 +278,47 @@ export class AuditComponent implements OnInit {
 
   // Below function is use to filter data on basis of selected date in dateSelection popup.
   filterDate(firstDay, lastday) {
-    this.currentTableContent = this.allpipelineData['results'];
+    this.currentTableContent = this.currentTabData['results'];
     this.currentDatalength = this.currentTableContent.length;
-    let test = this.currentTableContent.filter(el => {
-      const date = new Date(+el.pipelineStartTime);
-      if (firstDay <= date || firstDay === null) {
-        if (date <= lastday) {
-          return el;
-        }
+    let searchArr = [];
+
+    // checking startTime is exist in table or not for search
+    this.currentHeaderKeys.forEach(el=>{
+      if(el.includes('StartTime')){
+        searchArr.push('true');
+      }else{
+        searchArr.push('false');
       }
     })
-    this.currentTableContent = test;
-    this.currentDatalength = this.currentTableContent.length;
-    this.renderPage();
+
+    // returning index of element otherwise returning -1
+    const timeIndex = searchArr.indexOf('true');
+    const elementKey = this.currentHeaderKeys[timeIndex];
+    
+    // filtering table if contain startTime in it.
+    if(timeIndex > 0){
+      let test = this.currentTableContent.filter(el => {
+        const date = new Date(+el[elementKey]);
+        if (firstDay <= date || firstDay === null) {
+          if (date <= lastday) {
+            return el;
+          }
+        }
+      })
+      this.currentTableContent = test;
+      this.currentDatalength = this.currentTableContent.length;
+      this.renderPage();
+    }else{
+      this.notification.showInfo('Table does not contain Start Time','Date Search');
+    }
   }
 
 
   // Below function is use to show or hide column on user demand
   showHideColumn() {
-    if (this.showColumn.length === 0) {
-      for (const key in this.currentHeaderKeys) {
-        this.showColumn.push('true');
-      }
+    this.showColumn = [];
+    for (const key in this.currentHeaderKeys) {
+      this.showColumn.push('true');
     }
   }
 
@@ -294,7 +408,7 @@ export class AuditComponent implements OnInit {
     if (currentPage * this.page.pageSize < this.currentDatalength) {
       this.page.endPoint = currentPage * this.page.pageSize;
     } else {
-      this.page.endPoint = this.currentDatalength - 1;
+      this.page.endPoint = this.currentDatalength;
     }
     this.renderPage();
   }

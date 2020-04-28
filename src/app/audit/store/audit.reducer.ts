@@ -7,13 +7,19 @@ import { PipelineCount } from 'src/app/models/audit/pipelineCount.model';
 export interface State {
     pipelineCount: PipelineCount;
     erroeMessage: string;
+    allRunningPipelineData: any;
     allPipelineData: any;
+    failedPipelineData: any;
+    lastSuccessfulDeploymentData: any;
 }
 
 export const initialState: State = {
     pipelineCount: null,
     erroeMessage: null,
-    allPipelineData: null
+    allRunningPipelineData: null,
+    allPipelineData: null,
+    failedPipelineData: null,
+    lastSuccessfulDeploymentData: null
 }
 
 export function AuditReducer(
@@ -33,10 +39,28 @@ export function AuditReducer(
                 erroeMessage:action.errorMessage
             })
         ),
+        on(AuditAction.fetchRuningPipeline,
+            (state,action) => ({
+                ...state,
+                allRunningPipelineData: action.allRunningPipelineData
+            })
+        ),
         on(AuditAction.fetchAllPipeline,
             (state,action) => ({
                 ...state,
-                allPipelineData: action.allPipelineData
+                allPipelineData: action.pipelineExist
+            })
+        ),
+        on(AuditAction.fetchFailedPipeline,
+            (state,action) => ({
+                ...state,
+                failedPipelineData: action.failedPipelineData
+            })
+        ),
+        on(AuditAction.fetchlastSuccessfulDeployments,
+            (state,action) => ({
+                ...state,
+                lastSuccessfulDeploymentData: action.lastSuccessfulDeployment
             })
         ),
     )(auditState,auditAction);

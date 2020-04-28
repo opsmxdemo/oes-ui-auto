@@ -100,12 +100,12 @@ export class ApplicationComponent implements OnInit {
             }
 
             //populate environment Form#################################################################################
-            if (this.appData.environment.length !== 0) {
+            if (this.appData.environments.length !== 0) {
               // clearing form first
               this.environmentForm = new FormGroup({
                 environments: new FormArray([])
               });
-              this.appData.environment.forEach(environmentdata => {
+              this.appData.environments.forEach(environmentdata => {
                 (<FormArray>this.environmentForm.get('environments')).push(
                   new FormGroup({
                     key: new FormControl(environmentdata.key, Validators.required),
@@ -396,7 +396,7 @@ export class ApplicationComponent implements OnInit {
         //#############ServiceFormSection###################
         this.mainForm.services = this.editServiceForm['services'];
         //#############EnvironmentFormSection###############
-        this.mainForm.environment = this.environmentForm.value.environments;
+        this.mainForm.environments = this.environmentForm.value.environments;
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
 
@@ -426,9 +426,8 @@ export class ApplicationComponent implements OnInit {
           })
         })
         this.mainForm.services = this.servicesForm.value.services;
-        this.mainForm.environment = this.environmentForm.value.environments;
+        this.mainForm.environments = this.environmentForm.value.environments;
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
-        console.log("editform", JSON.stringify(this.mainForm));
         //Below action is use to save created form in database
         this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
       } else {

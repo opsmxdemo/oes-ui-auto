@@ -1,22 +1,20 @@
 <div class="main_content p-0">
   <div class="page-content flex-grow-1">
+    <ul class="nav pt-2 bg-white tab-lined nav-tabs" id="myTab" role="tablist" (click)="onChangeTab($event)">
+      <li class="nav-item">
+        <a class="nav-link active" id="Pipeline" data-toggle="tab"  role="tab"
+          aria-controls="Pipeline" aria-selected="true">Pipeline</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
+          aria-selected="false">Pipeline Execution</a>
+      </li>
+    </ul>
     <div class="audit-info px-3 d-flex bg-white">
       <div>
-        <h4>{{pipelineCount !== null ? pipelineCount.totalPipelinesCount : 0}}</h4>
-        <span class="text-muted">All Pipelines</span>
+        <h4>{{pipelineCountValue}}</h4>
+        <span class="text-muted">{{pipelineCountName}}</span>
       </div>
-      <div>
-        <h4>{{pipelineCount !== null ? pipelineCount.totalPipelinesRunCount : 0}}</h4>
-        <span class="text-muted">Pipeline Runs</span>
-      </div>
-      <!-- <div>
-            <h4>{{pipelineCount !== null ? pipelineCount.totalPipelinesCount : 0}}</h4>
-            <span class="text-muted">Modified</span>
-          </div>
-          <div>
-            <h4 class="text-danger">{{pipelineCount !== null ? pipelineCount.totalFailedPipelinesCount : 0}}</h4>
-            <span class="text-muted">Failed</span>
-          </div> -->
     </div>
     <!-- /.page_title d-flex -->
 
@@ -26,7 +24,7 @@
           <div class="card">
             <div class="card-heading mb-form-db">
               <div class="form-inline">
-                <div class="form-group ml-sm-2 mb-2">
+                <!-- <div class="form-group ml-sm-2 mb-2">
                   <select class="form-control">
                     <option>Application Name</option>
                     <option></option>
@@ -45,7 +43,7 @@
                     <option>passed-pipelines</option>
                     <option>Successful pipelines by Sumeet Kulkarni</option>
                   </select>
-                </div>
+                </div> -->
                 <div class="form-group ml-sm-2 mb-2">
                   <div class="dropdown">
                     <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
@@ -70,7 +68,7 @@
                               <label class="custom-control-label" for="last-week-range">Last week</label>
                             </div>
                             <div class="custom-control custom-radio">
-                              <input type="radio" id="last-hours-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" checked value="last24Hour" ngModel>
+                              <input type="radio" id="last-hours-range" name="customRadio" (change)="dateForm(dForm.value)" class="custom-control-input" value="last24Hour" ngModel>
                               <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
                             </div>
                             <div class="custom-control custom-radio">
@@ -78,13 +76,18 @@
                               <label class="custom-control-label" for="custom-range">Custom</label>
                             </div>
                           </div>
-                          <div>
-                            <h4>Date Range</h4>  
-                            <span class="code" *ngIf="inlineRange">
-                              {{ inlineRange.begin | date }} to
-                              {{ inlineRange.end | date }}
-                            </span>
-                            <div class="inlineCalendarContainer {{disableDatepicker === true?'div-disabled':''}}" (click)="datepicker($event)">
+                          <div class=" {{disableDatepicker === true?'div-disabled':''}}">
+                            <div class="datepickerDiv">
+                              <h4>Date Range</h4>  
+                              <span class="code" *ngIf="inlineRange">
+                                {{ inlineRange.begin | date }} to
+                                {{ inlineRange.end | date }}
+                              </span>
+                              <span class="code" *ngIf="!inlineRange">
+                                Select date range
+                              </span>
+                            </div>
+                            <div class="inlineCalendarContainer" (click)="datepicker($event)">
                               <sat-calendar [rangeMode]="true"
                                             (dateRangesChange)="inlineRangeChange($event)">
                               </sat-calendar>
@@ -163,14 +166,13 @@
                     </form>
                   </div>
                 </div>
-                <div class="form-group ml-sm-2 mb-2">
+                <!-- <div class="form-group ml-sm-2 mb-2">
                   <select class="form-control">
                     <option>Build Number</option>
                   </select>
                 </div>
                 <div class="form-group ml-sm-2 mb-2">
                   <div class="form-group">
-                    <!-- <button class="btn btn-default" data-toggle="modal" data-target="#pipelineFilter" data-backdrop="static" data-keyboard="false"><img src="images/filter-icon.png" alt="icon" /></button> -->
                     <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
                       title="Add More Filters">
                       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -200,8 +202,8 @@
                           <label class="custom-control-label" for="approved_by">Approved By</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                          <input type="checkbox" class="custom-control-input" id="cluster" checked>
-                          <label class="custom-control-label" for="cluster">Cluster</label>
+                          <input type="checkbox" class="custom-control-input" id="cluster1" checked>
+                          <label class="custom-control-label" for="cluster1">Cluster</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input" id="artifacts_deployed">
@@ -238,7 +240,6 @@
                             <i class="fa fa-times"></i>
                           </button>
                         </div>
-                        <!-- /.dropdown-menu-header -->
                         <div class="dropdown-menu-body mt-3 mb-2 px-3">
                           <div class="form-row align-items-center">
                             <div class="col-auto">
@@ -249,7 +250,6 @@
                             </div>
                           </div>
                         </div>
-                        <!-- /.dropdown-menu-body -->
                       </div>
                     </div>
                     <div class="btn-group" role="group" data-toggle="tooltip" data-placement="top"
@@ -272,7 +272,7 @@
                   </div>
                 </div>
                 <button type="submit" class="btn btn-default mb-2"><img src="../../assets/images/code-icon.png"
-                    alt="icon" style="display: block; margin: 4px 0px;" /></button>
+                    alt="icon" style="display: block; margin: 4px 0px;" /></button> -->
 
                 <div class="ml-auto d-flex">
                   <div class="form-group mx-sm-3 mb-2">
@@ -308,8 +308,8 @@
                 </div>
               </div>
               <!-- /.form-inline -->
-
-              <div class="toolpills">
+              <!-- #### Don't delete need in future toolpills ##### -->
+              <!-- <div class="toolpills">
                 <div class="dropdown">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -388,7 +388,8 @@
                     <a href="#" class="dropdown-item">Madhusudan Sharma</a>
                   </div>
                 </div>
-              </div>
+              </div> -->
+
               <!-- /.toolpills -->
 
             </div>
@@ -409,7 +410,7 @@
                         <td *ngIf="showColumn[j] === 'true'">
                           <div *ngIf="dataKey.includes('Time'); then thenBlock else elseBlock"></div>
                           <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
-                          <ng-template #elseBlock><span>{{pageData[dataKey]}}</span></ng-template>
+                          <ng-template #elseBlock><span class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}">{{pageData[dataKey]}}</span></ng-template>
                         </td>
                       </ng-container>
                   </tbody>
@@ -432,18 +433,21 @@
                 <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
                   {{page.endPoint < currentDatalength && page.endPoint > page.startingPoint ? page.endPoint:currentDatalength}} of
                   {{currentDatalength}}</span>
-                <input type="text" class="form-control mr-2" />
-                <button class="btn btn-primary">Go</button>
+                <!-- <input type="text" class="form-control mr-2" />
+                <button class="btn btn-primary">Go</button> -->
 
                 <ul class="pagination ml-auto mb-0">
                   <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
                   <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
                     (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
                   <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
-                    *ngIf="(page.pageNo*page.pageSize) < currentDatalength || page.currentPage+1 == page.pageNo ? true : false"
+                    *ngIf="(page.pageNo*page.pageSize) < currentDatalength || 
+                            page.currentPage+1 == page.pageNo || page.currentPage+1 == page.pageNo-1 ? true : false"
                     (click)=showPage(page.currentPage+1)><a class="page-link">{{page.currentPage+1}}</a></li>
                   <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}"
-                    *ngIf="((page.pageNo+1)*page.pageSize) < currentDatalength || page.currentPage+2 == page.pageNo ? true : false"
+                    *ngIf="((page.pageNo+1)*page.pageSize) < currentDatalength || 
+                             page.currentPage+2 == page.pageNo ||
+                             ((page.currentPage+2)*page.pageSize< currentDatalength? true : ((page.currentPage+2)*page.pageSize)-currentDatalength < page.pageSize? true : false) ? true : false"
                     (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a></li>
                   <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
                 </ul>
