@@ -155,10 +155,9 @@ export class ApplicationOnBoardingEffect {
             tap(([actiondata,appOnboardingState]) => {
                 this.toastr.showSuccess('Data saved successfully !!','SUCCESS')
                 this.router.navigate([appOnboardingState.parentPage]);
+                this.store.dispatch(OnboardingAction.loadAppList());
             })
         ), { dispatch: false }
     )
-
-
 
 }

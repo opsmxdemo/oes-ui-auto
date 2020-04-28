@@ -11,11 +11,12 @@ import { NgForm } from '@angular/forms';
   templateUrl: './audit.component.html',
   styleUrls: ['./audit.component.less']
 })
-export class AuditComponent implements OnInit,AfterViewInit{
+export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   @ViewChild('CustomColumn') CustomColumn: ElementRef;
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
   @ViewChild('dForm') dateSearchForm: NgForm;
+  @ViewChild('datepickerElement') datepickeEl: ElementRef;
 
   pipelineCount: PipelineCount = null;                                                 // It use to store pipelineCount data.
   pipelineCountName = 'All Pipelines';                                                 // It is use to store current tab pipelineName.
@@ -142,6 +143,9 @@ export class AuditComponent implements OnInit,AfterViewInit{
           currentPage: 1,
           pageNo: 1,
         }
+        //disabling customize option in datefilter
+        this.disableDatepicker = true; 
+        this.inlineRange = null;
         if (this.currentTabData !== null) {
           this.currentTableContent = this.currentTabData['results'];
           this.currentDatalength = this.currentTableContent.length;
