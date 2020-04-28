@@ -67,7 +67,10 @@
                         <button class="btn btn-primary" (click)="newReleaseMethod()">New Release</button>
                       </div>
                 </div>
-            <table class="table table-pet-service mb-0">
+                <div *ngIf="releaseDataFromParent.length == 0" class="alert alert-danger" role="alert">
+                    <p>{{releaseErrorMessage}}</p>
+                  </div>
+            <table *ngIf="releaseDataFromParent.length > 0" class="table table-pet-service mb-0">
             <thead>
               <tr>
                 <th>Release Name</th>
@@ -84,21 +87,28 @@
                 
               </tr>
                 <ng-container *ngIf="$index === expandedIndex">
-               <tr>
-                  <th>Service</th>
-                  <th>Image</th>
-                </tr>
-                <tr *ngFor="let rel of ChildList;let i = index">
-                <td>{{rel.serviceName}}</td>
-                <td>{{rel.image}}</td>
-                </tr>
+                <tr>
+                    <td colspan="5" class="inner-table">
+                      <table class="table">
+                        <tr>
+                            <td colspan="2" ><small *ngFor="let relInfo of childListData;let i= index">{{relInfo.key}}: <b>{{relInfo.val}}</b><br></small></td>
+                            <td  colspan="2"><small>Jira ID: <b>{{release.jiraId}}</b> <br>Source: <b>{{release.source}}</b></small></td>
+                          </tr>
+
+                        <tr>
+                          <th>Service</th>
+                          <th>Image ID</th>
+                          <th>Container ID</th>
+                        </tr>
+                        <tr *ngFor="let rel of ChildList;let i = index">
+                            <td>{{rel.serviceName}}</td>
+                            <td>{{rel.image}}</td>
+                            <td>{{rel.tag}}</td>
+                            </tr>
+                      </table>
+                    </td>
+                  </tr>
                 </ng-container>
-                  <!-- <tr class="collapse" id="collapseExample" *ngFor="let services of release.services;let i = index">
-                        <td>{{services.serviceName}}</td>
-                        <td>{{services.latestTag}}</td>
-                  </tr> -->
-                     
-             
             </tbody>
           </table>
           </div>

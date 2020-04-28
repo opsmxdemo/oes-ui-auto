@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
 import { environment } from 'src/environments/environment';
-import { isTemplateMiddle } from 'typescript';
+import { isTemplateMiddle, StringLiteral } from 'typescript';
 class ReleaseServices {
   serviceName = '';
   tag = '';
@@ -20,6 +20,7 @@ class ReleaseEnvironment {
 export class ReleaseComponent implements OnInit {
   @Input() releaseDataFromParent: any;
   public releaseData: any[] = [];
+  public childListData: any[] = [];
   public newReleaseData: any = null;
   public application: string;
   public releaseServicObj: ReleaseServices;
@@ -36,6 +37,8 @@ export class ReleaseComponent implements OnInit {
   expandedIndex: number;
   ParentList: any[];
   ChildList: any[];
+  // tslint:disable-next-line:ban-types
+  releaseErrorMessage: String;
 
   constructor(private applicationService: ApplicationService) { }
 
@@ -43,6 +46,9 @@ export class ReleaseComponent implements OnInit {
     this.expandedIndex = -1;
     this.application = this.releaseDataFromParent[0].appName;
     this.releaseData = this.releaseDataFromParent;
+    // if (this.releaseDataFromParent.length === 0){
+    //   this.releaseErrorMessage = 'No recent releases found.';
+    // }
   }
   public newReleaseMethod() {
     this.spinnerService = true;
@@ -63,6 +69,7 @@ export class ReleaseComponent implements OnInit {
   }
   public Collaps(index: number, childData: any) {
     this.expandedIndex = index === this.expandedIndex ? -1 : index;
+    this.childListData = childData.env;
     this.ChildList = childData.services;
     }
   public promoteRelease() {
