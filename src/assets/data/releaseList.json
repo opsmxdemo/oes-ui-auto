@@ -1,47 +1,144 @@
 [
-    {
-      "releaseName": "release 1.18.5",
-      "date": 1583907587000,
-      "services": [
-        {
-          "serviceName": "clouddriver11",
-          "latestImageId": "6.4.0"
-          
-        },
-        {
-          "serviceName": "clouddriver11",
-          "latestImageId": "6.4.0"
-          
-        }]
-    },
-    {
-      "releaseName": "release 1.17.6",
-      "date": 1583821187000,
-      "services": [
-        {
-          "serviceName": "clouddriver1122",
-          "latestImageId": "6.4.0"
-          
-        },
-        {
-          "serviceName": "clouddriver1122",
-          "latestImageId": "6.4.0"
-          
-        }]
-    },
-    {
-      "releaseName": "release 1.16.8",
-      "date": 1583803187000,
-      "services": [
-        {
-          "serviceName": "clouddriver1133",
-          "latestImageId": "6.4.0"
-          
-        },
-        {
-          "serviceName": "clouddriver1133",
-          "latestImageId": "6.4.0"
-          
-        }]
-    }
-  ]
+  {
+    "releaseName": "release 1.18.5",
+    "source": "docker.io/opsmx11",
+    "jiraId": "6234",
+    "status": "SUCCESS",
+    "date": 1583907587000,
+    "env": [
+      {
+        "key": "namespace",
+        "val": "default"
+      },
+      {
+        "key": "soxCompliant",
+        "val": "false"
+      }
+    ],
+    "services": [
+      {
+        "serviceName": "clouddriver",
+        "image": "spin/clouddriver",
+        "tag": "7.3.6"
+
+      },
+      {
+        "serviceName": "igor",
+        "image": "spin/igor",
+        "tag": "5.5.6"
+
+      },
+      {
+        "serviceName": "rosco",
+        "image": "spin/rosco",
+        "tag": "4.2.7"
+
+      },
+      {
+        "serviceName": "fiat",
+        "image": "spin/fiat",
+        "tag": "3.5.6"
+
+      },
+      {
+        "serviceName": "orca",
+        "image": "spin/orca",
+        "tag": "2.5.8"
+
+      }]
+  },
+  {
+    "releaseName": "release 1.18.4",
+    "source": "docker.io/opsmx11",
+    "jiraId": "6557",
+    "date": 1583821187000,
+    "env": [
+      {
+        "key": "namespace",
+        "val": "default"
+      },
+      {
+        "key": "soxCompliant",
+        "val": "false"
+      }
+    ],
+    "services": [
+      {
+        "serviceName": "clouddriver",
+        "image": "spin/clouddriver",
+        "tag": "7.3.4"
+
+      },
+      {
+        "serviceName": "igor",
+        "image": "spin/igor",
+        "tag": "5.5.5"
+
+      },
+      {
+        "serviceName": "rosco",
+        "image": "spin/rosco",
+        "tag": "4.2.6"
+
+      },
+      {
+        "serviceName": "fiat",
+        "image": "spin/fiat",
+        "tag": "3.5.5"
+
+      },
+      {
+        "serviceName": "orca",
+        "image": "spin/orca",
+        "tag": "2.5.7"
+
+      }]
+  },
+  {
+    "releaseName": "release 1.18.3",
+    "source": "docker.io/opsmx11",
+    "jiraId": "12345",
+    "date": 1583803187000,
+    "env": [
+      {
+        "key": "namespace",
+        "val": "default"
+      },
+      {
+        "key": "soxCompliant",
+        "val": "false"
+      }
+    ],
+    "services": [
+      {
+        "serviceName": "clouddriver",
+        "image": "spin/clouddriver",
+        "tag": "7.3.3"
+
+      },
+      {
+        "serviceName": "igor",
+        "image": "spin/igor",
+        "tag": "5.5.3"
+
+      },
+      {
+        "serviceName": "rosco",
+        "image": "spin/rosco",
+        "tag": "4.2.4"
+
+      },
+      {
+        "serviceName": "fiat",
+        "image": "spin/fiat",
+        "tag": "3.5.3"
+
+      },
+      {
+        "serviceName": "orca",
+        "image": "spin/orca",
+        "tag": "2.5.5"
+
+      }]
+  }
+]
