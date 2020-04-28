@@ -24,6 +24,7 @@ export class ApplicationDashboardComponent implements OnInit {
   showReleaseTable = false;
   public spinnerService = true;
   public parentReleaseData: any;
+  releaseErrorMessage: string;
 
 
   // tslint:disable-next-line:max-line-length
@@ -60,6 +61,9 @@ export class ApplicationDashboardComponent implements OnInit {
     this.showReleaseTable = true;
     this.applicationService.getReleaseList(application.name).subscribe((releaseList: any) => {
       this.parentReleaseData = releaseList;
+      if (releaseList.length === 0){
+        this.releaseErrorMessage = 'No recent releases found.';
+      }
       this.parentReleaseData[0].appName = application.name;
       this.spinnerService = false;
     });
