@@ -2,14 +2,15 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
 import { environment } from 'src/environments/environment';
 import { isTemplateMiddle, StringLiteral } from 'typescript';
+import { NotificationService } from '../services/notification.service';
 class ReleaseServices {
   serviceName = '';
   tag = '';
   image = '';
 }
 class ReleaseEnvironment {
-  keyName = '';
-  valName = '';
+  key = '';
+  val = '';
 }
 
 @Component({
@@ -26,12 +27,13 @@ export class ReleaseComponent implements OnInit {
   public releaseServicObj: ReleaseServices;
   public releaseEnvironmentObj: ReleaseEnvironment;
   public selectedServiceIndex: string;
+  public selectedAppName: string;
   public spinnerService = false;
   public promoteData: any = {
     releaseName: '',
     source: '',
-    serviceList: [],
-    environmentList: []
+    services: [],
+    env: []
   };
   showRelease = false;
   expandedIndex: number;
@@ -41,28 +43,32 @@ export class ReleaseComponent implements OnInit {
   releaseErrorMessage: String;
   newReleaseErrorMessage: string;
 
-  constructor(private applicationService: ApplicationService) { }
+  constructor(private applicationService: ApplicationService, public notification: NotificationService) { }
 
   ngOnInit(): void {
     this.expandedIndex = -1;
     console.log(this.releaseDataFromParent);
     this.application = this.releaseDataFromParent.appName;
+  //  this.selectedAppName = this.application;
     this.releaseData = this.releaseDataFromParent;
     // if (this.releaseDataFromParent.length === 0){
     //   this.releaseErrorMessage = 'No recent releases found.';
     // }
   }
-  public newReleaseMethod() {
+  public newReleaseMethod(app) {
     this.spinnerService = true;
     this.showRelease = true;
-    this.application = this.releaseDataFromParent.appName;
+    this.application = app;
+    // if (this.releaseDataFromParent.appName === undefined){
+    //   this.application = this.selectedAppName;
+    // }
     this.applicationService.doNewRelease(this.application).subscribe((response: any) => {
         response.services.forEach(item => {
         item.isChecked = false;
       });
         this.newReleaseData = response;
-        if(response.services.length === 0){
-          this.newReleaseErrorMessage = "No services found.";
+        if (response.services.length === 0) {
+          this.newReleaseErrorMessage = 'No services found.';
         }
         this.spinnerService = false;
     });
@@ -79,25 +85,39 @@ export class ReleaseComponent implements OnInit {
     this.ChildList = childData.services;
     }
   public promoteRelease() {
-    this.promoteData.serviceList = [];
-    this.promoteData.environmentList = [];
+    this.promoteData.services = [];
+    this.promoteData.env = [];
     this.newReleaseData.services.forEach(item => {
          if (item.isChecked) {
         this.releaseServicObj = new ReleaseServices();
         this.releaseServicObj.serviceName = item.serviceName;
         this.releaseServicObj.tag = item.latestTag;
         this.releaseServicObj.image = item.image;
-        this.promoteData.serviceList.push(this.releaseServicObj);
+        this.promoteData.services.push(this.releaseServicObj);
       }
          this.promoteData.source = this.newReleaseData.source;
     });
     this.newReleaseData.env.forEach(item => {
       this.releaseEnvironmentObj = new ReleaseEnvironment();
-      this.releaseEnvironmentObj.keyName = item.key;
-      this.releaseEnvironmentObj.valName = item.val;
-      this.promoteData.environmentList.push(this.releaseEnvironmentObj);
+      this.releaseEnvironmentObj.key = item.key;
+      this.releaseEnvironmentObj.val = item.val;
+      this.promoteData.env.push(this.releaseEnvironmentObj);
     });
-    this.applicationService.promoteRelease(this.promoteData,this.application).subscribe((response: any) => {
+    this.applicationService.promoteRelease(this.promoteData, this.application).subscribe((response: any) => {
+      if (response.status === 'IN_PROGRESS'){
+          this.notification.showSuccess('Success','Release process is IN_PROGRESS');
+          this.showRelease = false;
+          this.applicationService.getReleaseList(this.application).subscribe((relResponse: any) => {
+          this.releaseDataFromParent = relResponse;
+          this.releaseDataFromParent.appName = this.application;
+          this.promoteData.releaseName = '';
+          this.promoteData.jiraId = '';
+        //  this.application = this.releaseDataFromParent.appName;
+        });
+      } else {
+        this.notification.showError('Error','Error in processing the Release');
+      }
+    
     });
   }
 
