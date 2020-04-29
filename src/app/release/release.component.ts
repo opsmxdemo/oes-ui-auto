@@ -39,12 +39,14 @@ export class ReleaseComponent implements OnInit {
   ChildList: any[];
   // tslint:disable-next-line:ban-types
   releaseErrorMessage: String;
+  newReleaseErrorMessage: string;
 
   constructor(private applicationService: ApplicationService) { }
 
   ngOnInit(): void {
     this.expandedIndex = -1;
-    this.application = this.releaseDataFromParent[0].appName;
+    console.log(this.releaseDataFromParent);
+    this.application = this.releaseDataFromParent.appName;
     this.releaseData = this.releaseDataFromParent;
     // if (this.releaseDataFromParent.length === 0){
     //   this.releaseErrorMessage = 'No recent releases found.';
@@ -53,11 +55,15 @@ export class ReleaseComponent implements OnInit {
   public newReleaseMethod() {
     this.spinnerService = true;
     this.showRelease = true;
+    this.application = this.releaseDataFromParent.appName;
     this.applicationService.doNewRelease(this.application).subscribe((response: any) => {
         response.services.forEach(item => {
         item.isChecked = false;
       });
         this.newReleaseData = response;
+        if(response.services.length === 0){
+          this.newReleaseErrorMessage = "No services found.";
+        }
         this.spinnerService = false;
     });
   }

@@ -62,9 +62,10 @@ export class ApplicationDashboardComponent implements OnInit {
     this.applicationService.getReleaseList(application.name).subscribe((releaseList: any) => {
       this.parentReleaseData = releaseList;
       if (releaseList.length === 0){
-        this.releaseErrorMessage = 'No recent releases found.';
+        this.parentReleaseData.appName = application.name;
+        this.parentReleaseData.releaseErrorMessage = 'No recent releases.';
       }
-      this.parentReleaseData[0].appName = application.name;
+      this.parentReleaseData.appName = application.name;
       this.spinnerService = false;
     });
     event.stopPropagation();

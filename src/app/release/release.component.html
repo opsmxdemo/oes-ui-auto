@@ -1,7 +1,7 @@
 
       <div class="rightBox position-sticky">
         <div class="rightBox_header d-flex align-items-center">
-          <h3>{{releaseDataFromParent[0].appName}}</h3>
+          <h3>{{releaseDataFromParent.appName}}</h3>
           <!-- {{releaseDataFromParent}} -->
           <!-- <div class="btns_icon d-flex ml-auto">
             <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
@@ -11,7 +11,15 @@
         </div>
         <!-- /.rightBox_header -->
         <div class="rightBox_body">
-          <div *ngIf="showRelease">
+          <div *ngIf="showRelease && newReleaseData.services.length === 0;">
+          <div class="alert alert-danger" role="alert">
+                <p>{{newReleaseErrorMessage}}</p>
+              </div> 
+              <div class="bottom_btns mt-auto bg-white position-sticky text-right">
+                  <button class="btn btn-danger" style="color:#fff;" (click)="cancelRelease()">Cancel</button>
+               </div>
+          </div>
+          <div *ngIf="showRelease && newReleaseData.services.length != 0;">
               <div class="form-group form-inline">
                 <label class="release-label" for="exampleInputReleaseName">Release Name
                  </label> <input type="text" [(ngModel)]="promoteData.releaseName" class="form-control"
@@ -62,15 +70,16 @@
                </div>
           </div>
           <div class="table-responsive" *ngIf="!showRelease">
+              <div *ngIf="!showRelease && releaseDataFromParent.releaseErrorMessage != undefined;" class="alert alert-danger" role="alert">
+                  <p>{{releaseDataFromParent.releaseErrorMessage}}</p>
+                </div> 
             	<div class="form-group form-inline pull-right">
                   <div class=" mt-auto bg-white position-sticky text-right">
                         <button class="btn btn-primary" (click)="newReleaseMethod()">New Release</button>
                       </div>
                 </div>
-                <div *ngIf="releaseDataFromParent.length == 0" class="alert alert-danger" role="alert">
-                    <p>{{releaseErrorMessage}}</p>
-                  </div>
-            <table *ngIf="releaseDataFromParent.length > 0" class="table table-pet-service mb-0">
+             
+            <table *ngIf="!showRelease && releaseDataFromParent.releaseErrorMessage == undefined;" class="table table-pet-service mb-0">
             <thead>
               <tr>
                 <th>Release Name</th>
