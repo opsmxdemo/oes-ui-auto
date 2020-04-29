@@ -61,17 +61,77 @@ export class AuditEffect {
         )
     )
 
-    // Below effect is use for fetch all pipline data which is used to display on select allPipeline.
+    // Below effect is use for fetch all Runningpipline data which is used to display on select Pipeline Execution.
     fetchAllPipeline = createEffect(() =>
         this.actions$.pipe(
-            ofType(AuditAction.loadAudit),
+            ofType(AuditAction.loadFinalData),
             switchMap(() => {
                 const params  =  new HttpParams()
                 .set('isLatest','false')
-                .set('isTreeView','true');
+                .set('isTreeView','false');
                 return this.http.get(environment.samlUrl+'oes/audit/allDeployments',{params: params}).pipe(
                     map(resdata => {
-                        return AuditAction.fetchAllPipeline({allPipelineData:resdata});
+                        return AuditAction.fetchRuningPipeline({allRunningPipelineData:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch all pipline exist in system which is used to display on select Pipeline.
+    fetchModifiedPipeline = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadAudit),
+            switchMap(() => {
+                const params  =  new HttpParams() 
+                .set('isTreeView','false');
+                return this.http.get(environment.samlUrl+'oes/audit/pipelinesModified',{params: params}).pipe(
+                    map(resdata => {
+                        return AuditAction.fetchAllPipeline({pipelineExist:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch all pipline data which is used to display on select allPipeline.
+    fetchFailedPipeline = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadFinalData),
+            switchMap(() => {
+                const params  =  new HttpParams()
+                .set('isTreeView','true');
+                return this.http.get(environment.samlUrl+'oes/audit/failedPipelineDetails',{params: params}).pipe(
+                    map(resdata => {
+                        return AuditAction.fetchFailedPipeline({failedPipelineData:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch all pipline data which is used to display on select allPipeline.
+    fetchLastSuccessfulDeployment = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadFinalData),
+            switchMap(() => {
+                const params  =  new HttpParams()
+                .set('isTreeView','true');
+                return this.http.get(environment.samlUrl+'oes/audit/lastSuccessfulDeployments',{params: params}).pipe(
+                    map(resdata => {
+                        return AuditAction.fetchlastSuccessfulDeployments({lastSuccessfulDeployment:resdata});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!','ERROR')

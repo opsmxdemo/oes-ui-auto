@@ -55,7 +55,10 @@ import { AuditEffect } from './audit/store/audit.effects';
     HttpClientModule,
     AppMaterialModule,
     Ng2SearchPipeModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      preventDuplicates: true,
+    }),
     StoreModule.forRoot(fromApp.appReducers),
     EffectsModule.forRoot([AuthEffect,LayoutEffect,ApplicationOnBoardingEffect,AuditEffect]),
     //please keep below import always in last position

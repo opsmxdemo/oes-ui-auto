@@ -6,7 +6,7 @@ export class CreateApplication {
     name: string;
     description: string;
     services:Service[];
-    environment:Environment[];
+    environments:Environment[];
     userGroups:GroupPermission[];
 
     constructor(data: any) {
@@ -17,9 +17,9 @@ export class CreateApplication {
         data.services.forEach(element => {
             this.services.push(new Service(element));
         });
-        this.environment=[];
+        this.environments=[];
         data.environment.forEach(element => {
-            this.environment.push(new Environment(element));
+            this.environments.push(new Environment(element));
         });
         this.userGroups=[];
         data.userGroups.forEach(element => {
