@@ -1,0 +1,13 @@
+FROM registry.access.redhat.com/ubi8/ubi:latest
+MAINTAINER OpsMx
+
+# Install nginx
+RUN yum -y install nginx
+
+####### Copy nginx configuration #########
+COPY /docker_build/nginx.conf /etc/nginx/
+####### Copy angular build #########
+COPY /dist/OES-UI/*  /var/www/html/
+####### Start nginx server on port 80 #########
+EXPOSE 80/tcp
+CMD ["nginx", "-g", "daemon off;"]
