@@ -4,6 +4,9 @@ MAINTAINER OpsMx
 # Install nginx
 RUN yum -y install nginx
 
+# Install procps(ps)
+RUN yum install -y procps
+
 ####### Copy nginx configuration #########
 COPY /docker_build/nginx.conf /etc/nginx/
 ####### Copy angular build #########
