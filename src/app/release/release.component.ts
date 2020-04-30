@@ -29,6 +29,7 @@ export class ReleaseComponent implements OnInit {
   public selectedServiceIndex: string;
   public selectedAppName: string;
   public spinnerService = false;
+  public promoteStatus = false;
   public promoteData: any = {
     releaseName: '',
     source: '',
@@ -84,7 +85,9 @@ export class ReleaseComponent implements OnInit {
     this.childListData = childData.env;
     this.ChildList = childData.services;
     }
+    
   public promoteRelease() {
+    this.promoteStatus = true;
     this.promoteData.services = [];
     this.promoteData.env = [];
     this.newReleaseData.services.forEach(item => {
@@ -112,10 +115,12 @@ export class ReleaseComponent implements OnInit {
           this.releaseDataFromParent.appName = this.application;
           this.promoteData.releaseName = '';
           this.promoteData.jiraId = '';
+          this.promoteStatus = false;
         //  this.application = this.releaseDataFromParent.appName;
         });
       } else {
         this.notification.showError('Error','Error in processing the Release');
+        this.promoteStatus = false;
       }
     
     });
