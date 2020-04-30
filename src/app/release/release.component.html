@@ -57,7 +57,7 @@
                       <td><div  [(ngModel)]="newRelease.image">{{newRelease.image}}</div></td>
                         <td>
                           <select class="form-control"  [(ngModel)]="newRelease.latestTag">
-                            <option *ngFor="let containers of newRelease.tags" [value]="newRelease.latestTag">{{containers.tag}}</option>
+                            <option *ngFor="let containers of newRelease.tags" [value]="containers.tag">{{containers.tag}}</option>
                           </select>
                       </td>
                     </tr>
