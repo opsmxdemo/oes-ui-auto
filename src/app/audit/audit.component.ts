@@ -1,21 +1,23 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer';
 import * as AuditActions from './store/audit.actions';
 import { PipelineCount } from '../models/audit/pipelineCount.model';
 import { NotificationService } from '../services/notification.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-audit',
   templateUrl: './audit.component.html',
-  styleUrls: ['./audit.component.less']
+  styleUrls: ['./audit.component.less'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   @ViewChild('CustomColumn') CustomColumn: ElementRef;
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
   @ViewChild('dForm') dateSearchForm: NgForm;
+  @ViewChild('filterForm') filterForm: NgForm;
 
   pipelineCount: PipelineCount = null;                                                 // It use to store pipelineCount data.
   pipelineCountName = 'All Pipelines';                                                 // It is use to store current tab pipelineName.
@@ -40,7 +42,18 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
   disableDatepicker = true;                                                            // It is use to disabled datepicker present in date filter.
   timerHour = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];            // It is use to store timer value in hours used in customize date filter.
   timerMinute = [];                                                                    // It is use to store timer value in minute used in customize date filter.
-  currentTabData: any = null;                                                          // It is use to store current tab data to populate dynamic table
+  currentTabData: any = null;                                                          // It is use to store current tab data to populate dynamic table.
+
+  // Below variable is use for filters
+  disabledfilter = false;
+  ShowFilter = false;
+  limitSelection = false;
+  application = ['App','App1','App2','App3','App4jbjojnoj','App5','App6','App7','App8','App9','App10'];
+  selectedItems = [];
+  dropdownSettings: any = {};
+
+  //for testing purpose remove in future
+  filtersList = ['application','cloudData','status','application','cloudData','status']
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService) { }
@@ -64,6 +77,16 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
     //Dispatching action to fetch data from api related to rest of tab exist in Audit
     this.store.dispatch(AuditActions.loadFinalData());
+
+    // setting filter default setting
+    this.dropdownSettings = {
+      singleSelection: false,
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 2,
+      allowSearchFilter:true,
+      minWidth:180
+  };
 
     // Fetching data from state
     this.store.select('audit').subscribe(
@@ -152,14 +175,16 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
           this.createHeaders(this.currentTabData['headerOrder']);
           this.showHideColumn();
           // setting date form values present in date search
-          this.dateSearchForm.setValue({
-            customRadio:'allTime',
-            firstdayHours: "",
-            firstdayMinutes: "",
-            firstdayMeridiem: "",
-            lastdayHours: "",
-            lastdayMinutes: "",
-            lastdayMeridiem: ""
+          setTimeout(() => {
+            this.dateSearchForm.setValue({
+              customRadio:'allTime',
+              firstdayHours: "",
+              firstdayMinutes: "",
+              firstdayMeridiem: "",
+              lastdayHours: "",
+              lastdayMinutes: "",
+              lastdayMeridiem: ""
+            })
           })
         }
       }
@@ -179,6 +204,17 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
   //################### Multiple Table Logic ends ########################
 
   //################### Filter logic start ################################
+
+  //Below funstion is use on select of filter multiple values
+  onItemSelect(event,category){
+    debugger
+    if(typeof event === 'object'){
+      this.filterForm.value[category] = event;
+    }
+    console.log("form",this.filterForm.value);
+    console.log("event",event);
+    console.log("eventlength",typeof event);
+  }
 
   // Below function is execute on search
   onSearch() {

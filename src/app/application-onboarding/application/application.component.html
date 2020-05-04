@@ -28,6 +28,11 @@
                 <span>Description :</span>
                 <strong>{{createApplicationForm.value.description}}</strong>
               </li>
+              <li class="ti-item">
+                <i class="{{createApplicationForm.value.dockerName !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <span>Docker Name :</span>
+                <strong>{{createApplicationForm.value.dockerName}}</strong>
+              </li>
               <br>
               <br>
             </ul>
@@ -117,6 +122,14 @@
                     <textarea class="form-control" rows="3" formControlName="description" [readonly]="editMode"></textarea>
                   </div>
                   <!-- /.form-group -->
+                  <div class="form-group">
+                    <label>Docker Name</label>
+                    <input type="text" class="form-control" formControlName="dockerName" [readonly]="editMode">
+                    <span *ngIf="createApplicationForm.get('dockerName').invalid && createApplicationForm.get('dockerName').touched"
+                      class="help-block">
+                      Docker Name is required
+                    </span>
+                  </div>
                 </form>
               </div>
               <!-- /.col-6 -->

@@ -61,7 +61,7 @@ export class AppliactionListComponent implements OnInit {
 
   // Below function is use to redirect to create application page
   createApplication() {
-    this.store.dispatch(OnboardingActions.loadApp({page:'/setup'}));
+    this.store.dispatch(OnboardingActions.loadApp({page:'/setup/applications'}));
   }
 
   //Below function is used to implement pagination
@@ -143,7 +143,7 @@ export class AppliactionListComponent implements OnInit {
   // Below function is use for edit application
   editApplication(index){
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: this.appListData[index].name,page:'/setup'}));
+    this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: this.appListData[index].name,page:'/setup/applications'}));
   }
 
 }
