@@ -13,17 +13,20 @@ import { DynamicAccountsComponent } from '../application-onboarding/accounts/dyn
 
 
 const routes: Routes = [
+  {path:'', redirectTo:'/setup/applications',pathMatch:'full'},
   {path:'appdashboard', component:ApplicationDashboardComponent},
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'setup', component:ApplicationOnboardingComponent, canActivate: [AuthGuard], children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
+    {path: '', redirectTo:'/setup/applications',pathMatch:'full'},
     {path: 'applications' , component: AppliactionListComponent},
     {path: 'newApplication' , component: ApplicationComponent},
     {path: 'datasource' , component: DataSourceComponent},
     {path: 'cloudservices' , component: CloudServicesComponent},
     {path: 'accounts' , component: DynamicAccountsComponent}
   ]},
+  
 ];
 
 @NgModule({

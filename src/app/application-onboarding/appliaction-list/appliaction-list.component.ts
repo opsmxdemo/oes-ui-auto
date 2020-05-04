@@ -32,6 +32,7 @@ export class AppliactionListComponent implements OnInit {
   
   ngOnInit(): void {
 
+    
     //fetching data from state
     this.store.select('appOnboarding').subscribe(
       (response) => {

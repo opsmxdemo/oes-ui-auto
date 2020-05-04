@@ -352,7 +352,7 @@ export class ApplicationComponent implements OnInit {
 
   // Below function is use to redirect to parent page after click on cancel btn
   cancelForm(){
-    this.router.navigate([this.parentPage])
+    this.router.navigate([this.parentPage]);
   }
 
   //Below function is use to submit whole form and send request to backend

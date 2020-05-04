@@ -76,12 +76,6 @@ export function AppOnboardingReducer(
                 applicationList: action.Applist
             })
         ),
-        on(OnboardingAction.dataSaved,
-            state => ({
-                ...state,
-                parentPage: null
-            })
-        ),
         on(OnboardingAction.appDelete,
             (state,action) => ({
                 ...state,

@@ -207,7 +207,6 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   //Below funstion is use on select of filter multiple values
   onItemSelect(event,category){
-    debugger
     if(typeof event === 'object'){
       this.filterForm.value[category] = event;
     }
