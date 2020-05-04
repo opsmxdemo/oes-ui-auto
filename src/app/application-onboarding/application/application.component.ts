@@ -53,7 +53,8 @@ export class ApplicationComponent implements OnInit {
             //populating createApplicationForm ################################################################
             this.createApplicationForm = new FormGroup({
               name: new FormControl(this.appData.name, Validators.required, this.valitateApplicationName.bind(this)),
-              description: new FormControl(this.appData.description)
+              description: new FormControl(this.appData.description),
+              dockerName: new FormControl(this.appData.dockerName,Validators.required)
             });
 
             //populating serviceForm############################################################################
@@ -159,7 +160,8 @@ export class ApplicationComponent implements OnInit {
     // defining reactive form approach for createApplicationForm
     this.createApplicationForm = new FormGroup({
       name: new FormControl('', Validators.required, this.valitateApplicationName.bind(this)),
-      description: new FormControl('')
+      description: new FormControl(''),
+      dockerName: new FormControl('',Validators.required)
     });
 
     // defining reactive form for Permission Section
@@ -350,7 +352,7 @@ export class ApplicationComponent implements OnInit {
 
   // Below function is use to redirect to parent page after click on cancel btn
   cancelForm(){
-    this.router.navigate([this.parentPage])
+    this.router.navigate([this.parentPage]);
   }
 
   //Below function is use to submit whole form and send request to backend

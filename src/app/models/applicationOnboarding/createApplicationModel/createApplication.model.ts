@@ -5,6 +5,7 @@ import { Environment } from './environmentModel/environment.model';
 export class CreateApplication {
     name: string;
     description: string;
+    dockerName: string;
     services:Service[];
     environments:Environment[];
     userGroups:GroupPermission[];
@@ -13,6 +14,7 @@ export class CreateApplication {
         data = data || {};
         this.name = data.name;
         this.description = data.description;
+        this.dockerName = data.dockerName;
         this.services=[];
         data.services.forEach(element => {
             this.services.push(new Service(element));

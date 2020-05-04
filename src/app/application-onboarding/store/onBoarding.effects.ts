@@ -142,7 +142,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             tap(() => {
-                this.router.navigate(['/setup/application'])
+                this.router.navigate(['/setup/newApplication'])
             })
         ), { dispatch: false }
     )

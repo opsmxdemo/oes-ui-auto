@@ -9,19 +9,24 @@ import { ApplicationComponent } from '../application-onboarding/application/appl
 import { DataSourceComponent } from '../application-onboarding/data-source/data-source.component';
 import { CloudServicesComponent } from '../application-onboarding/cloud-services/cloud-services.component';
 import { AppliactionListComponent } from '../application-onboarding/appliaction-list/appliaction-list.component';
+import { DynamicAccountsComponent } from '../application-onboarding/accounts/dynamic-accounts/dynamic-accounts.component';
 
 
 const routes: Routes = [
+  {path:'', redirectTo:'/setup/applications',pathMatch:'full'},
   {path:'appdashboard', component:ApplicationDashboardComponent},
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'setup', component:ApplicationOnboardingComponent, canActivate: [AuthGuard], children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
-    {path: '' , component: AppliactionListComponent},
-    {path: 'application' , component: ApplicationComponent},
+    {path: '', redirectTo:'/setup/applications',pathMatch:'full'},
+    {path: 'applications' , component: AppliactionListComponent},
+    {path: 'newApplication' , component: ApplicationComponent},
     {path: 'datasource' , component: DataSourceComponent},
     {path: 'cloudservices' , component: CloudServicesComponent},
+    {path: 'accounts' , component: DynamicAccountsComponent}
   ]},
+  
 ];
 
 @NgModule({

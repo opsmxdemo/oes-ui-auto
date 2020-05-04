@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
-import { ReleaseComponent } from '../release/release.component';
-import { stringify } from 'querystring';
 import * as fromApp from '../store/app.reducer';
 import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
 import * as LayoutAction from '../layout/store/layout.actions';
@@ -31,6 +29,7 @@ export class ApplicationDashboardComponent implements OnInit {
   constructor(private applicationService: ApplicationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
+
     this.applicationService.getApplicationList().subscribe((response: any) => {
       this.store.dispatch(new LayoutAction.ApplicationData(response.length));
       this.applicationData = response;
