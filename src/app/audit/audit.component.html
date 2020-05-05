@@ -308,21 +308,8 @@
               <!-- /.form-inline -->
               <!-- #### Don't delete need in future toolpills ##### -->
               <div class="toolpills">
-                <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Pipeline/Service: <span>aws-product</span>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
-                    aria-labelledby="dropdownMenuButton">
-                    <a href="#" class="dropdown-item">Sumeet Bhandarkar</a>
-                    <a href="#" class="dropdown-item">Rajesh Kumar</a>
-                    <a href="#" class="dropdown-item">John Carter</a>
-                    <a href="#" class="dropdown-item">Madhusudan Sharma</a>
-                  </div>
-                </div>
                 <form #filterForm="ngForm" class="filterForm">
-                  <div class="form-group ml-sm-2 mb-2" *ngFor="let filter of filtersList;let i = index">
+                  <div class="form-group ml-sm-2 mb-2 btn" *ngFor="let filter of filtersList;let i = index">
                     <ng-multiselect-dropdown [placeholder]="filter" name="{{filtersList[i]}}" [data]="application"
                       [settings]="dropdownSettings" (onSelect)="onItemSelect($event,filter)"
                       (onSelectAll)="onItemSelect($event,filter)" (onDeSelectAll)="onItemSelect($event,filter)"

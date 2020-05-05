@@ -13,7 +13,6 @@ import { DynamicAccountsComponent } from '../application-onboarding/accounts/dyn
 
 
 const routes: Routes = [
-  {path:'', redirectTo:'/setup/applications',pathMatch:'full'},
   {path:'appdashboard', component:ApplicationDashboardComponent},
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},

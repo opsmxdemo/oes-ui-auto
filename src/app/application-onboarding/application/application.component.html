@@ -29,9 +29,9 @@
                 <strong>{{createApplicationForm.value.description}}</strong>
               </li>
               <li class="ti-item">
-                <i class="{{createApplicationForm.value.dockerName !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Docker Name :</span>
-                <strong>{{createApplicationForm.value.dockerName}}</strong>
+                <i class="{{createApplicationForm.value.imageSource !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <span>Image Source :</span>
+                <strong>{{createApplicationForm.value.imageSource}}</strong>
               </li>
               <br>
               <br>
@@ -123,11 +123,11 @@
                   </div>
                   <!-- /.form-group -->
                   <div class="form-group">
-                    <label>Docker Name</label>
-                    <input type="text" class="form-control" formControlName="dockerName" [readonly]="editMode">
-                    <span *ngIf="createApplicationForm.get('dockerName').invalid && createApplicationForm.get('dockerName').touched"
+                    <label>Image Source</label>
+                    <input type="text" class="form-control" formControlName="imageSource" [readonly]="editMode">
+                    <span *ngIf="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched"
                       class="help-block">
-                      Docker Name is required
+                      Image Source is required
                     </span>
                   </div>
                 </form>
@@ -248,58 +248,47 @@
               <div class="col-lg-8 col-12 col-xl-6">
                 <div class="form-group group_permission">
                   <label>Environments</label>
-                  <div class="row" *ngIf="environmentForm.value.environments.length !== 0 ? true : false ">
-                    <div class="col-12">
-                      <form [formGroup]="environmentForm">
-                        <div class="col-12">
-                          <hr class="ml-0 mt-3 mb-3" />
-                        </div>
-                        <div class="col-12" formArrayName="environments">
-                          <div class="row">
-                            <div class="col-12" class="table permission_section_heading">
-                              <div class="row">
-                                <div class="col-4 table-head"><strong>Key</strong></div>
-                                <div class="col-6 table-head"><strong>Value</strong></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-12">
-                              <hr class="ml-0 mt-3 mb-3" />
-                            </div>
-                          </div>
-                          <div class="row"
-                            *ngFor="let optionsArr of environmentForm.get('environments')['controls'];let i=index">
-                            <div class="col-md-12 permission_Section_content" [formGroupName]="i">
-                              <div class="row">
-                                <div class="col-md-4">
-                                  <input type="text" class="form-control" formControlName="key">
-                                  <span *ngIf="!environmentForm.get('environments')['controls'][i].get('key').valid && environmentForm.get('environments')['controls'][i].get('key').touched"
-                                  class="help-block">Key is required</span>
-                                </div>
-                                <div class="col-md-5">
-                                  <input type="text" class="form-control" formControlName="value">
-                                  <span *ngIf="!environmentForm.get('environments')['controls'][i].get('value').valid && environmentForm.get('environments')['controls'][i].get('value').touched"
-                                  class="help-block">Value is required</span>
-                                </div>
-                                <div class="col-md-1">
-                                  <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete"
-                                  (click)="removeEnvironment(i)">
-                                    <i class="mt_custom-3 fas fa-trash-alt"></i></a>
-                                </div>
-                              </div>
-                              <br>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
                   <div class="col-12">
                     <hr class="ml-0 mt-3 mb-3" />
                   </div>
+                  <div class="row" *ngIf="environmentForm.value.environments.length !== 0 ? true : false ">
+                    <div class="col-12">
+                      <form [formGroup]="environmentForm">
+                        <table class="table table-outline" formArrayName="environments">
+                          <thead>
+                            <tr>
+                              <th>Key</th>
+                              <th>Value</th>
+                              <th class="text-right"><a (click)="addEnvironment()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Environment"><i class="fas fa-plus"></i></a></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let optionsArr of environmentForm.get('environments')['controls'];let i=index">
+                              <ng-container [formGroupName]="i">
+                                <td>
+                                  <input type="text" class="form-control" formControlName="key">
+                                  <span *ngIf="!environmentForm.get('environments')['controls'][i].get('key').valid && environmentForm.get('environments')['controls'][i].get('key').touched"
+                                  class="help-block">Key is required</span>
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control" formControlName="value">
+                                  <span *ngIf="!environmentForm.get('environments')['controls'][i].get('value').valid && environmentForm.get('environments')['controls'][i].get('value').touched"
+                                  class="help-block">Value is required</span>
+                                </td>
+                                <td>
+                                  <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete"
+                                  (click)="removeEnvironment(i)">
+                                    <i class="mt_custom-3 fas fa-trash-alt"></i></a>
+                                </td>
+                              </ng-container>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </form>
+                    </div>
+                  </div>
                   <div class="col-6">
-                    <a class="btn btn-link btn-link-black" (click)="addEnvironment()">{{environmentForm.value.environments.length !== 0 ? 'Add another Environment' : 'Add Environment' }}</a>
+                    <a class="btn btn-link btn-link-black" *ngIf="environmentForm.value.environments.length === 0 ? true : false " (click)="addEnvironment()">Add Environment</a>
                   </div>
                 </div>
                 <!-- /.form-group -->
@@ -317,36 +306,29 @@
               <div class="col-lg-8 col-12 col-xl-6">
                 <div class="form-group group_permission">
                   <label>Group Permissions</label>
+                  <div class="col-12">
+                    <hr class="ml-0 mt-3 mb-3" />
+                  </div>
                   <div class="row" *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
                     <div class="col-12">
                       <form [formGroup]="groupPermissionForm">
-                        <div class="col-12">
-                          <hr class="ml-0 mt-3 mb-3" />
-                        </div>
-                        <div class="col-12" formArrayName="userGroups">
-                          <div class="row">
-                            <div class="col-12" class="table permission_section_heading">
-                              <div class="row">
-                                <div class="col-4 table-head"><strong>Group</strong></div>
-                                <div class="col-6 table-head"><strong>Permissions</strong></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-12">
-                              <hr class="ml-0 mt-3 mb-3" />
-                            </div>
-                          </div>
-                          <div class="row"
-                            *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
-                            <div class="col-md-12 permission_Section_content" [formGroupName]="i">
-                              <div class="row">
-                                <div class="col-md-4">
+                        <table class="table table-outline" formArrayName="userGroups">
+                          <thead>
+                            <tr>
+                              <th>Group</th>
+                              <th>Permissions</th>
+                              <th class="text-right"><a (click)="addGroup()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Group"><i class="fas fa-plus"></i></a></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
+                              <ng-container [formGroupName]="i">
+                                <td>
                                   <input type="text" class="form-control" formControlName="userGroup">
                                   <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').touched"
                                   class="help-block">Group name is required</span>
-                                </div>
-                                <div class="col-md-5">
+                                </td>
+                                <td>
                                   <select class="form-control" formControlName="permission">
                                     <option value="Read Only">Read Only</option>
                                     <option value="Read & Write">Read & Write</option>
@@ -354,25 +336,21 @@
                                   </select>
                                   <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('permission').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permission').touched"
                                   class="help-block">Permission is required</span>
-                                </div>
-                                <div class="col-md-1">
+                                </td>
+                                <td>
                                   <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete" 
                                   (click)="removeGroup(i)">
                                     <i class="mt_custom-3 fas fa-trash-alt"></i></a>
-                                </div>
-                              </div>
-                              <br>
-                            </div>
-                          </div>
-                        </div>
+                                </td>
+                              </ng-container>
+                            </tr>
+                          </tbody>
+                        </table>
                       </form>
                     </div>
                   </div>
-                  <div class="col-12">
-                    <hr class="ml-0 mt-3 mb-3" />
-                  </div>
                   <div class="col-6">
-                    <a class="btn btn-link btn-link-black" (click)="addGroup()">{{groupPermissionForm.value.userGroups.length !== 0 ? 'Add another Group' : 'Add Group' }}</a>
+                    <a class="btn btn-link btn-link-black" *ngIf="groupPermissionForm.value.userGroups.length === 0 ? true : false " (click)="addGroup()">Add Group</a>
                   </div>
                 </div>
                 <!-- /.form-group -->

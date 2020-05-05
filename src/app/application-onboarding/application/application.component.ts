@@ -54,7 +54,7 @@ export class ApplicationComponent implements OnInit {
             this.createApplicationForm = new FormGroup({
               name: new FormControl(this.appData.name, Validators.required, this.valitateApplicationName.bind(this)),
               description: new FormControl(this.appData.description),
-              dockerName: new FormControl(this.appData.dockerName,Validators.required)
+              imageSource: new FormControl(this.appData.imageSource,Validators.required)
             });
 
             //populating serviceForm############################################################################
@@ -161,7 +161,7 @@ export class ApplicationComponent implements OnInit {
     this.createApplicationForm = new FormGroup({
       name: new FormControl('', Validators.required, this.valitateApplicationName.bind(this)),
       description: new FormControl(''),
-      dockerName: new FormControl('',Validators.required)
+      imageSource: new FormControl('',Validators.required)
     });
 
     // defining reactive form for Permission Section
