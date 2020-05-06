@@ -160,4 +160,22 @@ export class ApplicationOnBoardingEffect {
         ), { dispatch: false }
     )
 
+     // Below effect is use for fetch data related to Accounts List page
+     fetchAccountListData = createEffect(() =>
+     this.actions$.pipe(
+         ofType(OnboardingAction.loadAccountList),
+         switchMap(() => {
+             return this.http.get<any>('../../../assets/data/accountList.json').pipe(
+                 map(resdata => {
+                     return OnboardingAction.fetchAccountList({Accountlist:resdata['accounts']});
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('Server Error !!','ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
 }

@@ -1,0 +1,133 @@
+{
+    "accounts": [
+      {
+        "name": "default",
+        "providerVersion": "v2",
+        "environment": null,
+        "context": null,
+        "oAuthServiceAccount": null,
+        "oAuthScopes": [],
+        "kubeconfigFile": "configserver:kubeCfg_default",
+        "serviceAccount": true,
+        "configureImagePullSecrets": true,
+        "namespaces": [
+          "oes-dev-ns",
+          "oes-stg-ns"
+        ],
+        "omitNamespaces": [],
+        "cacheThreads": 1,
+        "dockerRegistries": [],
+        "requiredGroupMembership": [],
+        "permissions": {
+          "READ": [
+            "oes-dev",
+            "oes-stg",
+            "oes-admin"
+          ],
+          "WRITE": [
+            "oes-admin",
+            "oes-dev"
+          ],
+          "EXECUTE": [
+            "oes-admin"
+          ]
+        },
+        "metrics": true,
+        "checkPermissionsOnStartup": true,
+        "customResources": [],
+        "cachingPolicies": [],
+        "kinds": [],
+        "omitKinds": [],
+        "onlySpinnakerManaged": true,
+        "liveManifestCalls": false
+      },
+      {
+        "name": "k8s-autopilot",
+        "providerVersion": "v2",
+        "environment": null,
+        "context": null,
+        "oAuthServiceAccount": null,
+        "oAuthScopes": [],
+        "kubeconfigFile": "configserver:kubeCfg_k8s-autopilot",
+        "serviceAccount": true,
+        "configureImagePullSecrets": true,
+        "namespaces": [
+          "autopilot-dev-ns",
+          "autopilot-qa-ns",
+          "autopilot-stg-ns",
+          "autopilot-prd-ns"
+        ],
+        "omitNamespaces": [],
+        "cacheThreads": 1,
+        "dockerRegistries": [],
+        "requiredGroupMembership": [],
+        "permissions": {
+          "READ": [
+            "autopilot-dev",
+            "autopilot-qa",
+            "autopilot-stg",
+            "autopilot-prd"
+          ],
+          "WRITE": [
+            "autopilot-prd",
+            "autopilot-dev"
+          ],
+          "EXECUTE": [
+            "autopilot-prd",
+            "autopilot-qa",
+            "autopilot-stg"
+          ]
+        },
+        "metrics": true,
+        "checkPermissionsOnStartup": true,
+        "customResources": [],
+        "cachingPolicies": [],
+        "kinds": [],
+        "omitKinds": [],
+        "onlySpinnakerManaged": true,
+        "liveManifestCalls": false
+      },
+      {
+        "name": "k8s-spinnaker",
+        "providerVersion": "v2",
+        "environment": null,
+        "context": null,
+        "oAuthServiceAccount": null,
+        "oAuthScopes": [],
+        "kubeconfigFile": "configserver:kubeCfg_k8s-spinnaker",
+        "serviceAccount": true,
+        "configureImagePullSecrets": true,
+        "namespaces": [
+          "spin-dev-ns",
+          "spin-stg-ns",
+          "spin-prd-ns"
+        ],
+        "omitNamespaces": [],
+        "cacheThreads": 1,
+        "dockerRegistries": [],
+        "requiredGroupMembership": [],
+        "permissions": {
+          "READ": [
+            "spin-dev",
+            "spin-qa",
+            "spin-prd"
+          ],
+          "WRITE": [
+            "spin-dev",
+            "spin-prd"
+          ],
+          "EXECUTE": [
+            "spin-prd"
+          ]
+        },
+        "metrics": true,
+        "checkPermissionsOnStartup": true,
+        "customResources": [],
+        "cachingPolicies": [],
+        "kinds": [],
+        "omitKinds": [],
+        "onlySpinnakerManaged": true,
+        "liveManifestCalls": false
+      }
+    ]
+  }
