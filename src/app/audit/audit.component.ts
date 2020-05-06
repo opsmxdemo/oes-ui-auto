@@ -177,6 +177,11 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
         this.disableDatepicker = true; 
         this.inlineRange = null;
         if (this.currentTabData !== null) {
+          this.currentTableContent = this.currentTabData['results'];	
+          this.currentDatalength = this.currentTableContent.length;	
+          this.currentTableHeader = this.currentTabData['headers'];	
+          this.createHeaders(this.currentTabData['headerOrder']);	
+          this.showHideColumn();
           // setting date form values present in date search
           if(this.advanSearchMode === true){
             setTimeout(() => {
