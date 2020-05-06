@@ -142,6 +142,45 @@ export class AuditEffect {
         )
     )
 
+    // Below effect is use for fetch all pipline data which is used to display on select allPipeline.
+    fetchFilterData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadAudit),
+            switchMap(() => {
+                return this.http.get('http://localhost:3000/filtersection').pipe(
+                    map(resdata => {
+                        return AuditAction.fetchFilterData({filterData:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+     // Below effect is use for post all filter data which will filter the data in backend and give filtered data in response
+//      postFilterData = createEffect(() =>
+//      this.actions$.pipe(
+//          ofType(AuditAction.postFilterData),
+//          switchMap(() => {
+//             const params  =  new HttpParams()
+//             .set('isLatest','false')
+//             .set('isTreeView','false');
+//              return this.http.post('http://localhost:3000/filtersection',{params: params}).pipe(
+//                  map(resdata => {
+//                      return AuditAction.fetchFilterData({filterData:resdata});
+//                  }),
+//                  catchError(errorRes => {
+//                      this.toastr.showError('Server Error !!','ERROR')
+//                      return handleError(errorRes);
+//                  })
+//              );
+//          })
+//      )
+//  )
+
 
 
 }

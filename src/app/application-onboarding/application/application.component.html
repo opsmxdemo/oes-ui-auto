@@ -114,6 +114,9 @@
                         required</span>
                       <span *ngIf="createApplicationForm.get('name').errors['applicationExist']">Application already
                         exists with same name. Please choose a unique application name</span>
+                      <span *ngIf="createApplicationForm.get('name').errors['containSpace']">Space is not allowed in application name</span>
+                      <span *ngIf="createApplicationForm.get('name').errors['startingFromNumber']">The application name must begin with a letter.</span>
+                      <span *ngIf="createApplicationForm.get('name').errors['symbols']">No Special characters are allowed.</span>
                     </span>
                   </div>
                   <!-- /.form-group -->
@@ -163,8 +166,13 @@
                               (click)="deleteService(i)" *ngIf ="servicesForm.get('services')['controls'].length > 1 ? true : false">
                                 <i class="fas fa-trash-alt"></i></a>
                               </div>
-                              <span *ngIf="!servicesForm.get('services')['controls'][i].get('serviceName').valid && servicesForm.get('services')['controls'][i].get('serviceName').touched"
-                              class="help-block">Service name is required</span>
+                              <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').invalid && servicesForm.get('services')['controls'][i].get('serviceName').touched"
+                              class="help-block">
+                              <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['required']">Service name is required</span>
+                              <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['containSpace']">Space is not allowed in Service Name</span>
+                              <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['startingFromNumber']">The service name must begin with a letter.</span>
+                              <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['symbols']">No Special characters are allowed.</span>
+                            </span>
                             <!-- /.d-flex -->
                           </div>
                           <div class="col-12 " formArrayName="pipelines">

@@ -9,7 +9,7 @@ import { ApplicationComponent } from '../application-onboarding/application/appl
 import { DataSourceComponent } from '../application-onboarding/data-source/data-source.component';
 import { CloudServicesComponent } from '../application-onboarding/cloud-services/cloud-services.component';
 import { AppliactionListComponent } from '../application-onboarding/appliaction-list/appliaction-list.component';
-import { DynamicAccountsComponent } from '../application-onboarding/accounts/dynamic-accounts/dynamic-accounts.component';
+import { DynamicAccountsComponent } from '../application-onboarding/dynamic-accounts/dynamic-accounts.component';
 
 
 const routes: Routes = [
