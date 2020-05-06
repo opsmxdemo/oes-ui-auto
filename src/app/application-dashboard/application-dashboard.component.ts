@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
+import {NotificationService} from '../services/notification.service';
 import * as fromApp from '../store/app.reducer';
 import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
 import * as LayoutAction from '../layout/store/layout.actions';
@@ -26,15 +27,19 @@ export class ApplicationDashboardComponent implements OnInit {
 
 
   // tslint:disable-next-line:max-line-length
-  constructor(private applicationService: ApplicationService, public store: Store<fromApp.AppState>) { }
+  constructor(private applicationService: ApplicationService, private notifications: NotificationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
-
+    this.getApplications();
+  }
+  // code to load applications
+  public getApplications() {
     this.applicationService.getApplicationList().subscribe((response: any) => {
       this.store.dispatch(new LayoutAction.ApplicationData(response.length));
       this.applicationData = response;
       this.spinnerService = false;
       this.selectedApplication(0, response[0]);
+     // this.notifications.showError('error','errorMessage');
     });
   }
   public selectedApplication(index: number, app: any) {

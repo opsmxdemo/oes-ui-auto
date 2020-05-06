@@ -14,7 +14,8 @@ export interface State {
     parentPage: string;
     applicationData: CreateApplication;
     cloudAccountExist: CloudAccount;
-    applicationList: ApplicationList[]
+    applicationList: ApplicationList[];
+    accountList: any;
 }
 
 export const initialState: State = {
@@ -24,7 +25,8 @@ export const initialState: State = {
     parentPage: null,
     applicationData: null,
     cloudAccountExist: null,
-    applicationList: null
+    applicationList: null,
+    accountList: null,
 }
 
 export function AppOnboardingReducer(
@@ -81,6 +83,12 @@ export function AppOnboardingReducer(
                 ...state,
                 applicationList: state.applicationList.filter((applist,index) => index !== action.index)
             })
-        )
+        ),
+        on(OnboardingAction.fetchAccountList,
+            (state,action) => ({
+                ...state,
+                accountList: action.Accountlist,
+            })
+        ),
     )(onboardingState,onboardingAction);
 }
