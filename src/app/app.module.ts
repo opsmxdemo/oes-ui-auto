@@ -30,6 +30,7 @@ import { KeysPipe } from './pipes/keys.pipe';
 import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBoarding.effects';
 import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
 import { AuditEffect } from './audit/store/audit.effects';
+import { DynamicAccountsComponent } from './application-onboarding/dynamic-accounts/dynamic-accounts.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AuditEffect } from './audit/store/audit.effects';
     CloudServicesComponent,
     ReleaseComponent,
     KeysPipe,
-    AppliactionListComponent
+    AppliactionListComponent,
+    DynamicAccountsComponent
   ],
   imports: [
     BrowserModule,

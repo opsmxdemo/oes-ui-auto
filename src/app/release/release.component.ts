@@ -57,13 +57,15 @@ export class ReleaseComponent implements OnInit {
     // }
   }
   public newReleaseMethod(app) {
+    debugger
     this.spinnerService = true;
     this.showRelease = true;
     this.application = app;
     // if (this.releaseDataFromParent.appName === undefined){
     //   this.application = this.selectedAppName;
     // }
-    this.applicationService.doNewRelease(this.application).subscribe((response: any) => {
+    this.applicationService.doNewRelease(this.application).subscribe(
+      (response: any) => {
         response.services.forEach(item => {
         item.isChecked = false;
       });
@@ -72,7 +74,14 @@ export class ReleaseComponent implements OnInit {
           this.newReleaseErrorMessage = 'No services found.';
         }
         this.spinnerService = false;
-    });
+    },
+    (error) => {
+      console.log("erroeUI",error);
+      
+      this.notification.showInfo("test","test");
+      alert('hello');
+    }
+    );
   }
   public cancelRelease(){
     this.showRelease = false;

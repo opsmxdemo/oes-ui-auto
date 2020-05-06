@@ -44,7 +44,7 @@ export class ApplicationService {
         } else {
             // server-side error
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-            this.notifications.showError('error',errorMessage);
+            // this.notifications.showError('error',errorMessage);
         }
         console.log(errorMessage);
         return throwError(errorMessage);
