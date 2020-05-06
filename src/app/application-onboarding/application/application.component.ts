@@ -66,7 +66,7 @@ export class ApplicationComponent implements OnInit {
               this.appData.services.forEach((serviceArr, serviceindex) => {
                 (<FormArray>this.servicesForm.get('services')).push(
                   new FormGroup({
-                    serviceName: new FormControl(serviceArr.serviceName, Validators.required),
+                    serviceName: new FormControl(serviceArr.serviceName, [Validators.required,this.cannotContainSpace.bind(this)]),
                     status: new FormControl(serviceArr.status),
                     pipelines: new FormArray([])
                   })
@@ -159,7 +159,7 @@ export class ApplicationComponent implements OnInit {
   defineAllForms() {
     // defining reactive form approach for createApplicationForm
     this.createApplicationForm = new FormGroup({
-      name: new FormControl('', Validators.required, this.valitateApplicationName.bind(this)),
+      name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
       description: new FormControl(''),
       imageSource: new FormControl('',Validators.required)
     });
@@ -178,7 +178,7 @@ export class ApplicationComponent implements OnInit {
     this.servicesForm = new FormGroup({
       services: new FormArray([
         new FormGroup({
-          serviceName: new FormControl('', Validators.required),
+          serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
           status: new FormControl('New'),
           pipelines: new FormArray([
             new FormGroup({
@@ -192,11 +192,10 @@ export class ApplicationComponent implements OnInit {
       ])
     })
   }
-
+  
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
   valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
     const promise = new Promise<any>((resolve, reject) => {
-
       this.sharedService.validateApplicationName(control.value, 'application').subscribe(
         (response) => {
           if (response['applicationExist'] === true) {
@@ -208,6 +207,22 @@ export class ApplicationComponent implements OnInit {
       )
     });
     return promise;
+  }
+
+  //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
+  cannotContainSpace(control: FormControl): {[s: string]: boolean} {
+    let startingValue = control.value.split('');
+    console.log('validation',startingValue.length);
+  if(startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0){
+    return {containSpace: true}
+  }
+  if( +startingValue[0] > -1 && startingValue.length > 0){
+    return {startingFromNumber: true}
+  }
+  if ( !/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
+    return {symbols: true};
+  }
+  return null;
   }
 
   //Below function is use to add more permission group
@@ -272,7 +287,7 @@ export class ApplicationComponent implements OnInit {
   addService() {
     (<FormArray>this.servicesForm.get('services')).push(
       new FormGroup({
-        serviceName: new FormControl('', Validators.required),
+        serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
         status: new FormControl('New'),
         pipelines: new FormArray([
           new FormGroup({

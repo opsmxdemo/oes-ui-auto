@@ -4,7 +4,8 @@ import * as fromApp from '../store/app.reducer';
 import * as AuditActions from './store/audit.actions';
 import { PipelineCount } from '../models/audit/pipelineCount.model';
 import { NotificationService } from '../services/notification.service';
-import { NgForm, FormGroup, FormControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-audit',
@@ -15,6 +16,7 @@ import { NgForm, FormGroup, FormControl } from '@angular/forms';
 export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   @ViewChild('CustomColumn') CustomColumn: ElementRef;
+  @ViewChild('AddMoreFilters') AddMoreFilters: ElementRef;
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
   @ViewChild('dForm') dateSearchForm: NgForm;
   @ViewChild('filterForm') filterForm: NgForm;
@@ -34,6 +36,7 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
     currentPage: 1,
     pageNo: 1,
   }
+  advanSearchMode = false;                                                             // It is use to switch filter or search option between advance and normal mode.
   currentDatalength: number = null;                                                    // It is used to store length of current table data.
   currentTableHeader = [''];                                                           // It is used to store column key of current table to be displayed.
   currentHeaderKeys = [];                                                              // It is used to store keys of current table content.
@@ -46,31 +49,31 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   // Below variable is use for filters
   disabledfilter = false;
-  ShowFilter = false;
   limitSelection = false;
-  application = ['App','App1','App2','App3','App4jbjojnoj','App5','App6','App7','App8','App9','App10'];
-  selectedItems = [];
   dropdownSettings: any = {};
-
-  //for testing purpose remove in future
-  filtersList = ['application','cloudData','status','application','cloudData','status']
+  filtersData: any;                                                                    // It is use to store filter data of current table.
+  selectedFilters = [];                                                                // It is use to store selected filter data
+  showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
+  applyFilterbtnShow = false;                                                          // It is use to show and hide apply filter btn exist in filter section.
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService) { }
 
   ngAfterViewInit(){
     // Setting initial value of dateFilter form
-    setTimeout(() => {
-      this.dateSearchForm.setValue({
-        customRadio:'allTime',
-        firstdayHours: "",
-        firstdayMinutes: "",
-        firstdayMeridiem: "",
-        lastdayHours: "",
-        lastdayMinutes: "",
-        lastdayMeridiem: ""
+    if(this.advanSearchMode === true){
+      setTimeout(() => {
+        this.dateSearchForm.setValue({
+          customRadio:'allTime',
+          firstdayHours: "",
+          firstdayMinutes: "",
+          firstdayMeridiem: "",
+          lastdayHours: "",
+          lastdayMinutes: "",
+          lastdayMeridiem: ""
+        })
       })
-    })
+    }
   }
 
   ngOnInit() {
@@ -94,6 +97,10 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
         if (auditData.pipelineCount !== null){
           this.pipelineCount = auditData.pipelineCount;
           this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
+        }
+        if (auditData.filterData!== null){
+          this.filtersData = auditData.filterData['filter'];
+          this.selectedFilter();
         }
         if (auditData.allPipelineData !== null) {
           this.allpipelineData = auditData.allPipelineData;
@@ -135,6 +142,7 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   // Below function is execute on click on tabs exist in navigation area
   onChangeTab(event) {
+    debugger
     this.currentTableContent = [];
     const currentData = event.target.id;
     this.store.select('audit').subscribe(
@@ -169,23 +177,20 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
         this.disableDatepicker = true; 
         this.inlineRange = null;
         if (this.currentTabData !== null) {
-          this.currentTableContent = this.currentTabData['results'];
-          this.currentDatalength = this.currentTableContent.length;
-          this.currentTableHeader = this.currentTabData['headers'];
-          this.createHeaders(this.currentTabData['headerOrder']);
-          this.showHideColumn();
           // setting date form values present in date search
-          setTimeout(() => {
-            this.dateSearchForm.setValue({
-              customRadio:'allTime',
-              firstdayHours: "",
-              firstdayMinutes: "",
-              firstdayMeridiem: "",
-              lastdayHours: "",
-              lastdayMinutes: "",
-              lastdayMeridiem: ""
+          if(this.advanSearchMode === true){
+            setTimeout(() => {
+              this.dateSearchForm.setValue({
+                customRadio:'allTime',
+                firstdayHours: "",
+                firstdayMinutes: "",
+                firstdayMeridiem: "",
+                lastdayHours: "",
+                lastdayMinutes: "",
+                lastdayMeridiem: ""
+              })
             })
-          })
+          }
         }
       }
     )
@@ -205,14 +210,65 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   //################### Filter logic start ################################
 
+  // Below function is use to toggle between advanced and normal search mode
+  advancedModeToggle(){
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.advanSearchMode = !this.advanSearchMode;
+  }
+
+  // Below function is use to save selectedfilter value in selectedFilter array
+  selectedFilter(){
+    this.filtersData.forEach((el,index) => {
+      this.selectedFilters[index] = el.selectedItem
+      if(el.selectedItem.length > 0){
+        this.showHideFilter[index] = true;
+      }else{
+        this.showHideFilter[index] = false;
+      }
+    });
+  }
+
+  // Below function is use to show hide of filter selected by user on click of add more filters
+  showHideFilters(event, index) {
+    if (index !== 'selectAll') {
+      if (event.target.checked) {
+        this.showHideFilter[index] = true;
+      } else {
+        this.showHideFilter[index] = false;
+      }
+    } else {
+      this.showHideFilter = [];
+      this.filtersData.forEach(element => {
+        this.showHideFilter.push(true);
+      });
+    }
+    this.applyFilterbtnShow = true;
+    // hide filter dropdown
+    this.AddMoreFilters.nativeElement.dispatchEvent(new Event('click'));
+  }
+
   //Below funstion is use on select of filter multiple values
   onItemSelect(event,category){
     if(typeof event === 'object'){
       this.filterForm.value[category] = event;
     }
-    console.log("form",this.filterForm.value);
-    console.log("event",event);
-    console.log("eventlength",typeof event);
+    this.applyFilterbtnShow = true;
+  }
+
+  // Below function is executed on click of apply filters
+  applyFilters(){
+    let filterArr = [];
+    this.filtersData.forEach((el,index) => {
+      if(this.showHideFilter[index] && this.filterForm.value[el.name].length > 0){
+        let appliedfilters= {};
+        appliedfilters['name']= el.name;
+        appliedfilters['placeholder']= el.placeholder;
+        appliedfilters['items']= el.items;
+        appliedfilters['selectedItem']= this.filterForm.value[el.name];
+        filterArr.push(appliedfilters);
+      }
+    });
+    console.log('finaldata',filterArr)
   }
 
   // Below function is execute on search
