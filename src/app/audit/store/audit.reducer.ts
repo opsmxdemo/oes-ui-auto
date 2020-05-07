@@ -64,12 +64,6 @@ export function AuditReducer(
                 ...state,
                 lastSuccessfulDeploymentData: action.lastSuccessfulDeployment
             })
-        ),
-        on(AuditAction.fetchFilterData,
-            (state,action) => ({
-                ...state,
-                filterData: action.filterData
-            })
-        ),
+        )
     )(auditState,auditAction);
 }

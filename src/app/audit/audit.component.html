@@ -33,7 +33,7 @@
                       <option>Successful pipelines by Sumeet Kulkarni</option>
                     </select>
                   </div> -->
-                  <div class="form-group ml-sm-2 mb-2 mx-sm-2">
+                  <div class="form-group mx-sm-2 mb-2">
                     <div class="dropdown">
                       <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -181,8 +181,9 @@
                                 for="showHide{{i}}">{{currentTableHeader[filter.name]}}</label>
                             </div>
                             <div class="dropdown-footer dropdown-footer-border">
-                              <button class="btn text-left btn-block btn-link"
+                              <button class="btn text-left btn-block btn-link" *ngIf="filtersData.length > 0"
                                 (click)="showHideFilters($event,'selectAll')">Select All</button>
+                              <div class="addFilter" *ngIf="filtersData.length === 0"><span>Data not avaliable</span></div>
                             </div>
                           </form>
                         </div>
@@ -193,27 +194,33 @@
                     <div class="btn-group dropdown-icon-remove" role="group"
                       aria-label="Button group with nested dropdown">
                       <div class="btn-group" role="group">
-                        <button id="btnGroupDrop1" type="button" class="btn btn-default dropdown-toggle"
+                        <button id="btnGroupDrop2" type="button" class="btn btn-default" #SaveFilter
                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Save Filter
                         </button>
-                        <div class="dropdown-menu p-0 dropdown-save-filter" aria-labelledby="btnGroupDrop1">
+                        <div class="dropdown-menu p-0 dropdown-save-filter" aria-labelledby="btnGroupDrop2">
+                          <form [formGroup]="saveFilterForm">
                           <div class="dropdown-menu-header py-3 px-3 d-flex align-items-center">
                             <h6>Save New Filter</h6>
                             <button type="button" class="close ml-auto">
                               <i class="fa fa-times"></i>
                             </button>
                           </div>
-                          <div class="dropdown-menu-body mt-3 mb-2 px-3">
-                            <div class="form-row align-items-center">
-                              <div class="col-auto">
-                                <input type="text" class="form-control mb-2" />
-                              </div>
-                              <div class="col-auto">
-                                <button type="submit" class="btn btn-outline-secondary mb-2">Save</button>
+                         
+                            <div class="dropdown-menu-body mt-3 mb-2 px-3">
+                              <div class="form-row align-items-center">
+                                <div class="col-auto mb-2">
+                                  <input type="text" class="form-control" formControlName="filterName"/>
+                                  <span *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched" class="help-block">
+                                    <span *ngIf="saveFilterForm.get('filterName').errors['required']">Name is required</span>
+                                  </span>
+                                </div>
+                                <div class="col-auto">
+                                  <button type="submit" class="btn btn-outline-secondary mb-2" (click)="saveFilter($event)">Save</button>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                          </form>
                         </div>
                       </div>
                       <div class="btn-group" role="group" data-toggle="tooltip" data-placement="top"
