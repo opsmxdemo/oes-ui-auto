@@ -267,7 +267,6 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
       if(this.showHideFilter[index] && this.filterForm.value[el.name].length > 0){
         let appliedfilters= {};
         appliedfilters['name']= el.name;
-        appliedfilters['placeholder']= el.placeholder;
         appliedfilters['items']= el.items;
         appliedfilters['selectedItem']= this.filterForm.value[el.name];
         filterArr.push(appliedfilters);

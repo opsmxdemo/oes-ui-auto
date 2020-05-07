@@ -25,15 +25,15 @@
             <div class="card-heading mb-form-db">
               <div class="form-inline">
                 <ng-container *ngIf = "advanSearchMode">
-                  <div class="form-group ml-sm-2 mb-2">
+                  <!-- <div class="form-group ml-sm-2 mb-2">
                     <select class="form-control" style="width: 150px;">
                       <option>Select saved filter</option>
                       <option>Failed-pipelines</option>
                       <option>passed-pipelines</option>
                       <option>Successful pipelines by Sumeet Kulkarni</option>
                     </select>
-                  </div>
-                  <div class="form-group ml-sm-2 mb-2">
+                  </div> -->
+                  <div class="form-group ml-sm-2 mb-2 mx-sm-2">
                     <div class="dropdown">
                       <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -152,20 +152,17 @@
                                 </div>
                                 <!-- /.form-inline -->
                               </div>
-  
                               <div class="mt-5">
                                 <button class="btn btn-block btn-clear mb-1">Clear</button>
                                 <button class="btn btn-block btn-primary" id="applybtn" type="submit">Apply</button>
                               </div>
-  
                             </div>
                           </div>
-                          <!-- /.d-flex -->
                         </div>
                       </form>
                     </div>
                   </div>
-                  <div class="form-group ml-sm-2 mb-2">
+                  <!-- <div class="form-group ml-sm-2 mb-2">
                     <div class="form-group">
                       <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
                         title="Add More Filters">
@@ -181,7 +178,7 @@
                               <input type="checkbox" class="custom-control-input" (change)="showHideFilters($event,i)"
                                  [checked]="showHideFilter[i]" id="showHide{{i}}">
                               <label class="custom-control-label"
-                                for="showHide{{i}}">{{filter.placeholder}}</label>
+                                for="showHide{{i}}">{{currentTableHeader[filter.name]}}</label>
                             </div>
                             <div class="dropdown-footer dropdown-footer-border">
                               <button class="btn text-left btn-block btn-link"
@@ -237,7 +234,7 @@
                         </ul>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </ng-container>
                 <ng-container *ngIf = "!advanSearchMode">
                   <div class="form-group mx-sm-2 mb-2">
@@ -294,7 +291,7 @@
                 <form #filterForm="ngForm" class="filterForm">
                   <ng-container *ngFor="let filter of filtersData;let i = index">
                     <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]">
-                      <ng-multiselect-dropdown [placeholder]="filter.placeholder" name="{{filtersData[i].name}}" [data]="filter.items"
+                      <ng-multiselect-dropdown [placeholder]="currentTableHeader[filter.name]" name="{{filtersData[i].name}}" [data]="filter.items"
                         [settings]="dropdownSettings" (onSelect)="onItemSelect($event,filter)" [(ngModel)]="selectedFilters[i]"
                         (onSelectAll)="onItemSelect($event,filter)" (onDeSelectAll)="onItemSelect($event,filter)"
                         (onDeSelect)="onItemSelect($event,filter)" ngModel>

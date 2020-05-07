@@ -61,38 +61,31 @@
     "filtersection":{
         "filter":[
             {
-                "name":"application",
+                "name":"pipelineName",
                 "placeholder":"Application",
                 "items":["App0","App1","App2","App3","App4","App5"],
                 "selectedItem":["App1","App5"]
 
             },
             {
-                "name":"cloudData",
+                "name":"user",
                 "placeholder":"Cloud Data",
                 "items":["App00","App01","App02","App03","App04","App05"],
                 "selectedItem":["App03"]
 
             },
             {
-                "name":"status",
+                "name":"applicationName",
                 "placeholder":"Status",
                 "items":["App000","App001","App002","App003","App004","App005"],
                 "selectedItem":["App001","App005"]
 
             },
             {
-                "name":"buildno",
+                "name":"updateTimestamp",
                 "placeholder":"Build No",
                 "items":["App0000","App0001","App0002","App0003","App0004","App0005"],
                 "selectedItem":[]
-
-            },
-            {
-                "name":"triggerBy",
-                "placeholder":"Trigger By",
-                "items":["App00000","App00001","App00002","App00003","App00004","App00005"],
-                "selectedItem":["App00002"]
 
             }
         ]
