@@ -110,7 +110,7 @@ export class ApplicationComponent implements OnInit {
                 (<FormArray>this.environmentForm.get('environments')).push(
                   new FormGroup({
                     key: new FormControl(environmentdata.key, Validators.required),
-                    value: new FormControl(environmentdata.value, Validators.required),
+                    value: new FormControl(environmentdata.value),
                   })
                 );
               })
@@ -246,7 +246,7 @@ export class ApplicationComponent implements OnInit {
     (<FormArray>this.environmentForm.get('environments')).push(
       new FormGroup({
         key: new FormControl('', Validators.required),
-        value: new FormControl('', Validators.required),
+        value: new FormControl(''),
       })
     );
   }
@@ -445,6 +445,7 @@ export class ApplicationComponent implements OnInit {
         this.mainForm.services = this.servicesForm.value.services;
         this.mainForm.environments = this.environmentForm.value.environments;
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
+        console.log("editform", JSON.stringify(this.mainForm));
         //Below action is use to save created form in database
         this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
       } else {
