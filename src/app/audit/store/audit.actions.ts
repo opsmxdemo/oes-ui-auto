@@ -15,5 +15,4 @@ export const fetchFailedPipeline = createAction('[Audit] FetchFailedPipeline', p
 export const fetchlastSuccessfulDeployments = createAction('[Audit] FetchLastSuccessfulDeployments', props<{lastSuccessfulDeployment:any}>());
 
 //Below actions related to filters
-export const fetchFilterData = createAction('[Audit] FetchFilterData', props<{filterData:any}>());
-export const postFilterData = createAction('[Audit] PostFilterData', props<{filter:any}>());
+export const postFilterData = createAction('[Audit] PostFilterData', props<{filter:any,relatedApi:string}>());

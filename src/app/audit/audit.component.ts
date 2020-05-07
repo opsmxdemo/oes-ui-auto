@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer';
 import * as AuditActions from './store/audit.actions';
 import { PipelineCount } from '../models/audit/pipelineCount.model';
 import { NotificationService } from '../services/notification.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup, Validators, FormControl } from '@angular/forms';
 import * as $ from 'jquery';
 
 @Component({
@@ -13,8 +13,9 @@ import * as $ from 'jquery';
   styleUrls: ['./audit.component.less'],
   encapsulation: ViewEncapsulation.None
 })
-export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
+export class AuditComponent implements OnInit{
 
+  @ViewChild('SaveFilter') SaveFilter: ElementRef;
   @ViewChild('CustomColumn') CustomColumn: ElementRef;
   @ViewChild('AddMoreFilters') AddMoreFilters: ElementRef;
   @ViewChild('datedropdownbtn') datedropdownbtn: ElementRef;
@@ -55,26 +56,11 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
   applyFilterbtnShow = false;                                                          // It is use to show and hide apply filter btn exist in filter section.
+  relatedApi: string = null;                                                           // It is use to store value of which api should call on click of apply filter.
+  saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService) { }
-
-  ngAfterViewInit(){
-    // Setting initial value of dateFilter form
-    if(this.advanSearchMode === true){
-      setTimeout(() => {
-        this.dateSearchForm.setValue({
-          customRadio:'allTime',
-          firstdayHours: "",
-          firstdayMinutes: "",
-          firstdayMeridiem: "",
-          lastdayHours: "",
-          lastdayMinutes: "",
-          lastdayMeridiem: ""
-        })
-      })
-    }
-  }
 
   ngOnInit() {
 
@@ -89,7 +75,13 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
       itemsShowLimit: 2,
       allowSearchFilter:true,
       minWidth:180
-  };
+    };
+
+    // Below is reactive form defining for save filter functionality
+    this.saveFilterForm = new FormGroup({
+      filterName: new FormControl('',Validators.required)
+    });
+
 
     // Fetching data from state
     this.store.select('audit').subscribe(
@@ -98,19 +90,18 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
           this.pipelineCount = auditData.pipelineCount;
           this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
         }
-        if (auditData.filterData!== null){
-          this.filtersData = auditData.filterData['filter'];
-          this.selectedFilter();
-        }
         if (auditData.allPipelineData !== null) {
           this.allpipelineData = auditData.allPipelineData;
           this.currentDatalength = this.allpipelineData['results'].length;
           this.currentTableContent = this.allpipelineData['results'];
           this.currentTableHeader = this.allpipelineData['headers'];
+          this.filtersData = this.allpipelineData['filters'];
           this.currentTabData = this.allpipelineData;
+          this.relatedApi = 'pipelinesModified';
           this.renderPage();
           this.createHeaders(this.allpipelineData['headerOrder']);
           this.showHideColumn();
+          this.selectedFilter();
         }
       }
     )
@@ -142,7 +133,6 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
 
   // Below function is execute on click on tabs exist in navigation area
   onChangeTab(event) {
-    debugger
     this.currentTableContent = [];
     const currentData = event.target.id;
     this.store.select('audit').subscribe(
@@ -152,11 +142,13 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
+            this.relatedApi = 'allDeployments';
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
             this.pipelineCountName = 'All Pipelines';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
+            this.relatedApi = 'pipelinesModified';
             break;
           // case 'lastSuccessfulDeployment':
           //   this.currentTabData = responseData.lastSuccessfulDeploymentData;
@@ -183,7 +175,7 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
           this.createHeaders(this.currentTabData['headerOrder']);	
           this.showHideColumn();
           // setting date form values present in date search
-          if(this.advanSearchMode === true){
+          if(this.advanSearchMode){
             setTimeout(() => {
               this.dateSearchForm.setValue({
                 customRadio:'allTime',
@@ -195,6 +187,14 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
                 lastdayMeridiem: ""
               })
             })
+          }
+          // resetting filter object when tab changes
+          this.applyFilterbtnShow = false;
+          if(this.currentTabData['filters'].length > 0){
+            this.filtersData = this.currentTabData['filters'];
+            this.selectedFilter();
+          }else{
+            this.filtersData = [];
           }
         }
       }
@@ -219,6 +219,20 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
   advancedModeToggle(){
     $("[data-toggle='tooltip']").tooltip('hide');
     this.advanSearchMode = !this.advanSearchMode;
+    // Setting initial value of dateFilter form
+    if(this.advanSearchMode === true){
+      setTimeout(() => {
+        this.dateSearchForm.setValue({
+          customRadio:'allTime',
+          firstdayHours: "",
+          firstdayMinutes: "",
+          firstdayMeridiem: "",
+          lastdayHours: "",
+          lastdayMinutes: "",
+          lastdayMeridiem: ""
+        })
+      })
+    }
   }
 
   // Below function is use to save selectedfilter value in selectedFilter array
@@ -247,7 +261,11 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
         this.showHideFilter.push(true);
       });
     }
-    this.applyFilterbtnShow = true;
+    if(this.showHideFilter.indexOf(true) > -1){
+      this.applyFilterbtnShow = true;
+    }else{
+      this.applyFilterbtnShow = false;
+    }
     // hide filter dropdown
     this.AddMoreFilters.nativeElement.dispatchEvent(new Event('click'));
   }
@@ -263,6 +281,7 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
   // Below function is executed on click of apply filters
   applyFilters(){
     let filterArr = [];
+    let filterObj = {};
     this.filtersData.forEach((el,index) => {
       if(this.showHideFilter[index] && this.filterForm.value[el.name].length > 0){
         let appliedfilters= {};
@@ -272,7 +291,24 @@ export class AuditComponent implements OnInit,AfterViewInit{datepickerElement
         filterArr.push(appliedfilters);
       }
     });
-    console.log('finaldata',filterArr)
+    filterObj['filters'] = filterArr
+    this.store.dispatch(AuditActions.postFilterData({filter:filterObj,relatedApi:this.relatedApi}));
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.applyFilterbtnShow = false;
+    console.log('finaldata',filterObj)
+  }
+
+  // Below function is execute on click of save filter
+  saveFilter(event){
+    if(this.saveFilterForm.valid){
+      this.saveFilterForm.reset();
+    }else{
+      this.saveFilterForm.markAllAsTouched();
+      event.stopPropagation();
+    }
+    
+    console.log('form',this.saveFilterForm.value);
+    
   }
 
   // Below function is execute on search
