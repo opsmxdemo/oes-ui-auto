@@ -16,6 +16,7 @@ export interface State {
     cloudAccountExist: CloudAccount;
     applicationList: ApplicationList[];
     accountList: any;
+    accountParentPage: string;
 }
 
 export const initialState: State = {
@@ -27,6 +28,7 @@ export const initialState: State = {
     cloudAccountExist: null,
     applicationList: null,
     accountList: null,
+    accountParentPage: null,
 }
 
 export function AppOnboardingReducer(
@@ -88,6 +90,12 @@ export function AppOnboardingReducer(
             (state,action) => ({
                 ...state,
                 accountList: action.Accountlist,
+            })
+        ),
+        on(OnboardingAction.loadAccount,
+            (state, action) => ({
+                ...state,
+                accountParentPage: action.page
             })
         ),
     )(onboardingState,onboardingAction);
