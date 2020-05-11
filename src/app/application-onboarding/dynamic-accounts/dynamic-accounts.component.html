@@ -51,14 +51,17 @@
                     </tr>
                   </thead>
                   <tbody>
-                      <tr *ngFor="let accountsData of accountListData">
+                      <tr *ngFor="let accountsData of accountListData | filter:searchData; let i=index">
                         <td>{{accountsData.name}}</td>
                         <td>Kubernetes</td>
                         <td>{{accountsData.namespaces}}</td>
                         <td>{{accountsData.permissions.READ.toString()}}</td>
                         <td>{{accountsData.permissions.WRITE.toString()}}</td>
                         <td>{{accountsData.permissions.EXECUTE.toString()}}</td>
-                        <td></td>
+                        <td>
+                          <a href="#" class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                          <a href="#" class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                        </td>
                       </tr>
                   </tbody>
                 </table>

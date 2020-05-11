@@ -3,6 +3,7 @@ import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import { CreateAccount } from 'src/app/models/applicationOnboarding/createAccountModel/createAccount.model'
 
 // Below action related to create application
 export const loadApp = createAction('[Application-OnBoarding] LoadApp' , props<{page:string}>());
@@ -23,7 +24,7 @@ export const appDelete = createAction('[Application-OnBoarding] AppDelete', prop
 
 // Below action related to Account
 export const loadAccount = createAction('[Application-OnBoarding] LoadAccount' , props<{page:string}>());
-//export const createAccount = createAction('[Application-OnBoarding] createAccount', props<{accountData:createAccount}>())
+export const createAccount = createAction('[Application-OnBoarding] createAccount', props<{accountData:CreateAccount}>())
 //export const dataSaved = createAction('[Application-OnBoarding] DataSaved');
 
 // Below action is related to accounts list
