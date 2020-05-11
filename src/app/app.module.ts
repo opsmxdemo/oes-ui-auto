@@ -31,6 +31,7 @@ import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBo
 import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
 import { AuditEffect } from './audit/store/audit.effects';
 import { DynamicAccountsComponent } from './application-onboarding/dynamic-accounts/dynamic-accounts.component';
+import { CreateAccountComponent } from './application-onboarding/create-account/create-account.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { DynamicAccountsComponent } from './application-onboarding/dynamic-accou
     ReleaseComponent,
     KeysPipe,
     AppliactionListComponent,
-    DynamicAccountsComponent
+    DynamicAccountsComponent,
+    CreateAccountComponent
   ],
   imports: [
     BrowserModule,
