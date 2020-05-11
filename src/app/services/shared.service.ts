@@ -12,4 +12,9 @@ export class SharedService {
     validateApplicationName(name: string, type: string) {
         return this.httpClient.get(environment.samlUrl+'oes/appOnboarding/nameCheck/'+name);
     }
+
+     //Below function is use to validate Filter name exist or not through api.i.e, AuditComponent
+     validateFiltersName(name: string, type: string) {
+        return this.httpClient.get(environment.samlUrl+'oes/appOnboarding/nameCheck/'+name);
+    }
 }

@@ -33,7 +33,7 @@
                       <option>Successful pipelines by Sumeet Kulkarni</option>
                     </select>
                   </div> -->
-                  <div class="form-group mx-sm-2 mb-2">
+                  <div class="form-group ml-sm-2 mb-2">
                     <div class="dropdown">
                       <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -162,7 +162,7 @@
                       </form>
                     </div>
                   </div>
-                  <!-- <div class="form-group ml-sm-2 mb-2">
+                  <div class="form-group ml-sm-2 mb-2">
                     <div class="form-group">
                       <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
                         title="Add More Filters">
@@ -206,13 +206,12 @@
                               <i class="fa fa-times"></i>
                             </button>
                           </div>
-                         
                             <div class="dropdown-menu-body mt-3 mb-2 px-3">
                               <div class="form-row align-items-center">
                                 <div class="col-auto mb-2">
                                   <input type="text" class="form-control" formControlName="filterName"/>
                                   <span *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched" class="help-block">
-                                    <span *ngIf="saveFilterForm.get('filterName').errors['required']">Name is required</span>
+                                    <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is required</span>
                                   </span>
                                 </div>
                                 <div class="col-auto">
@@ -241,7 +240,7 @@
                         </ul>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
                 </ng-container>
                 <ng-container *ngIf = "!advanSearchMode">
                   <div class="form-group mx-sm-2 mb-2">

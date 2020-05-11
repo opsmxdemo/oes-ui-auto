@@ -6,6 +6,8 @@ import { PipelineCount } from '../models/audit/pipelineCount.model';
 import { NotificationService } from '../services/notification.service';
 import { NgForm, FormGroup, Validators, FormControl } from '@angular/forms';
 import * as $ from 'jquery';
+import { Observable } from 'rxjs/internal/Observable';
+import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'app-audit',
@@ -60,7 +62,8 @@ export class AuditComponent implements OnInit{
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
 
   constructor(public store: Store<fromApp.AppState>,
-              public notification: NotificationService) { }
+              public notification: NotificationService,
+              public sharedService: SharedService) { }
 
   ngOnInit() {
 
@@ -79,7 +82,7 @@ export class AuditComponent implements OnInit{
 
     // Below is reactive form defining for save filter functionality
     this.saveFilterForm = new FormGroup({
-      filterName: new FormControl('',Validators.required)
+      filterName: new FormControl('',Validators.required,this.validateFilterName.bind(this))
     });
 
 
@@ -214,6 +217,22 @@ export class AuditComponent implements OnInit{
   //################### Multiple Table Logic ends ########################
 
   //################### Filter logic start ################################
+
+  //Below function is custom valiadator which is use to validate filter name through API call, if name is not exist then it allows us to proceed.
+  validateFilterName(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>((resolve, reject) => {
+      this.sharedService.validateFiltersName(control.value,this.relatedApi).subscribe(
+        (response) => {
+          if (response['filterExist'] === true) {
+            resolve({ 'filterExist': true });
+          } else {
+            resolve(null);
+          }
+        }
+      )
+    });
+    return promise;
+  }
 
   // Below function is use to toggle between advanced and normal search mode
   advancedModeToggle(){
@@ -494,7 +513,11 @@ export class AuditComponent implements OnInit{
 
   // Below function is execute on change of perPage dropdown value
   onChangePerPageData() {
+    debugger
     this.page.pageSize = +this.perPageData;
+    this.page.startingPoint = 0;
+    this.page.currentPage = 1;
+    this.page.pageNo = 1;
     if ((this.page.startingPoint + this.page.pageSize) < this.currentDatalength) {
       this.page.endPoint = this.page.startingPoint + this.page.pageSize;
     } else {

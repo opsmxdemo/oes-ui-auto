@@ -147,7 +147,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.postFilterData),
             switchMap((action) => {
-                return this.http.post(environment.samlUrl + 'oes/roaudit/'+action.relatedApi+'?isTreeView=false',action.filter).pipe(
+                return this.http.post(environment.samlUrl + 'oes/audit/'+action.relatedApi+'?isTreeView=false',action.filter).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
                             case 'pipelinesModified':
