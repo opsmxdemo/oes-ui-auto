@@ -31,6 +31,7 @@ import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBo
 import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
 import { AuditEffect } from './audit/store/audit.effects';
 import { DynamicAccountsComponent } from './application-onboarding/dynamic-accounts/dynamic-accounts.component';
+import { PolicyManagementComponent } from './policy-management/policy-management.component';
 import { CreateAccountComponent } from './application-onboarding/create-account/create-account.component';
 
 @NgModule({
@@ -48,6 +49,7 @@ import { CreateAccountComponent } from './application-onboarding/create-account/
     KeysPipe,
     AppliactionListComponent,
     DynamicAccountsComponent,
+    PolicyManagementComponent,
     CreateAccountComponent
   ],
   imports: [

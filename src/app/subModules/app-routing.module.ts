@@ -10,12 +10,14 @@ import { DataSourceComponent } from '../application-onboarding/data-source/data-
 import { CloudServicesComponent } from '../application-onboarding/cloud-services/cloud-services.component';
 import { AppliactionListComponent } from '../application-onboarding/appliaction-list/appliaction-list.component';
 import { DynamicAccountsComponent } from '../application-onboarding/dynamic-accounts/dynamic-accounts.component';
+import { PolicyManagementComponent } from '../policy-management/policy-management.component';
 import { CreateAccountComponent } from '../application-onboarding/create-account/create-account.component';
 
 const routes: Routes = [
   {path:'appdashboard', component:ApplicationDashboardComponent},
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
+  {path:'policymanagement', component:PolicyManagementComponent},
   {path:'setup', component:ApplicationOnboardingComponent, canActivate: [AuthGuard], children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
     {path: '', redirectTo:'/setup/applications',pathMatch:'full'},
