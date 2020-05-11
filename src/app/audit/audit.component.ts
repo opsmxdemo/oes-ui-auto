@@ -513,7 +513,6 @@ export class AuditComponent implements OnInit{
 
   // Below function is execute on change of perPage dropdown value
   onChangePerPageData() {
-    debugger
     this.page.pageSize = +this.perPageData;
     this.page.startingPoint = 0;
     this.page.currentPage = 1;

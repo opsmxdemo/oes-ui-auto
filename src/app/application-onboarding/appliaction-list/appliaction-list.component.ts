@@ -82,6 +82,9 @@ export class AppliactionListComponent implements OnInit {
   //Below function is execute on change of perPage dropdown value
   onChangePerPageData() {
     this.page.pageSize = +this.perPageData;
+    this.page.startingPoint = 0;
+    this.page.currentPage = 1;
+    this.page.pageNo = 1;
     if ((this.page.startingPoint + this.page.pageSize) < this.appListLength) {
       this.page.endPoint = this.page.startingPoint + this.page.pageSize;
     } else {
