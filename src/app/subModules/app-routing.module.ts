@@ -11,7 +11,7 @@ import { CloudServicesComponent } from '../application-onboarding/cloud-services
 import { AppliactionListComponent } from '../application-onboarding/appliaction-list/appliaction-list.component';
 import { DynamicAccountsComponent } from '../application-onboarding/dynamic-accounts/dynamic-accounts.component';
 import { PolicyManagementComponent } from '../policy-management/policy-management.component';
-
+import { CreateAccountComponent } from '../application-onboarding/create-account/create-account.component';
 
 const routes: Routes = [
   {path:'appdashboard', component:ApplicationDashboardComponent},
@@ -25,7 +25,8 @@ const routes: Routes = [
     {path: 'newApplication' , component: ApplicationComponent},
     {path: 'datasource' , component: DataSourceComponent},
     {path: 'cloudservices' , component: CloudServicesComponent},
-    {path: 'accounts' , component: DynamicAccountsComponent}
+    {path: 'accounts' , component: DynamicAccountsComponent},
+    {path: 'newAccount', component: CreateAccountComponent}
   ]},
   
 ];

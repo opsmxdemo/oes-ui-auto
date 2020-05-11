@@ -4,18 +4,36 @@
       <div class="col-sm-12 d-flex flex-column">
         <div class="h-100 d-flex flex-column">
           <div class="tab-content h-100 p-3 flex-grow-1">
-            <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-              <div class="page_access d-flex text-right p-3">
-                <div class="mr-auto">
-                  <div class="input-group input-group_search">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+              <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                  <div class="page_access text-right p-3">
+                    <button class="btn btn-default" (click)="createAccount()">New Account</button>
+                  </div>
+                  <!-- /.page_access ml-auto -->
+                  <div class="gray-strip">
+    
+                  </div>
+                  <!-- /.gray-strip -->
+                  <div class="d-flex w-100 h-100">
+                    <div class="no_content m-auto">
+                      <img src="../../../assets/images//blank-123.png" class="hr-image" alt="blank" />
+                      <p><strong>Create New Account</strong></p>
+                      <!-- <p>Use application for continuous verification and production monitoring <br><small>(To create
+                          application, add at least 1 Cloud service and 1 Data source)</small></p> -->
                     </div>
-                    <input type="text" class="form-control" />
+                    <!-- /.no_content -->
                   </div>
                 </div>
-
-                <button class="btn btn-default">New Account</button>
+            <div *ngIf="!tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+              <div class="page_access d-flex text-right p-3">
+                  <div class="mr-auto">
+                      <div class="input-group input-group_search">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
+                      </div>
+                    </div>
+                <button class="btn btn-default" (click)="createAccount()">New Account</button>
               </div>
               <!-- /.page_access ml-auto -->
               <div class="table-content">
@@ -35,15 +53,51 @@
                   <tbody>
                       <tr *ngFor="let accountsData of accountListData">
                         <td>{{accountsData.name}}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>Kubernetes</td>
+                        <td>{{accountsData.namespaces}}</td>
+                        <td>{{accountsData.permissions.READ.toString()}}</td>
+                        <td>{{accountsData.permissions.WRITE.toString()}}</td>
+                        <td>{{accountsData.permissions.EXECUTE.toString()}}</td>
                         <td></td>
                       </tr>
                   </tbody>
                 </table>
+                <div class="table-footer gray-strip px-3 py-2">
+                  <div class="form-inline">
+                    <span class="mr-2">Per page</span>
+                    <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
+                      <option value="10">10</option>
+                      <option value="15">15</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+
+                    </select>
+                    <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
+                      {{page.endPoint < accountListLength-1?page.endPoint:accountListLength}} of {{accountListLength}}</span>
+                    <!-- <input type="text" class="form-control mr-2" />
+                    <button class="btn btn-primary">Go</button> -->
+
+                    <ul class="pagination ml-auto mb-0">
+                      <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                      <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
+                        (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
+                      <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
+                        *ngIf="(page.pageNo*page.pageSize) < accountListLength || 
+                                  page.currentPage+1 == page.pageNo || page.currentPage+1 == page.pageNo-1 ? true : false" (click)=showPage(page.currentPage+1)>
+                        <a class="page-link">{{page.currentPage+1}}</a>
+                      </li>
+                      <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}"
+                        *ngIf="((page.pageNo+1)*page.pageSize) < accountListLength || 
+                                   page.currentPage+2 == page.pageNo ||
+                                   ((page.currentPage+2)*page.pageSize< accountListLength? true : ((page.currentPage+2)*page.pageSize)-accountListLength < page.pageSize? true : false) ? true : false"
+                        (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a>
+                      </li>
+                      <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
+                    </ul>
+                  </div>
+                  <!-- /.per_page -->
+                </div>
+                <!-- /.table-footer px-3 py-2 -->
               </div>
               <!-- /.table-content -->
             </div>

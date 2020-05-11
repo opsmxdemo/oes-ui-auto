@@ -176,6 +176,16 @@ export class ApplicationOnBoardingEffect {
              );
          })
      )
+     
  )
+  //Below effect is use to redirect to application onboardind page in create& edit phase
+  accountRedirect = createEffect(() =>
+  this.actions$.pipe(
+      ofType(OnboardingAction.loadAccount),
+      tap(() => {
+          this.router.navigate(['/setup/newAccount'])
+      })
+  ), { dispatch: false }
+)
 
 }
