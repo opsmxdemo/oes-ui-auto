@@ -48,7 +48,7 @@ export class DynamicAccountsComponent implements OnInit {
 
   // Below function is use to redirect to create application page
   createAccount() {
-    this.store.dispatch(OnboardingActions.loadAccount({page:'newAccount'}));
+    this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
   }
 
   //Below function is execute on search
