@@ -24,11 +24,11 @@ export const appDelete = createAction('[Application-OnBoarding] AppDelete', prop
 
 // Below action related to Account
 export const loadAccount = createAction('[Application-OnBoarding] LoadAccount' , props<{page:string}>());
-export const createAccount = createAction('[Application-OnBoarding] createAccount', props<{accountData:CreateAccount}>())
+export const createAccount = createAction('[Application-OnBoarding] createAccount', props<{accountData:any}>())
 //export const dataSaved = createAction('[Application-OnBoarding] DataSaved');
 
 // Below action is related to accounts list
 export const loadAccountList = createAction('[Application-OnBoarding] LoadAccountList');
 export const fetchAccountList = createAction('[Application-OnBoarding] FetchAccountList', props<{Accountlist: any}>());
-
-
+export const deleteAccount = createAction('[Application-onBoarding] DeleteAccount', props<{accountName:string}>())
+export const accountDeleted = createAction('[Application-OnBoarding] AccountDeleted');

@@ -4,6 +4,8 @@ import * as OnboardingActions from '../store/onBoarding.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
+import { SharedService } from 'src/app/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dynamic-accounts',
@@ -24,7 +26,9 @@ export class DynamicAccountsComponent implements OnInit {
   }
   currentPage = [];                                                                    // this use to store array of data exists in current page.
   accountListLength: number = null;
-  constructor(public store: Store<fromApp.AppState>, public notifications: NotificationService) { }
+  nameOfAccount: null;
+  constructor(public store: Store<fromApp.AppState>, public notifications: NotificationService,
+              public sharedAccountData: SharedService) { }
 
   ngOnInit(): void {
     this.store.dispatch(OnboardingActions.loadAccountList());
@@ -44,11 +48,6 @@ export class DynamicAccountsComponent implements OnInit {
       }
       }
     );
-  }
-
-  // Below function is use to redirect to create application page
-  createAccount() {
-    this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
   }
 
   //Below function is execute on search
@@ -130,6 +129,37 @@ export class DynamicAccountsComponent implements OnInit {
       this.page.endPoint = this.accountListLength-1;
     }
     this.renderPage();
+  }
+
+  // Below function is use to redirect to create account page
+  createAccount() {
+    this.sharedAccountData.setUserData([]);
+    this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
+  }
+
+  // Below function is use to edit existing account
+  editAccount(data: any) {
+    this.sharedAccountData.setUserData(data);
+    this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
+  }
+
+  // Below function is use to delete existiong account
+  deleteAccount(account: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.value) {
+        this.store.dispatch(OnboardingActions.deleteAccount({accountName: account.name}));
+      }else{
+        //alert('dont delete'); 
+      }
+    })
   }
 
 }

@@ -14,7 +14,8 @@ import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplica
 import {environment} from '../../../environments/environment.prod'
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import { NotificationService } from 'src/app/services/notification.service';
-
+import { CreateAccount } from 'src/app/models/applicationOnboarding/createAccountModel/createAccount.model';
+import Swal from 'sweetalert2';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
@@ -160,6 +161,24 @@ export class ApplicationOnBoardingEffect {
         ), { dispatch: false }
     )
 
+    // Below effect is use for saved data in create account phase
+    onsavedCreateAccountData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.createAccount),
+            switchMap(action => {
+                return this.http.post<CreateAccount>(environment.samlUrl+'/oes/addOrUpdateAccount', action.accountData).pipe(
+                    map(resdata => {
+                        return OnboardingAction.dataSaved();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
      // Below effect is use for fetch data related to Accounts List page
      fetchAccountListData = createEffect(() =>
      this.actions$.pipe(
@@ -175,8 +194,30 @@ export class ApplicationOnBoardingEffect {
                  })
              );
          })
+        )
+    )
+
+     // Below effect is use for delete Account .
+     deleteAccountData = createEffect(() =>
+     this.actions$.pipe(
+         ofType(OnboardingAction.deleteAccount),
+         switchMap(action => {
+             return this.http.get<any>(environment.samlUrl+'oes/getDynamicAccounts/?accountName=' + action.accountName).pipe(
+                 map(resdata => {
+                     return OnboardingAction.accountDeleted();
+                     Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                      )
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('Server Error !!','ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
      )
-     
  )
   //Below effect is use to redirect to application onboardind page in create& edit phase
   accountRedirect = createEffect(() =>
