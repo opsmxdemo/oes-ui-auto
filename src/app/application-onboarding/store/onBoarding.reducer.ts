@@ -17,6 +17,7 @@ export interface State {
     applicationList: ApplicationList[];
     accountList: any;
     accountParentPage: string;
+    accountDeleted: boolean;
 }
 
 export const initialState: State = {
@@ -29,6 +30,7 @@ export const initialState: State = {
     applicationList: null,
     accountList: null,
     accountParentPage: null,
+    accountDeleted: false,
 }
 
 export function AppOnboardingReducer(
@@ -96,6 +98,18 @@ export function AppOnboardingReducer(
             (state, action) => ({
                 ...state,
                 accountParentPage: action.page
+            })
+        ),
+        on(OnboardingAction.deleteAccount,
+            (state, action) => ({
+                ...state,
+                accountDeleted: false
+            })
+        ),
+        on(OnboardingAction.accountDeleted,
+            state => ({
+                ...state,
+                accountDeleted: true
             })
         ),
     )(onboardingState,onboardingAction);

@@ -20,7 +20,12 @@ export class CreateAccountComponent implements OnInit {
  // createAccountForm: FormGroup;                               // Form for Account details      
   mainForm: CreateAccount = null;                             // It contain data form which send to backend after successful submission.                                                                
   accountData: CreateAccount = null;
-  parentRedirection: string; 
+  parentRedirection: string;
+  namespacesList: [];
+  readList: [];
+  writeList: [];
+  executeList: []; 
+  postDataForm: any;
 
   createAccountForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -46,6 +51,18 @@ export class CreateAccountComponent implements OnInit {
         }
       }
     )
+    
+  console.log(this.sharedService.getUserData());
+    
+    this.createAccountForm.patchValue({
+      name: this.sharedService.getUserData().name,
+      accountType: this.sharedService.getUserData().accountType,
+      namespaces: this.sharedService.getUserData().namespaces,
+      read: this.sharedService.getUserData().permissions.READ,
+      write: this.sharedService.getUserData().permissions.WRITE,
+      execute: this.sharedService.getUserData().permissions.EXECUTE,
+      //file: this.sharedService.getUserData().kubeconfigFile,
+    });
   }
 
   get accountform(){
@@ -71,27 +88,43 @@ export class CreateAccountComponent implements OnInit {
   //Below function is use to submit whole form and send request to backend
 
   submitForm(data){
-    console.log("Submitted Data ** ", data)
+    console.log(this.sharedService.getUserData());
+    console.log("Submitted Data ** ",data.namespaces);
+    this.namespacesList = data.namespaces.split(",");
+    this.readList = data.read.split(",");
+    this.writeList = data.write.split(",");
+    this.executeList = data.execute.split(",");
+    console.log(this.namespacesList);
+    
+    this.postDataForm = {
+      name : data.accountName,
+      accountType : data.accountType,
+      namespaces : this.namespacesList,
+      read : this.readList,
+      write : this.writeList,
+      execute : this.executeList
+      }
+      console.log();
+      
+
     const formData = new FormData();
-    formData.append('data',data['name']);
-    formData.append('data',data['accountType']);
-    formData.append('data',data['namespaces']);
-    formData.append('data',data['read']);
-    formData.append('data',data['write']);
-    formData.append('data',data['execute']);
+    formData.append('data',JSON.stringify(this.postDataForm));
+    //formData.append('files', file, 'kubeconfig');
+    // formData.append('data',data['name']);
+    // formData.append('data',data['accountType']);
+    // formData.append('data',data['namespaces']);
+    // formData.append('data',data['read']);
+    // formData.append('data',data['write']);
+    // formData.append('data',data['execute']);
     // formData.append('data',this.createAccountForm.get('namespaces').value);
     // formData.append('data',this.createAccountForm.get('read').value);
     // formData.append('data',this.createAccountForm.get('write').value);
     // formData.append('data',this.createAccountForm.get('execute').value);
-    formData.append('file', data['file']);
+    formData.append('file', data.file);
     console.log('formdata',formData);
     
-   
-    // this.http.post('http://localhost:3000', formData)
-    //   .subscribe(res => {
-    //     console.log(res);
-    //     alert('Uploaded Successfully.');
-    //   })
+   this.store.dispatch(OnboardingActions.createAccount({accountData: formData}));
+ 
   }
 
 
