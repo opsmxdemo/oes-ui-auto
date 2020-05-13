@@ -17,78 +17,18 @@
                                               <!-- /.page_access ml-auto -->
                                               <div class="setup-content">
                                                 <div class="row">
-                                            
-                                                  <!-- ###################### Tree Section Starts #####################################-->
-                                            
-                                                  <div class="col-sm-3">
-                                                    <div class="sidebar-tree">
-                                                      <ul class="tree-inset  list-unstyled tree-active">
-                                                        <li class="ti-title">
-                                                          <i class="fas fa-check-circle"></i>
-                                                          <span>Endpoint Details</span>
-                                                        </li>
-                                                        <br>
-                                                        <li class="ti-item">
-                                                          <i class="fas fa-check-circle"></i>
-                                                          <span>Endpoint Type :</span>
-                                                          <strong>test</strong>
-                                                        </li>
-                                                        <br>
-                                                        <li class="ti-item">
-                                                          <i class="far fa-dot-circle"></i>
-                                                          <span>Endpoint Url :</span>
-                                                          <strong>test</strong>
-                                                        </li>
-                                                        <br>
-                                                      </ul>
-                                                      
-                                                      <ul class="tree-inset  list-unstyled tree-active">
-                                                        <li class="ti-title">
-                                                          <i class="fas fa-check-circle"></i>
-                                                          <span>Dynamic Policies</span>
-                                                        </li>
-                                                        <br>
-                                                        <br>
-                                                        <li class="ti-item">
-                                                          <i class="fas fa-check-circle"></i>
-                                                          <span>Policy Name :</span>
-                                                          <strong>test</strong>
-                                                        </li>
-                                                        <br>
-                                                        <br>
-                                                        <li class="ti-item">
-                                                          <i class="far fa-dot-circle"></i>
-                                                          <span>Policy Description :</span>
-                                                          <strong>test</strong>
-                                                        </li>
-                                                        <br>
-                                                        <br>
-                                                      </ul>
-                                                      <ul class="tree-inset tree-finished list-unstyled tree-active">
-                                                        <li class="ti-title">
-                                                          <i class="fas fa-circle"></i>
-                                                          <span>Finish Policies</span>
-                                                        </li>
-                                                      </ul>
-                                                      <!-- /.tree-inset -->
-                                                    </div>
-                                                    <!-- /.sidebar-tree -->
-                                                  </div>
-                                                  <!-- /.col-sm-3 -->
-                                            
-                                                  <!-- ###################### Tree Section Starts #####################################-->
-                                            
-                                                  <div class="col-sm-9">
+                                                  <div class="col-sm-12">
                                                     <div class="p-3">
                                                       <div class="row">
-                                            
                                                         <!-- ###################### Endpoint Section Starts #####################################-->
                                             
-                                                        <div class="col-6">
+                                                        <div class="col-5">
                                                           <form [formGroup]="endpointForm">
                                                             <div class="form-group">
                                                               <label>Endpoint Type</label>
-                                                              <input type="text" class="form-control" formControlName="endpointType">
+                                                              <select class="form-control" formControlName="endpointType">
+                                                                <option *ngFor="let data of endpointTypes">{{data}}</option>
+                                                              </select>
                                                               <span *ngIf="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched"
                                                                 class="help-block">
                                                                 <span *ngIf="endpointForm.get('endpointType').errors['required']">Endpoint Type is required</span>
@@ -97,7 +37,11 @@
                                                             <!-- /.form-group -->
                                                             <div class="form-group">
                                                               <label>Endpoint URL</label>
-                                                              <textarea class="form-control" rows="3" formControlName="endpointUrl"></textarea>
+                                                              <input type="text" class="form-control" formControlName="endpointUrl">
+                                                              <span *ngIf="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched"
+                                                              class="help-block">
+                                                              <span *ngIf="endpointForm.get('endpointUrl').errors['required']">Endpoint Url is required</span>
+                                                            </span>
                                                             </div>
                                                           </form>
                                                         </div>
@@ -118,20 +62,35 @@
                                                             <div class="col-12 policyContent">
                                                                 <br>
                                                                 <div class="col-12">
+                                                                  <div class="row">
+                                                                    <div class="col-12">
+                                                                      <div class="page_access d-flex text-right p-3">
+                                                                        <div class="mr-auto">
+                                                                          <div class="input-group input-group_search">
+                                                                            <div class="input-group-prepend">
+                                                                              <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control" />
+                                                                          </div>
+                                                                        </div>
+                                                                        <button class="btn btn-default">New Policy</button>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
                                                                     <div class="row">
                                                                         <div class="col-5 policyList">
                                                                             <table class="table table-sticky table-striped mb-0">
                                                                                 <thead>
                                                                                   <tr>
                                                                                     <th class="font-weight-bold">POLICY NAME</th>
-                                                                                    <th class="font-weight-bold">TYPE</th>
+                                                                                    <th class="font-weight-bold">STATUS</th>
                                                                                     <th class="font-weight-bold">ACTION</th>
                                                                                   </tr>
                                                                                 </thead>
                                                                                 <tbody>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -139,7 +98,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -147,7 +106,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -155,7 +114,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Inactive</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -163,7 +122,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -171,7 +130,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>InActive</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -179,7 +138,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -187,7 +146,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -195,7 +154,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -203,7 +162,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -211,7 +170,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -219,7 +178,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -227,7 +186,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Inactive</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -235,7 +194,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -243,7 +202,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -251,7 +210,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -259,7 +218,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -267,7 +226,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -275,7 +234,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ekspromethues</td>
-                                                                                    <td>prometheus</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -283,7 +242,7 @@
                                                                                   </tr>
                                                                                   <tr>
                                                                                     <td>ElasticCredentials</td>
-                                                                                    <td>elasticsearch</td>
+                                                                                    <td>Active</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -329,7 +288,7 @@
                                                     </div>
                                                     <div class="p-3 bottom-strp-cover gray-strip text-right">
                                                         <button class="btn btn-default">Cancel</button>
-                                                        <button class="btn btn-default ml-2" disabled="disabled">Load</button> 
+                                                        <button class="btn btn-default ml-2" (click)="loadFileContent()">Load</button> 
                                                         <button class="btn btn-primary ml-2">Save & Finish</button>
                                                       </div>
                                                   </div>
