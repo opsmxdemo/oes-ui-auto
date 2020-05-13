@@ -27,7 +27,7 @@ export class AuditComponent implements OnInit{
   pipelineCount: PipelineCount = null;                                                 // It use to store pipelineCount data.
   pipelineCountName = 'All Pipelines';                                                 // It is use to store current tab pipelineName.
   pipelineCountValue = 0;                                                              // It is use to store current pipeline count.
-  allpipelineData: any = null;                                                         // It is use to store all pipeline data.
+  tableData: any = null;                                                               // It is use to store all pipeline data.
   currentTableContent: any = null;                                                     // It is use to store current table content.
   currentPage = [''];                                                                  // It is use to store current page data.
   searchData: string = '';                                                             // this is use to fetch value from search field.
@@ -58,7 +58,7 @@ export class AuditComponent implements OnInit{
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
   applyFilterbtnShow = false;                                                          // It is use to show and hide apply filter btn exist in filter section.
-  relatedApi: string = null;                                                           // It is use to store value of which api should call on click of apply filter.
+  relatedApi: string = 'pipelinesModified';                                            // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
 
   constructor(public store: Store<fromApp.AppState>,
@@ -89,22 +89,29 @@ export class AuditComponent implements OnInit{
     // Fetching data from state
     this.store.select('audit').subscribe(
       (auditData) => {
+        debugger
         if (auditData.pipelineCount !== null){
           this.pipelineCount = auditData.pipelineCount;
           this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
         }
         if (auditData.allPipelineData !== null) {
-          this.allpipelineData = auditData.allPipelineData;
-          this.currentDatalength = this.allpipelineData['results'].length;
-          this.currentTableContent = this.allpipelineData['results'];
-          this.currentTableHeader = this.allpipelineData['headers'];
-          this.filtersData = this.allpipelineData['filters'];
-          this.currentTabData = this.allpipelineData;
+          switch(this.relatedApi){
+            case 'pipelinesModified':
+              this.tableData = auditData.allPipelineData;
+              break;
+            case 'allDeployments':
+              this.tableData = auditData.allRunningPipelineData;
+          }
+          this.currentDatalength = this.tableData['results'].length;
+          this.currentTableContent = this.tableData['results'];
+          this.currentTableHeader = this.tableData['headers'];
+          this.filtersData = this.tableData['filters'];
+          this.currentTabData = this.tableData;
           this.relatedApi = 'pipelinesModified';
-          this.renderPage();
-          this.createHeaders(this.allpipelineData['headerOrder']);
+          this.createHeaders(this.tableData['headerOrder']);
           this.showHideColumn();
           this.selectedFilter();
+          this.renderPage();
         }
       }
     )

@@ -57,7 +57,6 @@ export class ReleaseComponent implements OnInit {
     // }
   }
   public newReleaseMethod(app) {
-    debugger
     this.spinnerService = true;
     this.showRelease = true;
     this.application = app;

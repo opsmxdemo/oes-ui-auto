@@ -13,6 +13,7 @@ export class PolicyManagementComponent implements OnInit {
   policyForm: FormGroup;                                 // For Policy section
   fileContent: any;                                      // For file data
   endpointTypes = ['type1','type2','type3','type4']
+  currentTableContent = [];                              // It is use to store current table data
 
   constructor() { }
 
@@ -28,6 +29,8 @@ export class PolicyManagementComponent implements OnInit {
      this.policyForm = new FormGroup({
       name: new FormControl('',Validators.required),
       description: new FormControl('',Validators.required),
+      status: new FormControl(''),
+      package: new FormControl(''),
       policyDetails: new FormControl('')
     });
 
@@ -74,6 +77,16 @@ export class PolicyManagementComponent implements OnInit {
         })
       }
     })
+  }
+
+  // Below function is execute on tab change.i.e, dynamic or static polices
+  onChangeTab(event){
+    debugger
+    const currentData = event.target.id;
+  }
+
+  onCheckedStatus(event){
+    console.log("val",this.policyForm.value);
   }
 
 }
