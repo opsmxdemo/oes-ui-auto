@@ -293,7 +293,7 @@
               </div>
               <!-- /.form-inline -->
               <!-- #### Don't delete need in future toolpills ##### -->
-              <div class="toolpills" *ngIf = "advanSearchMode">
+              <div class="toolpills">
                 <form #filterForm="ngForm" class="filterForm">
                   <ng-container *ngFor="let filter of filtersData;let i = index">
                     <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]">

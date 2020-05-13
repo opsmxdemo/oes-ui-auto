@@ -51,13 +51,15 @@
                                                       </div>
                                                       <div class="row">
                                                           <div class="col-12">
-                                                            <ul class="nav pt-2 bg-white tab-lined nav-tabs" id="myTab" role="tablist">
-                                                                <li class="nav-item active">
-                                                                    <a class="nav-link">Dynamic Policies</a>
-                                                                </li>
-                                                                <li class="nav-item">
-                                                                    <a class="nav-link">Static Policies</a>
-                                                                </li>
+                                                            <ul class="nav pt-2 bg-white tab-lined nav-tabs" role="tablist" (click)="onChangeTab($event)">
+                                                              <li class="nav-item">
+                                                                <a class="nav-link active" id="dynamicPolicies" data-toggle="tab" role="tab" aria-controls="dynamicPolicies"
+                                                                  aria-selected="true">Dynamic Policies</a>
+                                                              </li>
+                                                              <li class="nav-item">
+                                                                <a class="nav-link" id="staticPolicies" data-toggle="tab" role="tab" aria-controls="staticPolicies"
+                                                                  aria-selected="false">Static Policies</a>
+                                                              </li>
                                                             </ul>
                                                             <div class="col-12 policyContent">
                                                                 <br>
@@ -78,7 +80,7 @@
                                                                     </div>
                                                                   </div>
                                                                     <div class="row">
-                                                                        <div class="col-5 policyList">
+                                                                        <div class="col-3 policyList">
                                                                             <table class="table table-sticky table-striped mb-0">
                                                                                 <thead>
                                                                                   <tr>
@@ -251,23 +253,39 @@
                                                                                 </tbody>
                                                                               </table>
                                                                         </div>
-                                                                        <div class="col-7">
+                                                                        <div class="col-9">
                                                                             <form [formGroup]="policyForm">
-                                                                                <div class="form-group">
+                                                                              <div class="row">
+                                                                                <div class="form-group col-7">
                                                                                   <label>Name</label>
-                                                                                  <input type="text" class="form-control w-5" formControlName="name">
+                                                                                  <input type="text" class="form-control" formControlName="name">
                                                                                   <span *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
                                                                                     class="help-block">
                                                                                     <span *ngIf="policyForm.get('name').errors['required']">Name is required</span>
                                                                                   </span>
                                                                                 </div>
-                                                                                <!-- /.form-group -->
-                                                                                <div class="form-group">
-                                                                                  <label>Description</label>
-                                                                                  <textarea class="form-control w-5" rows="3" formControlName="description"></textarea>
+                                                                                <div class="form-group col-5 statuselement">
+                                                                                  <div class="custom-control custom-checkbox">
+                                                                                  <input type="checkbox" class="custom-control-input" formControlName="status" id="status" (change)="onCheckedStatus($event)">
+                                                                                  <label class="custom-control-label"
+                                                                                    for="status">Active</label>
+                                                                                </div>
+                                                                                </div>
+                                                                                <div class="form-group col-7">
+                                                                                  <label>Package</label>
+                                                                                  <input type="text" class="form-control" formControlName="package">
+                                                                                  <span *ngIf="policyForm.get('package').invalid && policyForm.get('package').touched"
+                                                                                    class="help-block">
+                                                                                    <span *ngIf="policyForm.get('package').errors['required']">Package is required</span>
+                                                                                  </span>
                                                                                 </div>
                                                                                 <!-- /.form-group -->
-                                                                                <div class="form-group">
+                                                                                <div class="form-group col-7">
+                                                                                  <label>Description</label>
+                                                                                  <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                                                                                </div>
+                                                                                <!-- /.form-group -->
+                                                                                <div class="form-group col-12">
                                                                                   <label>Policy Details</label>
                                                                                   <textarea type="text" class="form-control policyDetailText" formControlName="policyDetails"></textarea>
                                                                                   <span *ngIf="policyForm.get('policyDetails').invalid && policyForm.get('policyDetails').touched"
@@ -275,6 +293,7 @@
                                                                                     Image Source is required
                                                                                   </span>
                                                                                 </div>
+                                                                              </div>
                                                                               </form>
                                                                         </div>
                                                                     </div>
