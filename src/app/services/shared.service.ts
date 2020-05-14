@@ -22,8 +22,13 @@ export class SharedService {
     return this.userData;
   }
 
-  //Below function is use to validate Application name exist or not through api.i.e, ApplicationComponent
+  //Below function is use to validate filter name exist or not through api.i.e, ApplicationComponent
   validateFiltersName(name: string, type: string) {
     return this.httpClient.get(environment.samlUrl + 'oes/appOnboarding/nameCheck/' + name);
+  }
+
+   //Below function is use to validate policy name exist or not through api.i.e, policyManagementComponent
+   validatePolicyName(name: string, type: string) {
+    return this.httpClient.get(environment.samlUrl + 'oes/policy/{name}/nameCheck' + name);
   }
 }

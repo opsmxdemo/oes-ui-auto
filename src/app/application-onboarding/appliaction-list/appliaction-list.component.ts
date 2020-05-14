@@ -138,10 +138,9 @@ export class AppliactionListComponent implements OnInit {
   }
 
   //Below function is use to delete application fron existing list
-  appDelete(index){
+  appDelete(name,index){
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.toastr.showSuccess('Application is deleted successfully!!','SUCCESS')
-    this.store.dispatch(OnboardingActions.appDelete({index}));
+    this.store.dispatch(OnboardingActions.appDelete({applicationName:name,index:index}));
   }
 
   // Below function is use for edit application
