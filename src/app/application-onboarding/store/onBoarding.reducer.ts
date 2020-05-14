@@ -82,7 +82,7 @@ export function AppOnboardingReducer(
                 applicationList: action.Applist
             })
         ),
-        on(OnboardingAction.appDelete,
+        on(OnboardingAction.appDeletedSuccessfully,
             (state,action) => ({
                 ...state,
                 applicationList: state.applicationList.filter((applist,index) => index !== action.index)

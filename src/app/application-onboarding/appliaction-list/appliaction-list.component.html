@@ -44,17 +44,17 @@
                     <tr>
                       <th class="font-weight-bold">APPLICATION NAME</th>
                       <th class="font-weight-bold">DESCRIPTION</th>
-                      <!-- <th class="font-weight-bold">ACTION</th> -->
+                      <th class="font-weight-bold">ACTION</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let listData of currentPage | filter:searchData; let i=index">
                       <td>{{listData.name}}</td>
                       <td>{{listData.description}}</td>
-                      <!-- <td>
-                            <a *ngIf = "listData.status === 'ACTIVE' ? true : false"  class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editApplication(i)"><i class="fas fa-pencil-alt"></i></a>
-                            <a *ngIf = "listData.status === 'ACTIVE' ? true : false" (click)="appDelete(i)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                          </td> -->
+                      <td>
+                            <!-- <a *ngIf = "listData.status === 'ACTIVE' ? true : false"  class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editApplication(i)"><i class="fas fa-pencil-alt"></i></a> -->
+                            <a *ngIf = "listData.status === 'ACTIVE' ? true : false" (click)="appDelete(listData.name,i)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                          </td>
                     </tr>
                   </tbody>
                 </table>

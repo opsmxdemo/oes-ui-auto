@@ -20,7 +20,8 @@ export const enableEditMode = createAction('[Application-OnBoarding] EnableEditM
 // Below action is related to application list
 export const loadAppList = createAction('[Application-OnBoarding] LoadAppList');
 export const fetchAppList = createAction('[Application-OnBoarding] FetchAppList', props<{Applist:ApplicationList[]}>());
-export const appDelete = createAction('[Application-OnBoarding] AppDelete', props<{index:number}>());
+export const appDelete = createAction('[Application-OnBoarding] AppDelete', props<{applicationName:string,index:number}>());
+export const appDeletedSuccessfully = createAction('[Application-OnBoarding] AppDeletedSuccessfully', props<{index:number}>());
 
 // Below action related to Account
 export const loadAccount = createAction('[Application-OnBoarding] LoadAccount' , props<{page:string}>());

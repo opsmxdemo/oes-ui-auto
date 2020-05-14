@@ -33,6 +33,7 @@ import { AuditEffect } from './audit/store/audit.effects';
 import { DynamicAccountsComponent } from './application-onboarding/dynamic-accounts/dynamic-accounts.component';
 import { PolicyManagementComponent } from './policy-management/policy-management.component';
 import { CreateAccountComponent } from './application-onboarding/create-account/create-account.component';
+import { PolicyEffect } from './policy-management/store/policyManagement.effects';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,11 @@ import { CreateAccountComponent } from './application-onboarding/create-account/
     Ng2SearchPipeModule,
     NgMultiSelectDropDownModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
-    EffectsModule.forRoot([AuthEffect,LayoutEffect,ApplicationOnBoardingEffect,AuditEffect]),
+    EffectsModule.forRoot([AuthEffect,
+                          LayoutEffect,
+                          ApplicationOnBoardingEffect,
+                          AuditEffect,
+                          PolicyEffect]),
     ToastrModule.forRoot({
       timeOut: 10000,
       preventDuplicates: true,

@@ -27,7 +27,8 @@
                                                             <div class="form-group">
                                                               <label>Endpoint Type</label>
                                                               <select class="form-control" formControlName="endpointType">
-                                                                <option *ngFor="let data of endpointTypes">{{data}}</option>
+                                                                <option value="">Select Type</option>
+                                                                <option *ngFor="let data of endpointTypes" value="data">{{data}}</option>
                                                               </select>
                                                               <span *ngIf="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched"
                                                                 class="help-block">
@@ -53,11 +54,11 @@
                                                           <div class="col-12">
                                                             <ul class="nav pt-2 bg-white tab-lined nav-tabs" role="tablist" (click)="onChangeTab($event)">
                                                               <li class="nav-item">
-                                                                <a class="nav-link active" id="dynamicPolicies" data-toggle="tab" role="tab" aria-controls="dynamicPolicies"
+                                                                <a class="nav-link active" id="DYNAMIC" data-toggle="tab" role="tab" aria-controls="DYNAMIC"
                                                                   aria-selected="true">Dynamic Policies</a>
                                                               </li>
                                                               <li class="nav-item">
-                                                                <a class="nav-link" id="staticPolicies" data-toggle="tab" role="tab" aria-controls="staticPolicies"
+                                                                <a class="nav-link" id="STATIC" data-toggle="tab" role="tab" aria-controls="STATIC"
                                                                   aria-selected="false">Static Policies</a>
                                                               </li>
                                                             </ul>
@@ -72,7 +73,7 @@
                                                                             <div class="input-group-prepend">
                                                                               <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                                                                             </div>
-                                                                            <input type="text" class="form-control" />
+                                                                            <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()"/>
                                                                           </div>
                                                                         </div>
                                                                         <button class="btn btn-default">New Policy</button>
@@ -90,161 +91,9 @@
                                                                                   </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Inactive</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>InActive</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Inactive</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ekspromethues</td>
-                                                                                    <td>Active</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                  <tr>
-                                                                                    <td>ElasticCredentials</td>
-                                                                                    <td>Active</td>
+                                                                                  <tr *ngFor = "let tabledata of currentTableContent | filter:searchData">
+                                                                                    <td>{{tabledata.policyName}}</td>
+                                                                                    <td>{{tabledata.status}}</td>
                                                                                     <td>
                                                                                         <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                                                                                         <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -262,22 +111,16 @@
                                                                                   <span *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
                                                                                     class="help-block">
                                                                                     <span *ngIf="policyForm.get('name').errors['required']">Name is required</span>
+                                                                                    <span *ngIf="policyForm.get('name').errors['policyExist']">Policy already
+                                                                                      exists with same name. Please choose a unique policy name</span>
                                                                                   </span>
                                                                                 </div>
                                                                                 <div class="form-group col-5 statuselement">
                                                                                   <div class="custom-control custom-checkbox">
-                                                                                  <input type="checkbox" class="custom-control-input" formControlName="status" id="status" (change)="onCheckedStatus($event)">
+                                                                                  <input type="checkbox" class="custom-control-input" formControlName="status" id="status">
                                                                                   <label class="custom-control-label"
                                                                                     for="status">Active</label>
                                                                                 </div>
-                                                                                </div>
-                                                                                <div class="form-group col-7">
-                                                                                  <label>Package</label>
-                                                                                  <input type="text" class="form-control" formControlName="package">
-                                                                                  <span *ngIf="policyForm.get('package').invalid && policyForm.get('package').touched"
-                                                                                    class="help-block">
-                                                                                    <span *ngIf="policyForm.get('package').errors['required']">Package is required</span>
-                                                                                  </span>
                                                                                 </div>
                                                                                 <!-- /.form-group -->
                                                                                 <div class="form-group col-7">
@@ -287,10 +130,10 @@
                                                                                 <!-- /.form-group -->
                                                                                 <div class="form-group col-12">
                                                                                   <label>Policy Details</label>
-                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="policyDetails"></textarea>
-                                                                                  <span *ngIf="policyForm.get('policyDetails').invalid && policyForm.get('policyDetails').touched"
+                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="rego"></textarea>
+                                                                                  <span *ngIf="policyForm.get('rego').invalid && policyForm.get('rego').touched"
                                                                                     class="help-block">
-                                                                                    Image Source is required
+                                                                                    Policy Details is required
                                                                                   </span>
                                                                                 </div>
                                                                               </div>
@@ -308,7 +151,7 @@
                                                     <div class="p-3 bottom-strp-cover gray-strip text-right">
                                                         <button class="btn btn-default">Cancel</button>
                                                         <button class="btn btn-default ml-2" (click)="loadFileContent()">Load</button> 
-                                                        <button class="btn btn-primary ml-2">Save & Finish</button>
+                                                        <button class="btn btn-primary ml-2" (click)="submitForm()">Save & Finish</button>
                                                       </div>
                                                   </div>
                                                   <!-- /.col-sm-9 -->

@@ -197,6 +197,26 @@ export class ApplicationOnBoardingEffect {
         )
     )
 
+    // Below effect is use for delete application present in application
+    deleteApplication = createEffect(() =>
+    this.actions$.pipe(
+        ofType(OnboardingAction.appDelete),
+        switchMap((action) => {
+            return this.http.delete<any>(environment.samlUrl+'oes/appOnboarding/deleteApplication/'+action.applicationName).pipe(
+                map(resdata => {
+                    this.toastr.showSuccess(action.applicationName+' is deleted successfully!!','SUCCESS')
+                    return OnboardingAction.appDeletedSuccessfully({index:action.index});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!','ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+       )
+   )
+
+
      // Below effect is use for delete Account .
      deleteAccountData = createEffect(() =>
      this.actions$.pipe(

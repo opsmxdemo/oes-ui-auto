@@ -89,7 +89,6 @@ export class AuditComponent implements OnInit{
     // Fetching data from state
     this.store.select('audit').subscribe(
       (auditData) => {
-        debugger
         if (auditData.pipelineCount !== null){
           this.pipelineCount = auditData.pipelineCount;
           this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
