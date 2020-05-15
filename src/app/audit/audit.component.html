@@ -166,9 +166,9 @@
                     <div class="form-group">
                       <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
                         title="Add More Filters">
-                        <button class="btn btn-default dropdown-toggle" type="button" #AddMoreFilters id="addMoreFilters"
+                        <button class="btn btn-default dropdown-toggle addmorefilter" type="button" #AddMoreFilters id="addMoreFilters"
                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <img src="../../assets/images/filter-icon.png" alt="icon" />
+                          <i class="fa fa-filter">+</i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
                           aria-labelledby="addMoreFilters">
@@ -304,8 +304,6 @@
                       </ng-multiselect-dropdown>
                     </div>
                   </ng-container>
-                  <button type="submit" *ngIf="applyFilterbtnShow" class="ml-sm-2 mb-2 applyfilters" data-toggle="tooltip" data-placement="top"
-                  title="Apply Filters"><i class="fa fa-filter" (click)="applyFilters()"></i></button>
                 </form>
               </div>
 

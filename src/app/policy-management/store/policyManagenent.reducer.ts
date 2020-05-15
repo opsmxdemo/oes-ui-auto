@@ -7,13 +7,15 @@ export interface State {
     staticTableData: PolicyTable[];
     endpointTypeData: any;
     errorMessage: string;
+    submited:boolean;
 }
 
 export const initialState: State = {
     dynamicTableData: null,
     staticTableData: null,
     endpointTypeData: null,
-    errorMessage: null
+    errorMessage: null,
+    submited: false
 }
 
 export function PolicyReducer(
@@ -37,13 +39,15 @@ export function PolicyReducer(
         on(PolicyActions.errorOccured,
             (state, action) => ({
                 ...state,
-                errorMessage: action.errorMessage
+                errorMessage: action.errorMessage,
+                submited:false
             })
         ),
         on(PolicyActions.successfullSubmission,
             state => ({
                 ...state,
-                errorMessage: null
+                errorMessage: null,
+                submited:true
             })
         ),
     )(policyState,policyActions);

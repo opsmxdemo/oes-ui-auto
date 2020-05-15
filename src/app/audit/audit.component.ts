@@ -57,7 +57,6 @@ export class AuditComponent implements OnInit{
   filtersData: any;                                                                    // It is use to store filter data of current table.
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
-  applyFilterbtnShow = false;                                                          // It is use to show and hide apply filter btn exist in filter section.
   relatedApi: string = 'pipelinesModified';                                            // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
 
@@ -198,7 +197,6 @@ export class AuditComponent implements OnInit{
             })
           }
           // resetting filter object when tab changes
-          this.applyFilterbtnShow = false;
           if(this.currentTabData['filters'].length > 0){
             this.filtersData = this.currentTabData['filters'];
             this.selectedFilter();
@@ -286,11 +284,7 @@ export class AuditComponent implements OnInit{
         this.showHideFilter.push(true);
       });
     }
-    if(this.showHideFilter.indexOf(true) > -1){
-      this.applyFilterbtnShow = true;
-    }else{
-      this.applyFilterbtnShow = false;
-    }
+   
     // hide filter dropdown
     this.AddMoreFilters.nativeElement.dispatchEvent(new Event('click'));
   }
@@ -300,7 +294,7 @@ export class AuditComponent implements OnInit{
     if(typeof event === 'object'){
       this.filterForm.value[category] = event;
     }
-    this.applyFilterbtnShow = true;
+    this.applyFilters();
   }
 
   // Below function is executed on click of apply filters
@@ -317,10 +311,12 @@ export class AuditComponent implements OnInit{
       }
     });
     filterObj['filters'] = filterArr
-    this.store.dispatch(AuditActions.postFilterData({filter:filterObj,relatedApi:this.relatedApi}));
-    $("[data-toggle='tooltip']").tooltip('hide');
-    this.applyFilterbtnShow = false;
-    console.log('finaldata',filterObj)
+    if(filterArr.length > 0){
+      this.store.dispatch(AuditActions.postFilterData({filter:filterObj,relatedApi:this.relatedApi}));
+    }else{
+      this.store.dispatch(AuditActions.loadDataAfterClearFilter({relatedApi:this.relatedApi}));
+    }
+    
   }
 
   // Below function is execute on click of save filter
