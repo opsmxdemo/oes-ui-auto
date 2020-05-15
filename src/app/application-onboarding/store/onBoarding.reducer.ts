@@ -106,10 +106,16 @@ export function AppOnboardingReducer(
                 accountDeleted: false
             })
         ),
+        // on(OnboardingAction.accountDeleted,
+        //     state => ({
+        //         ...state,
+        //         accountDeleted: true
+        //     })
+        // ),
         on(OnboardingAction.accountDeleted,
-            state => ({
+            (state,action) => ({
                 ...state,
-                accountDeleted: true
+                accountList: state.accountList.filter((accountList,index) => index !== action.index)
             })
         ),
     )(onboardingState,onboardingAction);
