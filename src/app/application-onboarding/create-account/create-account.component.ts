@@ -97,7 +97,7 @@ export class CreateAccountComponent implements OnInit {
     console.log(this.namespacesList);
     
     this.postDataForm = {
-      name : data.accountName,
+      name : data.name,
       accountType : data.accountType,
       namespaces : this.namespacesList,
       read : this.readList,
@@ -109,18 +109,9 @@ export class CreateAccountComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('data',JSON.stringify(this.postDataForm));
-    //formData.append('files', file, 'kubeconfig');
-    // formData.append('data',data['name']);
-    // formData.append('data',data['accountType']);
-    // formData.append('data',data['namespaces']);
-    // formData.append('data',data['read']);
-    // formData.append('data',data['write']);
-    // formData.append('data',data['execute']);
-    // formData.append('data',this.createAccountForm.get('namespaces').value);
-    // formData.append('data',this.createAccountForm.get('read').value);
-    // formData.append('data',this.createAccountForm.get('write').value);
-    // formData.append('data',this.createAccountForm.get('execute').value);
-    formData.append('file', data.file);
+   // formData.append('files', data.fileSource, 'kubeconfig');
+    //formData.append('data',this.myForm.get('name').value);
+    formData.append('file', this.createAccountForm.get('fileSource').value, 'kubeconfig');
     console.log('formdata',formData);
     
    this.store.dispatch(OnboardingActions.createAccount({accountData: formData}));

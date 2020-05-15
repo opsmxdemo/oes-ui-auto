@@ -31,5 +31,7 @@ export const createAccount = createAction('[Application-OnBoarding] createAccoun
 // Below action is related to accounts list
 export const loadAccountList = createAction('[Application-OnBoarding] LoadAccountList');
 export const fetchAccountList = createAction('[Application-OnBoarding] FetchAccountList', props<{Accountlist: any}>());
-export const deleteAccount = createAction('[Application-onBoarding] DeleteAccount', props<{accountName:string}>())
-export const accountDeleted = createAction('[Application-OnBoarding] AccountDeleted');
+export const deleteAccount = createAction('[Application-onBoarding] DeleteAccount', props<{accountName:any,index:number}>())
+export const accountDeleted = createAction('[Application-OnBoarding] AccountDeleted', props<{index:number}>());
+//export const accountDeletedSuccessfully = createAction('[Application-OnBoarding] AccountDeletedSuccessfully', props<{index:number}>());
+

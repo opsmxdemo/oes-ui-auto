@@ -166,12 +166,13 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.createAccount),
             switchMap(action => {
-                return this.http.post<CreateAccount>(environment.samlUrl+'/oes/addOrUpdateAccount', action.accountData).pipe(
+                return this.http.post<CreateAccount>(environment.oesUrl+'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData).pipe(
                     map(resdata => {
                         return OnboardingAction.dataSaved();
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!','ERROR')
+                      //  this.toastr.showError('Server Error !!','ERROR')
+                        this.toastr.showError('Error', errorRes);
                         return handleError(errorRes);
                     })
                 );
@@ -184,7 +185,7 @@ export class ApplicationOnBoardingEffect {
      this.actions$.pipe(
          ofType(OnboardingAction.loadAccountList),
          switchMap(() => {
-             return this.http.get<any>('../../../assets/data/accountList.json').pipe(
+             return this.http.get<any>(environment.oesUrl+'oes/accountsConfig/getDynamicAccounts').pipe(
                  map(resdata => {
                      return OnboardingAction.fetchAccountList({Accountlist:resdata['accounts']});
                  }),
@@ -222,9 +223,11 @@ export class ApplicationOnBoardingEffect {
      this.actions$.pipe(
          ofType(OnboardingAction.deleteAccount),
          switchMap(action => {
-             return this.http.get<any>(environment.samlUrl+'oes/getDynamicAccounts/?accountName=' + action.accountName).pipe(
+             return this.http.delete<any>(environment.oesUrl+'oes/accountsConfig/dynamicAccount/' + action.accountName).pipe(
                  map(resdata => {
-                     return OnboardingAction.accountDeleted();
+                    this.toastr.showSuccess(action.accountName+' is deleted successfully!!','SUCCESS')
+                   // return OnboardingAction.appDeletedSuccessfully({index:action.index});
+                     return OnboardingAction.accountDeleted({index:action.index})
                      Swal.fire(
                         'Deleted!',
                         'Your file has been deleted.',

@@ -46,6 +46,11 @@ export class DynamicAccountsComponent implements OnInit {
       }else{
         this.tableIsEmpty = true;
       }
+      },
+      (error) => {
+        console.log("erroeUI",error);
+        //alert(error);
+
       }
     );
   }
@@ -144,7 +149,7 @@ export class DynamicAccountsComponent implements OnInit {
   }
 
   // Below function is use to delete existiong account
-  deleteAccount(account: any) {
+  deleteAccount(account: any,index) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -155,7 +160,8 @@ export class DynamicAccountsComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.value) {
-        this.store.dispatch(OnboardingActions.deleteAccount({accountName: account.name}));
+        $("[data-toggle='tooltip']").tooltip('hide');
+        this.store.dispatch(OnboardingActions.deleteAccount({accountName: account.name,index:index}));
       }else{
         //alert('dont delete'); 
       }
