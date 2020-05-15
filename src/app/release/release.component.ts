@@ -77,8 +77,8 @@ export class ReleaseComponent implements OnInit {
     (error) => {
       console.log("erroeUI",error);
       
-      this.notification.showInfo("test","test");
-      alert('hello');
+      //this.notification.showInfo("test","test");
+      //alert('hello');
     }
     );
   }
