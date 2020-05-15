@@ -57,7 +57,7 @@
                                                                 <a class="nav-link active" id="DYNAMIC" data-toggle="tab" role="tab" aria-controls="DYNAMIC"
                                                                   aria-selected="true">Dynamic Policies</a>
                                                               </li>
-                                                              <li class="nav-item">
+                                                              <li class="nav-item disabledMenu">
                                                                 <a class="nav-link" id="STATIC" data-toggle="tab" role="tab" aria-controls="STATIC"
                                                                   aria-selected="false">Static Policies</a>
                                                               </li>
@@ -68,15 +68,15 @@
                                                                   <div class="row">
                                                                     <div class="col-12">
                                                                       <div class="page_access d-flex text-right p-3">
-                                                                        <div class="mr-auto">
-                                                                          <div class="input-group input-group_search">
+                                                                        <div>
+                                                                          <div class="input-group input-group_search  w-2">
                                                                             <div class="input-group-prepend">
                                                                               <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                                                                             </div>
                                                                             <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()"/>
                                                                           </div>
                                                                         </div>
-                                                                        <button class="btn btn-default">New Policy</button>
+                                                                        <button class="btn btn-default" (click)="newPolicy()">New Policy</button>
                                                                       </div>
                                                                     </div>
                                                                   </div>
@@ -111,7 +111,7 @@
                                                                                   <span *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
                                                                                     class="help-block">
                                                                                     <span *ngIf="policyForm.get('name').errors['required']">Name is required</span>
-                                                                                    <span *ngIf="policyForm.get('name').errors['policyExist']">Policy already
+                                                                                    <span *ngIf="policyForm.get('name').errors['policyExists']">Policy already
                                                                                       exists with same name. Please choose a unique policy name</span>
                                                                                   </span>
                                                                                 </div>
@@ -151,7 +151,7 @@
                                                     <div class="p-3 bottom-strp-cover gray-strip text-right">
                                                         <button class="btn btn-default">Cancel</button>
                                                         <button class="btn btn-default ml-2" (click)="loadFileContent()">Load</button> 
-                                                        <button class="btn btn-primary ml-2" (click)="submitForm()">Save & Finish</button>
+                                                        <button class="btn btn-primary ml-2 {{!allowSubmit ? 'sw-btn-next':''}}" [disabled]="!allowSubmit" (click)="submitForm()">Save & Finish</button>
                                                       </div>
                                                   </div>
                                                   <!-- /.col-sm-9 -->

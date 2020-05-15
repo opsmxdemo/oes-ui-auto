@@ -29,6 +29,6 @@ export class SharedService {
 
    //Below function is use to validate policy name exist or not through api.i.e, policyManagementComponent
    validatePolicyName(name: string, type: string) {
-    return this.httpClient.get(environment.samlUrl + 'oes/policy/{name}/nameCheck' + name);
+    return this.httpClient.get(environment.samlUrl + 'oes/policy/'+ name +'/nameCheck');
   }
 }

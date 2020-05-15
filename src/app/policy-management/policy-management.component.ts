@@ -23,6 +23,7 @@ export class PolicyManagementComponent implements OnInit {
   currentTableContent = [];                              // It is use to store current table data.
   policyData:PolicyManagement = null;                    // It is use to store whole form data use to send to backend.
   currentTab = 'DYNAMIC';                                // It is use to store value of current tab.
+  allowSubmit = true;
 
   constructor(public store: Store<fromApp.AppState>,
               public sharedService: SharedService,) {}
@@ -35,12 +36,18 @@ export class PolicyManagementComponent implements OnInit {
      // fetching data from State
      this.store.select('policy').subscribe(
       (resData) => {
+        if(resData.submited){
+          this.allowSubmit = false;
+        }else{
+          this.allowSubmit = true;
+        }
         if(resData.dynamicTableData !== null){
           if(this.currentTab === 'DYNAMIC'){
             this.currentTableContent = resData.dynamicTableData;
-          }else{
-            this.currentTableContent = resData.staticTableData;
           }
+          // else{
+          //   this.currentTableContent = resData.staticTableData;
+          // }
         }
       }
     )
@@ -53,11 +60,17 @@ export class PolicyManagementComponent implements OnInit {
 
      // defining reactive form approach for policyForm
      this.policyForm = new FormGroup({
-      name: new FormControl('',Validators.required),
+      name: new FormControl('',Validators.required,this.valitatePolicyName.bind(this)),
       description: new FormControl('',Validators.required),
       status: new FormControl(true),
       rego: new FormControl('')
     });
+
+    this.policyForm.valueChanges.subscribe(
+      () =>{
+        this.allowSubmit = true;
+      }
+    )
 
   }
 
@@ -66,8 +79,8 @@ export class PolicyManagementComponent implements OnInit {
     const promise = new Promise<any>((resolve, reject) => {
       this.sharedService.validatePolicyName(control.value, 'dynamic').subscribe(
         (response) => {
-          if (response['policyExist'] === true) {
-            resolve({ 'policyExist': true });
+          if (response['policyExists'] === true) {
+            resolve({ 'policyExists': true });
           } else {
             resolve(null);
           }
@@ -114,12 +127,14 @@ export class PolicyManagementComponent implements OnInit {
         }
       },
       allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.value) {
-        Swal.fire({
-          title: 'File loaded successfully!!',
-        })
-      }
+    })
+  }
+
+  // Below function is use to reset form on click new policy btn
+  newPolicy(){
+    this.policyForm.reset();
+    this.policyForm.patchValue({
+      status:true
     })
   }
 
@@ -132,16 +147,17 @@ export class PolicyManagementComponent implements OnInit {
         if(resData.dynamicTableData !== null){
           if(this.currentTab === 'DYNAMIC'){
             this.currentTableContent = resData.dynamicTableData;
-          }else{
-            this.currentTableContent = resData.staticTableData;
           }
+          // else{
+          //   this.currentTableContent = resData.staticTableData;
+          // }
         }
       }
     )
-    this.policyForm.reset();
-    this.policyForm.patchValue({
-      status:true
-    })
+    // this.policyForm.reset();
+    // this.policyForm.patchValue({
+    //   status:true
+    // })
   }
   
 
@@ -149,12 +165,15 @@ export class PolicyManagementComponent implements OnInit {
   submitForm(){
     if(this.endpointForm.valid && this.policyForm.valid){
       this.policyData = this.policyForm.value;
-      if(this.policyData.status){
-        this.policyData.status = "ACTIVE";
-      }else{
-        this.policyData.status = "INACTIVE";
+      if(typeof this.policyData.status !== 'string'){
+        if(this.policyData.status){
+          this.policyData.status = "ACTIVE";
+        }else{
+          this.policyData.status = "INACTIVE";
+        }
+        this.policyData.endpoint = this.endpointForm.value.endpointUrl;
       }
-      this.policyData.endpoint = this.endpointForm.value.endpointUrl;
+      
       this.policyData.type = this.currentTab;
       console.log("fulldata",JSON.stringify(this.policyData));
       this.store.dispatch(PolicyActions.savePolicy({policyForm:this.policyData}));

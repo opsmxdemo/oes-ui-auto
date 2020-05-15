@@ -68,18 +68,22 @@ export class PolicyEffect {
      this.actions$.pipe(
          ofType(PolicyAction.savePolicy),
          switchMap((action) => {
-             return this.http.post<PolicyManagement>(environment.samlUrl + 'oes/policy/save',action.policyForm).pipe(
+             return this.http.post<any>(environment.samlUrl + 'oes/policy/save',action.policyForm).pipe(
                  map(resdata => {
-                     return PolicyAction.loadTableData({TableData:resdata});
+                    if(resdata['status'] === 400){
+                        this.toastr.showError(resdata['response'].message, 'ERROR')
+                        return PolicyAction.errorOccured({errorMessage:resdata['response'].message});
+                    }else if (resdata['status'] === 200){
+                        this.toastr.showSuccess(resdata['response'].message,'SUCCESS');
+                        return PolicyAction.successfullSubmission();
+                    }
                  }),
-                 catchError(errorRes => {
-                     this.toastr.showError(errorRes.error.message, 'ERROR')
-                     return handleError(errorRes);
-                 })
+                
              );
          })
      )
  )
+ 
 
     
 

@@ -8,4 +8,4 @@ export const errorOccured = createAction('[Audit] ErrorOccured', props<{errorMes
 export const loadTableData = createAction('[Policy] LoadTableData', props<{TableData:any}>());
 export const fetchEndpointType = createAction('[Policy] FetchEndpointType', props<{endpointType:any}>());
 export const savePolicy = createAction('[Policy] SavePolicy', props<{policyForm:PolicyManagement}>());
-export const successfullSubmission = createAction('[Policy] SavePolicy', props<{successmessage:string}>());
+export const successfullSubmission = createAction('[Policy] SavePolicy');

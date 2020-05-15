@@ -58,6 +58,28 @@
 	.selected-item{
 		color: white !important;
 	}
+	.dropdown-down{
+		border-top:0px !important;
+		&::after {
+			border: none;
+			vertical-align: 0.155em;
+			content: url('../../assets//images/arrow_down.png');
+		}
+	}
+	.dropdown-up{
+		border-bottom:0px !important;
+		&::after {
+			border: none;
+			vertical-align: 0.155em;
+			content: url('../../assets//images/arrow_down.png');
+		}
+	}
+}
+.addmorefilter{
+	.fa-filter:before {
+		font-size: large !important;
+		color: #9b9b9b !important;;
+	}
 }
 .filterForm{
 	display: flex;

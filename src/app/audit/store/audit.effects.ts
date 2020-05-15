@@ -165,6 +165,32 @@ export class AuditEffect {
         )
     )
 
+    // Below effect is use for fetch all Runningpipline data which is used to display on select Pipeline Execution.
+    loadDataAfterClearedFilters = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadDataAfterClearFilter),
+            switchMap((action) => {
+                const params = new HttpParams()
+                    .set('isLatest', 'false')
+                    .set('isTreeView', 'false');
+                return this.http.get(environment.samlUrl + 'oes/audit/'+action.relatedApi, { params: params }).pipe(
+                    map(resdata => {
+                        switch(action.relatedApi){
+                            case 'pipelinesModified':
+                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
+                            case 'allDeployments':
+                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
+                        }
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
 
 
 }
