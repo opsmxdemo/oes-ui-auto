@@ -182,20 +182,7 @@ export class AuditComponent implements OnInit{
           this.currentTableHeader = this.currentTabData['headers'];	
           this.createHeaders(this.currentTabData['headerOrder']);	
           this.showHideColumn();
-          // setting date form values present in date search
-          if(this.advanSearchMode){
-            setTimeout(() => {
-              this.dateSearchForm.setValue({
-                customRadio:'allTime',
-                firstdayHours: "",
-                firstdayMinutes: "",
-                firstdayMeridiem: "",
-                lastdayHours: "",
-                lastdayMinutes: "",
-                lastdayMeridiem: ""
-              })
-            })
-          }
+          this.advanSearchMode = false;
           // resetting filter object when tab changes
           if(this.currentTabData['filters'].length > 0){
             this.filtersData = this.currentTabData['filters'];
