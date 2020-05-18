@@ -1,5 +1,6 @@
 export class PolicyManagement {
     endpoint: string;
+    endpointType: string;
     name: string;
     description: string;
     status: string;
@@ -9,6 +10,7 @@ export class PolicyManagement {
     constructor(data: any) {
         data = data || {};
         this.endpoint = data.endpoint;
+        this.endpointType = data.endpointType;
         this.name = data.name;
         this.description = data.description;
         this.rego = data.rego;

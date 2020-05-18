@@ -52,7 +52,7 @@ export class ApplicationComponent implements OnInit {
           if (responseData.applicationData !== null) {
             //populating createApplicationForm ################################################################
             this.createApplicationForm = new FormGroup({
-              name: new FormControl(this.appData.name, Validators.required, this.valitateApplicationName.bind(this)),
+              name: new FormControl(this.appData.name, Validators.required),
               emailId: new FormControl(this.appData.emailId,[Validators.required,Validators.email]),
               description: new FormControl(this.appData.description),
               imageSource: new FormControl(this.appData.imageSource,Validators.required)
@@ -375,7 +375,6 @@ export class ApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    debugger
     // Execute when user editing application data ########### EDIT APPLICATION MODE ############
     if (this.editMode) {
       const existServiceLength = this.editServiceForm['services'].length;
@@ -422,6 +421,8 @@ export class ApplicationComponent implements OnInit {
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
 
         console.log("editform1", JSON.stringify(this.mainForm));
+        //Below action is use to save updated application form in database
+        this.store.dispatch(OnboardingActions.updateApplication({appData:this.mainForm}));
       } else {
         this.environmentForm.markAllAsTouched();
         this.groupPermissionForm.markAllAsTouched();
@@ -449,9 +450,8 @@ export class ApplicationComponent implements OnInit {
         this.mainForm.services = this.servicesForm.value.services;
         this.mainForm.environments = this.environmentForm.value.environments;
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
-        console.log("editform", JSON.stringify(this.mainForm));
         //Below action is use to save created form in database
-        // this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
+        this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
       } else {
         this.validForms();
       }

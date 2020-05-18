@@ -26,8 +26,8 @@ export function PolicyReducer(
         on(PolicyActions.loadTableData,
             (state, action) => ({
                 ...state,
-                dynamicTableData: action.TableData['dynamicTable'],
-                staticTableData: action.TableData['staticTable'],
+                dynamicTableData: action.TableData['dynamicPolicies'],
+                staticTableData: action.TableData['staticPolicies'],
             })
         ),
         on(PolicyActions.fetchEndpointType,

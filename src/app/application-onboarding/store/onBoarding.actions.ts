@@ -16,6 +16,7 @@ export const fetchCloudAccount = createAction('[Application-OnBoarding] FetchClo
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application-OnBoarding] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());
+export const updateApplication = createAction('[Application-OnBoarding] UpdateApplication', props<{appData:CreateApplication}>());
 
 // Below action is related to application list
 export const loadAppList = createAction('[Application-OnBoarding] LoadAppList');

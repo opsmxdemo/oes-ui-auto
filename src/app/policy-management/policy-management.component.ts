@@ -19,7 +19,7 @@ export class PolicyManagementComponent implements OnInit {
   endpointForm: FormGroup;                               // For Endpoint Section.
   policyForm: FormGroup;                                 // For Policy section.
   fileContent: any;                                      // For file data.
-  endpointTypes = ['OPA']
+  endpointTypes: any = null;                             // It is use to store endpoint type dropdown data
   currentTableContent = [];                              // It is use to store current table data.
   policyData:PolicyManagement = null;                    // It is use to store whole form data use to send to backend.
   currentTab = 'DYNAMIC';                                // It is use to store value of current tab.
@@ -49,6 +49,7 @@ export class PolicyManagementComponent implements OnInit {
           //   this.currentTableContent = resData.staticTableData;
           // }
         }
+        this.endpointTypes = resData.endpointTypeData;
       }
     )
 
@@ -113,7 +114,6 @@ export class PolicyManagementComponent implements OnInit {
           let fileReader: FileReader = new FileReader();
           fileReader.onloadend = (x) => {
             this.fileContent = fileReader.result;
-            console.log('reader',this.fileContent);
             this.policyForm.patchValue({
               rego:this.fileContent
             })
@@ -172,6 +172,7 @@ export class PolicyManagementComponent implements OnInit {
           this.policyData.status = "INACTIVE";
         }
         this.policyData.endpoint = this.endpointForm.value.endpointUrl;
+        this.policyData.endpointType = this.endpointForm.value.endpointType;
       }
       
       this.policyData.type = this.currentTab;
