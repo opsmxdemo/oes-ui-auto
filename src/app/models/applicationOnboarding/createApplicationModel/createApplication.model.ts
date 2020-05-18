@@ -6,6 +6,7 @@ export class CreateApplication {
     name: string;
     description: string;
     imageSource: string;
+    emailId: string;
     services:Service[];
     environments:Environment[];
     userGroups:GroupPermission[];
@@ -15,6 +16,7 @@ export class CreateApplication {
         this.name = data.name;
         this.description = data.description;
         this.imageSource = data.imageSource;
+        this.emailId = data.emailId;
         this.services=[];
         data.services.forEach(element => {
             this.services.push(new Service(element));

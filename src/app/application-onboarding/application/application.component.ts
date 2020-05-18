@@ -53,6 +53,7 @@ export class ApplicationComponent implements OnInit {
             //populating createApplicationForm ################################################################
             this.createApplicationForm = new FormGroup({
               name: new FormControl(this.appData.name, Validators.required, this.valitateApplicationName.bind(this)),
+              emailId: new FormControl(this.appData.emailId,[Validators.required,Validators.email]),
               description: new FormControl(this.appData.description),
               imageSource: new FormControl(this.appData.imageSource,Validators.required)
             });
@@ -131,6 +132,8 @@ export class ApplicationComponent implements OnInit {
                 );
               })
             }
+          }else{
+            this.defineAllForms();
           }
         } else if (this.appData === null) {
           // defining all forms when not in edit mode
@@ -160,6 +163,7 @@ export class ApplicationComponent implements OnInit {
     // defining reactive form approach for createApplicationForm
     this.createApplicationForm = new FormGroup({
       name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+      emailId: new FormControl('',[Validators.required,Validators.email]),
       description: new FormControl(''),
       imageSource: new FormControl('',Validators.required)
     });
@@ -212,7 +216,6 @@ export class ApplicationComponent implements OnInit {
   //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
   cannotContainSpace(control: FormControl): {[s: string]: boolean} {
     let startingValue = control.value.split('');
-    console.log('validation',startingValue.length);
   if(startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0){
     return {containSpace: true}
   }
@@ -372,6 +375,7 @@ export class ApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
+    debugger
     // Execute when user editing application data ########### EDIT APPLICATION MODE ############
     if (this.editMode) {
       const existServiceLength = this.editServiceForm['services'].length;
@@ -417,7 +421,7 @@ export class ApplicationComponent implements OnInit {
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
 
-        console.log("editform", JSON.stringify(this.mainForm));
+        console.log("editform1", JSON.stringify(this.mainForm));
       } else {
         this.environmentForm.markAllAsTouched();
         this.groupPermissionForm.markAllAsTouched();
@@ -447,7 +451,7 @@ export class ApplicationComponent implements OnInit {
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
         console.log("editform", JSON.stringify(this.mainForm));
         //Below action is use to save created form in database
-        this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
+        // this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
       } else {
         this.validForms();
       }

@@ -1,6 +1,6 @@
 import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -70,6 +70,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             switchMap(() => {
+
                 return this.http.get<CloudAccount>(environment.samlUrl+'oes/appOnboarding/cloudAccounts').pipe(
                     map(resdata => {
                         return OnboardingAction.fetchCloudAccount({cloudAccount:resdata['data']})
@@ -89,8 +90,10 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(environment.samlUrl+'oes/appOnboarding/editApplication?applicationName=' + action.applicationName).pipe(
+                return this.http.get<CreateApplication>('../../../assets/data/onboarding.json').pipe(
                     map(resdata => {
+                        console.log("editmode",resdata);
+                        
                         return OnboardingAction.fetchAppData({ appData: resdata })
                     }),
                     catchError(errorRes => {
@@ -166,7 +169,9 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.createAccount),
             switchMap(action => {
-                return this.http.post<CreateAccount>(environment.oesUrl+'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData).pipe(
+                const params = new HttpParams()
+                .set('postData', action.postData)
+                return this.http.post<CreateAccount>('http://137.117.94.95:8085/oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
                     map(resdata => {
                         return OnboardingAction.dataSaved();
                     }),

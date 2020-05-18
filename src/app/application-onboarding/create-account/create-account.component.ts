@@ -26,6 +26,7 @@ export class CreateAccountComponent implements OnInit {
   writeList: [];
   executeList: []; 
   postDataForm: any;
+  fileContent:any;
 
   createAccountForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -72,6 +73,7 @@ export class CreateAccountComponent implements OnInit {
   onFileChange(event) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
+      this.fileContent = file;
       this.createAccountForm.patchValue({
         fileSource: file
       });
@@ -88,6 +90,7 @@ export class CreateAccountComponent implements OnInit {
   //Below function is use to submit whole form and send request to backend
 
   submitForm(data){
+    debugger
     console.log(this.sharedService.getUserData());
     console.log("Submitted Data ** ",data.namespaces);
     this.namespacesList = data.namespaces.split(",");
@@ -104,17 +107,17 @@ export class CreateAccountComponent implements OnInit {
       write : this.writeList,
       execute : this.executeList
       }
-      console.log();
+      console.log('valueform',this.postDataForm);
       
 
     const formData = new FormData();
-    formData.append('data',JSON.stringify(this.postDataForm));
+    // formData.append('data',JSON.stringify(this.postDataForm));
    // formData.append('files', data.fileSource, 'kubeconfig');
     //formData.append('data',this.myForm.get('name').value);
-    formData.append('file', this.createAccountForm.get('fileSource').value, 'kubeconfig');
+    formData.append('file', this.fileContent);
     console.log('formdata',formData);
     
-   this.store.dispatch(OnboardingActions.createAccount({accountData: formData}));
+   this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
  
   }
 

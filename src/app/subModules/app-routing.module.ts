@@ -18,7 +18,7 @@ const routes: Routes = [
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
-  {path:'setup', component:ApplicationOnboardingComponent, canActivate: [AuthGuard], children: [
+  {path:'setup', component:ApplicationOnboardingComponent, children: [
     // child component of Setup i.e,ApplicationOnboardingComponent.
     {path: '', redirectTo:'/setup/applications',pathMatch:'full'},
     {path: 'applications' , component: AppliactionListComponent},

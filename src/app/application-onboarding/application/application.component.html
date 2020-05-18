@@ -24,6 +24,11 @@
                 <strong>{{createApplicationForm.value.name}}</strong>
               </li>
               <li class="ti-item">
+                <i class="{{createApplicationForm.value.emailId !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <span>Email :</span>
+                <strong>{{createApplicationForm.value.emailId}}</strong>
+              </li>
+              <li class="ti-item">
                 <i class="{{createApplicationForm.value.description !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Description :</span>
                 <strong>{{createApplicationForm.value.description}}</strong>
@@ -119,10 +124,13 @@
                       <span *ngIf="createApplicationForm.get('name').errors['symbols']">No Special characters are allowed.</span>
                     </span>
                   </div>
-                  <!-- /.form-group -->
                   <div class="form-group">
-                    <label>Application Description</label>
-                    <textarea class="form-control" rows="3" formControlName="description" [readonly]="editMode"></textarea>
+                    <label>Email Id</label>
+                    <input type="text" class="form-control" formControlName="emailId" [readonly]="editMode">
+                    <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="help-block">
+                      <span *ngIf="createApplicationForm.get('emailId').errors['required']">Email is required</span>
+                      <span *ngIf="createApplicationForm.get('emailId').errors['email']">Please enter valid Email Id</span>
+                    </span>
                   </div>
                   <!-- /.form-group -->
                   <div class="form-group">
@@ -132,6 +140,11 @@
                       class="help-block">
                       Image Source is required
                     </span>
+                  </div>
+                  <!-- /.form-group -->
+                  <div class="form-group">
+                    <label>Application Description</label>
+                    <textarea class="form-control" rows="3" formControlName="description" [readonly]="editMode"></textarea>
                   </div>
                 </form>
               </div>
