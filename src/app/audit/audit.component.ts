@@ -8,6 +8,7 @@ import { NgForm, FormGroup, Validators, FormControl } from '@angular/forms';
 import * as $ from 'jquery';
 import { Observable } from 'rxjs/internal/Observable';
 import { SharedService } from '../services/shared.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-audit',
@@ -59,6 +60,7 @@ export class AuditComponent implements OnInit{
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
   relatedApi: string = 'pipelinesModified';                                            // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
+ 
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService,
@@ -309,14 +311,29 @@ export class AuditComponent implements OnInit{
   // Below function is execute on click of save filter
   saveFilter(event){
     if(this.saveFilterForm.valid){
+      let savefilterObj = {};
+      savefilterObj['name'] = this.saveFilterForm.value.filterName;
+      savefilterObj['filters'] = this.filtersData.filter(el => {
+        if(el.selectedItem.length > 0){
+          return el;
+        }
+      })
+      if(savefilterObj['filters'].length > 0){
+        console.log('savefilter',JSON.stringify(savefilterObj) );
+      }else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Please select the filters to save it',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
       this.saveFilterForm.reset();
+      
     }else{
       this.saveFilterForm.markAllAsTouched();
       event.stopPropagation();
     }
-    
-    console.log('form',this.saveFilterForm.value);
-    
   }
 
   // Below function is execute on search

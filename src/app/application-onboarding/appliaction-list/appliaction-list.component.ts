@@ -48,6 +48,11 @@ export class AppliactionListComponent implements OnInit {
     )
   }
 
+  // Below function is used if user want to refresh list data
+  refreshList(){
+    this.store.dispatch(OnboardingActions.loadAppList());
+  } 
+
   //Below function is execute on search
   onSearch(){
     if(this.searchData !== ''){

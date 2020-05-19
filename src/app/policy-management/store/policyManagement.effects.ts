@@ -44,15 +44,34 @@ export class PolicyEffect {
         public toastr: NotificationService
     ) { }
 
-    // Below effect is use for fetch Tadle data exist in dynamic and static section
+    // Below effect is use for fetch Table data exist in dynamic and static section
     fetchTableData = createEffect(() =>
         this.actions$.pipe(
             ofType(PolicyAction.loadPolicy),
             switchMap(() => {
-                return this.http.get<PolicyTable[]>('../../../assets/data/policyManagement.json').pipe(
+                return this.http.get<PolicyTable[]>(environment.samlUrl + 'oes/policy/list').pipe(
                     map(resdata => {
-                        console.log('tabledata',resdata);
-                        return PolicyAction.loadTableData({TableData:resdata});
+                        if(resdata['status'] === 400){
+                            this.toastr.showError(resdata['response'].message, 'ERROR')
+                            return PolicyAction.errorOccured({errorMessage:resdata['response'].message});
+                        }else if (resdata['status'] === 200){
+                            return PolicyAction.loadTableData({TableData:resdata['response']});
+                        }
+                    }),
+                    
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch endpoint Types from API
+    fetchEndpointTypes = createEffect(() =>
+        this.actions$.pipe(
+            ofType(PolicyAction.loadPolicy),
+            switchMap(() => {
+                return this.http.get(environment.samlUrl + 'oes/policy/endpointType').pipe(
+                    map(resdata => {
+                        return PolicyAction.fetchEndpointType({endpointType:resdata});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')

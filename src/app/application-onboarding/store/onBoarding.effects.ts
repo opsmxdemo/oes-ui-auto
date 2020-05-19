@@ -90,9 +90,8 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>('../../../assets/data/onboarding.json').pipe(
+                return this.http.get<CreateApplication>(environment.samlUrl+'oes/appOnboarding/editApplication?applicationName='+action.applicationName).pipe(
                     map(resdata => {
-                        console.log("editmode",resdata);
                         
                         return OnboardingAction.fetchAppData({ appData: resdata })
                     }),
@@ -122,6 +121,25 @@ export class ApplicationOnBoardingEffect {
             })
         )
     )
+
+    // Below effect is use for saved data in create application phase
+    onUpdateExistApplicationData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.updateApplication),
+            switchMap(action => {
+                return this.http.post<CreateApplication>(environment.samlUrl+'oes/appOnboarding/updateApplication', action.appData).pipe(
+                    map(resdata => {
+                        return OnboardingAction.dataSaved();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
 
     // Below effect is use for fetch data related to Application List page
     fetchAppListData = createEffect(() =>
