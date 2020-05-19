@@ -47,15 +47,15 @@ export class ApplicationComponent implements OnInit {
         if (responseData.editMode) {
           this.appData = responseData.applicationData;
           this.editMode = responseData.editMode;
-          // this.defineAllForms();
+          this.defineAllForms();
 
           if (responseData.applicationData !== null) {
             //populating createApplicationForm ################################################################
             this.createApplicationForm = new FormGroup({
-              name: new FormControl(this.appData.name, Validators.required),
-              emailId: new FormControl(this.appData.emailId,[Validators.required,Validators.email]),
+              name: new FormControl(this.appData.name),
+              emailId: new FormControl(this.appData.emailId),
               description: new FormControl(this.appData.description),
-              imageSource: new FormControl(this.appData.imageSource,Validators.required)
+              imageSource: new FormControl(this.appData.imageSource)
             });
 
             //populating serviceForm############################################################################
@@ -67,7 +67,7 @@ export class ApplicationComponent implements OnInit {
               this.appData.services.forEach((serviceArr, serviceindex) => {
                 (<FormArray>this.servicesForm.get('services')).push(
                   new FormGroup({
-                    serviceName: new FormControl(serviceArr.serviceName, [Validators.required,this.cannotContainSpace.bind(this)]),
+                    serviceName: new FormControl(serviceArr.serviceName),
                     status: new FormControl(serviceArr.status),
                     pipelines: new FormArray([])
                   })
@@ -153,9 +153,6 @@ export class ApplicationComponent implements OnInit {
         }
       }
     )
-
-    //this.store.dispatch(OnboardingActions.enableEditMode({editMode:true,applicationName:'DemoApplicationoesasdfasdfasdf',page:'setup'}));
-    
   }
 
   // Below function is use to define all forms exist in application On boarding component
@@ -334,7 +331,7 @@ export class ApplicationComponent implements OnInit {
     let result: boolean = null;
     if (this.editMode === true && this.appData !== null) {
       this.appData.services.forEach(servicArr => {
-        if (servicArr.serviceName === this.servicesForm.value.services[index].serviceName) {
+        if (servicArr.serviceName === this.servicesForm.value.services[index].serviceName && this.servicesForm.value.services[index].status === 'ACTIVE') {
           result = true;
           return result;
         }
@@ -370,26 +367,33 @@ export class ApplicationComponent implements OnInit {
 
   // Below function is use to redirect to parent page after click on cancel btn
   cancelForm(){
+    if(this.editMode){
+      this.createApplicationForm.reset();
+      this.environmentForm.reset();
+      this.servicesForm.reset();
+      this.groupPermissionForm.reset();
+    }
     this.router.navigate([this.parentPage]);
   }
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
+    
     // Execute when user editing application data ########### EDIT APPLICATION MODE ############
     if (this.editMode) {
       const existServiceLength = this.editServiceForm['services'].length;
       let serviceFormValidation = null;
+
       // Below logic check whether newely added service is valid or not
-      if (this.servicesForm.value.services.length > existServiceLength){
-        for (let i=existServiceLength; i< this.servicesForm.value.services.length ; i++){
+      this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
+        if (serviceArr.status === 'New') {
           const arrayControl = this.servicesForm.get('services') as FormArray;
-          const innerarrayControl = arrayControl.at(i)
+          const innerarrayControl = arrayControl.at(serviceIndex)
           innerarrayControl.markAllAsTouched();
           serviceFormValidation = innerarrayControl.valid;
         }
-      }else{
-        serviceFormValidation = true;
-      }
+      })
+      
       if (serviceFormValidation && this.environmentForm.valid && this.groupPermissionForm.valid) {
         // Saving all 4 forms data into one
         //#############CreateApplicationForm###############
@@ -401,17 +405,22 @@ export class ApplicationComponent implements OnInit {
             this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
           }
         })
+        let delete_counter = 0;
         this.editServiceForm['services'].forEach((ServiceArr, i) => {
-          ServiceArr.pipelines.forEach((PipelineArr, j) => {
-            if (typeof (PipelineArr.cloudAccount) === 'string') {
-              PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
-            }
-            PipelineArr.pipelineParameters.forEach((DataArr, k) => {
-              if (DataArr.value === '') {
-                DataArr.value = this.getProperValue(i, j, k)
+          if(ServiceArr.status === 'Delete'){
+            delete_counter++;
+          }else{
+            ServiceArr.pipelines.forEach((PipelineArr, j) => {
+              if (typeof (PipelineArr.cloudAccount) === 'string') {
+                PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
               }
+              PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+                  if (DataArr.value === '') {
+                    DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
+                  }
+              })
             })
-          })
+          }
         })
         //#############ServiceFormSection###################
         this.mainForm.services = this.editServiceForm['services'];

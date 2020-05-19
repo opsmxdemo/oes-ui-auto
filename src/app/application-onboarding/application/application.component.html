@@ -41,7 +41,7 @@
               <br>
               <br>
             </ul>
-            <!-- /.tree-inset -->
+            
             <ul class="tree-inset list-unstyled {{serviceArr.serviceName !== '' ? 'tree-active' : ''}}" *ngFor="let serviceArr of servicesForm.value.services; let i = index">
               <li class="ti-title">
                 <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
@@ -53,15 +53,10 @@
                 <span>Service name</span>
                 <strong>{{serviceArr.serviceName}}</strong>
               </li>
-              <!-- <li class="ti-item" *ngFor = "let pipelineData of serviceArr.pipeline[0].pipelineParameter">
-                  <i class="{{pipelineData.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                  <span>{{pipelineData.label}}:</span>
-                  <strong>{{pipelineData.value}}</strong>
-              </li> -->
               <br>
               <br>
             </ul>
-            <!-- /.tree-inset -->
+           
             <ul class="tree-inset list-unstyled {{environmentForm.value.environments[0].key !== '' ? 'tree-active' : ''}}"
               *ngIf="environmentForm.value.environments.length !== 0 ? true : false ">
               <li class="ti-title">
@@ -70,37 +65,36 @@
               </li>
               <li class="ti-item" *ngFor="let env of environmentForm.value.environments; let index = i">
                 <i class="{{env.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>{{env.key}} :</span>
-                <strong *ngIf="env.value !== ''? true:false">{{env.value}}</strong>
+                <span>{{env.key !== ''? env.key : ''}} :</span>
+                <strong *ngIf="env.value !== ''? true:false">{{env.value !== ''? env.value : ''}}</strong>
               </li>
             </ul>
-            <!-- /.tree-inset -->
+            
             <ul class="tree-inset list-unstyled {{groupPermissionForm.value.userGroups[0].userGroup !== '' ? 'tree-active' : ''}}"
-              *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
+              *ngIf="groupPermissionForm.value.userGroups.length > 0 ? true : false ">
               <li class="ti-title">
                 <i class="{{groupPermissionForm.value.userGroups[0].userGroup !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
                 <span>Group Permissions Details</span>
               </li>
               <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
                 <i class="{{group.permission !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>{{group.userGroup}} :</span>
-                <strong *ngIf="group.permission !== ''? true:false">{{group.permission}}</strong>
+                <span>{{group.userGroup !== ''?group.userGroup:''}} :</span>
+                <strong *ngIf="group.permission !== ''? true:false">{{group.permission !== ''?group.permission:''}}</strong>
               </li>
             </ul>
-            <!-- /.tree-inset -->
+           
             <ul class="tree-inset tree-finished list-unstyled {{groupPermissionForm.valid && createApplicationForm.valid && servicesForm.valid && environmentForm.valid ? 'tree-active' : ''}}">
               <li class="ti-title">
                 <i class="{{groupPermissionForm.valid && createApplicationForm.valid && servicesForm.valid ? 'fas fa-circle' : 'far fa-circle'}}"></i>
                 <span>Finish Application</span>
               </li>
             </ul>
-            <!-- /.tree-inset -->
+           
           </div>
-          <!-- /.sidebar-tree -->
         </div>
-        <!-- /.col-sm-3 -->
+       
   
-        <!-- ###################### Tree Section Starts #####################################-->
+        <!-- ###################### Tree Section Ends #####################################-->
   
         <div class="col-sm-9">
           <div class="p-3">
