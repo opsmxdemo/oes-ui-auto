@@ -95,10 +95,37 @@ input.ng-invalid.ng-touched , select.ng-invalid.ng-touched{
 	width: 90% !important;
 }
 .sw-btn-next {
-    color: #000;
-    background: #cccccc;
-	border-color: #cccccc;
+    color: #000 !important;
+    background: #cccccc !important;
+	border-color: #cccccc !important;
 	&:hover{
 		background: #e2dede !important;
+	}
+}
+td{
+	a{
+		cursor: pointer;
+	}
+}
+.disabledcheckbox{
+	pointer-events: none;
+	&::before{
+		background: #e9ecef;
+	}
+}
+.disableddropdown{
+	pointer-events: none;
+	background: #e9ecef;
+}
+.dots-container{
+	position: relative !important;
+}
+.policyname{
+	cursor: pointer;
+	&:hover{
+		background: #e9ecef;
+	}
+	.active{
+		background: #e9ecef;
 	}
 }

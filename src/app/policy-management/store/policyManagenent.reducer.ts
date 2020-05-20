@@ -1,13 +1,17 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { PolicyTable } from 'src/app/models/policyManagement/policyTable.model';
 import * as PolicyActions from './policyManagement.actions'
+import { PolicyManagement } from 'src/app/models/policyManagement/policyManagement.model';
 
 export interface State {
     dynamicTableData: PolicyTable[];
     staticTableData: PolicyTable[];
     endpointTypeData: any;
     errorMessage: string;
-    submited:boolean;
+    editPolicyData:PolicyManagement;
+    editMode:boolean;
+    readonlyMode:boolean;
+    loading:boolean;
 }
 
 export const initialState: State = {
@@ -15,7 +19,10 @@ export const initialState: State = {
     staticTableData: null,
     endpointTypeData: null,
     errorMessage: null,
-    submited: false
+    editPolicyData: null,
+    editMode: false,
+    readonlyMode: true,
+    loading:false
 }
 
 export function PolicyReducer(
@@ -28,6 +35,7 @@ export function PolicyReducer(
                 ...state,
                 dynamicTableData: action.TableData['dynamicPolicies'],
                 staticTableData: action.TableData['staticPolicies'],
+                loading:false
             })
         ),
         on(PolicyActions.fetchEndpointType,
@@ -40,14 +48,45 @@ export function PolicyReducer(
             (state, action) => ({
                 ...state,
                 errorMessage: action.errorMessage,
-                submited:false
+                readonlyMode:false,
+                loading:false
             })
         ),
         on(PolicyActions.successfullSubmission,
-            state => ({
+            (state,action) => ({
                 ...state,
                 errorMessage: null,
-                submited:true
+                readonlyMode:true,
+                editPolicyData:action.policyData
+                
+            })
+        ),
+        on(PolicyActions.editPolicy,
+            (state,action) => ({
+                ...state,
+                editMode: action.editMode,
+                readonlyMode: action.readonlyMode,
+                loading:true
+            })
+        ),
+        on(PolicyActions.fetchedPolicyData,
+            (state,action) => ({
+                ...state,
+                editPolicyData: action.policyData,
+                loading:false
+            })
+        ),
+        on(PolicyActions.createPolicy,
+            (state,action) => ({
+                ...state,
+                readonlyMode:false,
+                editMode:false
+            })
+        ),
+        on(PolicyActions.savePolicy,
+            (state) => ({
+                ...state,
+                loading:true
             })
         ),
     )(policyState,policyActions);

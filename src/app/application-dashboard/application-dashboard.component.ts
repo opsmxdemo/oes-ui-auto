@@ -90,4 +90,10 @@ export class ApplicationDashboardComponent implements OnInit {
    this.store.dispatch(AppOnboardingAction.loadApp({page:'appdashboard'}));
   }
 
+  // Below function is use to get proper href
+  redirectLink(ServiceName,applicationName){
+    const href = 'http://52.255.164.169:9000/#/applications/'+applicationName+'/executions?pipeline='+ServiceName;
+    return href;
+  }
+
 }

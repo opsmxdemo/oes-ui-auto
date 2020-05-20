@@ -118,5 +118,11 @@ export function AppOnboardingReducer(
                 accountList: state.accountList.filter((accountList,index) => index !== action.index)
             })
         ),
+        on(OnboardingAction.disabledEditMode,
+            state => ({
+                ...state,
+                editMode:false
+            })
+        ),
     )(onboardingState,onboardingAction);
 }
