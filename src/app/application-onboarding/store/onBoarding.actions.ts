@@ -28,7 +28,7 @@ export const appDeletedSuccessfully = createAction('[Application-OnBoarding] App
 // Below action related to Account
 export const loadAccount = createAction('[Application-OnBoarding] LoadAccount' , props<{page:string}>());
 export const createAccount = createAction('[Application-OnBoarding] createAccount', props<{accountData:any,postData:any}>())
-//export const dataSaved = createAction('[Application-OnBoarding] DataSaved');
+export const accountDataSaved = createAction('[Application-onBoarding] AccountDataSaved');
 
 // Below action is related to accounts list
 export const loadAccountList = createAction('[Application-OnBoarding] LoadAccountList');

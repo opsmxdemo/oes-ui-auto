@@ -31,6 +31,7 @@
                           <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                         </div>
                         <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
+                        <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                       </div>
                     </div>
                 <button class="btn btn-default" (click)="createAccount()">New Account</button>
@@ -51,7 +52,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                      <tr *ngFor="let accountsData of accountListData | filter:searchData; let i=index">
+                      <tr *ngFor="let accountsData of currentPage | filter:searchData; let i=index">
                         <td>{{accountsData.name}}</td>
                         <td>Kubernetes</td>
                         <td>{{accountsData.namespaces}}</td>
