@@ -47,18 +47,18 @@ export class PolicyEffect {
     // Below effect is use for fetch Table data exist in dynamic and static section
     fetchTableData = createEffect(() =>
         this.actions$.pipe(
-            ofType(PolicyAction.loadPolicy),
+            ofType(PolicyAction.loadPolicy,PolicyAction.successfullSubmission),
             switchMap(() => {
                 return this.http.get<PolicyTable[]>(environment.samlUrl + 'oes/policy/list').pipe(
                     map(resdata => {
-                        if(resdata['status'] === 400){
+                        if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR')
-                            return PolicyAction.errorOccured({errorMessage:resdata['response'].message});
-                        }else if (resdata['status'] === 200){
-                            return PolicyAction.loadTableData({TableData:resdata['response']});
+                            return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
+                        } else if (resdata['status'] === 200) {
+                            return PolicyAction.loadTableData({ TableData: resdata['response'] });
                         }
                     }),
-                    
+
                 );
             })
         )
@@ -71,7 +71,7 @@ export class PolicyEffect {
             switchMap(() => {
                 return this.http.get(environment.samlUrl + 'oes/policy/endpointType').pipe(
                     map(resdata => {
-                        return PolicyAction.fetchEndpointType({endpointType:resdata});
+                        return PolicyAction.fetchEndpointType({ endpointType: resdata });
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -82,28 +82,69 @@ export class PolicyEffect {
         )
     )
 
-     // Below effect is use to post data to backend
-     savePolicy = createEffect(() =>
-     this.actions$.pipe(
-         ofType(PolicyAction.savePolicy),
-         switchMap((action) => {
-             return this.http.post<any>(environment.samlUrl + 'oes/policy/save',action.policyForm).pipe(
-                 map(resdata => {
-                    if(resdata['status'] === 400){
-                        this.toastr.showError(resdata['response'].message, 'ERROR')
-                        return PolicyAction.errorOccured({errorMessage:resdata['response'].message});
-                    }else if (resdata['status'] === 200){
-                        this.toastr.showSuccess(resdata['response'].message,'SUCCESS');
-                        return PolicyAction.successfullSubmission();
-                    }
-                 }),
-                
-             );
-         })
-     )
- )
- 
+    // Below effect is use for fetch Policy data in edit and viewOnly mode
+    fetchPolicyData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(PolicyAction.editPolicy),
+            switchMap((action) => {
+                return this.http.get(environment.samlUrl + 'oes/policy/'+action.policyName).pipe(
+                    map(resdata => {
+                        if (resdata['status'] === 400) {
+                            this.toastr.showError(resdata['response'].message, 'ERROR')
+                            return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
+                        } else if (resdata['status'] === 200) {
+                            return PolicyAction.fetchedPolicyData({policyData:resdata['response']})
+                        }
+                    }),
+                   
+                );
+            })
+        )
+    )
 
-    
+    // Below effect is use to post data to backend
+    savePolicy = createEffect(() =>
+        this.actions$.pipe(
+            ofType(PolicyAction.savePolicy),
+            switchMap((action) => {
+                return this.http.post<any>(environment.samlUrl + 'oes/policy/save', action.policyForm).pipe(
+                    map(resdata => {
+                        if (resdata['status'] === 400) {
+                            this.toastr.showError(resdata['response'].message, 'ERROR');
+                            return PolicyAction.successfullSubmission({policyData:action.policyForm});
+                        } else if (resdata['status'] === 200) {
+                            this.toastr.showSuccess(resdata['response'].message, 'SUCCESS');
+                            return PolicyAction.successfullSubmission({policyData:action.policyForm});
+                        }
+                    }),
+
+                );
+            })
+        )
+    )
+
+    // Below effect is use to post data to backend
+    deletePolicy = createEffect(() =>
+        this.actions$.pipe(
+            ofType(PolicyAction.deletePolicy),
+            switchMap((action) => {
+                return this.http.delete<any>(environment.samlUrl + 'oes/policy/'+action.policyName).pipe(
+                    map(resdata => {
+                        if (resdata['status'] === 400) {
+                            this.toastr.showError(resdata['response'].message, 'ERROR');
+                            return PolicyAction.successfullSubmission({policyData:action.policydatatoshow});
+                        } else if (resdata['status'] === 200) {
+                            this.toastr.showSuccess(resdata['response'].message, 'SUCCESS');
+                            return PolicyAction.successfullSubmission({policyData:action.policydatatoshow});
+                        }
+                    }),
+
+                );
+            })
+        )
+    )
+
+
+
 
 }

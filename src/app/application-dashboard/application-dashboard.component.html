@@ -99,6 +99,7 @@
                 <tr>
                   <th>Service</th>
                   <th>Score</th>
+                  <th>Link</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -106,7 +107,7 @@
                 <tr *ngFor="let service of serviceData; let i=index">
                   <td>{{service.name}}</td>
                   <td>{{service.score}}</td>
-
+                  <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}"><a [href]="service.status === 'N/A' ? '': redirectLink(service.name,selectedApplicationName)">{{service.status === 'N/A' ? '-': 'Link'}}</a></td>
                   <td
                     [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">
                     {{service.status}}</td>

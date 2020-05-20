@@ -13,9 +13,15 @@
                                       <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                                         <div class="tab-content h-100 p-3 flex-grow-1">
                                             <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-                                            
+                                              <div class="dots-container" *ngIf="loading">
+                                                <div class="dots"></div>
+                                                <div class="dots"></div>
+                                                <div class="dots"></div>
+                                                <div class="dots"></div>
+                                                <div class="dots"></div>
+                                              </div>
                                               <!-- /.page_access ml-auto -->
-                                              <div class="setup-content">
+                                              <div class="setup-content" *ngIf="!loading">
                                                 <div class="row">
                                                   <div class="col-sm-12">
                                                     <div class="p-3">
@@ -26,9 +32,9 @@
                                                           <form [formGroup]="endpointForm">
                                                             <div class="form-group">
                                                               <label>Endpoint Type</label>
-                                                              <select class="form-control" formControlName="endpointType">
+                                                              <select class="form-control {{viewOnly || editMode ? 'disableddropdown':''}}" formControlName="endpointType">
                                                                 <option value="">Select Type</option>
-                                                                <option *ngFor="let data of endpointTypes" value="data">{{data}}</option>
+                                                                <option *ngFor="let data of endpointTypes" value="{{data}}">{{data}}</option>
                                                               </select>
                                                               <span *ngIf="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched"
                                                                 class="help-block">
@@ -38,7 +44,7 @@
                                                             <!-- /.form-group -->
                                                             <div class="form-group">
                                                               <label>Endpoint URL</label>
-                                                              <input type="text" class="form-control" formControlName="endpointUrl">
+                                                              <input type="text" class="form-control" formControlName="endpointUrl" [readonly]="viewOnly || editMode">
                                                               <span *ngIf="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched"
                                                               class="help-block">
                                                               <span *ngIf="endpointForm.get('endpointUrl').errors['required']">Endpoint Url is required</span>
@@ -91,12 +97,12 @@
                                                                                   </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                  <tr *ngFor = "let tabledata of currentTableContent | filter:searchData">
-                                                                                    <td>{{tabledata.policyName}}</td>
-                                                                                    <td>{{tabledata.status}}</td>
-                                                                                    <td>
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                                                                  <tr class="policyname" *ngFor = "let tabledata of currentTableContent | filter:searchData; let i = index">
+                                                                                    <td (click)="policyView(tabledata.policyName)" class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">{{tabledata.policyName}}</td>
+                                                                                    <td (click)="policyView(tabledata.policyName)" class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">{{tabledata.status}}</td>
+                                                                                    <td class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">
+                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editPolicy(tabledata.policyName)"><i class="fas fa-pencil-alt"></i></a>
+                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete" (click)="deletePolicy(tabledata.policyName,i)"><i class="fas fa-trash-alt"></i></a>
                                                                                       </td>
                                                                                   </tr>
                                                                                 </tbody>
@@ -107,10 +113,11 @@
                                                                               <div class="row">
                                                                                 <div class="form-group col-7">
                                                                                   <label>Name</label>
-                                                                                  <input type="text" class="form-control" formControlName="name">
+                                                                                  <input type="text" class="form-control" formControlName="name" [readonly]="viewOnly || editMode">
                                                                                   <span *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
                                                                                     class="help-block">
                                                                                     <span *ngIf="policyForm.get('name').errors['required']">Name is required</span>
+                                                                                    <span *ngIf="policyForm.get('name').errors['containSpace']">Space is not allowed in Policy Name</span>
                                                                                     <span *ngIf="policyForm.get('name').errors['policyExists']">Policy already
                                                                                       exists with same name. Please choose a unique policy name</span>
                                                                                   </span>
@@ -118,19 +125,19 @@
                                                                                 <div class="form-group col-5 statuselement">
                                                                                   <div class="custom-control custom-checkbox">
                                                                                   <input type="checkbox" class="custom-control-input" formControlName="status" id="status">
-                                                                                  <label class="custom-control-label"
+                                                                                  <label class="custom-control-label {{viewOnly ? 'disabledcheckbox':''}}"
                                                                                     for="status">Active</label>
                                                                                 </div>
                                                                                 </div>
                                                                                 <!-- /.form-group -->
                                                                                 <div class="form-group col-7">
                                                                                   <label>Description</label>
-                                                                                  <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                                                                                  <textarea class="form-control" rows="3" formControlName="description" [readonly]="viewOnly"></textarea>
                                                                                 </div>
                                                                                 <!-- /.form-group -->
                                                                                 <div class="form-group col-12">
                                                                                   <label>Policy Details</label>
-                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="rego"></textarea>
+                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="rego" [readonly]="viewOnly"></textarea>
                                                                                   <span *ngIf="policyForm.get('rego').invalid && policyForm.get('rego').touched"
                                                                                     class="help-block">
                                                                                     Policy Details is required
@@ -150,8 +157,8 @@
                                                     </div>
                                                     <div class="p-3 bottom-strp-cover gray-strip text-right">
                                                         <button class="btn btn-default">Cancel</button>
-                                                        <button class="btn btn-default ml-2" (click)="loadFileContent()">Load</button> 
-                                                        <button class="btn btn-primary ml-2 {{!allowSubmit ? 'sw-btn-next':''}}" [disabled]="!allowSubmit" (click)="submitForm()">Save & Finish</button>
+                                                        <button class="btn btn-default ml-2 {{viewOnly ? 'sw-btn-next':''}}" (click)="loadFileContent()" [disabled]="viewOnly">Load</button> 
+                                                        <button class="btn btn-primary ml-2 {{viewOnly ? 'sw-btn-next':''}}" [disabled]="viewOnly" (click)="submitForm()">Save & Finish</button>
                                                       </div>
                                                   </div>
                                                   <!-- /.col-sm-9 -->
