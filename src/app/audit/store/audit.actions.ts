@@ -17,3 +17,6 @@ export const fetchlastSuccessfulDeployments = createAction('[Audit] FetchLastSuc
 //Below actions related to filters
 export const postFilterData = createAction('[Audit] PostFilterData', props<{filter:any,relatedApi:string}>());
 export const loadDataAfterClearFilter = createAction('[Audit] LoadDataAfterClearFilter', props<{relatedApi:string}>());
+export const saveFilterCall = createAction('[Audit] SaveFilterCall', props<{saveFilterData:any,relatedApi:string}>());
+export const savedFilterSuccessfully = createAction('[Audit] SavedFilterSuccessfully');
+

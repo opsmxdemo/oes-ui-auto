@@ -24,7 +24,7 @@ export class SharedService {
 
   //Below function is use to validate filter name exist or not through api.i.e, ApplicationComponent
   validateFiltersName(name: string, type: string) {
-    return this.httpClient.get(environment.samlUrl + 'oes/appOnboarding/nameCheck/' + name);
+    return this.httpClient.get(environment.samlUrl + 'oes/audit/filter/nameCheck/' + name);
   }
 
    //Below function is use to validate policy name exist or not through api.i.e, policyManagementComponent

@@ -60,6 +60,7 @@ export class AuditComponent implements OnInit{
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
   relatedApi: string = 'pipelinesModified';                                            // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
+  saveFilterTab: string = 'pipelineconfigsave'                                         // It is use to call appropriate API during save filter.
  
 
   constructor(public store: Store<fromApp.AppState>,
@@ -153,12 +154,14 @@ export class AuditComponent implements OnInit{
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
             this.relatedApi = 'allDeployments';
+            this.saveFilterTab = 'pipelinesave';
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
             this.pipelineCountName = 'All Pipelines';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
             this.relatedApi = 'pipelinesModified';
+            this.saveFilterTab = 'pipelineconfigsave';
             break;
           // case 'lastSuccessfulDeployment':
           //   this.currentTabData = responseData.lastSuccessfulDeploymentData;
@@ -329,6 +332,7 @@ export class AuditComponent implements OnInit{
       
       if(savefilterObj['filters'].length > 0){
         console.log('savefilter',JSON.stringify(savefilterObj) );
+        this.store.dispatch(AuditActions.saveFilterCall({saveFilterData:savefilterObj,relatedApi:this.saveFilterTab}));
       }else{
         Swal.fire({
           icon: 'error',
