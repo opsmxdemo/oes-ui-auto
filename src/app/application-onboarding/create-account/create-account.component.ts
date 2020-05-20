@@ -52,9 +52,8 @@ export class CreateAccountComponent implements OnInit {
         }
       }
     )
-    
-  console.log(this.sharedService.getUserData());
-    
+
+
     this.createAccountForm.patchValue({
       name: this.sharedService.getUserData().name,
       accountType: this.sharedService.getUserData().accountType,
@@ -90,14 +89,10 @@ export class CreateAccountComponent implements OnInit {
   //Below function is use to submit whole form and send request to backend
 
   submitForm(data){
-    debugger
-    console.log(this.sharedService.getUserData());
-    console.log("Submitted Data ** ",data.namespaces);
     this.namespacesList = data.namespaces.split(",");
     this.readList = data.read.split(",");
     this.writeList = data.write.split(",");
     this.executeList = data.execute.split(",");
-    console.log(this.namespacesList);
     
     this.postDataForm = {
       name : data.name,
@@ -107,15 +102,9 @@ export class CreateAccountComponent implements OnInit {
       write : this.writeList,
       execute : this.executeList
       }
-      console.log('valueform',this.postDataForm);
-      
-
+     
     const formData = new FormData();
-    // formData.append('data',JSON.stringify(this.postDataForm));
-   // formData.append('files', data.fileSource, 'kubeconfig');
-    //formData.append('data',this.myForm.get('name').value);
-    formData.append('file', this.fileContent);
-    console.log('formdata',formData);
+    formData.append('files', this.fileContent,'kubeconfig');
     
    this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
  
@@ -125,6 +114,7 @@ export class CreateAccountComponent implements OnInit {
 
   // Below function is use to redirect to parent page after click on cancel btn
   cancelForm(){
+    this.createAccountForm.reset();
     this.router.navigate([this.parentRedirection]);
   }
 

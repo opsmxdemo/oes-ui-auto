@@ -36,8 +36,6 @@ export class DynamicAccountsComponent implements OnInit {
      // fetching data from state
      this.store.select('appOnboarding').subscribe(
       (response) => {
-       //this.accountListData = response.accountList;
-       console.log("account",this.accountListData);
        if (response.accountList !== null) {
         this.accountListData = response.accountList;
         this.accountListLength = this.accountListData.length;
@@ -48,12 +46,15 @@ export class DynamicAccountsComponent implements OnInit {
       }
       },
       (error) => {
-        console.log("erroeUI",error);
-        //alert(error);
-
+        this.notifications.showError('Error',error);
       }
     );
   }
+
+   // Below function is used if user want to refresh list data
+   refreshList(){
+    this.store.dispatch(OnboardingActions.loadAccountList());
+  } 
 
   //Below function is execute on search
   onSearch(){
