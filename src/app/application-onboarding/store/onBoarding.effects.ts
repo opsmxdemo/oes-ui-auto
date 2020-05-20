@@ -182,6 +182,19 @@ export class ApplicationOnBoardingEffect {
         ), { dispatch: false }
     )
 
+     //Below effect is use to redirect to application dashboard page after successfull submission
+     accountsRedirect = createEffect(() =>
+     this.actions$.pipe(
+         ofType(OnboardingAction.accountDataSaved),
+         withLatestFrom(this.store.select('appOnboarding')),
+         tap(([actiondata,appOnboardingState]) => {
+             this.toastr.showSuccess('Data saved successfully !!','SUCCESS')
+             //this.store.dispatch(OnboardingAction.loadAccountList());
+             this.router.navigate([appOnboardingState.accountParentPage]);
+         })
+     ), { dispatch: false }
+ )
+
     // Below effect is use for saved data in create account phase
     onsavedCreateAccountData = createEffect(() =>
         this.actions$.pipe(
@@ -189,9 +202,10 @@ export class ApplicationOnBoardingEffect {
             switchMap(action => {
                 const params = new HttpParams()
                 .set('postData', action.postData)
-                return this.http.post<CreateAccount>('http://137.117.94.95:8085/oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
+                return this.http.post<CreateAccount>(environment.oesUrl+ 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
                     map(resdata => {
-                        return OnboardingAction.dataSaved();
+                       // this.router.navigate([]);
+                        return OnboardingAction.accountDataSaved();
                     }),
                     catchError(errorRes => {
                       //  this.toastr.showError('Server Error !!','ERROR')
