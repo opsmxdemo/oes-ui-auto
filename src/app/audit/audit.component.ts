@@ -60,6 +60,7 @@ export class AuditComponent implements OnInit{
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
   relatedApi: string = 'pipelinesModified';                                            // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
+  saveFilterTab: string = 'pipelineconfigsave'                                         // It is use to call appropriate API during save filter.
  
 
   constructor(public store: Store<fromApp.AppState>,
@@ -153,12 +154,14 @@ export class AuditComponent implements OnInit{
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
             this.relatedApi = 'allDeployments';
+            this.saveFilterTab = 'pipelinesave';
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
             this.pipelineCountName = 'All Pipelines';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
             this.relatedApi = 'pipelinesModified';
+            this.saveFilterTab = 'pipelineconfigsave';
             break;
           // case 'lastSuccessfulDeployment':
           //   this.currentTabData = responseData.lastSuccessfulDeploymentData;
@@ -184,7 +187,6 @@ export class AuditComponent implements OnInit{
           this.currentTableHeader = this.currentTabData['headers'];	
           this.createHeaders(this.currentTabData['headerOrder']);	
           this.showHideColumn();
-          this.advanSearchMode = false;
           // resetting filter object when tab changes
           if(this.currentTabData['filters'].length > 0){
             this.filtersData = this.currentTabData['filters'];
@@ -196,6 +198,7 @@ export class AuditComponent implements OnInit{
       }
     )
     this.renderPage();
+    this.advanSearchMode = false;
   }
 
   // Below function is use to apply appropriate class on basics of status
@@ -312,14 +315,24 @@ export class AuditComponent implements OnInit{
   saveFilter(event){
     if(this.saveFilterForm.valid){
       let savefilterObj = {};
+      let mainObj = [];
+      //removing items property fron filters obj
+      this.filtersData.forEach((el,index) =>{
+        mainObj[index] = {
+          name:el.name,
+          selectedItem:el.selectedItem
+        }
+      })
       savefilterObj['name'] = this.saveFilterForm.value.filterName;
-      savefilterObj['filters'] = this.filtersData.filter(el => {
+      savefilterObj['filters'] = mainObj.filter(el => {
         if(el.selectedItem.length > 0){
           return el;
         }
       })
+      
       if(savefilterObj['filters'].length > 0){
         console.log('savefilter',JSON.stringify(savefilterObj) );
+        this.store.dispatch(AuditActions.saveFilterCall({saveFilterData:savefilterObj,relatedApi:this.saveFilterTab}));
       }else{
         Swal.fire({
           icon: 'error',

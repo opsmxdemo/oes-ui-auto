@@ -191,6 +191,25 @@ export class AuditEffect {
         )
     )
 
+    // Below effect is use to save customize filter in database
+    saveFilterCall = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.saveFilterCall),
+            switchMap((action) => {
+                return this.http.post(environment.samlUrl + 'oes/audit/filter/'+action.relatedApi,action.saveFilterData).pipe(
+                    map(resdata => {
+                        this.toastr.showSuccess(action.saveFilterData['name']+' Successfully Saved','SUCCESS')
+                       return AuditAction.savedFilterSuccessfully();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
 
 
 }

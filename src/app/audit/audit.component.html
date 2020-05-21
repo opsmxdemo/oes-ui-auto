@@ -212,6 +212,7 @@
                                   <input type="text" class="form-control" formControlName="filterName"/>
                                   <span *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched" class="help-block">
                                     <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is required</span>
+                                    <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter already exists with same name. Please choose a unique filter name</span>
                                   </span>
                                 </div>
                                 <div class="col-auto">
