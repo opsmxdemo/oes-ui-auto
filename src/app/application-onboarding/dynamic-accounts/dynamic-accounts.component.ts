@@ -144,8 +144,10 @@ export class DynamicAccountsComponent implements OnInit {
   }
 
   // Below function is use to edit existing account
-  editAccount(data: any) {
+  editAccount(data: any,type: string) {
+    //this.sharedAccountData.setUserData(data.name === 'kubernetes')
     this.sharedAccountData.setUserData(data);
+    this.sharedAccountData.setAccountType(type);
     this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
   }
 
