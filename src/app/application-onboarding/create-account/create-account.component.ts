@@ -53,16 +53,18 @@ export class CreateAccountComponent implements OnInit {
       }
     )
 
-
-    this.createAccountForm.patchValue({
-      name: this.sharedService.getUserData().name,
-      accountType: this.sharedService.getUserData().accountType,
-      namespaces: this.sharedService.getUserData().namespaces,
-      read: this.sharedService.getUserData().permissions.READ,
-      write: this.sharedService.getUserData().permissions.WRITE,
-      execute: this.sharedService.getUserData().permissions.EXECUTE,
-      //file: this.sharedService.getUserData().kubeconfigFile,
-    });
+    if(this.sharedService.getAccountType() === 'editAcc'){
+      this.createAccountForm.patchValue({
+        name: this.sharedService.getUserData().name,
+        accountType: 'Kubernetes',
+        namespaces: this.sharedService.getUserData().namespaces,
+        read: this.sharedService.getUserData().permissions.READ,
+        write: this.sharedService.getUserData().permissions.WRITE,
+        execute: this.sharedService.getUserData().permissions.EXECUTE,
+        //file: this.sharedService.getUserData().kubeconfigFile,
+      });
+    }
+   
   }
 
   get accountform(){
@@ -89,10 +91,18 @@ export class CreateAccountComponent implements OnInit {
   //Below function is use to submit whole form and send request to backend
 
   submitForm(data){
+   if(this.sharedService.getAccountType() === 'editAcc'){
+    this.namespacesList = data.namespaces;
+    this.readList = data.read;
+    this.writeList = data.write;
+    this.executeList = data.execute;
+   }else{
     this.namespacesList = data.namespaces.split(",");
     this.readList = data.read.split(",");
     this.writeList = data.write.split(",");
     this.executeList = data.execute.split(",");
+   }
+  
     
     this.postDataForm = {
       name : data.name,
@@ -105,9 +115,12 @@ export class CreateAccountComponent implements OnInit {
      
     const formData = new FormData();
     formData.append('files', this.fileContent,'kubeconfig');
-    
-   this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
- 
+
+    if(this.sharedService.getAccountType() === 'editAcc'){
+      this.store.dispatch(OnboardingActions.updateAccount({accountData: formData,postData: JSON.stringify(this.postDataForm)}));
+    }else{
+     this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
+    }
   }
 
 
