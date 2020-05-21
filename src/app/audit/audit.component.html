@@ -25,14 +25,12 @@
             <div class="card-heading mb-form-db">
               <div class="form-inline">
                 <ng-container *ngIf = "advanSearchMode">
-                  <!-- <div class="form-group ml-sm-2 mb-2">
-                    <select class="form-control" style="width: 150px;">
-                      <option>Select saved filter</option>
-                      <option>Failed-pipelines</option>
-                      <option>passed-pipelines</option>
-                      <option>Successful pipelines by Sumeet Kulkarni</option>
+                  <div class="form-group ml-sm-2 mb-2">
+                    <select class="form-control"  style="width: 150px;" [(ngModel)]="selectedSaveFilter" (change)="onSelectSavedFilter()">
+                      <option value="">Select saved filter</option>
+                      <option *ngFor="let filter of savedFilters" value="{{filter}}">{{filter}}</option>
                     </select>
-                  </div> -->
+                  </div>
                   <div class="form-group ml-sm-2 mb-2">
                     <div class="dropdown">
                       <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
@@ -230,14 +228,8 @@
                           <i class="fa fa-ellipsis-h"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-                          <li class="dropdown-item d-flex align-items-center">Failed Pipelines <button
-                              class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
-                          <li class="dropdown-item d-flex align-items-center">Successful Pipelines <button
-                              class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
-                          <li class="dropdown-item d-flex align-items-center">P/L saved by John Doe <button
-                              class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
-                          <li class="dropdown-item d-flex align-items-center">Terminated Pipelines <button
-                              class="btn text-muted ml-auto p-0 pl-2"><i class="fas fa-trash-alt"></i></button></li>
+                          <li class="dropdown-item d-flex align-items-center" *ngFor="let filter of savedFilters">{{filter}}<button
+                              class="btn text-muted ml-auto p-0 pl-2"><i (click)="deleteSavedFilter(filter)" class="fas fa-trash-alt"></i></button></li>
                         </ul>
                       </div>
                     </div>

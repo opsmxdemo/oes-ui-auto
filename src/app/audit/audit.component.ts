@@ -58,9 +58,11 @@ export class AuditComponent implements OnInit{
   filtersData: any;                                                                    // It is use to store filter data of current table.
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
-  relatedApi: string = 'pipelinesModified';                                            // It is use to store value of which api should call on click of apply filter.
+  relatedApi: string = 'pipelineconfig';                                               // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
-  saveFilterTab: string = 'pipelineconfigsave'                                         // It is use to call appropriate API during save filter.
+  saveFilterTab: string = 'pipelineconfig';                                            // It is use to call appropriate API during save filter.
+  savedFilters: any = ['rp1','rp2','rp3'];                                                            // It is use to store value of saved filters exist in particular table.
+  selectedSaveFilter:string = '';                                                      // It is use to store selected filter value in it.
  
 
   constructor(public store: Store<fromApp.AppState>,
@@ -97,7 +99,7 @@ export class AuditComponent implements OnInit{
         }
         if (auditData.allPipelineData !== null) {
           switch(this.relatedApi){
-            case 'pipelinesModified':
+            case 'pipelineconfig':
               this.tableData = auditData.allPipelineData;
               break;
             case 'allDeployments':
@@ -108,8 +110,14 @@ export class AuditComponent implements OnInit{
           this.currentTableHeader = this.tableData['headers'];
           this.filtersData = this.tableData['filters'];
           this.currentTabData = this.tableData;
-          this.relatedApi = 'pipelinesModified';
+          this.relatedApi = 'pipelineconfig';
           this.createHeaders(this.tableData['headerOrder']);
+          this.savedFilters = this.tableData['savedFilters']['filters']
+          if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
+            this.selectedSaveFilter = this.tableData['savedFilters']['selectedFilter'];
+          }else{
+            this.selectedSaveFilter='';
+          }
           this.showHideColumn();
           this.selectedFilter();
           this.renderPage();
@@ -154,14 +162,14 @@ export class AuditComponent implements OnInit{
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
             this.relatedApi = 'allDeployments';
-            this.saveFilterTab = 'pipelinesave';
+            this.saveFilterTab = 'pipeline';
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
             this.pipelineCountName = 'All Pipelines';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
-            this.relatedApi = 'pipelinesModified';
-            this.saveFilterTab = 'pipelineconfigsave';
+            this.relatedApi = 'pipelineconfig';
+            this.saveFilterTab = 'pipelineconfig';
             break;
           // case 'lastSuccessfulDeployment':
           //   this.currentTabData = responseData.lastSuccessfulDeploymentData;
@@ -194,6 +202,13 @@ export class AuditComponent implements OnInit{
           }else{
             this.filtersData = [];
           }
+          // resetting saved filters data when tab changes
+          this.savedFilters = this.currentTabData['savedFilters']['filters'];
+          if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
+            this.selectedSaveFilter = this.currentTabData['savedFilters']['selectedFilter'];
+          }else{
+            this.selectedSaveFilter='';
+          }
         }
       }
     )
@@ -214,7 +229,12 @@ export class AuditComponent implements OnInit{
 
   //################### Filter logic start ################################
 
-  //Below function is custom valiadator which is use to validate filter name through API call, if name is not exist then it allows us to proceed.
+  // Below function is execute once user selected saved filter
+  onSelectSavedFilter(){
+    this.store.dispatch(AuditActions.selectedFilterCall({filtername:this.selectedSaveFilter,relatedApi:this.saveFilterTab}))
+  }
+
+  // Below function is custom valiadator which is use to validate filter name through API call, if name is not exist then it allows us to proceed.
   validateFilterName(control: FormControl): Promise<any> | Observable<any> {
     const promise = new Promise<any>((resolve, reject) => {
       this.sharedService.validateFiltersName(control.value,this.relatedApi).subscribe(
@@ -331,7 +351,6 @@ export class AuditComponent implements OnInit{
       })
       
       if(savefilterObj['filters'].length > 0){
-        console.log('savefilter',JSON.stringify(savefilterObj) );
         this.store.dispatch(AuditActions.saveFilterCall({saveFilterData:savefilterObj,relatedApi:this.saveFilterTab}));
       }else{
         Swal.fire({
@@ -347,6 +366,11 @@ export class AuditComponent implements OnInit{
       this.saveFilterForm.markAllAsTouched();
       event.stopPropagation();
     }
+  }
+
+  // Below fonction is use to delete saved filter
+  deleteSavedFilter(filter){
+    this.store.dispatch(AuditActions.deleteSavedFilter({filtername:filter}))
   }
 
   // Below function is execute on search

@@ -5,6 +5,7 @@ import * as OnboardingActions from '../store/onBoarding.actions';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-appliaction-list',
@@ -145,7 +146,20 @@ export class AppliactionListComponent implements OnInit {
   //Below function is use to delete application fron existing list
   appDelete(name,index){
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(OnboardingActions.appDelete({applicationName:name,index:index}));
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        this.store.dispatch(OnboardingActions.appDelete({applicationName:name,index:index}));
+      }
+    })
+    
   }
 
   // Below function is use for edit application

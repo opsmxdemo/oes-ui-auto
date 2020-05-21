@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import * as PolicyActions from './store/policyManagement.actions'
 import * as fromApp from '../store/app.reducer';
 import { Store } from '@ngrx/store';
@@ -73,6 +73,18 @@ export class PolicyManagementComponent implements OnInit {
         }else{
           // Defining Form
           this.defineForms();
+        }
+        if(resData.errorMode && resData.editPolicyData !== null){
+          this.endpointForm.setValue({
+            endpointUrl: this.editPolicyData.endpoint,
+            endpointType: this.endpointTypes
+          });
+          this.policyForm.setValue({
+            name: this.editPolicyData.name,
+            description: this.editPolicyData.description,
+            status: this.editPolicyData.status,
+            rego: this.editPolicyData.rego
+          })
         }
       }
     )
@@ -147,18 +159,29 @@ export class PolicyManagementComponent implements OnInit {
   // Below function is use to policy delete
   deletePolicy(policyname,index){
     $("[data-toggle='tooltip']").tooltip('hide');
-    if(this.editPolicyData.name !== policyname){
-      this.store.dispatch(PolicyActions.deletePolicy({policydatatoshow:this.editPolicyData, policyName:policyname}))
-    }else{
-      if(index+1 < this.currentTableContent.length){
-        this.store.dispatch(PolicyActions.editPolicy({policyName:this.currentTableContent[index].name,editMode:false,readonlyMode:true}));
-      }else{
-        this.store.dispatch(PolicyActions.editPolicy({policyName:this.currentTableContent[index-1].name,editMode:false,readonlyMode:true}));
-      }
-      this.store.dispatch(PolicyActions.deletePolicy({policydatatoshow:this.editPolicyData, policyName:policyname}))
-    }
 
-    
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        if(this.editPolicyData.name !== policyname){
+          this.store.dispatch(PolicyActions.deletePolicy({policyName:policyname}))
+        }else{
+          if(index+1 < this.currentTableContent.length){
+            this.store.dispatch(PolicyActions.editPolicy({policyName:this.currentTableContent[index+1].policyName,editMode:false,readonlyMode:true}));
+          }else{
+            this.store.dispatch(PolicyActions.editPolicy({policyName:this.currentTableContent[index-1].policyName,editMode:false,readonlyMode:true}));
+          }
+          this.store.dispatch(PolicyActions.deletePolicy({policyName:policyname}))
+        }
+      }
+    })
   }
 
   // Below function is use to load file content
