@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError, take, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map, tap, catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as PolicyAction from './policyManagement.actions';
@@ -11,7 +11,6 @@ import { of } from 'rxjs';
 import { environment } from '../../../environments/environment.prod'
 import { NotificationService } from 'src/app/services/notification.service';
 import { PolicyTable } from 'src/app/models/policyManagement/policyTable.model';
-import { PolicyManagement } from 'src/app/models/policyManagement/policyManagement.model';
 
 
 //below function is use to fetch error and return appropriate comments

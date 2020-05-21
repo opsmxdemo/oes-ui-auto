@@ -61,7 +61,7 @@ export class AuditComponent implements OnInit{
   relatedApi: string = 'pipelineconfig';                                               // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
   saveFilterTab: string = 'pipelineconfig';                                            // It is use to call appropriate API during save filter.
-  savedFilters: any = ['rp1','rp2','rp3'];                                                            // It is use to store value of saved filters exist in particular table.
+  savedFilters: any = null;                                                            // It is use to store value of saved filters exist in particular table.
   selectedSaveFilter:string = '';                                                      // It is use to store selected filter value in it.
  
 
