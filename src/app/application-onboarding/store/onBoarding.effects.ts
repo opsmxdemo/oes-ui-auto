@@ -217,21 +217,43 @@ export class ApplicationOnBoardingEffect {
         )
     )
 
-    // Below effect is use for fetch data related to Accounts List page
-    fetchAccountListData = createEffect(() =>
+    // Below effect is use for update account 
+    onsavedUpdateAccountData = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadAccountList),
-            switchMap(() => {
-                return this.http.get<any>(environment.oesUrl + 'oes/accountsConfig/getDynamicAccounts').pipe(
+            ofType(OnboardingAction.updateAccount),
+            switchMap(action => {
+                const params = new HttpParams()
+                .set('postData', action.postData)
+                return this.http.put<CreateAccount>(environment.oesUrl+ 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchAccountList({ Accountlist: resdata['accounts'] });
+                       // this.router.navigate([]);
+                        return OnboardingAction.accountDataSaved();
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                      //  this.toastr.showError('Server Error !!','ERROR')
+                        this.toastr.showError('Error', errorRes);
                         return handleError(errorRes);
                     })
                 );
             })
+        )
+    )
+
+     // Below effect is use for fetch data related to Accounts List page
+     fetchAccountListData = createEffect(() =>
+     this.actions$.pipe(
+         ofType(OnboardingAction.loadAccountList),
+         switchMap(() => {
+             return this.http.get<any>(environment.oesUrl+'oes/accountsConfig/getDynamicAccounts').pipe(
+                 map(resdata => {
+                     return OnboardingAction.fetchAccountList({Accountlist:resdata['accounts']});
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('Server Error !!','ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
         )
     )
 
