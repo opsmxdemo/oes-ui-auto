@@ -204,7 +204,7 @@ export class AuditComponent implements OnInit{
           }
           // resetting saved filters data when tab changes
           this.savedFilters = this.currentTabData['savedFilters']['filters'];
-          if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
+          if(typeof (this.currentTabData['savedFilters']['selectedFilter']) === 'string'){
             this.selectedSaveFilter = this.currentTabData['savedFilters']['selectedFilter'];
           }else{
             this.selectedSaveFilter='';
