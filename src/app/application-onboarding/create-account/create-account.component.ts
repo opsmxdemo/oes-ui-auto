@@ -117,7 +117,7 @@ export class CreateAccountComponent implements OnInit {
     formData.append('files', this.fileContent,'kubeconfig');
 
     if(this.sharedService.getAccountType() === 'editAcc'){
-      this.store.dispatch(OnboardingActions.updateAccount({accountData: formData,postData: JSON.stringify(this.postDataForm)}));
+      this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData: JSON.stringify(this.postDataForm)}));
     }else{
      this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
     }
