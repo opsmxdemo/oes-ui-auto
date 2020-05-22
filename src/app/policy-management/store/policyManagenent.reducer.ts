@@ -12,6 +12,7 @@ export interface State {
     editMode:boolean;
     readonlyMode:boolean;
     loading:boolean;
+    errorMode:boolean;
 }
 
 export const initialState: State = {
@@ -22,7 +23,8 @@ export const initialState: State = {
     editPolicyData: null,
     editMode: false,
     readonlyMode: true,
-    loading:false
+    loading:false,
+    errorMode:false
 }
 
 export function PolicyReducer(
@@ -56,9 +58,10 @@ export function PolicyReducer(
             (state,action) => ({
                 ...state,
                 errorMessage: null,
-                readonlyMode:true,
-                editPolicyData:action.policyData
-                
+                readonlyMode:action.readonly,
+                editPolicyData:action.policyData,
+                editMode:action.editMode,
+                errorMode:action.errorMode
             })
         ),
         on(PolicyActions.editPolicy,
@@ -66,7 +69,8 @@ export function PolicyReducer(
                 ...state,
                 editMode: action.editMode,
                 readonlyMode: action.readonlyMode,
-                loading:true
+                loading:true,
+                errorMode:false
             })
         ),
         on(PolicyActions.fetchedPolicyData,
@@ -80,7 +84,8 @@ export function PolicyReducer(
             (state,action) => ({
                 ...state,
                 readonlyMode:false,
-                editMode:false
+                editMode:false,
+                errorMode:false
             })
         ),
         on(PolicyActions.savePolicy,

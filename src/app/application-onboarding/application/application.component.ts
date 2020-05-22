@@ -378,7 +378,6 @@ export class ApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    
     // Execute when user editing application data ########### EDIT APPLICATION MODE ############
     if (this.editMode) {
       const existServiceLength = this.editServiceForm['services'].length;
@@ -409,6 +408,11 @@ export class ApplicationComponent implements OnInit {
         this.editServiceForm['services'].forEach((ServiceArr, i) => {
           if(ServiceArr.status === 'Delete'){
             delete_counter++;
+            ServiceArr.pipelines.forEach((PipelineArr, j) => {
+              if (typeof (PipelineArr.cloudAccount) === 'string') {
+                PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
+              }
+            })
           }else{
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
               if (typeof (PipelineArr.cloudAccount) === 'string') {

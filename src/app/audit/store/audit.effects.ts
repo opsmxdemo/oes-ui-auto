@@ -89,7 +89,7 @@ export class AuditEffect {
             switchMap(() => {
                 const params = new HttpParams()
                     .set('isTreeView', 'false');
-                return this.http.get(environment.samlUrl + 'oes/audit/pipelinesModified', { params: params }).pipe(
+                return this.http.get(environment.samlUrl + 'oes/audit/pipelineconfig', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
                     }),
@@ -150,7 +150,7 @@ export class AuditEffect {
                 return this.http.post(environment.samlUrl + 'oes/audit/'+action.relatedApi+'?isLatest=false&isTreeView=false',action.filter).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
-                            case 'pipelinesModified':
+                            case 'pipelineconfig':
                                 return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
                             case 'allDeployments':
                                 return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
@@ -176,7 +176,7 @@ export class AuditEffect {
                 return this.http.get(environment.samlUrl + 'oes/audit/'+action.relatedApi, { params: params }).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
-                            case 'pipelinesModified':
+                            case 'pipelineconfig':
                                 return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
                             case 'allDeployments':
                                 return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
@@ -196,10 +196,59 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.saveFilterCall),
             switchMap((action) => {
-                return this.http.post(environment.samlUrl + 'oes/audit/filter/'+action.relatedApi,action.saveFilterData).pipe(
+                return this.http.post(environment.samlUrl + 'oes/audit/filter/'+action.relatedApi+'save',action.saveFilterData).pipe(
                     map(resdata => {
-                        this.toastr.showSuccess(action.saveFilterData['name']+' Successfully Saved','SUCCESS')
+                        this.toastr.showSuccess(action.saveFilterData['name']+' Successfully Saved','SUCCESS');
+                        switch(action.relatedApi){
+                            case 'pipelineconfig':
+                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
+                            case 'pipeline':
+                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
+                        }
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use to save customize filter in database
+    deleteSavedFilter = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.deleteSavedFilter),
+            switchMap((action) => {
+                return this.http.delete(environment.samlUrl + 'oes/audit/filter/delete/'+action.filtername).pipe(
+                    map(resdata => {
+                        if(resdata['status']== 200){
+                            this.toastr.showSuccess(resdata['response'].message,'SUCCESS')
+                        }
                        return AuditAction.savedFilterSuccessfully();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use to fetched data of savedFilter from database
+    fetchedSelectedSavedFilter = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.selectedFilterCall),
+            switchMap((action) => {
+                return this.http.get(environment.samlUrl + 'oes/audit/'+action.relatedApi+'/'+action.filtername).pipe(
+                    map(resdata => {
+                        switch(action.relatedApi){
+                            case 'pipelineconfig':
+                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
+                            case 'pipeline':
+                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
+                        }
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
