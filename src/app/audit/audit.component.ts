@@ -250,6 +250,12 @@ export class AuditComponent implements OnInit{
     return promise;
   }
 
+  // Below function is use to reset all applied filters
+  resetFilters(){
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.store.dispatch(AuditActions.loadDataAfterClearFilter({relatedApi:this.relatedApi}));
+  }
+
   // Below function is use to toggle between advanced and normal search mode
   advancedModeToggle(){
     $("[data-toggle='tooltip']").tooltip('hide');
@@ -370,7 +376,12 @@ export class AuditComponent implements OnInit{
 
   // Below fonction is use to delete saved filter
   deleteSavedFilter(filter){
-    this.store.dispatch(AuditActions.deleteSavedFilter({filtername:filter}))
+    if(this.selectedSaveFilter === filter || this.selectedSaveFilter === ''){
+      this.store.dispatch(AuditActions.deleteSavedFilter({filtername:filter,isSame:true,appliedFilter:filter,relatedApi:this.relatedApi}));
+    }else{
+      this.store.dispatch(AuditActions.deleteSavedFilter({filtername:filter,isSame:false,appliedFilter:this.selectedSaveFilter,relatedApi:this.relatedApi}))
+    }
+    
   }
 
   // Below function is execute on search

@@ -11,7 +11,7 @@ import { of } from 'rxjs';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
-import { environment } from '../../../environments/environment.prod'
+import { environment } from '../../../environments/environment'
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { CreateAccount } from 'src/app/models/applicationOnboarding/createAccountModel/createAccount.model';
@@ -52,7 +52,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             switchMap(() => {
-                return this.http.get<Pipeline>(environment.samlUrl + 'oes/appOnboarding/pipelineTemplates').pipe(
+                return this.http.get<Pipeline>(environment.endPointUrl + 'oes/appOnboarding/pipelineTemplates').pipe(
                     map(resdata => {
                         return OnboardingAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
@@ -71,7 +71,7 @@ export class ApplicationOnBoardingEffect {
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             switchMap(() => {
 
-                return this.http.get<CloudAccount>(environment.samlUrl + 'oes/appOnboarding/cloudAccounts').pipe(
+                return this.http.get<CloudAccount>(environment.endPointUrl + 'oes/appOnboarding/cloudAccounts').pipe(
                     map(resdata => {
                         return OnboardingAction.fetchCloudAccount({ cloudAccount: resdata['data'] })
                     }),
@@ -90,7 +90,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(environment.samlUrl + 'oes/appOnboarding/editApplication?applicationName=' + action.applicationName).pipe(
+                return this.http.get<CreateApplication>(environment.endPointUrl + 'oes/appOnboarding/editApplication?applicationName=' + action.applicationName).pipe(
                     map(resdata => {
 
                         return OnboardingAction.fetchAppData({ appData: resdata })
@@ -109,7 +109,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.createApplication),
             switchMap(action => {
-                return this.http.post<CreateApplication>(environment.samlUrl + 'oes/appOnboarding/createApplication', action.appData).pipe(
+                return this.http.post<CreateApplication>(environment.endPointUrl + 'oes/appOnboarding/createApplication', action.appData).pipe(
                     map(resdata => {
                         return OnboardingAction.dataSaved();
                     }),
@@ -127,7 +127,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.updateApplication),
             switchMap(action => {
-                return this.http.put<CreateApplication>(environment.samlUrl + 'oes/appOnboarding/updateApplication', action.appData).pipe(
+                return this.http.put<CreateApplication>(environment.endPointUrl + 'oes/appOnboarding/updateApplication', action.appData).pipe(
                     map(resdata => {
                         return OnboardingAction.dataSaved();
                     }),
@@ -146,7 +146,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.loadAppList),
             switchMap(() => {
-                return this.http.get<ApplicationList>(environment.samlUrl + 'oes/appOnboarding/applicationList').pipe(
+                return this.http.get<ApplicationList>(environment.endPointUrl + 'oes/appOnboarding/applicationList').pipe(
                     map(resdata => {
                         return OnboardingAction.fetchAppList({ Applist: resdata['data'] });
                     }),
@@ -202,7 +202,7 @@ export class ApplicationOnBoardingEffect {
             switchMap(action => {
                 const params = new HttpParams()
                     .set('postData', action.postData)
-                return this.http.post<CreateAccount>(environment.oesUrl + 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData, { params: params }).pipe(
+                return this.http.post<CreateAccount>(environment.endPointUrl + 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData, { params: params }).pipe(
                     map(resdata => {
                         // this.router.navigate([]);
                         return OnboardingAction.accountDataSaved();
@@ -224,7 +224,7 @@ export class ApplicationOnBoardingEffect {
             switchMap(action => {
                 const params = new HttpParams()
                 .set('postData', action.postData)
-                return this.http.put<CreateAccount>(environment.oesUrl+ 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
+                return this.http.put<CreateAccount>(environment.endPointUrl+ 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
                     map(resdata => {
                        // this.router.navigate([]);
                         return OnboardingAction.accountDataSaved();
@@ -244,7 +244,7 @@ export class ApplicationOnBoardingEffect {
      this.actions$.pipe(
          ofType(OnboardingAction.loadAccountList),
          switchMap(() => {
-             return this.http.get<any>(environment.oesUrl+'oes/accountsConfig/getDynamicAccounts').pipe(
+             return this.http.get<any>(environment.endPointUrl+'oes/accountsConfig/getDynamicAccounts').pipe(
                  map(resdata => {
                      return OnboardingAction.fetchAccountList({Accountlist:resdata['accounts']});
                  }),
@@ -262,7 +262,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.appDelete),
             switchMap((action) => {
-                return this.http.delete<any>(environment.samlUrl + 'oes/appOnboarding/deleteApplication/' + action.applicationName).pipe(
+                return this.http.delete<any>(environment.endPointUrl + 'oes/appOnboarding/deleteApplication/' + action.applicationName).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS')
                         return OnboardingAction.appDeletedSuccessfully({ index: action.index });
@@ -282,7 +282,7 @@ export class ApplicationOnBoardingEffect {
         this.actions$.pipe(
             ofType(OnboardingAction.deleteAccount),
             switchMap(action => {
-                return this.http.delete<any>(environment.oesUrl + 'oes/accountsConfig/dynamicAccount/' + action.accountName).pipe(
+                return this.http.delete<any>(environment.endPointUrl + 'oes/accountsConfig/dynamicAccount/' + action.accountName).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
                         // return OnboardingAction.appDeletedSuccessfully({index:action.index});

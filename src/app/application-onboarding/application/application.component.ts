@@ -385,11 +385,17 @@ export class ApplicationComponent implements OnInit {
 
       // Below logic check whether newely added service is valid or not
       this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
+        let new_ServiceCounter = 0;
         if (serviceArr.status === 'New') {
           const arrayControl = this.servicesForm.get('services') as FormArray;
           const innerarrayControl = arrayControl.at(serviceIndex)
           innerarrayControl.markAllAsTouched();
           serviceFormValidation = innerarrayControl.valid;
+          new_ServiceCounter++;
+        }else if (serviceArr.status === 'ACTIVE'){
+          if(new_ServiceCounter === 0){
+            serviceFormValidation = true;
+          }
         }
       })
       
