@@ -1,0 +1,87 @@
+<form [formGroup]="gitForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+        <div class="form-group col-5">
+            <label>End Point</label>
+            <input type="text" formControlName="endPoint" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.endPoint.errors }" />
+            <div *ngIf="submitted && g.endPoint.errors" class="invalid-feedback">
+                <div *ngIf="g.endPoint.errors.required">Endpoint is required</div>
+            </div>
+        </div>
+        <div class="form-group col-5">
+            <label>Account Name</label>
+            <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.name.errors }" />
+            <div *ngIf="submitted && g.name.errors" class="invalid-feedback">
+                <div *ngIf="g.name.errors.required">Account Name is required</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-check">
+        <input type="checkbox" formControlName="clouddriver" id="clouddriver" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && g.clouddriver.errors }" />
+        <label for="clouddriver" class="form-check-label">Set as a remote source for Spinnaker Dynamic Accounts</label>
+        <div *ngIf="submitted && g.clouddriver.errors" class="invalid-feedback">Accept remote source for Spinnaker Dynamic Accounts required</div>
+    </div>
+    <div class="form-row">
+       <div class="form-group col">
+            <!-- <label>gitType</label> -->
+            <!-- <select formControlName="gitType" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.gitType.errors }">
+                <option value=""></option>
+                <option value="Credntials">Credntials</option>
+                <option value="Token">Token</option>
+            </select> -->
+            <label for="credentialsType">Git Type</label>
+            <select formControlName="credentialsType" id="credentialsType" class="form-control" (change)="changeType($event)" [ngClass]="{ 'is-invalid': submitted && g.credentialsType.errors }">
+              <option *ngFor="let gitType of credentialsType; let i = index" [value]="credentialsType[i].type">
+                {{credentialsType[i].type}}
+              </option>
+            </select>
+          
+            <div *ngIf="submitted && g.credentialsType.errors" class="invalid-feedback">
+                <div *ngIf="g.credentialsType.errors.required">gitType is required</div>
+            </div>
+        </div> 
+    </div>
+    <div *ngIf="selectedType === 'credentials'" class="form-row">
+        <div class="form-group col">
+            <label>User Name</label>
+            <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.username.errors }" />
+            <div *ngIf="submitted && g.username.errors" class="invalid-feedback">
+                <div *ngIf="g.username.errors.required">User Name is required</div>
+            </div>
+        </div>
+        <div class="form-group col">
+            <label>Password</label>
+            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.password.errors }" />
+            <div *ngIf="submitted && g.password.errors" class="invalid-feedback">
+                <div *ngIf="g.password.errors.required">Password is required</div>
+                <div *ngIf="g.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+        </div>
+    </div>    
+    <div *ngIf="selectedType === 'token'"  class="form-row">
+        <div class="form-group col-6">
+            <label>Git Token</label>
+            <input type="text" formControlName="gitToken" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.gitToken.errors }" />
+            <div *ngIf="submitted && g.gitToken.errors" class="invalid-feedback">
+                <div *ngIf="g.gitToken.errors.required">Git Token is required</div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="form-group">
+        <label>Email</label>
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.email.errors }" />
+        <div *ngIf="submitted && g.email.errors" class="invalid-feedback">
+            <div *ngIf="g.email.errors.required">Email is required</div>
+            <div *ngIf="g.email.errors.email">Email must be a valid email address</div>
+        </div>
+    </div> -->
+   
+    <!-- <div class="text-center">
+        <button class="btn btn-primary mr-1">Register</button>
+        <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
+    </div> -->
+    <div></div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-default" type="reset" (click)="onReset()" data-dismiss="modal" aria-label="Close">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+</form>

@@ -239,6 +239,24 @@ export class ApplicationOnBoardingEffect {
         )
     )
 
+    // Below effect is use for fetch data related to Accounts List page
+    fetchDatasourcesListData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(OnboardingAction.loadDatasourceList),
+        switchMap(() => {
+            return this.http.get<any>(environment.endPointUrl+'oes/accountsConfig/getAccounts').pipe(
+                map(resdata => {
+                    return OnboardingAction.fetchDatasourceList({DatasourceList:resdata['data']});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!','ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+       )
+   )
+
      // Below effect is use for fetch data related to Accounts List page
      fetchAccountListData = createEffect(() =>
      this.actions$.pipe(

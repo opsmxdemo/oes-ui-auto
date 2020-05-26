@@ -16,6 +16,7 @@ export interface State {
     cloudAccountExist: CloudAccount;
     applicationList: ApplicationList[];
     accountList: any;
+    datasourceList: any;
     accountParentPage: string;
     accountDeleted: boolean;
 }
@@ -29,6 +30,7 @@ export const initialState: State = {
     cloudAccountExist: null,
     applicationList: null,
     accountList: null,
+    datasourceList: null,
     accountParentPage: null,
     accountDeleted: false,
 }
@@ -122,6 +124,12 @@ export function AppOnboardingReducer(
             state => ({
                 ...state,
                 editMode:false
+            })
+        ),
+        on(OnboardingAction.fetchDatasourceList,
+            (state,action) => ({
+                ...state,
+                datasourceList: action.DatasourceList,
             })
         ),
     )(onboardingState,onboardingAction);
