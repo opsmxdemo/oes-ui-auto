@@ -44,6 +44,7 @@ import { AppDynamicsFormComponent } from './application-onboarding/data-source/a
 import { AwsCloudwatchFormComponent } from './application-onboarding/data-source/aws-cloudwatch-form/aws-cloudwatch-form.component';
 import { ElasticsearchFormComponent } from './application-onboarding/data-source/elasticsearch-form/elasticsearch-form.component';
 import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
+import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { DockerFormComponent } from './application-onboarding/data-source/docker
     AppDynamicsFormComponent,
     AwsCloudwatchFormComponent,
     ElasticsearchFormComponent,
-    DockerFormComponent
+    DockerFormComponent,
+    LoadingScreenComponent
   ],
   imports: [
     BrowserModule,

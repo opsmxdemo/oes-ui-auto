@@ -99,13 +99,7 @@
               <!-- /.table-content -->
             </div>
             <div *ngIf="!tableIsEmpty && loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-              <div class="dots-container">
-                <div class="dots"></div>
-                <div class="dots"></div>
-                <div class="dots"></div>
-                <div class="dots"></div>
-                <div class="dots"></div>
-              </div>
+             <app-loading-screen></app-loading-screen>
             </div>
           </div>
         </div>
