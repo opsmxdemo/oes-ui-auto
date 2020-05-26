@@ -32,6 +32,7 @@ export class ApplicationComponent implements OnInit {
   appData: CreateApplication = null;                              // It use to hold application fetch from api.                                         
   editServiceForm: Service;                                       // It is use to save edit Service form data.
   parentPage: string = null;                                      // It is use to redirect the parent page after clicking cancel.
+  apploading: boolean = false;                                    // It is use to show hide loading screen.
 
   constructor(public sharedService: SharedService,
               public store: Store<fromApp.AppState>,
@@ -42,6 +43,7 @@ export class ApplicationComponent implements OnInit {
     // fetching data from store and check editMode mode is enable or disabled
     this.store.select('appOnboarding').subscribe(
       (responseData) => {
+        this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
         //checking is editMode enabled
         if (responseData.editMode) {

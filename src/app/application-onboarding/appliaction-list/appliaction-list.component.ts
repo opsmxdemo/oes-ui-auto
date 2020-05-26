@@ -27,6 +27,7 @@ export class AppliactionListComponent implements OnInit {
   }
   currentPage = [];                                                                    // this use to store array of data exists in current page.
   appListLength: number = null;                                                        // It use to store AppList array length
+  loading = false;                                                                     // It is use to show and hide loading screen
 
   constructor(public store: Store<fromApp.AppState>,
               public toastr: NotificationService) { }
@@ -38,6 +39,7 @@ export class AppliactionListComponent implements OnInit {
     this.store.select('appOnboarding').subscribe(
       (response) => {
         if (response.applicationList !== null) {
+          this.loading = response.appListLoading;
           this.appListData = response.applicationList;
           this.appListLength = this.appListData.length;
           this.renderPage();
@@ -51,6 +53,7 @@ export class AppliactionListComponent implements OnInit {
 
   // Below function is used if user want to refresh list data
   refreshList(){
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.store.dispatch(OnboardingActions.loadAppList());
   } 
 

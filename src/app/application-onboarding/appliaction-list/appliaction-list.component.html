@@ -23,7 +23,7 @@
                 <!-- /.no_content -->
               </div>
             </div>
-            <div *ngIf="!tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+            <div *ngIf="!tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
               <div class="page_access d-flex text-right p-3">
                 <div class="mr-auto">
                   <div class="input-group input-group_search">
@@ -97,6 +97,15 @@
                 <!-- /.table-footer px-3 py-2 -->
               </div>
               <!-- /.table-content -->
+            </div>
+            <div *ngIf="!tableIsEmpty && loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+              <div class="dots-container">
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+              </div>
             </div>
           </div>
         </div>
