@@ -39,4 +39,9 @@ export class SharedService {
    validatePolicyName(name: string, type: string) {
     return this.httpClient.get(environment.endPointUrl + 'oes/policy/'+ name +'/nameCheck');
   }
+
+   //Below function is use to save data from datasources
+   saveData(postData){
+    return this.httpClient.post(environment.endPointUrl + 'oes/accountsConfig/saveAccount',postData).pipe();
+  }
 }

@@ -34,6 +34,16 @@ import { DynamicAccountsComponent } from './application-onboarding/dynamic-accou
 import { PolicyManagementComponent } from './policy-management/policy-management.component';
 import { CreateAccountComponent } from './application-onboarding/create-account/create-account.component';
 import { PolicyEffect } from './policy-management/store/policyManagement.effects';
+import { GithubFormComponent } from './application-onboarding/data-source/github-form/github-form.component';
+import { NewrelicFormComponent } from './application-onboarding/data-source/newrelic-form/newrelic-form.component';
+import { PrometheusFormComponent } from './application-onboarding/data-source/prometheus-form/prometheus-form.component';
+import { DynatraceFormComponent } from './application-onboarding/data-source/dynatrace-form/dynatrace-form.component';
+import { GcpStackdriverFormComponent } from './application-onboarding/data-source/gcp-stackdriver-form/gcp-stackdriver-form.component';
+import { DatadogFormComponent } from './application-onboarding/data-source/datadog-form/datadog-form.component';
+import { AppDynamicsFormComponent } from './application-onboarding/data-source/app-dynamics-form/app-dynamics-form.component';
+import { AwsCloudwatchFormComponent } from './application-onboarding/data-source/aws-cloudwatch-form/aws-cloudwatch-form.component';
+import { ElasticsearchFormComponent } from './application-onboarding/data-source/elasticsearch-form/elasticsearch-form.component';
+import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +61,17 @@ import { PolicyEffect } from './policy-management/store/policyManagement.effects
     AppliactionListComponent,
     DynamicAccountsComponent,
     PolicyManagementComponent,
-    CreateAccountComponent
+    CreateAccountComponent,
+    GithubFormComponent,
+    NewrelicFormComponent,
+    PrometheusFormComponent,
+    DynatraceFormComponent,
+    GcpStackdriverFormComponent,
+    DatadogFormComponent,
+    AppDynamicsFormComponent,
+    AwsCloudwatchFormComponent,
+    ElasticsearchFormComponent,
+    DockerFormComponent
   ],
   imports: [
     BrowserModule,
