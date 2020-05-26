@@ -9,7 +9,7 @@ import * as LayoutAction from './layout.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
-import {environment} from '../../../environments/environment.prod'
+import {environment} from '../../../environments/environment'
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
@@ -45,7 +45,7 @@ export class LayoutEffect {
     authLogin = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
-            return this.http.get<Menu>(environment.samlUrl+'oes/dashboard/dynamicMenu').pipe(
+            return this.http.get<Menu>(environment.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
                 map(resData => {
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),

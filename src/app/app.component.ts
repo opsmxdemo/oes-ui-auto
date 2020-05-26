@@ -6,7 +6,7 @@ import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
-import { environment } from '../environments/environment.prod'
+import { environment } from '../environments/environment'
 import * as $ from 'jquery';
 import 'bootstrap';
 
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   loginRedirect(callback): void {
-    window.location.href = `${environment.samlUrl}auth/redirectauto?to=${callback}`;
+    window.location.href = `${environment.endPointUrl}auth/redirectauto?to=${callback}`;
   }
 
   toggleNavbar() {

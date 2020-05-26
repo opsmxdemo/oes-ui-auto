@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, map } from 'rxjs/operators';
 import * as AuthAction from '../store/auth.actions';
-import {environment} from '../../../environments/environment.prod'
+import {environment} from '../../../environments/environment'
 
 @Injectable()
 export class AuthEffect {
@@ -17,7 +17,7 @@ export class AuthEffect {
        authLogin = this.actions$.pipe(
            ofType(AuthAction.AuthActionTypes.LOGINSTART),
            switchMap(() => {
-               return this.http.get(environment.samlUrl+'auth/user', {observe: 'response'})
+               return this.http.get(environment.endPointUrl+'auth/user', {observe: 'response'})
                 .pipe(
                    map(resData => {
                        if(resData.body !== null){
@@ -37,7 +37,7 @@ export class AuthEffect {
         authLogout = this.actions$.pipe(
             ofType(AuthAction.AuthActionTypes.LOGOUT),
             switchMap(() => {
-                return this.http.get(environment.samlUrl+'auth/logout', {observe: 'response'})
+                return this.http.get(environment.endPointUrl+'auth/logout', {observe: 'response'})
                  .pipe(
                     map(resData => {
                         return new AuthAction.LoginStart();
