@@ -38,3 +38,6 @@ export const deleteAccount = createAction('[Application-onBoarding] DeleteAccoun
 export const accountDeleted = createAction('[Application-OnBoarding] AccountDeleted', props<{index:number}>());
 //export const accountDeletedSuccessfully = createAction('[Application-OnBoarding] AccountDeletedSuccessfully', props<{index:number}>());
 
+// Below action is related to datasources
+export const loadDatasourceList = createAction('[Application-onBoarding] LoadDatasourceList');
+export const fetchDatasourceList  = createAction('[Application-OnBoarding] FetchDatasourceList', props<{DatasourceList:any}>());

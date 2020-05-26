@@ -24,6 +24,7 @@ export interface State {
 
     // Account variables
     accountList: any;
+    datasourceList: any;
     accountParentPage: string;
     accountDeleted: boolean;
 }
@@ -37,6 +38,7 @@ export const initialState: State = {
     cloudAccountExist: null,
     applicationList: null,
     accountList: null,
+    datasourceList: null,
     accountParentPage: null,
     accountDeleted: false,
     appListLoading: false,
@@ -177,7 +179,15 @@ export function AppOnboardingReducer(
                 accountList: state.accountList.filter((accountList,index) => index !== action.index)
             })
         ),
-    // ###  Account screen logic End ### // 
+        // ###  Account screen logic End ### // 
 
+        // ###  Datasource screen logic start ### // 
+
+        on(OnboardingAction.fetchDatasourceList,
+            (state,action) => ({
+                ...state,
+                datasourceList: action.DatasourceList,
+            })
+        ),
     )(onboardingState,onboardingAction);
 }
