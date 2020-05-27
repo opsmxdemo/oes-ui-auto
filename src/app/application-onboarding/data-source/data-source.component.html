@@ -52,14 +52,8 @@
                             <td>{{datasourceData.endPoint}}</td>
                             <td>{{datasourceData.accountType}}</td>
                             <td>{{datasourceData.username}}</td>
-                            <!-- <td *ngIf="datasourceData.permissions.READ == undefined"> </td>
-                            <td *ngIf="datasourceData.permissions.WRITE == undefined"> </td>
-                            <td *ngIf="datasourceData.permissions.EXECUTE == undefined"> </td>
-                            <td *ngIf="datasourceData.permissions.READ != undefined">{{datasourceData.permissions.READ.toString()}}</td>
-                            <td *ngIf="datasourceData.permissions.WRITE != undefined">{{datasourceData.permissions.WRITE.toString()}}</td>
-                            <td *ngIf="datasourceData.permissions.EXECUTE != undefined">{{datasourceData.permissions.EXECUTE.toString()}}</td> -->
                              <td>
-                              <!-- <a    class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a> -->
+                             <!-- <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editAccount(datasourceData,i,'edit')" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  -->
                               <a (click)="deleteAccount(datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>

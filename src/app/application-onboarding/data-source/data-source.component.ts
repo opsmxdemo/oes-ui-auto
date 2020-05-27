@@ -6,7 +6,7 @@ import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
-
+import { ViewChild, ElementRef} from '@angular/core';
 
 @Component({
   selector: 'app-data-source',
@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./data-source.component.less']
 })
 export class DataSourceComponent implements OnInit {
+  @ViewChild('closeAddExpenseModal') closeAddExpenseModal: ElementRef;
   dataSourceList: { id: string; name: string; path: string; }[];
   selectedDataProvider: any;
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
@@ -30,6 +31,7 @@ export class DataSourceComponent implements OnInit {
   currentPage = [];                                                                    // this use to store array of data exists in current page.
   datasourceListLength: number = null;
   nameOfAccount: null;
+  typeOfForm: any;
 
   constructor(public store: Store<fromApp.AppState>, public notifications: NotificationService,
     public sharedAccountData: SharedService) { }
@@ -108,6 +110,9 @@ export class DataSourceComponent implements OnInit {
    );
   }
 
+  getClose(){
+    this.closeAddExpenseModal.nativeElement.click();
+  }
   getDataProvider(e){
     this.selectedDataProvider = e;
   }
@@ -216,6 +221,14 @@ export class DataSourceComponent implements OnInit {
          
         }
       })
+    }
+
+    // Below funcion is use to edit existing account
+    editAccount(account:any,index,type:string){
+      this.typeOfForm = type;
+      console.log(account);
+      this.sharedAccountData.setDataSourceData(account);
+      this.sharedAccountData.setDataSourceType(type);
     }
 
  
