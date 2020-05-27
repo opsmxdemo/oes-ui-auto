@@ -12,22 +12,19 @@
             <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.name.errors }" />
             <div *ngIf="submitted && g.name.errors" class="invalid-feedback">
                 <div *ngIf="g.name.errors.required">Account Name is required</div>
+                <div *ngIf="g.name.errors.accountExist">Account already
+                    exists with same name. Please choose a unique account name</div>
             </div>
         </div>
     </div>
     <div class="form-group form-check">
-        <input type="checkbox" formControlName="clouddriver" id="clouddriver" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && g.clouddriver.errors }" />
+        <input type="checkbox" (change)="doGitCheck($event.target.checked)" formControlName="clouddriver" id="clouddriver" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && g.clouddriver.errors }" />
         <label for="clouddriver" class="form-check-label">Set as a remote source for Spinnaker Dynamic Accounts</label>
         <div *ngIf="submitted && g.clouddriver.errors" class="invalid-feedback">Accept remote source for Spinnaker Dynamic Accounts required</div>
+        <div *ngIf="showGitCheck" class="git-feedback">Git Account exists</div>
     </div>
     <div class="form-row">
        <div class="form-group col">
-            <!-- <label>gitType</label> -->
-            <!-- <select formControlName="gitType" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.gitType.errors }">
-                <option value=""></option>
-                <option value="Credntials">Credntials</option>
-                <option value="Token">Token</option>
-            </select> -->
             <label for="credentialsType">Git Type</label>
             <select formControlName="credentialsType" id="credentialsType" class="form-control" (change)="changeType($event)" [ngClass]="{ 'is-invalid': submitted && g.credentialsType.errors }">
               <option *ngFor="let gitType of credentialsType; let i = index" [value]="credentialsType[i].type">
@@ -66,19 +63,6 @@
             </div>
         </div>
     </div>
-    <!-- <div class="form-group">
-        <label>Email</label>
-        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && g.email.errors }" />
-        <div *ngIf="submitted && g.email.errors" class="invalid-feedback">
-            <div *ngIf="g.email.errors.required">Email is required</div>
-            <div *ngIf="g.email.errors.email">Email must be a valid email address</div>
-        </div>
-    </div> -->
-   
-    <!-- <div class="text-center">
-        <button class="btn btn-primary mr-1">Register</button>
-        <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
-    </div> -->
     <div></div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-default" type="reset" (click)="onReset()" data-dismiss="modal" aria-label="Close">Cancel</button>

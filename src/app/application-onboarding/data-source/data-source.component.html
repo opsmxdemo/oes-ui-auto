@@ -60,7 +60,7 @@
                             <td *ngIf="datasourceData.permissions.EXECUTE != undefined">{{datasourceData.permissions.EXECUTE.toString()}}</td> -->
                              <td>
                               <!-- <a    class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-pencil-alt"></i></a> -->
-                              <a  class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                              <a (click)="deleteAccount(datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>
                       </tbody>
@@ -116,7 +116,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">New Data Source</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" #closeAddExpenseModal aria-label="Close">
             <i class="fa fa-times"></i>
           </button>
         </div>
@@ -125,7 +125,7 @@
             <div class="form-group text-muted">
               <label>Select Monitoring Provider DD</label>
               <div class="box-icon-group">
-                <div class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.name)">
+                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.name)" [ngClass]="{'disabledMenu':d.id !== 'docker' && d.id !==  'github'}">
                   <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === 'docker'" />
                   <label for="{{d.id}}">
                     <span class="bi-lbl">

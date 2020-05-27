@@ -198,5 +198,25 @@ export class DataSourceComponent implements OnInit {
     this.renderPage();
   }
 
+    // Below function is use to delete existiong account
+    deleteAccount(account: any,index) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result) => {
+        if (result.value) {
+          $("[data-toggle='tooltip']").tooltip('hide');
+        this.store.dispatch(OnboardingActions.deleteDatasourceAccount({accountName: account.name,index:index}));
+        }else{
+         
+        }
+      })
+    }
+
  
 }

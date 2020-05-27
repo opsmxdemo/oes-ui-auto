@@ -41,3 +41,5 @@ export const accountDeleted = createAction('[Application-OnBoarding] AccountDele
 // Below action is related to datasources
 export const loadDatasourceList = createAction('[Application-onBoarding] LoadDatasourceList');
 export const fetchDatasourceList  = createAction('[Application-OnBoarding] FetchDatasourceList', props<{DatasourceList:any}>());
+export const deleteDatasourceAccount = createAction('[Application-onBoarding] DeleteDatasourceAccount', props<{accountName:any,index:number}>())
+export const DatasourceaccountDeleted = createAction('[Application-OnBoarding] DatasourceAccountDeleted', props<{index:number}>());
