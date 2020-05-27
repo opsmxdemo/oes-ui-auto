@@ -33,7 +33,7 @@ export const initialState: State = {
     pipelineData: null,
     erroeMessage: null,
     editMode: false,
-    parentPage: null,
+    parentPage: '/setup/applications',
     applicationData: null,
     cloudAccountExist: null,
     applicationList: null,

@@ -106,9 +106,9 @@
                 <form [formGroup]="createApplicationForm">
                   <div class="form-group">
                     <label>Application Name</label>
-                    <input type="text" class="form-control" formControlName="name" [readonly]="editMode">
+                    <input type="text" class="form-control" formControlName="name" [readonly]="editMode" [ngClass]="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched"
-                      class="help-block">
+                      class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('name').errors['required']">Application Name is
                         required</span>
                       <span *ngIf="createApplicationForm.get('name').errors['applicationExist']">Application already
@@ -120,8 +120,8 @@
                   </div>
                   <div class="form-group">
                     <label>Email Id</label>
-                    <input type="text" class="form-control" formControlName="emailId" [readonly]="editMode">
-                    <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="help-block">
+                    <input type="text" class="form-control" formControlName="emailId" [readonly]="editMode" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
+                    <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('emailId').errors['required']">Email is required</span>
                       <span *ngIf="createApplicationForm.get('emailId').errors['email']">Please enter valid Email Id</span>
                     </span>
@@ -129,9 +129,9 @@
                   <!-- /.form-group -->
                   <div class="form-group">
                     <label>Image Source</label>
-                    <input type="text" class="form-control" formControlName="imageSource" [readonly]="editMode">
+                    <input type="text" class="form-control" formControlName="imageSource" [readonly]="editMode" [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched"
-                      class="help-block">
+                      class="invalid-feedback">
                       Image Source is required
                     </span>
                   </div>
@@ -168,7 +168,8 @@
                           <div class="form-group mb-3 pl-4 text-muted">
                             <label>Service Name</label>
                             <div class="d-flex  mr-4 align-items-center">
-                              <input type="text" class="form-control input_len" formControlName="serviceName" [readonly]="isReadonly(i)">
+                              <input type="text" class="form-control input_len" formControlName="serviceName" [readonly]="isReadonly(i)" 
+                              [ngClass]="servicesForm.get('services')['controls'][i].get('serviceName').invalid && servicesForm.get('services')['controls'][i].get('serviceName').touched ? 'is-invalid':''">
                               <a class="text-muted ml-3 formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete Service" 
                               (click)="deleteService(i)" *ngIf ="servicesForm.get('services')['controls'].length > 1 ? true : false">
                                 <i class="fas fa-trash-alt"></i></a>
@@ -189,7 +190,8 @@
                                 <div class="form-group mb-3 pl-5 text-muted">
                                   <label>Select Service Pipeline</label>
                                   <div class="d-flex  mr-5 align-items-center">
-                                    <select class="form-control" formControlName="pipelinetemplate" (change)="onPipelineSelect(i,j,$event.target.value)">
+                                    <select class="form-control" formControlName="pipelinetemplate" (change)="onPipelineSelect(i,j,$event.target.value)"
+                                    [ngClass]="!pipelineArr.get('pipelinetemplate').valid && pipelineArr.get('pipelinetemplate').touched ? 'is-invalid':''">
                                       <option *ngFor="let pipelineData of pipelineExists" value="{{pipelineData.name}}">{{pipelineData.name}}</option>
                                     </select>
                                     <!-- <a class="text-muted ml-3 formarray_btn"><i class="fas fa-plus"></i></a> -->
@@ -200,7 +202,8 @@
                                 <div class="form-group mb-3 pl-5 text-muted">
                                   <label>Cloud Account</label>
                                   <div class="d-flex  mr-5 align-items-center">
-                                    <select class="form-control" formControlName="cloudAccount">
+                                    <select class="form-control" formControlName="cloudAccount"
+                                    [ngClass]="!pipelineArr.get('cloudAccount').valid && pipelineArr.get('cloudAccount').touched ? 'is-invalid':''">
                                       <option *ngFor="let cloudData of cloudAccountExist" value="{{cloudData.name}}">{{cloudData.name}}</option>
                                     </select>
                                   </div>
@@ -210,7 +213,8 @@
                                 <div class="form-group mb-3 pl-5 text-muted">
                                   <label>Docker Image Name</label>
                                   <div class="d-flex  mr-5 align-items-center">
-                                    <input type="text" class="form-control" formControlName="dockerImageName">
+                                    <input type="text" class="form-control" formControlName="dockerImageName"
+                                    [ngClass]="!pipelineArr.get('dockerImageName').valid && pipelineArr.get('dockerImageName').touched ? 'is-invalid':''">
                                   </div>
                                   <span *ngIf="!pipelineArr.get('dockerImageName').valid && pipelineArr.get('dockerImageName').touched"
                                   class="help-block">Docker Image Name is required</span>
@@ -222,8 +226,10 @@
                                         <label>{{pipelineParameterArr.get('name').value}}</label>
                                         <div class="d-flex mr-6 align-items-center">
                                           <input *ngIf = "pipelineParameterArr.get('type').value !== 'boolean'" type="{{pipelineParameterArr.get('type').value === 'string'? 'text' : 'number'}}" 
-                                          class="form-control" placeholder="{{getProperValue(i,j,k)}}" formControlName="value">
-                                          <select *ngIf = "pipelineParameterArr.get('type').value === 'boolean'" class="form-control" formControlName="value">
+                                          class="form-control" placeholder="{{getProperValue(i,j,k)}}" formControlName="value"
+                                          [ngClass]="!pipelineParameterArr.get('value').valid && pipelineParameterArr.get('value').touched ? 'is-invalid':''">
+                                          <select *ngIf = "pipelineParameterArr.get('type').value === 'boolean'" class="form-control" formControlName="value"
+                                          [ngClass]="!pipelineParameterArr.get('value').valid && pipelineParameterArr.get('value').touched ? 'is-invalid':''">
                                             <option value="">Select</option>
                                             <option value="True">True</option>
                                             <option value="False">False</option>
@@ -281,14 +287,13 @@
                             <tr *ngFor="let optionsArr of environmentForm.get('environments')['controls'];let i=index">
                               <ng-container [formGroupName]="i">
                                 <td>
-                                  <input type="text" class="form-control" formControlName="key">
+                                  <input type="text" class="form-control" formControlName="key"
+                                  [ngClass]="!environmentForm.get('environments')['controls'][i].get('key').valid && environmentForm.get('environments')['controls'][i].get('key').touched ? 'is-invalid':''">
                                   <span *ngIf="!environmentForm.get('environments')['controls'][i].get('key').valid && environmentForm.get('environments')['controls'][i].get('key').touched"
-                                  class="help-block">Key is required</span>
+                                  class="invalid-feedback">Key is required</span>
                                 </td>
                                 <td>
                                   <input type="text" class="form-control" formControlName="value">
-                                  <span *ngIf="!environmentForm.get('environments')['controls'][i].get('value').valid && environmentForm.get('environments')['controls'][i].get('value').touched"
-                                  class="help-block">Value is required</span>
                                 </td>
                                 <td>
                                   <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete"
@@ -339,18 +344,20 @@
                             <tr *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
                               <ng-container [formGroupName]="i">
                                 <td>
-                                  <input type="text" class="form-control" formControlName="userGroup">
+                                  <input type="text" class="form-control" formControlName="userGroup"
+                                  [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').touched ? 'is-invalid':''">
                                   <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').touched"
-                                  class="help-block">Group name is required</span>
+                                  class="invalid-feedback">Group name is required</span>
                                 </td>
                                 <td>
-                                  <select class="form-control" formControlName="permission">
+                                  <select class="form-control" formControlName="permission"
+                                  [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('permission').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permission').touched ? 'is-invalid':''">
                                     <option value="Read Only">Read Only</option>
                                     <option value="Read & Write">Read & Write</option>
                                     <option value="Read,Write & Execute">Read,Write & Execute</option>
                                   </select>
                                   <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('permission').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permission').touched"
-                                  class="help-block">Permission is required</span>
+                                  class="invalid-feedback">Permission is required</span>
                                 </td>
                                 <td>
                                   <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete" 
