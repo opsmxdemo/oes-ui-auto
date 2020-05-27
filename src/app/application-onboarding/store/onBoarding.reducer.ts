@@ -8,13 +8,21 @@ import { ApplicationList } from 'src/app/models/applicationOnboarding/applicatio
 
 
 export interface State {
+
+    // Create Application variable
     pipelineData: Pipeline;
     erroeMessage: string;
     editMode: boolean;
     parentPage: string;
     applicationData: CreateApplication;
+    applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
+
+    // Application List variables
     applicationList: ApplicationList[];
+    appListLoading: boolean;
+
+    // Account variables
     accountList: any;
     datasourceList: any;
     accountParentPage: string;
@@ -33,6 +41,8 @@ export const initialState: State = {
     datasourceList: null,
     accountParentPage: null,
     accountDeleted: false,
+    appListLoading: false,
+    applicationLoading: false
 }
 
 export function AppOnboardingReducer(
@@ -40,6 +50,7 @@ export function AppOnboardingReducer(
     onboardingAction: Action) {
     return createReducer(
         initialState,
+        // #### CreateApplication screen logic start ####
         on(OnboardingAction.loadApp,
             (state, action) => ({
                 ...state,
@@ -63,31 +74,79 @@ export function AppOnboardingReducer(
             (state,action) => ({
                 ...state,
                 editMode:action.editMode,
-                parentPage: action.page
+                parentPage: action.page,
+                applicationLoading: true
             })    
         ),
+        
         on(OnboardingAction.fetchAppData,
             (state,action) => ({
                 ...state,
-                applicationData:action.appData
+                applicationData:action.appData,
+                applicationLoading: false
             })
         ),
-        on(OnboardingAction.fetchCloudAccount,
-            (state,action) => ({
+        on(OnboardingAction.disabledEditMode,
+            state => ({
                 ...state,
-                cloudAccountExist:action.cloudAccount
+                editMode:false
+            })
+        ),
+        on(OnboardingAction.createApplication,
+            state => ({
+                ...state,
+                applicationLoading:true
+            })
+        ),
+        on(OnboardingAction.updateApplication,
+            state => ({
+                ...state,
+                applicationLoading:true
+            })
+        ),
+        on(OnboardingAction.dataSaved,
+            state => ({
+                ...state,
+                applicationLoading:false
+            })
+        ),
+        
+        // #### CreateApplication screen logic start ####//
+
+        // ###  Applist screen logic start ### // 
+        on(OnboardingAction.loadAppList,
+            state => ({
+                ...state,
+                appListLoading:true
             })
         ),
         on(OnboardingAction.fetchAppList,
             (state,action) => ({
                 ...state,
-                applicationList: action.Applist
+                applicationList: action.Applist,
+                appListLoading:false
+            })
+        ),
+        on(OnboardingAction.appDelete,
+            state => ({
+                ...state,
+                appListLoading:true
             })
         ),
         on(OnboardingAction.appDeletedSuccessfully,
             (state,action) => ({
                 ...state,
-                applicationList: state.applicationList.filter((applist,index) => index !== action.index)
+                applicationList: state.applicationList.filter((applist,index) => index !== action.index),
+                appListLoading:false
+            })
+        ),
+        // ###  Applist screen logic End ### // 
+
+        // ###  Account screen logic Starts ### // 
+        on(OnboardingAction.fetchCloudAccount,
+            (state,action) => ({
+                ...state,
+                cloudAccountExist:action.cloudAccount
             })
         ),
         on(OnboardingAction.fetchAccountList,
@@ -120,12 +179,10 @@ export function AppOnboardingReducer(
                 accountList: state.accountList.filter((accountList,index) => index !== action.index)
             })
         ),
-        on(OnboardingAction.disabledEditMode,
-            state => ({
-                ...state,
-                editMode:false
-            })
-        ),
+        // ###  Account screen logic End ### // 
+
+        // ###  Datasource screen logic start ### // 
+
         on(OnboardingAction.fetchDatasourceList,
             (state,action) => ({
                 ...state,

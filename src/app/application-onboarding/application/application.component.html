@@ -1,5 +1,5 @@
 <div class="tab-content h-100 p-3 flex-grow-1">
-  <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+  <div *ngIf = "!apploading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
     <div class="page_access text-right py-2 px-3">
       <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
       <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
@@ -391,5 +391,8 @@
       <!-- /.row -->
     </div>
     <!-- /.setup-content -->
+  </div>
+  <div *ngIf = "apploading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+    <app-loading-screen></app-loading-screen>
   </div>
 </div>

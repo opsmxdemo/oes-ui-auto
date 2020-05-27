@@ -13,12 +13,8 @@
                                       <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                                         <div class="tab-content h-100 p-3 flex-grow-1">
                                             <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-                                              <div class="dots-container" *ngIf="loading">
-                                                <div class="dots"></div>
-                                                <div class="dots"></div>
-                                                <div class="dots"></div>
-                                                <div class="dots"></div>
-                                                <div class="dots"></div>
+                                              <div *ngIf="loading">
+                                                <app-loading-screen></app-loading-screen>
                                               </div>
                                               <!-- /.page_access ml-auto -->
                                               <div class="setup-content" *ngIf="!loading">
