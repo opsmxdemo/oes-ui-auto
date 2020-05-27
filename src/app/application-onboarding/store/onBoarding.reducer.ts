@@ -191,5 +191,11 @@ export function AppOnboardingReducer(
                 datasourceList: action.DatasourceList,
             })
         ),
+        on(OnboardingAction.DatasourceaccountDeleted,
+            (state,action) => ({
+                ...state,
+                datasourceList: state.datasourceList.filter((datasourceList,index) => index !== action.index)
+            })
+        ),
     )(onboardingState,onboardingAction);
 }

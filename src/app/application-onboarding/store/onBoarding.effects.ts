@@ -319,6 +319,33 @@ export class ApplicationOnBoardingEffect {
             })
         )
     )
+
+
+    // Below effect is use for delete datasource Account .
+    deleteDatasourceData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.deleteDatasourceAccount),
+            switchMap(action => {
+                return this.http.delete<any>(environment.endPointUrl + 'oes/accountsConfig/deleteAccount/' + action.accountName).pipe(
+                    map(resdata => {
+                        this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
+                        // return OnboardingAction.appDeletedSuccessfully({index:action.index});
+                        return OnboardingAction.DatasourceaccountDeleted({ index: action.index })
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
     //Below effect is use to redirect to application onboardind page in create& edit phase
     accountRedirect = createEffect(() =>
         this.actions$.pipe(

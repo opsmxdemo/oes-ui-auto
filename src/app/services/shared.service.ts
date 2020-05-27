@@ -44,4 +44,15 @@ export class SharedService {
    saveData(postData){
     return this.httpClient.post(environment.endPointUrl + 'oes/accountsConfig/saveAccount',postData).pipe();
   }
+
+  // Below function to validate the github account exist or not through api
+  validateDatasourceName(name:string,type: string){
+    return this.httpClient.get(environment.endPointUrl + 'oes/accountsConfig/nameCheck/' + name);
+  }
+
+  //To verify Git account credentials to fetch cloud account details to use in Spinnaker
+  validateGitAccount(){
+    return this.httpClient.get(environment.endPointUrl + 'oes/accountsConfig/gitAccountExist');
+  }
+
 }
