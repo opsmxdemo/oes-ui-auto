@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { SharedService } from 'src/app/services/shared.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { Observable } from 'rxjs';
+import { ViewChild, ElementRef} from '@angular/core';
+
 
 @Component({
   selector: 'app-github-form',
@@ -9,9 +12,11 @@ import { NotificationService } from 'src/app/services/notification.service';
   styleUrls: ['./github-form.component.less']
 })
 export class GithubFormComponent implements OnInit {
+  @ViewChild('closeAddExpenseModal') closeAddExpenseModal: ElementRef;
   gitForm: FormGroup;
   credentialsType = [];
   submitted = false;
+  showGitCheck = false;
   selectedType: string;
   gitType: string;
   satya: any;
@@ -23,7 +28,7 @@ export class GithubFormComponent implements OnInit {
     this.gitForm = this.formBuilder.group({
       credentialsType: ['', Validators.required],
       endPoint: ['', Validators.required],
-      name: ['', Validators.required],
+      name: ['', Validators.required,this.validateDatasourceName.bind(this)],
       username: ['', []],
       password: ['', []],
       gitToken: ['',],
@@ -49,65 +54,55 @@ export class GithubFormComponent implements OnInit {
     ];
   }
 
-  //  //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
-  //  validateGitAccountName(control: FormControl): Promise<any> | Observable<any> {
-  //   const promise = new Promise<any>((resolve, reject) => {
-  //     this.sharedService.validateApplicationName(control.value, 'application').subscribe(
-  //       (response) => {
-  //         if (response['applicationExist'] === true) {
-  //           resolve({ 'applicationExist': true });
-  //         } else {
-  //           resolve(null);
-  //         }
-  //       }
-  //     )
-  //   });
-  //   return promise;
-  // }
+  // code for checking the git account
+  doGitCheck(isChecked: boolean){
+    if(isChecked){
+      this.sharedService.validateGitAccount().subscribe((response: any) => {
+        if(response.gitAccountExist === true){
+          this.showGitCheck = true;
+        }
+      });
+    }
+  }
 
   changeType(e){
     this.selectedType = e.target.value;
     if(this.selectedType === 'token'){
       this.gitForm.value.username = '';
       this.gitForm.value.password = '';
-    }
-    //this.satya = this.gitForm.value.type;
-    // if(this.selectedType === 'Token'){
-    //   this.gitForm = this.formBuilder.group({
-    //     credentialsType: ['', ],
-    //     endPoint: [this.gitForm.value.endPoint, Validators.required],
-    //     accountName: [this.gitForm.value.accountName, Validators.required],
-    //     userName: ['', []],
-    //     password: ['', []],
-    //     gitToken: ['',[Validators.required]],
-    //     setRemoteTerms: [true, Validators.requiredTrue]
-    // });
-    // }
-
-
+    }else{}
   }
 
    onSubmit() {
        this.submitted = true;
-    
        // stop here if form is invalid
        if (this.gitForm.invalid) {
            return;
        }
-
-       // display form values on success
-       //alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.gitForm.value, null, 4));
-      // this.sharedService.saveData(JSON.stringify(this.gitForm.value).
        this.sharedService.saveData(this.gitForm.value).subscribe((response: any) => {
         this.notifications.showSuccess("Success",response.message);
+        this.closeAddExpenseModal.nativeElement.click();
       },
       (error) => {
-        console.log("erroeUI",error);
-        
         this.notifications.showError("Error",error.message);
-        //alert('hello');
       });
    }
+
+   //Below function is custom valiadator which is use to validate account name through API call, if name is not exist then it allows us to proceed.
+   validateDatasourceName(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>((resolve, reject) => {
+      this.sharedService.validateDatasourceName(control.value, 'account').subscribe(
+        (response) => {
+          if (response['accountExist'] === true) {
+            resolve({ 'accountExist': true });
+          } else {
+            resolve(null);
+          }
+        }
+      )
+    });
+    return promise;
+  }
 
    onReset() {
        this.submitted = false;
