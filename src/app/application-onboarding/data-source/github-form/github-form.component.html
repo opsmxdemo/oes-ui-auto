@@ -27,7 +27,7 @@
        <div class="form-group col">
             <label for="credentialsType">Git Type</label>
             <select formControlName="credentialsType" id="credentialsType" class="form-control" (change)="changeType($event)" [ngClass]="{ 'is-invalid': submitted && g.credentialsType.errors }">
-              <option *ngFor="let gitType of credentialsType; let i = index" [value]="credentialsType[i].type">
+                <option *ngFor="let gitType of credentialsType; let i = index" [value]="credentialsType[i].type">
                 {{credentialsType[i].type}}
               </option>
             </select>

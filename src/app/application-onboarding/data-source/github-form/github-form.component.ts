@@ -29,11 +29,10 @@ export class GithubFormComponent implements OnInit {
       credentialsType: ['', Validators.required],
       endPoint: ['', Validators.required],
       name: ['', Validators.required,this.validateDatasourceName.bind(this)],
-      username: ['', []],
-      password: ['', []],
-      gitToken: ['',],
       clouddriver: [false],
-      account_type:['GITHUB']
+      account_type:['GITHUB'],
+      username:  ['', Validators.required],
+      password:  ['', Validators.required]
   });
   //this.gitType = 'Credentials';
   this.credentialsType = this.getcredentialsType();
@@ -66,11 +65,25 @@ export class GithubFormComponent implements OnInit {
   }
 
   changeType(e){
+    debugger
+    console.log('form-before',this.gitForm.value);
+    
     this.selectedType = e.target.value;
     if(this.selectedType === 'token'){
-      this.gitForm.value.username = '';
-      this.gitForm.value.password = '';
-    }else{}
+      this.gitForm.addControl('gitToken', new FormControl('', Validators.required));
+      if(this.gitForm.get('username') !== null && this.gitForm.get('password') !== null){
+        this.gitForm.removeControl('username');
+        this.gitForm.removeControl('password');
+      }
+      
+     }else{
+       this.gitForm.addControl('username', new FormControl('', Validators.required));
+       this.gitForm.addControl('password', new FormControl('', Validators.required));
+       if(this.gitForm.get('gitToken') !== null ){
+        this.gitForm.removeControl('gitToken');
+      }
+     }
+     console.log('form-after',this.gitForm.value);
   }
 
    onSubmit() {
