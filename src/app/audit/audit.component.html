@@ -207,8 +207,9 @@
                             <div class="dropdown-menu-body mt-3 mb-2 px-3">
                               <div class="form-row align-items-center">
                                 <div class="col-auto mb-2">
-                                  <input type="text" class="form-control" formControlName="filterName"/>
-                                  <span *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched" class="help-block">
+                                  <input type="text" class="form-control" formControlName="filterName"
+                                  [ngClass]="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched ? 'is-invalid':''"/>
+                                  <span *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched" class="invalid-feedback">
                                     <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is required</span>
                                     <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter already exists with same name. Please choose a unique filter name</span>
                                   </span>

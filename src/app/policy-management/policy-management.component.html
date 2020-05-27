@@ -28,21 +28,23 @@
                                                           <form [formGroup]="endpointForm">
                                                             <div class="form-group">
                                                               <label>Endpoint Type</label>
-                                                              <select class="form-control {{viewOnly || editMode ? 'disableddropdown':''}}" formControlName="endpointType">
+                                                              <select class="form-control {{viewOnly || editMode ? 'disableddropdown':''}}" formControlName="endpointType"
+                                                              [ngClass]="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched ? 'is-invalid':''">
                                                                 <option value="">Select Type</option>
                                                                 <option *ngFor="let data of endpointTypes" value="{{data}}">{{data}}</option>
                                                               </select>
                                                               <span *ngIf="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched"
-                                                                class="help-block">
+                                                                class="invalid-feedback">
                                                                 <span *ngIf="endpointForm.get('endpointType').errors['required']">Endpoint Type is required</span>
                                                               </span>
                                                             </div>
                                                             <!-- /.form-group -->
                                                             <div class="form-group">
                                                               <label>Endpoint URL</label>
-                                                              <input type="text" class="form-control" formControlName="endpointUrl" [readonly]="viewOnly || editMode">
+                                                              <input type="text" class="form-control" formControlName="endpointUrl" [readonly]="viewOnly || editMode"
+                                                              [ngClass]="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched ? 'is-invalid':''">
                                                               <span *ngIf="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched"
-                                                              class="help-block">
+                                                              class="invalid-feedback">
                                                               <span *ngIf="endpointForm.get('endpointUrl').errors['required']">Endpoint Url is required</span>
                                                             </span>
                                                             </div>
@@ -109,9 +111,10 @@
                                                                               <div class="row">
                                                                                 <div class="form-group col-7">
                                                                                   <label>Name</label>
-                                                                                  <input type="text" class="form-control" formControlName="name" [readonly]="viewOnly || editMode">
+                                                                                  <input type="text" class="form-control" formControlName="name" [readonly]="viewOnly || editMode"
+                                                                                  [ngClass]="policyForm.get('name').invalid && policyForm.get('name').touched ? 'is-invalid':''">
                                                                                   <span *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
-                                                                                    class="help-block">
+                                                                                    class="invalid-feedback">
                                                                                     <span *ngIf="policyForm.get('name').errors['required']">Name is required</span>
                                                                                     <span *ngIf="policyForm.get('name').errors['containSpace']">Space is not allowed in Policy Name</span>
                                                                                     <span *ngIf="policyForm.get('name').errors['policyExists']">Policy already
@@ -133,9 +136,10 @@
                                                                                 <!-- /.form-group -->
                                                                                 <div class="form-group col-12">
                                                                                   <label>Policy Details</label>
-                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="rego" [readonly]="viewOnly"></textarea>
+                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="rego" [readonly]="viewOnly"
+                                                                                  [ngClass]="policyForm.get('rego').invalid && policyForm.get('rego').touched ? 'is-invalid':''"></textarea>
                                                                                   <span *ngIf="policyForm.get('rego').invalid && policyForm.get('rego').touched"
-                                                                                    class="help-block">
+                                                                                    class="invalid-feedback">
                                                                                     Policy Details is required
                                                                                   </span>
                                                                                 </div>

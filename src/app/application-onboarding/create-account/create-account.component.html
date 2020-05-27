@@ -16,9 +16,10 @@
                 <form [formGroup]="createAccountForm" (ngSubmit)="validate() && submitForm(createAccountForm.value)">
                   <div class="form-group">
                     <label>Account Name</label>
-                    <input type="text" class="form-control" formControlName="name">
+                    <input type="text" class="form-control" formControlName="name"
+                    [ngClass]="accountform.name.invalid && accountform.name.touched ? 'is-invalid':''">
                     <span *ngIf="accountform.name.invalid && accountform.name.touched"
-                      class="help-block">
+                      class="invalid-feedback">
                       <span *ngIf="accountform.name.invalid && accountform.name.errors.required">Account Name is
                         required </span>
                     </span>
@@ -26,7 +27,8 @@
                   <div class="form-group">
                           <label>Select Account Type</label>
                           <div class="align-items-center">
-                            <select class="form-control" formControlName="accountType">
+                            <select class="form-control" formControlName="accountType"
+                            [ngClass]="accountform.accountType.invalid && accountform.accountType.touched ? 'is-invalid':''">
                               <option>Kubernetes</option>
                             </select>
                           </div>
@@ -38,9 +40,10 @@
                   <!-- /.form-group -->
                   <div class="form-group">
                           <label>Name space</label>
-                          <input type="text" class="form-control" formControlName="namespaces" >
+                          <input type="text" class="form-control" formControlName="namespaces" 
+                          [ngClass]="accountform.namespaces.invalid && accountform.namespaces.touched ? 'is-invalid':''">
                           <span *ngIf="accountform.namespaces.invalid && accountform.namespaces.touched"
-                            class="help-block">
+                            class="invalid-feedback">
                             <span *ngIf="accountform.namespaces.invalid && accountform.namespaces.errors.required">Namespace is
                               required</span>
                           </span>
@@ -48,9 +51,10 @@
                   <!-- /.form-group --> 
                   <div class="form-group">
                     <label>Permissions Read</label>
-                    <input type="text" class="form-control" formControlName="read" >
+                    <input type="text" class="form-control" formControlName="read" 
+                    [ngClass]="accountform.read.invalid && accountform.read.touched ? 'is-invalid':''">
                     <span *ngIf="accountform.read.invalid && accountform.read.touched"
-                      class="help-block">
+                      class="invalid-feedback">
                       <span *ngIf="accountform.read.invalid && accountform.read.errors.required">read Permissions is
                         required</span>
                     </span>
@@ -59,9 +63,10 @@
                     <!-- /.form-group -->
                   <div class="form-group">
                           <label>Permissions Write</label>
-                          <input type="text" class="form-control" formControlName="write" >
+                          <input type="text" class="form-control" formControlName="write" 
+                          [ngClass]="accountform.write.invalid && accountform.write.touched ? 'is-invalid':''">
                           <span *ngIf="accountform.write.invalid && accountform.write.touched"
-                            class="help-block">
+                            class="invalid-feedback">
                             <span *ngIf="accountform.write.invalid && accountform.write.errors.required">write Permissions is
                               required</span>
                           </span>
@@ -69,9 +74,10 @@
                          <!-- /.form-group -->
                       <div class="form-group">
                           <label>Permissions Execute</label>
-                          <input type="text" class="form-control" formControlName="execute">
+                          <input type="text" class="form-control" formControlName="execute"
+                          [ngClass]="accountform.execute.invalid && accountform.execute.touched ? 'is-invalid':''">
                           <span *ngIf="accountform.execute.invalid && accountform.execute.touched"
-                            class="help-block">
+                            class="invalid-feedback">
                             <span *ngIf="accountform.execute.invalid && accountform.execute.errors.required">Execute Permissions is
                               required</span>
                           </span>
@@ -85,8 +91,9 @@
                              id="file" name="file"
                              type="file" 
                              class="form-control"
-                             (change)="onFileChange($event)">
-                         <span *ngIf="accountform.file.touched && accountform.file.invalid" class="help-block">
+                             (change)="onFileChange($event)"
+                             [ngClass]="accountform.file.touched && accountform.file.invalid ? 'is-invalid':''">
+                         <span *ngIf="accountform.file.touched && accountform.file.invalid" class="invalid-feedback">
                              <span *ngIf="accountform.file.invalid && accountform.file.errors.required">File is required.</span>
                          </span>
                          </div>
