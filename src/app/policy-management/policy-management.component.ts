@@ -261,7 +261,6 @@ export class PolicyManagementComponent implements OnInit {
       this.policyData.endpoint = this.endpointForm.value.endpointUrl;
       this.policyData.endpointType = this.endpointForm.value.endpointType;
       this.policyData.type = this.currentTab;
-      console.log("fulldata",JSON.stringify(this.policyData));
       this.store.dispatch(PolicyActions.savePolicy({policyForm:this.policyData}));
     }else{
       this.policyForm.markAllAsTouched();
