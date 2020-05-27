@@ -67,7 +67,9 @@ export function AppOnboardingReducer(
         on(OnboardingAction.errorOccured,
             (state,action) => ({
                 ...state,
-                erroeMessage:action.errorMessage
+                erroeMessage:action.errorMessage,
+                appListLoading: false,
+                applicationLoading: false
             })
         ),
         on(OnboardingAction.enableEditMode,
