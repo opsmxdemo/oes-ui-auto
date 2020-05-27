@@ -7,10 +7,14 @@ import { environment } from '../../environments/environment';
 export class SharedService {
   userData: any;
   type: string;
+  dataSourceData: any;
+  dataSourceType: string;
 
   constructor(private httpClient: HttpClient) {
     this.userData = {};
+    this.dataSourceData = {};
     this.type = '';
+    this.dataSourceType = '';
   }
 
   //Below function is use to validate Application name exist or not through api.i.e, ApplicationComponent
@@ -28,6 +32,18 @@ export class SharedService {
   }
   getAccountType(){
     return this.type;
+  }
+  setDataSourceData(val: any) {
+    this.dataSourceData = val;
+  }
+  getDataSourceData() {
+    return this.dataSourceData;
+  }
+  setDataSourceType(datasourceType: string){
+    this.dataSourceType = datasourceType;
+  }
+  getDataSourceType(){
+    return this.dataSourceType;
   }
 
   //Below function is use to validate filter name exist or not through api.i.e, ApplicationComponent

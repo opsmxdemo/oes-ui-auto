@@ -4,7 +4,11 @@ import { SharedService } from 'src/app/services/shared.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Observable } from 'rxjs';
 import { ViewChild, ElementRef} from '@angular/core';
-
+import {DataSourceComponent} from 'src/app/application-onboarding/data-source/data-source.component'
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../../store/app.reducer';
+import * as OnboardingActions from '../../store/onBoarding.actions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-github-form',
@@ -19,10 +23,11 @@ export class GithubFormComponent implements OnInit {
   showGitCheck = false;
   selectedType: string;
   gitType: string;
-  satya: any;
 
   constructor(private formBuilder: FormBuilder,private sharedService: SharedService,
-    private notifications: NotificationService) { }
+    private notifications: NotificationService, private datasource: DataSourceComponent,
+    public store: Store<fromApp.AppState>,
+              public router: Router) { }
 
   ngOnInit(): void {
     this.gitForm = this.formBuilder.group({
@@ -93,8 +98,11 @@ export class GithubFormComponent implements OnInit {
            return;
        }
        this.sharedService.saveData(this.gitForm.value).subscribe((response: any) => {
-        this.notifications.showSuccess("Success",response.message);
-        this.closeAddExpenseModal.nativeElement.click();
+        if(response.status === 200){
+          this.notifications.showSuccess("Success",response.message);
+          this.store.dispatch(OnboardingActions.loadDatasourceList());
+          this.datasource.getClose();
+        }
       },
       (error) => {
         this.notifications.showError("Error",error.message);
@@ -119,6 +127,7 @@ export class GithubFormComponent implements OnInit {
 
    onReset() {
        this.submitted = false;
+       this.showGitCheck = false;
        this.gitForm.reset();
    }
 
