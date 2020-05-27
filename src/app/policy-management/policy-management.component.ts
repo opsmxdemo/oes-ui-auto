@@ -35,9 +35,6 @@ export class PolicyManagementComponent implements OnInit {
 
   ngOnInit(){
 
-    //dispatching action for policy management
-    this.store.dispatch(PolicyActions.loadPolicy({relatedTab:this.currentTab}));
-
      // fetching data from State
      this.store.select('policy').subscribe(
       (resData) => {

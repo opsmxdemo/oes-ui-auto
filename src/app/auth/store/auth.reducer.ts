@@ -29,7 +29,7 @@ export function authReducer(
                 ...state,
                 user: action.payload,
                 authenticated:true,
-                authResponse:'dummy'
+                authResponse:'success'
             }
             case AuthAction.AuthActionTypes.LOGOUT:
                 return {
