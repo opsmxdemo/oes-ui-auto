@@ -46,7 +46,6 @@ export class ApplicationService {
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
             // this.notifications.showError('error',errorMessage);
         }
-        console.log(errorMessage);
         return throwError(errorMessage);
     }
 }

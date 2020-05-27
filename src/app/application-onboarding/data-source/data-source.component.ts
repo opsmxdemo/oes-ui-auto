@@ -95,7 +95,6 @@ export class DataSourceComponent implements OnInit {
       if (response.datasourceList !== null) {
        this.datasourceListData = response.datasourceList;
        this.datasourceListLength = this.datasourceListData.length;
-       console.log(this.datasourceListData);
        this.renderPage();
        this.tableIsEmpty = false;
      }else{

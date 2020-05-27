@@ -48,7 +48,6 @@ export class ReleaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.expandedIndex = -1;
-    console.log(this.releaseDataFromParent);
     this.application = this.releaseDataFromParent.appName;
   //  this.selectedAppName = this.application;
     this.releaseData = this.releaseDataFromParent;

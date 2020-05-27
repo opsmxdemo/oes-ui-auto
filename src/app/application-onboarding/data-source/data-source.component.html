@@ -126,7 +126,7 @@
               <label>Select Monitoring Provider DD</label>
               <div class="box-icon-group">
                 <div class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.name)">
-                  <input id="{{d.id}}" type="radio" name="apm-provider" />
+                  <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === 'docker'" />
                   <label for="{{d.id}}">
                     <span class="bi-lbl">
                       <img src="{{d.path}}" alt="icon" />

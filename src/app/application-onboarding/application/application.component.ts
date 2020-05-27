@@ -440,8 +440,7 @@ export class ApplicationComponent implements OnInit {
         this.mainForm.environments = this.environmentForm.value.environments;
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
-
-        console.log("editform1", JSON.stringify(this.mainForm));
+        
         //Below action is use to save updated application form in database
         this.store.dispatch(OnboardingActions.updateApplication({appData:this.mainForm}));
       } else {
