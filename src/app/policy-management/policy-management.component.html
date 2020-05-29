@@ -1,194 +1,248 @@
 <div class="main_content p-0">
-    <div class="page-content">
-        <div class="row no-gutters row-fit-vh">
-            <div class="col-sm-12 d-flex flex-column">
-                <div class="h-100 d-flex flex-column">
-                    <div class="tab-content h-100 flex-grow-1">
-                        <div class="main_content p-0">
-                            <div class="page-content">
-                              <div class="row no-gutters row-fit-vh">
-                                <div class="col-sm-12 d-flex flex-column">
-                                  <div class="h-100 d-flex flex-column">
-                                    <div class="tab-content h-100 p-3 flex-grow-1">
-                                      <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-                                        <div class="tab-content h-100 p-3 flex-grow-1">
-                                            <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-                                              <div *ngIf="loading">
-                                                <app-loading-screen></app-loading-screen>
-                                              </div>
-                                              <!-- /.page_access ml-auto -->
-                                              <div class="setup-content" *ngIf="!loading">
-                                                <div class="row">
-                                                  <div class="col-sm-12">
-                                                    <div class="p-3">
-                                                      <div class="row">
-                                                        <!-- ###################### Endpoint Section Starts #####################################-->
-                                            
-                                                        <div class="col-5">
-                                                          <form [formGroup]="endpointForm">
-                                                            <div class="form-group">
-                                                              <label>Endpoint Type</label>
-                                                              <select class="form-control {{viewOnly || editMode ? 'disableddropdown':''}}" formControlName="endpointType"
-                                                              [ngClass]="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched ? 'is-invalid':''">
-                                                                <option value="">Select Type</option>
-                                                                <option *ngFor="let data of endpointTypes" value="{{data}}">{{data}}</option>
-                                                              </select>
-                                                              <span *ngIf="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched"
-                                                                class="invalid-feedback">
-                                                                <span *ngIf="endpointForm.get('endpointType').errors['required']">Endpoint Type is required</span>
-                                                              </span>
-                                                            </div>
-                                                            <!-- /.form-group -->
-                                                            <div class="form-group">
-                                                              <label>Endpoint URL</label>
-                                                              <input type="text" class="form-control" formControlName="endpointUrl" [readonly]="viewOnly || editMode"
-                                                              [ngClass]="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched ? 'is-invalid':''">
-                                                              <span *ngIf="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched"
-                                                              class="invalid-feedback">
-                                                              <span *ngIf="endpointForm.get('endpointUrl').errors['required']">Endpoint Url is required</span>
-                                                            </span>
-                                                            </div>
-                                                          </form>
-                                                        </div>
-                                                        <!-- /.col-6 -->
-                                            
-                                                        <!-- ###################### Endpoint Section Ends #####################################-->
-                                                      </div>
-                                                      <div class="row">
-                                                          <div class="col-12">
-                                                            <ul class="nav pt-2 bg-white tab-lined nav-tabs" role="tablist" (click)="onChangeTab($event)">
-                                                              <li class="nav-item">
-                                                                <a class="nav-link active" id="DYNAMIC" data-toggle="tab" role="tab" aria-controls="DYNAMIC"
-                                                                  aria-selected="true">Dynamic Policies</a>
-                                                              </li>
-                                                              <li class="nav-item disabledMenu">
-                                                                <a class="nav-link" id="STATIC" data-toggle="tab" role="tab" aria-controls="STATIC"
-                                                                  aria-selected="false">Static Policies</a>
-                                                              </li>
-                                                            </ul>
-                                                            <div class="col-12 policyContent">
-                                                                <br>
-                                                                <div class="col-12">
-                                                                  <div class="row">
-                                                                    <div class="col-12">
-                                                                      <div class="page_access d-flex text-right p-3">
-                                                                        <div>
-                                                                          <div class="input-group input-group_search  w-2">
-                                                                            <div class="input-group-prepend">
-                                                                              <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                                                                            </div>
-                                                                            <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()"/>
-                                                                          </div>
-                                                                        </div>
-                                                                        <button class="btn btn-default" (click)="newPolicy()">New Policy</button>
-                                                                      </div>
-                                                                    </div>
-                                                                  </div>
-                                                                    <div class="row">
-                                                                        <div class="col-3 policyList">
-                                                                            <table class="table table-sticky table-striped mb-0">
-                                                                                <thead>
-                                                                                  <tr>
-                                                                                    <th class="font-weight-bold">POLICY NAME</th>
-                                                                                    <th class="font-weight-bold">STATUS</th>
-                                                                                    <th class="font-weight-bold">ACTION</th>
-                                                                                  </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                  <tr class="policyname" *ngFor = "let tabledata of currentTableContent | filter:searchData; let i = index">
-                                                                                    <td (click)="policyView(tabledata.policyName)" class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">{{tabledata.policyName}}</td>
-                                                                                    <td (click)="policyView(tabledata.policyName)" class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">{{tabledata.status}}</td>
-                                                                                    <td class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">
-                                                                                        <a   class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editPolicy(tabledata.policyName)"><i class="fas fa-pencil-alt"></i></a>
-                                                                                        <a    class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete" (click)="deletePolicy(tabledata.policyName,i)"><i class="fas fa-trash-alt"></i></a>
-                                                                                      </td>
-                                                                                  </tr>
-                                                                                </tbody>
-                                                                              </table>
-                                                                        </div>
-                                                                        <div class="col-9">
-                                                                            <form [formGroup]="policyForm">
-                                                                              <div class="row">
-                                                                                <div class="form-group col-7">
-                                                                                  <label>Name</label>
-                                                                                  <input type="text" class="form-control" formControlName="name" [readonly]="viewOnly || editMode"
-                                                                                  [ngClass]="policyForm.get('name').invalid && policyForm.get('name').touched ? 'is-invalid':''">
-                                                                                  <span *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
-                                                                                    class="invalid-feedback">
-                                                                                    <span *ngIf="policyForm.get('name').errors['required']">Name is required</span>
-                                                                                    <span *ngIf="policyForm.get('name').errors['containSpace']">Space is not allowed in Policy Name</span>
-                                                                                    <span *ngIf="policyForm.get('name').errors['policyExists']">Policy already
-                                                                                      exists with same name. Please choose a unique policy name</span>
-                                                                                  </span>
-                                                                                </div>
-                                                                                <div class="form-group col-5 statuselement">
-                                                                                  <div class="custom-control custom-checkbox">
-                                                                                  <input type="checkbox" class="custom-control-input" formControlName="status" id="status">
-                                                                                  <label class="custom-control-label {{viewOnly ? 'disabledcheckbox':''}}"
-                                                                                    for="status">Active</label>
-                                                                                </div>
-                                                                                </div>
-                                                                                <!-- /.form-group -->
-                                                                                <div class="form-group col-7">
-                                                                                  <label>Description</label>
-                                                                                  <textarea class="form-control" rows="3" formControlName="description" [readonly]="viewOnly"></textarea>
-                                                                                </div>
-                                                                                <!-- /.form-group -->
-                                                                                <div class="form-group col-12">
-                                                                                  <label>Policy Details</label>
-                                                                                  <textarea type="text" class="form-control policyDetailText" formControlName="rego" [readonly]="viewOnly"
-                                                                                  [ngClass]="policyForm.get('rego').invalid && policyForm.get('rego').touched ? 'is-invalid':''"></textarea>
-                                                                                  <span *ngIf="policyForm.get('rego').invalid && policyForm.get('rego').touched"
-                                                                                    class="invalid-feedback">
-                                                                                    Policy Details is required
-                                                                                  </span>
-                                                                                </div>
-                                                                              </div>
-                                                                              </form>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <br>
-                                                            </div>
-                                                           
-                                                          </div>
-                                                      </div>
-                                                      <!-- /.row -->
-                                                    </div>
-                                                    <div class="p-3 bottom-strp-cover gray-strip text-right">
-                                                        <button class="btn btn-default">Cancel</button>
-                                                        <button class="btn btn-default ml-2 {{viewOnly ? 'sw-btn-next':''}}" (click)="loadFileContent()" [disabled]="viewOnly">Load</button> 
-                                                        <button class="btn btn-primary ml-2 {{viewOnly ? 'sw-btn-next':''}}" [disabled]="viewOnly" (click)="submitForm()">Save & Finish</button>
-                                                      </div>
-                                                  </div>
-                                                  <!-- /.col-sm-9 -->
-                                                </div>
-                                                <!-- /.row -->
-                                              </div>
-                                              <!-- /.setup-content -->
+  <div class="page-content">
+    <div class="row no-gutters row-fit-vh">
+      <div class="col-sm-12 d-flex flex-column">
+        <div class="h-100 d-flex flex-column">
+          <div class="tab-content h-100 flex-grow-1">
+            <div class="main_content p-0">
+              <div class="page-content">
+                <div class="row no-gutters row-fit-vh">
+                  <div class="col-sm-12 d-flex flex-column">
+                    <div class="h-100 d-flex flex-column">
+                      <div class="tab-content h-100 p-3 flex-grow-1">
+                        <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                          <div class="tab-content h-100 p-3 flex-grow-1">
+                            <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                              <div *ngIf="loading">
+                                <app-loading-screen></app-loading-screen>
+                              </div>
+                              <!-- /.page_access ml-auto -->
+                              <div class="setup-content" *ngIf="!loading">
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <div class="p-3">
+                                      <div class="row">
+                                        <!-- ###################### Endpoint Section Starts #####################################-->
+
+                                        <div class="col-5">
+                                          <form [formGroup]="endpointForm">
+                                            <div class="form-group">
+                                              <label>Endpoint Type</label>
+                                              <select
+                                                class="form-control {{viewOnly || editMode ? 'disableddropdown':''}}"
+                                                formControlName="endpointType"
+                                                [ngClass]="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched ? 'is-invalid':''">
+                                                <option value="">Select Type</option>
+                                                <option *ngFor="let data of endpointTypes" value="{{data}}">{{data}}
+                                                </option>
+                                              </select>
+                                              <span
+                                                *ngIf="endpointForm.get('endpointType').invalid && endpointForm.get('endpointType').touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                  *ngIf="endpointForm.get('endpointType').errors['required']">Endpoint
+                                                  Type is required</span>
+                                              </span>
                                             </div>
-                                          </div>
-                                          
+                                            <!-- /.form-group -->
+                                            <div class="form-group">
+                                              <label>Endpoint URL</label>
+                                              <input type="text" class="form-control" formControlName="endpointUrl"
+                                                [readonly]="viewOnly || editMode"
+                                                [ngClass]="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched ? 'is-invalid':''">
+                                              <span
+                                                *ngIf="endpointForm.get('endpointUrl').invalid && endpointForm.get('endpointUrl').touched"
+                                                class="invalid-feedback">
+                                                <span
+                                                  *ngIf="endpointForm.get('endpointUrl').errors['required']">Endpoint
+                                                  Url is required</span>
+                                              </span>
+                                            </div>
+                                          </form>
+                                        </div>
+                                        <!-- /.col-6 -->
+
+                                        <!-- ###################### Endpoint Section Ends #####################################-->
                                       </div>
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <ul class="nav pt-2 bg-white tab-lined nav-tabs" role="tablist"
+                                            (click)="onChangeTab($event)">
+                                            <li class="nav-item">
+                                              <a class="nav-link active" id="DYNAMIC" data-toggle="tab" role="tab"
+                                                aria-controls="DYNAMIC" aria-selected="true">Dynamic Policies</a>
+                                            </li>
+                                            <li class="nav-item disabledMenu">
+                                              <a class="nav-link" id="STATIC" data-toggle="tab" role="tab"
+                                                aria-controls="STATIC" aria-selected="false">Static Policies</a>
+                                            </li>
+                                          </ul>
+                                          <div class="col-12 policyContent">
+                                            <br>
+                                            <div class="col-12">
+                                              <div class="row">
+                                                <div class="col-12">
+                                                  <div class="page_access d-flex text-right p-3">
+                                                    <div>
+                                                      <div class="input-group input-group_search  w-2">
+                                                        <div class="input-group-prepend">
+                                                          <span class="input-group-text" id="modal-search"><i
+                                                              class="fa fa-search"></i></span>
+                                                        </div>
+                                                        <input type="text" class="form-control" placeholder="Search Policy" [(ngModel)]="searchData"
+                                                          (keyup)="onSearch()" />
+                                                      </div>
+                                                    </div>
+                                                    <button class="btn btn-default" (click)="newPolicy()">New
+                                                      Policy</button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="row" *ngIf="isDataEmpty">
+                                                <div class="d-flex w-100 emptyDataScreen">
+                                                  <div class="no_content m-auto">
+                                                    <img src="../../../assets/images//blank-123.png" class="hr-image"
+                                                      alt="blank" />
+                                                    <p><strong>Create New '{{currentTab}}' Policy</strong></p>
+                                                    <p>Non of Policy is exist in database. <br><small>(To create
+                                                        Policy, click New Policy button present above)</small></p>
+                                                  </div>
+                                                  <!-- /.no_content -->
+                                                </div>
+                                              </div>
+                                              <div class="row" *ngIf="!isDataEmpty">
+                                                <div class="col-3 policyList">
+                                                  <table class="table table-sticky table-striped mb-0">
+                                                    <thead>
+                                                      <tr>
+                                                        <th class="font-weight-bold">POLICY NAME</th>
+                                                        <th class="font-weight-bold">STATUS</th>
+                                                        <th class="font-weight-bold">ACTION</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr class="policyname"
+                                                        *ngFor="let tabledata of currentTableContent | filter:searchData; let i = index">
+                                                        <td (click)="policyView(tabledata.policyName)"
+                                                          class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">
+                                                          {{tabledata.policyName}}</td>
+                                                        <td (click)="policyView(tabledata.policyName)"
+                                                          class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">
+                                                          {{tabledata.status}}</td>
+                                                        <td
+                                                          class="{{editPolicyData.name === tabledata.policyName ? 'active':''}}">
+                                                          <a class="text-muted" data-toggle="tooltip"
+                                                            data-placement="top" title="Edit"
+                                                            (click)="editPolicy(tabledata.policyName)"><i
+                                                              class="fas fa-pencil-alt"></i></a>
+                                                          <a class="text-muted ml-2" data-toggle="tooltip"
+                                                            data-placement="top" title="Delete"
+                                                            (click)="deletePolicy(tabledata.policyName,i)"><i
+                                                              class="fas fa-trash-alt"></i></a>
+                                                        </td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                </div>
+                                                <div class="col-9">
+                                                  <form [formGroup]="policyForm">
+                                                    <div class="row">
+                                                      <div class="form-group col-7">
+                                                        <label>Name</label>
+                                                        <input type="text" class="form-control" formControlName="name"
+                                                          [readonly]="viewOnly || editMode"
+                                                          [ngClass]="policyForm.get('name').invalid && policyForm.get('name').touched ? 'is-invalid':''">
+                                                        <span
+                                                          *ngIf="policyForm.get('name').invalid && policyForm.get('name').touched"
+                                                          class="invalid-feedback">
+                                                          <span *ngIf="policyForm.get('name').errors['required']">Name
+                                                            is required</span>
+                                                          <span
+                                                            *ngIf="policyForm.get('name').errors['containSpace']">Space
+                                                            is not allowed in Policy Name</span>
+                                                          <span
+                                                            *ngIf="policyForm.get('name').errors['policyExists']">Policy
+                                                            already
+                                                            exists with same name. Please choose a unique policy
+                                                            name</span>
+                                                        </span>
+                                                      </div>
+                                                      <div class="form-group col-5 statuselement">
+                                                        <div class="custom-control custom-checkbox">
+                                                          <input type="checkbox" class="custom-control-input"
+                                                            formControlName="status" id="status">
+                                                          <label
+                                                            class="custom-control-label {{viewOnly ? 'disabledcheckbox':''}}"
+                                                            for="status">Active</label>
+                                                        </div>
+                                                      </div>
+                                                      <!-- /.form-group -->
+                                                      <div class="form-group col-7">
+                                                        <label>Description</label>
+                                                        <textarea class="form-control" rows="3"
+                                                          formControlName="description"
+                                                          [readonly]="viewOnly"></textarea>
+                                                      </div>
+                                                      <!-- /.form-group -->
+                                                      <div class="form-group col-12">
+                                                        <label>Policy Details</label>
+                                                        <textarea type="text" class="form-control policyDetailText"
+                                                          formControlName="rego" [readonly]="viewOnly"
+                                                          [ngClass]="policyForm.get('rego').invalid && policyForm.get('rego').touched ? 'is-invalid':''"></textarea>
+                                                        <span
+                                                          *ngIf="policyForm.get('rego').invalid && policyForm.get('rego').touched"
+                                                          class="invalid-feedback">
+                                                          Policy Details is required
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </form>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <br>
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                      <!-- /.row -->
+                                    </div>
+                                    <div class="p-3 gray-strip text-right">
+                                      <button class="btn btn-default">Cancel</button>
+                                      <button class="btn btn-default ml-2 {{viewOnly ? 'sw-btn-next':''}}"
+                                        (click)="loadFileContent()" [disabled]="viewOnly">Load</button>
+                                      <button class="btn btn-primary ml-2 {{viewOnly ? 'sw-btn-next':''}}"
+                                        [disabled]="viewOnly" (click)="submitForm()">Save & Finish</button>
                                     </div>
                                   </div>
-                                  <!-- /.tab-lined -->
+                                  <!-- /.col-sm-9 -->
                                 </div>
-                                <!-- /.col-sm-8 -->
+                                <!-- /.row -->
                               </div>
-                              <!-- /.row -->
+                              <!-- /.setup-content -->
                             </div>
-                            <!-- /.page-content -->
                           </div>
-                          <!-- /.main_content -->
+
+                        </div>
+                      </div>
                     </div>
+                    <!-- /.tab-lined -->
+                  </div>
+                  <!-- /.col-sm-8 -->
                 </div>
-                <!-- /.tab-lined -->
+                <!-- /.row -->
+              </div>
+              <!-- /.page-content -->
             </div>
-            <!-- /.col-sm-8 -->
+            <!-- /.main_content -->
+          </div>
         </div>
-        <!-- /.row -->
+        <!-- /.tab-lined -->
+      </div>
+      <!-- /.col-sm-8 -->
     </div>
-    <!-- /.page-content -->
+    <!-- /.row -->
+  </div>
+  <!-- /.page-content -->
 </div>
 <!-- /.main_content -->
