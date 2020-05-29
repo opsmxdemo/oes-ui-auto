@@ -67,34 +67,6 @@
                   "maximumError": "40kb"
                 }
               ]
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "40kb",
-                  "maximumError": "40kb"
-                }
-              ]
             }
           }
         },
@@ -106,9 +78,6 @@
           "configurations": {
             "production": {
               "browserTarget": "OES-UI:build:production"
-            },
-            "staging": {
-              "browserTarget": "OES-UI:build:staging"
             }
           }
         },

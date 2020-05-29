@@ -8,9 +8,9 @@ import * as fromApp from '../../store/app.reducer';
 import * as AuditAction from './audit.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { environment } from '../../../environments/environment'
 import { NotificationService } from 'src/app/services/notification.service';
 import { PipelineCount } from 'src/app/models/audit/pipelineCount.model';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -40,7 +40,8 @@ export class AuditEffect {
         public http: HttpClient,
         public store: Store<fromApp.AppState>,
         public router: Router,
-        public toastr: NotificationService
+        public toastr: NotificationService,
+        private environment: AppConfigService
     ) { }
 
     // Below effect is use for fetch pipline count which is used in audit navigation.
@@ -48,7 +49,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.loadAudit),
             switchMap(() => {
-                return this.http.get<PipelineCount>(environment.endPointUrl + 'oes/audit/pipelinescount').pipe(
+                return this.http.get<PipelineCount>(this.environment.config.endPointUrl + 'oes/audit/pipelinescount').pipe(
                     map(resdata => {
                         return AuditAction.fetchPipelineCount({ pipelineCount: resdata });
                     }),
@@ -69,7 +70,7 @@ export class AuditEffect {
                 const params = new HttpParams()
                     .set('isLatest', 'false')
                     .set('isTreeView', 'false');
-                return this.http.get(environment.endPointUrl + 'oes/audit/allDeployments', { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/allDeployments', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
                     }),
@@ -89,7 +90,7 @@ export class AuditEffect {
             switchMap(() => {
                 const params = new HttpParams()
                     .set('isTreeView', 'false');
-                return this.http.get(environment.endPointUrl + 'oes/audit/pipelineconfig', { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/pipelineconfig', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
                     }),
@@ -109,7 +110,7 @@ export class AuditEffect {
             switchMap(() => {
                 const params = new HttpParams()
                     .set('isTreeView', 'true');
-                return this.http.get(environment.endPointUrl + 'oes/audit/failedPipelineDetails', { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/failedPipelineDetails', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchFailedPipeline({ failedPipelineData: resdata });
                     }),
@@ -129,7 +130,7 @@ export class AuditEffect {
             switchMap(() => {
                 const params = new HttpParams()
                     .set('isTreeView', 'true');
-                return this.http.get(environment.endPointUrl + 'oes/audit/lastSuccessfulDeployments', { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/lastSuccessfulDeployments', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchlastSuccessfulDeployments({ lastSuccessfulDeployment: resdata });
                     }),
@@ -147,7 +148,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.postFilterData),
             switchMap((action) => {
-                return this.http.post(environment.endPointUrl + 'oes/audit/'+action.relatedApi+'?isLatest=false&isTreeView=false',action.filter).pipe(
+                return this.http.post(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi+'?isLatest=false&isTreeView=false',action.filter).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
                             case 'pipelineconfig':
@@ -173,7 +174,7 @@ export class AuditEffect {
                 const params = new HttpParams()
                     .set('isLatest', 'false')
                     .set('isTreeView', 'false');
-                return this.http.get(environment.endPointUrl + 'oes/audit/'+action.relatedApi, { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi, { params: params }).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
                             case 'pipelineconfig':
@@ -196,7 +197,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.saveFilterCall),
             switchMap((action) => {
-                return this.http.post(environment.endPointUrl + 'oes/audit/filter/'+action.relatedApi+'save',action.saveFilterData).pipe(
+                return this.http.post(this.environment.config.endPointUrl + 'oes/audit/filter/'+action.relatedApi+'save',action.saveFilterData).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.saveFilterData['name']+' Successfully Saved','SUCCESS');
                         switch(action.relatedApi){
@@ -220,7 +221,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.deleteSavedFilter),
             switchMap((action) => {
-                return this.http.delete(environment.endPointUrl + 'oes/audit/filter/delete/'+action.filtername).pipe(
+                return this.http.delete(this.environment.config.endPointUrl + 'oes/audit/filter/delete/'+action.filtername).pipe(
                     map(resdata => {
                         if (resdata['status'] === 200) {
                             this.toastr.showSuccess(resdata['message'], 'SUCCESS')
@@ -242,7 +243,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.selectedFilterCall),
             switchMap((action) => {
-                return this.http.get(environment.endPointUrl + 'oes/audit/'+action.relatedApi+'/'+action.filtername).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi+'/'+action.filtername).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
                             case 'pipelineconfig':

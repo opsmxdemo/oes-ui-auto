@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import * as fromApp from './store/app.reducer';
 import { AppRoutingModule } from './subModules/app-routing.module';
 import { AppComponent } from './app.component';
@@ -45,6 +45,14 @@ import { AwsCloudwatchFormComponent } from './application-onboarding/data-source
 import { ElasticsearchFormComponent } from './application-onboarding/data-source/elasticsearch-form/elasticsearch-form.component';
 import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
+import { AppConfigService } from './services/app-config.service';
+
+// Below function is use to fetch endpointUrl fron file present in assets/config location.
+const appInitializerFn = (appConfig: AppConfigService) => {
+  return () => {
+      return appConfig.loadAppConfig();
+  }
+};
 
 @NgModule({
   declarations: [
@@ -100,6 +108,13 @@ import { LoadingScreenComponent } from './loading-screen/loading-screen.componen
     WildcardRoutingModule
   ],
   providers: [
+    AppConfigService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appInitializerFn,
+            multi: true,
+            deps: [AppConfigService]
+        },
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

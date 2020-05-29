@@ -9,7 +9,7 @@ import * as LayoutAction from './layout.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
-import {environment} from '../../../environments/environment'
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
@@ -37,7 +37,8 @@ export class LayoutEffect {
     constructor(public actions$: Actions<LayoutAction.LayoutActions>,
         public http: HttpClient,
         public store: Store<fromApp.AppState>,
-        public router: Router
+        public router: Router,
+        private environment: AppConfigService
     ) { }
 
     // Below effect is use for fetch sidebar data. 
@@ -45,7 +46,7 @@ export class LayoutEffect {
     authLogin = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
-            return this.http.get<Menu>(environment.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
+            return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
                 map(resData => {
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),
