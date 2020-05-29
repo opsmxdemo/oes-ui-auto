@@ -18,7 +18,6 @@ export class AppConfigService {
         return http.get('../../assets/config/app-config.json')
         .toPromise()
         .then(data => {
-            debugger
             if(data['endPointUrl'] !== undefined){
                 this.appConfig = data;
             }else {

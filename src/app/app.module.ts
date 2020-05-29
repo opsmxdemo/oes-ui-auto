@@ -46,6 +46,7 @@ import { ElasticsearchFormComponent } from './application-onboarding/data-source
 import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AppConfigService } from './services/app-config.service';
+import { AppDashboardEffect } from './application-dashboard/store/dashboard.effects';
 
 // Below function is use to fetch endpointUrl fron file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -99,7 +100,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
                           LayoutEffect,
                           ApplicationOnBoardingEffect,
                           AuditEffect,
-                          PolicyEffect]),
+                          PolicyEffect,
+                          AppDashboardEffect]),
     ToastrModule.forRoot({
       timeOut: 10000,
       preventDuplicates: true,
