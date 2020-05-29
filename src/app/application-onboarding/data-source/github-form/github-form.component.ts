@@ -70,9 +70,6 @@ export class GithubFormComponent implements OnInit {
   }
 
   changeType(e){
-    debugger
-    console.log('form-before',this.gitForm.value);
-    
     this.selectedType = e.target.value;
     if(this.selectedType === 'token'){
       this.gitForm.addControl('gitToken', new FormControl('', Validators.required));
@@ -88,7 +85,6 @@ export class GithubFormComponent implements OnInit {
         this.gitForm.removeControl('gitToken');
       }
      }
-     console.log('form-after',this.gitForm.value);
   }
 
    onSubmit() {

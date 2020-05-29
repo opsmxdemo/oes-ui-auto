@@ -16,8 +16,8 @@ import * as $ from 'jquery';
 })
 export class PolicyManagementComponent implements OnInit {
 
-  loading=false;                                         // It is use to show and hide loader
-  searchData: string = ''                                // It is use for search purpose
+  loading=false;                                         // It is use to show and hide loader.
+  searchData: string = ''                                // It is use for search purpose.
   endpointForm: FormGroup;                               // For Endpoint Section.
   policyForm: FormGroup;                                 // For Policy section.
   fileContent: any;                                      // For file data.
@@ -25,18 +25,16 @@ export class PolicyManagementComponent implements OnInit {
   currentTableContent = [];                              // It is use to store current table data.
   policyData:PolicyManagement = null;                    // It is use to store whole form data use to send to backend.
   currentTab = 'DYNAMIC';                                // It is use to store value of current tab.
-  policyCounter = 0;                                     // It is use to call policyData initially
+  policyCounter = 0;                                     // It is use to call policyData initially.
   editPolicyData:PolicyManagement = null;                // It is use to store edit application data. 
-  viewOnly:boolean = true;                               // It is use to set readonly mode in policy form
-  editMode:boolean = false;                              // It is use to set edit Mode in policy form
+  viewOnly:boolean = true;                               // It is use to set readonly mode in policy form.
+  editMode:boolean = false;                              // It is use to set edit Mode in policy form.
+  isDataEmpty:boolean = false;                           // It is use to show and hide empty screen on basics of table data.
 
   constructor(public store: Store<fromApp.AppState>,
               public sharedService: SharedService,) {}
 
   ngOnInit(){
-
-    //dispatching action for policy management
-    this.store.dispatch(PolicyActions.loadPolicy({relatedTab:this.currentTab}));
 
      // fetching data from State
      this.store.select('policy').subscribe(
@@ -45,13 +43,17 @@ export class PolicyManagementComponent implements OnInit {
         this.viewOnly = resData.readonlyMode;
         this.editMode = resData.editMode;
         if(resData.dynamicTableData !== null){
-          if(this.currentTab === 'DYNAMIC'){
+          if(this.currentTab === 'DYNAMIC' && resData.dynamicTableData.length>0){
             this.currentTableContent = resData.dynamicTableData;
+            this.isDataEmpty = false;
             this.fetchInitialData(this.currentTableContent);
+          }else if(this.currentTab === 'STATIC' && resData.staticTableData.length>0){
+            this.currentTableContent = resData.staticTableData;
+            this.isDataEmpty = false;
+            this.fetchInitialData(this.currentTableContent);
+          }else{
+            this.isDataEmpty = true;
           }
-          // else{
-          //   this.currentTableContent = resData.staticTableData;
-          // }
         }
         this.endpointTypes = resData.endpointTypeData;
         if(resData.editPolicyData !== null && resData.editPolicyData !== undefined){
@@ -222,6 +224,7 @@ export class PolicyManagementComponent implements OnInit {
   newPolicy(){
     this.store.dispatch(PolicyActions.createPolicy());
     this.defineForms();
+    this.isDataEmpty = false;
   }
 
   // Below function is execute on tab change.i.e, dynamic or static polices
@@ -231,12 +234,15 @@ export class PolicyManagementComponent implements OnInit {
     this.store.select('policy').subscribe(
       (resData) => {
         if(resData.dynamicTableData !== null){
-          if(this.currentTab === 'DYNAMIC'){
+          if(this.currentTab === 'DYNAMIC' && resData.dynamicTableData.length>0){
             this.currentTableContent = resData.dynamicTableData;
           }
-          // else{
+          // else if (this.currentTab === 'STATIC' && resData.staticTableData.length>0){
           //   this.currentTableContent = resData.staticTableData;
           // }
+          else{
+            this.isDataEmpty = true;
+          }
         }
       }
     )

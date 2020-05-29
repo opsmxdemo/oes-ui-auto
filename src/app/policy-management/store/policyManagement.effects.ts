@@ -8,9 +8,9 @@ import * as fromApp from '../../store/app.reducer';
 import * as PolicyAction from './policyManagement.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { environment } from '../../../environments/environment'
 import { NotificationService } from 'src/app/services/notification.service';
 import { PolicyTable } from 'src/app/models/policyManagement/policyTable.model';
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -40,7 +40,8 @@ export class PolicyEffect {
         public http: HttpClient,
         public store: Store<fromApp.AppState>,
         public router: Router,
-        public toastr: NotificationService
+        public toastr: NotificationService,
+        private environment: AppConfigService
     ) { }
 
     // Below effect is use for fetch Table data exist in dynamic and static section
@@ -48,7 +49,7 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.loadPolicy,PolicyAction.successfullSubmission,PolicyAction.deletedPolicySuccessfully),
             switchMap(() => {
-                return this.http.get<PolicyTable[]>(environment.endPointUrl + 'oes/policy/list').pipe(
+                return this.http.get<PolicyTable[]>(this.environment.config.endPointUrl + 'oes/policy/list').pipe(
                     map(resdata => {
                         if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR')
@@ -68,7 +69,7 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.loadPolicy),
             switchMap(() => {
-                return this.http.get(environment.endPointUrl + 'oes/policy/endpointType').pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/policy/endpointType').pipe(
                     map(resdata => {
                         return PolicyAction.fetchEndpointType({ endpointType: resdata });
                     }),
@@ -86,7 +87,7 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.editPolicy),
             switchMap((action) => {
-                return this.http.get(environment.endPointUrl + 'oes/policy/'+action.policyName).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/policy/'+action.policyName).pipe(
                     map(resdata => {
                         if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR')
@@ -106,7 +107,7 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.savePolicy),
             switchMap((action) => {
-                return this.http.post<any>(environment.endPointUrl + 'oes/policy/save', action.policyForm).pipe(
+                return this.http.post<any>(this.environment.config.endPointUrl + 'oes/policy/save', action.policyForm).pipe(
                     map(resdata => {
                         if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR');
@@ -127,7 +128,7 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.deletePolicy),
             switchMap((action) => {
-                return this.http.delete<any>(environment.endPointUrl + 'oes/policy/'+action.policyName).pipe(
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/policy/'+action.policyName).pipe(
                     map(resdata => {
                         if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR');

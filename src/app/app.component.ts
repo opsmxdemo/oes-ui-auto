@@ -4,6 +4,7 @@ import * as fromApp from './store/app.reducer';
 import * as AuthAction from './auth/store/auth.actions';
 import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
+import * as PolicyActions from './policy-management/store/policyManagement.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import { environment } from '../environments/environment'
@@ -32,10 +33,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   ngOnInit() {
 
-    //Dispatching action to fetch Sidebar Menu
-    this.store.dispatch(new LayoutAction.LoadPage());
-
-    //Dispatching action for autoLogin functionality
+    //Dispatching action for login functionality
     this.store.dispatch(new AuthAction.LoginStart());
 
     //fetching data from AuthState
@@ -48,12 +46,20 @@ export class AppComponent implements OnInit, AfterViewChecked {
           var resultUrl = arr[0] + "//" + arr[2] + "/appdashboard";
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
-        }else{
+        }else if(response.authResponse === 'success'){
+
+          //Dispatching action to fetch Sidebar Menu
+          this.store.dispatch(new LayoutAction.LoadPage());
+
           //Dispatching action to fetch application data from API
           this.store.dispatch(OnboardingActions.loadAppList());
 
           //Dispatching action to fetch audit initial data
           this.store.dispatch(AuditActions.loadAudit());
+
+          //Dispatching action for policy management initial data
+          this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
+
         }
       }
     );
