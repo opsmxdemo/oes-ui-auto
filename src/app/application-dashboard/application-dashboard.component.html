@@ -1,6 +1,6 @@
-<div class="main_content">
+<div class="main_content" *ngIf="!dashboardLoading">
   <div class="page_title d-flex align-items-center">
-    <h2>Application Dashboard </h2> <i (click)="getApplications()" class="refresh-icon fa">&#xf021;</i>
+    <h2>Application Dashboard </h2> <i (click)="getApplications()" data-toggle="tooltip" data-placement="top" title="Refresh Application List" class="refresh-icon fa">&#xf021;</i>
     <div class="page_access ml-auto">
       <!-- <button class="btn btn-white"><img src="../../../assets/setting_icon.png" alt="icon" /></button> -->
       <button class="btn btn-primary ml-2" (click)="addNewApplication()" data-backdrop="static" data-keyboard="false"><i
@@ -124,4 +124,9 @@
   <!-- /.row -->
 </div>
 <!-- /.main_content -->
+<div class="main_content" *ngIf="dashboardLoading">
+  <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+    <app-loading-screen></app-loading-screen>
+   </div>
+</div>
 

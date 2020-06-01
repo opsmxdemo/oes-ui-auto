@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
-import { environment } from 'src/environments/environment';
-import { isTemplateMiddle, StringLiteral } from 'typescript';
 import { NotificationService } from '../services/notification.service';
+import * as AppDashboardAction from '../application-dashboard/store/dashboard.actions';
+import * as fromApp from '../store/app.reducer';
+import { Store } from '@ngrx/store';
 class ReleaseServices {
   serviceName = '';
   tag = '';
@@ -44,7 +45,9 @@ export class ReleaseComponent implements OnInit {
   releaseErrorMessage: String;
   newReleaseErrorMessage: string;
 
-  constructor(private applicationService: ApplicationService, public notification: NotificationService) { }
+  constructor(private applicationService: ApplicationService, 
+              public notification: NotificationService,
+              public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
     this.expandedIndex = -1;
@@ -131,5 +134,7 @@ export class ReleaseComponent implements OnInit {
       }
     
     });
+    // Dispatching dashboard actions to refresh application list or to fetched updated data
+    //this.store.dispatch(AppDashboardAction.loadAppDashboard());
   }
 }
