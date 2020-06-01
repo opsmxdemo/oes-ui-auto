@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
 import { ViewChild, ElementRef} from '@angular/core';
+//import { } from '@ng-bo'
 
 @Component({
   selector: 'app-data-source',
@@ -37,8 +38,8 @@ export class DataSourceComponent implements OnInit {
     public sharedAccountData: SharedService) { }
 
   ngOnInit(): void {
-    this.selectedDataProvider = 'Docker';
-    this.getDataProvider("Docker");
+    this.selectedDataProvider = '';
+   // this.getDataProvider("Docker");
     this.dataSourceList = [{
       "id": "new_relic",
       "name": "New Relic",
@@ -80,12 +81,12 @@ export class DataSourceComponent implements OnInit {
       "path": "../../assets/images/elastic-search.png"
     },
     {
-      "id": "github",
+      "id": "GITHUB",
       "name": "Github",
       "path": "../../assets/images/github.png"
     },
     {
-      "id": "docker",
+      "id": "DOCKERHUB",
       "name": "Docker",
       "path": "../../assets/images/docker.png"
     }];
@@ -102,7 +103,6 @@ export class DataSourceComponent implements OnInit {
      }else{
        this.tableIsEmpty = true;
      }
-    //alert(response);
      },
      (error) => {
        this.notifications.showError('Error',error);
@@ -223,12 +223,27 @@ export class DataSourceComponent implements OnInit {
       })
     }
 
+    //Below function is to get the typeof the form used
+    addDataSourceAccount(type:string){
+      this.typeOfForm = type;
+      this.selectedDataProvider = 'DOCKERHUB';
+      this.sharedAccountData.setDataSourceType(this.typeOfForm);
+      this.sharedAccountData.setDataSourceData('');
+    }
+
     // Below funcion is use to edit existing account
     editAccount(account:any,index,type:string){
       this.typeOfForm = type;
-      console.log(account);
       this.sharedAccountData.setDataSourceData(account);
-      this.sharedAccountData.setDataSourceType(type);
+      this.sharedAccountData.setDataSourceType(this.typeOfForm);
+      if(account.account_type === 'DOCKERHUB'){
+        this.selectedDataProvider = 'DOCKERHUB';
+      }else if(account.account_type === 'GITHUB'){
+        this.selectedDataProvider = 'GITHUB';
+      }else{
+        
+      }
+      
     }
 
  

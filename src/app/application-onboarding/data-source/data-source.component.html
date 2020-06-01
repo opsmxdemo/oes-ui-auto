@@ -6,7 +6,7 @@
             <div class="tab-content h-100 p-3 flex-grow-1">
                 <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access text-right p-3">
-                    <button class="btn btn-default" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                    <button class="btn btn-default" (click)="addDataSourceAccount('new')" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
                   </div>
                   <!-- /.page_access ml-auto -->
                   <div class="gray-strip"></div>
@@ -31,7 +31,7 @@
                             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                           </div>
                         </div>
-                        <button class="btn btn-default" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                        <button class="btn btn-default" (click)="addDataSourceAccount('new')"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
                       </div>
                   <!-- /.page_access ml-auto -->
                   <div class="table-content">
@@ -53,7 +53,7 @@
                             <td>{{datasourceData.accountType}}</td>
                             <td>{{datasourceData.username}}</td>
                              <td>
-                             <!-- <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editAccount(datasourceData,i,'edit')" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  -->
+                              <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editAccount(datasourceData,i,'edit')" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  
                               <a (click)="deleteAccount(datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>
@@ -109,7 +109,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">New Data Source</h5>
+          <h5 *ngIf="typeOfForm === 'new'" class="modal-title">New Data Source</h5>
+          <h5 *ngIf="typeOfForm === 'edit'" class="modal-title">{{selectedDataProvider}}</h5>
           <button type="button" class="close" data-dismiss="modal" #closeAddExpenseModal aria-label="Close">
             <i class="fa fa-times"></i>
           </button>
@@ -117,10 +118,10 @@
         <div class="modal-body">
           <!-- <form> -->
             <div class="form-group text-muted">
-              <label>Select Monitoring Provider DD</label>
+              <label>Select Monitoring Provider </label>
               <div class="box-icon-group">
-                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.name)" [ngClass]="{'disabledMenu':d.id !== 'docker' && d.id !==  'github'}">
-                  <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === 'docker'" />
+                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.id)" [ngClass]="{'disabledMenu':d.id !== 'DOCKERHUB' && d.id !==  'GITHUB'}">
+                  <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === selectedDataProvider" />
                   <label for="{{d.id}}">
                     <span class="bi-lbl">
                       <img src="{{d.path}}" alt="icon" />
@@ -138,7 +139,8 @@
             <!-- /.form-group -->
             <hr />
            <!-- code for form load   -->
-           <div *ngIf="selectedDataProvider === 'Github'"><app-github-form></app-github-form></div>
+           <div *ngIf="selectedDataProvider === 'GITHUB' && typeOfForm === 'edit'"><app-github-form></app-github-form></div>
+           <div *ngIf="selectedDataProvider === 'GITHUB' && typeOfForm === 'new'"><app-github-form></app-github-form></div>
            <div *ngIf="selectedDataProvider === 'New Relic'"><app-newrelic-form></app-newrelic-form></div>
            <div *ngIf="selectedDataProvider === 'Dynatrace'"><app-dynatrace-form></app-dynatrace-form></div>
            <div *ngIf="selectedDataProvider === 'GCP Stackdriver'"><app-gcp-stackdriver-form></app-gcp-stackdriver-form></div>
@@ -147,7 +149,9 @@
            <div *ngIf="selectedDataProvider === 'AWS Cloudwatch'"><app-aws-cloudwatch-form></app-aws-cloudwatch-form></div>
            <div *ngIf="selectedDataProvider === 'App Dynamics'"><app-app-dynamics-form></app-app-dynamics-form></div> 
            <div *ngIf="selectedDataProvider === 'Datadog'"><app-datadog-form></app-datadog-form></div>
-           <div *ngIf="selectedDataProvider === 'Docker'"><app-docker-form></app-docker-form></div>
+           <div *ngIf="selectedDataProvider === 'DOCKERHUB' && typeOfForm === 'edit'"><app-docker-form></app-docker-form></div>
+           <div *ngIf="selectedDataProvider === 'DOCKERHUB' && typeOfForm === 'new'"><app-docker-form></app-docker-form></div>
+
            <!-- </form> -->
         </div>
        

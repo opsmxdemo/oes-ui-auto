@@ -23,6 +23,7 @@ export class GithubFormComponent implements OnInit {
   showGitCheck = false;
   selectedType: string;
   gitType: string;
+  form_type: string;
 
   constructor(private formBuilder: FormBuilder,private sharedService: SharedService,
     private notifications: NotificationService, private datasource: DataSourceComponent,
@@ -39,12 +40,45 @@ export class GithubFormComponent implements OnInit {
       username:  ['', Validators.required],
       password:  ['', Validators.required]
   });
-  //this.gitType = 'Credentials';
-  this.credentialsType = this.getcredentialsType();
- this.selectedType = 'credentials';
- this.gitForm.patchValue({
- credentialsType: 'credentials',
-});
+  
+  this.form_type= this.sharedService.getDataSourceType();
+  if(this.sharedService.getDataSourceType() === 'edit'){
+    this.gitForm = this.formBuilder.group({
+      credentialsType: ['', Validators.required],
+      endPoint: ['', Validators.required],
+      name: ['', Validators.required],
+      clouddriver: [false],
+      account_type:['GITHUB'],
+      username:  ['', Validators.required],
+      password:  ['', Validators.required]
+    });
+    this.form_type = 'edit';
+  //  / this.form_type= this.sharedService.getDataSourceType();
+    this.credentialsType = this.getcredentialsType();
+    this.selectedType = 'credentials';
+    this.gitForm.patchValue({
+    credentialsType: 'credentials',
+    name: this.sharedService.getDataSourceData().name,
+    username: this.sharedService.getDataSourceData().username,
+    password: this.sharedService.getDataSourceData().password,
+    endPoint: this.sharedService.getDataSourceData().endPoint,
+     
+   //   credentialsType: this.sharedService.getDataSourceData().credentialsType,
+     });
+  }else{
+    this.form_type= this.sharedService.getDataSourceType();
+    this.credentialsType = this.getcredentialsType();
+    this.selectedType = 'credentials';
+    this.gitForm.patchValue({
+    credentialsType: 'credentials',
+   });
+    // this.gitForm.patchValue({
+    //   name: '',
+    //   username: '',
+    //   password: ''
+    //  });
+  }
+
   }
 
    // convenience getter for easy access to form fields
@@ -93,16 +127,30 @@ export class GithubFormComponent implements OnInit {
        if (this.gitForm.invalid) {
            return;
        }
-       this.sharedService.saveData(this.gitForm.value).subscribe((response: any) => {
-        if(response.status === 200){
-          this.notifications.showSuccess("Success",response.message);
-          this.store.dispatch(OnboardingActions.loadDatasourceList());
-          this.datasource.getClose();
-        }
-      },
-      (error) => {
-        this.notifications.showError("Error",error.message);
-      });
+       if(this.form_type === 'new'){
+        this.sharedService.saveData(this.gitForm.value).subscribe((response: any) => {
+          if(response.status === 200){
+            this.notifications.showSuccess("Success",response.message);
+            this.store.dispatch(OnboardingActions.loadDatasourceList());
+            this.datasource.getClose();
+          }
+        },
+        (error) => {
+          this.notifications.showError("Error",error.message);
+        });
+       }else{
+        this.sharedService.updateData(this.gitForm.value).subscribe((response: any) => {
+          if(response.status === 200){
+            this.notifications.showSuccess("Success",response.message);
+            this.store.dispatch(OnboardingActions.loadDatasourceList());
+            this.datasource.getClose();
+          }
+        },
+        (error) => {
+          this.notifications.showError("Error",error.message);
+        });
+       }
+      
    }
 
    //Below function is custom valiadator which is use to validate account name through API call, if name is not exist then it allows us to proceed.
