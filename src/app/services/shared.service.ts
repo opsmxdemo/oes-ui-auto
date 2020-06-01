@@ -66,6 +66,11 @@ export class SharedService {
     return this.httpClient.post(this.endpointUrl + 'oes/accountsConfig/saveAccount',postData).pipe();
   }
 
+  //
+  updateData(updatedData){
+    return this.httpClient.put(this.endpointUrl + 'oes/accountsConfig/updateAccount',updatedData).pipe();
+  }
+
   // Below function to validate the github account exist or not through api
   validateDatasourceName(name:string,type: string){
     return this.httpClient.get(this.endpointUrl + 'oes/accountsConfig/nameCheck/' + name);
