@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
 import {NotificationService} from '../services/notification.service';
 import * as fromApp from '../store/app.reducer';
+import * as AppDashboardAction from './store/dashboard.actions';
 import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
 import * as LayoutAction from '../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
+
 
 @Component({
   selector: 'app-application-dashboard',
@@ -30,8 +32,19 @@ export class ApplicationDashboardComponent implements OnInit {
   constructor(private applicationService: ApplicationService, private notifications: NotificationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
-    this.getApplications();
+    //fetching appData from dashboard state
+    this.store.select('appDashboard').subscribe(
+      (resdata) => {
+        if(resdata.appData !== null){
+          this.applicationData = resdata.appData;
+          this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
+          this.spinnerService = false;
+          this.selectedApplication(0, this.applicationData[0]);
+        }
+      }
+    )
   }
+  
   // code to load applications
   public getApplications() {
     this.applicationService.getApplicationList().subscribe((response: any) => {

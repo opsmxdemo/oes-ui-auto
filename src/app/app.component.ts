@@ -6,6 +6,7 @@ import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
 import * as PolicyActions from './policy-management/store/policyManagement.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
+import * as AppDashboardAction from './application-dashboard/store/dashboard.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import { environment } from '../environments/environment'
 import * as $ from 'jquery';
@@ -51,7 +52,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
 
-          //Dispatching action to fetch application data from API
+          //Dispatching action to fetch application dashboard data from API
+          this.store.dispatch(AppDashboardAction.loadAppDashboard());
+
+          //Dispatching action to fetch application Onboarding data from API
           this.store.dispatch(OnboardingActions.loadAppList());
 
           //Dispatching action to fetch audit initial data

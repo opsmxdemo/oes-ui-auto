@@ -51,7 +51,7 @@ export class SharedService {
     return this.dataSourceType;
   }
 
-  //Below function is use to validate filter name exist or not through api.i.e, ApplicationComponent
+  //Below function is use to validate filter name exist or not through api.i.e, AuditComponent
   validateFiltersName(name: string, type: string) {
     return this.httpClient.get(this.endpointUrl + 'oes/audit/filter/nameCheck/' + name);
   }
