@@ -110,7 +110,7 @@
                           <th>Tag</th>
                         </tr>
                         <tr *ngFor="let rel of ChildList;let i = index">
-                            <td>{{rel.serviceName}}</td>
+                            <td><a href="{{rel.href}}" target="_blank">{{rel.serviceName}}</a></td>
                             <td>{{rel.image}}</td>
                             <td>{{rel.tag}}</td>
                             </tr>

@@ -60,7 +60,7 @@
                   </tbody>
                 </table>
                 <div class="table-footer gray-strip px-3 py-2">
-                  <div class="form-inline">
+                  <div class="form-inline {{searchData !== ''?'disabledFooter':''}}">
                     <span class="mr-2">Per page</span>
                     <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
                       <option value="10">10</option>
@@ -69,13 +69,13 @@
                       <option value="25">25</option>
 
                     </select>
-                    <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
-                      {{page.endPoint < appListLength-1?page.endPoint:appListLength}} of {{appListLength}}</span>
+                    <span class="ml-3 mr-2">Showing {{appListLength>0?page.startingPoint+1:0}} to
+                      {{page.endPoint < appListLength?page.endPoint:appListLength}} of {{appListLength}}</span>
                     <!-- <input type="text" class="form-control mr-2" />
                     <button class="btn btn-primary">Go</button> -->
 
                     <ul class="pagination ml-auto mb-0">
-                      <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                      <li class="page-item" (click)="pagePrev()" class = "{{page.startingPoint === 0?'disabledbtn':''}}"><a class="page-link">Previous</a></li>
                       <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
                         (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
                       <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
@@ -89,7 +89,7 @@
                                    ((page.currentPage+2)*page.pageSize< appListLength? true : ((page.currentPage+2)*page.pageSize)-appListLength < page.pageSize? true : false) ? true : false"
                         (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a>
                       </li>
-                      <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
+                      <li class="page-item" (click)="pageNext()" class = "{{page.endPoint === appListLength?'disabledbtn':''}}"><a class="page-link">Next</a></li>
                     </ul>
                   </div>
                   <!-- /.per_page -->

@@ -77,7 +77,7 @@ export class AppliactionListComponent implements OnInit {
   //Below function is used to implement pagination
   renderPage() {
     this.currentPage = [];
-    if(this.page.endPoint < this.appListLength-1){
+    if(this.page.endPoint < this.appListLength){
       for (let i = this.page.startingPoint; i < this.page.endPoint; i++) {
         this.currentPage.push(this.appListData[i]);
       }
@@ -104,7 +104,7 @@ export class AppliactionListComponent implements OnInit {
 
   //Below function is execute on click of page next btn
   pageNext() {
-    if (this.page.endPoint < this.appListLength-1) {
+    if (this.page.endPoint < this.appListLength) {
       this.page.pageNo += 1;
       this.page.currentPage = this.page.pageNo;
       if ((this.page.endPoint + this.page.pageSize) < this.appListLength) {
@@ -112,7 +112,7 @@ export class AppliactionListComponent implements OnInit {
         this.page.endPoint += this.page.pageSize;
       } else if (this.page.endPoint < this.appListLength) {
         this.page.startingPoint = this.page.endPoint;
-        this.page.endPoint = this.appListLength-1;
+        this.page.endPoint = this.appListLength;
       }
       this.renderPage();
     }
@@ -141,7 +141,7 @@ export class AppliactionListComponent implements OnInit {
     if (currentPage * this.page.pageSize < this.appListLength) {
       this.page.endPoint = currentPage * this.page.pageSize;
     } else {
-      this.page.endPoint = this.appListLength-1;
+      this.page.endPoint = this.appListLength;
     }
     this.renderPage();
   }
