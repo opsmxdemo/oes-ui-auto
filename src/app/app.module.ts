@@ -48,7 +48,7 @@ import { LoadingScreenComponent } from './loading-screen/loading-screen.componen
 import { AppConfigService } from './services/app-config.service';
 import { AppDashboardEffect } from './application-dashboard/store/dashboard.effects';
 
-// Below function is use to fetch endpointUrl fron file present in assets/config location.
+// Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
   return () => {
       return appConfig.loadAppConfig();
@@ -111,13 +111,17 @@ const appInitializerFn = (appConfig: AppConfigService) => {
   ],
   providers: [
     AppConfigService,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: appInitializerFn,
-            multi: true,
-            deps: [AppConfigService]
-        },
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFn,
+      multi: true,
+      deps: [AppConfigService]
+    },
+    {
+      provide: HTTP_INTERCEPTORS, 
+      useClass: AuthInterceptor, 
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
