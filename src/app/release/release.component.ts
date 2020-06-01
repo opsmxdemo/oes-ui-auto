@@ -135,6 +135,6 @@ export class ReleaseComponent implements OnInit {
     
     });
     // Dispatching dashboard actions to refresh application list or to fetched updated data
-    this.store.dispatch(AppDashboardAction.loadAppDashboard());
+    //this.store.dispatch(AppDashboardAction.loadAppDashboard());
   }
 }
