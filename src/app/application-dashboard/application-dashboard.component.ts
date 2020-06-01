@@ -6,6 +6,7 @@ import * as AppDashboardAction from './store/dashboard.actions';
 import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
 import * as LayoutAction from '../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
+import * as $ from 'jquery';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class ApplicationDashboardComponent implements OnInit {
   public spinnerService = true;
   public parentReleaseData: any;
   releaseErrorMessage: string;
+  dashboardLoading: boolean = true;
 
 
   // tslint:disable-next-line:max-line-length
@@ -36,6 +38,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.store.select('appDashboard').subscribe(
       (resdata) => {
         if(resdata.appData !== null){
+          this.dashboardLoading = resdata.dashboardLoading;
           this.applicationData = resdata.appData;
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
@@ -47,14 +50,10 @@ export class ApplicationDashboardComponent implements OnInit {
   
   // code to load applications
   public getApplications() {
-    this.applicationService.getApplicationList().subscribe((response: any) => {
-      this.store.dispatch(new LayoutAction.ApplicationData(response.length));
-      this.applicationData = response;
-      this.spinnerService = false;
-      this.selectedApplication(0, response[0]);
-     // this.notifications.showError('error','errorMessage');
-    });
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.store.dispatch(AppDashboardAction.loadAppDashboard());
   }
+
   public selectedApplication(index: number, app: any) {
     this.spinnerService = true;
     this.showAppDataType = 'Services';

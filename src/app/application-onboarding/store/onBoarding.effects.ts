@@ -6,6 +6,7 @@ import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators'
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as OnboardingAction from './onBoarding.actions';
+import * as AppDashboardAction from '../../application-dashboard/store/dashboard.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
@@ -179,6 +180,17 @@ export class ApplicationOnBoardingEffect {
                 this.toastr.showSuccess('Data saved successfully !!', 'SUCCESS')
                 this.router.navigate([appOnboardingState.parentPage]);
                 this.store.dispatch(OnboardingAction.loadAppList());
+                this.store.dispatch(AppDashboardAction.loadAppDashboard());
+            })
+        ), { dispatch: false }
+    )
+
+    //Below effect is use to refresh appDashboard list on delete of application
+    refreshDashboard = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.appDeletedSuccessfully),
+            tap((actiondata) => {
+                this.store.dispatch(AppDashboardAction.loadAppDashboard());
             })
         ), { dispatch: false }
     )
