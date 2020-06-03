@@ -9,6 +9,10 @@
         <a class="nav-link" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
           aria-selected="false">Pipeline Execution</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" id="policy" data-toggle="tab" role="tab" aria-controls="policy"
+          aria-selected="false">Policy Audit</a>
+      </li>
     </ul>
     <div class="audit-info px-3 d-flex bg-white">
       <div>
@@ -24,9 +28,10 @@
           <div class="card">
             <div class="card-heading mb-form-db">
               <div class="form-inline">
-                <ng-container *ngIf = "advanSearchMode">
+                <ng-container *ngIf="advanSearchMode">
                   <div class="form-group ml-sm-2 mb-2">
-                    <select class="form-control"  style="width: 150px;" [(ngModel)]="selectedSaveFilter" (change)="onSelectSavedFilter()">
+                    <select class="form-control" style="width: 150px;" [(ngModel)]="selectedSaveFilter"
+                      (change)="onSelectSavedFilter()">
                       <option value="">Select saved filter</option>
                       <option *ngFor="let filter of savedFilters" value="{{filter}}">{{filter}}</option>
                     </select>
@@ -50,12 +55,14 @@
                               </div>
                               <div class="custom-control custom-radio">
                                 <input type="radio" id="last-month-range" name="customRadio"
-                                  (change)="dateForm(dForm.value)" class="custom-control-input" value="lastMonth" ngModel>
+                                  (change)="dateForm(dForm.value)" class="custom-control-input" value="lastMonth"
+                                  ngModel>
                                 <label class="custom-control-label" for="last-month-range">Last Month</label>
                               </div>
                               <div class="custom-control custom-radio">
                                 <input type="radio" id="last-week-range" name="customRadio"
-                                  (change)="dateForm(dForm.value)" class="custom-control-input" value="lastWeek" ngModel>
+                                  (change)="dateForm(dForm.value)" class="custom-control-input" value="lastWeek"
+                                  ngModel>
                                 <label class="custom-control-label" for="last-week-range">Last week</label>
                               </div>
                               <div class="custom-control custom-radio">
@@ -65,8 +72,8 @@
                                 <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
                               </div>
                               <div class="custom-control custom-radio">
-                                <input type="radio" id="custom-range" name="customRadio" (change)="dateForm(dForm.value)"
-                                  class="custom-control-input" value="custom" ngModel>
+                                <input type="radio" id="custom-range" name="customRadio"
+                                  (change)="dateForm(dForm.value)" class="custom-control-input" value="custom" ngModel>
                                 <label class="custom-control-label" for="custom-range">Custom</label>
                               </div>
                             </div>
@@ -92,7 +99,8 @@
                                 <div class="form-group">
                                   <select class="form-control" name="firstdayHours" id="firstdayHours" ngModel>
                                     <option value="">00</option>
-                                    <option *ngFor="let time of timerHour;let i = index" value="{{i+1}}" selected>{{time}}
+                                    <option *ngFor="let time of timerHour;let i = index" value="{{i+1}}" selected>
+                                      {{time}}
                                     </option>
                                     <option value="11">11</option>
                                   </select>
@@ -117,7 +125,7 @@
                                 <!-- /.form-group -->
                               </div>
                               <!-- /.form-inline -->
-  
+
                               <div class="mt-3">
                                 <h4>To</h4>
                                 <div class="form-inline">
@@ -164,24 +172,24 @@
                     <div class="form-group">
                       <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
                         title="Add More Filters">
-                        <button class="btn btn-default dropdown-toggle addmorefilter" type="button" #AddMoreFilters id="addMoreFilters"
-                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle addmorefilter" type="button" #AddMoreFilters
+                          id="addMoreFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <i class="fa fa-filter">+</i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
                           aria-labelledby="addMoreFilters">
                           <form #filtersShowHide="ngForm">
-                            <div class="custom-control custom-checkbox"
-                              *ngFor="let filter of filtersData; let i=index">
+                            <div class="custom-control custom-checkbox" *ngFor="let filter of filtersData; let i=index">
                               <input type="checkbox" class="custom-control-input" (change)="showHideFilters($event,i)"
-                                 [checked]="showHideFilter[i]" id="showHide{{i}}">
+                                [checked]="showHideFilter[i]" id="showHide{{i}}">
                               <label class="custom-control-label"
                                 for="showHide{{i}}">{{currentTableHeader[filter.name]}}</label>
                             </div>
                             <div class="dropdown-footer dropdown-footer-border">
                               <button class="btn text-left btn-block btn-link" *ngIf="filtersData.length > 0"
                                 (click)="showHideFilters($event,'selectAll')">Select All</button>
-                              <div class="addFilter" *ngIf="filtersData.length === 0"><span>Data not avaliable</span></div>
+                              <div class="addFilter" *ngIf="filtersData.length === 0"><span>Data not avaliable</span>
+                              </div>
                             </div>
                           </form>
                         </div>
@@ -198,24 +206,29 @@
                         </button>
                         <div class="dropdown-menu p-0 dropdown-save-filter" aria-labelledby="btnGroupDrop2">
                           <form [formGroup]="saveFilterForm">
-                          <div class="dropdown-menu-header py-3 px-3 d-flex align-items-center">
-                            <h6>Save New Filter</h6>
-                            <button type="button" class="close ml-auto">
-                              <i class="fa fa-times"></i>
-                            </button>
-                          </div>
+                            <div class="dropdown-menu-header py-3 px-3 d-flex align-items-center">
+                              <h6>Save New Filter</h6>
+                              <button type="button" class="close ml-auto">
+                                <i class="fa fa-times"></i>
+                              </button>
+                            </div>
                             <div class="dropdown-menu-body mt-3 mb-2 px-3">
                               <div class="form-row align-items-center">
                                 <div class="col-auto mb-2">
                                   <input type="text" class="form-control" formControlName="filterName"
-                                  [ngClass]="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched ? 'is-invalid':''"/>
-                                  <span *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched" class="invalid-feedback">
-                                    <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is required</span>
-                                    <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter already exists with same name. Please choose a unique filter name</span>
+                                    [ngClass]="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched ? 'is-invalid':''" />
+                                  <span
+                                    *ngIf="saveFilterForm.get('filterName').invalid && saveFilterForm.get('filterName').touched"
+                                    class="invalid-feedback">
+                                    <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is
+                                      required</span>
+                                    <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter already
+                                      exists with same name. Please choose a unique filter name</span>
                                   </span>
                                 </div>
                                 <div class="col-auto">
-                                  <button type="submit" class="btn btn-outline-secondary mb-2" (click)="saveFilter($event)">Save</button>
+                                  <button type="submit" class="btn btn-outline-secondary mb-2"
+                                    (click)="saveFilter($event)">Save</button>
                                 </div>
                               </div>
                             </div>
@@ -229,14 +242,15 @@
                           <i class="fa fa-ellipsis-h"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
-                          <li class="dropdown-item d-flex align-items-center" *ngFor="let filter of savedFilters">{{filter}}<button
-                              class="btn text-muted ml-auto p-0 pl-2"><i (click)="deleteSavedFilter(filter)" class="fas fa-trash-alt"></i></button></li>
+                          <li class="dropdown-item d-flex align-items-center" *ngFor="let filter of savedFilters">
+                            {{filter}}<button class="btn text-muted ml-auto p-0 pl-2"><i
+                                (click)="deleteSavedFilter(filter)" class="fas fa-trash-alt"></i></button></li>
                         </ul>
                       </div>
                     </div>
                   </div>
                 </ng-container>
-                <ng-container *ngIf = "!advanSearchMode">
+                <ng-container *ngIf="!advanSearchMode">
                   <div class="form-group mx-sm-2 mb-2">
                     <div class="form-group">
                       <div class="input-group input-group_search">
@@ -249,14 +263,17 @@
                     </div>
                   </div>
                 </ng-container>
-                <button type="submit" *ngIf="!advanSearchMode" class="btn btn-default mb-2" (click)="advancedModeToggle()" data-toggle="tooltip" data-placement="top"
-                title="Switch to advanced search"><img src="../../assets/images/code-icon.png"
-                    alt="icon" style="display: block; margin: 4px 0px;" /></button>
-                <button type="submit"  *ngIf="advanSearchMode" class="btn btn-default mb-2" (click)="advancedModeToggle()" data-toggle="tooltip" data-placement="top"
-                    title="Switch to basic search"><img src="../../assets/images/code-icon.png"
-                    alt="icon" style="display: block; margin: 4px 0px;" /></button>
-                <button type="submit" class="btn btn-default mb-2 ml-sm-2" *ngIf="selectedSaveFilter !== ''" (click)="resetFilters()" data-toggle="tooltip" data-placement="top"
-                title="Clear filter"><i class="fa fa-redo"></i> &nbsp;Clear</button>
+                <button type="submit" *ngIf="!advanSearchMode" class="btn btn-default mb-2"
+                  (click)="advancedModeToggle()" data-toggle="tooltip" data-placement="top"
+                  title="Switch to advanced search"><img src="../../assets/images/code-icon.png" alt="icon"
+                    style="display: block; margin: 4px 0px;" /></button>
+                <button type="submit" *ngIf="advanSearchMode" class="btn btn-default mb-2"
+                  (click)="advancedModeToggle()" data-toggle="tooltip" data-placement="top"
+                  title="Switch to basic search"><img src="../../assets/images/code-icon.png" alt="icon"
+                    style="display: block; margin: 4px 0px;" /></button>
+                <button type="submit" class="btn btn-default mb-2 ml-sm-2" *ngIf="selectedSaveFilter !== ''"
+                  (click)="resetFilters()" data-toggle="tooltip" data-placement="top" title="Clear filter"><i
+                    class="fa fa-redo"></i> &nbsp;Clear</button>
 
                 <div class="ml-auto d-flex">
                   <div class="form-group mb-2">
@@ -293,8 +310,9 @@
                 <form #filterForm="ngForm" class="filterForm">
                   <ng-container *ngFor="let filter of filtersData;let i = index">
                     <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]">
-                      <ng-multiselect-dropdown [placeholder]="currentTableHeader[filter.name]" name="{{filtersData[i].name}}" [data]="filter.items"
-                        [settings]="dropdownSettings" (onSelect)="onItemSelect($event,filter)" [(ngModel)]="selectedFilters[i]"
+                      <ng-multiselect-dropdown [placeholder]="currentTableHeader[filter.name]"
+                        name="{{filtersData[i].name}}" [data]="filter.items" [settings]="dropdownSettings"
+                        (onSelect)="onItemSelect($event,filter)" [(ngModel)]="selectedFilters[i]"
                         (onSelectAll)="onItemSelect($event,filter)" (onDeSelectAll)="onItemSelect($event,filter)"
                         (onDeSelect)="onItemSelect($event,filter)" ngModel>
                       </ng-multiselect-dropdown>
@@ -311,22 +329,38 @@
               <div class="table-responsive">
                 <table class="table table-sticky table-collaps table-dark-head mb-0">
                   <thead>
-                    <tr>
+                    <tr class="nestedrow">
                       <ng-container *ngFor="let key of currentHeaderKeys; let i=index">
-                        <th *ngIf="showColumn[i] === 'true'">{{currentTableHeader[key]}}</th>
+                        <th *ngIf="showColumn[i] === 'true'"><i
+                            class="fa fa-caret-right showCarret" *ngIf = "i === 0"></i>{{currentTableHeader[key]}}</th>
                       </ng-container>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr *ngFor="let pageData of currentPage | filter:searchData; let i=index">
-                      <ng-container *ngFor="let dataKey of currentHeaderKeys; let j=index">
-                        <td *ngIf="showColumn[j] === 'true'">
-                          <div *ngIf="dataKey.includes('Time'); then thenBlock else elseBlock"></div>
-                          <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
-                          <ng-template #elseBlock><span class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}">{{pageData[dataKey]}}</span>
-                          </ng-template>
-                        </td>
-                      </ng-container>
+                  <tbody class="table_body_audit">
+                    <ng-container *ngFor="let pageData of currentPage | filter:searchData; let i=index">
+                      <tr class="nestedrow">
+                        <ng-container *ngFor="let dataKey of currentHeaderKeys; let j=index">
+                          <td *ngIf="showColumn[j] === 'true'">
+                            <div *ngIf="dataKey.includes('Time') || dataKey.includes('Date'); then thenBlock else elseBlock"></div>
+                            <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
+                            <ng-template #elseBlock><span
+                                class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}"><i *ngIf="j === 0"
+                                  class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}" 
+                                  id="treeview{{i}}" (click)="onClickNestedRow(i,$event)" style="transition: transform 400ms ease-in-out;"></i>{{pageData[dataKey]}}</span>
+                            </ng-template>
+                          </td>
+                        </ng-container>
+                      </tr>
+                      <tr class="nested_tr">
+                        <ng-container *ngIf="treeView[i]">
+                          <td [attr.colspan]="currentHeaderKeys.length"  class="inner-table" >
+                            <div [@expandableRow]="treeView_rowanimation">
+                              <app-tree-view></app-tree-view>
+                            </div>
+                          </td>
+                        </ng-container>
+                      </tr>
+                    </ng-container>
                   </tbody>
                 </table>
                 <!-- /.table -->
@@ -352,7 +386,8 @@
                 <button class="btn btn-primary">Go</button> -->
 
                 <ul class="pagination ml-auto mb-0">
-                  <li class="page-item" (click)="pagePrev()" class = "{{page.startingPoint === 0?'disabledbtn':''}}"><a class="page-link">Previous</a></li>
+                  <li class="page-item" (click)="pagePrev()" class="{{page.startingPoint === 0?'disabledbtn':''}}"><a
+                      class="page-link">Previous</a></li>
                   <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
                     (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
                   <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}" *ngIf="(page.pageNo*page.pageSize) < currentDatalength || 
@@ -363,7 +398,8 @@
                              page.currentPage+2 == page.pageNo ||
                              ((page.currentPage+2)*page.pageSize< currentDatalength? true : ((page.currentPage+2)*page.pageSize)-currentDatalength < page.pageSize? true : false) ? true : false"
                     (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a></li>
-                  <li class="page-item" (click)="pageNext()" class = "{{page.endPoint === currentDatalength?'disabledbtn':''}}"><a class="page-link">Next</a></li>
+                  <li class="page-item" (click)="pageNext()"
+                    class="{{page.endPoint === currentDatalength?'disabledbtn':''}}"><a class="page-link">Next</a></li>
                 </ul>
               </div>
               <!-- /.per_page -->

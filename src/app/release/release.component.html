@@ -110,7 +110,10 @@
                           <th>Tag</th>
                         </tr>
                         <tr *ngFor="let rel of ChildList;let i = index">
-                            <td><a href="{{rel.href}}" target="_blank">{{rel.serviceName}}</a></td>
+                            <td>
+                              <a *ngIf = "rel.href !== ''" href="{{rel.href}}" target="_blank">{{rel.serviceName}}</a>
+                              <span *ngIf = "rel.href === ''">{{rel.serviceName}}</span>
+                            </td>
                             <td>{{rel.image}}</td>
                             <td>{{rel.tag}}</td>
                             </tr>

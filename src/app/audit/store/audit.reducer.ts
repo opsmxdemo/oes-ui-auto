@@ -12,6 +12,8 @@ export interface State {
     failedPipelineData: any;
     lastSuccessfulDeploymentData: any;
     filterData: any;
+    policyAudit: any;
+    treeViewData: any;
 }
 
 export const initialState: State = {
@@ -21,7 +23,9 @@ export const initialState: State = {
     allPipelineData: null,
     failedPipelineData: null,
     lastSuccessfulDeploymentData: null,
-    filterData :null
+    filterData :null,
+    policyAudit: null,
+    treeViewData: null
 }
 
 export function AuditReducer(
@@ -63,6 +67,18 @@ export function AuditReducer(
             (state,action) => ({
                 ...state,
                 lastSuccessfulDeploymentData: action.lastSuccessfulDeployment
+            })
+        ),
+        on(AuditAction.fetchedPolicyAudit,
+            (state,action) => ({
+                ...state,
+                policyAudit: action.policyAuditData
+            })
+        ),
+        on(AuditAction.fetchedTreeViewData,
+            (state,action) => ({
+                ...state,
+                treeViewData: action.treeViewData
             })
         )
     )(auditState,auditAction);

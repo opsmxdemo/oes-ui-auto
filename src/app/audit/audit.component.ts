@@ -9,12 +9,35 @@ import * as $ from 'jquery';
 import { Observable } from 'rxjs/internal/Observable';
 import { SharedService } from '../services/shared.service';
 import Swal from 'sweetalert2'
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-audit',
   templateUrl: './audit.component.html',
   styleUrls: ['./audit.component.less'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+  trigger('expandableRow', [
+    state('collapsed, void', style({
+      height: '0px',
+      visibility: 'hidden',
+      opacity:0
+    })),
+    state('expanded', style({
+      'height': '*',
+      visibility: 'visible',
+      opacity:1
+    })),
+    transition(
+      '* <=> expanded, expanded <=> collapsed',
+      animate('400ms ease-in')
+    ),
+    transition(
+      '* => collapsed',
+      animate('400ms ease-in',style({ height: '0px', opacity: 0}))
+    ),
+  ])
+  ]
 })
 export class AuditComponent implements OnInit{
 
@@ -63,11 +86,15 @@ export class AuditComponent implements OnInit{
   saveFilterTab: string = 'pipelineconfig';                                            // It is use to call appropriate API during save filter.
   savedFilters: any = null;                                                            // It is use to store value of saved filters exist in particular table.
   selectedSaveFilter:string = '';                                                      // It is use to store selected filter value in it.
+  treeView = [];                                                                       // It is use to store array to hide or show tree view row.
+  treeView_rowanimation = 'collapsed';                                                 // It is use to store value of animation state to represent animation in tree view
+  treeView_currentKey = '';                                                            // It is use to store value of currenttab key value of treeView. 
  
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService,
-              public sharedService: SharedService) { }
+              public sharedService: SharedService,
+              private elRef:ElementRef) { }
 
   ngOnInit() {
 
@@ -118,6 +145,7 @@ export class AuditComponent implements OnInit{
           }else{
             this.selectedSaveFilter='';
           }
+          this.fetchTreeViewKey(this.currentTableHeader);
           this.showHideColumn();
           this.selectedFilter();
           this.renderPage();
@@ -148,6 +176,15 @@ export class AuditComponent implements OnInit{
     this.currentHeaderKeys = mainObj;
   }
 
+  // Below function is use to fetch current key of treeview fron headers
+  fetchTreeViewKey(currentHeader){
+    for (const key in currentHeader) {
+      if(key.includes('TreeView')){
+        this.treeView_currentKey = key;
+      }
+    }
+  } 
+
   //################### Multiple Table Logic start ########################
 
   // Below function is execute on click on tabs exist in navigation area
@@ -171,9 +208,13 @@ export class AuditComponent implements OnInit{
             this.relatedApi = 'pipelineconfig';
             this.saveFilterTab = 'pipelineconfig';
             break;
-          // case 'lastSuccessfulDeployment':
-          //   this.currentTabData = responseData.lastSuccessfulDeploymentData;
-          //   break;
+          case 'policy':
+            this.currentTabData = responseData.policyAudit;
+            this.pipelineCountName = 'Policy';
+            this.pipelineCountValue = responseData.policyAudit['results'].length;
+            this.relatedApi = 'policy';
+            this.saveFilterTab = 'policy';
+            break;
           // case 'failedPipeline':
           //   this.currentTabData = responseData.failedPipelineData;
           //   break;
@@ -195,6 +236,7 @@ export class AuditComponent implements OnInit{
           this.currentTableHeader = this.currentTabData['headers'];	
           this.createHeaders(this.currentTabData['headerOrder']);	
           this.showHideColumn();
+          this.fetchTreeViewKey(this.currentTableHeader);
           // resetting filter object when tab changes
           if(this.currentTabData['filters'].length > 0){
             this.filtersData = this.currentTabData['filters'];
@@ -222,6 +264,23 @@ export class AuditComponent implements OnInit{
       return 'successStatus'
     }else{
       return 'failStatus'
+    }
+  }
+
+  // Below function is use to see nested row 
+  onClickNestedRow(index,event){
+    if(this.treeView.indexOf(true) === -1){
+      this.treeView[index] = true;
+      this.treeView_rowanimation = 'expanded';
+      event.target.style.transform = 'rotate(90deg)';
+    }else{
+      const index_val = this.treeView.indexOf(true);
+      this.treeView[index_val] = false;
+      this.treeView_rowanimation = 'collapsed';
+      this.elRef.nativeElement.querySelector('#treeview'+index_val).style.transform = 'rotate(0deg)';
+      if(index !== index_val){
+        this.onClickNestedRow(index,event);
+      }
     }
   }
 
@@ -554,6 +613,7 @@ export class AuditComponent implements OnInit{
   // Below function is used to implement pagination
   renderPage() {
     this.currentPage = [];
+    this.treeView = [];
     if (this.page.endPoint < this.currentDatalength - 1) {
       for (let i = this.page.startingPoint; i < this.page.endPoint; i++) {
         this.currentPage.push(this.currentTableContent[i]);
@@ -562,6 +622,12 @@ export class AuditComponent implements OnInit{
       for (let i = this.page.startingPoint; i < this.currentDatalength; i++) {
         this.currentPage.push(this.currentTableContent[i]);
       }
+    }
+    // Below logic is to support tree view functionality
+    if(this.currentPage.length>0){
+      this.currentPage.forEach(()=>{
+        this.treeView.push(false);
+      })
     }
   }
 
@@ -611,7 +677,7 @@ export class AuditComponent implements OnInit{
     }
   }
 
-  // Below function is executes on click of page btn exist in pagination
+  // Below function is executes on click of SpecificPageCount btn exist in pagination
   showPage(currentPage) {
     this.page.pageNo = currentPage;
     this.page.startingPoint = (currentPage - 1) * this.page.pageSize;
