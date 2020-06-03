@@ -677,7 +677,7 @@ export class AuditComponent implements OnInit{
     }
   }
 
-  // Below function is executes on click of pexpandedage btn exist in pagination
+  // Below function is executes on click of SpecificPageCount btn exist in pagination
   showPage(currentPage) {
     this.page.pageNo = currentPage;
     this.page.startingPoint = (currentPage - 1) * this.page.pageSize;
