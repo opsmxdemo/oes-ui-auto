@@ -47,6 +47,7 @@ import { DockerFormComponent } from './application-onboarding/data-source/docker
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AppConfigService } from './services/app-config.service';
 import { AppDashboardEffect } from './application-dashboard/store/dashboard.effects';
+import { TreeViewComponent } from './audit/tree-view/tree-view.component';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -82,7 +83,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AwsCloudwatchFormComponent,
     ElasticsearchFormComponent,
     DockerFormComponent,
-    LoadingScreenComponent
+    LoadingScreenComponent,
+    TreeViewComponent
   ],
   imports: [
     BrowserModule,

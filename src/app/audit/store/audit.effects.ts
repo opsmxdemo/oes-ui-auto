@@ -69,7 +69,7 @@ export class AuditEffect {
             switchMap(() => {
                 const params = new HttpParams()
                     .set('isLatest', 'false')
-                    .set('isTreeView', 'false');
+                    .set('isTreeView', 'true');
                 return this.http.get(this.environment.config.endPointUrl + 'oes/audit/allDeployments', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
@@ -251,6 +251,42 @@ export class AuditEffect {
                             case 'pipeline':
                                 return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
                         }
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use to fetched TreeView data for specific application
+    fetchedTreeViewData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadTreeView),
+            switchMap((action) => {
+                return this.http.post(this.environment.config.endPointUrl + 'oes/audit/pipelinesTreeView',action.callingApiData).pipe(
+                    map(resdata => {
+                        return AuditAction.fetchedTreeViewData({treeViewData:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use to fetched TreeView data for specific application
+    fetchedPolicyAudit= createEffect(() =>
+        this.actions$.pipe(
+            ofType(AuditAction.loadFinalData),
+            switchMap((action) => {
+                return this.http.get('../../../assets/data/policyaudit.json').pipe(
+                    map(resdata => {
+                        return AuditAction.fetchedPolicyAudit({policyAuditData:resdata});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')

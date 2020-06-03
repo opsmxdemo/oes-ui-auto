@@ -47,11 +47,13 @@ export class PolicyManagementComponent implements OnInit {
             this.currentTableContent = resData.dynamicTableData;
             this.isDataEmpty = false;
             this.fetchInitialData(this.currentTableContent);
-          }else if(this.currentTab === 'STATIC' && resData.staticTableData.length>0){
-            this.currentTableContent = resData.staticTableData;
-            this.isDataEmpty = false;
-            this.fetchInitialData(this.currentTableContent);
-          }else{
+          }
+          // else if(this.currentTab === 'STATIC' && resData.staticTableData.length>0){
+          //   this.currentTableContent = resData.staticTableData;
+          //   this.isDataEmpty = false;
+          //   this.fetchInitialData(this.currentTableContent);
+          // }
+          else{
             this.isDataEmpty = true;
           }
         }
@@ -236,13 +238,15 @@ export class PolicyManagementComponent implements OnInit {
         if(resData.dynamicTableData !== null){
           if(this.currentTab === 'DYNAMIC' && resData.dynamicTableData.length>0){
             this.currentTableContent = resData.dynamicTableData;
+            this.isDataEmpty = false;
           }
           // else if (this.currentTab === 'STATIC' && resData.staticTableData.length>0){
           //   this.currentTableContent = resData.staticTableData;
+          // this.isDataEmpty = false;
           // }
-          else{
-            this.isDataEmpty = true;
-          }
+          // else{
+          //   this.isDataEmpty = true;
+          // }
         }
       }
     )

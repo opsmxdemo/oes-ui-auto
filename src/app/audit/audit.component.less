@@ -117,3 +117,39 @@ input.ng-invalid.ng-touched , select.ng-invalid.ng-touched{
     opacity: 0.4;
     background: #f5f6f7;
 }
+
+	.nestedrow{
+		.hiddenCarret{
+			margin-right: 5px;
+			cursor: none;
+			visibility: hidden;
+		}
+		.showCarret{
+			margin-right: 5px;
+			cursor: pointer;
+			visibility: show;
+		}
+	}
+	.show_row{
+		height: 100%;
+	}
+	.hide-row{
+		height: 0%;
+	}
+
+	.inner-table {
+		background-color: #f0f2f5;
+		padding: 5px 10px !important;
+		.table {
+			opacity: 0.8;
+			width: 100%;
+			margin: 0;
+			th {
+				background: #fff;
+			}
+			td {
+				background: #fff;
+			}
+		}
+	}
+	
