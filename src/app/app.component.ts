@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   title = 'OES-UI';
   addclass = false;
   isAuthenticate = false;
-  Sidebar: any;
+  Sidebar: Menu;
   applicationCount: number;
   endpointUrl: string;
 
@@ -81,71 +81,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
     // fetching data from LayoutState
     this.store.select('layout').subscribe(
       (response) => {
-        this.Sidebar = [
-          {
-            "name": "OES Dashboard",
-            "id": 1,
-            "link": "oesdashboard",
-            "subMenu": [],
-            "disabled": true
-          },
-          {
-            "name": "Applications",
-            "id": 2,
-            "link": "application",
-            "subMenu": [
-              {
-                "name": "Dev Verification",
-                "id": 21,
-                "link": "DevV",
-                "disabled": true
-              },
-              {
-                "name": "Production Monitoring",
-                "id": 24,
-                "link": "Monitoring",
-                "disabled": true
-              },
-              {
-                "name": "Deployment Verification",
-                "id": 23,
-                "link": "/application/deploymentverification",
-                "disabled": false
-              }
-            ],
-            "disabled": false
-          },
-          {
-            "name": "Policy Management",
-            "id": 3,
-            "link": "policymanagement",
-            "subMenu": [],
-            "disabled": false
-          },
-          {
-            "name": "Security/Audit",
-            "id": 4,
-            "link": "audit",
-            "subMenu": [],
-            "disabled": false
-          },
-          {
-            "name": "System Setup",
-            "id": 5,
-            "link": "setup",
-            "subMenu": [],
-            "disabled": false
-          },
-          {
-            "name": "User Setting",
-            "id": 6,
-            "link": "setting",
-            "subMenu": [],
-            "disabled": true
-          }
-        ];
-        
-       // this.applicationCount = response.appliactionData;
+        this.Sidebar = response.menu;
+        this.applicationCount = response.appliactionData;
       }
     );
   }
