@@ -12,9 +12,23 @@ import { AppliactionListComponent } from '../application-onboarding/appliaction-
 import { DynamicAccountsComponent } from '../application-onboarding/dynamic-accounts/dynamic-accounts.component';
 import { PolicyManagementComponent } from '../policy-management/policy-management.component';
 import { CreateAccountComponent } from '../application-onboarding/create-account/create-account.component';
+import { DeploymentVerificationComponent } from '../application-dashboard/deployment-verification/deployment-verification.component';
+import { AppsComponent } from '../application-dashboard/apps/apps.component'
 
 const routes: Routes = [
-  {path:'appdashboard', component:ApplicationDashboardComponent},
+  // {path:'appdashboard', component:ApplicationDashboardComponent, children: [
+  //   {path:'deploymentverification', component: DeploymentVerificationComponent}
+  // ]},
+  {path:'application', component: AppsComponent, 
+  children:[
+    {path:'', component: ApplicationDashboardComponent},
+    {path:'deploymentverification', component: DeploymentVerificationComponent,pathMatch:'full' }
+  ]
+},
+  // children: [
+  //   {path:'deploymentverification', component: DeploymentVerificationComponent}
+  // ]},
+ // {path: 'deploymentverification', component: DeploymentVerificationComponent},
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
