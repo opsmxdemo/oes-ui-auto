@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationService } from '../services/application.service';
-import {NotificationService} from '../services/notification.service';
-import * as fromApp from '../store/app.reducer';
+import { ApplicationService } from '../../services/application.service';
+import {NotificationService} from '../../services/notification.service';
+import * as fromApp from '../../store/app.reducer';
 import * as AppDashboardAction from './store/dashboard.actions';
-import * as AppOnboardingAction from '../application-onboarding/store/onBoarding.actions';
-import * as LayoutAction from '../layout/store/layout.actions';
+import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
+import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 
@@ -99,7 +99,7 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
   public addNewApplication() {
-   this.store.dispatch(AppOnboardingAction.loadApp({page:'appdashboard'}));
+   this.store.dispatch(AppOnboardingAction.loadApp({page:'application'}));
   }
 
   // Below function is use to get proper href

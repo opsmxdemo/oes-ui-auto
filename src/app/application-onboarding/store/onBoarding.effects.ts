@@ -6,7 +6,7 @@ import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators'
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as OnboardingAction from './onBoarding.actions';
-import * as AppDashboardAction from '../../application-dashboard/store/dashboard.actions';
+import * as AppDashboardAction from '../../application/application-dashboard/store/dashboard.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';

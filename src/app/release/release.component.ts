@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ApplicationService } from '../services/application.service';
 import { NotificationService } from '../services/notification.service';
-import * as AppDashboardAction from '../application-dashboard/store/dashboard.actions';
+import * as AppDashboardAction from '../application/application-dashboard/store/dashboard.actions';
 import * as fromApp from '../store/app.reducer';
 import { Store } from '@ngrx/store';
 class ReleaseServices {

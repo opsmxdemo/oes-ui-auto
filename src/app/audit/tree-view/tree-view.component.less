@@ -1,0 +1,42 @@
+
+div.table { margin: 10px; }
+
+.mat-table { 
+  background-color: inherit;
+
+  .mat-header-row { 
+    background-color: #ebeceb; 
+  }
+
+  .mat-header-cell { 
+    color: black;
+    font-weight: bold;
+  }
+
+  .mat-cell { 
+    font-size: 12px; 
+  }
+
+  .mat-icon { 
+    position: relative;
+    top: 4px;
+    cursor: pointer;
+
+    &.active {
+      transform: rotate(90deg);
+      margin-left: -8px;
+    }
+  }
+
+}
+
+.expandable-row {
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  background-color: #fafafa;
+  min-height: 0;
+  overflow: hidden;
+}
+
+
+
+

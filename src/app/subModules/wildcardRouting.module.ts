@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
         RouterModule.forChild([
             {
                 path:'**', 
-                redirectTo:'appdashboard'} 
+                redirectTo:'application'} 
         ])
     ],
     declarations: [],

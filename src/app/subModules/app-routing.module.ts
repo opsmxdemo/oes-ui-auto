@@ -1,20 +1,24 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ApplicationDashboardComponent } from '../application-dashboard/application-dashboard.component';
+import { ApplicationDashboardComponent } from '../application/application-dashboard/application-dashboard.component';
 import { OesDashboardComponent } from '../oes-dashboard/oes-dashboard.component';
 import { AuthGuard } from '../guards/auth-guard.service';
 import { AuditComponent } from '../audit/audit.component';
 import { ApplicationOnboardingComponent } from '../application-onboarding/application-onboarding.component';
-import { ApplicationComponent } from '../application-onboarding/application/application.component';
 import { DataSourceComponent } from '../application-onboarding/data-source/data-source.component';
 import { CloudServicesComponent } from '../application-onboarding/cloud-services/cloud-services.component';
 import { AppliactionListComponent } from '../application-onboarding/appliaction-list/appliaction-list.component';
 import { DynamicAccountsComponent } from '../application-onboarding/dynamic-accounts/dynamic-accounts.component';
 import { PolicyManagementComponent } from '../policy-management/policy-management.component';
 import { CreateAccountComponent } from '../application-onboarding/create-account/create-account.component';
+import { DeploymentVerificationComponent } from '../application/deployment-verification/deployment-verification.component';
+import { ApplicationComponent } from '../application/application.component';
 
 const routes: Routes = [
-  {path:'appdashboard', component:ApplicationDashboardComponent},
+  {path:'application', component: ApplicationComponent, children:[
+    {path:'', component: ApplicationDashboardComponent},
+    {path:'deploymentverification', component: DeploymentVerificationComponent}
+  ]},
   {path:'oesdashboard', component:OesDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'policymanagement', component:PolicyManagementComponent},

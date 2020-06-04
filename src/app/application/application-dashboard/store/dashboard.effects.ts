@@ -4,7 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap, catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../store/app.reducer';
+import * as fromApp from '../../../store/app.reducer';
 import * as DashboardActions from './dashboard.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';

@@ -6,11 +6,13 @@ import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
 import * as PolicyActions from './policy-management/store/policyManagement.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
-import * as AppDashboardAction from './application-dashboard/store/dashboard.actions';
+import * as AppDashboardAction from './application/application-dashboard/store/dashboard.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import { environment } from '../environments/environment'
 import * as $ from 'jquery';
 import 'bootstrap';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AppConfigService } from './services/app-config.service';
 
 @Component({
   selector: 'app-root',
@@ -21,10 +23,16 @@ export class AppComponent implements OnInit, AfterViewChecked {
   title = 'OES-UI';
   addclass = false;
   isAuthenticate = false;
-  Sidebar: Menu;
+  Sidebar: any;
   applicationCount: number;
+  endpointUrl: string;
 
-  constructor(public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromApp.AppState>,
+              private router: Router,
+              private route: ActivatedRoute,
+              public environment: AppConfigService) {
+                this.endpointUrl = environment.config.endPointUrl;
+               }
   // For tooltip
   ngAfterViewChecked() {
     $('[data-toggle="tooltip"]').tooltip({
@@ -44,7 +52,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if (response.authResponse === null) {
           var browserUrl = window.location.href;
           var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/appdashboard";
+          var resultUrl = arr[0] + "//" + arr[2] + "/application";
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
         }else if(response.authResponse === 'success'){
@@ -68,21 +76,104 @@ export class AppComponent implements OnInit, AfterViewChecked {
       }
     );
 
+   
+
     // fetching data from LayoutState
     this.store.select('layout').subscribe(
       (response) => {
-        this.Sidebar = response.menu;
-        this.applicationCount = response.appliactionData;
+        this.Sidebar = [
+          {
+            "name": "OES Dashboard",
+            "id": 1,
+            "link": "oesdashboard",
+            "subMenu": [],
+            "disabled": true
+          },
+          {
+            "name": "Applications",
+            "id": 2,
+            "link": "application",
+            "subMenu": [
+              {
+                "name": "Dev Verification",
+                "id": 21,
+                "link": "DevV",
+                "disabled": true
+              },
+              {
+                "name": "Production Monitoring",
+                "id": 24,
+                "link": "Monitoring",
+                "disabled": true
+              },
+              {
+                "name": "Deployment Verification",
+                "id": 23,
+                "link": "/application/deploymentverification",
+                "disabled": false
+              }
+            ],
+            "disabled": false
+          },
+          {
+            "name": "Policy Management",
+            "id": 3,
+            "link": "policymanagement",
+            "subMenu": [],
+            "disabled": false
+          },
+          {
+            "name": "Security/Audit",
+            "id": 4,
+            "link": "audit",
+            "subMenu": [],
+            "disabled": false
+          },
+          {
+            "name": "System Setup",
+            "id": 5,
+            "link": "setup",
+            "subMenu": [],
+            "disabled": false
+          },
+          {
+            "name": "User Setting",
+            "id": 6,
+            "link": "setting",
+            "subMenu": [],
+            "disabled": true
+          }
+        ];
+        
+       // this.applicationCount = response.appliactionData;
       }
     );
   }
 
   loginRedirect(callback): void {
-    window.location.href = `${environment.endPointUrl}auth/redirectauto?to=${callback}`;
+    window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
   }
 
   toggleNavbar() {
     this.addclass = !this.addclass;
   }
+
+  // Below function is use to nevigate to proper page while click on submenu link
+  navigateMenu(event){
+    event.stopPropagation();
+  }
+
+  // Below function is use to return appropriate class for submenu link
+  subMenuclass(link){
+    const linkArr = link.split('/');
+    let linkClass = linkArr[linkArr.length-1];
+    return linkClass;
+  }
+
+  // getData(){
+  //   //this.router.navigate(['/appdashboard/deployment'])
+  //   this.router.navigate(['deployment'], { relativeTo: this.route });
+
+  // }
 
 }

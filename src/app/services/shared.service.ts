@@ -11,6 +11,7 @@ export class SharedService {
   dataSourceData: any;
   dataSourceType: string;
   endpointUrl: string = null;
+  showCommonInfo: string;
 
   constructor(private httpClient: HttpClient,
               private environment: AppConfigService) {
@@ -49,6 +50,12 @@ export class SharedService {
   }
   getDataSourceType(){
     return this.dataSourceType;
+  }
+  setCommonInfo(showCommonInfo: string){
+    this.showCommonInfo = showCommonInfo;
+  }
+  getCoomonInfo(){
+    return this.showCommonInfo;
   }
 
   //Below function is use to validate filter name exist or not through api.i.e, AuditComponent

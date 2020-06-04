@@ -1,0 +1,54 @@
+<div [class.sub-row]="title"> 
+    <p>{{ title }}</p>
+    <mat-table [dataSource]="dataSource" 
+               multiTemplateDataRows>
+  
+      <!-- COLUMNS AND ROWS-->
+      <ng-container *ngFor="let key of displayedColumns; let j = index"
+                    [matColumnDef]="key">
+        <mat-header-cell *matHeaderCellDef>{{ key }}</mat-header-cell>
+  
+        <mat-cell *matCellDef="let element; let i = dataIndex"> 
+          
+          <span> <mat-icon *ngIf="j === 0" class="{{element.kids[iconKeyReference] && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
+            [class.active]="element.data[referenceId] === expandedId"
+            (click)="toggleExpandableSymbol(element.data[referenceId])">play_arrow</mat-icon>{{ element.data[key] }}</span>     
+  
+          <ng-template #icon>
+           
+          </ng-template>   
+          
+        </mat-cell>
+      </ng-container>
+  
+       <!-- EXPANDABLE ROW -->
+      <ng-container matColumnDef="expandedDetail">
+        <mat-cell *matCellDef="let element" 
+                 [@expandableRow]="element.data[referenceId] === expandedId ? 'expanded' : 'collapsed'">
+  
+        <div *ngIf="element.data[referenceId] === expandedId"
+             class="width-100"
+             [ngSwitch]="renderTemplate">
+  
+          <app-has-phone-table *ngSwitchCase="'phone'"
+                               [phones]="element.kids.has_phone.records"></app-has-phone-table>
+          
+          <app-has-relative-table *ngSwitchCase="'relative'" 
+                              [relatives]="element.kids.has_relatives.records"></app-has-relative-table>
+  
+        </div>
+  
+      </mat-cell>
+    </ng-container>
+  
+    <!-- -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  
+    <mat-row *matRowDef="let row; columns: displayedColumns;" class="normal-row"></mat-row>
+  
+    <mat-row class="expandable-row"
+             *matRowDef="let row; columns: ['expandedDetail'];">
+    </mat-row>
+  
+    </mat-table>
+  </div>

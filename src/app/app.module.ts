@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { HeaderComponent } from './layout/header/header.component';
 import { AuthEffect } from './auth/store/auth.effects';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ApplicationDashboardComponent } from './application-dashboard/application-dashboard.component';
+import { ApplicationDashboardComponent } from './application/application-dashboard/application-dashboard.component';
 import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
 import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
@@ -20,7 +20,6 @@ import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
 import { LayoutEffect } from './layout/store/layout.effects';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationOnboardingComponent } from './application-onboarding/application-onboarding.component';
-import { ApplicationComponent } from './application-onboarding/application/application.component';
 import { DataSourceComponent } from './application-onboarding/data-source/data-source.component';
 import { ReleaseComponent } from './release/release.component';
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
@@ -46,8 +45,16 @@ import { ElasticsearchFormComponent } from './application-onboarding/data-source
 import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AppConfigService } from './services/app-config.service';
-import { AppDashboardEffect } from './application-dashboard/store/dashboard.effects';
+import { AppDashboardEffect } from './application/application-dashboard/store/dashboard.effects';
 import { TreeViewComponent } from './audit/tree-view/tree-view.component';
+import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
+import { HasRelativeTableComponent } from './audit/tree-view/has-relative-table/has-relative-table.component';
+import { HasPhoneTableComponent } from './audit/tree-view/has-phone-table/has-phone-table.component';
+import { DeploymentVerificationComponent } from './application/deployment-verification/deployment-verification.component';
+import { LogAnalysisComponent } from './application/deployment-verification/log-analysis/log-analysis.component';
+import { MetricAnalysisComponent } from './application/deployment-verification/metric-analysis/metric-analysis.component';
+import { ApplicationComponent } from './application/application.component';
+
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -84,7 +91,13 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ElasticsearchFormComponent,
     DockerFormComponent,
     LoadingScreenComponent,
-    TreeViewComponent
+    TreeViewComponent,
+    TableRowComponent,
+    HasRelativeTableComponent,
+    HasPhoneTableComponent,
+    DeploymentVerificationComponent,
+    LogAnalysisComponent,
+    MetricAnalysisComponent,
   ],
   imports: [
     BrowserModule,
