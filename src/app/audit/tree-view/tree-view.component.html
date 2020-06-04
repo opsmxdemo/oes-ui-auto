@@ -1,1 +1,6 @@
-<div style="margin-left: 12px;"><b>Work in progress !!!</b></div>
+<app-table-row [dataSource]="users"
+               [displayedColumns]="displayedColumns"
+               [referenceId]="'Identification number'"
+               [iconKeyReference]="'has_relatives'"
+               [renderTemplate]="'relative'">
+</app-table-row>

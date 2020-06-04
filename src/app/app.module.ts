@@ -48,6 +48,9 @@ import { LoadingScreenComponent } from './loading-screen/loading-screen.componen
 import { AppConfigService } from './services/app-config.service';
 import { AppDashboardEffect } from './application-dashboard/store/dashboard.effects';
 import { TreeViewComponent } from './audit/tree-view/tree-view.component';
+import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
+import { HasRelativeTableComponent } from './audit/tree-view/has-relative-table/has-relative-table.component';
+import { HasPhoneTableComponent } from './audit/tree-view/has-phone-table/has-phone-table.component';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -84,7 +87,10 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ElasticsearchFormComponent,
     DockerFormComponent,
     LoadingScreenComponent,
-    TreeViewComponent
+    TreeViewComponent,
+    TableRowComponent,
+    HasRelativeTableComponent,
+    HasPhoneTableComponent
   ],
   imports: [
     BrowserModule,
