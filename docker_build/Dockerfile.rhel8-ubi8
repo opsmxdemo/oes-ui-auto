@@ -10,7 +10,7 @@ RUN yum install -y procps
 ####### Copy nginx configuration #########
 COPY /docker_build/nginx.conf /etc/nginx/
 ####### Copy angular build #########
-COPY /dist/OES-UI/*  /var/www/html/
+COPY /dist/OES-UI/  /var/www/html/
 ####### Start nginx server on port 80 #########
 EXPOSE 80/tcp
 CMD ["nginx", "-g", "daemon off;"]
