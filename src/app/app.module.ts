@@ -51,6 +51,11 @@ import { TreeViewComponent } from './audit/tree-view/tree-view.component';
 import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
 import { HasRelativeTableComponent } from './audit/tree-view/has-relative-table/has-relative-table.component';
 import { HasPhoneTableComponent } from './audit/tree-view/has-phone-table/has-phone-table.component';
+import { DeploymentVerificationComponent } from './application-dashboard/deployment-verification/deployment-verification.component';
+import { AppsComponent } from './application-dashboard/apps/apps.component';
+import { LogAnalysisComponent } from './application-dashboard/deployment-verification/log-analysis/log-analysis.component';
+import { MetricAnalysisComponent } from './application-dashboard/deployment-verification/metric-analysis/metric-analysis.component';
+
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -90,7 +95,11 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     TreeViewComponent,
     TableRowComponent,
     HasRelativeTableComponent,
-    HasPhoneTableComponent
+    HasPhoneTableComponent,
+    DeploymentVerificationComponent,
+    LogAnalysisComponent,
+    MetricAnalysisComponent,
+    AppsComponent
   ],
   imports: [
     BrowserModule,

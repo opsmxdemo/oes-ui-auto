@@ -11,6 +11,7 @@ import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import { environment } from '../environments/environment'
 import * as $ from 'jquery';
 import 'bootstrap';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -21,10 +22,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
   title = 'OES-UI';
   addclass = false;
   isAuthenticate = false;
-  Sidebar: Menu;
+  Sidebar: any;
   applicationCount: number;
 
-  constructor(public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromApp.AppState>,private router: Router,private route: ActivatedRoute) { }
   // For tooltip
   ngAfterViewChecked() {
     $('[data-toggle="tooltip"]').tooltip({
@@ -68,11 +69,76 @@ export class AppComponent implements OnInit, AfterViewChecked {
       }
     );
 
+   
+
     // fetching data from LayoutState
     this.store.select('layout').subscribe(
       (response) => {
-        this.Sidebar = response.menu;
-        this.applicationCount = response.appliactionData;
+        this.Sidebar = [
+          {
+            "name": "OES Dashboard",
+            "id": 1,
+            "link": "oesdashboard",
+            "subMenu": [],
+            "disabled": true
+          },
+          {
+            "name": "Applications",
+            "id": 2,
+            "link": "/application",
+            "subMenu": [
+              {
+                "name": "Dev Verification",
+                "id": 21,
+                "link": "DevV",
+                "disabled": true
+              },
+              {
+                "name": "Production Monitoring",
+                "id": 24,
+                "link": "Monitoring",
+                "disabled": true
+              },
+              {
+                "name": "Deployment Verification",
+                "id": 23,
+                "link": "/application/deploymentverification",
+                "disabled": false
+              }
+            ],
+            "disabled": false
+          },
+          {
+            "name": "Policy Management",
+            "id": 3,
+            "link": "policymanagement",
+            "subMenu": [],
+            "disabled": false
+          },
+          {
+            "name": "Security/Audit",
+            "id": 4,
+            "link": "audit",
+            "subMenu": [],
+            "disabled": false
+          },
+          {
+            "name": "System Setup",
+            "id": 5,
+            "link": "setup",
+            "subMenu": [],
+            "disabled": false
+          },
+          {
+            "name": "User Setting",
+            "id": 6,
+            "link": "setting",
+            "subMenu": [],
+            "disabled": true
+          }
+        ];
+        
+       // this.applicationCount = response.appliactionData;
       }
     );
   }
@@ -84,5 +150,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
   toggleNavbar() {
     this.addclass = !this.addclass;
   }
+
+  // getData(){
+  //   //this.router.navigate(['/appdashboard/deployment'])
+  //   this.router.navigate(['deployment'], { relativeTo: this.route });
+
+  // }
 
 }
