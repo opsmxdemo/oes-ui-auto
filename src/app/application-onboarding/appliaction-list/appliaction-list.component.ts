@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as OnboardingActions from '../store/onBoarding.actions';
-import * as AppDashboardAction from '../../application-dashboard/store/dashboard.actions';
+import * as AppDashboardAction from '../../application/application-dashboard/store/dashboard.actions';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';

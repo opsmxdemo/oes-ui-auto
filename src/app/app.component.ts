@@ -6,12 +6,13 @@ import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
 import * as PolicyActions from './policy-management/store/policyManagement.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
-import * as AppDashboardAction from './application-dashboard/store/dashboard.actions';
+import * as AppDashboardAction from './application/application-dashboard/store/dashboard.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import { environment } from '../environments/environment'
 import * as $ from 'jquery';
 import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AppConfigService } from './services/app-config.service';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +25,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
   isAuthenticate = false;
   Sidebar: any;
   applicationCount: number;
+  endpointUrl: string;
 
-  constructor(public store: Store<fromApp.AppState>,private router: Router,private route: ActivatedRoute) { }
+  constructor(public store: Store<fromApp.AppState>,
+              private router: Router,
+              private route: ActivatedRoute,
+              public environment: AppConfigService) {
+                this.endpointUrl = environment.config.endPointUrl;
+               }
   // For tooltip
   ngAfterViewChecked() {
     $('[data-toggle="tooltip"]').tooltip({
@@ -45,7 +52,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if (response.authResponse === null) {
           var browserUrl = window.location.href;
           var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/appdashboard";
+          var resultUrl = arr[0] + "//" + arr[2] + "/application";
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
         }else if(response.authResponse === 'success'){
@@ -85,7 +92,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           {
             "name": "Applications",
             "id": 2,
-            "link": "/application",
+            "link": "application",
             "subMenu": [
               {
                 "name": "Dev Verification",
@@ -144,11 +151,23 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   loginRedirect(callback): void {
-    window.location.href = `${environment.endPointUrl}auth/redirectauto?to=${callback}`;
+    window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
   }
 
   toggleNavbar() {
     this.addclass = !this.addclass;
+  }
+
+  // Below function is use to nevigate to proper page while click on submenu link
+  navigateMenu(event){
+    event.stopPropagation();
+  }
+
+  // Below function is use to return appropriate class for submenu link
+  subMenuclass(link){
+    const linkArr = link.split('/');
+    let linkClass = linkArr[linkArr.length-1];
+    return linkClass;
   }
 
   // getData(){

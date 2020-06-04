@@ -4,7 +4,7 @@ import * as fromLayout from '../layout/store/layout.reducer';
 import * as fromAppOnboarding from '../application-onboarding/store/onBoarding.reducer';
 import * as fromAudit from '../audit/store/audit.reducer';
 import * as fromPolicy from '../policy-management/store/policyManagenent.reducer';
-import * as fromAppDashboard from '../application-dashboard/store/dashboard.reducer';
+import * as fromAppDashboard from '../application/application-dashboard/store/dashboard.reducer';
 
 export interface AppState {
     auth: fromAuth.State;
