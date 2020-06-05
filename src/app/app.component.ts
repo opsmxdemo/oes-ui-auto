@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   addclass = false;
   isAuthenticate = false;
   Sidebar: Menu;
-  applicationCount: number;
+  applicationCount: number = 0;
   endpointUrl: string;
 
   constructor(public store: Store<fromApp.AppState>,

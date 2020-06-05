@@ -18,7 +18,7 @@ import * as $ from 'jquery';
   templateUrl: './application.component.html',
   styleUrls: ['./application.component.less']
 })
-export class ApplicationComponent implements OnInit {
+export class CreateApplicationComponent implements OnInit {
 
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section

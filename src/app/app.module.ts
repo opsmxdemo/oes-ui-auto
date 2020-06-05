@@ -54,6 +54,7 @@ import { DeploymentVerificationComponent } from './application/deployment-verifi
 import { LogAnalysisComponent } from './application/deployment-verification/log-analysis/log-analysis.component';
 import { MetricAnalysisComponent } from './application/deployment-verification/metric-analysis/metric-analysis.component';
 import { ApplicationComponent } from './application/application.component';
+import { CreateApplicationComponent } from './application-onboarding/application/application.component';
 
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -72,6 +73,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AuditComponent,
     ApplicationOnboardingComponent,
     ApplicationComponent,
+    CreateApplicationComponent,
     DataSourceComponent,
     CloudServicesComponent,
     ReleaseComponent,
