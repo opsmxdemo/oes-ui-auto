@@ -13,6 +13,7 @@ import { PolicyManagementComponent } from '../policy-management/policy-managemen
 import { CreateAccountComponent } from '../application-onboarding/create-account/create-account.component';
 import { DeploymentVerificationComponent } from '../application/deployment-verification/deployment-verification.component';
 import { ApplicationComponent } from '../application/application.component';
+import { CreateApplicationComponent } from '../application-onboarding/application/application.component';
 
 const routes: Routes = [
   {path:'application', component: ApplicationComponent, children:[
@@ -26,7 +27,7 @@ const routes: Routes = [
     // child component of Setup i.e,ApplicationOnboardingComponent.
     {path: '', redirectTo:'/setup/applications',pathMatch:'full'},
     {path: 'applications' , component: AppliactionListComponent},
-    {path: 'newApplication' , component: ApplicationComponent},
+    {path: 'newApplication' , component: CreateApplicationComponent},
     {path: 'datasource' , component: DataSourceComponent},
     {path: 'cloudservices' , component: CloudServicesComponent},
     {path: 'accounts' , component: DynamicAccountsComponent},
