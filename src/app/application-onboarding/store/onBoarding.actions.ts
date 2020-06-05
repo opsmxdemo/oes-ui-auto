@@ -13,6 +13,7 @@ export const fetchAppData = createAction('[Application-OnBoarding] FetchAppData'
 export const createApplication = createAction('[Application-OnBoarding] CreateApplication', props<{appData:CreateApplication}>())
 export const dataSaved = createAction('[Application-OnBoarding] DataSaved');
 export const fetchCloudAccount = createAction('[Application-OnBoarding] FetchCloudAccount', props<{cloudAccount:CloudAccount}>());
+export const fetchImageSource = createAction('[Application-OnBoarding] FetchImageSource', props<{imageSource: string[]}>());
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application-OnBoarding] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());

@@ -1,0 +1,6 @@
+{
+    "imageSource":[
+        "docker.io/opsmx11",
+        "docker.io/opsmx12"
+    ]
+}

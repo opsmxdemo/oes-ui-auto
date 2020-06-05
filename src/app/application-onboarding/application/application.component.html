@@ -29,9 +29,9 @@
                 <strong>{{createApplicationForm.value.emailId}}</strong>
               </li>
               <li class="ti-item">
-                <i class="{{createApplicationForm.value.imageSource !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <i class="{{createApplicationForm.getRawValue().imageSource !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Image Source :</span>
-                <strong>{{createApplicationForm.value.imageSource}}</strong>
+                <strong>{{createApplicationForm.getRawValue().imageSource}}</strong>
               </li>
               <li class="ti-item">
                 <i class="{{createApplicationForm.value.description !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
@@ -129,7 +129,10 @@
                   <!-- /.form-group -->
                   <div class="form-group">
                     <label>Image Source</label>
-                    <input type="text" class="form-control" formControlName="imageSource" [readonly]="editMode" [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''">
+                    <select class="form-control" formControlName="imageSource"
+                    [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''">
+                      <option *ngFor="let imageData of imageSourceData" value="{{imageData}}">{{imageData}}</option>
+                    </select>
                     <span *ngIf="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched"
                       class="invalid-feedback">
                       Image Source is required

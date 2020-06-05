@@ -86,6 +86,25 @@ export class ApplicationOnBoardingEffect {
         )
     )
 
+     // Below effect is use for fetch imageSource dropdown data.
+     fetchImageSource = createEffect(() =>
+     this.actions$.pipe(
+         ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+         switchMap(() => {
+
+             return this.http.get<string[]>('../../../assets/data/dummyData/imagesource.json').pipe(
+                 map(resdata => {
+                     return OnboardingAction.fetchImageSource({imageSource:resdata['imageSource']});
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
 
     // Below effect is use for fetch Application data on edit mode.
     onEditApplication = createEffect(() =>

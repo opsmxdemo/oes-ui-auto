@@ -8,7 +8,6 @@ import * as PolicyActions from './policy-management/store/policyManagement.actio
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
 import * as AppDashboardAction from './application/application-dashboard/store/dashboard.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
-import { environment } from '../environments/environment'
 import * as $ from 'jquery';
 import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';

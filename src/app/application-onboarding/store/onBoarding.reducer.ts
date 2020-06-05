@@ -17,6 +17,7 @@ export interface State {
     applicationData: CreateApplication;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
+    imageSource: string[];
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -42,7 +43,8 @@ export const initialState: State = {
     accountParentPage: null,
     accountDeleted: false,
     appListLoading: false,
-    applicationLoading: false
+    applicationLoading: false,
+    imageSource: null
 }
 
 export function AppOnboardingReducer(
@@ -112,6 +114,18 @@ export function AppOnboardingReducer(
                 applicationLoading:false
             })
         ),
+        on(OnboardingAction.fetchCloudAccount,
+            (state,action) => ({
+                ...state,
+                cloudAccountExist:action.cloudAccount
+            })
+        ),
+        on(OnboardingAction.fetchImageSource,
+            (state,action) => ({
+                ...state,
+                imageSource:action.imageSource
+            })
+        ),
         
         // #### CreateApplication screen logic start ####//
 
@@ -145,12 +159,6 @@ export function AppOnboardingReducer(
         // ###  Applist screen logic End ### // 
 
         // ###  Account screen logic Starts ### // 
-        on(OnboardingAction.fetchCloudAccount,
-            (state,action) => ({
-                ...state,
-                cloudAccountExist:action.cloudAccount
-            })
-        ),
         on(OnboardingAction.fetchAccountList,
             (state,action) => ({
                 ...state,

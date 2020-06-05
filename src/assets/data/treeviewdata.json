@@ -1,0 +1,47 @@
+[
+    {
+      "configId": "46a02913-8fb9-45b5-a649-1272c8ee1a28",
+      "name": "nested_01",
+      "user": "admin",
+      "applicationName": "nestedpipe001",
+      "status": "SUCCEEDED",
+      "child": [
+        {
+          "configId": "e4c44a0a-54fa-4d7b-8d82-05497f262910",
+          "name": "nested_02",
+          "childOf": "nested_01",
+          "user": "admin",
+          "applicationName": "nestedpipe001",
+          "status": "SUCCEEDED",
+          "child": [
+            {
+              "configId": "4914f8e8-b69f-4814-ab46-38e0c9e20465",
+              "name": "nested_03",
+              "childOf": "nested_02",
+              "user": "admin",
+              "applicationName": "nestedpipe001",
+              "status": "SUCCEEDED"
+            }
+          ]
+        },
+        {
+            "configId": "e4c44a0a-54fa-4d7b-8d82-05497f262910",
+            "name": "nested_04",
+            "childOf": "nested_01",
+            "user": "admin",
+            "applicationName": "nestedpipe001",
+            "status": "SUCCEEDED",
+            "child": [
+              {
+                "configId": "4914f8e8-b69f-4814-ab46-38e0c9e20465",
+                "name": "nested_03",
+                "childOf": "nested_02",
+                "user": "admin",
+                "applicationName": "nestedpipe001",
+                "status": "SUCCEEDED"
+              }
+            ]
+          }
+      ]
+    }
+  ]
