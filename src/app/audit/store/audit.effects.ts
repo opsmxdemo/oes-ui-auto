@@ -70,7 +70,7 @@ export class AuditEffect {
                 const params = new HttpParams()
                     .set('isLatest', 'false')
                     .set('isTreeView', 'true');
-                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/allDeployments', { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/pipeline', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
                     }),
@@ -153,7 +153,7 @@ export class AuditEffect {
                         switch(action.relatedApi){
                             case 'pipelineconfig':
                                 return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
-                            case 'allDeployments':
+                            case 'pipeline':
                                 return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
                         }
                     }),
@@ -179,7 +179,7 @@ export class AuditEffect {
                         switch(action.relatedApi){
                             case 'pipelineconfig':
                                 return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
-                            case 'allDeployments':
+                            case 'pipeline':
                                 return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
                         }
                     }),
@@ -284,7 +284,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.loadFinalData),
             switchMap((action) => {
-                return this.http.get('../../../assets/data/policyaudit.json').pipe(
+                return this.http.get('../../../assets/data/dummyData/policyaudit.json').pipe(
                     map(resdata => {
                         return AuditAction.fetchedPolicyAudit({policyAuditData:resdata});
                     }),

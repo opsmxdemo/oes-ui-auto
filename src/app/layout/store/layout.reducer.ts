@@ -9,7 +9,7 @@ export interface State {
 
 export const initialState: State = {
     menu: null,
-    appliactionData: null
+    appliactionData: 0
 }
 
 export function layoutReducer(

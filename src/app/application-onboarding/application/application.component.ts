@@ -33,6 +33,7 @@ export class CreateApplicationComponent implements OnInit {
   editServiceForm: Service;                                       // It is use to save edit Service form data.
   parentPage: string = null;                                      // It is use to redirect the parent page after clicking cancel.
   apploading: boolean = false;                                    // It is use to show hide loading screen.
+  imageSourceData = null;                                         // It is use to store imageSource dropdown data
 
   constructor(public sharedService: SharedService,
               public store: Store<fromApp.AppState>,
@@ -57,7 +58,7 @@ export class CreateApplicationComponent implements OnInit {
               name: new FormControl(this.appData.name),
               emailId: new FormControl(this.appData.emailId),
               description: new FormControl(this.appData.description),
-              imageSource: new FormControl(this.appData.imageSource)
+              imageSource: new FormControl({ value: this.appData.imageSource, disabled: true })
             });
 
             //populating serviceForm############################################################################
@@ -152,6 +153,11 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.cloudAccountExist !== null) {
           this.cloudAccountExist = response.cloudAccountExist;
+        }
+        if (response.imageSource !== null) {
+          this.imageSourceData = response.imageSource;
+          console.log("imagesource",this.imageSourceData);
+          
         }
       }
     )
@@ -404,7 +410,7 @@ export class CreateApplicationComponent implements OnInit {
       if (serviceFormValidation && this.environmentForm.valid && this.groupPermissionForm.valid) {
         // Saving all 4 forms data into one
         //#############CreateApplicationForm###############
-        this.mainForm = this.createApplicationForm.value;
+        this.mainForm = this.createApplicationForm.getRawValue();
 
         // Below configuration related to service form
         this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {

@@ -83,13 +83,12 @@ export class AuditComponent implements OnInit{
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
   relatedApi: string = 'pipelineconfig';                                               // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
-  saveFilterTab: string = 'pipelineconfig';                                            // It is use to call appropriate API during save filter.
   savedFilters: any = null;                                                            // It is use to store value of saved filters exist in particular table.
   selectedSaveFilter:string = '';                                                      // It is use to store selected filter value in it.
   treeView = [];                                                                       // It is use to store array to hide or show tree view row.
   treeView_rowanimation = 'collapsed';                                                 // It is use to store value of animation state to represent animation in tree view
   treeView_currentKey = '';                                                            // It is use to store value of currenttab key value of treeView. 
- 
+  
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService,
@@ -129,7 +128,7 @@ export class AuditComponent implements OnInit{
             case 'pipelineconfig':
               this.tableData = auditData.allPipelineData;
               break;
-            case 'allDeployments':
+            case 'pipeline':
               this.tableData = auditData.allRunningPipelineData;
           }
           this.currentDatalength = this.tableData['results'].length;
@@ -198,22 +197,19 @@ export class AuditComponent implements OnInit{
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
-            this.relatedApi = 'allDeployments';
-            this.saveFilterTab = 'pipeline';
+            this.relatedApi = 'pipeline';
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
             this.pipelineCountName = 'All Pipelines';
             this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
             this.relatedApi = 'pipelineconfig';
-            this.saveFilterTab = 'pipelineconfig';
             break;
           case 'policy':
             this.currentTabData = responseData.policyAudit;
             this.pipelineCountName = 'Policy';
             this.pipelineCountValue = responseData.policyAudit['results'].length;
             this.relatedApi = 'policy';
-            this.saveFilterTab = 'policy';
             break;
           // case 'failedPipeline':
           //   this.currentTabData = responseData.failedPipelineData;
@@ -268,18 +264,25 @@ export class AuditComponent implements OnInit{
   }
 
   // Below function is use to see nested row 
-  onClickNestedRow(index,event){
+  onClickNestedRow(index,event,application,pipelineconfigId,eventId){
     if(this.treeView.indexOf(true) === -1){
       this.treeView[index] = true;
       this.treeView_rowanimation = 'expanded';
       event.target.style.transform = 'rotate(90deg)';
+      const treeViewObj = {
+        applicationName:application,
+        pipelineConfigId:pipelineconfigId,
+        eventId:eventId
+      }
+      console.log('treeObj',treeViewObj);
+      
     }else{
       const index_val = this.treeView.indexOf(true);
       this.treeView[index_val] = false;
       this.treeView_rowanimation = 'collapsed';
       this.elRef.nativeElement.querySelector('#treeview'+index_val).style.transform = 'rotate(0deg)';
       if(index !== index_val){
-        this.onClickNestedRow(index,event);
+        this.onClickNestedRow(index,event,application,pipelineconfigId,eventId);
       }
     }
   }
@@ -290,7 +293,7 @@ export class AuditComponent implements OnInit{
 
   // Below function is execute once user selected saved filter
   onSelectSavedFilter(){
-    this.store.dispatch(AuditActions.selectedFilterCall({filtername:this.selectedSaveFilter,relatedApi:this.saveFilterTab}))
+    this.store.dispatch(AuditActions.selectedFilterCall({filtername:this.selectedSaveFilter,relatedApi:this.relatedApi}))
   }
 
   // Below function is custom valiadator which is use to validate filter name through API call, if name is not exist then it allows us to proceed.
@@ -416,7 +419,7 @@ export class AuditComponent implements OnInit{
       })
       
       if(savefilterObj['filters'].length > 0){
-        this.store.dispatch(AuditActions.saveFilterCall({saveFilterData:savefilterObj,relatedApi:this.saveFilterTab}));
+        this.store.dispatch(AuditActions.saveFilterCall({saveFilterData:savefilterObj,relatedApi:this.relatedApi}));
       }else{
         Swal.fire({
           icon: 'error',
