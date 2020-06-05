@@ -69,11 +69,11 @@
                                           <ul class="nav pt-2 bg-white tab-lined nav-tabs" role="tablist"
                                             (click)="onChangeTab($event)">
                                             <li class="nav-item">
-                                              <a class="nav-link active" id="DYNAMIC" data-toggle="tab" role="tab"
+                                              <a class="nav-link {{currentTab === 'DYNAMIC'?'active':''}}" id="DYNAMIC" data-toggle="tab" role="tab"
                                                 aria-controls="DYNAMIC" aria-selected="true">Dynamic Policies</a>
                                             </li>
-                                            <li class="nav-item disabledMenu">
-                                              <a class="nav-link" id="STATIC" data-toggle="tab" role="tab"
+                                            <li class="nav-item">
+                                              <a class="nav-link {{currentTab === 'STATIC'?'active':''}}" id="STATIC" data-toggle="tab" role="tab"
                                                 aria-controls="STATIC" aria-selected="false">Static Policies</a>
                                             </li>
                                           </ul>
