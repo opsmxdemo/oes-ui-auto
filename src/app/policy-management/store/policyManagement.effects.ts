@@ -47,7 +47,7 @@ export class PolicyEffect {
     // Below effect is use for fetch Table data exist in dynamic and static section
     fetchTableData = createEffect(() =>
         this.actions$.pipe(
-            ofType(PolicyAction.loadPolicy,PolicyAction.successfullSubmission,PolicyAction.deletedPolicySuccessfully),
+            ofType(PolicyAction.loadPolicy,PolicyAction.dynamicPolicSuccessfullSubmission,PolicyAction.staticPolicySuccessfullSubmission,PolicyAction.deletedPolicySuccessfully),
             switchMap(() => {
                 return this.http.get<PolicyTable[]>(this.environment.config.endPointUrl + 'oes/policy/list').pipe(
                     map(resdata => {
@@ -93,7 +93,12 @@ export class PolicyEffect {
                             this.toastr.showError(resdata['response'].message, 'ERROR')
                             return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
                         } else if (resdata['status'] === 200) {
-                            return PolicyAction.fetchedPolicyData({policyData:resdata['response']})
+                            switch(action.relatedTab){
+                                case 'DYNAMIC':
+                                    return PolicyAction.fetchedDynamicPolicyData({DynamicPolicyData:resdata['response']});
+                                case 'STATIC':
+                                    return PolicyAction.fetchedStaticPolicyData({StaticPolicyData:resdata['response']});
+                            }
                         }
                     }),
                    
@@ -111,10 +116,21 @@ export class PolicyEffect {
                     map(resdata => {
                         if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR');
-                            return PolicyAction.successfullSubmission({policyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
+                            //return PolicyAction.successfullSubmission({policyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
+                            switch(action.relatedTab){
+                                case 'DYNAMIC':
+                                    return PolicyAction.dynamicPolicSuccessfullSubmission({DynamicPolicyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
+                                case 'STATIC':
+                                    return PolicyAction.staticPolicySuccessfullSubmission({StaticPolicyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
+                            }
                         } else if (resdata['status'] === 200) {
                             this.toastr.showSuccess(resdata['response'].message, 'SUCCESS');
-                            return PolicyAction.successfullSubmission({policyData:action.policyForm,readonly:true,editMode:false,errorMode:false});
+                            switch(action.relatedTab){
+                                case 'DYNAMIC':
+                                    return PolicyAction.dynamicPolicSuccessfullSubmission({DynamicPolicyData:action.policyForm,readonly:true,editMode:false,errorMode:false});
+                                case 'STATIC':
+                                    return PolicyAction.staticPolicySuccessfullSubmission({StaticPolicyData:action.policyForm,readonly:true,editMode:false,errorMode:false});
+                            }
                         }
                     }),
 

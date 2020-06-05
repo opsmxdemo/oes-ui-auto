@@ -8,7 +8,8 @@ export interface State {
     staticTableData: PolicyTable[];
     endpointTypeData: any;
     errorMessage: string;
-    editPolicyData:PolicyManagement;
+    dynamicEditPolicyData:PolicyManagement;
+    staticEditPolicyData:PolicyManagement;
     editMode:boolean;
     readonlyMode:boolean;
     loading:boolean;
@@ -20,7 +21,8 @@ export const initialState: State = {
     staticTableData: null,
     endpointTypeData: null,
     errorMessage: null,
-    editPolicyData: null,
+    dynamicEditPolicyData: null,
+    staticEditPolicyData: null,
     editMode: false,
     readonlyMode: true,
     loading:false,
@@ -54,12 +56,22 @@ export function PolicyReducer(
                 loading:false
             })
         ),
-        on(PolicyActions.successfullSubmission,
+        on(PolicyActions.dynamicPolicSuccessfullSubmission,
             (state,action) => ({
                 ...state,
                 errorMessage: null,
                 readonlyMode:action.readonly,
-                editPolicyData:action.policyData,
+                dynamicEditPolicyData:action.DynamicPolicyData,
+                editMode:action.editMode,
+                errorMode:action.errorMode
+            })
+        ),
+        on(PolicyActions.staticPolicySuccessfullSubmission,
+            (state,action) => ({
+                ...state,
+                errorMessage: null,
+                readonlyMode:action.readonly,
+                staticEditPolicyData:action.StaticPolicyData,
                 editMode:action.editMode,
                 errorMode:action.errorMode
             })
@@ -73,10 +85,17 @@ export function PolicyReducer(
                 errorMode:false
             })
         ),
-        on(PolicyActions.fetchedPolicyData,
+        on(PolicyActions.fetchedDynamicPolicyData,
             (state,action) => ({
                 ...state,
-                editPolicyData: action.policyData,
+                dynamicEditPolicyData: action.DynamicPolicyData,
+                loading:false
+            })
+        ),
+        on(PolicyActions.fetchedStaticPolicyData,
+            (state,action) => ({
+                ...state,
+                staticEditPolicyData: action.StaticPolicyData,
                 loading:false
             })
         ),
@@ -84,6 +103,14 @@ export function PolicyReducer(
             (state,action) => ({
                 ...state,
                 readonlyMode:false,
+                editMode:false,
+                errorMode:false
+            })
+        ),
+        on(PolicyActions.changeTab,
+            state => ({
+                ...state,
+                readonlyMode:true,
                 editMode:false,
                 errorMode:false
             })
