@@ -1,7 +1,330 @@
-<div class="container">
+<!-- <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1>OES Dashboard Component</h1>
         </div>
     </div>
-</div>
+</div> -->
+
+
+    <div class="main-topBar d-flex align-items-center">
+      <div class="mtb_left">
+        <h1 class="page-title">Dashboard</h1>
+      </div>
+      <!-- /.mtb_left -->
+     
+    </div>
+    <!-- /.main-topBar -->
+
+    <div class="main_content p-0">
+      <div class="page-content">
+          <div class="h-100 p-4 d-flex flex-column">
+                <div class="row no-gutters">
+                  <div class="col-sm-12 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Health Status
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-data">
+                            <span style="color: #009999;"><img src="../../assets/images/pass-icon.png" alt="icon"> Pass - 34</span>
+                            <span style="color: #cc0000;"><img src="../../assets/images/fail-icon.png" alt="icon"> Fail - 16</span>
+                          </div>
+
+                          <div class="graph-controls d-flex">
+                            <div class="mr-3">
+                              <select class="form-control">
+                                <option>Last 7 Days</option>
+                              </select>
+                            </div>
+
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <img src="../../assets/images/graph-box1.png" class="d-block w-100" alt="img" />
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-12 mb-2 -->
+
+                  <div class="col-sm-4 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Pipeline Status <small>(Active, Pass, Fail)</small>
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-controls d-flex">
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <img src="../../assets/images/graph-box2.png" class="d-block w-100" alt="img" />
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-4 -->
+
+                  <div class="col-sm-4 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Pipeline Speed
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-controls d-flex">
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <img src="../../assets/images/graph-box3.png" class="d-block w-100" alt="img" />
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-4 -->
+
+                  <div class="col-sm-4 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Rollback Services
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-controls d-flex">
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <img src="../../assets/images/graph-box4.png" class="d-block w-100" alt="img" />
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-4 -->
+
+                  <div class="col-sm-4 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Automated Verification
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-controls d-flex">
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <div class="graph-blank">
+                            <img src="../../assets/images/no-found.png" alt="">
+                            No data found
+                          </div>
+                          <!-- /.graph-blank -->
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-4 -->
+
+                  <div class="col-sm-4 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Manual Judgement Time
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-controls d-flex">
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <img src="../../assets/images/graph-box5.png" class="d-block w-100" alt="">
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-4 -->
+
+                  <div class="col-sm-4 px-1 mb-2">
+                    <div class="card border-0">
+                      <div class="card-body">
+                        <div class="graph-header d-flex align-items-center justify-content-between">
+                          <div class="graph-title">
+                            <img src="../../assets/images/drag-dots.png" alt="dots" />
+                            Add a new chart widget
+                          </div>
+                          <!-- /.graph-title -->
+                          <div class="graph-controls d-flex">
+                            <div class="dropdown dropdown-icon-remove">
+                              <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Hide labels</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Add/Edit widget</a>
+                                <a class="dropdown-item" href="#">Export to CSV</a>
+                                <a class="dropdown-item" href="#">Go to report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Remove widget</a>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /.graph-controls -->
+                        </div>
+                        <!-- /.graph-header -->
+
+                        <div class="graph-body">
+                          <div class="graph-blank">
+                            <img src="../../assets/images/add-icon.png" alt="">
+                            Add a new chart widget
+                          </div>
+                          <!-- /.graph-blank -->
+                        </div>
+                        <!-- /.graph-body -->
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /.col-sm-4 -->
+                </div>
+                <!-- /.row -->
+              </div>
+        </div>
+        <!-- /.page-content -->
+    </div>
+    <!-- /.main_content -->
+
+  
+  <!-- /.content_section -->
