@@ -33,10 +33,7 @@ export class TableRowComponent implements OnInit {
   expandedId: string = '';
 
   constructor() {}
-  ngOnInit(){
-    debugger
-   console.log('datasource',this.displayedColumns)
-  }
+  ngOnInit(){}
 
   toggleExpandableSymbol(id: string): void {
     this.expandedId = this.expandedId === id ? '' : id;

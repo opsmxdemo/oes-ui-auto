@@ -44,7 +44,7 @@ export class TreeViewComponent implements OnInit {
       // fetching data from state
       this.store.select('audit').subscribe(
         (auditdata) => {
-          debugger
+          
           if(auditdata.treeViewData !== null){
 
             this.treeViewData = auditdata.treeViewData;
