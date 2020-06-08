@@ -3,6 +3,7 @@ import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/
 import { Action, createReducer, on } from '@ngrx/store';
 import * as AuditAction from './audit.actions';
 import { PipelineCount } from 'src/app/models/audit/pipelineCount.model';
+import { TreeView } from 'src/app/models/audit/treeView.model';
 
 export interface State {
     pipelineCount: PipelineCount;
@@ -13,7 +14,7 @@ export interface State {
     lastSuccessfulDeploymentData: any;
     filterData: any;
     policyAudit: any;
-    treeViewData: any;
+    treeViewData: TreeView;
 }
 
 export const initialState: State = {
@@ -73,6 +74,12 @@ export function AuditReducer(
             (state,action) => ({
                 ...state,
                 policyAudit: action.policyAuditData
+            })
+        ),
+        on(AuditAction.loadTreeView,
+            (state,action) => ({
+                ...state,
+                treeViewData: null
             })
         ),
         on(AuditAction.fetchedTreeViewData,

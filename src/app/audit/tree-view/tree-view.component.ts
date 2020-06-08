@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { TestService } from 'src/app/services/test.service';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../store/app.reducer';
+import { TreeView } from 'src/app/models/audit/treeView.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tree-view',
@@ -25,29 +29,35 @@ import { TestService } from 'src/app/services/test.service';
 })
 export class TreeViewComponent implements OnInit {
 
-  constructor(public userService:TestService) { }
+  constructor(public userService:TestService,
+              public store: Store<fromApp.AppState>) { }
 
  
-  users: any;
-
-  displayedColumns: string[] = [
-    'Identification number', 
-    'Name', 
-    'Gender',
-    'Risk', 
-    'Hair length', 
-    'IQ', 
-    'Admission date', 
-    'Last breakdown', 
-    'Yearly fee', 
-    'Knows the Joker?',
-    'deleteIcon'
-  ];
+  
+  treeViewData: any;
+  displayedColumns = [];
+  childData: any;
 
   ngOnInit() {
-    this.userService
-      .getUsers()
-      .subscribe(data => this.users = data);
+   
+
+      // fetching data from state
+      this.store.select('audit').subscribe(
+        (auditdata) => {
+          debugger
+          if(auditdata.treeViewData !== null){
+
+            this.treeViewData = auditdata.treeViewData;
+            var key = Object.keys(this.treeViewData[0].child[0]);
+            key.forEach(ArrKeys => {
+              if( ArrKeys !== 'child'){
+                this.displayedColumns.push(ArrKeys);
+              }
+            }) 
+            this.childData = this.treeViewData[0].child;
+          }
+        }
+      )
   }
 
 }

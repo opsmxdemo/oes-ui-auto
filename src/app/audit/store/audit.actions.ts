@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { PipelineCount } from 'src/app/models/audit/pipelineCount.model';
 import { AuditApplication } from 'src/app/models/audit/auditApplication.model';
+import { TreeView } from 'src/app/models/audit/treeView.model';
 
 
 // Below action related to fetch existing table data
@@ -25,5 +26,5 @@ export const selectedFilterCall = createAction('[Audit] SelectedFilterCall', pro
 
 //Below actions is related to treeView data
 export const loadTreeView = createAction('[Audit] LoadTreeView', props<{callingApiData:any,relatedApi:string}>());
-export const fetchedTreeViewData = createAction('[Audit] FetchedTreeView', props<{treeViewData:any}>())
+export const fetchedTreeViewData = createAction('[Audit] FetchedTreeView', props<{treeViewData:TreeView}>())
 

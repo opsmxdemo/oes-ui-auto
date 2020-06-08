@@ -48,13 +48,12 @@ import { AppConfigService } from './services/app-config.service';
 import { AppDashboardEffect } from './application/application-dashboard/store/dashboard.effects';
 import { TreeViewComponent } from './audit/tree-view/tree-view.component';
 import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
-import { HasRelativeTableComponent } from './audit/tree-view/has-relative-table/has-relative-table.component';
-import { HasPhoneTableComponent } from './audit/tree-view/has-phone-table/has-phone-table.component';
 import { DeploymentVerificationComponent } from './application/deployment-verification/deployment-verification.component';
 import { LogAnalysisComponent } from './application/deployment-verification/log-analysis/log-analysis.component';
 import { MetricAnalysisComponent } from './application/deployment-verification/metric-analysis/metric-analysis.component';
 import { ApplicationComponent } from './application/application.component';
 import { CreateApplicationComponent } from './application-onboarding/application/application.component';
+import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
 
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -95,11 +94,10 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     LoadingScreenComponent,
     TreeViewComponent,
     TableRowComponent,
-    HasRelativeTableComponent,
-    HasPhoneTableComponent,
+    HasChildComponent,
     DeploymentVerificationComponent,
     LogAnalysisComponent,
-    MetricAnalysisComponent,
+    MetricAnalysisComponent
   ],
   imports: [
     BrowserModule,

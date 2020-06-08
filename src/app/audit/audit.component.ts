@@ -274,8 +274,7 @@ export class AuditComponent implements OnInit{
         pipelineConfigId:pipelineconfigId,
         eventId:eventId
       }
-      console.log('treeObj',treeViewObj);
-      
+     this.store.dispatch(AuditActions.loadTreeView({callingApiData:treeViewObj,relatedApi:this.relatedApi}));
     }else{
       const index_val = this.treeView.indexOf(true);
       this.treeView[index_val] = false;

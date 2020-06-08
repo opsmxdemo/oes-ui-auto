@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PipelineCount } from 'src/app/models/audit/pipelineCount.model';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { TreeView } from 'src/app/models/audit/treeView.model';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -89,7 +90,7 @@ export class AuditEffect {
             ofType(AuditAction.loadAudit),
             switchMap(() => {
                 const params = new HttpParams()
-                    .set('isTreeView', 'false');
+                    .set('isTreeView', 'true');
                 return this.http.get(this.environment.config.endPointUrl + 'oes/audit/pipelineconfig', { params: params }).pipe(
                     map(resdata => {
                         return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
@@ -148,7 +149,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.postFilterData),
             switchMap((action) => {
-                return this.http.post(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi+'?isLatest=false&isTreeView=false',action.filter).pipe(
+                return this.http.post(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi+'?isLatest=false&isTreeView=true',action.filter).pipe(
                     map(resdata => {
                         switch(action.relatedApi){
                             case 'pipelineconfig':
@@ -266,7 +267,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.loadTreeView),
             switchMap((action) => {
-                return this.http.post(this.environment.config.endPointUrl + 'oes/audit/pipelinesTreeView',action.callingApiData).pipe(
+                return this.http.get<TreeView>('../../../assets/data/treeviewdata.json').pipe(
                     map(resdata => {
                         return AuditAction.fetchedTreeViewData({treeViewData:resdata});
                     }),

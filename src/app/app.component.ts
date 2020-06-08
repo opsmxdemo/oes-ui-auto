@@ -105,11 +105,5 @@ export class AppComponent implements OnInit, AfterViewChecked {
     let linkClass = linkArr[linkArr.length-1];
     return linkClass;
   }
-
-  // getData(){
-  //   //this.router.navigate(['/appdashboard/deployment'])
-  //   this.router.navigate(['deployment'], { relativeTo: this.route });
-
-  // }
-
+  
 }
