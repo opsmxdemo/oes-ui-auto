@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { TestService } from 'src/app/services/test.service';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
-import { TreeView } from 'src/app/models/audit/treeView.model';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tree-view',
@@ -29,8 +26,7 @@ import { Observable } from 'rxjs';
 })
 export class TreeViewComponent implements OnInit {
 
-  constructor(public userService: TestService,
-    public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromApp.AppState>) { }
 
 
 
