@@ -7,6 +7,7 @@ import * as AuditActions from './audit/store/audit.actions';
 import * as PolicyActions from './policy-management/store/policyManagement.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
 import * as AppDashboardAction from './application/application-dashboard/store/dashboard.actions';
+import * as DeploymentVerificationAction from './application/deployment-verification/store/deploymentverification.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
 import * as $ from 'jquery';
 import 'bootstrap';
