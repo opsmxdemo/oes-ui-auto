@@ -45,6 +45,7 @@ import { ElasticsearchFormComponent } from './application-onboarding/data-source
 import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AppConfigService } from './services/app-config.service';
+import { DeploymentVerificationEffect } from './application/deployment-verification/store/deploymentverification.effects'
 import { AppDashboardEffect } from './application/application-dashboard/store/dashboard.effects';
 import { TreeViewComponent } from './audit/tree-view/tree-view.component';
 import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
@@ -54,7 +55,7 @@ import { MetricAnalysisComponent } from './application/deployment-verification/m
 import { ApplicationComponent } from './application/application.component';
 import { CreateApplicationComponent } from './application-onboarding/application/application.component';
 import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
-
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -116,7 +117,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
                           ApplicationOnBoardingEffect,
                           AuditEffect,
                           PolicyEffect,
-                          AppDashboardEffect]),
+                          AppDashboardEffect,
+                          DeploymentVerificationEffect]),
     ToastrModule.forRoot({
       timeOut: 10000,
       preventDuplicates: true,

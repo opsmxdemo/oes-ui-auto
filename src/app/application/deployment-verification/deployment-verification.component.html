@@ -2,15 +2,25 @@
           <div class="d-flex">
             <div class="leftBox bg-white mw-250">
               <div class="leftBox_header text-muted text-center">
-                <span>Pet Service Application</span>
+                <span>Pet Service Application &nbsp;&nbsp;</span><span><img src="../../../assets/images/fail-icon.png" alt="status"/></span>
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <button class="input-group-text" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
+                    <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementInputVar(inputVar)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
                   </div>
-                  <input type="text" class="form-control text-center" value="11883" aria-describedby="button-addon1">
-                  <div class="input-group-append">
-                    <button class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
+                  <form class="example-form" >
+                    <input type="text" class="form-control text-center"
+                           [formControl]="control"  
+                           [matAutocomplete]="auto" [(ngModel)]="inputVar">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId">
+                        {{canaryId}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </form>
+                  <div  class="input-group-prepend">
+                    <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementInputVar(inputVar)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
                   </div>
+                  <br>
                 </div>
               </div>
               <!-- /.leftBox_header -->
@@ -19,42 +29,123 @@
                   <tbody>
                     <tr>
                       <td>CAS-service</td>
+                      <td width="30" class="text-danger">45</td>
                       <td width="30" class="text-danger">FAIL</td>
                     </tr>
                     <tr>
                       <td>CAS-service</td>
+                      <td width="30" class="text-danger">45</td>
                       <td width="30" class="text-danger">FAIL</td>
                     </tr>
                     <tr class="active-service">
                       <td>CAS-service</td>
+                      <td width="30" class="text-danger">45</td>
                       <td width="30" class="text-danger">FAIL</td>
                     </tr>
                     <tr class="not-attempt-text">
                       <td>CAS-service</td>
+                      <td width="30" class="text-dark">N/A</td>
                       <td width="30">N/A</td>
                     </tr>
                     <tr>
                       <td>XYZ Service</td>
+                      <td width="30" class="text-danger">49</td>
                       <td width="30" class="text-danger">FAIL</td>
                     </tr>
                     <tr>
                       <td>SMARTService</td>
+                      <td width="30" class="text-danger">53</td>
                       <td width="30" class="text-danger">FAIL</td>
                     </tr>
                     <tr class="not-attempt-text">
                       <td>PetService</td>
+                      <td width="30" class="text-dark">N/A</td>
                       <td width="30">N/A</td>
                     </tr>
                     <tr>
                       <td>SMARTEMP</td>
+                      <td width="30" class="text-danger">39</td>
                       <td width="30" class="text-danger">FAIL</td>
                     </tr>
                   </tbody>
                 </table>
                 <!-- /.table -->
-              </div>
+                <div class="chart_ratio text-center d-flex">
+                  <div class="chart_value bg-info flex-grow-1">
+                    <div class="cv_heighlight text-muted">08</div>
+                    <!-- /.cv_heighlight -->
+                    <div class="cv_name">Services</div>
+                    <!-- /.cv_name -->
+                  </div>
+                  <!-- /.chart_value low -->
+                  <div class="chart_value flex-grow-1">
+                    <div class="cv_heighlight text-danger">06</div>
+                    <!-- /.cv_heighlight -->
+                    <div class="cv_name">Failed</div>
+                    <!-- /.cv_name -->
+                  </div>
+                  <!-- /.chart_value alert -->
+                  <div class="chart_value cv_alert flex-grow-1">
+                    <div class="cv_heighlight text-muted">2</div>
+                    <!-- /.cv_heighlight -->
+                    <div class="cv_name">Review</div>
+                    <!-- /.cv_name -->
+                  </div>
+                  <!-- /.chart_value alert -->
+                  <div class="chart_value cv_alert flex-grow-1">
+                    <div class="cv_heighlight">0</div>
+                    <!-- /.cv_heighlight -->
+                    <div class="cv_name">Success</div>
+                    <!-- /.cv_name -->
+                  </div>
+                  <!-- /.chart_value alert -->
+                </div>
+              <!-- <div class="audit-info px-3 d-flex bg-white">
+                <div>
+                  <h4 class="text-danger">6</h4>
+                  <span class="text-muted">Failed</span>
+                </div>
+                <div>
+                  <h4 class="text-dark">2</h4>
+                  <span class="text-muted">Review</span>
+                </div>
+                <div>
+                  <h4 class="text-success">0</h4>
+                  <span class="text-muted">Success</span>
+                </div>
+                <!-- <div>
+                  <h4 class="text-dark">10</h4>
+                  <span class="text-muted">In Progress</span>
+                </div> -->
+              <!-- </div> --> 
               <!-- /.leftBox_body -->
+              <div class="form-group col-12 text-muted">
+                <!-- <label>Application</label> -->
+                <select class="form-control">
+                  <option value="All">All (8)</option>
+                  <option>Select Service</option>
+                  <option value="Service 2">Service 2</option>
+                  <option value="Service 1">Service 1</option>
+                  <option value="Service 2">Service 2</option>
+                </select>
+              </div>
+              <div class="card border-0">
+                <div class="card-body">
+              <div class="graph-header d-flex align-items-center justify-content-between">
+                <!-- <div class="graph-title">
+                  <img src="../../../assets/images/drag-dots.png" alt="dots" />
+                  Application
+                </div> -->
+                <!-- /.graph-title -->
+                <div class="graph-body">
+                  <img src="../../../assets/images/pie-chart.png" class="d-block w-100" alt="">
+                </div>
+                <!-- /.graph-controls -->
+              </div>
             </div>
+            </div>
+            </div>
+          </div>
             <!-- /.leftBox w-250 -->
 
 
@@ -231,9 +322,39 @@
                         </div>
                         <!-- /.chart_value alert -->
                         <div class="chart_value cv_alert flex-grow-1">
-                          <div class="cv_heighlight">35</div>
+                          <div class="cv_heighlight text-danger">35</div>
                           <!-- /.cv_heighlight -->
                           <div class="cv_name">Logs</div>
+                          <!-- /.cv_name -->
+                        </div>
+                        <!-- /.chart_value alert -->
+                      </div>
+                      <!-- /.chart_ratio -->
+                      <div class="chart_ratio mb-3 text-center d-flex">
+                        <div class="chart_value cv_low flex-grow-1">
+                          <div class="cv_heighlight">78</div>
+                          <!-- /.cv_heighlight -->
+                          <div class="cv_name">Metrics</div>
+                          <!-- /.cv_name -->
+                        </div>
+                        <!-- /.chart_value low -->
+                        <!-- /.chart_value alert -->
+                        <div class="chart_value cv_alert flex-grow-1">
+                          <div class="cv_heighlight text-danger">42</div>
+                          <!-- /.cv_heighlight -->
+                          <div class="cv_name">Failed</div>
+                          <!-- /.cv_name -->
+                        </div>
+                        <div class="chart_value cv_alert flex-grow-1">
+                          <div class="cv_heighlight text-warning">6</div>
+                          <!-- /.cv_heighlight -->
+                          <div class="cv_name">Warning</div>
+                          <!-- /.cv_name -->
+                        </div>
+                        <div class="chart_value cv_alert flex-grow-1">
+                          <div class="cv_heighlight">30</div>
+                          <!-- /.cv_heighlight -->
+                          <div class="cv_name">Passed</div>
                           <!-- /.cv_name -->
                         </div>
                         <!-- /.chart_value alert -->
@@ -265,7 +386,7 @@
                         <div class="chart_value cv_alert flex-grow-1">
                           <div class="cv_heighlight">7</div>
                           <!-- /.cv_heighlight -->
-                          <div class="cv_name">Events</div>
+                          <div class="cv_name">Cluster</div>
                           <!-- /.cv_name -->
                         </div>
                         <!-- /.chart_value alert -->
