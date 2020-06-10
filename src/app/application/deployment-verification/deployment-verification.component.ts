@@ -41,6 +41,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.store.dispatch(DeploymentAction.loadLatestRun());
     this.store.select('deploymentOnboarding').subscribe(
       (resData) => {
         if(resData.canaryRun !== null){

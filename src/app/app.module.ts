@@ -55,7 +55,6 @@ import { MetricAnalysisComponent } from './application/deployment-verification/m
 import { ApplicationComponent } from './application/application.component';
 import { CreateApplicationComponent } from './application-onboarding/application/application.component';
 import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
