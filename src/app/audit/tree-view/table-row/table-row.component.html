@@ -6,17 +6,13 @@
       <!-- COLUMNS AND ROWS-->
       <ng-container *ngFor="let key of displayedColumns; let j = index"
                     [matColumnDef]="key">
-        <mat-header-cell *matHeaderCellDef>{{ key }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> <mat-icon *ngIf="j === 0" class="hiddenCarret expand-carret">play_arrow</mat-icon>{{ key | titlecase }}</mat-header-cell>
   
         <mat-cell *matCellDef="let element; let i = dataIndex"> 
           
-          <span> <mat-icon *ngIf="j === 0" class="{{element.kids[iconKeyReference] && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
-            [class.active]="element.data[referenceId] === expandedId"
-            (click)="toggleExpandableSymbol(element.data[referenceId])">play_arrow</mat-icon>{{ element.data[key] }}</span>     
-  
-          <ng-template #icon>
-           
-          </ng-template>   
+          <span> <mat-icon *ngIf="j === 0" class="{{element.child && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
+            [class.active]="element[referenceId] === expandedId"
+            (click)="toggleExpandableSymbol(element[referenceId])">play_arrow</mat-icon>{{ element[key] }}</span>   
           
         </mat-cell>
       </ng-container>
@@ -24,18 +20,11 @@
        <!-- EXPANDABLE ROW -->
       <ng-container matColumnDef="expandedDetail">
         <mat-cell *matCellDef="let element" 
-                 [@expandableRow]="element.data[referenceId] === expandedId ? 'expanded' : 'collapsed'">
+                 [@expandableRow]="element[referenceId] === expandedId ? 'expanded' : 'collapsed'">
   
-        <div *ngIf="element.data[referenceId] === expandedId"
-             class="width-100"
-             [ngSwitch]="renderTemplate">
-  
-          <app-has-phone-table *ngSwitchCase="'phone'"
-                               [phones]="element.kids.has_phone.records"></app-has-phone-table>
-          
-          <app-has-relative-table *ngSwitchCase="'relative'" 
-                              [relatives]="element.kids.has_relatives.records"></app-has-relative-table>
-  
+        <div *ngIf="element[referenceId] === expandedId"
+             class="width-100">
+          <app-has-child [childData]="element.child" [displayedColumns]="displayedColumns"></app-has-child>
         </div>
   
       </mat-cell>

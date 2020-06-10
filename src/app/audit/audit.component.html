@@ -10,7 +10,7 @@
           aria-selected="false">Pipeline Execution</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="policy" data-toggle="tab" role="tab" aria-controls="policy"
+        <a class="nav-link" id="Policy" data-toggle="tab" role="tab" aria-controls="Policy"
           aria-selected="false">Policy Audit</a>
       </li>
     </ul>
@@ -341,7 +341,7 @@
                       <tr class="nestedrow">
                         <ng-container *ngFor="let dataKey of currentHeaderKeys; let j=index">
                           <td *ngIf="showColumn[j] === 'true'">
-                            <div *ngIf="dataKey.includes('Time') || dataKey.includes('Date'); then thenBlock else elseBlock"></div>
+                            <div *ngIf="dataKey.includes('Time'); then thenBlock else elseBlock"></div>
                             <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
                             <ng-template #elseBlock><span
                                 class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}"><i *ngIf="j === 0"

@@ -29,14 +29,11 @@ export class TableRowComponent implements OnInit {
   @Input() title: string;
   @Input() referenceId: string;
   @Input() iconKeyReference: string;
-  @Input() renderTemplate: string;
 
   expandedId: string = '';
 
   constructor() {}
-  ngOnInit(){
-   
-  }
+  ngOnInit(){}
 
   toggleExpandableSymbol(id: string): void {
     this.expandedId = this.expandedId === id ? '' : id;
