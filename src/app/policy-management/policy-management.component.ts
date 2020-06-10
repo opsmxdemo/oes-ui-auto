@@ -261,17 +261,25 @@ export class PolicyManagementComponent implements OnInit {
     this.store.select('policy').subscribe(
       (resData) => {
         if(resData.dynamicTableData !== null){
-          if(this.currentTab === 'DYNAMIC' && resData.dynamicTableData.length>0){
-            this.currentTableContent = resData.dynamicTableData;
-            this.isDataEmpty = false;
+          if(this.currentTab === 'DYNAMIC'){
+            if(resData.dynamicTableData.length>0){
+              this.currentTableContent = resData.dynamicTableData;
+              this.isDataEmpty = false;
+            }else{
+              this.isDataEmpty = true;
+              this.currentTableContent = [];
+            }
+            
           }
-          else if (this.currentTab === 'STATIC' && resData.staticTableData.length>0){
-            this.currentTableContent = resData.staticTableData;
-            this.isDataEmpty = false;
-          }
-          else{
-            this.isDataEmpty = true;
-            this.currentTableContent = [];
+          else if (this.currentTab === 'STATIC' || this.currentTab === ''){
+            this.currentTab = 'STATIC';
+            if(resData.staticTableData.length>0){
+              this.currentTableContent = resData.staticTableData;
+              this.isDataEmpty = false;
+            }else{
+              this.isDataEmpty = true;
+              this.currentTableContent = [];
+            }
           }
           this.fetchInitialData(this.currentTableContent);
         }

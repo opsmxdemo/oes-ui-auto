@@ -6,11 +6,11 @@
       <!-- COLUMNS AND ROWS-->
       <ng-container *ngFor="let key of displayedColumns; let j = index"
                     [matColumnDef]="key">
-        <mat-header-cell *matHeaderCellDef> <mat-icon *ngIf="j === 0" class="hiddenCarret expand-carret">play_arrow</mat-icon>{{ key }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> <mat-icon *ngIf="j === 0" class="hiddenCarret expand-carret">play_arrow</mat-icon>{{ key | titlecase }}</mat-header-cell>
   
         <mat-cell *matCellDef="let element; let i = dataIndex"> 
           
-          <span> <mat-icon *ngIf="j === 0" class="{{element.child.length > 0 && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
+          <span> <mat-icon *ngIf="j === 0" class="{{element.child && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
             [class.active]="element[referenceId] === expandedId"
             (click)="toggleExpandableSymbol(element[referenceId])">play_arrow</mat-icon>{{ element[key] }}</span>   
           

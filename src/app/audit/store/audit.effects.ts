@@ -34,6 +34,18 @@ const handleError = (errorRes: any) => {
     return of(AuditAction.errorOccured({ errorMessage }));
 }
 
+// Below function is use to call specific action for saving data into appropriate tab object
+const fetchedTabData = (resdata:any,relatedApi:string) => {
+    switch(relatedApi){
+        case 'pipelineconfig':
+            return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
+        case 'pipeline':
+            return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
+        case 'policies':
+            return AuditAction.fetchedPolicyAudit({ policyAuditData: resdata });
+    }
+}
+
 @Injectable()
 export class AuditEffect {
     user: any;
@@ -104,36 +116,14 @@ export class AuditEffect {
         )
     )
 
-    // Below effect is use for fetch all pipline data which is used to display on select allPipeline.
-    fetchFailedPipeline = createEffect(() =>
+    // Below effect is use for fetch all Policies data which is used to display on select Policy tab.
+    fetchpoliciesDatainitially = createEffect(() =>
         this.actions$.pipe(
             ofType(AuditAction.loadFinalData),
             switchMap(() => {
-                const params = new HttpParams()
-                    .set('isTreeView', 'true');
-                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/failedPipelineDetails', { params: params }).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/policies').pipe(
                     map(resdata => {
-                        return AuditAction.fetchFailedPipeline({ failedPipelineData: resdata });
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
-
-    // Below effect is use for fetch all pipline data which is used to display on select allPipeline.
-    fetchLastSuccessfulDeployment = createEffect(() =>
-        this.actions$.pipe(
-            ofType(AuditAction.loadFinalData),
-            switchMap(() => {
-                const params = new HttpParams()
-                    .set('isTreeView', 'true');
-                return this.http.get(this.environment.config.endPointUrl + 'oes/audit/lastSuccessfulDeployments', { params: params }).pipe(
-                    map(resdata => {
-                        return AuditAction.fetchlastSuccessfulDeployments({ lastSuccessfulDeployment: resdata });
+                        return AuditAction.fetchedPolicyAudit({policyAuditData:resdata});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -151,12 +141,7 @@ export class AuditEffect {
             switchMap((action) => {
                 return this.http.post(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi+'?isLatest=false&isTreeView=true',action.filter).pipe(
                     map(resdata => {
-                        switch(action.relatedApi){
-                            case 'pipelineconfig':
-                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
-                            case 'pipeline':
-                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
-                        }
+                        return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -177,12 +162,7 @@ export class AuditEffect {
                     .set('isTreeView', 'false');
                 return this.http.get(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi, { params: params }).pipe(
                     map(resdata => {
-                        switch(action.relatedApi){
-                            case 'pipelineconfig':
-                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
-                            case 'pipeline':
-                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
-                        }
+                        return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -201,12 +181,7 @@ export class AuditEffect {
                 return this.http.post(this.environment.config.endPointUrl + 'oes/audit/filter/'+action.relatedApi+'save',action.saveFilterData).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.saveFilterData['name']+' Successfully Saved','SUCCESS');
-                        switch(action.relatedApi){
-                            case 'pipelineconfig':
-                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
-                            case 'pipeline':
-                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
-                        }
+                        return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -246,12 +221,7 @@ export class AuditEffect {
             switchMap((action) => {
                 return this.http.get(this.environment.config.endPointUrl + 'oes/audit/'+action.relatedApi+'/'+action.filtername).pipe(
                     map(resdata => {
-                        switch(action.relatedApi){
-                            case 'pipelineconfig':
-                                return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
-                            case 'pipeline':
-                                return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
-                        }
+                        return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -267,7 +237,7 @@ export class AuditEffect {
         this.actions$.pipe(
             ofType(AuditAction.loadTreeView),
             switchMap((action) => {
-                return this.http.get<TreeView>('../../../assets/data/treeviewdata.json').pipe(
+                return this.http.post<TreeView>(this.environment.config.endPointUrl + 'oes/audit/pipelinesTreeView',action.callingApiData).pipe(
                     map(resdata => {
                         return AuditAction.fetchedTreeViewData({treeViewData:resdata});
                     }),
@@ -279,25 +249,5 @@ export class AuditEffect {
             })
         )
     )
-
-    // Below effect is use to fetched TreeView data for specific application
-    fetchedPolicyAudit= createEffect(() =>
-        this.actions$.pipe(
-            ofType(AuditAction.loadFinalData),
-            switchMap((action) => {
-                return this.http.get('../../../assets/data/dummyData/policyaudit.json').pipe(
-                    map(resdata => {
-                        return AuditAction.fetchedPolicyAudit({policyAuditData:resdata});
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
-
-
 
 }

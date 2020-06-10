@@ -12,7 +12,6 @@ export const fetchAuditApplication = createAction('[Audit] FetchAuditApplication
 export const errorOccured = createAction('[Audit] ErrorOccured', props<{errorMessage:string}>());
 export const fetchRuningPipeline = createAction('[Audit] FetchAllPipeline', props<{allRunningPipelineData:any}>());
 export const fetchAllPipeline = createAction('[Audit] FetchModifiedPipeline', props<{pipelineExist:any}>());
-export const fetchFailedPipeline = createAction('[Audit] FetchFailedPipeline', props<{failedPipelineData:any}>());
 export const fetchlastSuccessfulDeployments = createAction('[Audit] FetchLastSuccessfulDeployments', props<{lastSuccessfulDeployment:any}>());
 export const fetchedPolicyAudit = createAction('[Audit] FetchedPolicyAudit', props<{policyAuditData:any}>());
 

@@ -1,5 +1,21 @@
-<app-table-row [dataSource]="childData"
+<div *ngIf = "!loading">
+    <div *ngIf = "dataAvaliable">
+        <app-table-row *ngIf = "dataAvaliable" [dataSource]="childData"
                [displayedColumns]="displayedColumns"
                [referenceId]="'child'"
                [iconKeyReference]="'child'">
-</app-table-row>
+        </app-table-row>
+    </div>
+    <div *ngIf = "!dataAvaliable" class="dataNotAvaliable">
+       <b>Nested data not found !!!</b>
+    </div>
+</div>
+<div *ngIf = "loading">
+    <div class="treeViewLoading">
+        <div class="dots"></div>
+        <div class="dots"></div>
+        <div class="dots"></div>
+        <div class="dots"></div>
+        <div class="dots"></div>
+      </div>
+</div>

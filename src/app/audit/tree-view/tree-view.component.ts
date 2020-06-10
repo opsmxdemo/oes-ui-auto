@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
   selector: 'app-tree-view',
   templateUrl: './tree-view.component.html',
   styleUrls: ['./tree-view.component.less'],
-  animations: [ 
+  animations: [
     trigger('expandableRow', [
       state('collapsed, void', style({
         height: '0px',
@@ -29,35 +29,48 @@ import { Observable } from 'rxjs';
 })
 export class TreeViewComponent implements OnInit {
 
-  constructor(public userService:TestService,
-              public store: Store<fromApp.AppState>) { }
+  constructor(public userService: TestService,
+    public store: Store<fromApp.AppState>) { }
 
- 
-  
+
+
   treeViewData: any;
   displayedColumns = [];
   childData: any;
+  dataAvaliable: boolean;
+  loading: boolean = false;
 
   ngOnInit() {
-   
 
-      // fetching data from state
-      this.store.select('audit').subscribe(
-        (auditdata) => {
-          
-          if(auditdata.treeViewData !== null){
 
+    // fetching data from state
+    this.store.select('audit').subscribe(
+      (auditdata) => {
+        if (auditdata.treeViewLoading) {
+          this.loading = true;
+          this.dataAvaliable = true;
+        } else {
+          this.loading = false;
+          if (auditdata.treeViewData !== null) {
             this.treeViewData = auditdata.treeViewData;
-            var key = Object.keys(this.treeViewData[0].child[0]);
-            key.forEach(ArrKeys => {
-              if( ArrKeys !== 'child'){
-                this.displayedColumns.push(ArrKeys);
-              }
-            }) 
-            this.childData = this.treeViewData[0].child;
+            if (this.treeViewData.length > 0 && this.treeViewData[0].child.length > 0) {
+              var key = Object.keys(this.treeViewData[0].child[0]);
+              key.forEach(ArrKeys => {
+                if (ArrKeys !== 'child' && ArrKeys !== 'configId' && ArrKeys !== 'childOf') {
+                  this.displayedColumns.push(ArrKeys);
+                }
+              })
+              this.childData = this.treeViewData[0].child;
+              this.dataAvaliable = true;
+            } else {
+              this.dataAvaliable = false;
+            }
+
           }
         }
-      )
+
+      }
+    )
   }
 
 }

@@ -130,13 +130,16 @@ export class AuditComponent implements OnInit{
               break;
             case 'pipeline':
               this.tableData = auditData.allRunningPipelineData;
+              break;
+            case 'policies':
+              this.tableData = auditData.allpolicy;
+              break;
           }
           this.currentDatalength = this.tableData['results'].length;
           this.currentTableContent = this.tableData['results'];
           this.currentTableHeader = this.tableData['headers'];
           this.filtersData = this.tableData['filters'];
           this.currentTabData = this.tableData;
-          this.relatedApi = 'pipelineconfig';
           this.createHeaders(this.tableData['headerOrder']);
           this.savedFilters = this.tableData['savedFilters']['filters']
           if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
@@ -147,7 +150,9 @@ export class AuditComponent implements OnInit{
           this.fetchTreeViewKey(this.currentTableHeader);
           this.showHideColumn();
           this.selectedFilter();
-          this.renderPage();
+          if(!auditData.treeViewMode){
+            this.renderPage();
+          }
         }
       }
     )
@@ -205,24 +210,14 @@ export class AuditComponent implements OnInit{
             this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
             this.relatedApi = 'pipelineconfig';
             break;
-          case 'policy':
-            this.currentTabData = responseData.policyAudit;
-            this.pipelineCountName = 'Policy';
-            this.pipelineCountValue = responseData.policyAudit['results'].length;
-            this.relatedApi = 'policy';
+          case 'Policy':
+            this.currentTabData = responseData.allpolicy;
+            this.pipelineCountName = 'All Policies';
+            this.pipelineCountValue = responseData.allpolicy['results'].length;
+            this.relatedApi = 'policies';
             break;
-          // case 'failedPipeline':
-          //   this.currentTabData = responseData.failedPipelineData;
-          //   break;
         }
-        //updating page values;
-        this.page = {                                                                             
-          startingPoint: 0,
-          endPoint: 15,
-          pageSize: 15,
-          currentPage: 1,
-          pageNo: 1,
-        }
+        
         //disabling customize option in datefilter
         this.disableDatepicker = true; 
         this.inlineRange = null;
@@ -250,6 +245,14 @@ export class AuditComponent implements OnInit{
         }
       }
     )
+    //updating page values;
+    this.page = {                                                                             
+      startingPoint: 0,
+      endPoint: 15,
+      pageSize: 15,
+      currentPage: 1,
+      pageNo: 1,
+    }
     this.renderPage();
     this.advanSearchMode = false;
   }
@@ -265,14 +268,15 @@ export class AuditComponent implements OnInit{
 
   // Below function is use to see nested row 
   onClickNestedRow(index,event,application,pipelineconfigId,eventId){
+    
     if(this.treeView.indexOf(true) === -1){
       this.treeView[index] = true;
       this.treeView_rowanimation = 'expanded';
       event.target.style.transform = 'rotate(90deg)';
       const treeViewObj = {
-        applicationName:application,
+        appName:application,
         pipelineConfigId:pipelineconfigId,
-        eventId:eventId
+        eventId:eventId !== undefined?eventId:''
       }
      this.store.dispatch(AuditActions.loadTreeView({callingApiData:treeViewObj,relatedApi:this.relatedApi}));
     }else{

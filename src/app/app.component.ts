@@ -84,6 +84,15 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.applicationCount = response.appliactionData;
       }
     );
+
+    // fetching data from application dashboard State
+    this.store.select('appDashboard').subscribe(
+      (response) => {
+        if(response.appData !== null){
+          this.store.dispatch(new LayoutAction.ApplicationData(response.appData.length));
+        }
+      }
+    )
   }
 
   loginRedirect(callback): void {
