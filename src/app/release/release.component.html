@@ -108,6 +108,7 @@
                           <th>Service</th>
                           <th>Image ID</th>
                           <th>Tag</th>
+                          <th>Status</th>
                         </tr>
                         <tr *ngFor="let rel of ChildList;let i = index">
                             <td>
@@ -116,6 +117,7 @@
                             </td>
                             <td>{{rel.image}}</td>
                             <td>{{rel.tag}}</td>
+                            <td data-toggle="tooltip" data-placement="top" title="{{rel.details}}">{{rel.staus}}</td>
                             </tr>
                       </table>
                     </td>
