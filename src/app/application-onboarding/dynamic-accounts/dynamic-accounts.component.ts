@@ -139,12 +139,14 @@ export class DynamicAccountsComponent implements OnInit {
 
   // Below function is use to redirect to create account page
   createAccount() {
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.sharedAccountData.setUserData([]);
     this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
   }
 
   // Below function is use to edit existing account
   editAccount(data: any,type: string) {
+    $("[data-toggle='tooltip']").tooltip('hide');
     //this.sharedAccountData.setUserData(data.name === 'kubernetes')
     this.sharedAccountData.setUserData(data);
     this.sharedAccountData.setAccountType(type);
@@ -153,6 +155,7 @@ export class DynamicAccountsComponent implements OnInit {
 
   // Below function is use to delete existiong account
   deleteAccount(account: any,index) {
+    $("[data-toggle='tooltip']").tooltip('hide');
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
