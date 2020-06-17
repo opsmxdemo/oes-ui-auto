@@ -20,7 +20,7 @@ import { AppConfigService } from './services/app-config.service';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit, AfterViewChecked {
-  title = 'OES-UI';
+  title = 'OES';
   addclass = false;
   isAuthenticate = false;
   Sidebar: Menu;

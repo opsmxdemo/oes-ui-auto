@@ -609,7 +609,7 @@ export class AuditComponent implements OnInit{
       }
     }
     // hide column dropdown
-    this.CustomColumn.nativeElement.dispatchEvent(new Event('click'));
+    //this.CustomColumn.nativeElement.dispatchEvent(new Event('click'));
   }
 
   //################### Filter logic ends ################################
