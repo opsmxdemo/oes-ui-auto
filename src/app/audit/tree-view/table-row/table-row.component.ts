@@ -5,7 +5,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   selector: 'app-table-row',
   templateUrl: './table-row.component.html',
   styleUrls: ['./table-row.component.less'],
-  animations: [ 
+  animations: [
     trigger('expandableRow', [
       state('collapsed, void', style({
         height: '0px',
@@ -32,11 +32,19 @@ export class TableRowComponent implements OnInit {
 
   expandedId: string = '';
 
-  constructor() {}
-  ngOnInit(){}
+  constructor() { }
+  ngOnInit() { }
 
   toggleExpandableSymbol(id: string): void {
     this.expandedId = this.expandedId === id ? '' : id;
   }
 
+  // Below function is use to apply appropriate class on basics of status
+  getClass(status) {
+    if (status === 'SUCCEEDED') {
+      return 'successStatus'
+    } else {
+      return 'failStatus'
+    }
+  }
 }

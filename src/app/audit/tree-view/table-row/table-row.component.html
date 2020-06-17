@@ -8,7 +8,7 @@
                     [matColumnDef]="key">
         <mat-header-cell *matHeaderCellDef> <mat-icon *ngIf="j === 0" class="hiddenCarret expand-carret">play_arrow</mat-icon>{{ key | titlecase }}</mat-header-cell>
   
-        <mat-cell *matCellDef="let element; let i = dataIndex"> 
+        <mat-cell *matCellDef="let element; let i = dataIndex" class="{{key === 'status' ? getClass(element[key]) : ''}}"> 
           
           <span> <mat-icon *ngIf="j === 0" class="{{element.child && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
             [class.active]="element[referenceId] === expandedId"
