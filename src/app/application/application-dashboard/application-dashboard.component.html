@@ -11,7 +11,7 @@
   <!-- /.page_title d-flex -->
 
   <div class="row no-gutters">
-    <div class="col-sm-8">
+    <div class="col-sm-7">
       <div class="data_listArea">
         <ng-container *ngFor="let application of applicationData; let i=index">
           <div class="data_list" (click)="selectedApplication(i,application)"
@@ -69,10 +69,10 @@
       <!-- /.data_listArea -->
     </div>
     <!-- /.col-sm-8 -->
-    <div class="col-md-4" *ngIf="showReleaseTable">
+    <div class="col-md-5" *ngIf="showReleaseTable">
       <app-release [releaseDataFromParent]="parentReleaseData"></app-release>
     </div>
-    <div class="col-sm-4" *ngIf="!showReleaseTable && applicationData.length != 0">
+    <div class="col-sm-5" *ngIf="!showReleaseTable && applicationData.length != 0">
       <div class="rightBox position-sticky">
         <div class="rightBox_header d-flex align-items-center">
           <h3>{{selectedApplicationName}}</h3>
