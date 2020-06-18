@@ -117,7 +117,7 @@
                             </td>
                             <td>{{rel.image}}</td>
                             <td>{{rel.tag}}</td>
-                            <td data-toggle="tooltip" data-placement="top" title="{{rel.details}}">{{rel.staus}}</td>
+                            <td class="show-status" [ngClass]= "{'text-danger':rel.status === 'TERMINAL','text-success':rel.status === 'SUCCEEDED'}" *ngIf="rel.status !== undefined" data-toggle="tooltip" data-placement="left" title="{{rel.details}}" >{{rel.status}}</td>
                             </tr>
                       </table>
                     </td>

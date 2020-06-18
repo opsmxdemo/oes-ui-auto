@@ -10,7 +10,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @NgModule({
     exports: [
@@ -26,6 +26,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
       MatToolbarModule,
       MatTableModule,
       MatAutocompleteModule,
+      MatSidenavModule,
     ]
   })
 export class AppMaterialModule { }

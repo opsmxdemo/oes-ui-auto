@@ -13,6 +13,10 @@ import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 
+export interface User {
+  name: string;
+}
+
 @Component({
   selector: 'app-deployment-verification',
   templateUrl: './deployment-verification.component.html',
@@ -22,10 +26,6 @@ export class DeploymentVerificationComponent implements OnInit {
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   public deployementRun: any;
   showCommonInfo: string;
-
-  // myControl = new FormControl();
-  // options: string[] = ['11883', '11884', '11885'];
-  // filteredOptions: Observable<string[]>;
   control = new FormControl('11885');
   canaries: string[] = ['11883', '11884', '11885', '11886', '11887','12345','12222','13452'];
   filteredCanaries: Observable<string[]>;
@@ -34,7 +34,19 @@ export class DeploymentVerificationComponent implements OnInit {
   incredementDisable = false;
   decrementDisable = false;
   deployementLoading: boolean = true;
-  ///canaryList: [];
+  showFiller = false;
+  nav_position: string = 'end';
+
+  
+  ///code for showing select application shows here
+  myControl = new FormControl('Pet Service Application');
+  options: User[] = [
+    {name: 'Pet Service Application'},
+    {name: 'App6Test6'},
+    {name: 'App6Test67'}
+  ];
+  filteredOptions: Observable<User[]>;
+  isShow = true;
 
    constructor(public sharedService: SharedService, public store: Store<fromApp.AppState>,
     public autopilotService: AutopiloService, public notifications: NotificationService) { }
@@ -52,16 +64,25 @@ export class DeploymentVerificationComponent implements OnInit {
       }
     );
 
+    //code for showing application list
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value.name),
+        map(name => name ? this._filter(name) : this.options.slice())
+      );
+    //code for showing application list ending here
+
     this.filteredCanaries = this.control.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value))
+      map(value => this._filterCanaries(value))
     );
     this.showCommonInfo = 'show';
     this.inputVar = '11885';
     
   }
   
-  private _filter(value: string): string[] {
+  private _filterCanaries(value: string): string[] {
     const filterValue = this._normalizeValue(value);
     return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
   }
@@ -131,4 +152,27 @@ export class DeploymentVerificationComponent implements OnInit {
            this.inputVar = this.canaryList[index];
          }
        }
+
+    //code for application list display starts here
+    displayFn(user: User): string {
+      return user && user.name ? user.name : '';
+    }
+  
+    private _filter(name: string): User[] {
+      const filterValue = name.toLowerCase();
+  
+      return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    }
+    
+    onTogglePosition(position: string) {
+      this.nav_position = position === 'start' ? 'end' : 'start';
+      
+    }
+    getOverallInfo(){
+      this.isShow = !this.isShow;
+     // x.class.toggle("fa fa-chevron-up");
+      // x.classList.toggle("fa fa-chevron-left");
+      // $(this).find
+    }
+     
 }
