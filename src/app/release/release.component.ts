@@ -124,7 +124,7 @@ export class ReleaseComponent implements OnInit {
           this.releaseDataFromParent = relResponse;
           this.releaseDataFromParent.appName = this.application;
           this.promoteData.releaseName = '';
-          this.promoteData.jiraId = '';
+          // this.promoteData.jiraId = '';
           this.promoteStatus = false;
         //  this.application = this.releaseDataFromParent.appName;
         });
