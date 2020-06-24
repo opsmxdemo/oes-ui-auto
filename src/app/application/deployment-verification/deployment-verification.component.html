@@ -14,7 +14,7 @@
                     </mat-autocomplete>
                   </mat-form-field>
                 </form>
-                <span>Pet Service Application &nbsp;&nbsp;</span><span><img src="../../../assets/images/fail-icon.png" alt="status"/></span>
+                <span>{{deploymentApplicationHealth.applicationName}} &nbsp;&nbsp;</span><span><img src="../../../assets/images/pass-icon.png" alt="status"/></span>
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementInputVar(inputVar)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
@@ -39,66 +39,33 @@
               <div class="leftBox_body">
                 <table class="table table-sm table-avenir table-no-bordered table-no-dots">
                   <tbody>
-                    <tr>
-                      <td>CAS-service</td>
-                      <td width="30" class="text-danger">45</td>
-                      <td width="30" class="text-danger">FAIL</td>
-                    </tr>
-                    <tr>
-                      <td>CAS-service</td>
-                      <td width="30" class="text-danger">45</td>
-                      <td width="30" class="text-danger">FAIL</td>
-                    </tr>
-                    <tr class="active-service">
-                      <td>CAS-service</td>
-                      <td width="30" class="text-danger">45</td>
-                      <td width="30" class="text-danger">FAIL</td>
-                    </tr>
-                    <tr class="not-attempt-text">
-                      <td>CAS-service</td>
-                      <td width="30" class="text-dark">N/A</td>
-                      <td width="30">N/A</td>
-                    </tr>
-                    <tr>
-                      <td>XYZ Service</td>
-                      <td width="30" class="text-danger">49</td>
-                      <td width="30" class="text-danger">FAIL</td>
-                    </tr>
-                    <tr>
-                      <td>SMARTService</td>
-                      <td width="30" class="text-danger">53</td>
-                      <td width="30" class="text-danger">FAIL</td>
-                    </tr>
-                    <tr class="not-attempt-text">
-                      <td>PetService</td>
-                      <td width="30" class="text-dark">N/A</td>
-                      <td width="30">N/A</td>
-                    </tr>
-                    <tr>
-                      <td>SMARTEMP</td>
-                      <td width="30" class="text-danger">39</td>
-                      <td width="30" class="text-danger">FAIL</td>
-                    </tr>
+                    <ng-container *ngFor="let service of newServ">
+                    <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
+                      <td>{{service.serviceName}}</td>
+                      <td width="30" [ngClass]= "{'text-danger':service.healthStatusOfService === 'FAIL','text-success':service.healthStatusOfService === 'Success'}">{{service.finalScore | number:'1.0-0'}}</td>
+                      <td width="30"  [ngClass]= "{'text-danger':service.healthStatusOfService === 'FAIL','text-success':service.healthStatusOfService === 'Success'}">{{service.healthStatusOfService}}</td>
+                    </tr> 
+                  </ng-container>               
                   </tbody>
                 </table>
                 <!-- /.table -->
                 <div class="chart_ratio text-center d-flex">
                   <div class="chart_value bg-info flex-grow-1">
-                    <div class="cv_heighlight text-muted">08</div>
+                    <div class="cv_heighlight text-muted">{{deploymentApplicationHealth.noOfServices}}</div>
                     <!-- /.cv_heighlight -->
                     <div class="cv_name text-muted">Services</div>
                     <!-- /.cv_name -->
                   </div>
                   <!-- /.chart_value low -->
                   <div class="chart_value flex-grow-1">
-                    <div class="cv_heighlight text-danger">06</div>
+                    <div class="cv_heighlight text-danger">{{deploymentApplicationHealth.noOfFailed}}</div>
                     <!-- /.cv_heighlight -->
                     <div class="cv_name text-muted">Failed</div>
                     <!-- /.cv_name -->
                   </div>
                   <!-- /.chart_value alert -->
                   <div class="chart_value cv_alert flex-grow-1">
-                    <div class="cv_heighlight text-muted">2</div>
+                    <div class="cv_heighlight text-muted">{{deploymentApplicationHealth.noOfReview}}</div>
                     <!-- /.cv_heighlight -->
                     <div class="cv_name text-muted">Review</div>
                     <!-- /.cv_name -->
@@ -107,14 +74,14 @@
                   <div class="chart_value cv_alert flex-grow-1">
                     <div class="cv_heighlight">0</div>
                     <!-- /.cv_heighlight -->
-                    <div class="cv_name text-muted">Success</div>
+                    <div class="cv_name text-muted">{{deploymentApplicationHealth.noOfSuccess}}</div>
                     <!-- /.cv_name -->
                   </div>
                   <!-- /.chart_value alert -->
                 </div>
                 <div class="audit-info px-1 d-flex bg-white">
                   <div>
-                    <h4>0</h4>
+                    <h4>{{deploymentApplicationHealth.noOfInProgress}}</h4>
                     <span class="text-muted">In Progress</span>
                   </div>
                   </div>
@@ -156,6 +123,7 @@
                 </div> -->
                 <!-- /.graph-title -->
                 <div class="graph-body">
+                  <!-- <div #chart></div> -->
                   <img src="../../../assets/images/pie-chart.png" class="d-block w-100" alt="">
                 </div>
                 <!-- /.graph-controls -->
