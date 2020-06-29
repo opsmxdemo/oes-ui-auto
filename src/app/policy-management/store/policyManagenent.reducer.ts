@@ -4,12 +4,12 @@ import * as PolicyActions from './policyManagement.actions'
 import { PolicyManagement } from 'src/app/models/policyManagement/policyManagement.model';
 
 export interface State {
-    dynamicTableData: PolicyTable[];
-    staticTableData: PolicyTable[];
+    runtimeTableData: PolicyTable[];
+    compliantPipelineTableData: PolicyTable[];
     endpointTypeData: any;
     errorMessage: string;
-    dynamicEditPolicyData:PolicyManagement;
-    staticEditPolicyData:PolicyManagement;
+    runtimeEditPolicyData:PolicyManagement;
+    compliantPipelineEditPolicyData:PolicyManagement;
     editMode:boolean;
     readonlyMode:boolean;
     loading:boolean;
@@ -17,12 +17,12 @@ export interface State {
 }
 
 export const initialState: State = {
-    dynamicTableData: null,
-    staticTableData: null,
+    runtimeTableData: null,
+    compliantPipelineTableData: null,
     endpointTypeData: null,
     errorMessage: null,
-    dynamicEditPolicyData: null,
-    staticEditPolicyData: null,
+    runtimeEditPolicyData: null,
+    compliantPipelineEditPolicyData: null,
     editMode: false,
     readonlyMode: true,
     loading:false,
@@ -37,8 +37,8 @@ export function PolicyReducer(
         on(PolicyActions.loadTableData,
             (state, action) => ({
                 ...state,
-                dynamicTableData: action.TableData['dynamicPolicies'],
-                staticTableData: action.TableData['staticPolicies'],
+                runtimeTableData: action.TableData['runtimePolicies'],
+                compliantPipelineTableData: action.TableData['compliantPipelinePolicies'],
                 loading:false
             })
         ),
@@ -61,7 +61,7 @@ export function PolicyReducer(
                 ...state,
                 errorMessage: null,
                 readonlyMode:action.readonly,
-                dynamicEditPolicyData:action.DynamicPolicyData,
+                runtimeEditPolicyData:action.DynamicPolicyData,
                 editMode:action.editMode,
                 errorMode:action.errorMode
             })
@@ -71,7 +71,7 @@ export function PolicyReducer(
                 ...state,
                 errorMessage: null,
                 readonlyMode:action.readonly,
-                staticEditPolicyData:action.StaticPolicyData,
+                compliantPipelineEditPolicyData:action.StaticPolicyData,
                 editMode:action.editMode,
                 errorMode:action.errorMode
             })
@@ -88,14 +88,14 @@ export function PolicyReducer(
         on(PolicyActions.fetchedDynamicPolicyData,
             (state,action) => ({
                 ...state,
-                dynamicEditPolicyData: action.DynamicPolicyData,
+                runtimeEditPolicyData: action.DynamicPolicyData,
                 loading:false
             })
         ),
         on(PolicyActions.fetchedStaticPolicyData,
             (state,action) => ({
                 ...state,
-                staticEditPolicyData: action.StaticPolicyData,
+                compliantPipelineEditPolicyData: action.StaticPolicyData,
                 loading:false
             })
         ),

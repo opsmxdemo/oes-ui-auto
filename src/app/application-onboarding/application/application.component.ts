@@ -50,7 +50,7 @@ export class CreateApplicationComponent implements OnInit {
         if (responseData.editMode) {
           this.appData = responseData.applicationData;
           this.editMode = responseData.editMode;
-          this.defineAllForms();
+          //this.defineAllForms();
 
           if (responseData.applicationData !== null) {
             //populating createApplicationForm ################################################################
@@ -93,9 +93,9 @@ export class CreateApplicationComponent implements OnInit {
                     const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
                     pipelineParameter.push(
                       new FormGroup({
-                        value: new FormControl({ value: pipelineParameterArr.value, disabled: true }),
-                        name: new FormControl({ value: pipelineParameterArr.name, disabled: false }),
-                        type: new FormControl({ value: pipelineParameterArr.type, disabled: false })
+                        value: new FormControl({ value: pipelineParameterArr.value}),
+                        name: new FormControl({ value: pipelineParameterArr.name}),
+                        type: new FormControl({ value: pipelineParameterArr.type})
                       })
                     );
                   })
@@ -188,7 +188,7 @@ export class CreateApplicationComponent implements OnInit {
       services: new FormArray([
         new FormGroup({
           serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-          status: new FormControl('New'),
+          status: new FormControl('NEW'),
           pipelines: new FormArray([
             new FormGroup({
               pipelinetemplate: new FormControl('', Validators.required),
@@ -296,7 +296,7 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.servicesForm.get('services')).push(
       new FormGroup({
         serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-        status: new FormControl('New'),
+        status: new FormControl('NEW'),
         pipelines: new FormArray([
           new FormGroup({
             pipelinetemplate: new FormControl('', Validators.required),
@@ -315,7 +315,7 @@ export class CreateApplicationComponent implements OnInit {
     if (this.editMode && this.appData !== null) {
       this.editServiceForm['services'].forEach(serviceArr => {
         if (serviceArr.serviceName === this.servicesForm.value.services[index].serviceName) {
-          serviceArr.status = 'Delete';
+          serviceArr.status = 'DELETE';
         }
       })
     }
@@ -360,6 +360,16 @@ export class CreateApplicationComponent implements OnInit {
     this.groupPermissionForm.markAllAsTouched();
   }
 
+  // Below functon is use to change the service status in editmode
+  onChangeValue(serviceIndex, pipelineIndex, pipelineTemplateIndex,event){
+    const serviceInfo = this.servicesForm.value.services[serviceIndex];
+    if( serviceInfo.status === 'ACTIVE' && this.editMode){
+      if(event.target.value !== this.getProperValue(serviceIndex, pipelineIndex, pipelineTemplateIndex)){
+        this.servicesForm.value.services[serviceIndex].status = 'UPDATE';
+      }
+    }
+  }
+
   //Below function is use to fetch proper value from pipelineExist array and return in result in string format. i.e, related to pipeline templateParameter section
   getProperValue(serviceIndex, pipelineIndex, pipelineTemplateIndex) {
     const pipelineServiceName = this.servicesForm.value.services[serviceIndex].pipelines[pipelineIndex].pipelinetemplate;
@@ -394,7 +404,7 @@ export class CreateApplicationComponent implements OnInit {
       // Below logic check whether newely added service is valid or not
       this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
         let new_ServiceCounter = 0;
-        if (serviceArr.status === 'New') {
+        if (serviceArr.status === 'NEW') {
           const arrayControl = this.servicesForm.get('services') as FormArray;
           const innerarrayControl = arrayControl.at(serviceIndex)
           innerarrayControl.markAllAsTouched();
@@ -414,13 +424,15 @@ export class CreateApplicationComponent implements OnInit {
 
         // Below configuration related to service form
         this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
-          if (serviceArr.status === 'New') {
+          if (serviceArr.status === 'NEW') {
+            this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
+          }else if (serviceArr.status === 'UPDATE') {
             this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
           }
         })
         let delete_counter = 0;
         this.editServiceForm['services'].forEach((ServiceArr, i) => {
-          if(ServiceArr.status === 'Delete'){
+          if(ServiceArr.status === 'DELETE'){
             delete_counter++;
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
               if (typeof (PipelineArr.cloudAccount) === 'string') {

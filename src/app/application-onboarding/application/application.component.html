@@ -229,7 +229,7 @@
                                         <label>{{pipelineParameterArr.get('name').value}}</label>
                                         <div class="d-flex mr-6 align-items-center">
                                           <input *ngIf = "pipelineParameterArr.get('type').value !== 'boolean'" type="{{pipelineParameterArr.get('type').value === 'string'? 'text' : 'number'}}" 
-                                          class="form-control" placeholder="{{getProperValue(i,j,k)}}" formControlName="value"
+                                          class="form-control" placeholder="{{getProperValue(i,j,k)}}" formControlName="value" (change)="onChangeValue(i,j,k,$event)"
                                           [ngClass]="!pipelineParameterArr.get('value').valid && pipelineParameterArr.get('value').touched ? 'is-invalid':''">
                                           <select *ngIf = "pipelineParameterArr.get('type').value === 'boolean'" class="form-control" formControlName="value"
                                           [ngClass]="!pipelineParameterArr.get('value').valid && pipelineParameterArr.get('value').touched ? 'is-invalid':''">
