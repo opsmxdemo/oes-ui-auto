@@ -290,13 +290,13 @@
                             <tr *ngFor="let optionsArr of environmentForm.get('environments')['controls'];let i=index">
                               <ng-container [formGroupName]="i">
                                 <td>
-                                  <input type="text" class="form-control" formControlName="key"
+                                  <input type="text" class="form-control" formControlName="key" (change)="onEnvironmentUpdate(i,'key',$event)"
                                   [ngClass]="!environmentForm.get('environments')['controls'][i].get('key').valid && environmentForm.get('environments')['controls'][i].get('key').touched ? 'is-invalid':''">
                                   <span *ngIf="!environmentForm.get('environments')['controls'][i].get('key').valid && environmentForm.get('environments')['controls'][i].get('key').touched"
                                   class="invalid-feedback">Key is required</span>
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control" formControlName="value">
+                                  <input type="text" class="form-control" formControlName="value" (change)="onEnvironmentUpdate(i,'value',$event)">
                                 </td>
                                 <td>
                                   <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete"

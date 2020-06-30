@@ -19,7 +19,6 @@ export const fetchedPolicyAudit = createAction('[Audit] FetchedPolicyAudit', pro
 export const postFilterData = createAction('[Audit] PostFilterData', props<{filter:any,relatedApi:string}>());
 export const loadDataAfterClearFilter = createAction('[Audit] LoadDataAfterClearFilter', props<{relatedApi:string}>());
 export const saveFilterCall = createAction('[Audit] SaveFilterCall', props<{saveFilterData:any,relatedApi:string}>());
-export const savedFilterSuccessfully = createAction('[Audit] SavedFilterSuccessfully');
 export const deleteSavedFilter = createAction('[Audit] DeleteSavedFilter', props<{filtername:string,isSame:boolean,appliedFilter:string,relatedApi:string}>());
 export const selectedFilterCall = createAction('[Audit] SelectedFilterCall', props<{filtername:string,relatedApi:string}>());
 

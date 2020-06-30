@@ -1,5 +1,5 @@
 <div class="main_content p-0">
-  <div class="page-content flex-grow-1">
+  <div class="page-content flex-grow-1 {{cursorWaiting === true ?'pagewait':''}}">
     <ul class="nav pt-2 bg-white tab-lined nav-tabs" id="myTab" role="tablist" (click)="onChangeTab($event)">
       <li class="nav-item">
         <a class="nav-link active" id="Pipeline" data-toggle="tab" role="tab" aria-controls="Pipeline"
@@ -309,7 +309,7 @@
               <div class="toolpills">
                 <form #filterForm="ngForm" class="filterForm">
                   <ng-container *ngFor="let filter of filtersData;let i = index">
-                    <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]">
+                    <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]" data-toggle="tooltip" data-placement="top" title="{{currentTableHeader[filter.name]}}">
                       <ng-multiselect-dropdown [placeholder]="currentTableHeader[filter.name]"
                         name="{{filtersData[i].name}}" [data]="filter.items" [settings]="dropdownSettings"
                         (onSelect)="onItemSelect($event,filter)" [(ngModel)]="selectedFilters[i]"

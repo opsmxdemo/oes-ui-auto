@@ -33,7 +33,8 @@ export class CreateApplicationComponent implements OnInit {
   editServiceForm: Service;                                       // It is use to save edit Service form data.
   parentPage: string = null;                                      // It is use to redirect the parent page after clicking cancel.
   apploading: boolean = false;                                    // It is use to show hide loading screen.
-  imageSourceData = null;                                         // It is use to store imageSource dropdown data
+  imageSourceData = null;                                         // It is use to store imageSource dropdown data.
+  environmentUpdated = false;                                     // It is use to change status of services while environment is update in edit mode.
 
   constructor(public sharedService: SharedService,
               public store: Store<fromApp.AppState>,
@@ -50,7 +51,7 @@ export class CreateApplicationComponent implements OnInit {
         if (responseData.editMode) {
           this.appData = responseData.applicationData;
           this.editMode = responseData.editMode;
-          //this.defineAllForms();
+          this.defineAllForms();
 
           if (responseData.applicationData !== null) {
             //populating createApplicationForm ################################################################
@@ -93,9 +94,9 @@ export class CreateApplicationComponent implements OnInit {
                     const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
                     pipelineParameter.push(
                       new FormGroup({
-                        value: new FormControl({ value: pipelineParameterArr.value}),
-                        name: new FormControl({ value: pipelineParameterArr.name}),
-                        type: new FormControl({ value: pipelineParameterArr.type})
+                        value: new FormControl(pipelineParameterArr.value),
+                        name: new FormControl(pipelineParameterArr.name),
+                        type: new FormControl(pipelineParameterArr.type)
                       })
                     );
                   })
@@ -156,8 +157,6 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
-          console.log("imagesource",this.imageSourceData);
-          
         }
       }
     )
@@ -265,6 +264,19 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.environmentForm.get('environments')).removeAt(index);
   }
 
+  // Below function is use to change status of service on update of environment Form value
+  onEnvironmentUpdate(index,key,event){
+    if(this.editMode){
+      if(this.appData.environments.length > index) {
+        if(event.target.value !== this.appData.environments[index][key]){
+          this.environmentUpdated = true;
+        }
+      }else {
+        this.environmentUpdated = true;
+      }
+    }
+  }
+
   // Below function is execute on select of pipeline type in Services Section
   onPipelineSelect(service_index: number, pipeline_parameter_index: number, selectedTemplate: string) {
 
@@ -339,7 +351,7 @@ export class CreateApplicationComponent implements OnInit {
     let result: boolean = null;
     if (this.editMode === true && this.appData !== null) {
       this.appData.services.forEach(servicArr => {
-        if (servicArr.serviceName === this.servicesForm.value.services[index].serviceName && this.servicesForm.value.services[index].status === 'ACTIVE') {
+        if (servicArr.serviceName === this.servicesForm.value.services[index].serviceName && (this.servicesForm.value.services[index].status === 'ACTIVE' || this.servicesForm.value.services[index].status === 'UPDATE')) {
           result = true;
           return result;
         }
@@ -400,7 +412,6 @@ export class CreateApplicationComponent implements OnInit {
     if (this.editMode) {
       const existServiceLength = this.editServiceForm['services'].length;
       let serviceFormValidation = null;
-
       // Below logic check whether newely added service is valid or not
       this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
         let new_ServiceCounter = 0;
@@ -410,7 +421,7 @@ export class CreateApplicationComponent implements OnInit {
           innerarrayControl.markAllAsTouched();
           serviceFormValidation = innerarrayControl.valid;
           new_ServiceCounter++;
-        }else if (serviceArr.status === 'ACTIVE'){
+        }else if (serviceArr.status === 'ACTIVE' || serviceArr.status === 'UPDATE'){
           if(new_ServiceCounter === 0){
             serviceFormValidation = true;
           }
@@ -425,9 +436,21 @@ export class CreateApplicationComponent implements OnInit {
         // Below configuration related to service form
         this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
           if (serviceArr.status === 'NEW') {
-            this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
+            let counter = 0;
+            this.editServiceForm['services'].forEach((el,index) => {
+              if(el.serviceName === serviceArr.serviceName){
+                counter++;
+              }
+            })
+            if(counter === 0){
+              this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
+            }
           }else if (serviceArr.status === 'UPDATE') {
-            this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
+            this.editServiceForm['services'].forEach((el,index) => {
+              if(el.serviceName === serviceArr.serviceName){
+                this.editServiceForm['services'][index] = this.servicesForm.value.services[serviceIndex];
+              }
+            })
           }
         })
         let delete_counter = 0;
@@ -455,6 +478,14 @@ export class CreateApplicationComponent implements OnInit {
         //#############ServiceFormSection###################
         this.mainForm.services = this.editServiceForm['services'];
         //#############EnvironmentFormSection###############
+        // when environment is updated make all service status as UPDATE
+        if(this.environmentUpdated){
+          this.mainForm.services.forEach(el => {
+            if(el.status === 'ACTIVE') {
+              el.status = 'UPDATE';
+            }
+          })
+        }
         this.mainForm.environments = this.environmentForm.value.environments;
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;

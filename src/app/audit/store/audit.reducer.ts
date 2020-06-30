@@ -16,6 +16,7 @@ export interface State {
     treeViewData: TreeView;
     treeViewMode: boolean;
     treeViewLoading: boolean;
+    cursorWait: boolean;
 }
 
 export const initialState: State = {
@@ -28,7 +29,8 @@ export const initialState: State = {
     allpolicy: null,
     treeViewData: null,
     treeViewMode: false,
-    treeViewLoading:false
+    treeViewLoading:false,
+    cursorWait: false
 }
 
 export function AuditReducer(
@@ -48,21 +50,24 @@ export function AuditReducer(
                 ...state,
                 erroeMessage:action.errorMessage,
                 treeViewMode:false,
-                treeViewLoading:false
+                treeViewLoading:false,
+                cursorWait:false
             })
         ),
         on(AuditAction.fetchRuningPipeline,
             (state,action) => ({
                 ...state,
                 allRunningPipelineData: action.allRunningPipelineData,
-                treeViewMode:false
+                treeViewMode:false,
+                cursorWait:false
             })
         ),
         on(AuditAction.fetchAllPipeline,
             (state,action) => ({
                 ...state,
                 allPipelineData: action.pipelineExist,
-                treeViewMode:false
+                treeViewMode:false,
+                cursorWait:false
             })
         ),
         on(AuditAction.fetchlastSuccessfulDeployments,
@@ -76,7 +81,8 @@ export function AuditReducer(
             (state,action) => ({
                 ...state,
                 allpolicy: action.policyAuditData,
-                treeViewMode:false
+                treeViewMode:false,
+                cursorWait:false
             })
         ),
         on(AuditAction.loadTreeView,
@@ -93,6 +99,36 @@ export function AuditReducer(
                 treeViewData: action.treeViewData,
                 treeViewMode:true,
                 treeViewLoading:false
+            })
+        ),
+        on(AuditAction.postFilterData,
+            (state,action) => ({
+                ...state,
+                cursorWait:true
+            })
+        ),
+        on(AuditAction.loadDataAfterClearFilter,
+            (state,action) => ({
+                ...state,
+                cursorWait:true
+            })
+        ),
+        on(AuditAction.saveFilterCall,
+            (state,action) => ({
+                ...state,
+                cursorWait:true
+            })
+        ),
+        on(AuditAction.deleteSavedFilter,
+            (state,action) => ({
+                ...state,
+                cursorWait:true
+            })
+        ),
+        on(AuditAction.selectedFilterCall,
+            (state,action) => ({
+                ...state,
+                cursorWait:true
             })
         )
     )(auditState,auditAction);

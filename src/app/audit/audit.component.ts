@@ -78,6 +78,7 @@ export class AuditComponent implements OnInit{
   disabledfilter = false;
   limitSelection = false;
   dropdownSettings: any = {};
+  cursorWaiting = false;                                                               // It is use to show waiting icon on cursor if true.
   filtersData: any;                                                                    // It is use to store filter data of current table.
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
@@ -119,6 +120,7 @@ export class AuditComponent implements OnInit{
     // Fetching data from state
     this.store.select('audit').subscribe(
       (auditData) => {
+        this.cursorWaiting = auditData.cursorWait;
         if (auditData.pipelineCount !== null){
           this.pipelineCount = auditData.pipelineCount;
           this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
@@ -374,6 +376,7 @@ export class AuditComponent implements OnInit{
 
   //Below funstion is use on select of filter multiple values
   onItemSelect(event,category){
+    $("[data-toggle='tooltip']").tooltip('hide');
     if(typeof event === 'object'){
       this.filterForm.value[category] = event;
     }
