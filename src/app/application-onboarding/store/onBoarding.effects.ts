@@ -68,23 +68,23 @@ export class ApplicationOnBoardingEffect {
     )
 
     // Below effect is use for fetch cloudAccount dropdown data.
-    fetchCloudAccount = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
-            switchMap(() => {
+    // fetchCloudAccount = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+    //         switchMap(() => {
 
-                return this.http.get<CloudAccount>(this.environment.config.endPointUrl + 'oes/appOnboarding/cloudAccounts').pipe(
-                    map(resdata => {
-                        return OnboardingAction.fetchCloudAccount({ cloudAccount: resdata['data'] })
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
+    //             return this.http.get<CloudAccount>(this.environment.config.endPointUrl + 'oes/appOnboarding/cloudAccounts').pipe(
+    //                 map(resdata => {
+    //                     return OnboardingAction.fetchCloudAccount({ cloudAccount: resdata['data'] })
+    //                 }),
+    //                 catchError(errorRes => {
+    //                     this.toastr.showError('Server Error !!', 'ERROR')
+    //                     return handleError(errorRes);
+    //                 })
+    //             );
+    //         })
+    //     )
+    // )
 
      // Below effect is use for fetch imageSource dropdown data.
      fetchImageSource = createEffect(() =>
@@ -92,9 +92,9 @@ export class ApplicationOnBoardingEffect {
          ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
          switchMap(() => {
 
-             return this.http.get<string[]>('../../../assets/data/dummyData/imagesource.json').pipe(
+             return this.http.get(this.environment.config.endPointUrl + 'oes/accountsConfig/getDockerAccounts').pipe(
                  map(resdata => {
-                     return OnboardingAction.fetchImageSource({imageSource:resdata['imageSource']});
+                     return OnboardingAction.fetchImageSource({imageSource:resdata['data']});
                  }),
                  catchError(errorRes => {
                      this.toastr.showError('Server Error !!', 'ERROR')
