@@ -25,6 +25,7 @@ import { ReleaseComponent } from './release/release.component';
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ApplicationOnBoardingEffect } from './application-onboarding/store/onBoarding.effects';
 import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
@@ -108,6 +109,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ReactiveFormsModule,
     HttpClientModule,
     AppMaterialModule,
+    NgxChartsModule,
     Ng2SearchPipeModule,
     NgMultiSelectDropDownModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
