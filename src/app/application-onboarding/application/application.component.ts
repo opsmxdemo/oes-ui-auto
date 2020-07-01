@@ -83,7 +83,7 @@ export class CreateApplicationComponent implements OnInit {
                   pipelineArray.push(
                     new FormGroup({
                       pipelinetemplate: new FormControl({ value: pipelineArr.pipelinetemplate, disabled: true }),
-                      cloudAccount: new FormControl({ value: pipelineArr.cloudAccount.name, disabled: true }),
+                      cloudAccount: new FormControl({ value: '', disabled: true }),
                       dockerImageName: new FormControl({ value: pipelineArr.dockerImageName, disabled: true }),
                       pipelineParameters: new FormArray([])
                     })
@@ -152,9 +152,9 @@ export class CreateApplicationComponent implements OnInit {
         if (response.pipelineData !== null) {
           this.pipelineExists = response.pipelineData;
         }
-        if (response.cloudAccountExist !== null) {
-          this.cloudAccountExist = response.cloudAccountExist;
-        }
+        // if (response.cloudAccountExist !== null) {
+        //   this.cloudAccountExist = response.cloudAccountExist;
+        // }
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
         }
@@ -191,7 +191,7 @@ export class CreateApplicationComponent implements OnInit {
           pipelines: new FormArray([
             new FormGroup({
               pipelinetemplate: new FormControl('', Validators.required),
-              cloudAccount: new FormControl('', Validators.required),
+              cloudAccount: new FormControl(''),
               dockerImageName: new FormControl('', Validators.required),
               pipelineParameters: new FormArray([])
             })
@@ -312,7 +312,7 @@ export class CreateApplicationComponent implements OnInit {
         pipelines: new FormArray([
           new FormGroup({
             pipelinetemplate: new FormControl('', Validators.required),
-            cloudAccount: new FormControl('', Validators.required),
+            cloudAccount: new FormControl(''),
             dockerImageName: new FormControl('', Validators.required),
             pipelineParameters: new FormArray([])
           })
@@ -336,15 +336,15 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   //Below function is execute on change of cloudAccount array .
-  CloudAccountConfigure(service_index: number, pipeline_parameter_index: number, selectedCloudAccount: string) {
-    let CloudData = null;
-    for (const cloudAccountArr in this.cloudAccountExist) {
-      if (this.cloudAccountExist[cloudAccountArr].name === selectedCloudAccount) {
-        CloudData = this.cloudAccountExist[cloudAccountArr];
-      }
-    }
-    return CloudData;
-  }
+  // CloudAccountConfigure(service_index: number, pipeline_parameter_index: number, selectedCloudAccount: string) {
+  //   let CloudData = null;
+  //   for (const cloudAccountArr in this.cloudAccountExist) {
+  //     if (this.cloudAccountExist[cloudAccountArr].name === selectedCloudAccount) {
+  //       CloudData = this.cloudAccountExist[cloudAccountArr];
+  //     }
+  //   }
+  //   return CloudData;
+  // }
 
   //below function is use to make field readonly when form is in edit mode
   isReadonly(index) {
@@ -458,14 +458,24 @@ export class CreateApplicationComponent implements OnInit {
           if(ServiceArr.status === 'DELETE'){
             delete_counter++;
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
-              if (typeof (PipelineArr.cloudAccount) === 'string') {
-                PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
+              // if (typeof (PipelineArr.cloudAccount) === 'string') {
+              //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
+              // }
+              PipelineArr.cloudAccount = {
+                "name": "",
+                "type": "",
+                "providerVersion": ""
               }
             })
           }else{
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
-              if (typeof (PipelineArr.cloudAccount) === 'string') {
-                PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
+              // if (typeof (PipelineArr.cloudAccount) === 'string') {
+              //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
+              // }
+              PipelineArr.cloudAccount = {
+                "name": "",
+                "type": "",
+                "providerVersion": ""
               }
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
                   if (DataArr.value === '') {
@@ -489,7 +499,7 @@ export class CreateApplicationComponent implements OnInit {
         this.mainForm.environments = this.environmentForm.value.environments;
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
-        
+
         //Below action is use to save updated application form in database
         this.store.dispatch(OnboardingActions.updateApplication({appData:this.mainForm}));
       } else {
@@ -506,8 +516,14 @@ export class CreateApplicationComponent implements OnInit {
         // Below is configuration related to service section
         this.servicesForm.value.services.forEach((ServiceArr, i) => {
           ServiceArr.pipelines.forEach((PipelineArr, j) => {
-            if (typeof (PipelineArr.cloudAccount) === 'string') {
-              PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
+            // if (typeof (PipelineArr.cloudAccount) === 'string') {
+            //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
+            // }
+            // below code is removed in future when clound account implements
+            PipelineArr.cloudAccount = {
+              "name": "",
+              "type": "",
+              "providerVersion": ""
             }
             PipelineArr.pipelineParameters.forEach((DataArr, k) => {
               if (DataArr.value === '') {
@@ -519,6 +535,7 @@ export class CreateApplicationComponent implements OnInit {
         this.mainForm.services = this.servicesForm.value.services;
         this.mainForm.environments = this.environmentForm.value.environments;
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
+        
         //Below action is use to save created form in database
         this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
       } else {
