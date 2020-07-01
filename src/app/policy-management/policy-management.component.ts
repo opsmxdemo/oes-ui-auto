@@ -24,7 +24,7 @@ export class PolicyManagementComponent implements OnInit {
   endpointTypes: any = null;                             // It is use to store endpoint type dropdown data
   currentTableContent = [];                              // It is use to store current table data.
   policyData:PolicyManagement = null;                    // It is use to store whole form data use to send to backend.
-  currentTab = 'DYNAMIC';                                // It is use to store value of current tab.
+  currentTab = 'RUNTIME';                                // It is use to store value of current tab.
   dynamicPolicyCounter = 0;                              // It is use to call Dynamic policyData initially.
   staticPolicyCounter = 0;                               // It is use to call Static policyData initially.
   editPolicyData:PolicyManagement = null;                // It is use to store edit application data. 
@@ -46,19 +46,19 @@ export class PolicyManagementComponent implements OnInit {
         this.viewOnly = resData.readonlyMode;
         this.editMode = resData.editMode;
         this.endpointTypes = resData.endpointTypeData;
-        if(resData.dynamicTableData !== null || resData.staticTableData !== null){
-          if(this.currentTab === 'DYNAMIC' && resData.dynamicTableData.length>0){
-            this.currentTableContent = resData.dynamicTableData;
+        if(resData.runtimeTableData !== null || resData.compliantPipelineTableData !== null){
+          if(this.currentTab === 'RUNTIME' && resData.runtimeTableData.length>0){
+            this.currentTableContent = resData.runtimeTableData;
             this.isDataEmpty = false;
-            this.dynamicPolicyData = resData.dynamicEditPolicyData;
+            this.dynamicPolicyData = resData.runtimeEditPolicyData;
             this.fetchInitialData(this.currentTableContent);
-            this.populateForms(resData.dynamicEditPolicyData,resData.editMode,resData.readonlyMode,resData.errorMode);
-          }else if(this.currentTab === 'STATIC' && resData.staticTableData.length>0){
-            this.currentTableContent = resData.staticTableData;
+            this.populateForms(resData.runtimeEditPolicyData,resData.editMode,resData.readonlyMode,resData.errorMode);
+          }else if(this.currentTab === 'COMPLIANT_PIPELINE' && resData.compliantPipelineTableData.length>0){
+            this.currentTableContent = resData.compliantPipelineTableData;
             this.isDataEmpty = false;
-            this.staticPolicyData = resData.staticEditPolicyData;
+            this.staticPolicyData = resData.compliantPipelineEditPolicyData;
             this.fetchInitialData(this.currentTableContent);
-            this.populateForms(resData.staticEditPolicyData,resData.editMode,resData.readonlyMode,resData.errorMode);
+            this.populateForms(resData.compliantPipelineEditPolicyData,resData.editMode,resData.readonlyMode,resData.errorMode);
           }else{
             this.isDataEmpty = true;
             this.currentTableContent = [];
@@ -126,14 +126,14 @@ export class PolicyManagementComponent implements OnInit {
 
   // Below function is use to call initial API of policy data
   fetchInitialData(data){
-    if(this.currentTab === 'DYNAMIC' && data.length>0 && this.dynamicPolicyCounter === 0){
+    if(this.currentTab === 'RUNTIME' && data.length>0 && this.dynamicPolicyCounter === 0){
       this.dynamicPolicyCounter++;
       this.store.dispatch(PolicyActions.editPolicy({policyName:data[0].policyName,editMode:false,readonlyMode:true,relatedTab:this.currentTab}));
-    }else if(this.currentTab === 'STATIC' && data.length>0 && this.staticPolicyCounter === 0){
+    }else if(this.currentTab === 'COMPLIANT_PIPELINE' && data.length>0 && this.staticPolicyCounter === 0){
       this.staticPolicyCounter++;
       this.store.dispatch(PolicyActions.editPolicy({policyName:data[0].policyName,editMode:false,readonlyMode:true,relatedTab:this.currentTab}));
     }else{
-      this.populateForms(this.currentTab === 'DYNAMIC'?this.dynamicPolicyData:this.staticPolicyData,false,true,false);
+      this.populateForms(this.currentTab === 'RUNTIME'?this.dynamicPolicyData:this.staticPolicyData,false,true,false);
     }
     
   } 
@@ -260,10 +260,10 @@ export class PolicyManagementComponent implements OnInit {
     // fetching data from State
     this.store.select('policy').subscribe(
       (resData) => {
-        if(resData.dynamicTableData !== null){
-          if(this.currentTab === 'DYNAMIC'){
-            if(resData.dynamicTableData.length>0){
-              this.currentTableContent = resData.dynamicTableData;
+        if(resData.runtimeTableData !== null){
+          if(this.currentTab === 'RUNTIME'){
+            if(resData.runtimeTableData.length>0){
+              this.currentTableContent = resData.runtimeTableData;
               this.isDataEmpty = false;
             }else{
               this.isDataEmpty = true;
@@ -271,10 +271,10 @@ export class PolicyManagementComponent implements OnInit {
             }
             
           }
-          else if (this.currentTab === 'STATIC' || this.currentTab === ''){
-            this.currentTab = 'STATIC';
-            if(resData.staticTableData.length>0){
-              this.currentTableContent = resData.staticTableData;
+          else if (this.currentTab === 'COMPLIANT_PIPELINE' || this.currentTab === ''){
+            this.currentTab = 'COMPLIANT_PIPELINE';
+            if(resData.compliantPipelineTableData.length>0){
+              this.currentTableContent = resData.compliantPipelineTableData;
               this.isDataEmpty = false;
             }else{
               this.isDataEmpty = true;

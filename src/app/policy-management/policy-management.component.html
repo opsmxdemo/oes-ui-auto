@@ -69,12 +69,12 @@
                                           <ul class="nav pt-2 bg-white tab-lined nav-tabs" role="tablist"
                                             (click)="onChangeTab($event)">
                                             <li class="nav-item">
-                                              <a class="nav-link {{currentTab === 'DYNAMIC'?'active':''}}" id="DYNAMIC" data-toggle="tab" role="tab"
-                                                aria-controls="DYNAMIC" aria-selected="true">Runtime Policies</a>
+                                              <a class="nav-link {{currentTab === 'RUNTIME'?'active':''}}" id="RUNTIME" data-toggle="tab" role="tab"
+                                                aria-controls="RUNTIME" aria-selected="true">Runtime Policies</a>
                                             </li>
                                             <li class="nav-item">
-                                              <a class="nav-link {{currentTab === 'STATIC'?'active':''}}" id="STATIC" data-toggle="tab" role="tab"
-                                                aria-controls="STATIC" aria-selected="false">Compliant Pipeline Policies</a>
+                                              <a class="nav-link {{currentTab === 'COMPLIANT_PIPELINE'?'active':''}}" id="COMPLIANT_PIPELINE" data-toggle="tab" role="tab"
+                                                aria-controls="COMPLIANT_PIPELINE" aria-selected="false">Compliant Pipeline Policies</a>
                                             </li>
                                           </ul>
                                           <div class="col-12 policyContent">
@@ -103,7 +103,7 @@
                                                   <div class="no_content m-auto">
                                                     <img src="../../../assets/images//blank-123.png" class="hr-image"
                                                       alt="blank" />
-                                                    <p><strong>Create New '{{currentTab}}' Policy</strong></p>
+                                                    <p><strong>Create New {{currentTab | titlecase}} Policy</strong></p>
                                                     <p>Non of Policy is exist in database. <br><small>(To create
                                                         Policy, click New Policy button present above)</small></p>
                                                   </div>
@@ -112,7 +112,7 @@
                                               </div>
                                               <div class="row" *ngIf="!isDataEmpty">
                                                 <div class="col-3 policyList">
-                                                  <table class="table table-sticky table-striped mb-0">
+                                                  <table class="table table-sticky table-striped">
                                                     <thead>
                                                       <tr>
                                                         <th class="font-weight-bold">POLICY NAME</th>

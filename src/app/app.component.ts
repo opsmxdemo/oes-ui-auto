@@ -39,6 +39,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       trigger: 'hover'
     });
     $('[data-toggle="dropdown"]').dropdown();
+    $('[data-toggle="popover"]').popover();
   }
   ngOnInit() {
 

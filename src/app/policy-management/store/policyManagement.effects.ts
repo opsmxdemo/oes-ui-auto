@@ -94,9 +94,9 @@ export class PolicyEffect {
                             return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
                         } else if (resdata['status'] === 200) {
                             switch(action.relatedTab){
-                                case 'DYNAMIC':
+                                case 'RUNTIME':
                                     return PolicyAction.fetchedDynamicPolicyData({DynamicPolicyData:resdata['response']});
-                                case 'STATIC':
+                                case 'COMPLIANT_PIPELINE':
                                     return PolicyAction.fetchedStaticPolicyData({StaticPolicyData:resdata['response']});
                             }
                         }
@@ -118,17 +118,17 @@ export class PolicyEffect {
                             this.toastr.showError(resdata['response'].message, 'ERROR');
                             //return PolicyAction.successfullSubmission({policyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
                             switch(action.relatedTab){
-                                case 'DYNAMIC':
+                                case 'RUNTIME':
                                     return PolicyAction.dynamicPolicSuccessfullSubmission({DynamicPolicyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
-                                case 'STATIC':
+                                case 'COMPLIANT_PIPELINE':
                                     return PolicyAction.staticPolicySuccessfullSubmission({StaticPolicyData:action.policyForm,readonly:false,editMode:false,errorMode:true});
                             }
                         } else if (resdata['status'] === 200) {
                             this.toastr.showSuccess(resdata['response'].message, 'SUCCESS');
                             switch(action.relatedTab){
-                                case 'DYNAMIC':
+                                case 'RUNTIME':
                                     return PolicyAction.dynamicPolicSuccessfullSubmission({DynamicPolicyData:action.policyForm,readonly:true,editMode:false,errorMode:false});
-                                case 'STATIC':
+                                case 'COMPLIANT_PIPELINE':
                                     return PolicyAction.staticPolicySuccessfullSubmission({StaticPolicyData:action.policyForm,readonly:true,editMode:false,errorMode:false});
                             }
                         }
