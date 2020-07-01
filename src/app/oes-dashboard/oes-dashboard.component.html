@@ -61,7 +61,22 @@
                         <!-- /.graph-header -->
 
                         <div class="graph-body">
-                          <img src="../../assets/images/graph-box1.png" class="d-block w-100" alt="img" />
+                          <ngx-charts-area-chart
+                              [view]="view"
+                              [scheme]="colorScheme"
+                              [legend]="legend"
+                              [showXAxisLabel]="showXAxisLabel"
+                              [showYAxisLabel]="showYAxisLabel"
+                              [xAxis]="xAxis"
+                              [yAxis]="yAxis"
+                              [xAxisLabel]="xAxisLabel"
+                              [yAxisLabel]="yAxisLabel"
+                              [timeline]="timeline"
+                              [results]="multi"
+                              [legendPosition]="legendPosition"
+                              (select)="onSelect($event)">
+                          </ngx-charts-area-chart>
+                          <!-- <img src="../../assets/images/graph-box1.png" class="d-block w-100" alt="img" /> -->
                         </div>
                         <!-- /.graph-body -->
                       </div>
@@ -101,7 +116,19 @@
                         <!-- /.graph-header -->
 
                         <div class="graph-body">
-                          <img src="../../assets/images/graph-box2.png" class="d-block w-100" alt="img" />
+                          <ngx-charts-bar-horizontal-stacked
+                        [view]="viewBar"
+                        [scheme]="colorScheme"
+                        [results]="barGraphData"
+                        [gradient]="gradient"
+                        [xAxis]="showXAxisBar"
+                        [yAxis]="showYAxisBar"
+                        [legend]="showLegendBar"
+                        [showXAxisLabel]="showXAxisLabelBar"
+                        [xAxisLabel]="xAxisLabelBar"
+                        (select)="onSelect($event)">
+                      </ngx-charts-bar-horizontal-stacked>
+                          <!-- <img src="../../assets/images/graph-box2.png" class="d-block w-100" alt="img" /> -->
                         </div>
                         <!-- /.graph-body -->
                       </div>
@@ -221,10 +248,24 @@
                         <!-- /.graph-header -->
 
                         <div class="graph-body">
-                          <div class="graph-blank">
-                            <img src="../../assets/images/no-found.png" alt="">
-                            No data found
-                          </div>
+                          <!-- <div class="graph-blank"> -->
+                            <ngx-charts-pie-chart
+                              [view]="viewPie"
+                              [scheme]="colorScheme"
+                              [results]="pieChartData"
+                              [gradient]="gradientPie"
+                              [legend]="showLegendPie"
+                              [legendPosition]="legendPositionPie"
+                              [labels]="showLabelsPie"
+                              [doughnut]="isDoughnutPie"
+                              (select)="onSelect($event)"
+                              (activate)="onActivate($event)"
+                              (deactivate)="onDeactivate($event)"
+                              >
+                            </ngx-charts-pie-chart>
+                            <!-- <img src="../../assets/images/no-found.png" alt="">
+                            No data found -->
+                          <!-- </div> -->
                           <!-- /.graph-blank -->
                         </div>
                         <!-- /.graph-body -->
