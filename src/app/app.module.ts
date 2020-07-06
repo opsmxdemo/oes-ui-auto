@@ -13,7 +13,6 @@ import { HeaderComponent } from './layout/header/header.component';
 import { AuthEffect } from './auth/store/auth.effects';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApplicationDashboardComponent } from './application/application-dashboard/application-dashboard.component';
-import { OesDashboardComponent } from './oes-dashboard/oes-dashboard.component';
 import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
@@ -56,6 +55,9 @@ import { MetricAnalysisComponent } from './application/deployment-verification/m
 import { ApplicationComponent } from './application/application.component';
 import { CreateApplicationComponent } from './application-onboarding/application/application.component';
 import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
+import { CdDashboardComponent } from './cd-dashboard/cd-dashboard.component';
+import { ChartsModule } from './subModules/charts.module';
+
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -69,7 +71,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AppComponent,
     HeaderComponent,
     ApplicationDashboardComponent,
-    OesDashboardComponent,
     AuditComponent,
     ApplicationOnboardingComponent,
     ApplicationComponent,
@@ -98,11 +99,13 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HasChildComponent,
     DeploymentVerificationComponent,
     LogAnalysisComponent,
-    MetricAnalysisComponent
+    MetricAnalysisComponent,
+    CdDashboardComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ChartsModule,
     BrowserAnimationsModule,
     AuthModule,
     FormsModule,

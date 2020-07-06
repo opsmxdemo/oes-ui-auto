@@ -201,8 +201,10 @@ export class PolicyManagementComponent implements OnInit {
         }else{
           if(index+1 < this.currentTableContent.length){
             this.store.dispatch(PolicyActions.editPolicy({policyName:this.currentTableContent[index+1].policyName,editMode:false,readonlyMode:true,relatedTab:this.currentTab}));
-          }else{
+          }else if(this.currentTableContent.length > 1){
             this.store.dispatch(PolicyActions.editPolicy({policyName:this.currentTableContent[index-1].policyName,editMode:false,readonlyMode:true,relatedTab:this.currentTab}));
+          }else if(this.currentTableContent.length === 1){
+            
           }
           this.store.dispatch(PolicyActions.deletePolicy({policyName:policyname}))
         }

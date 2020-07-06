@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ApplicationDashboardComponent } from '../application/application-dashboard/application-dashboard.component';
-import { OesDashboardComponent } from '../oes-dashboard/oes-dashboard.component';
 import { AuthGuard } from '../guards/auth-guard.service';
 import { AuditComponent } from '../audit/audit.component';
 import { ApplicationOnboardingComponent } from '../application-onboarding/application-onboarding.component';
@@ -14,13 +13,14 @@ import { CreateAccountComponent } from '../application-onboarding/create-account
 import { DeploymentVerificationComponent } from '../application/deployment-verification/deployment-verification.component';
 import { ApplicationComponent } from '../application/application.component';
 import { CreateApplicationComponent } from '../application-onboarding/application/application.component';
+import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
 
 const routes: Routes = [
   {path:'application', component: ApplicationComponent, children:[
     {path:'', component: ApplicationDashboardComponent},
     {path:'deploymentverification', component: DeploymentVerificationComponent}
   ]},
-  {path:'oesdashboard', component:OesDashboardComponent},
+  {path:'oesdashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
   {path:'setup', component:ApplicationOnboardingComponent, children: [

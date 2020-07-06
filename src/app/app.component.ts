@@ -103,6 +103,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   toggleNavbar() {
     this.addclass = !this.addclass;
+    this.store.dispatch(new LayoutAction.SideBarToggle(!this.addclass === false?'false':'true'));
   }
 
   // Below function is use to nevigate to proper page while click on submenu link
