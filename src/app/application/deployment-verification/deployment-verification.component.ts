@@ -3,8 +3,9 @@ import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
 import { NotificationService } from '../../services/notification.service';
 import {FormControl} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, tap} from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromApp from '../../store/app.reducer';
 import * as deploymentApp from './store/deploymentverification.reducer';
@@ -21,7 +22,7 @@ import { NumberLiteralType } from 'typescript';
 
 
 export interface User {
-  name: string;
+  applicationName: string;
   id: any;
 }
 
@@ -31,11 +32,13 @@ export interface User {
   styleUrls: ['./deployment-verification.component.less']
 })
 export class DeploymentVerificationComponent implements OnInit {
+  applicationForm: FormGroup;
+
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   deployementRun: any;
   showCommonInfo: string;
   control = new FormControl(this.deployementRun);
-  canaries: string[] = ['11883', '11884', '11885', '11886', '11887','12345','12222','13452'];
+  canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
   inputVar: string;
   canaryList: string[];
@@ -50,52 +53,108 @@ export class DeploymentVerificationComponent implements OnInit {
 
   
   ///code for showing select application shows here
-  myControl = new FormControl('Pet Service Application');
+  myControl = new FormControl();
   options: User[] = [];
   filteredOptions: Observable<User[]>;
   isShow = true;
   deployementApplications: any;
   deploymentServices: any;
   deploymentApplicationHealth: any;
-  newServ: any;
+  selectedService: any;
   selectedServiceId: number;
   deploymentServiceInformation: any;
 
+
+  // App form initia
+
+  //applicationForm: FormGroup;
+  humanizeAge = '';
+
+
+  applicationList = [
+    { applicationName: '' }
+  ];
+
+  applicationListOptions: Observable<any[]>;
+  // serviceInfo: any;
+  applicationId: any;
+  selectedApplicationName: any;
+  canaryId: any[];
+  serviceNameInfo: any;
+
+  // App form end
+
    constructor(public sharedService: SharedService, public store: Store<fromApp.AppState>,
-    public autopilotService: AutopiloService, public notifications: NotificationService) { }
+    public autopilotService: AutopiloService, public notifications: NotificationService,
+    private fb: FormBuilder) { }
 
+// code for application dropdown display starts here
+
+onSelectionChange(event){
+  console.log('App:::', event.option.value);
+  this.selectedApplicationName  = event.option.value;
+}
+
+    buildApplicationForm() {
+      this.applicationForm = this.fb.group({
+        application: [this.selectedApplicationName],
+      });
+      
+    }
+  
+    filterApplications(applicationName: string): any[] {
+      return this.applicationList.filter(option => option.applicationName.toLowerCase().indexOf(applicationName.toLowerCase()) === 0);
+    }
+  
+    initFilterApplication() {
+      this.applicationListOptions = this.applicationForm
+        .get('application')
+        .valueChanges.pipe(
+        startWith<string | any>(''),
+        map(val => (typeof val === 'string' ? val : val.applicationName)),
+        map(applicationName => (applicationName ? this.filterApplications(applicationName) : this.applicationList.slice()))
+        );  
+       // this.onSelectionChange(event);
+    }
+
+  // code for application dropdown display ends here
+
+  
+    displayView(object?: any): string | undefined {
+      return object ? object.applicationName : undefined;
+    }
+
+
+    
   ngOnInit(): void {
-
-
+    this.getApplicationHealth();
     this.getLatestRun();
     this.getAllApplications();
+    
+    
     this.getAllServices();
-    this.getApplicationHealth();
     this.getServiceInformation();
-
-  
-  
-    //code for showing application list
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
+    this.buildApplicationForm();
+    this.initFilterApplication();
+    if(this.canaries.length > 0){
+      console.log("CANARIES LOADED ");
+      this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
-        map(name => name ? this._filter(name) : this.options.slice())
+        map(value => this._filterCanaries(value))
       );
-    //code for showing application list ending here
-
-    this.filteredCanaries = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCanaries(value))
-    );
+    }
+   
     this.showCommonInfo = 'show';
-    this.inputVar = '11885';
+   
     
   }
   
+ 
   
   private _filterCanaries(value: string): string[] {
     const filterValue = this._normalizeValue(value);
+    console.log("Filter Canaries Function", this.canaries);
+    
     return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
   }
 
@@ -155,13 +214,13 @@ export class DeploymentVerificationComponent implements OnInit {
 
     //code for application list display starts here
     displayFn(user: User): string {
-      return user && user.name ? user.name : '';
+      return user && user.applicationName ? user.applicationName : '';
     }
   
     private _filter(name: string): User[] {
       const filterValue = name.toLowerCase();
   
-      return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+      return this.options.filter(option => option.applicationName.toLowerCase().indexOf(filterValue) === 0);
     }
     
     onTogglePosition(position: string) {
@@ -180,6 +239,7 @@ export class DeploymentVerificationComponent implements OnInit {
         if(resData.canaryRun !== null){
                 this.deployementLoading = resData.deployementLoading;
                 this.deployementRun = resData.canaryRun;  
+                this.inputVar = this.deployementRun;
                if(this.counter === 1){
                 this.store.dispatch(DeploymentAction.loadServices({canaryId: this.deployementRun}));
                 this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.deployementRun}));
@@ -198,12 +258,33 @@ export class DeploymentVerificationComponent implements OnInit {
           if(resData.applicationList !== null){
                   this.deployementLoading = resData.applicationListLoading;
                   this.deployementApplications = resData.applicationList;
-                  this.options = resData.applicationList;
-                  console.log(resData);
+                  this.applicationList = resData.applicationList;
+                  console.log('ss');
+                  const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+                 // console.log(JSON.stringify(d['canaryIdList']));
+                  this.canaries = d['canaryIdList'].toString().split(",");
+
+
+                  this.filteredCanaries = this.control.valueChanges.pipe(
+                    startWith(''),
+                    map(value => this._filterCanaries(value))
+                  );
+
+
+
+
+
+               //   this.filteredCanaries = ['121', '11884', '11885', '11886', '11887','12345','12222','13452'];
+                  
+                //  this.canaryId = c.canaryIdList;
+                  this.buildApplicationForm();
+                  this.initFilterApplication();
                   //alert(this.deployementRun);
              }
         }
+        
       );
+     
     }
 
     // get application details
@@ -213,12 +294,15 @@ export class DeploymentVerificationComponent implements OnInit {
           if(resData.serviceList !== null){
                   this.deployementLoading = resData.serviceListLoading;
                   this.deploymentServices = resData.serviceList;
-                  this.newServ = this.deploymentServices.services;
+                  this.selectedService = this.deploymentServices.services;
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
-                  if(this.serviceCounter === 0){
-                    this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: 87,serviceId: this.selectedServiceId}));
-                    this.serviceCounter ++;
-                  }
+                  this.serviceNameInfo = this.deploymentServices.services[0];
+                  //const d = this.deploymentServices.services.find(s => s.serviceName == this.selectedApplicationName);
+
+                  // if(this.serviceCounter === 0){
+                  //   this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: 87,serviceId: this.selectedServiceId}));
+                  //   this.serviceCounter ++;
+                  // }
                //   this.options = resData.serviceList;
                   console.log(resData);
                   //alert(this.deployementRun);
@@ -234,9 +318,16 @@ export class DeploymentVerificationComponent implements OnInit {
           if(resData.applicationHealthDetails !== null){
                   this.deployementLoading = resData.applicationHealthDetailsLoading;
                   this.deploymentApplicationHealth = resData.applicationHealthDetails;
+                  this.selectedApplicationName = this.deploymentApplicationHealth.applicationName;
                   if(this.deploymentApplicationHealth.error != null){
                     this.notifications.showError('Application health Error:', this.deploymentApplicationHealth.error);
                   }
+                  //buildApplicationForm() {
+                    this.applicationForm = this.fb.group({
+                      application: [this.selectedApplicationName],
+                    });
+                    this.applicationId = this.deploymentApplicationHealth.applicationId;
+                 // }
              }
         }
       );
