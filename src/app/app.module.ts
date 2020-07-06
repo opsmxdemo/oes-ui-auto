@@ -57,6 +57,7 @@ import { CreateApplicationComponent } from './application-onboarding/application
 import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
 import { CdDashboardComponent } from './cd-dashboard/cd-dashboard.component';
 import { ChartsModule } from './subModules/charts.module';
+import { CdDashboardEffect } from './cd-dashboard/store/cd-dashboard.effects';
 
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -122,7 +123,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
                           AuditEffect,
                           PolicyEffect,
                           AppDashboardEffect,
-                          DeploymentVerificationEffect]),
+                          DeploymentVerificationEffect,
+                          CdDashboardEffect]),
     ToastrModule.forRoot({
       timeOut: 10000,
       preventDuplicates: true,

@@ -4,6 +4,7 @@ import * as fromLayout from '../layout/store/layout.reducer';
 import * as fromAppOnboarding from '../application-onboarding/store/onBoarding.reducer';
 import * as fromAudit from '../audit/store/audit.reducer';
 import * as fromPolicy from '../policy-management/store/policyManagenent.reducer';
+import * as fromCdDashboard from '../cd-dashboard/store/cd-dashboard.reducer';
 import * as fromAppDashboard from '../application/application-dashboard/store/dashboard.reducer';
 import * as fromDeploymentVerification from '../application/deployment-verification/store/deploymentverification.reducer'
 
@@ -15,6 +16,7 @@ export interface AppState {
     policy: fromPolicy.State;
     appDashboard: fromAppDashboard.State;
     deploymentOnboarding: fromDeploymentVerification.State;
+    cdDashboard: fromCdDashboard.State;
 }
 
 export const appReducers: ActionReducerMap<AppState> = {
@@ -24,5 +26,6 @@ export const appReducers: ActionReducerMap<AppState> = {
     audit: fromAudit.AuditReducer,
     policy: fromPolicy.PolicyReducer,
     appDashboard: fromAppDashboard.DashboardReducer,
-    deploymentOnboarding: fromDeploymentVerification.DeploymentdReducer
+    deploymentOnboarding: fromDeploymentVerification.DeploymentdReducer,
+    cdDashboard: fromCdDashboard.CdDashboardReducer
 };

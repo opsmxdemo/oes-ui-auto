@@ -4,7 +4,7 @@ import { PolicyManagement } from 'src/app/models/policyManagement/policyManageme
 
 
 export const loadPolicy = createAction('[Policy] LoadPolicy', props<{relatedTab}>());
-export const errorOccured = createAction('[Audit] ErrorOccured', props<{errorMessage:string}>());
+export const errorOccured = createAction('[Policy] ErrorOccured', props<{errorMessage:string}>());
 export const loadTableData = createAction('[Policy] LoadTableData', props<{TableData:any}>());
 export const fetchEndpointType = createAction('[Policy] FetchEndpointType', props<{endpointType:any}>());
 export const savePolicy = createAction('[Policy] SavePolicy', props<{policyForm:PolicyManagement,relatedTab:string}>());

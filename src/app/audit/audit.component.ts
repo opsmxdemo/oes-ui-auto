@@ -155,6 +155,8 @@ export class AuditComponent implements OnInit{
           if(!auditData.treeViewMode){
             this.renderPage();
           }
+          // hide tooltip if visible
+          $("[data-toggle='tooltip']").tooltip('hide');
         }
       }
     )

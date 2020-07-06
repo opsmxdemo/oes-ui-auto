@@ -4,6 +4,7 @@ import * as fromApp from './store/app.reducer';
 import * as AuthAction from './auth/store/auth.actions';
 import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
+import * as CdDashboardActions from './cd-dashboard/store/cd-dashboard.actions';
 import * as PolicyActions from './policy-management/store/policyManagement.actions';
 import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
 import * as AppDashboardAction from './application/application-dashboard/store/dashboard.actions';
@@ -63,6 +64,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
           //Dispatching action to fetch application dashboard data from API
           this.store.dispatch(AppDashboardAction.loadAppDashboard());
+
+          //Dispatching action to fetch Cd dashboard data from API
+          this.store.dispatch(CdDashboardActions.loadCdDashboard());
 
           //Dispatching action to fetch application Onboarding data from API
           this.store.dispatch(OnboardingActions.loadAppList());

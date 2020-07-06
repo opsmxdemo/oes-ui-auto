@@ -20,7 +20,7 @@ export class AreaChartComponent implements OnInit {
   showXAxisLabel: boolean = true;
   xAxisLabel: string = 'Year';
   yAxisLabel: string = 'Population';
-  timeline: boolean = false;
+  timeline: boolean = true;
   legendPosition: string = 'below';
 
   colorScheme = {

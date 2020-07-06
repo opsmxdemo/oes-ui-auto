@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import * as LayoutAction from '../layout/store/layout.actions';
 import * as fromApp from '../store/app.reducer';
 import { multi } from './data';
@@ -26,7 +26,8 @@ export class CdDashboardComponent implements OnInit,AfterViewInit {
   stackedBarGraphdata = barGraphData;
   pieChartdata = pieChartData;
 
-  constructor(public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromApp.AppState>,
+              public cdr: ChangeDetectorRef) { }
   ngOnInit(){
     //resetting sidebarVisible value in state
     this.store.dispatch(new LayoutAction.SideBarToggle(''));
@@ -36,6 +37,8 @@ export class CdDashboardComponent implements OnInit,AfterViewInit {
       (layoutData) => {
         this.setWidth(layoutData.sidebarVisible);
         this.sidebarVisible = layoutData.sidebarVisible;
+        // below method is use to Try using ChangeDetectorRef to tell angular that there are new changes to the data sets after been checked.
+        this.cdr.detectChanges();
       }
     )
   }
