@@ -62,7 +62,7 @@ export class CdDashboardEffect {
             switchMap(() => {
                 return this.http.get('../../../assets/data/subchartrawdata.json').pipe(
                     map(resdata => {
-                        return CdDashboardAction.fetchSubChartRawData({subChartRawData:resdata});
+                        return CdDashboardAction.fetchSubChartRawData({widgetRawData:resdata});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')

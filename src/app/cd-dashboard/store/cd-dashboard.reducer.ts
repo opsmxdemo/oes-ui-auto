@@ -4,13 +4,17 @@ import * as CdDashboardActions from './cd-dashboard.actions'
 export interface State {
     healthChartData: any;
     errorMessage: string;
-    subChardRawData: any;
+    widgetRawData: any;
+    subChartData: [];
+    subChartLoading: [];
 }
 
 export const initialState: State = {
     healthChartData: null,
     errorMessage: null,
-    subChardRawData: null
+    widgetRawData: null,
+    subChartData: null,
+    subChartLoading: null
 }
 
 export function CdDashboardReducer(
@@ -27,7 +31,7 @@ export function CdDashboardReducer(
         on(CdDashboardActions.fetchSubChartRawData,
             (state, action) => ({
                 ...state,
-                subChardRawData:action.subChartRawData
+                widgetRawData:action.widgetRawData
             })
         ),
         on(CdDashboardActions.errorOccured,
@@ -36,6 +40,12 @@ export function CdDashboardReducer(
                 errorMessage: action.errorMessage
             })
         ),
+        // on(CdDashboardActions.loadSubChartData,
+        //     (state, action) => ({
+        //         ...state,
+        //         subChartLoading: [...state.subChartLoading,false]
+        //     })
+        // ),
         
     )(dashboardState,dashboardActions);
 }

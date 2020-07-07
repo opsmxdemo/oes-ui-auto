@@ -18,13 +18,13 @@ export class AreaChartComponent implements OnInit {
   yAxis: boolean = true;
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Year';
-  yAxisLabel: string = 'Population';
-  timeline: boolean = true;
+  xAxisLabel: string = 'Time';
+  yAxisLabel: string = 'Count';
+  timeline: boolean = false;
   legendPosition: string = 'below';
 
   colorScheme = {
-    domain: ['#66c285','#ffaeb6']
+    domain: ['#66c285','#e0d256','#ffaeb6','#c2c2c2']
   };
 
   constructor() {}
