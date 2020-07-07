@@ -53,13 +53,13 @@
                 </div>
                 <!-- /.col-sm-12 mb-2 -->
 
-                <div class="col-sm-4 px-1 mb-2">
+                <div class="col-sm-4 px-1 mb-2" *ngFor = "let widget of widgetRawData;let i=index">
                   <div class="card border-0">
                     <div class="card-body">
                       <div class="graph-header d-flex align-items-center justify-content-between">
                         <div class="graph-title">
                           <img src="../../assets/images/drag-dots.png" alt="dots" />
-                          Pipeline Status <small>(Active, Pass, Fail)</small>
+                          {{widget.name}}
                         </div>
                         <!-- /.graph-title -->
                         <div class="graph-controls d-flex">
