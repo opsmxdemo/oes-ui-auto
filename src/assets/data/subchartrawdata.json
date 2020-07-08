@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Pipeline Status",
+        "id": 1
+    },
+    {
+        "name": "Pipeline Speed",
+        "id": 2
+    },
+    {
+        "name": "Rollback Services",
+        "id": 3
+    },
+    {
+        "name": "Automated Verification",
+        "id": 4
+    },
+    {
+        "name": "Manual Judgement Time",
+        "id": 5
+    }
+  ]

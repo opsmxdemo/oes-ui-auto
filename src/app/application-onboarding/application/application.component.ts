@@ -11,6 +11,7 @@ import * as OnboardingActions from '../store/onBoarding.actions';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { Service } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/serviceModel';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import * as $ from 'jquery';
 
 @Component({
@@ -500,8 +501,27 @@ export class CreateApplicationComponent implements OnInit {
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
 
+        //Below function is checking user updated the form or not
+        let formUpdated = false;
+        this.mainForm.services.forEach(el => {
+          if(el.status !== "ACTIVE"){
+            formUpdated = true;
+          }
+        })
+
         //Below action is use to save updated application form in database
-        this.store.dispatch(OnboardingActions.updateApplication({appData:this.mainForm}));
+        if(formUpdated){
+          this.store.dispatch(OnboardingActions.updateApplication({appData:this.mainForm}));
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            html:
+                '<h5>None of the application parameter is edited !!</h5>' +
+                '<p style="font-size: small;">Please edit the application parameters to proceed further.</p>',
+          })
+        }
+        
       } else {
         this.environmentForm.markAllAsTouched();
         this.groupPermissionForm.markAllAsTouched();

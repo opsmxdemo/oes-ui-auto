@@ -5,11 +5,13 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 export interface State {
     menu: Menu;
     appliactionData: number;
+    sidebarVisible: string;
 }
 
 export const initialState: State = {
     menu: null,
-    appliactionData: 0
+    appliactionData: 0,
+    sidebarVisible: ''
 }
 
 export function layoutReducer(
@@ -30,6 +32,11 @@ export function layoutReducer(
             return {
                 ...state,
                 appliactionData: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.SIDEBARTOGGLE:
+            return {
+                ...state,
+                sidebarVisible: action.payload
             }
         default:
             return state;

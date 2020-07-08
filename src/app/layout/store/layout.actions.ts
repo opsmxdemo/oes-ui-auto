@@ -6,7 +6,8 @@ export enum LayoutActionTypes {
     LOADPAGE = '[Layout] LoadPage',
     SIDEBAR_FETCH = '[Layout] SideBar Fetch',
     ERROR_RESPONSE = '[Layout] Error Response',
-    APPLICATIONDATA = '[Layout] Appliaction Data'
+    APPLICATIONDATA = '[Layout] Appliaction Data',
+    SIDEBARTOGGLE = '[Layout] Sidebar Toggle'
 }
 
 export class LoadPage implements Action {
@@ -28,7 +29,13 @@ export class ApplicationData implements Action {
     constructor(public payload:number){}
 }
 
+export class SideBarToggle implements Action {
+    readonly type = LayoutActionTypes.SIDEBARTOGGLE;
+    constructor(public payload:string){}
+}
+
 export type LayoutActions = LoadPage   
                         |   SideBarFetch
                         |   ErrorResponse
-                        |   ApplicationData;
+                        |   ApplicationData
+                        |   SideBarToggle;
