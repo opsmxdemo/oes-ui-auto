@@ -36,6 +36,8 @@ export class CreateApplicationComponent implements OnInit {
   apploading: boolean = false;                                    // It is use to show hide loading screen.
   imageSourceData = null;                                         // It is use to store imageSource dropdown data.
   environmentUpdated = false;                                     // It is use to change status of services while environment is update in edit mode.
+  dockerImageData = null;                                         // It is use to store data related to dockerImage fetched from state.
+  dockerImageDropdownData = null;                                 // It is use to store dockerImage dropdown data on selection of Image Source
 
   constructor(public sharedService: SharedService,
               public store: Store<fromApp.AppState>,
@@ -48,6 +50,7 @@ export class CreateApplicationComponent implements OnInit {
       (responseData) => {
         this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
+        
         //checking is editMode enabled
         if (responseData.editMode) {
           this.appData = responseData.applicationData;
@@ -62,6 +65,8 @@ export class CreateApplicationComponent implements OnInit {
               description: new FormControl(this.appData.description),
               imageSource: new FormControl({ value: this.appData.imageSource, disabled: true })
             });
+            //populating dockerImagenamedropdown.
+            this.onImageSourceSelect(this.appData.imageSource);
 
             //populating serviceForm############################################################################
             if (this.appData.services.length !== 0) {
@@ -159,6 +164,9 @@ export class CreateApplicationComponent implements OnInit {
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
         }
+        if (response.dockerImageData !== null) {
+          this.dockerImageData = response.dockerImageData;
+        }
       }
     )
   }
@@ -231,6 +239,23 @@ export class CreateApplicationComponent implements OnInit {
     return {symbols: true};
   }
   return null;
+  }
+
+  // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
+  onImageSourceSelect(ImageSourceValue){
+    let imageSourceUserName = null;
+    if(this.imageSourceData !== null && this.dockerImageData!== null){
+      this.imageSourceData.forEach(imageSource => {
+        if(ImageSourceValue === imageSource.name){
+          imageSourceUserName = imageSource.username;
+        }
+      })
+      this.dockerImageData.forEach(docker => {
+        if(docker.imageSource === imageSourceUserName){
+          this.dockerImageDropdownData = docker.images;
+        }
+      })
+    }
   }
 
   //Below function is use to add more permission group

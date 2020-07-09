@@ -67,6 +67,25 @@ export class ApplicationOnBoardingEffect {
         )
     )
 
+    // Below effect is use for fetch dockerImageName dropdown data.
+    fetchDockerImageName = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            switchMap(() => {
+
+                return this.http.get<any>('../../../assets/data/dockerImageName.json').pipe(
+                    map(resdata => {
+                        return OnboardingAction.fetchDockerImageName({dockerImageData:resdata['results']});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR');
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
     // Below effect is use for fetch cloudAccount dropdown data.
     // fetchCloudAccount = createEffect(() =>
     //     this.actions$.pipe(
@@ -336,12 +355,12 @@ export class ApplicationOnBoardingEffect {
                     map(resdata => {
                         this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
                         // return OnboardingAction.appDeletedSuccessfully({index:action.index});
-                        return OnboardingAction.accountDeleted({ index: action.index })
                         Swal.fire(
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
                         )
+                        return OnboardingAction.accountDeleted({ index: action.index })
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -362,12 +381,12 @@ export class ApplicationOnBoardingEffect {
                     map(resdata => {
                         this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
                         // return OnboardingAction.appDeletedSuccessfully({index:action.index});
-                        return OnboardingAction.DatasourceaccountDeleted({ index: action.index })
                         Swal.fire(
                             'Deleted!',
                             'Your file has been deleted.',
                             'success'
                         )
+                        return OnboardingAction.DatasourceaccountDeleted({ index: action.index })
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')

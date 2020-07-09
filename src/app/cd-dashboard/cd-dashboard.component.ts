@@ -4,7 +4,6 @@ import * as CdDashboardAction from './store/cd-dashboard.actions';
 import * as fromApp from '../store/app.reducer';
 import { Store } from '@ngrx/store';
 import { pieChartData } from './pie-data';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cd-dashboard',
@@ -83,7 +82,6 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Below function is use to create initial array based on rawData fetched from api
   createInitialData(){
-    
     if(this.widgetRawData !== null && this.widgetChartLoading === null){
       let chartLodingData = [];
       let chartData = [];
