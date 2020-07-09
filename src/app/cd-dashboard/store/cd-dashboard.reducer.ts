@@ -5,8 +5,9 @@ export interface State {
     healthChartData: any;
     errorMessage: string;
     widgetRawData: any;
-    subChartData: [];
-    subChartLoading: [];
+    subChartData: Object[];
+    subChartLoading: boolean[];
+    subDataFetched: boolean;
 }
 
 export const initialState: State = {
@@ -14,7 +15,8 @@ export const initialState: State = {
     errorMessage: null,
     widgetRawData: null,
     subChartData: null,
-    subChartLoading: null
+    subChartLoading: null,
+    subDataFetched: false
 }
 
 export function CdDashboardReducer(
@@ -40,12 +42,37 @@ export function CdDashboardReducer(
                 errorMessage: action.errorMessage
             })
         ),
-        // on(CdDashboardActions.loadSubChartData,
-        //     (state, action) => ({
-        //         ...state,
-        //         subChartLoading: [...state.subChartLoading,false]
-        //     })
-        // ),
+        on(CdDashboardActions.setInitialArrayData,
+            (state, action) => ({
+                ...state,
+                subChartLoading: action.initialSubChartLoading,
+                subChartData: action.initialSubChartData
+            })
+        ),
+        on(CdDashboardActions.loadSubChartData,
+            (state,action) => ({
+                ...state,
+                subChartLoading: state.subChartLoading.map(
+                    (sunChartLoading, index) => index === action.index ? true : sunChartLoading
+                ),
+                subChartData: state.subChartData.map(
+                    (subchartData,index) => index === action.index ? {} : subchartData
+                ),
+                subDataFetched:true
+            })
+        ),
+        on(CdDashboardActions.fetchSubChartData,
+            (state,action) => ({
+                
+                ...state,
+                subChartLoading: state.subChartLoading.map(
+                    (sunChartLoading, index) => index === action.index ? false : sunChartLoading
+                ),
+                subChartData: state.subChartData.map(
+                    (subchartData,index) => index === action.index ? action.subChartData : subchartData
+                )
+            })
+        )
         
     )(dashboardState,dashboardActions);
 }

@@ -43,7 +43,7 @@
                       <!-- /.graph-header -->
 
                       <div class="graph-body" #areaGraph >
-                        <app-area-chart [dataSource]="mainChartData" [view]="mainChartSize"></app-area-chart>
+                        <app-area-chart [dataSource]="mainChartData.dataSource" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-area-chart>
                       </div>
                       <!-- /.graph-body -->
                     </div>
@@ -83,7 +83,7 @@
                       <!-- /.graph-header -->
 
                       <div class="graph-body" #subGraph>
-                        <app-stacket-horizontal-bar-chart [dataSource]="stackedBarGraphdata" [view]="widgetChartSize"></app-stacket-horizontal-bar-chart>
+                        <!-- <app-stacket-horizontal-bar-chart [dataSource]="stackedBarGraphdata" [view]="widgetChartSize" [chartProperty]="mainChartData.chartProperty"></app-stacket-horizontal-bar-chart> -->
                       </div>
                       <!-- /.graph-body -->
                     </div>

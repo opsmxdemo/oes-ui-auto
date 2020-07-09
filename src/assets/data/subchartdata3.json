@@ -1,0 +1,28 @@
+{
+    "type": "pie-chart",
+    "chartProperty":{
+        "showLabels": true,
+        "xAxis": true,
+        "yAxis": true,
+        "showYAxisLabel": true,
+        "showXAxisLabel": true,
+        "xAxisLabel": "Time",
+        "yAxisLabel": "Count",
+        "tooltipDisabled": false,
+        "showGridLines": true
+    },
+    "DataSource" : [
+        {
+          "name": "Monitored",
+          "value": 8
+        },
+        {
+          "name": "Unmonitroed",
+          "value": 3
+        }
+       
+      ]
+  }
+  
+  
+    
