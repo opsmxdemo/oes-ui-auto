@@ -11,7 +11,7 @@
         "tooltipDisabled": false,
         "showGridLines": true
     },
-    "DataSource" : [
+    "dataSource" : [
       {
         "name": "multicloud",
         "series": [

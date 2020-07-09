@@ -1,7 +1,7 @@
 import { ColorScheme } from './chartColorScheme.model';
 
 export class ChartOptions {
-    legend: boolean;
+    showLegend: boolean;
     legendTitle: string;
     xAxis: boolean;
     yAxis: boolean;
@@ -16,11 +16,13 @@ export class ChartOptions {
     animations: boolean;
     gradient: boolean;
     autoScale: boolean;
+    isDoughnut: boolean;
+    showLabels: boolean;
     colorScheme: ColorScheme;
 
     constructor(data: any) {
         data = data || {};
-        this.legend = data.legend;
+        this.showLegend = data.showLegend;
         this.legendTitle = data.legendTitle;
         this.xAxis = data.xAxis;
         this.yAxis = data.yAxis;
@@ -35,6 +37,8 @@ export class ChartOptions {
         this.animations = data.animations;
         this.gradient = data.gradient;
         this.autoScale = data.autoScale;
+        this.isDoughnut = data.isDoughnut;
+        this.showLabels = data.showLabels;
         this.colorScheme = data.colorScheme;
     }
 }

@@ -1,1 +1,28 @@
-{}
+{
+    "type": "demo",
+    "chartProperty":{
+        "showLabels": true,
+        "xAxis": true,
+        "yAxis": true,
+        "showYAxisLabel": true,
+        "showXAxisLabel": true,
+        "xAxisLabel": "Time",
+        "yAxisLabel": "Count",
+        "tooltipDisabled": false,
+        "showGridLines": true
+    },
+    "dataSource" : [
+        {
+          "name": "Monitored",
+          "value": 8
+        },
+        {
+          "name": "Unmonitroed",
+          "value": 3
+        }
+       
+      ]
+  }
+  
+  
+    

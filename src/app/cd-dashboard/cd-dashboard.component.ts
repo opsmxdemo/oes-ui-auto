@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy, ViewEncapsulation } from '@angular/core';
 import * as LayoutAction from '../layout/store/layout.actions';
 import * as CdDashboardAction from './store/cd-dashboard.actions';
 import * as fromApp from '../store/app.reducer';
@@ -8,7 +8,8 @@ import { pieChartData } from './pie-data';
 @Component({
   selector: 'app-cd-dashboard',
   templateUrl: './cd-dashboard.component.html',
-  styleUrls: ['./cd-dashboard.component.less']
+  styleUrls: ['./cd-dashboard.component.less'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -24,6 +25,10 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   changeEventSubscription = null;                          // It is use to unsubscribe the subscription on leave of component.
   widgetChartsData  = [];                                  // It is use to store all data of widget charts.
   pieChartdata = pieChartData;
+
+  // Below variable is for widget chart
+  stackedHorizontalBar = 'stacket-horizontal-bar-chart';
+  pieChart = 'pie-chart';
   
 
   constructor( public store: Store<fromApp.AppState>,
@@ -106,15 +111,15 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   // Below function is use to set width of graphs exist in dashboard
   setWidth(sidebarVisible) {
     if (sidebarVisible === 'false') {
-      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth + 200, 230];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth + (200 / 3), 230]
+      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth + 200, 260];
+      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth + (200 / 3), 260]
     } else if (sidebarVisible === 'true') {
-      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth - 200, 230];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth - (200 / 3), 230]
+      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth - 200, 260];
+      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth - (200 / 3), 260]
     } else {
       // Below we are setting initial width of graph
-      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 230];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 230]
+      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 260];
+      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
     }
   }
 

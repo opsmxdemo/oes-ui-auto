@@ -13,7 +13,7 @@ export class AreaChartComponent implements OnInit {
   @Input() chartProperty: ChartOptions;
 
   // options
-  legend: boolean;
+  showLegend: boolean;
   animations: boolean;
   xAxis: boolean;
   yAxis: boolean;
@@ -31,7 +31,7 @@ export class AreaChartComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.legend = this.chartProperty.legend !== undefined ? this.chartProperty.legend : true;
+    this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : true;
     this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
     this.xAxis = this.chartProperty.xAxis !== undefined ? this.chartProperty.xAxis : true;
     this.yAxis = this.chartProperty.yAxis !== undefined ? this.chartProperty.yAxis : true;
