@@ -5,4 +5,5 @@ export const errorOccured = createAction('[CdDashboard] ErrorOccured', props<{er
 export const fetchHealthChartData = createAction('[CdDashboard] FetchHealthChartData', props<{mainChartData: any}>());
 export const fetchSubChartRawData = createAction('[CdDashboard] FetchSubChartRawData', props<{widgetRawData: any}>());
 export const loadSubChartData = createAction('[CdDashboard] LoadSubChartData', props<{subChartId: number, index:number}>());
-export const fetchSubChartData = createAction('[CdDashboard] LoadSubChartData', props<{subChartData: number, index:number}>());
+export const fetchSubChartData = createAction('[CdDashboard] FetchSubChartData', props<{subChartData: Object[], index:number}>());
+export const setInitialArrayData = createAction('[CdDashboard] SetInitialArrayData', props<{initialSubChartLoading: boolean[], initialSubChartData:Object[]}>());

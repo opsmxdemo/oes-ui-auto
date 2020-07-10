@@ -1,4 +1,19 @@
-[
+{
+  "chartProperty":{
+    "showLabels": true,
+    "xAxis": true,
+    "yAxis": true,
+    "showYAxisLabel": true,
+    "showXAxisLabel": true,
+    "xAxisLabel": "Time",
+    "yAxisLabel":"Count",
+    "tooltipDisabled": false,
+    "showGridLines": true,
+    "colorScheme":{
+      "domain":["#33b3f1","#f29798","#9bd8af","#c2c2c2"]
+    }
+},
+"dataSource":[
   {
     "name": "Pass",
     "series": [
@@ -20,31 +35,6 @@
       },
       {
         "value": 6182,
-        "name": "2016-09-19T14:48:01.362Z"
-      }
-    ]
-  },
-  {
-    "name": "InProgress",
-    "series": [
-      {
-        "value": 4890,
-        "name": "2016-09-19T21:20:09.809Z"
-      },
-      {
-        "value": 2684,
-        "name": "2016-09-18T04:48:51.928Z"
-      },
-      {
-        "value": 5240,
-        "name": "2016-09-14T15:35:27.718Z"
-      },
-      {
-        "value": 2950,
-        "name": "2016-09-21T16:17:14.917Z"
-      },
-      {
-        "value": 3277,
         "name": "2016-09-19T14:48:01.362Z"
       }
     ]
@@ -75,6 +65,31 @@
     ]
   },
   {
+    "name": "InProgress",
+    "series": [
+      {
+        "value": 4890,
+        "name": "2016-09-19T21:20:09.809Z"
+      },
+      {
+        "value": 2684,
+        "name": "2016-09-18T04:48:51.928Z"
+      },
+      {
+        "value": 5240,
+        "name": "2016-09-14T15:35:27.718Z"
+      },
+      {
+        "value": 2950,
+        "name": "2016-09-21T16:17:14.917Z"
+      },
+      {
+        "value": 3277,
+        "name": "2016-09-19T14:48:01.362Z"
+      }
+    ]
+  },
+  {
     "name": "Running",
     "series": [
       {
@@ -100,3 +115,4 @@
     ]
   }
 ]
+}

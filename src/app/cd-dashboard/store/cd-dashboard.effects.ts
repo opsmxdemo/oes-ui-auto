@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, mergeMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as CdDashboardAction from './cd-dashboard.actions';
@@ -63,6 +63,24 @@ export class CdDashboardEffect {
                 return this.http.get('../../../assets/data/subchartrawdata.json').pipe(
                     map(resdata => {
                         return CdDashboardAction.fetchSubChartRawData({widgetRawData:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch sub chart data i.e, no of charts exist in widgets.
+    fetchSubChartData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(CdDashboardAction.loadSubChartData),
+            mergeMap( action => {
+                return this.http.get<any>('../../../assets/data/subchartdata'+action.subChartId+'.json').pipe(
+                    map(resdata => {
+                        return CdDashboardAction.fetchSubChartData({subChartData:resdata,index:action.index})
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')

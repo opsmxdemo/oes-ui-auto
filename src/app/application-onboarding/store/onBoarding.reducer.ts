@@ -18,6 +18,7 @@ export interface State {
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
+    dockerImageData:any;
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -44,7 +45,8 @@ export const initialState: State = {
     accountDeleted: false,
     appListLoading: false,
     applicationLoading: false,
-    imageSource: null
+    imageSource: null,
+    dockerImageData: null
 }
 
 export function AppOnboardingReducer(
@@ -124,6 +126,12 @@ export function AppOnboardingReducer(
             (state,action) => ({
                 ...state,
                 imageSource:action.imageSource
+            })
+        ),
+        on(OnboardingAction.fetchDockerImageName,
+            (state,action) => ({
+                ...state,
+                dockerImageData: action.dockerImageData
             })
         ),
         
