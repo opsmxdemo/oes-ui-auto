@@ -14,8 +14,8 @@ export class StacketHorizontalBarChartComponent implements OnInit {
  
   // options
   showLegend: boolean;
-  xAxis:boolean;
-  yAxis:boolean;
+  showYAxis:boolean;
+  showXAxis:boolean;
   gradient: boolean;
   showXAxisLabel: boolean;
   yAxisLabel: string;
@@ -34,8 +34,8 @@ export class StacketHorizontalBarChartComponent implements OnInit {
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : false;
     this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
     this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
-    this.xAxis = this.chartProperty.xAxis !== undefined ? this.chartProperty.xAxis : true;
-    this.yAxis = this.chartProperty.yAxis !== undefined ? this.chartProperty.yAxis : true;
+    this.showXAxis = this.chartProperty.showXAxis !== undefined ? this.chartProperty.showXAxis : true;
+    this.showYAxis = this.chartProperty.showYAxis !== undefined ? this.chartProperty.showYAxis : true;
     this.showYAxisLabel = this.chartProperty.showYAxisLabel !== undefined ? this.chartProperty.showYAxisLabel : true;
     this.showXAxisLabel = this.chartProperty.showXAxisLabel !== undefined ? this.chartProperty.showXAxisLabel : true;
     this.xAxisLabel = this.chartProperty.xAxisLabel !== undefined ? this.chartProperty.xAxisLabel : "";

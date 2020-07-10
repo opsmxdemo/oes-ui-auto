@@ -9,7 +9,8 @@
         "xAxisLabel": "Time",
         "yAxisLabel": "Count",
         "tooltipDisabled": false,
-        "showGridLines": true
+        "showGridLines": true,
+        "animations":true
     },
     "dataSource" : [
         {

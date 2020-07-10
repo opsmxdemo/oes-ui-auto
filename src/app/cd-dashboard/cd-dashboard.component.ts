@@ -27,8 +27,9 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   pieChartdata = pieChartData;
 
   // Below variable is for widget chart
-  stackedHorizontalBar = 'stacket-horizontal-bar-chart';
+  stackedHorizontalBarChart = 'stacket-horizontal-bar-chart';
   pieChart = 'pie-chart';
+  HorizontalBarChart = 'horizontal-bar-chart';
   
 
   constructor( public store: Store<fromApp.AppState>,

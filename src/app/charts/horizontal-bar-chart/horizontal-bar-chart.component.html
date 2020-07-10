@@ -1,1 +1,20 @@
-<p>horizontal-bar-chart works!</p>
+<ngx-charts-bar-horizontal
+  [view]="view"
+  [scheme]="colorScheme"
+  [animations]="animations"
+  [results]="dataSource"
+  [gradient]="gradient"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [maxYAxisTickLength]="maxYAxisTickLength"
+  [maxXAxisTickLength]="maxXAxisTickLength"
+  (select)="onSelect($event)"
+  (activate)="onActivate($event)"
+  (deactivate)="onDeactivate($event)"
+  style="fill: #999999;">
+</ngx-charts-bar-horizontal>

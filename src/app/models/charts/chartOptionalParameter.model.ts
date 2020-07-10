@@ -3,8 +3,8 @@ import { ColorScheme } from './chartColorScheme.model';
 export class ChartOptions {
     showLegend: boolean;
     legendTitle: string;
-    xAxis: boolean;
-    yAxis: boolean;
+    showXAxis: boolean;
+    showYAxis: boolean;
     showYAxisLabel: boolean;
     showXAxisLabel: boolean;
     xAxisLabel: string;
@@ -18,14 +18,16 @@ export class ChartOptions {
     autoScale: boolean;
     isDoughnut: boolean;
     showLabels: boolean;
+    maxXAxisTickLength: number;
+    maxYAxisTickLength: number;
     colorScheme: ColorScheme;
 
     constructor(data: any) {
         data = data || {};
         this.showLegend = data.showLegend;
         this.legendTitle = data.legendTitle;
-        this.xAxis = data.xAxis;
-        this.yAxis = data.yAxis;
+        this.showXAxis = data.showXAxis;
+        this.showYAxis = data.showYAxis;
         this.showYAxisLabel = data.showYAxisLabel;
         this.showXAxisLabel = data.showXAxisLabel;
         this.xAxisLabel = data.xAxisLabel;
@@ -39,6 +41,8 @@ export class ChartOptions {
         this.autoScale = data.autoScale;
         this.isDoughnut = data.isDoughnut;
         this.showLabels = data.showLabels;
+        this.maxXAxisTickLength = data.maxXAxisTickLength;
+        this.maxYAxisTickLength = data.maxYAxisTickLength;
         this.colorScheme = data.colorScheme;
     }
 }

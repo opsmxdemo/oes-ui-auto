@@ -15,8 +15,8 @@ export class AreaChartComponent implements OnInit {
   // options
   showLegend: boolean;
   animations: boolean;
-  xAxis: boolean;
-  yAxis: boolean;
+  showXAxis: boolean;
+  showYAxis: boolean;
   showYAxisLabel: boolean;
   showXAxisLabel: boolean;
   xAxisLabel: string;
@@ -33,8 +33,8 @@ export class AreaChartComponent implements OnInit {
   ngOnInit(): void {
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : true;
     this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
-    this.xAxis = this.chartProperty.xAxis !== undefined ? this.chartProperty.xAxis : true;
-    this.yAxis = this.chartProperty.yAxis !== undefined ? this.chartProperty.yAxis : true;
+    this.showXAxis = this.chartProperty.showXAxis !== undefined ? this.chartProperty.showXAxis : true;
+    this.showYAxis = this.chartProperty.showYAxis !== undefined ? this.chartProperty.showYAxis : true;
     this.showYAxisLabel = this.chartProperty.showYAxisLabel !== undefined ? this.chartProperty.showYAxisLabel : true;
     this.showXAxisLabel = this.chartProperty.showXAxisLabel !== undefined ? this.chartProperty.showXAxisLabel : true;
     this.xAxisLabel = this.chartProperty.xAxisLabel !== undefined ? this.chartProperty.xAxisLabel : "";

@@ -1,180 +1,179 @@
 <div class="main_content p-0">
-    <div class="page-content">
-        <div class="h-100 p-4 d-flex flex-column">
-              <div class="row no-gutters">
-                <div class="col-sm-12 px-1 mb-2">
-                  <div class="card border-0">
-                    <div class="card-body">
-                      <div class="graph-header d-flex align-items-center justify-content-between">
-                        <div class="graph-title">
-                          <img src="../../assets/images/drag-dots.png" alt="dots" />
-                          Health Status
-                        </div>
-                        <!-- /.graph-title -->
-                        <!-- <div class="graph-data">
+  <div class="page-content">
+    <div class="h-100 p-4 d-flex flex-column">
+      <div class="row no-gutters">
+
+        <!-- #################### Main charts codes starts ############################ -->
+
+        <div class="col-sm-12 px-1 mb-2">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="graph-header d-flex align-items-center justify-content-between">
+                <div class="graph-title">
+                  <img src="../../assets/images/drag-dots.png" alt="dots" />
+                  Health Status
+                </div>
+                <!-- /.graph-title -->
+                <!-- <div class="graph-data">
                           <span style="color: #009999;"><img src="../../assets/images/pass-icon.png" alt="icon"> Pass - 34</span>
                           <span style="color: #cc0000;"><img src="../../assets/images/fail-icon.png" alt="icon"> Fail - 16</span>
                         </div> -->
 
-                        <div class="graph-controls d-flex">
-                          <div class="mr-3">
-                            <select class="form-control">
-                              <option>Last 7 Days</option>
-                            </select>
-                          </div>
-
-                          <div class="dropdown dropdown-icon-remove">
-                            <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="#">Hide labels</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Add/Edit widget</a>
-                              <a class="dropdown-item" href="#">Export to CSV</a>
-                              <a class="dropdown-item" href="#">Go to report</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Remove widget</a>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- /.graph-controls -->
-                      </div>
-                      <!-- /.graph-header -->
-
-                      <div class="graph-body" #areaGraph >
-                        <app-area-chart [dataSource]="mainChartData.dataSource" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-area-chart>
-                      </div>
-                      <!-- /.graph-body -->
-                    </div>
-                    <!-- /.card-body -->
+                <div class="graph-controls d-flex">
+                  <div class="mr-3">
+                    <select class="form-control">
+                      <option>Last 7 Days</option>
+                    </select>
                   </div>
-                  <!-- /.card -->
-                </div>
-                <!-- /.col-sm-12 mb-2 -->
 
-                <div class="col-sm-4 px-1 mb-2" *ngFor = "let widget of widgetRawData;let widgetindex=index">
-                  <div class="card border-0">
-                    <div class="card-body">
-
-                      <!-- #################### Main charts codes starts ############################ -->
-
-                      <div class="graph-header d-flex align-items-center justify-content-between">
-                        <div class="graph-title">
-                          <img src="../../assets/images/drag-dots.png" alt="dots" />
-                          {{widget.name}}
-                        </div>
-                        <!-- /.graph-title -->
-                        <div class="graph-controls d-flex">
-                          <div class="dropdown dropdown-icon-remove">
-                            <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="#">Hide labels</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Add/Edit widget</a>
-                              <a class="dropdown-item" href="#">Export to CSV</a>
-                              <a class="dropdown-item" href="#">Go to report</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Remove widget</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- #################### Main charts codes ends ############################ -->
-                      
-                      <!-- #################### widget charts codes start ############################ -->
-
-                      <div class="graph-body" #subGraph>
-                        <div *ngIf="widgetChartLoading[widgetindex]" style="height: 260px">
-                          <app-loading-screen></app-loading-screen>
-                        </div>
-                        <div *ngIf="!widgetChartLoading[widgetindex]">
-                          <ng-container *ngIf = "widgetChartsData[widgetindex]['type'] === undefined">
-                            <div class="graph-blank">
-                              <img src="../../assets/images/no-found.png" alt="">
-                              No data found
-                            </div>
-                          </ng-container>
-                          <ng-container *ngIf = "widgetChartsData[widgetindex]['type'] !== undefined">
-                            <!-- switch case for widget chart start -->
-                            <div [ngSwitch]="widgetChartsData[widgetindex]['type']">
-                              <app-stacket-horizontal-bar-chart *ngSwitchCase="stackedHorizontalBar" [dataSource]="widgetChartsData[widgetindex]['dataSource']" [view]="widgetChartSize" [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-stacket-horizontal-bar-chart>
-                              <app-pie-chart *ngSwitchCase="pieChart" [dataSource]="widgetChartsData[widgetindex]['dataSource']" [view]="widgetChartSize" [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-pie-chart>
-                              
-                              <!-- default switch case -->
-                              <div class="type-not-exist" *ngSwitchDefault>
-                                <i class="fa fa-area-chart" aria-hidden="true"></i>
-                                <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                                <i class="fa fa-line-chart" aria-hidden="true"></i>
-                                <i class="fa fa-pie-chart" aria-hidden="true"></i><br>
-                                Chart type does not exist.
-                              </div>
-                             
-                            </div>
-                            <!-- switch case for widget chart end -->
-                          </ng-container>
-
-                        </div>
-                      </div>
-                      
-                       <!-- #################### widget charts codes ends ############################ -->
-
+                  <div class="dropdown dropdown-icon-remove">
+                    <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Hide labels</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Add/Edit widget</a>
+                      <a class="dropdown-item" href="#">Export to CSV</a>
+                      <a class="dropdown-item" href="#">Go to report</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Remove widget</a>
                     </div>
-                    <!-- /.card-body -->
                   </div>
-                  <!-- /.card -->
                 </div>
-                <!-- /.col-sm-4 -->
-
-                <div class="col-sm-4 px-1 mb-2">
-                  <div class="card border-0">
-                    <div class="card-body">
-                      <div class="graph-header d-flex align-items-center justify-content-between">
-                        <div class="graph-title">
-                          <img src="../../assets/images/drag-dots.png" alt="dots" />
-                          Add a new chart widget
-                        </div>
-                        <!-- /.graph-title -->
-                        <div class="graph-controls d-flex">
-                          <div class="dropdown dropdown-icon-remove">
-                            <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="#">Hide labels</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Add/Edit widget</a>
-                              <a class="dropdown-item" href="#">Export to CSV</a>
-                              <a class="dropdown-item" href="#">Go to report</a>
-                              <div class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Remove widget</a>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- /.graph-controls -->
-                      </div>
-                      <!-- /.graph-header -->
-
-                      <div class="graph-body">
-                        <div class="graph-blank">
-                          <img src="../../assets/images/add-icon.png" alt="">
-                          Add a new chart widget
-                        </div>
-                        <!-- /.graph-blank -->
-                      </div>
-                      <!-- /.graph-body -->
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-                </div>
-                <!-- /.col-sm-4 -->
+                <!-- /.graph-controls -->
               </div>
-              <!-- /.row -->
+              <!-- /.graph-header -->
+
+              <div class="graph-body" #areaGraph>
+                <app-area-chart [dataSource]="mainChartData.dataSource" [view]="mainChartSize"
+                  [chartProperty]="mainChartData.chartProperty"></app-area-chart>
+              </div>
+              <!-- /.graph-body -->
             </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+
+        <!-- #################### Main charts codes ends ############################ -->
+
+        <!-- #################### widget charts codes start ############################ -->
+
+        <div class="col-sm-4 px-1 mb-2" *ngFor="let widget of widgetRawData;let widgetindex=index">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="graph-header d-flex align-items-center justify-content-between">
+                <div class="graph-title">
+                  <img src="../../assets/images/drag-dots.png" alt="dots" />
+                  {{widget.name}}
+                </div>
+                <!-- /.graph-title -->
+                <div class="graph-controls d-flex">
+                  <div class="dropdown dropdown-icon-remove">
+                    <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Hide labels</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Add/Edit widget</a>
+                      <a class="dropdown-item" href="#">Export to CSV</a>
+                      <a class="dropdown-item" href="#">Go to report</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Remove widget</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="graph-body" #subGraph>
+                <div *ngIf="widgetChartLoading[widgetindex]" style="height: 260px">
+                  <app-loading-screen></app-loading-screen>
+                </div>
+                <div *ngIf="!widgetChartLoading[widgetindex]">
+                  <ng-container *ngIf="widgetChartsData[widgetindex]['type'] === undefined">
+                    <div class="graph-blank">
+                      <img src="../../assets/images/no-found.png" alt="">
+                      No data found
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="widgetChartsData[widgetindex]['type'] !== undefined">
+                    <!-- switch case for widget chart start -->
+                    <div [ngSwitch]="widgetChartsData[widgetindex]['type']">
+                      <app-stacket-horizontal-bar-chart *ngSwitchCase="stackedHorizontalBarChart"
+                        [dataSource]="widgetChartsData[widgetindex]['dataSource']" [view]="widgetChartSize"
+                        [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
+                      </app-stacket-horizontal-bar-chart>
+                      <app-pie-chart *ngSwitchCase="pieChart" [dataSource]="widgetChartsData[widgetindex]['dataSource']"
+                        [view]="widgetChartSize" [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
+                      </app-pie-chart>
+                      <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart"
+                        [dataSource]="widgetChartsData[widgetindex]['dataSource']" [view]="widgetChartSize"
+                        [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
+
+                      <!-- default switch case -->
+                      <div class="type-not-exist" *ngSwitchDefault>
+                        <i class="fa fa-area-chart" aria-hidden="true"></i>
+                        <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                        <i class="fa fa-line-chart" aria-hidden="true"></i>
+                        <i class="fa fa-pie-chart" aria-hidden="true"></i><br>
+                        Chart type does not exist.
+                      </div>
+
+                    </div>
+                    <!-- switch case for widget chart end -->
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- #################### widget charts codes ends ################################# -->
+
+        <!-- #################### Add widget charts codes start ############################ -->
+
+        <div class="col-sm-4 px-1 mb-2">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="graph-header d-flex align-items-center justify-content-between">
+                <div class="graph-title">
+                  <img src="../../assets/images/drag-dots.png" alt="dots" />
+                  Add a new chart widget
+                </div>
+                <div class="graph-controls d-flex">
+                  <div class="dropdown dropdown-icon-remove">
+                    <button class="btn btn-link text-muted px-2 dropdown-toggle" type="button" id="dropdownMenuButton"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Hide labels</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Add/Edit widget</a>
+                      <a class="dropdown-item" href="#">Export to CSV</a>
+                      <a class="dropdown-item" href="#">Go to report</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Remove widget</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="graph-body">
+                <div class="graph-blank">
+                  <img src="../../assets/images/add-icon.png" alt="">
+                  Add a new chart widget
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- /.page-content -->
+
+      <!-- #################### Add widget charts codes start ############################ -->
+
+    </div>
   </div>
+</div>
