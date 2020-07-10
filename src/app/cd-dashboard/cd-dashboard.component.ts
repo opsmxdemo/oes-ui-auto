@@ -3,8 +3,6 @@ import * as LayoutAction from '../layout/store/layout.actions';
 import * as CdDashboardAction from './store/cd-dashboard.actions';
 import * as fromApp from '../store/app.reducer';
 import { Store } from '@ngrx/store';
-import { pieChartData } from './pie-data';
-
 @Component({
   selector: 'app-cd-dashboard',
   templateUrl: './cd-dashboard.component.html',
@@ -24,7 +22,6 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   widgetChartLoading = [];                                 // It is use to store boolean type value based on no. of chart exist in widget is in loading state or not. 
   changeEventSubscription = null;                          // It is use to unsubscribe the subscription on leave of component.
   widgetChartsData  = [];                                  // It is use to store all data of widget charts.
-  pieChartdata = pieChartData;
 
   // Below variable is for widget chart
   stackedHorizontalBarChart = 'stacket-horizontal-bar-chart';
