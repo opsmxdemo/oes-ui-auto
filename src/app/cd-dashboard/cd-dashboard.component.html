@@ -46,9 +46,13 @@
               </div>
               <!-- /.graph-header -->
 
-              <div class="graph-body" #areaGraph>
-                <app-area-chart [dataSource]="mainChartData.dataSource" [view]="mainChartSize"
-                  [chartProperty]="mainChartData.chartProperty"></app-area-chart>
+              <div class="graph-body cdDashboard" #areaGraph>
+                <div *ngIf="mainChartLoading" style="height: 260px">
+                  <app-loading-screen></app-loading-screen>
+                </div>
+                <div *ngIf="!mainChartLoading">
+                  <app-area-chart [dataSource]="mainChartData.dataSource" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-area-chart>
+                </div>
               </div>
               <!-- /.graph-body -->
             </div>
