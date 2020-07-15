@@ -15,10 +15,8 @@ import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NumberLiteralType } from 'typescript';
-// import * as PlotlyJS from 'plotly.js/dist/plotly';
-// import { PlotlyModule } from 'angular-plotly.js';
-
-// PlotlyModule.plotlyjs = PlotlyJS;
+import { single } from './data'
+//import {pieCharFt} from '../../charts/pie-chart';
 
 
 export interface User {
@@ -32,6 +30,7 @@ export interface User {
   styleUrls: ['./deployment-verification.component.less']
 })
 export class DeploymentVerificationComponent implements OnInit {
+  
   applicationForm: FormGroup;
 
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
@@ -40,7 +39,7 @@ export class DeploymentVerificationComponent implements OnInit {
   control = new FormControl(this.deployementRun);
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
-  inputVar: string;
+  inputVar: any;
   canaryList: string[];
   incredementDisable = false;
   decrementDisable = false;
@@ -60,16 +59,9 @@ export class DeploymentVerificationComponent implements OnInit {
   deployementApplications: any;
   deploymentServices: any;
   deploymentApplicationHealth: any;
-  selectedService: any;
-  selectedServiceId: number;
   deploymentServiceInformation: any;
 
-
-  // App form initia
-
-  //applicationForm: FormGroup;
-  humanizeAge = '';
-
+ // App form initia
 
   applicationList = [
     { applicationName: '' }
@@ -82,17 +74,72 @@ export class DeploymentVerificationComponent implements OnInit {
   canaryId: any[];
   serviceNameInfo: any;
 
+  
+
+  //pagination for service table
+  tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
+  serviceListData: any;
+  selectedServiceId: number;                                              // It use to store Accountlist data fetched from state.
+  searchData: string = '';                                                             // this is use to fetch value from search field.
+  perPageData: number = 10;                                                            // this is use to populate value in perPage dropdown exist in pagination.
+  page = {                                                                             // this is use to support pagination in accunt page.
+    startingPoint: 0,
+    endPoint: 10,
+    pageSize: 10,
+    currentPage: 1,
+    pageNo: 1,
+  }
+  currentPage = [];                                                                    // this use to store array of data exists in current page.
+  serviceListLength: number = null;
+
+ //code for pie chart
+ // single: any[];
+  view: any[] = [230, 150];
+  gradient: boolean = true;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = true;
+  legendPosition: string = "bottom";
+  pieData: any;
+  colorScheme = {
+    domain: ["#A10A28","#C7B42C","#5AA454",  "#AAAAAA"]
+  }
+
   // App form end
 
    constructor(public sharedService: SharedService, public store: Store<fromApp.AppState>,
     public autopilotService: AutopiloService, public notifications: NotificationService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder) { 
+     // Object.assign(this, { single });
+    }
 
 // code for application dropdown display starts here
 
-onSelectionChange(event){
-  console.log('App:::', event.option.value);
+onSelectionChangeApplication(event){
   this.selectedApplicationName  = event.option.value;
+  const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+  if(d['canaryIdList'].length === 0){
+    this.inputVar = '';
+    this.canaries = [];
+    this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
+  }else{
+    this.canaries = d['canaryIdList'].toString().split(",");
+    this.canaries.sort();
+console.log('canaries list:::'+this.canaries);
+   this.filteredCanaries = this.control.valueChanges.pipe(
+     startWith(''),
+     map(value => this._filterCanaries(value))
+   );
+   let selectedCan = this.canaries.map(parseFloat).sort();
+   this.inputVar = Math.max.apply(null, selectedCan);
+  }
+}
+
+//code for change the canary
+onSelectionChangeCanaryRun(canary){
+  this.inputVar = canary;
+  this.store.dispatch(DeploymentAction.loadServices({canaryId: canary}));
+  this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: canary}));
 }
 
     buildApplicationForm() {
@@ -105,6 +152,7 @@ onSelectionChange(event){
     filterApplications(applicationName: string): any[] {
       return this.applicationList.filter(option => option.applicationName.toLowerCase().indexOf(applicationName.toLowerCase()) === 0);
     }
+    
   
     initFilterApplication() {
       this.applicationListOptions = this.applicationForm
@@ -114,6 +162,7 @@ onSelectionChange(event){
         map(val => (typeof val === 'string' ? val : val.applicationName)),
         map(applicationName => (applicationName ? this.filterApplications(applicationName) : this.applicationList.slice()))
         );  
+        console.log("its coming inside");
        // this.onSelectionChange(event);
     }
 
@@ -123,6 +172,17 @@ onSelectionChange(event){
     displayView(object?: any): string | undefined {
       return object ? object.applicationName : undefined;
     }
+
+    // filter for canaries
+    private _filterCanaries(value: string): string[] {
+      const filterValue = this._normalizeValue(value);     
+      return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
+    }
+  
+    private _normalizeValue(value: string): string {
+      return value.toLowerCase().replace(/\s/g, '');
+    }
+  
 
 
     
@@ -135,43 +195,19 @@ onSelectionChange(event){
     this.getAllServices();
     this.getServiceInformation();
     this.buildApplicationForm();
-    this.initFilterApplication();
+   // this.initFilterApplication();
     if(this.canaries.length > 0){
-      console.log("CANARIES LOADED ");
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
       );
     }
-   
-    this.showCommonInfo = 'show';
-   
-    
+    this.showCommonInfo = 'show';    
   }
   
- 
-  
-  private _filterCanaries(value: string): string[] {
-    const filterValue = this._normalizeValue(value);
-    console.log("Filter Canaries Function", this.canaries);
-    
-    return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
-  }
-
-  private _normalizeValue(value: string): string {
-    return value.toLowerCase().replace(/\s/g, '');
-  }
-
-    // set default canary id
-    setValue() {
-      // let filteredCanaries = this._auto.autocomplete.canaries.toArray()
-      // this.control.setValue(filteredCanaries[1].value)'
-    }
     incrementInputVar(max:any) {
-     //this.decrementDisable = ;
      this.canaries.sort();
      this.canaryList = this.canaries;
-  //   this.canaryList.sort();
      var length = this.canaryList.length;
      var index = this.canaryList.findIndex(cid => cid == max);
      if(index +1 === length -1){
@@ -189,6 +225,7 @@ onSelectionChange(event){
           }else{
             this.inputVar = this.canaryList[index+1];
           }
+          this.getAllServices()
         }
     }
     decrementInputVar(min:any) {
@@ -206,11 +243,22 @@ onSelectionChange(event){
         }
       
          if(index !== -1 && index !== 0){
-           this.inputVar = this.canaryList[index-1];
+          this.inputVar = this.canaryList[index-1];
+          this.store.dispatch(DeploymentAction.loadServices({canaryId: this.inputVar}));
+          this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.inputVar}));
          }else if(index === 0){
            this.inputVar = this.canaryList[index];
          }
+        
        }
+
+
+    //on click of service
+    getService(item: any){
+      this.selectedServiceId = item.serviceId;
+      this.serviceNameInfo = item;
+    }
+
 
     //code for application list display starts here
     displayFn(user: User): string {
@@ -249,7 +297,7 @@ onSelectionChange(event){
       }
     );
     }
-
+  
   // get application details
     getAllApplications(){
       this.store.dispatch(DeploymentAction.loadApplications());
@@ -259,55 +307,131 @@ onSelectionChange(event){
                   this.deployementLoading = resData.applicationListLoading;
                   this.deployementApplications = resData.applicationList;
                   this.applicationList = resData.applicationList;
-                  console.log('ss');
                   const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-                 // console.log(JSON.stringify(d['canaryIdList']));
                   this.canaries = d['canaryIdList'].toString().split(",");
-
-
                   this.filteredCanaries = this.control.valueChanges.pipe(
                     startWith(''),
                     map(value => this._filterCanaries(value))
                   );
-
-
-
-
-
-               //   this.filteredCanaries = ['121', '11884', '11885', '11886', '11887','12345','12222','13452'];
-                  
-                //  this.canaryId = c.canaryIdList;
                   this.buildApplicationForm();
                   this.initFilterApplication();
-                  //alert(this.deployementRun);
              }
-        }
-        
+            }
       );
-     
     }
 
-    // get application details
+    se
+
+    //getAllApplications().then(this.initFilterApplication);
+
+    //code for pagination of services list
+     // Below function is used if user want to refresh list data
+   refreshList(){
+  //  this.store.dispatch(DeploymentAction.loadServices(this.inputVar));
+    this.store.dispatch(DeploymentAction.loadServices({canaryId: this.deployementRun}));
+
+  } 
+    //Below function is execute on search
+  onSearch(){
+    if(this.searchData !== ''){
+      this.currentPage = [];
+      for (let i = 0; i < this.serviceListLength; i++) {
+        this.currentPage.push(this.serviceListData[i]);
+      }
+    }else{
+      this.renderPage();
+    }
+  }
+
+  //Below function is used to implement pagination
+  renderPage() {
+    this.currentPage = [];
+    if(this.page.endPoint < this.serviceListLength-1){
+      for (let i = this.page.startingPoint; i < this.page.endPoint; i++) {
+        this.currentPage.push(this.serviceListData[i]);
+      }
+    }else{
+      for (let i = this.page.startingPoint; i < this.serviceListLength; i++) {
+        this.currentPage.push(this.serviceListData[i]);
+      }
+    }
+  }
+
+  //Below function is execute on change of perPage dropdown value
+  onChangePerPageData() {
+    this.page.pageSize = +this.perPageData;
+    if ((this.page.startingPoint + this.page.pageSize) < this.serviceListLength) {
+      this.page.endPoint = this.page.startingPoint + this.page.pageSize;
+    } else {
+      this.page.endPoint = this.serviceListLength;
+    }
+    this.renderPage();
+  }
+
+  //Below function is execute on click of page next btn
+  pageNext() {
+    if (this.page.endPoint < this.serviceListLength-1) {
+      this.page.pageNo += 1;
+      this.page.currentPage = this.page.pageNo;
+      if ((this.page.endPoint + this.page.pageSize) < this.serviceListLength) {
+        this.page.startingPoint += this.page.pageSize;
+        this.page.endPoint += this.page.pageSize;
+      } else if (this.page.endPoint < this.serviceListLength) {
+        this.page.startingPoint = this.page.endPoint;
+        this.page.endPoint = this.serviceListLength-1;
+      }
+      this.renderPage();
+    }
+  }
+
+  //Below function is execute on click of page prev btn
+  pagePrev() {
+    if (this.page.startingPoint !== 0) {
+      this.page.pageNo -= 1;
+      this.page.currentPage = this.page.pageNo;
+      if ((this.page.startingPoint - this.page.pageSize) > 0) {
+        this.page.startingPoint -= this.page.pageSize;
+        this.page.endPoint = this.page.startingPoint + this.page.pageSize;
+      } else if ((this.page.startingPoint - this.page.pageSize) >= 0) {
+        this.page.startingPoint = 0;
+        this.page.endPoint = this.page.pageSize;
+      }
+      this.renderPage();
+    }
+  }
+
+  //Below function is executes on click of page btn exist in pagination
+  showPage(currentPage) {
+    this.page.pageNo = currentPage;
+    this.page.startingPoint = (currentPage - 1) * this.page.pageSize;
+    if (currentPage * this.page.pageSize < this.serviceListLength) {
+      this.page.endPoint = currentPage * this.page.pageSize;
+    } else {
+      this.page.endPoint = this.serviceListLength-1;
+    }
+    this.renderPage();
+  }
+
+
+    // get service  details
     getAllServices(){
       this.store.select('deploymentOnboarding').subscribe(
         (resData) => {
           if(resData.serviceList !== null){
                   this.deployementLoading = resData.serviceListLoading;
                   this.deploymentServices = resData.serviceList;
-                  this.selectedService = this.deploymentServices.services;
+                  this.serviceListData = this.deploymentServices.services;
+                  this.serviceListLength = this.deploymentServices.services.length;  
+                  this.renderPage();
+                  this.tableIsEmpty = false;
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
                   this.serviceNameInfo = this.deploymentServices.services[0];
-                  //const d = this.deploymentServices.services.find(s => s.serviceName == this.selectedApplicationName);
-
-                  // if(this.serviceCounter === 0){
-                  //   this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: 87,serviceId: this.selectedServiceId}));
-                  //   this.serviceCounter ++;
-                  // }
-               //   this.options = resData.serviceList;
-                  console.log(resData);
-                  //alert(this.deployementRun);
+                 
+             }else{
+               this.tableIsEmpty = true;
              }
         }
+        
       );
     }
 
@@ -328,10 +452,41 @@ onSelectionChange(event){
                     });
                     this.applicationId = this.deploymentApplicationHealth.applicationId;
                  // }
+                 
+                 this.pieData = [
+                  {
+                    "name": "Failed " + this.deploymentApplicationHealth.noOfFailed,
+                    "value": this.deploymentApplicationHealth.noOfFailed,
+                    "label": "Failed"
+                  },
+                  {
+                    "name": "Review " + this.deploymentApplicationHealth.noOfReview,
+                    "value": this.deploymentApplicationHealth.noOfReview,
+                    "label": "Review"
+                  },
+                  {
+                    "name": "Succeess " + this.deploymentApplicationHealth.noOfSuccess,
+                    "value": this.deploymentApplicationHealth.noOfSuccess,
+                    "label": "Success"
+                  },
+                    {
+                    "name": "InProgress " + this.deploymentApplicationHealth.noOfInProgress,
+                    "value": this.deploymentApplicationHealth.noOfInProgress,
+                    "label": "InProgress"
+                  }
+                ];
              }
         }
       );
     }
+
+    pieChartLabel(pieData: any[], name: string): string {
+      const item = pieData.filter(data => data.name === name);
+      if (item.length > 0) {
+          return item[0].label;
+      }
+      return name;
+  }
 
     // get service information
     getServiceInformation(){
@@ -347,5 +502,7 @@ onSelectionChange(event){
         }
       );
     }
+
+
 
 }

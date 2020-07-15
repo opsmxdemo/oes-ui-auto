@@ -6,17 +6,20 @@
           <mat-form-field>
             <input type="text" matInput placeholder="Application Name" formControlName="application" [matAutocomplete]="autoApplication" 
             />
-            <mat-autocomplete autoActiveFirstOption #autoApplication="matAutocomplete" (optionSelected)="onSelectionChange($event)">
+            <mat-autocomplete (optionSelected)="onSelectionChangeApplication($event)" autoActiveFirstOption #autoApplication="matAutocomplete" >
               <mat-option *ngFor="let applications of applicationListOptions | async" [value]="applications.applicationName">
                 {{ applications.applicationName }}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-          <!-- <span>{{applicationForm | json}}</span> -->
-
         </form>
     
-        <span>{{selectedApplicationName}} &nbsp;&nbsp;</span><span><img src="../../../assets/images/pass-icon.png" alt="status"/></span>
+        <span>{{selectedApplicationName}} &nbsp;&nbsp;</span><span>
+          <!-- <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='IN PROGRESS'" src="../../../assets/images/pass-icon.png" alt="status"/>
+          <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='PASS'" src="../../../assets/images/pass-icon.png" alt="status"/>
+          <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='FAIL'" src="../../../assets/images/fail-icon.png" alt="status"/> -->
+
+        </span>
         <div class="input-group">
           <div class="input-group-prepend">
             <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementInputVar(inputVar)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
@@ -26,7 +29,7 @@
                    [formControl]="control"  
                    [matAutocomplete]="autoCanaries" [(ngModel)]="inputVar">
             <mat-autocomplete #autoCanaries="matAutocomplete">
-              <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId">
+              <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId" >
                 {{canaryId}}
               </mat-option>
             </mat-autocomplete>
@@ -62,26 +65,25 @@
           </tbody>
         </table>
         <!-- /.table -->
-      
-   <br><br>
-   
+  
       <div class="card border-0">
-        <div>
       <div class="graph-header d-flex align-items-center justify-content-between">
           <div class="graph-body">
-          <!-- <google-chart #chart 
-          [title]="title" 
-          [type]="type"
-          [data]="data"
-          [columnNames]="columnNames"
-          [options]="options"
-          [width]="width"
-          [height]="height">
-       </google-chart> -->
+              <ngx-charts-pie-chart
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="pieData"
+              [gradient]="gradient"
+              [legendTitle]="'Services'"
+              [legend]="showLegend"
+              [legendPosition]="legendPosition"
+              [labelFormatting]="pieChartLabel.bind(this, pieData)"
+              [labels]="showLabels"
+              [doughnut]="isDoughnut">
+            </ngx-charts-pie-chart>
         </div>
         <!-- /.graph-controls -->
       </div>
-    </div>
     </div>
     <!-- <div class="form-group col-12 text-muted">
       <!-- <select formControlName="serviceName" id="serviceName" class="form-control">
@@ -97,17 +99,64 @@
     <option value="SUCCESS">SUCCESS</option>
   </select>
     </div> --> 
+    <div class="page_access d-flex text-right p-3">
+      <div class="mr-auto">
+          <div class="input-group input-group_search">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
+            <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
+          </div>
+        </div>
+  </div>
       <table class="table table-sm table-avenir table-no-bordered table-no-dots">
         <tbody>
-          <ng-container *ngFor="let service of selectedService">
+          <ng-container *ngFor="let service of currentPage | filter:searchData; let i=index">
           <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
-            <td>{{service.serviceName}}</td>
+            <td (click)="getService(service)">{{service.serviceName}}</td>
             <td width="30" [ngClass]= "{'text-danger':service.status === 'FAIL','text-success':service.status === 'Success'}">{{service.finalScore}}</td>
             <td width="30"  [ngClass]= "{'text-danger':service.status === 'FAIL','text-success':service.status === 'Success'}">{{service.status}}</td>
           </tr> 
         </ng-container>               
         </tbody>
       </table>
+      <div class="table-footer gray-strip px-3 py-2">
+        <div class="form-inline">
+          <span class="mr-2">Per page</span>
+          <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+
+          </select>
+          <!-- <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
+            {{page.endPoint < serviceListLength-1?page.endPoint:serviceListLength}} of {{serviceListLength}}</span> -->
+          <!-- <input type="text" class="form-control mr-2" />
+          <button class="btn btn-primary">Go</button> -->
+
+          <ul class="pagination ml-auto mb-0">
+            <li class="page-item" (click)="pagePrev()"><a class="page-link"><i class="fa fa-angle-left"></i></a></li>
+            <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
+              (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
+            <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
+              *ngIf="(page.pageNo*page.pageSize) < serviceListLength || 
+                        page.currentPage+1 == page.pageNo || page.currentPage+1 == page.pageNo-1 ? true : false" (click)=showPage(page.currentPage+1)>
+              <a class="page-link">{{page.currentPage+1}}</a>
+            </li>
+            <li class="page-item {{page.currentPage+2 === page.pageNo ? 'active' : ''}}"
+              *ngIf="((page.pageNo+1)*page.pageSize) < serviceListLength || 
+                         page.currentPage+2 == page.pageNo ||
+                         ((page.currentPage+2)*page.pageSize< serviceListLength? true : ((page.currentPage+2)*page.pageSize)-serviceListLength < page.pageSize? true : false) ? true : false"
+              (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a>
+            </li>
+            <li class="page-item" (click)="pageNext()"><a class="page-link"><i class="fa fa-angle-right"></i></a></li>
+          </ul>
+        </div>
+        <!-- /.per_page -->
+      </div>
+      <!-- /.table-footer px-3 py-2 -->
     </div>
   </div>
     <!-- /.leftBox w-250 -->
