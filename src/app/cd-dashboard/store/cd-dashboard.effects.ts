@@ -60,7 +60,7 @@ export class CdDashboardEffect {
         this.actions$.pipe(
             ofType(CdDashboardAction.loadCdDashboard),
             switchMap(() => {
-                return this.http.get('../../../assets/data/subchartrawdata.json').pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/dashboard/widgetRawData').pipe(
                     map(resdata => {
                         return CdDashboardAction.fetchSubChartRawData({widgetRawData:resdata});
                     }),
@@ -78,7 +78,7 @@ export class CdDashboardEffect {
         this.actions$.pipe(
             ofType(CdDashboardAction.loadSubChartData),
             mergeMap( action => {
-                return this.http.get<any>('../../../assets/data/subchartdata'+action.subChartId+'.json').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/dashboard/widgetRawData?chartId='+action.subChartId).pipe(
                     map(resdata => {
                         return CdDashboardAction.fetchSubChartData({subChartData:resdata,index:action.index})
                     }),

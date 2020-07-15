@@ -16,6 +16,7 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sidebarVisible = '';                                     // It is used to set chart width on click of menu btn of sidemenu. 
   mainChartData = null;                                    // It is use to store area chart data fetched from api.
+  mainChartLoading;                                        // It is use to show or hide loading screen on mainchart section
   mainChartSize;                                           // It is use to store width and height of area chart at show and hide of sidenav.
   widgetChartSize;                                         // It is use to store width and height of widget chart at show and hide of sidenav.
   widgetRawData = null;                                    // It is use to store raw data of widget chart, i.e,how many chart exist in sub section.
@@ -40,6 +41,7 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     // Below logic is use to fetch data from Cd-dashboard state
     this.store.select('cdDashboard').subscribe(
       (dashboardData) => {
+        this.mainChartLoading = dashboardData.mainChartLoading;
         if (dashboardData.healthChartData !== null) {
           this.mainChartData = dashboardData.healthChartData;
         }
