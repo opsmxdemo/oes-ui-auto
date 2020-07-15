@@ -1,5 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../../store/app.reducer';
 import { SharedService } from '../../../services/shared.service';
+import * as MetricAnalysisActions from './store/metric-analysis.actions';
+
 
 @Component({
   selector: 'app-metric-analysis',
@@ -16,10 +20,12 @@ export class MetricAnalysisComponent implements OnInit {
   size: string;
   showCommonInfo: string;
   sticky: boolean;                                                    // It is use to perform operation whether matric menu is sticky or not. 
-  constructor(private sharedServices: SharedService) { }
+  constructor(private sharedServices: SharedService,
+              public store: Store<fromApp.AppState>) { }
 
   ngOnInit(){
     this.size= "col-md-12";
+    this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis());
   }
 
   // Below function is use to capture scroll event occur in matric analysis component.
