@@ -13,10 +13,20 @@ export class AuthInterceptor implements HttpInterceptor {
        return this.store.select('auth').pipe(
          take(1),
         switchMap((authState: fromAuth.State) => {
-            const copyreq = req.clone({
+          const requrl = req.url;
+          if(requrl.includes('/auth/user') || requrl.includes('oes')){
+            const oesreq = req.clone({
               withCredentials: true
           });
-            return next.handle(copyreq);
+          return next.handle(oesreq);
+          }else{
+            const autopilotreq = req.clone({
+              setHeaders: {
+                Authorization: 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjIifQ.RrrgaxcRpoTxoXkIIZkaHyu-36Skjo3EHAmal0yAOJMO7z7QIqHc_0qA0woXFxCrnq-G1iW7dNM1RAtnS6Ho_Q'
+              }
+          });
+          return next.handle(autopilotreq);
+          }
         })
        );
    }

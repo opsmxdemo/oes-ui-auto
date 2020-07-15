@@ -73,7 +73,7 @@ export class ApplicationOnBoardingEffect {
             ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
             switchMap(() => {
 
-                return this.http.get<any>('../../../assets/data/dockerImageName.json').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/images').pipe(
                     map(resdata => {
                         return OnboardingAction.fetchDockerImageName({dockerImageData:resdata['results']});
                     }),

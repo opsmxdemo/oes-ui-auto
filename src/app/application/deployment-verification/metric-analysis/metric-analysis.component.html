@@ -1,7 +1,8 @@
-<div class="tab-pane h-100 fade show active" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab" style="background-color: #f5f7f9;">
+<div class="tab-content flex-grow-1" id="myTabContent">
+  <div class="tab-pane h-100 fade show active" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab" style="background-color: #f5f7f9;">
     <div class="row h-100 no-gutters">
-      <div class="col-md-12 h-100 ">
-        <div class="metric_analysis position-sticky" style="top: 0;">
+      <div class="col-sm-7 h-100 ">
+        <div class="metric_analysis" [class.sticky] = "sticky" #stickyMenu [style.width]="sticky?menuWidth:''">
           <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
@@ -42,44 +43,62 @@
             <table class="table valign-middle table-bottom-border mb-4">
               <thead>
                 <tr>
-                  <th>APM score</th>
-                  <th class="text-center">score</th>
-                  <th>Latency</th>
-                  <th>Error</th>
-                  <th>Throughput</th>
-                  <th>Apdex</th>
+                  <th>APM SCORE</th>
+                  <th class="text-center">SCORE</th>
+                  <th>LATENCY</th>
+                  <th>ERROR RATE</th>
+                  <th>THROUGHPUT</th>
+                  <th>APDEX</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td (click)="getGraph()">/SpringController/catcount (GET)</td>
+                  <td>/SpringController/catcount (GET)</td>
                   <td><span class="countBox countWarning">87.5</span></td>
                   <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
                 </tr>
                 <tr>
                   <td>/SpringController/dogcount (GET)</td>
                   <td><span class="countBox countWarning">87.5</span></td>
                   <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
                 </tr>
                 <tr>
                   <td>/SpringController/greeting (GET)</td>
                   <td><span class="countBox countWarning">87.5</span></td>
                   <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
                 </tr>
                 <tr>
                   <td>/SpringController/catcount (GET)</td>
                   <td><span class="countBox countWarning">87.5</span></td>
                   <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
                 </tr>
                 <tr>
                   <td>/SpringController/dogcount (GET)</td>
                   <td><span class="countBox countWarning">87.5</span></td>
                   <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
                 </tr>
                 <tr>
                   <td>LATENCY | ERROR RATE | THROUGHPUT | APDEX</td>
                   <td><span class="countBox countWarning">87.5</span></td>
                   <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
                 </tr>
               </tbody>
             </table>
@@ -151,7 +170,7 @@
         <!-- /.metric_analysis -->
       </div>
       <!-- /.col-sm-5 -->
-      <div *ngIf="showCommonInfo === 'hide'" class="col-sm-6">
+      <div class="col-sm-5">
         <div class="p-3">
           <div class="card mb-2">
             <div class="card-body">
@@ -164,7 +183,7 @@
 
               <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
               <div class="graph mb-4">
-                <img src="../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
+                <img src="./../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
               </div>
               <!-- /.graph mb-3 -->
 
@@ -235,3 +254,4 @@
     </div>
     <!-- /.row -->
   </div>
+</div>
