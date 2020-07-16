@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store/app.reducer';
 import { SharedService } from '../../../services/shared.service';
@@ -19,19 +19,24 @@ export class MetricAnalysisComponent implements OnInit {
   showGraph= false;
   size: string;
   showCommonInfo: string;
-  sticky: boolean;                                                    // It is use to perform operation whether matric menu is sticky or not. 
+  sticky: boolean = false;                                            // It is use to perform operation whether matric menu is sticky or not. 
   constructor(private sharedServices: SharedService,
               public store: Store<fromApp.AppState>) { }
-
+  
   ngOnInit(){
     this.size= "col-md-12";
     this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis());
   }
 
-  // Below function is use to capture scroll event occur in matric analysis component.
+  // Below function is use to capture events occur in matric analysis component and make responsive to table.
+ 
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:click', ['$event'])
   @HostListener('window:scroll', ['$event'])
     handleScroll(){
-      this.menuWidth = this.menuElement.nativeElement.offsetWidth +'px';
+      setTimeout(() =>{
+        this.menuWidth = this.menuElement.nativeElement.offsetWidth +'px';
+      },500)
         const windowScroll = window.pageYOffset;
         if(windowScroll >= this.menuTop){
             this.sticky = true;
