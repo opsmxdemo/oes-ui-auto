@@ -15,7 +15,7 @@ import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NumberLiteralType } from 'typescript';
-import { single } from './data'
+//import { single } from './data'
 //import {pieCharFt} from '../../charts/pie-chart';
 
 
