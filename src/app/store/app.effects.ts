@@ -9,6 +9,7 @@ import { AppDashboardEffect } from '../application/application-dashboard/store/d
 import { DeploymentVerificationEffect } from '../application/deployment-verification/store/deploymentverification.effects';
 import { CdDashboardEffect } from '../cd-dashboard/store/cd-dashboard.effects';
 import { MetricAnalysisEffect } from '../application/deployment-verification/metric-analysis/store/metric-analysis.effects';
+import { LogAnalysisEffect } from '../application/deployment-verification/log-analysis/store/log-analysis.effects';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { MetricAnalysisEffect } from '../application/deployment-verification/met
                           AppDashboardEffect,
                           DeploymentVerificationEffect,
                           CdDashboardEffect,
-                          MetricAnalysisEffect
+                          MetricAnalysisEffect,
+                          LogAnalysisEffect
     ])
   ],
 })
