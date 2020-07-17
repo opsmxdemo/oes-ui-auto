@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
           }else{
             const autopilotreq = req.clone({
               setHeaders: {
-                Authorization: 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjIifQ.RrrgaxcRpoTxoXkIIZkaHyu-36Skjo3EHAmal0yAOJMO7z7QIqHc_0qA0woXFxCrnq-G1iW7dNM1RAtnS6Ho_Q'
+                Authorization: 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjEifQ.M_3bBDWxQDGhLy0Dj5a5lxbvnv2ahqTKd4c7lC4CTdrU8bhThL9DfDV2BplDkOWqpnVH08BOv9R0oRERiSJ1TQ'
               }
           });
           return next.handle(autopilotreq);

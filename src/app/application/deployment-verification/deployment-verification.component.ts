@@ -52,7 +52,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   
   ///code for showing select application shows here
-  myControl = new FormControl();
+  myControl = new FormControl('abc');
   options: User[] = [];
   filteredOptions: Observable<User[]>;
   isShow = true;
@@ -132,6 +132,7 @@ console.log('canaries list:::'+this.canaries);
    );
    let selectedCan = this.canaries.map(parseFloat).sort();
    this.inputVar = Math.max.apply(null, selectedCan);
+   this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.inputVar }));
   }
 }
 

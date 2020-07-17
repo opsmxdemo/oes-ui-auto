@@ -27,7 +27,7 @@
           <form class="example-form" >
             <input type="text" class="form-control text-center"
                    [formControl]="control"  
-                   [matAutocomplete]="autoCanaries" [(ngModel)]="inputVar">
+                   [matAutocomplete]="autoCanaries">
             <mat-autocomplete #autoCanaries="matAutocomplete">
               <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId" >
                 {{canaryId}}
@@ -77,7 +77,6 @@
               [legendTitle]="'Services'"
               [legend]="showLegend"
               [legendPosition]="legendPosition"
-              [labelFormatting]="pieChartLabel.bind(this, pieData)"
               [labels]="showLabels"
               [doughnut]="isDoughnut">
             </ngx-charts-pie-chart>
@@ -529,7 +528,7 @@
                     <div class="tab-pane p-4 fade show active" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
                         <app-log-analysis></app-log-analysis>
                       </div>
-                    <div class="tab-pane p-4 fade" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
+                    <div class="tab-pane mp-4 fade" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
                         <app-metric-analysis></app-metric-analysis>
                       </div>
                 </div>
