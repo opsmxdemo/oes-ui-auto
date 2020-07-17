@@ -70,10 +70,10 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch dockerImageName dropdown data.
     fetchDockerImageName = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
-            switchMap(() => {
+            ofType(OnboardingAction.loadDockerImageName),
+            switchMap((action) => {
 
-                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/images').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/images?imageSource='+action.imageSourceName).pipe(
                     map(resdata => {
                         return OnboardingAction.fetchDockerImageName({dockerImageData:resdata['results']});
                     }),
@@ -185,8 +185,9 @@ export class ApplicationOnBoardingEffect {
     fetchAppListData = createEffect(() =>
         this.actions$.pipe(
             ofType(OnboardingAction.loadAppList),
-            switchMap(() => {
-                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList').pipe(
+            withLatestFrom(this.store.select('auth')),
+            switchMap(([action,authState]) => {
+                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList/'+authState.user).pipe(
                     map(resdata => {
                         return OnboardingAction.fetchAppList({ Applist: resdata['data'] });
                     }),

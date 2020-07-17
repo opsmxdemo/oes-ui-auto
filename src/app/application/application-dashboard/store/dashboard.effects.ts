@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store/app.reducer';
 import * as DashboardActions from './dashboard.actions';
@@ -46,8 +46,9 @@ export class AppDashboardEffect {
     fetchappData = createEffect(() =>
         this.actions$.pipe(
             ofType(DashboardActions.loadAppDashboard),
-            switchMap(() => {
-                return this.http.get(this.environment.config.endPointUrl + 'oes/dashboard/applications').pipe(
+            withLatestFrom(this.store.select('auth')),
+            switchMap(([action,authState]) => {
+                return this.http.get(this.environment.config.endPointUrl + 'oes/dashboard/applications/'+authState.user).pipe(
                     map(resdata => {
                        return DashboardActions.fetchedAppData({appData:resdata});
                     }),
