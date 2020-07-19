@@ -23,7 +23,6 @@ export class MetricAnalysisComponent implements OnInit {
               public store: Store<fromFeature.State>) { }
   
   ngOnInit(){
-    debugger
     this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis());
     
     //fetching data from deployment verification state
@@ -32,8 +31,6 @@ export class MetricAnalysisComponent implements OnInit {
         console.log('rps',resdata);
       }
     )
-    
-    
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
