@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../../store/app.reducer';
+import * as fromFeature from '../store/feature.reducer';
 import { SharedService } from '../../../services/shared.service';
 import * as MetricAnalysisActions from './store/metric-analysis.actions';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -16,16 +17,23 @@ export class MetricAnalysisComponent implements OnInit {
 
   menuWidth: any;                                                     // It is use to store offsetTop of matric table.
   menuTop:number = 213;                                               // It define top of metric table.
-  showGraph= false;
-  size: string;
-  showCommonInfo: string;
+  metricData$:Observable<any>;
   sticky: boolean = false;                                            // It is use to perform operation whether matric menu is sticky or not. 
   constructor(private sharedServices: SharedService,
-              public store: Store<fromApp.AppState>) { }
+              public store: Store<fromFeature.State>) { }
   
   ngOnInit(){
-    this.size= "col-md-12";
+    debugger
     this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis());
+    
+    //fetching data from deployment verification state
+    this.store.select(fromFeature.selectMetricAnalysisState).subscribe(
+      (resdata)=>{
+        console.log('rps',resdata);
+      }
+    )
+    
+    
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
@@ -44,12 +52,4 @@ export class MetricAnalysisComponent implements OnInit {
             this.sticky = false;
         }
     }
-
-
-  getGraph(){
-    this.showCommonInfo = 'hide';
-  //  this.showGraph = true;
-    this.size = "col-md-5";
-  }
-
 }
