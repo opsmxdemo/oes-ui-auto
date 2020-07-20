@@ -361,17 +361,24 @@
                             <tr *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
                               <ng-container [formGroupName]="i">
                                 <td>
-                                  <input type="text" class="form-control" formControlName="userGroup"
+                                  <select class="form-control" formControlName="userGroup"
                                   [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').touched ? 'is-invalid':''">
-                                  <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').touched"
-                                  class="invalid-feedback">Group name is required</span>
+                                    <option value="" [disabled]="true">Select</option>
+                                    <option *ngFor = "let user of userGroupDropdownData[i]" value="{{user}}">{{user}}</option>
+                                  </select>
+                                  <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').invalid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').touched"
+                                  class="invalid-feedback">
+                                    <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').errors['required']">Group name is required</span>
+                                    <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroup').errors['groupNameExist']">Group name already exist</span>
+                                  </span>
                                 </td>
                                 <td>
                                   <select class="form-control" formControlName="permission"
                                   [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('permission').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permission').touched ? 'is-invalid':''">
-                                    <option value="Read Only">Read Only</option>
-                                    <option value="Read & Write">Read & Write</option>
-                                    <option value="Read,Write & Execute">Read,Write & Execute</option>
+                                    <option value="" [disabled]="true">Select</option>
+                                    <option value="Read">Read Only</option>
+                                    <option value="Read,Execute">Read & Execute</option>
+                                    <option value="Read,Write,Execute">Read, Execute & Write</option>
                                   </select>
                                   <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('permission').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permission').touched"
                                   class="invalid-feedback">Permission is required</span>
