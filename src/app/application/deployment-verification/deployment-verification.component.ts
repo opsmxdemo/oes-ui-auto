@@ -15,8 +15,7 @@ import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NumberLiteralType } from 'typescript';
-//import { single } from './data'
-//import {pieCharFt} from '../../charts/pie-chart';
+
 
 
 export interface User {
@@ -32,14 +31,11 @@ export interface User {
 export class DeploymentVerificationComponent implements OnInit {
   
   applicationForm: FormGroup;
-
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   deployementRun: any;
-  showCommonInfo: string;
-  control = new FormControl(this.deployementRun);
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
-  inputVar: any;
+  control = new FormControl(this.deployementRun);
   canaryList: string[];
   incredementDisable = false;
   decrementDisable = false;
@@ -47,9 +43,7 @@ export class DeploymentVerificationComponent implements OnInit {
   showFiller = false;
   nav_position: string = 'end';
   counter = 1;
-  serviceCounter = 0;
-  
-
+  serviceConter = 1;
   
   ///code for showing select application shows here
   myControl = new FormControl();
@@ -68,13 +62,10 @@ export class DeploymentVerificationComponent implements OnInit {
   ];
 
   applicationListOptions: Observable<any[]>;
-  // serviceInfo: any;
   applicationId: any;
   selectedApplicationName: any;
   canaryId: any[];
   serviceNameInfo: any;
-
-  
 
   //pagination for service table
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
@@ -93,10 +84,9 @@ export class DeploymentVerificationComponent implements OnInit {
   serviceListLength: number = null;
 
  //code for pie chart
- // single: any[];
   view: any[] = [230, 150];
   gradient: boolean = true;
-  showLegend: boolean = true;
+  showLegend: boolean = false;
   showLabels: boolean = true;
   isDoughnut: boolean = true;
   legendPosition: string = "bottom";
@@ -110,38 +100,49 @@ export class DeploymentVerificationComponent implements OnInit {
    constructor(public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService,
     private fb: FormBuilder) { 
-     // Object.assign(this, { single });
     }
 
 // code for application dropdown display starts here
 
-onSelectionChangeApplication(event){
-  this.selectedApplicationName  = event.option.value;
-  const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-  if(d['canaryIdList'].length === 0){
-    this.inputVar = '';
+  onSelectionChangeApplication(event) {
+    
     this.canaries = [];
-    this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
-  }else{
-    this.canaries = d['canaryIdList'].toString().split(",");
-    this.canaries.sort();
-console.log('canaries list:::'+this.canaries);
-   this.filteredCanaries = this.control.valueChanges.pipe(
-     startWith(''),
-     map(value => this._filterCanaries(value))
-   );
-   let selectedCan = this.canaries.map(parseFloat).sort();
-   this.inputVar = Math.max.apply(null, selectedCan);
-   this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.inputVar }));
-  }
-}
+    this.selectedApplicationName = event.option.value;
+    const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+    if (d['canaryIdList'].length === 0) {
+      this.canaries = [];
+      this.control.setValue('');
+      this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
+    } else {
+      this.canaries = d['canaryIdList'].toString().split(",");
+      this.canaries.sort();
+      console.log('canaries list:::' + this.canaries);
+      this.filteredCanaries = this.control.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterCanaries(value))
+      );
+      let selectedCan = this.canaries.map(parseFloat).sort();
+      if(this.control.value != Math.max.apply(null, selectedCan)) {
+        this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
+      }
+            
+      this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
+      this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: Math.max.apply(null, selectedCan)}));
+      this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: Math.max.apply(null, selectedCan), serviceId: this.selectedServiceId }));
 
-//code for change the canary
-onSelectionChangeCanaryRun(canary){
-  this.inputVar = canary;
-  this.store.dispatch(DeploymentAction.loadServices({canaryId: canary}));
-  this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: canary}));
-}
+    }
+  }
+  //code for change the canary
+  onSelectionChangeCanaryRun(canary) {
+    this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: canary}));
+    this.filteredCanaries = this.control.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterCanaries(value))
+    );
+    this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
+    this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
+    this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId }));
+  }
 
     buildApplicationForm() {
       this.applicationForm = this.fb.group({
@@ -163,27 +164,22 @@ onSelectionChangeCanaryRun(canary){
         map(val => (typeof val === 'string' ? val : val.applicationName)),
         map(applicationName => (applicationName ? this.filterApplications(applicationName) : this.applicationList.slice()))
         );  
-        console.log("its coming inside");
-       // this.onSelectionChange(event);
     }
 
   // code for application dropdown display ends here
 
-  
-    displayView(object?: any): string | undefined {
-      return object ? object.applicationName : undefined;
-    }
 
-    // filter for canaries
-    private _filterCanaries(value: string): string[] {
-      const filterValue = this._normalizeValue(value);     
-      return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
-    }
-  
-    private _normalizeValue(value: string): string {
-      return value.toLowerCase().replace(/\s/g, '');
-    }
-  
+  // filter for canaries
+  private _filterCanaries(value: string): string[] {
+    const filterValue = this._normalizeValue(value);
+    return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    console.log(value);
+    return value;
+  }
+
 
 
     
@@ -191,146 +187,140 @@ onSelectionChangeCanaryRun(canary){
     this.getApplicationHealth();
     this.getLatestRun();
     this.getAllApplications();
-    
-    
     this.getAllServices();
     this.getServiceInformation();
-    this.buildApplicationForm();
-   // this.initFilterApplication();
-    if(this.canaries.length > 0){
+ 
+    if (this.canaries.length > 0) {
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
       );
     }
-    this.showCommonInfo = 'show';    
   }
-  
-    incrementInputVar(max:any) {
-     this.canaries.sort();
-     this.canaryList = this.canaries;
-     var length = this.canaryList.length;
-     var index = this.canaryList.findIndex(cid => cid == max);
-     if(index +1 === length -1){
-       this.decrementDisable = false;
+
+  incrementCanaryRun(max: any) {
+    this.canaries.sort();
+    this.canaryList = this.canaries;
+    console.log(this.canaryList, max);
+    var length = this.canaryList.length;
+    var index = this.canaryList.findIndex(cid => cid == max);
+    if (index  === length - 1) {
+      this.decrementDisable = false;
       this.incredementDisable = true;
-     }else{
+    } else {
       this.decrementDisable = false;
       this.incredementDisable = false;
-     }
-  
-        if(index !== -1){
-          if(index+1 === length-1){
-            this.incredementDisable = true;
-            this.inputVar = this.canaryList[index];
-          }else{
-            this.inputVar = this.canaryList[index+1];
-          }
-          this.getAllServices()
-        }
-    }
-    decrementInputVar(min:any) {
-      this.incredementDisable = false;
-      this.canaries.sort();
-      this.canaryList = this.canaries;
-      var length = this.canaryList.length;
-      var index = this.canaryList.findIndex(cid => cid == min);
-        if(index  === 0){
-          this.decrementDisable = true;
-          this.incredementDisable = false;
-        }else{
-          this.decrementDisable = false;
-          this.incredementDisable = false;
-        }
-      
-         if(index !== -1 && index !== 0){
-          this.inputVar = this.canaryList[index-1];
-          this.store.dispatch(DeploymentAction.loadServices({canaryId: this.inputVar}));
-          this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.inputVar}));
-         }else if(index === 0){
-           this.inputVar = this.canaryList[index];
-         }
-        
-       }
-
-
-    //on click of service
-    getService(item: any){
-      this.selectedServiceId = item.serviceId;
-      this.serviceNameInfo = item;
     }
 
-
-    //code for application list display starts here
-    displayFn(user: User): string {
-      return user && user.applicationName ? user.applicationName : '';
-    }
-  
-    private _filter(name: string): User[] {
-      const filterValue = name.toLowerCase();
-  
-      return this.options.filter(option => option.applicationName.toLowerCase().indexOf(filterValue) === 0);
-    }
+    if (index !== -1) {
+      if (index  === length - 1) {
+        this.incredementDisable = true;
     
-    onTogglePosition(position: string) {
-      this.nav_position = position === 'start' ? 'end' : 'start';
-      
+      } else {
+    
+        this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index + 1]}));
+        this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index + 1]}));
+        this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index + 1]}));
+        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index + 1], serviceId: this.selectedServiceId }));
+
+      } 
     }
-    getOverallInfo(){
-      this.isShow = !this.isShow;
+  }
+  decrementCanaryRun(min: any) {
+    console.log("SSS:::" + min +"DDD"+ this.control.value);
+    this.incredementDisable = false;
+    this.canaries.sort();
+    this.canaryList = this.canaries;
+    var length = this.canaryList.length;
+    var index = this.canaryList.findIndex(cid => cid == min);
+    if (index === 0) {
+      this.decrementDisable = true;
+      this.incredementDisable = false;
+    } else {
+      this.decrementDisable = false;
+      this.incredementDisable = false;
     }
 
-    // get latest canary run
-    getLatestRun(){
-      this.store.dispatch(DeploymentAction.loadLatestRun());
-      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
+    if (index !== -1 && index !== 0) {
+      this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index - 1]}));
+
+      console.log('MINNNNNN::'+this.canaryList[index - 1]);
+       this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index - 1]}));
+       this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index - 1]}));
+       this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index - 1], serviceId: this.selectedServiceId }));
+
+    } else if (index === 0) {
+      this.control.setValue(this.canaryList[index]);
+    }
+  }
+
+
+  //on click of service
+  getService(item: any) {
+    this.selectedServiceId = item.serviceId;
+    this.serviceNameInfo = item;
+  }
+
+
+  //code for application list display starts here
+  displayFn(user: User): string {
+    return user && user.applicationName ? user.applicationName : '';
+  }
+
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
+    return this.options.filter(option => option.applicationName.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  onTogglePosition(position: string) {
+    this.nav_position = position === 'start' ? 'end' : 'start';
+
+  }
+  getOverallInfo() {
+    this.isShow = !this.isShow;
+  }
+
+  // get latest canary run
+  getLatestRun() {
+    this.store.dispatch(DeploymentAction.loadLatestRun());
+    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
       (resData) => {
-        if(resData.canaryRun !== null){
-                this.deployementLoading = resData.deployementLoading;
-                this.deployementRun = resData.canaryRun;  
-                this.inputVar = this.deployementRun;
-               if(this.counter === 1){
-                this.store.dispatch(DeploymentAction.loadServices({canaryId: this.deployementRun}));
-                this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.deployementRun}));
-                  this.counter ++;
-               }
-           }
+        if (resData.canaryRun !== null) {
+          this.deployementLoading = resData.deployementLoading;
+          this.deployementRun = resData.canaryRun;
+          this.control.setValue(resData.canaryRun);
+
+        //this.control = new FormControl(resData.canaryRun);
+          if (this.counter === 1) {
+            this.store.dispatch(DeploymentAction.loadServices({ canaryId: resData.canaryRun }));
+            this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: resData.canaryRun}));
+            this.counter++;
+          }
+        }
       }
     );
     }
   
   // get application details
-    getAllApplications(){
-      this.store.dispatch(DeploymentAction.loadApplications());
-      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
-        (resData) => {
-          if(resData.applicationList !== null){
-                  this.deployementLoading = resData.applicationListLoading;
-                  this.deployementApplications = resData.applicationList;
-                  this.applicationList = resData.applicationList;
-                  const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-                  this.canaries = d['canaryIdList'].toString().split(",");
-                  this.filteredCanaries = this.control.valueChanges.pipe(
-                    startWith(''),
-                    map(value => this._filterCanaries(value))
-                  );
-                  this.buildApplicationForm();
-                  this.initFilterApplication();
-             }
-            }
-      );
-    }
-
-    se
-
-    //getAllApplications().then(this.initFilterApplication);
+  getAllApplications() {
+    this.store.dispatch(DeploymentAction.loadApplications());
+    this.buildApplicationForm();
+    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
+      (resData) => {
+        if (resData.applicationList !== null) {
+          this.deployementLoading = resData.applicationListLoading;
+          this.deployementApplications = resData.applicationList;
+          this.applicationList = resData.applicationList;
+          this.initFilterApplication();
+        }
+      }
+    );
+  }
 
     //code for pagination of services list
-     // Below function is used if user want to refresh list data
-   refreshList(){
-  //  this.store.dispatch(DeploymentAction.loadServices(this.inputVar));
-    this.store.dispatch(DeploymentAction.loadServices({canaryId: this.deployementRun}));
-
+  // Below function is used if user want to refresh list data
+  refreshList() {
+     this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.control.value}));
   } 
     //Below function is execute on search
   onSearch(){
@@ -426,13 +416,18 @@ onSelectionChangeCanaryRun(canary){
                   this.renderPage();
                   this.tableIsEmpty = false;
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
-                  this.serviceNameInfo = this.deploymentServices.services[0];
-                 
+                  this.serviceNameInfo = this.deploymentServices.services[0];   
+                  if (this.serviceConter === 1) {
+                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun, serviceId: this.selectedServiceId }));
+                    this.serviceConter++;
+                  } 
+            
              }else{
                this.tableIsEmpty = true;
              }
+            
         }
-        
+               
       );
     }
 
@@ -456,22 +451,22 @@ onSelectionChangeCanaryRun(canary){
                  
                  this.pieData = [
                   {
-                    "name": "Failed " + this.deploymentApplicationHealth.noOfFailed,
+                    "name": "Failed" ,
                     "value": this.deploymentApplicationHealth.noOfFailed,
                     "label": "Failed"
                   },
                   {
-                    "name": "Review " + this.deploymentApplicationHealth.noOfReview,
+                    "name": "Review",
                     "value": this.deploymentApplicationHealth.noOfReview,
                     "label": "Review"
                   },
                   {
-                    "name": "Succeess " + this.deploymentApplicationHealth.noOfSuccess,
+                    "name": "Succeess",
                     "value": this.deploymentApplicationHealth.noOfSuccess,
                     "label": "Success"
                   },
                     {
-                    "name": "InProgress " + this.deploymentApplicationHealth.noOfInProgress,
+                    "name": "InProgress",
                     "value": this.deploymentApplicationHealth.noOfInProgress,
                     "label": "InProgress"
                   }
@@ -503,7 +498,4 @@ onSelectionChangeCanaryRun(canary){
         }
       );
     }
-
-
-
 }
