@@ -113,5 +113,11 @@ export function DeploymentdReducer(
                 serviceInformationLoading:false
             })
         ),
+        on(DeploymentActions.updateCanaryRun,
+            (state, action) => ({
+                ...state,
+                canaryRun: action.canaryId,
+            })
+        ),
     )(deploymentVerificationState,deploymentVerificationdActions);
 }

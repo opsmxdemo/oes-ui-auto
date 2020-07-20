@@ -22,20 +22,20 @@
         </span>
         <div class="input-group">
           <div class="input-group-prepend">
-            <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementInputVar(inputVar)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
+            <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(this.control.value)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
           </div>
-          <form class="example-form" >
+          <form class="example-form">
             <input type="text" class="form-control text-center"
-                   [formControl]="control"  
-                   [matAutocomplete]="autoCanaries">
-            <mat-autocomplete #autoCanaries="matAutocomplete">
+                   [formControl]="control"  formControlName="canaryFormName"
+                   [matAutocomplete]="autoCanaries" name="inputVar" >
+            <mat-autocomplete #autoCanaries="matAutocomplete" (optionSelected)="onSelectionChangeCanaryRun($event.option.value)">
               <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId" >
                 {{canaryId}}
               </mat-option>
             </mat-autocomplete>
           </form>
           <div  class="input-group-prepend">
-            <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementInputVar(inputVar)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
+            <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementCanaryRun(this.control.value)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
           </div>
           <br>
         </div>
@@ -113,7 +113,7 @@
         <tbody>
           <ng-container *ngFor="let service of currentPage | filter:searchData; let i=index">
           <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
-            <td (click)="getService(service)">{{service.serviceName}}</td>
+            <td class="service-selection" (click)="getService(service)">{{service.serviceName}}</td>
             <td width="30" [ngClass]= "{'text-danger':service.status === 'FAIL','text-success':service.status === 'Success'}">{{service.finalScore}}</td>
             <td width="30"  [ngClass]= "{'text-danger':service.status === 'FAIL','text-success':service.status === 'Success'}">{{service.status}}</td>
           </tr> 
@@ -275,7 +275,7 @@
 
     <div class="page-content flex-grow-1">
       <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
-        <h3><img src="../../../assets/images/application-icon.png" alt="" />Pet Service » 11883 » RestService 1</h3>
+        <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} » {{this.control.value}} » {{serviceNameInfo.serviceName}}</h3>
         <div class="page_access d-flex ml-auto">
           <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false">Manual Trigger</button>
         </div>
@@ -307,14 +307,14 @@
                     </div>
                     <!-- /.chart_value low -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.metricScore ? serviceNameInfo.metricScore: ''}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo.metricScore}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Metrics</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo.logsScore ? serviceNameInfo.logsScore: ''}}</div>
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo.logsScore}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Logs</div>
                       <!-- /.cv_name -->
@@ -390,11 +390,11 @@
                     <tbody>
                       <tr>
                         <td width="110">User Name:</td>
-                        <td>OpsMxUser</td>
+                        <td>{{deploymentServiceInformation.userName}}</td>
                       </tr>
                       <tr>
                         <td width="110">Canary Id:</td>
-                        <td>{{inputVar}}</td>
+                        <td>{{this.control.value}}</td>
                       </tr>
                       <tr>
                         <td width="110">Application:</td>
@@ -411,7 +411,7 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">Baseline:</td>
-                        <td>kubedeploy-baseline-v037</td>
+                        <td>{{serviceNameInfo.version1name}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -428,7 +428,7 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">New Release:</td>
-                        <td>kubedeploy-canary-v045</td>
+                        <td>{{serviceNameInfo.version2name}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -445,7 +445,7 @@
                     <tbody>
                       <tr>
                         <td width="110">Template:</td>
-                        <td>kubemultidemotemplate:: kubemultilogtemplate</td>
+                        <td>{{deploymentApplicationHealth.logTemplateName}}::{{deploymentApplicationHealth.metricTemplateName}}</td>
                       </tr>
                       <tr class="font-weight-bold text-uppercase">
                         <td width="110">STATUS:</td>
@@ -454,43 +454,44 @@
                     </tbody>
                   </table>
                   <hr />
+                  
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr>
                         <td width="180">Log Score:</td>
-                        <td>50</td>
+                        <td>{{deploymentServiceInformation.logsScore}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file size:</td>
-                        <td>40.17 Kb</td>
+                        <td>{{deploymentServiceInformation.fileStat.v1FileSize}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file size:</td>
-                        <td>564.42 Kb</td>
+                        <td>{{deploymentServiceInformation.fileStat.v2FileSize}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file lines:</td>
-                        <td>507</td>
+                        <td>{{deploymentServiceInformation.fileStat.v1LogLen}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file lines:</td>
-                        <td>4693</td>
+                        <td>{{deploymentServiceInformation.fileStat.v2LogLen}}</td>
                       </tr>
                       <tr>
                         <td width="180">Canary Analysis Duration:</td>
-                        <td>0:0:0</td>
+                        <td>{{deploymentServiceInformation.duration}}</td>
                       </tr>
                       <tr>
                         <td width="180">Interval Minutes:</td>
-                        <td>30</td>
+                        <td>{{deploymentServiceInformation.intervalMinutes}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline logs:</td>
-                        <td><a href="#" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td><a href="{{deploymentServiceInformation.baselineKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
                       </tr>
                       <tr>
                         <td width="180">New Release logs: </td>
-                        <td><a href="#" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td><a href="{{deploymentServiceInformation.canaryKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
                       </tr>
                     </tbody>
                   </table>
