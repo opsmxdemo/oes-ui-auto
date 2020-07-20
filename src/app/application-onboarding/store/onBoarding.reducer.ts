@@ -20,6 +20,7 @@ export interface State {
     imageSource: string[];
     dockerImageData:any;
     callDockerImageDataAPI: boolean;
+    userGropsData: string[];
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -48,7 +49,8 @@ export const initialState: State = {
     applicationLoading: false,
     imageSource: null,
     dockerImageData: null,
-    callDockerImageDataAPI: true
+    callDockerImageDataAPI: true,
+    userGropsData: null
 }
 
 export function AppOnboardingReducer(
@@ -68,6 +70,12 @@ export function AppOnboardingReducer(
             (state, action) => ({
                 ...state,
                 pipelineData: action.pipelineData
+            })
+        ),
+        on(OnboardingAction.fetchUserGrops,
+            (state, action) => ({
+                ...state,
+                userGropsData: action.userGroupData
             })
         ),
         on(OnboardingAction.errorOccured,

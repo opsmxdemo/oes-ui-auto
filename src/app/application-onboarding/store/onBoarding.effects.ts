@@ -105,6 +105,25 @@ export class ApplicationOnBoardingEffect {
     //     )
     // )
 
+    // Below effect is use for fetch cloudAccount dropdown data.
+    fetchUserData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            switchMap(() => {
+
+                return this.http.get<string[]>(this.environment.config.endPointUrl + 'oes/authorize/groups').pipe(
+                    map(resdata => {
+                        return OnboardingAction.fetchUserGrops({userGroupData:resdata['data']})
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
      // Below effect is use for fetch imageSource dropdown data.
      fetchImageSource = createEffect(() =>
      this.actions$.pipe(
