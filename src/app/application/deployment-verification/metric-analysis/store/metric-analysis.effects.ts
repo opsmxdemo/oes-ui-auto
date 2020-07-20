@@ -45,9 +45,9 @@ export class MetricAnalysisEffect {
         this.actions$.pipe(
             ofType(MetricAnalysisdActions.loadMetricAnalysis),
             switchMap(() => {
-                return this.http.get(this.environment.config.autoPilotEndPointUrl +'cas/getCanaryOutputNew?canaryId=542&serviceId=847').pipe(
+                return this.http.get('../../../../../assets/data/metricAnalysisData.json').pipe(
                     map(resdata => {
-                       return MetricAnalysisdActions.fetchCanaryOutput({cararyData:resdata});
+                       return MetricAnalysisdActions.fetchCanaryOutput({cararyData:resdata['canaryOutputData']});
                     }),
                 );
             })

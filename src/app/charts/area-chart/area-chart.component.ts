@@ -47,7 +47,6 @@ export class AreaChartComponent implements OnInit {
   }
 
   onSelect(event) {
-    console.log(event);
   }
 
 }

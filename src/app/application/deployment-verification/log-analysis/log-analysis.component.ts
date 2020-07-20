@@ -22,7 +22,6 @@ export class LogAnalysisComponent implements OnInit {
     this.store.dispatch(LogAnalysisAction.loadLogResults());
     this.store.select(fromFeature.selectLogAnalysisState).subscribe(
     (resData) => {
-      debugger;
       if(resData.logsResults !== null){
              // this.deployementLoading = resData.deployementLoading;
              //this.logAnalysisResults = resData.logsResults; 

@@ -172,9 +172,7 @@ export class PolicyManagementComponent implements OnInit {
   }
 
   // Below function is use to support search functionality
-  onSearch(){
-    console.log("search",this.searchData);
-  }
+  onSearch(){}
 
   // Below function is use to policy edit
   editPolicy(policyName){

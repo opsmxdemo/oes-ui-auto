@@ -46,53 +46,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>/SpringController/catcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/dogcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/greeting (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/catcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/dogcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>LATENCY | ERROR RATE | THROUGHPUT | APDEX</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
+                <tr *ngFor = "let apmMetric of APMMetricData; let i=index;">
+                  <td>{{apmMetric.name}}</td>
+                  <td><span class="countBox countSuccess">{{apmMetric.groupScore}}</span></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
@@ -161,6 +121,7 @@
             </table>
           </div>
         </div>
+        <!-- ########## Below is sticky table ############### -->
         <div *ngIf="sticky" class="metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
           <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;">
             <div class="input-group input-group_search">
@@ -205,53 +166,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>/SpringController/catcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/dogcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/greeting (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/catcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>/SpringController/dogcount (GET)</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
-                </tr>
-                <tr>
-                  <td>LATENCY | ERROR RATE | THROUGHPUT | APDEX</td>
-                  <td><span class="countBox countWarning">87.5</span></td>
-                  <td>123</td>
-                  <td>129</td>
-                  <td>189</td>
-                  <td>190</td>
+                <tr *ngFor = "let apmMetric of APMMetricData; let i=index;">
+                  <td>{{apmMetric.name}}</td>
+                  <td><span class="countBox countSuccess">{{apmMetric.groupScore}}</span></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td class="text-center"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>

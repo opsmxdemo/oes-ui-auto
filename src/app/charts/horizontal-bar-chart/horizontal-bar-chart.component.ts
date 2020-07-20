@@ -28,17 +28,11 @@ export class HorizontalBarChartComponent implements OnInit {
 
   constructor() {}
 
-  onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
+  onSelect(data): void {}
 
-  onActivate(data): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
+  onActivate(data): void {}
 
-  onDeactivate(data): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
-  }
+  onDeactivate(data): void {}
 
   ngOnInit(){
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : false;

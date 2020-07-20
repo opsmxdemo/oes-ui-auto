@@ -17,8 +17,12 @@ export class MetricAnalysisComponent implements OnInit {
 
   menuWidth: any;                                                     // It is use to store offsetTop of matric table.
   menuTop:number = 213;                                               // It define top of metric table.
-  metricData$:Observable<any>;
   sticky: boolean = false;                                            // It is use to perform operation whether matric menu is sticky or not. 
+  metricData:any;                                                     // It is use to store data of whole metric analysis.
+  APMMetricData = [];                                                 // It is use to store APM metric Data.
+  InfraMetricData = [];                                               // It is use to store Infra Metric Data.
+  AdvancedMetricData = [];                                            // It is use to store Advanced Metric Data.
+
   constructor(private sharedServices: SharedService,
               public store: Store<fromFeature.State>) { }
   
@@ -28,7 +32,25 @@ export class MetricAnalysisComponent implements OnInit {
     //fetching data from deployment verification state
     this.store.select(fromFeature.selectMetricAnalysisState).subscribe(
       (resdata)=>{
-        console.log('rps',resdata);
+        if(resdata.canaryOutputData !== null){
+          this.metricData = resdata['canaryOutputData'];
+          this.metricData.canary_output.results.forEach((metricData) => {
+            switch(metricData.category){
+              case 'APM':
+                this.APMMetricData.push(metricData);
+                break;
+              case 'Infra':
+                this.InfraMetricData.push(metricData);
+                break;
+              case 'Advanced':
+                this.AdvancedMetricData.push(metricData);
+                break;
+            }
+          });
+          console.log("Apm",this.APMMetricData);
+          console.log("Infra",this.InfraMetricData);
+          console.log("Advanced",this.AdvancedMetricData);
+        }
       }
     )
   }

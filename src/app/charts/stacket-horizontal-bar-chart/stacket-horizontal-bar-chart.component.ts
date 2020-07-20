@@ -44,8 +44,6 @@ export class StacketHorizontalBarChartComponent implements OnInit {
     this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798',"#fed856"]};
   }
 
-  onSelect(event) {
-    console.log(event);
-  }
+  onSelect(event) {}
 
 }
