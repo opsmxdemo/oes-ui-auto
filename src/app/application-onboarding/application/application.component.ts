@@ -37,7 +37,8 @@ export class CreateApplicationComponent implements OnInit {
   imageSourceData = null;                                         // It is use to store imageSource dropdown data.
   environmentUpdated = false;                                     // It is use to change status of services while environment is update in edit mode.
   dockerImageData = null;                                         // It is use to store data related to dockerImage fetched from state.
-  dockerImageDropdownData = null;                                 // It is use to store dockerImage dropdown data on selection of Image Source
+  dockerImageDropdownData = [];                                   // It is use to store dockerImage dropdown data on selection of Image Source
+  dockerAccountName = '';                                         // It is use to store default docker Account name.
 
   constructor(public sharedService: SharedService,
               public store: Store<fromApp.AppState>,
@@ -66,7 +67,9 @@ export class CreateApplicationComponent implements OnInit {
               imageSource: new FormControl({ value: this.appData.imageSource, disabled: true })
             });
             //populating dockerImagenamedropdown.
-            this.onImageSourceSelect(this.appData.imageSource);
+            if(responseData.callDockerImageDataAPI){
+              this.onImageSourceSelect(this.appData.imageSource);
+            }
 
             //populating serviceForm############################################################################
             if (this.appData.services.length !== 0) {
@@ -145,7 +148,7 @@ export class CreateApplicationComponent implements OnInit {
           }else{
             this.defineAllForms();
           }
-        } else if (this.appData === null) {
+        } else if (this.appData === null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
           this.defineAllForms();
         }
@@ -166,6 +169,7 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.dockerImageData !== null) {
           this.dockerImageData = response.dockerImageData;
+          this.populateDockerImagenDropdown();
         }
       }
     )
@@ -241,21 +245,27 @@ export class CreateApplicationComponent implements OnInit {
   return null;
   }
 
+  //Below function is use to populate docker image name dropdown 
+  populateDockerImagenDropdown(){
+    this.dockerImageDropdownData = [];
+    this.dockerAccountName = this.dockerImageData[0].imageSource;
+    this.servicesForm.value.services.forEach(() => {
+      this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+    })
+  }
+
   // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
   onImageSourceSelect(ImageSourceValue){
-    let imageSourceUserName = null;
-    if(this.imageSourceData !== null && this.dockerImageData!== null){
-      this.imageSourceData.forEach(imageSource => {
-        if(ImageSourceValue === imageSource.name){
-          imageSourceUserName = imageSource.username;
-        }
-      })
-      this.dockerImageData.forEach(docker => {
-        if(docker.imageSource === imageSourceUserName){
-          this.dockerImageDropdownData = docker.images;
-        }
-      })
-    }
+    this.store.dispatch(OnboardingActions.loadDockerImageName({imageSourceName:ImageSourceValue}));
+  }
+
+  // Below function is use to populate Docker Image name dropdown after selecting DockerAccountName
+  onChangeDockerAcc(event,serviceIndex){
+    this.dockerImageData.forEach(imageName => {
+      if(imageName.imageSource === event.target.value){
+        this.dockerImageDropdownData[serviceIndex] = imageName.images;
+      }
+    })
   }
 
   //Below function is use to add more permission group
@@ -345,6 +355,8 @@ export class CreateApplicationComponent implements OnInit {
         ])
       })
     );
+    // Update dockerImageDropdownData array
+    this.dockerImageDropdownData.push(this.dockerImageData[0].images);
   }
 
   //Below function is use to delete existing service fron Service Section
@@ -359,6 +371,8 @@ export class CreateApplicationComponent implements OnInit {
     }
     $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
+     // Update dockerImageDropdownData array
+     this.dockerImageDropdownData.splice(index, 1);
   }
 
   //Below function is execute on change of cloudAccount array .

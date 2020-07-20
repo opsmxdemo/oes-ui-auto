@@ -1,8 +1,8 @@
 <div class="tab-content flex-grow-1" id="myTabContent">
   <div class="tab-pane h-100 fade show active" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab" style="background-color: #f5f7f9;">
     <div class="row h-100 no-gutters">
-      <div class="col-sm-7 h-100 ">
-        <div class="metric_analysis" [class.sticky] = "sticky" #stickyMenu [style.width]="sticky?menuWidth:''">
+      <div class="col-sm-7 col-md-7 col-lg-7 h-100 " #stickyMenu>
+        <div class="metric_analysis"  [style.width]="!sticky?menuWidth:''" style="transition: width 0.5s;">
           <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
@@ -17,27 +17,21 @@
                 <option value="">2</option>
               </select>
             </div>
-            <!-- /.field -->
             <div class="checkbox-indigators d-flex align-items-center">
               <div class="cb_indigator cd_red">
                 <input type="checkbox" id="indigatorRed" checked>
                 <label for="indigatorRed"></label>
               </div>
-              <!-- /.cb_indigator -->
               <div class="cb_indigator cb_warning">
                 <input type="checkbox" id="indigatorWarning">
                 <label for="indigatorWarning"></label>
               </div>
-              <!-- /.cb_indigator -->
               <div class="cb_indigator cb_success">
                 <input type="checkbox" id="indigatorSuccess">
                 <label for="indigatorSuccess"></label>
               </div>
-              <!-- /.cb_indigator -->
             </div>
-            <!-- /.checkbox-indigators -->
           </div>
-          <!-- /.py-2 px-3 -->
 
           <div class="table-responsive">
             <table class="table valign-middle table-bottom-border mb-4">
@@ -102,7 +96,8 @@
                 </tr>
               </tbody>
             </table>
-
+          </div>
+          <div class="table-responsive">
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
@@ -165,9 +160,166 @@
               </tbody>
             </table>
           </div>
-
         </div>
-        <!-- /.metric_analysis -->
+        <div *ngIf="sticky" class="metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;">
+            <div class="input-group input-group_search">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+              </div>
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+            <div class="field col-4">
+              <select class="form-control">
+                <option value="">All</option>
+                <option value="">1</option>
+                <option value="">2</option>
+              </select>
+            </div>
+            <div class="checkbox-indigators d-flex align-items-center">
+              <div class="cb_indigator cd_red">
+                <input type="checkbox" id="indigatorRed" checked>
+                <label for="indigatorRed"></label>
+              </div>
+              <div class="cb_indigator cb_warning">
+                <input type="checkbox" id="indigatorWarning">
+                <label for="indigatorWarning"></label>
+              </div>
+              <div class="cb_indigator cb_success">
+                <input type="checkbox" id="indigatorSuccess">
+                <label for="indigatorSuccess"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table valign-middle table-bottom-border mb-4">
+              <thead>
+                <tr>
+                  <th>APM SCORE</th>
+                  <th class="text-center">SCORE</th>
+                  <th>LATENCY</th>
+                  <th>ERROR RATE</th>
+                  <th>THROUGHPUT</th>
+                  <th>APDEX</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>/SpringController/catcount (GET)</td>
+                  <td><span class="countBox countWarning">87.5</span></td>
+                  <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
+                </tr>
+                <tr>
+                  <td>/SpringController/dogcount (GET)</td>
+                  <td><span class="countBox countWarning">87.5</span></td>
+                  <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
+                </tr>
+                <tr>
+                  <td>/SpringController/greeting (GET)</td>
+                  <td><span class="countBox countWarning">87.5</span></td>
+                  <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
+                </tr>
+                <tr>
+                  <td>/SpringController/catcount (GET)</td>
+                  <td><span class="countBox countWarning">87.5</span></td>
+                  <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
+                </tr>
+                <tr>
+                  <td>/SpringController/dogcount (GET)</td>
+                  <td><span class="countBox countWarning">87.5</span></td>
+                  <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
+                </tr>
+                <tr>
+                  <td>LATENCY | ERROR RATE | THROUGHPUT | APDEX</td>
+                  <td><span class="countBox countWarning">87.5</span></td>
+                  <td>123</td>
+                  <td>129</td>
+                  <td>189</td>
+                  <td>190</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-responsive">
+            <table class="table valign-middle table-bottom-border">
+              <thead>
+                <tr>
+                  <th>METRIC SCORE</th>
+                  <th class="text-center">score</th>
+                  <th>Range</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="cell-heading"><i class="fas fa-chevron-right"></i> RANK | CRITICAL | WATCHLIST | INTERVALS</td>
+                  <td><span class="countBox countDanger">50</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-heading"><i class="fas fa-chevron-right"></i> Memory Group</td>
+                  <td><span class="countBox countDanger">50</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_cache</td>
+                  <td><span class="countBox countDanger">0</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_failcnt</td>
+                  <td><span class="countBox countSuccess">100</span></td>
+                  <td>123</td>
+                </tr>
+                <tr class="selected-row">
+                  <td class="cell-child">container_memory_failcnt</td>
+                  <td><span class="countBox countDanger">0</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_mapped_file</td>
+                  <td><span class="countBox countSuccess">100</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_cache</td>
+                  <td><span class="countBox countDanger">0</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_rss</td>
+                  <td><span class="countBox countDanger">0</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_swap</td>
+                  <td><span class="countBox countSuccess">100</span></td>
+                  <td>123</td>
+                </tr>
+                <tr>
+                  <td class="cell-child">container_memory_usage_bytes</td>
+                  <td><span class="countBox countDanger">0</span></td>
+                  <td>123</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <!-- /.col-sm-5 -->
       <div class="col-sm-5">
@@ -178,34 +330,24 @@
               <div class="graph mb-3">
                 <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
               </div>
-              <!-- /.graph mb-3 -->
-
-
               <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
               <div class="graph mb-4">
                 <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
               </div>
-              <!-- /.graph mb-3 -->
-
               <div class="card mb-3">
                 <div class="card-header text-uppercase">
                   Analysis
                 </div>
-                <!-- /.card-header -->
                 <div class="card-body text-wrap-normal">
                   <div class="my-2">
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   </div>
                 </div>
-                <!-- /.card-body -->
               </div>
-              <!-- /.card -->
-
               <div class="card">
                 <div class="card-header text-uppercase">
                   container_memory_failures_total
                 </div>
-                <!-- /.card-header -->
                 <div class="table-responsive">
                   <table class="table mb-0">
                     <thead>
@@ -242,16 +384,10 @@
                   </table>
                 </div>
               </div>
-              <!-- /.card -->
-
             </div>
-            <!-- /.card-body -->
           </div>
         </div>
-        <!-- /.p-3 -->
       </div>
-      <!-- /.col-sm-7 -->
     </div>
-    <!-- /.row -->
-  </div>
+  </div> 
 </div>

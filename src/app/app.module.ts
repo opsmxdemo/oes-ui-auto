@@ -21,7 +21,6 @@ import { ReleaseComponent } from './release/release.component';
 import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { KeysPipe } from './pipes/keys.pipe';
 import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
 import { DynamicAccountsComponent } from './application-onboarding/dynamic-accounts/dynamic-accounts.component';
@@ -37,13 +36,11 @@ import { AppDynamicsFormComponent } from './application-onboarding/data-source/a
 import { AwsCloudwatchFormComponent } from './application-onboarding/data-source/aws-cloudwatch-form/aws-cloudwatch-form.component';
 import { ElasticsearchFormComponent } from './application-onboarding/data-source/elasticsearch-form/elasticsearch-form.component';
 import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
+import { DeploymentVerificationModule } from './application/deployment-verification/deployment-verification.module';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AppConfigService } from './services/app-config.service';
 import { TreeViewComponent } from './audit/tree-view/tree-view.component';
 import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
-import { DeploymentVerificationComponent } from './application/deployment-verification/deployment-verification.component';
-import { LogAnalysisComponent } from './application/deployment-verification/log-analysis/log-analysis.component';
-import { MetricAnalysisComponent } from './application/deployment-verification/metric-analysis/metric-analysis.component';
 import { ApplicationComponent } from './application/application.component';
 import { CreateApplicationComponent } from './application-onboarding/application/application.component';
 import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
@@ -90,9 +87,6 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     TreeViewComponent,
     TableRowComponent,
     HasChildComponent,
-    DeploymentVerificationComponent,
-    LogAnalysisComponent,
-    MetricAnalysisComponent,
     CdDashboardComponent
   ],
   imports: [
@@ -105,16 +99,16 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ReactiveFormsModule,
     HttpClientModule,
     AppMaterialModule,
-    NgxChartsModule,
     Ng2SearchPipeModule,
     EffectModule,
+    DeploymentVerificationModule,
     NgMultiSelectDropDownModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),
     ToastrModule.forRoot({
       timeOut: 10000,
       preventDuplicates: true,
     }),
-    //please keep below import always in last position
+    //please keep below WildcardRoutingModule always in last position.
     WildcardRoutingModule
   ],
   providers: [

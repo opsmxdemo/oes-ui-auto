@@ -107,14 +107,14 @@
                     <!-- switch case for widget chart start -->
                     <div [ngSwitch]="widgetChartsData[widgetindex]['type']">
                       <app-stacket-horizontal-bar-chart *ngSwitchCase="stackedHorizontalBarChart"
-                        [dataSource]="widgetChartsData[widgetindex]['dataSource']" [view]="widgetChartSize"
+                        [dataSource]="widgetChartsData[widgetindex]['DataSource']" [view]="widgetChartSize"
                         [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
                       </app-stacket-horizontal-bar-chart>
-                      <app-pie-chart *ngSwitchCase="pieChart" [dataSource]="widgetChartsData[widgetindex]['dataSource']"
+                      <app-pie-chart *ngSwitchCase="pieChart" [dataSource]="widgetChartsData[widgetindex]['DataSource']"
                         [view]="widgetChartSize" [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
                       </app-pie-chart>
                       <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart"
-                        [dataSource]="widgetChartsData[widgetindex]['dataSource']" [view]="widgetChartSize"
+                        [dataSource]="widgetChartsData[widgetindex]['DataSource']" [view]="widgetChartSize"
                         [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
 
                       <!-- default switch case -->

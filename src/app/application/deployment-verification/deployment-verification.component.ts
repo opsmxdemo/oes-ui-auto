@@ -7,7 +7,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith, tap} from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import * as fromApp from '../../store/app.reducer';
+import * as fromFeature from './store/feature.reducer';
 import * as deploymentApp from './store/deploymentverification.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
 import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
@@ -107,7 +107,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // App form end
 
-   constructor(public sharedService: SharedService, public store: Store<fromApp.AppState>,
+   constructor(public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService,
     private fb: FormBuilder) { 
      // Object.assign(this, { single });
@@ -132,6 +132,7 @@ console.log('canaries list:::'+this.canaries);
    );
    let selectedCan = this.canaries.map(parseFloat).sort();
    this.inputVar = Math.max.apply(null, selectedCan);
+   this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.inputVar }));
   }
 }
 
@@ -282,7 +283,7 @@ onSelectionChangeCanaryRun(canary){
     // get latest canary run
     getLatestRun(){
       this.store.dispatch(DeploymentAction.loadLatestRun());
-      this.store.select('deploymentOnboarding').subscribe(
+      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
       (resData) => {
         if(resData.canaryRun !== null){
                 this.deployementLoading = resData.deployementLoading;
@@ -301,7 +302,7 @@ onSelectionChangeCanaryRun(canary){
   // get application details
     getAllApplications(){
       this.store.dispatch(DeploymentAction.loadApplications());
-      this.store.select('deploymentOnboarding').subscribe(
+      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
           if(resData.applicationList !== null){
                   this.deployementLoading = resData.applicationListLoading;
@@ -415,7 +416,7 @@ onSelectionChangeCanaryRun(canary){
 
     // get service  details
     getAllServices(){
-      this.store.select('deploymentOnboarding').subscribe(
+      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
           if(resData.serviceList !== null){
                   this.deployementLoading = resData.serviceListLoading;
@@ -437,7 +438,7 @@ onSelectionChangeCanaryRun(canary){
 
     // get application health details
     getApplicationHealth(){
-      this.store.select('deploymentOnboarding').subscribe(
+      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
           if(resData.applicationHealthDetails !== null){
                   this.deployementLoading = resData.applicationHealthDetailsLoading;
@@ -490,7 +491,7 @@ onSelectionChangeCanaryRun(canary){
 
     // get service information
     getServiceInformation(){
-      this.store.select('deploymentOnboarding').subscribe(
+      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
           if(resData.serviceInformation !== null){
                   this.deployementLoading = resData.serviceInformationLoading;

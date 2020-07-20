@@ -14,6 +14,7 @@ export const createApplication = createAction('[Application-OnBoarding] CreateAp
 export const dataSaved = createAction('[Application-OnBoarding] DataSaved');
 export const fetchCloudAccount = createAction('[Application-OnBoarding] FetchCloudAccount', props<{cloudAccount:CloudAccount}>());
 export const fetchImageSource = createAction('[Application-OnBoarding] FetchImageSource', props<{imageSource: string[]}>());
+export const loadDockerImageName = createAction('[Application-OnBoarding] LoadDockerImageName', props<{imageSourceName:string}>());
 export const fetchDockerImageName = createAction('[Application-OnBoarding] FetchDockerImageName', props<{dockerImageData:any}>());
 
 // Below action is related to edit application 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as LogAnalysisAction from './store/log-analysis.actions';
-import * as fromApp from '../../../store/app.reducer';
+import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
 
 
@@ -11,7 +11,7 @@ import { Store } from '@ngrx/store';
 })
 export class LogAnalysisComponent implements OnInit {
 
-  constructor(public store: Store<fromApp.AppState>) { }
+  constructor(public store: Store<fromFeature.State>) { }
 
   ngOnInit(): void {
       this.getLogAnalysis();
@@ -20,7 +20,7 @@ export class LogAnalysisComponent implements OnInit {
    
    getLogAnalysis(){
     this.store.dispatch(LogAnalysisAction.loadLogResults());
-    this.store.select('logAnalysis').subscribe(
+    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
     (resData) => {
       debugger;
       if(resData.logsResults !== null){
