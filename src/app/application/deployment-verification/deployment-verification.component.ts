@@ -29,7 +29,8 @@ export interface User {
   styleUrls: ['./deployment-verification.component.less']
 })
 export class DeploymentVerificationComponent implements OnInit {
-  
+  size = 5343454545;
+
   applicationForm: FormGroup;
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   deployementRun: any;
@@ -116,7 +117,6 @@ export class DeploymentVerificationComponent implements OnInit {
     } else {
       this.canaries = d['canaryIdList'].toString().split(",");
       this.canaries.sort();
-      console.log('canaries list:::' + this.canaries);
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
@@ -134,11 +134,15 @@ export class DeploymentVerificationComponent implements OnInit {
   }
   //code for change the canary
   onSelectionChangeCanaryRun(canary) {
+    // this.canaries.sort();
+    // this.canaryList = this.canaries;
+    // var length = this.canaryList.length;
     this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: canary}));
-    this.filteredCanaries = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterCanaries(value))
-    );
+    
+    // this.filteredCanaries = this.control.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filterCanaries(value))
+    // );
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
     this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId }));
@@ -176,7 +180,6 @@ export class DeploymentVerificationComponent implements OnInit {
   }
 
   private _normalizeValue(value: string): string {
-    console.log(value);
     return value;
   }
 
@@ -201,7 +204,6 @@ export class DeploymentVerificationComponent implements OnInit {
   incrementCanaryRun(max: any) {
     this.canaries.sort();
     this.canaryList = this.canaries;
-    console.log(this.canaryList, max);
     var length = this.canaryList.length;
     var index = this.canaryList.findIndex(cid => cid == max);
     if (index  === length - 1) {
@@ -227,7 +229,6 @@ export class DeploymentVerificationComponent implements OnInit {
     }
   }
   decrementCanaryRun(min: any) {
-    console.log("SSS:::" + min +"DDD"+ this.control.value);
     this.incredementDisable = false;
     this.canaries.sort();
     this.canaryList = this.canaries;
@@ -243,8 +244,6 @@ export class DeploymentVerificationComponent implements OnInit {
 
     if (index !== -1 && index !== 0) {
       this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index - 1]}));
-
-      console.log('MINNNNNN::'+this.canaryList[index - 1]);
        this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index - 1]}));
        this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index - 1]}));
        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index - 1], serviceId: this.selectedServiceId }));
@@ -258,6 +257,7 @@ export class DeploymentVerificationComponent implements OnInit {
   //on click of service
   getService(item: any) {
     this.selectedServiceId = item.serviceId;
+    
     this.serviceNameInfo = item;
   }
 
@@ -277,6 +277,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   }
   getOverallInfo() {
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.isShow = !this.isShow;
   }
 

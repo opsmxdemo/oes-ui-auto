@@ -114,8 +114,8 @@
           <ng-container *ngFor="let service of currentPage | filter:searchData; let i=index">
           <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
             <td class="service-selection" (click)="getService(service)">{{service.serviceName}}</td>
-            <td width="30" [ngClass]= "{'text-danger':service.status === 'FAIL','text-success':service.status === 'Success'}">{{service.finalScore}}</td>
-            <td width="30"  [ngClass]= "{'text-danger':service.status === 'FAIL','text-success':service.status === 'Success'}">{{service.status}}</td>
+            <td width="30" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore}}</td>
+            <td width="30"  [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.status}}</td>
           </tr> 
         </ng-container>               
         </tbody>
@@ -307,14 +307,16 @@
                     </div>
                     <!-- /.chart_value low -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.metricScore}}</div>
+                      <div class="cv_heighlight" 
+                      [ngClass]= "{'text-success':serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore && serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore}">{{serviceNameInfo.metricScore}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Metrics</div>
                       <!-- /.cv_name -->
                     </div>
+                    
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo.logsScore}}</div>
+                      <div class="cv_heighlight"   [ngClass]= "{'text-success':serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':(serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore) && (serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore)}">{{serviceNameInfo.logsScore}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Logs</div>
                       <!-- /.cv_name -->
@@ -324,7 +326,7 @@
                   <!-- /.chart_ratio -->
                   <div class="chart_ratio mb-3 text-center d-flex">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.metricsCount.total}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.total:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Metrics</div>
                       <!-- /.cv_name -->
@@ -332,19 +334,19 @@
                     <!-- /.chart_value low -->
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo.metricsCount.fail}} </div>
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.fail:''}} </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Failed</div>
                       <!-- /.cv_name -->
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo.metricsCount.critical}}</div>
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.critical:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Critical</div>
                       <!-- /.cv_name -->
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.metricsCount.watchlist}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.watchlist:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Watchlist</div>
                       <!-- /.cv_name -->
@@ -355,28 +357,28 @@
 
                   <div class="chart_ratio text-center d-flex">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.clusterCount.critical}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.critical:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Critical</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value low -->
                     <div class="chart_value flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo.clusterCount.error}}</div>
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.error:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Error</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo.clusterCount.warning}}</div>
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.warning:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Warning</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.clusterCount.total}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.total:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Cluster</div>
                       <!-- /.cv_name -->
@@ -390,7 +392,7 @@
                     <tbody>
                       <tr>
                         <td width="110">User Name:</td>
-                        <td>{{deploymentServiceInformation.userName}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.userName: ''}}</td>
                       </tr>
                       <tr>
                         <td width="110">Canary Id:</td>
@@ -402,7 +404,7 @@
                       </tr>
                       <tr>
                         <td width="110">Service:</td>
-                        <td>{{serviceNameInfo.serviceName}}</td>
+                        <td>{{serviceNameInfo ? serviceNameInfo.serviceName: ''}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -411,7 +413,7 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">Baseline:</td>
-                        <td>{{serviceNameInfo.version1name}}</td>
+                        <td>{{serviceNameInfo ? serviceNameInfo.version1name: ''}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -428,7 +430,7 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">New Release:</td>
-                        <td>{{serviceNameInfo.version2name}}</td>
+                        <td>{{serviceNameInfo ? serviceNameInfo.version2name: ''}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -449,7 +451,7 @@
                       </tr>
                       <tr class="font-weight-bold text-uppercase">
                         <td width="110">STATUS:</td>
-                        <td>{{deploymentApplicationHealth.applicationHealthStatus}}</td>
+                        <td class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo.status === 'Fail','text-success':serviceNameInfo.status === 'Succeess','text-warning':serviceNameInfo.status === 'Review','text-muted':serviceNameInfo.status === 'InProgress'}">{{deploymentApplicationHealth.applicationHealthStatus}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -459,31 +461,31 @@
                     <tbody>
                       <tr>
                         <td width="180">Log Score:</td>
-                        <td>{{deploymentServiceInformation.logsScore}}</td>
+                        <td>{{serviceNameInfo.logsScore}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file size:</td>
-                        <td>{{deploymentServiceInformation.fileStat.v1FileSize}}</td>
+                        <td>{{deploymentServiceInformation.fileStat  ? deploymentServiceInformation.fileStat.v1FileSize: '' }}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file size:</td>
-                        <td>{{deploymentServiceInformation.fileStat.v2FileSize}}</td>
+                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v2FileSize: ''}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file lines:</td>
-                        <td>{{deploymentServiceInformation.fileStat.v1LogLen}}</td>
+                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v1LogLen: ''}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file lines:</td>
-                        <td>{{deploymentServiceInformation.fileStat.v2LogLen}}</td>
+                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v2LogLen: ''}}</td>
                       </tr>
                       <tr>
                         <td width="180">Canary Analysis Duration:</td>
-                        <td>{{deploymentServiceInformation.duration}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.duration: ''}}</td>
                       </tr>
                       <tr>
                         <td width="180">Interval Minutes:</td>
-                        <td>{{deploymentServiceInformation.intervalMinutes}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.intervalMinutes: ''}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline logs:</td>
@@ -527,7 +529,7 @@
                 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane p-4 fade show active" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
-                        <app-log-analysis></app-log-analysis>
+                        <app-log-analysis [canaryId]="this.control.value" [serviceId]="selectedServiceId"></app-log-analysis>
                       </div>
                     <div class="tab-pane mp-4 fade" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
                         <app-metric-analysis></app-metric-analysis>
