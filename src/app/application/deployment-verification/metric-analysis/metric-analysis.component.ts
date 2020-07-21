@@ -77,7 +77,6 @@ export class MetricAnalysisComponent implements OnInit {
 
   // Below function is use to calculate average score of apm metric column.
   AvgerageScore(index,type){
-    debugger
     let counter = 0;
     let typeScore = 0;
     this.APMMetricData[index].metricList.forEach(metricElement => {
@@ -93,7 +92,6 @@ export class MetricAnalysisComponent implements OnInit {
 
   // Below function is use to return appropriate color on the basics of matric score calculation
   assignProperColor(score){
-    debugger
     if(score === 0 || score === undefined){
       return 'countDisabled';
     } else if(score<this.minScore){
