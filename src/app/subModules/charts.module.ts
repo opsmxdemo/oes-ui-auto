@@ -5,6 +5,7 @@ import { AreaChartComponent } from '../charts/area-chart/area-chart.component';
 import { HorizontalBarChartComponent } from '../charts/horizontal-bar-chart/horizontal-bar-chart.component';
 import { PieChartComponent } from '../charts/pie-chart/pie-chart.component';
 import { StacketHorizontalBarChartComponent } from '../charts/stacket-horizontal-bar-chart/stacket-horizontal-bar-chart.component';
+import { LineChartComponent } from '../charts/line-chart/line-chart.component';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { StacketHorizontalBarChartComponent } from '../charts/stacket-horizontal
         AreaChartComponent,
         HorizontalBarChartComponent,
         PieChartComponent,
-        StacketHorizontalBarChartComponent
+        StacketHorizontalBarChartComponent,
+        LineChartComponent
     ],
     imports: [
         CommonModule,
@@ -22,7 +24,8 @@ import { StacketHorizontalBarChartComponent } from '../charts/stacket-horizontal
         AreaChartComponent, 
         HorizontalBarChartComponent, 
         PieChartComponent,
-        StacketHorizontalBarChartComponent
+        StacketHorizontalBarChartComponent,
+        LineChartComponent
     ]
   })
 
