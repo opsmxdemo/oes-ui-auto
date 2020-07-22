@@ -1,4 +1,4 @@
-<div class="main_content p-0 bg-white">
+<div *ngIf="!deployementLoading" class="main_content p-0 bg-white">
   <div class="d-flex">
     <div class="leftBox bg-white mw-250">
       <div class="leftBox_header text-muted text-center">
@@ -14,7 +14,14 @@
           </mat-form-field>
         </form>
     
-        <span>{{selectedApplicationName}} &nbsp;&nbsp;</span><span>
+        <span>{{selectedApplicationName}}  <button type="button" class="btn p-0" >
+          <a href="#" class="ml-2" [ngClass]= "{'ci_check':deploymentApplicationHealth.applicationHealthStatus==='PASS','ci_close':deploymentApplicationHealth.applicationHealthStatus==='FAIL','ci_minus': deploymentApplicationHealth.applicationHealthStatus === undefined}">
+          <i class="far" [ngClass]= "{'fa-check-circle':deploymentApplicationHealth.applicationHealthStatus==='PASS','fa-times-circle':deploymentApplicationHealth.applicationHealthStatus==='FAIL','fa-minus-circle': deploymentApplicationHealth.applicationHealthStatus === undefined}"></i></a>
+        </button></span><span>
+          <!-- <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
+          <a href="#" class="ci_close ml-2"><i class="far fa-times-circle"></i></a>
+        </button> -->
+       
           <!-- <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='IN PROGRESS'" src="../../../assets/images/pass-icon.png" alt="status"/>
           <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='PASS'" src="../../../assets/images/pass-icon.png" alt="status"/>
           <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='FAIL'" src="../../../assets/images/fail-icon.png" alt="status"/> -->
@@ -46,7 +53,7 @@
           <tbody>
             
             <tr>
-              <td class="bgDark" rowspan="4">Services</td> 
+              <td class="bgDark" rowspan="4">Services (<span class="text-center">{{serviceListLength}}</span>)</td> 
               <td> &nbsp;&nbsp;&nbsp;Failed</td>
               <td class="cv_heighlight text-danger">{{deploymentApplicationHealth ? deploymentApplicationHealth.noOfFailed : ''}}</td>
            </tr>
@@ -308,7 +315,7 @@
                     <!-- /.chart_value low -->
                     <div class="chart_value cv_alert flex-grow-1">
                       <div class="cv_heighlight" 
-                      [ngClass]= "{'text-success':serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore && serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore}">{{serviceNameInfo.metricScore}}</div>
+                      [ngClass]= "{'text-success':serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore && serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore,'text-muted': serviceNameInfo.metricScore === 'N/A'}">{{serviceNameInfo.metricScore}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Metrics</div>
                       <!-- /.cv_name -->
@@ -316,7 +323,7 @@
                     
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight"   [ngClass]= "{'text-success':serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':(serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore) && (serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore)}">{{serviceNameInfo.logsScore}}</div>
+                      <div class="cv_heighlight"   [ngClass]= "{'text-success':serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':(serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore) && (serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore),'text-muted': serviceNameInfo.logsScore === 'N/A'}">{{serviceNameInfo.logsScore}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Logs</div>
                       <!-- /.cv_name -->
@@ -451,7 +458,7 @@
                       </tr>
                       <tr class="font-weight-bold text-uppercase">
                         <td width="110">STATUS:</td>
-                        <td class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo.status === 'Fail','text-success':serviceNameInfo.status === 'Succeess','text-warning':serviceNameInfo.status === 'Review','text-muted':serviceNameInfo.status === 'InProgress'}">{{deploymentApplicationHealth.applicationHealthStatus}}</td>
+                        <td class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo.status === 'Fail','text-success':serviceNameInfo.status === 'Succeess','text-warning':serviceNameInfo.status === 'Review','text-muted':serviceNameInfo.status === 'InProgress'}">{{serviceNameInfo.status}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -460,40 +467,43 @@
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr>
-                        <td width="180">Log Score:</td>
+                        <td width="180">Log Score: {{baseLineFileSize}} {{canaryFileSize}}</td>
                         <td>{{serviceNameInfo.logsScore}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file size:</td>
-                        <td>{{deploymentServiceInformation.fileStat  ? deploymentServiceInformation.fileStat.v1FileSize: '' }}</td>
+                        <td>{{humanFileSize(deploymentServiceInformation.fileStat.v1FileSize,true)}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file size:</td>
-                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v2FileSize: ''}}</td>
+                        <td>{{humanFileSize(deploymentServiceInformation.fileStat.v2FileSize,true)}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file lines:</td>
-                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v1LogLen: ''}}</td>
+                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v1LogLen: 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file lines:</td>
-                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v2LogLen: ''}}</td>
+                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v2LogLen: 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">Canary Analysis Duration:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.duration: ''}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.duration: 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">Interval Minutes:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.intervalMinutes: ''}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.intervalMinutes: 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline logs:</td>
-                        <td><a href="{{deploymentServiceInformation.baselineKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td *ngIf="deploymentServiceInformation.baselineKibanaUrl != null"><a href="{{deploymentServiceInformation.baselineKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td *ngIf="deploymentServiceInformation.baselineKibanaUrl === null">N/A</td>
                       </tr>
                       <tr>
                         <td width="180">New Release logs: </td>
-                        <td><a href="{{deploymentServiceInformation.canaryKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td *ngIf="deploymentServiceInformation.canaryKibanaUrl != null"><a href="{{deploymentServiceInformation.canaryKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td *ngIf="deploymentServiceInformation.canaryKibanaUrl === null">N/A</td>
+                        
                       </tr>
                     </tbody>
                   </table>
@@ -552,4 +562,8 @@
   </div>
 </div>
 <!-- /.main_content -->
-=
+<!-- <div class="main_content p-0 bg-white" *ngIf="deployementLoading">
+  <div class="tab-pane d-flex flex-column bg-white h-100 fade show">
+    <app-loading-screen></app-loading-screen>
+   </div>
+</div> -->
