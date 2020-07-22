@@ -21,17 +21,11 @@ export class PieChartComponent implements OnInit {
   legendPosition: string;
   colorScheme;
 
-  onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
+  onSelect(data): void {}
 
-  onActivate(data): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
+  onActivate(data): void {}
 
-  onDeactivate(data): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
-  }
+  onDeactivate(data): void {}
 
   constructor() { }
 

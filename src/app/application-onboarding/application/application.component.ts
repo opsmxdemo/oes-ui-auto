@@ -39,6 +39,8 @@ export class CreateApplicationComponent implements OnInit {
   dockerImageData = null;                                         // It is use to store data related to dockerImage fetched from state.
   dockerImageDropdownData = [];                                   // It is use to store dockerImage dropdown data on selection of Image Source
   dockerAccountName = '';                                         // It is use to store default docker Account name.
+  userGroupData = [''];                                           // It is use to store array value of userGroups. 
+  userGroupDropdownData = [];                                     // It is use to store userGroupDropdown data .
 
   constructor(public sharedService: SharedService,
               public store: Store<fromApp.AppState>,
@@ -144,6 +146,7 @@ export class CreateApplicationComponent implements OnInit {
                   })
                 );
               })
+              this.populateUserGroupsDropdown();
             }
           }else{
             this.defineAllForms();
@@ -170,6 +173,9 @@ export class CreateApplicationComponent implements OnInit {
         if (response.dockerImageData !== null) {
           this.dockerImageData = response.dockerImageData;
           this.populateDockerImagenDropdown();
+        }
+        if (response.userGropsData !== null) {
+          this.userGroupData = response.userGropsData;
         }
       }
     )
@@ -245,12 +251,41 @@ export class CreateApplicationComponent implements OnInit {
   return null;
   }
 
+  // Below function is custom valiadator which is use to validate userGroup name is already selected or not. If already exist then it will return error
+  usergroupExist(control: FormControl): {[s: string]: boolean} {
+    let startingValue = control.value.split('');
+    let counter = 0;
+    if(startingValue.length > 0){
+      this.groupPermissionForm.value.userGroups.forEach(groupName => {
+        if(groupName.userGroup === control.value){
+          counter++;
+        }
+      })
+    }
+    if(counter > 0){
+      return {groupNameExist: true}
+    }
+    return null;
+  }
+
   //Below function is use to populate docker image name dropdown 
   populateDockerImagenDropdown(){
     this.dockerImageDropdownData = [];
     this.dockerAccountName = this.dockerImageData[0].imageSource;
     this.servicesForm.value.services.forEach(() => {
       this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+    })
+  }
+
+   //Below function is use to populate UserGroup dropdown exist in user group section. 
+   populateUserGroupsDropdown(){
+    this.userGroupDropdownData = [];
+    this.groupPermissionForm.value.userGroups.forEach((groupName,index) => {
+      if(index<1){
+        this.userGroupDropdownData.push(this.userGroupData);
+      }else{
+        this.userGroupDropdownData[index] = this.userGroupDropdownData[index-1].filter(el =>el !== this.groupPermissionForm.value.userGroups[index-1].userGroup);
+      }
     })
   }
 
@@ -272,16 +307,20 @@ export class CreateApplicationComponent implements OnInit {
   addGroup() {
     (<FormArray>this.groupPermissionForm.get('userGroups')).push(
       new FormGroup({
-        userGroup: new FormControl('', Validators.required),
+        userGroup: new FormControl('',[Validators.required,this.usergroupExist.bind(this)]),
         permission: new FormControl('', Validators.required),
       })
     );
+    // populating user group dropdown data
+    this.populateUserGroupsDropdown();
   }
 
   // Below function is use to remove exist permission group 
   removeGroup(index) {
     $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.groupPermissionForm.get('userGroups')).removeAt(index);
+    // updating user group dropdown data
+    this.populateUserGroupsDropdown();
   }
 
   //Below function is use to add more permission group

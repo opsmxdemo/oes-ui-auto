@@ -51,7 +51,6 @@ export class LogAnalysisEffect {
                 return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/logsData?id=542&serviceId=847').pipe(                  
                     map(resdata => {
                        //console.log("----effect-log-analysis",resdata);
-                        //debugger;
                        return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
                     }),
                     catchError(errorRes => {

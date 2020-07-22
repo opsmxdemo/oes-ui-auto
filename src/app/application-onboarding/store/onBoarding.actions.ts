@@ -16,6 +16,7 @@ export const fetchCloudAccount = createAction('[Application-OnBoarding] FetchClo
 export const fetchImageSource = createAction('[Application-OnBoarding] FetchImageSource', props<{imageSource: string[]}>());
 export const loadDockerImageName = createAction('[Application-OnBoarding] LoadDockerImageName', props<{imageSourceName:string}>());
 export const fetchDockerImageName = createAction('[Application-OnBoarding] FetchDockerImageName', props<{dockerImageData:any}>());
+export const fetchUserGrops = createAction('[Application-OnBoarding] FetchUserGrops', props<{userGroupData:string[]}>());
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application-OnBoarding] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());
