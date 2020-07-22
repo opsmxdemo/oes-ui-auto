@@ -3,7 +3,7 @@
     <div class="row h-100 no-gutters">
       <div class="col-sm-7 col-md-7 col-lg-7 h-100 " #stickyMenu>
         <div class="metric_analysis"  [style.width]="!sticky?menuWidth:''" style="transition: width 0.5s;">
-          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -37,7 +37,7 @@
             <table class="table valign-middle table-bottom-border mb-4" >
               <thead>
                 <tr>
-                  <th>APM SCORE</th>
+                  <th>APM METRIC</th>
                   <th class="text-center">SCORE</th>
                   <th>LATENCY</th>
                   <th>ERROR RATE</th>
@@ -46,13 +46,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;">
+                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{apmMetricSelectedRow === i ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
                   <td>{{apmMetric.name}}</td>
-                  <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
@@ -61,7 +61,7 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th>METRIC SCORE</th>
+                  <th>INFRA METRIC</th>
                   <th class="text-center">score</th>
                   <th>Range</th>
                 </tr>
@@ -87,7 +87,7 @@
                   <td><span class="countBox countSuccess">100</span></td>
                   <td>123</td>
                 </tr>
-                <tr class="selected-row">
+                <tr>
                   <td class="cell-child">container_memory_failcnt</td>
                   <td><span class="countBox countDanger">0</span></td>
                   <td>123</td>
@@ -123,7 +123,7 @@
         </div>
         <!-- ########## Below is sticky table ############### -->
         <div *ngIf="sticky" class="metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
-          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -154,10 +154,10 @@
           </div>
 
           <div class="table-responsive" *ngIf="APMMetricData.length > 0 ? true : false">
-            <table class="table valign-middle table-bottom-border mb-4">
+            <table class="table valign-middle table-bottom-border mb-4" >
               <thead>
                 <tr>
-                  <th>APM SCORE</th>
+                  <th>APM METRIC</th>
                   <th class="text-center">SCORE</th>
                   <th>LATENCY</th>
                   <th>ERROR RATE</th>
@@ -166,13 +166,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;">
+                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{apmMetricSelectedRow === i ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
                   <td>{{apmMetric.name}}</td>
-                  <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i class="fa fa-square matricstatusicon" aria-hidden="true"></i></td>
+                  <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
@@ -181,7 +181,7 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th>METRIC SCORE</th>
+                  <th>INFRA METRIC</th>
                   <th class="text-center">score</th>
                   <th>Range</th>
                 </tr>
@@ -207,7 +207,7 @@
                   <td><span class="countBox countSuccess">100</span></td>
                   <td>123</td>
                 </tr>
-                <tr class="selected-row">
+                <tr>
                   <td class="cell-child">container_memory_failcnt</td>
                   <td><span class="countBox countDanger">0</span></td>
                   <td>123</td>
@@ -246,64 +246,138 @@
       <div class="col-sm-5">
         <div class="p-3">
           <div class="card mb-2">
-            <div class="card-body">
-              <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-              <div class="graph mb-3">
-                <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
-              </div>
-              <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-              <div class="graph mb-4">
-                <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
-              </div>
-              <div class="card mb-3">
-                <div class="card-header text-uppercase">
-                  Analysis
+            <div [ngSwitch]="metricType">
+              <div class="card-body" *ngSwitchCase="'APM'">
+                <p class="mb-1"><b class="countDisabledbtn">APM METRIC : </b> <b>{{APMMetricData[apmMetricSelectedRow].name}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">TYPE : </b> <b class="{{typeColor}}">{{apmMetricSelectedType}}</b></p>
+                <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
+                  <hr>
+                  <i class="fa fa-line-chart" aria-hidden="true"></i>
+                  <app-line-chart [dataSource]="chart" [chartProperty]="lineChartProperty" [view]="chartSize"></app-line-chart>
                 </div>
-                <div class="card-body text-wrap-normal">
-                  <div class="my-2">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              </div>
+              <div class="card-body" *ngSwitchCase="'INFRA'">
+                <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
+                <div class="graph mb-3">
+                  <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
+                </div>
+                <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
+                <div class="graph mb-4">
+                  <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
+                </div>
+                <div class="card mb-3">
+                  <div class="card-header text-uppercase">
+                    Analysis
+                  </div>
+                  <div class="card-body text-wrap-normal">
+                    <div class="my-2">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header text-uppercase">
+                    container_memory_failures_total
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table mb-0">
+                      <thead>
+                        <tr class="text-uppercase">
+                          <th>Versions</th>
+                          <th>median</th>
+                          <th>Q1</th>
+                          <th>mean</th>
+                          <th>Q3</th>
+                          <th>MIN</th>
+                          <th>MAX</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Baseline</td>
+                          <td>7.98</td>
+                          <td>6.33</td>
+                          <td>7.81</td>
+                          <td>8.8</td>
+                          <td>0.14</td>
+                          <td>32.04</td>
+                        </tr>
+                        <tr>
+                          <td>New Release</td>
+                          <td>1.15</td>
+                          <td>1.17</td>
+                          <td>3</td>
+                          <td>1.86</td>
+                          <td>0.69</td>
+                          <td>33.41</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
-              <div class="card">
-                <div class="card-header text-uppercase">
-                  container_memory_failures_total
+              <div class="card-body" *ngSwitchCase="'ADVANCED'">
+                <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
+                <div class="graph mb-3">
+                  <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
                 </div>
-                <div class="table-responsive">
-                  <table class="table mb-0">
-                    <thead>
-                      <tr class="text-uppercase">
-                        <th>Versions</th>
-                        <th>median</th>
-                        <th>Q1</th>
-                        <th>mean</th>
-                        <th>Q3</th>
-                        <th>MIN</th>
-                        <th>MAX</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Baseline</td>
-                        <td>7.98</td>
-                        <td>6.33</td>
-                        <td>7.81</td>
-                        <td>8.8</td>
-                        <td>0.14</td>
-                        <td>32.04</td>
-                      </tr>
-                      <tr>
-                        <td>New Release</td>
-                        <td>1.15</td>
-                        <td>1.17</td>
-                        <td>3</td>
-                        <td>1.86</td>
-                        <td>0.69</td>
-                        <td>33.41</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
+                <div class="graph mb-4">
+                  <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
                 </div>
+                <div class="card mb-3">
+                  <div class="card-header text-uppercase">
+                    Analysis
+                  </div>
+                  <div class="card-body text-wrap-normal">
+                    <div class="my-2">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header text-uppercase">
+                    container_memory_failures_total
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table mb-0">
+                      <thead>
+                        <tr class="text-uppercase">
+                          <th>Versions</th>
+                          <th>median</th>
+                          <th>Q1</th>
+                          <th>mean</th>
+                          <th>Q3</th>
+                          <th>MIN</th>
+                          <th>MAX</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Baseline</td>
+                          <td>7.98</td>
+                          <td>6.33</td>
+                          <td>7.81</td>
+                          <td>8.8</td>
+                          <td>0.14</td>
+                          <td>32.04</td>
+                        </tr>
+                        <tr>
+                          <td>New Release</td>
+                          <td>1.15</td>
+                          <td>1.17</td>
+                          <td>3</td>
+                          <td>1.86</td>
+                          <td>0.69</td>
+                          <td>33.41</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="type-not-exist" *ngSwitchDefault>
+                <h4>Work In Progress !!</h4>
               </div>
             </div>
           </div>

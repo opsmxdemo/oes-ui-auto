@@ -1,0 +1,21 @@
+<ngx-charts-line-chart
+  [view]="view"
+  [scheme]="colorScheme"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [timeline]="timeline"
+  [results]="dataSource"
+  [gradient]="gradient"
+  [legendPosition]="legendPosition"
+  [animations]="animations"
+  [autoScale]="autoScale"
+  (select)="onSelect($event)"
+  (activate)="onActivate($event)"
+  (deactivate)="onDeactivate($event)"
+  style="fill: #999999;">
+</ngx-charts-line-chart>
