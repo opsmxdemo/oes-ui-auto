@@ -95,6 +95,8 @@ export class DeploymentVerificationComponent implements OnInit {
   colorScheme = {
     domain: ["#A10A28","#C7B42C","#5AA454",  "#AAAAAA"]
   }
+  baseLineFileSize: any;
+  canaryFileSize: any;
 
   // App form end
 
@@ -492,6 +494,9 @@ export class DeploymentVerificationComponent implements OnInit {
           if(resData.serviceInformation !== null){
                   this.deployementLoading = resData.serviceInformationLoading;
                   this.deploymentServiceInformation = resData.serviceInformation;
+                  this.baseLineFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v1FileSize,true);
+                  this.canaryFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v2FileSize,true);
+                 // console.log(this.humanFileSize())
                   if(this.deploymentServiceInformation.error != null){
                     this.notifications.showError('Service information Error:', this.deploymentServiceInformation.error);
                   }
@@ -499,4 +504,28 @@ export class DeploymentVerificationComponent implements OnInit {
         }
       );
     }
+
+    // function to convert filedata in size
+    humanFileSize(bytes, si=false, dp=1) {
+      const thresh = si ? 1000 : 1024;
+    
+      if (Math.abs(bytes) < thresh) {
+        return bytes + ' B';
+      }
+    
+      const units = si 
+        ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
+        : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+      let u = -1;
+      const r = 10**dp;
+    
+      do {
+        bytes /= thresh;
+        ++u;
+      } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+    
+    
+      return bytes.toFixed(dp) + ' ' + units[u];
+    }
+
 }
