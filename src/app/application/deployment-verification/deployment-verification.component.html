@@ -6,7 +6,7 @@
           <mat-form-field>
             <input type="text" matInput placeholder="Application Name" formControlName="application" [matAutocomplete]="autoApplication" 
             />
-            <mat-autocomplete (optionSelected)="onSelectionChangeApplication($event)" autoActiveFirstOption #autoApplication="matAutocomplete" >
+            <mat-autocomplete (optionSelected)="onSelectionChangeApplication($event.option.value)" autoActiveFirstOption #autoApplication="matAutocomplete" >
               <mat-option *ngFor="let applications of applicationListOptions | async" [value]="applications.applicationName">
                 {{ applications.applicationName }}
               </mat-option>
@@ -14,10 +14,13 @@
           </mat-form-field>
         </form>
     
-        <span>{{selectedApplicationName}}  <button type="button" class="btn p-0" >
-          <a href="#" class="ml-2" [ngClass]= "{'ci_check':deploymentApplicationHealth.applicationHealthStatus==='PASS','ci_close':deploymentApplicationHealth.applicationHealthStatus==='FAIL','ci_minus': deploymentApplicationHealth.applicationHealthStatus === undefined}">
-          <i class="far" [ngClass]= "{'fa-check-circle':deploymentApplicationHealth.applicationHealthStatus==='PASS','fa-times-circle':deploymentApplicationHealth.applicationHealthStatus==='FAIL','fa-minus-circle': deploymentApplicationHealth.applicationHealthStatus === undefined}"></i></a>
-        </button></span><span>
+        <span>{{selectedApplicationName}}  
+          <button type="button" class="btn p-0" >
+            <a href="#" class="ml-2" [ngClass]= "{'ci_check':deploymentApplicationHealth['applicationHealthStatus']==='PASS','ci_close':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','ci_minus': deploymentApplicationHealth['applicationHealthStatus'] === undefined}">
+            <i class="far" [ngClass]= "{'fa-check-circle':deploymentApplicationHealth['applicationHealthStatus']==='PASS','fa-times-circle':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','fa-minus-circle': deploymentApplicationHealth['applicationHealthStatus'] === undefined}"></i></a>
+          </button>
+        </span>
+        <span>
           <!-- <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
           <a href="#" class="ci_close ml-2"><i class="far fa-times-circle"></i></a>
         </button> -->
@@ -29,11 +32,11 @@
         </span>
         <div class="input-group">
           <div class="input-group-prepend">
-            <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(this.control.value)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
+            <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(control.value)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
           </div>
           <form class="example-form">
             <input type="text" class="form-control text-center"
-                   [formControl]="control"  formControlName="canaryFormName"
+                   [formControl]="control"
                    [matAutocomplete]="autoCanaries" name="inputVar" >
             <mat-autocomplete #autoCanaries="matAutocomplete" (optionSelected)="onSelectionChangeCanaryRun($event.option.value)">
               <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId" >
@@ -42,7 +45,7 @@
             </mat-autocomplete>
           </form>
           <div  class="input-group-prepend">
-            <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementCanaryRun(this.control.value)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
+            <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementCanaryRun(control.value)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
           </div>
           <br>
         </div>
@@ -53,21 +56,21 @@
           <tbody>
             
             <tr>
-              <td class="bgDark" rowspan="4">Services (<span class="text-center">{{serviceListLength}}</span>)</td> 
+              <td class="bgDark" rowspan="4">Services <br> <span class="service-count">{{serviceListLength}}</span></td> 
               <td> &nbsp;&nbsp;&nbsp;Failed</td>
-              <td class="cv_heighlight text-danger">{{deploymentApplicationHealth ? deploymentApplicationHealth.noOfFailed : ''}}</td>
+              <td class="cv_heighlight text-danger">{{deploymentApplicationHealth ? deploymentApplicationHealth['noOfFailed'] : ''}}</td>
            </tr>
             <tr>
               <td>Review</td>
-              <td class="cv_heighlight text-warning">{{deploymentApplicationHealth ? deploymentApplicationHealth.noOfReview : ''}}</td>
+              <td class="cv_heighlight text-warning">{{deploymentApplicationHealth ? deploymentApplicationHealth['noOfReview'] : ''}}</td>
             </tr>
             <tr>
               <td>Succeess</td>
-              <td class="cv_heighlight text-success">{{deploymentApplicationHealth ? deploymentApplicationHealth.noOfSuccess : ''}}</td>
+              <td class="cv_heighlight text-success">{{deploymentApplicationHealth ? deploymentApplicationHealth['noOfSuccess'] : ''}}</td>
             </tr>
             <tr>
               <td>InProgress</td>
-              <td class="cv_heighlight text-muted">{{deploymentApplicationHealth ? deploymentApplicationHealth.noOfInProgress : ''}}</td>
+              <td class="cv_heighlight text-muted">{{deploymentApplicationHealth ? deploymentApplicationHealth['noOfInProgress'] : ''}}</td>
             </tr> 
           </tbody>
         </table>
@@ -121,7 +124,7 @@
           <ng-container *ngFor="let service of currentPage | filter:searchData; let i=index">
           <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
             <td class="service-selection" (click)="getService(service)">{{service.serviceName}}</td>
-            <td width="30" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore}}</td>
+            <td width="30" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore | number: '1.0-0'}}</td>
             <td width="30"  [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.status}}</td>
           </tr> 
         </ng-container>               
@@ -282,7 +285,7 @@
 
     <div class="page-content flex-grow-1">
       <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
-        <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} » {{this.control.value}} » {{serviceNameInfo.serviceName}}</h3>
+        <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} » {{control.value}} » {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</h3>
         <div class="page_access d-flex ml-auto">
           <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false">Manual Trigger</button>
         </div>
@@ -315,7 +318,7 @@
                     <!-- /.chart_value low -->
                     <div class="chart_value cv_alert flex-grow-1">
                       <div class="cv_heighlight" 
-                      [ngClass]= "{'text-success':serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':serviceNameInfo.metricScore < deploymentApplicationHealth.minimumCanaryScore && serviceNameInfo.metricScore >= deploymentApplicationHealth.maximumCanaryScore,'text-muted': serviceNameInfo.metricScore === 'N/A'}">{{serviceNameInfo.metricScore}}</div>
+                      [ngClass]= "{'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-danger':serviceNameInfo['metricScore'] < deploymentApplicationHealth['minimumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['minimumCanaryScore'] && serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-muted': serviceNameInfo['metricScore'] === 'N/A'}">{{ serviceNameInfo['metricScore'] >=0 ? (serviceNameInfo['metricScore'] | number: '1.0-0') : 'N/A'}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Metrics</div>
                       <!-- /.cv_name -->
@@ -323,7 +326,7 @@
                     
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight"   [ngClass]= "{'text-success':serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore,'text-danger':serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore,'text-warning':(serviceNameInfo.logsScore < deploymentApplicationHealth.minimumCanaryScore) && (serviceNameInfo.logsScore >= deploymentApplicationHealth.maximumCanaryScore),'text-muted': serviceNameInfo.logsScore === 'N/A'}">{{serviceNameInfo.logsScore}}</div>
+                      <div class="cv_heighlight"   [ngClass]= "{'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-danger':serviceNameInfo['logsScore'] < deploymentApplicationHealth['minimumCanaryScore'],'text-warning':(serviceNameInfo['logsScore'] < deploymentApplicationHealth['minimumCanaryScore']) && (serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore']),'text-muted': serviceNameInfo['logsScore'] === 'N/A'}">{{serviceNameInfo['logsScore'] >= 0 ? (serviceNameInfo['logsScore'] | number: '1.0-0') : 'N/A'}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Logs</div>
                       <!-- /.cv_name -->
@@ -333,7 +336,7 @@
                   <!-- /.chart_ratio -->
                   <div class="chart_ratio mb-3 text-center d-flex">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.total:''}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['total']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Metrics</div>
                       <!-- /.cv_name -->
@@ -341,19 +344,19 @@
                     <!-- /.chart_value low -->
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.fail:''}} </div>
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['fail']:''}} </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Failed</div>
                       <!-- /.cv_name -->
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.critical:''}}</div>
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['critical']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Critical</div>
                       <!-- /.cv_name -->
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.metricsCount ? serviceNameInfo.metricsCount.watchlist:''}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['watchlist']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Watchlist</div>
                       <!-- /.cv_name -->
@@ -364,28 +367,28 @@
 
                   <div class="chart_ratio text-center d-flex">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.critical:''}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['critical']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Critical</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value low -->
                     <div class="chart_value flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.error:''}}</div>
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['error']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Error</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.warning:''}}</div>
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['warning']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Warning</div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value alert -->
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo.clusterCount ? serviceNameInfo.clusterCount.total:''}}</div>
+                      <div class="cv_heighlight">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['total']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Cluster</div>
                       <!-- /.cv_name -->
@@ -399,11 +402,11 @@
                     <tbody>
                       <tr>
                         <td width="110">User Name:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.userName: ''}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['userName']: ''}}</td>
                       </tr>
                       <tr>
                         <td width="110">Canary Id:</td>
-                        <td>{{this.control.value}}</td>
+                        <td>{{control.value}}</td>
                       </tr>
                       <tr>
                         <td width="110">Application:</td>
@@ -411,7 +414,7 @@
                       </tr>
                       <tr>
                         <td width="110">Service:</td>
-                        <td>{{serviceNameInfo ? serviceNameInfo.serviceName: ''}}</td>
+                        <td>{{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -420,15 +423,15 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">Baseline:</td>
-                        <td>{{serviceNameInfo ? serviceNameInfo.version1name: ''}}</td>
+                        <td>{{serviceNameInfo['version1name'] !== undefined ? serviceNameInfo['version1name']: ''}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
-                        <td>{{deploymentApplicationHealth.v1StartTime | date:'medium'}}</td>
+                        <td>{{deploymentApplicationHealth['v1StartTime'] | date:'medium'}}</td>
                       </tr>
                       <tr>
                         <td width="110">End time:</td>
-                        <td>{{deploymentApplicationHealth.v1EndTime | date:'medium'}}</td>
+                        <td>{{deploymentApplicationHealth['v1EndTime'] | date:'medium'}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -437,15 +440,15 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">New Release:</td>
-                        <td>{{serviceNameInfo ? serviceNameInfo.version2name: ''}}</td>
+                        <td>{{serviceNameInfo['version2name'] !== undefined ? serviceNameInfo['version2name']: ''}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
-                        <td>{{deploymentApplicationHealth.v2StartTime | date:'medium'}}</td>
+                        <td>{{deploymentApplicationHealth['v2StartTime'] | date:'medium'}}</td>
                       </tr>
                       <tr>
                         <td width="110">End time:</td>
-                        <td>{{deploymentApplicationHealth.v2EndTime | date:'medium'}}</td>
+                        <td>{{deploymentApplicationHealth['v2EndTime'] | date:'medium'}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -454,11 +457,11 @@
                     <tbody>
                       <tr>
                         <td width="110">Template:</td>
-                        <td>{{deploymentApplicationHealth.logTemplateName}}::{{deploymentApplicationHealth.metricTemplateName}}</td>
+                        <td>{{deploymentApplicationHealth['logTemplateName']}}::{{deploymentApplicationHealth['metricTemplateName']}}</td>
                       </tr>
                       <tr class="font-weight-bold text-uppercase">
                         <td width="110">STATUS:</td>
-                        <td class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo.status === 'Fail','text-success':serviceNameInfo.status === 'Succeess','text-warning':serviceNameInfo.status === 'Review','text-muted':serviceNameInfo.status === 'InProgress'}">{{serviceNameInfo.status}}</td>
+                        <td class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Succeess','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -468,41 +471,41 @@
                     <tbody>
                       <tr>
                         <td width="180">Log Score: {{baseLineFileSize}} {{canaryFileSize}}</td>
-                        <td>{{serviceNameInfo.logsScore}}</td>
+                        <td>{{serviceNameInfo['logsScore']}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file size:</td>
-                        <td>{{humanFileSize(deploymentServiceInformation.fileStat.v1FileSize,true)}}</td>
+                        <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v1FileSize']:null,true)}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file size:</td>
-                        <td>{{humanFileSize(deploymentServiceInformation.fileStat.v2FileSize,true)}}</td>
+                        <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v2FileSize']:null,true)}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline log file lines:</td>
-                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v1LogLen: 'N/A'}}</td>
+                        <td>{{deploymentServiceInformation['fileStat'] ? (deploymentServiceInformation['fileStat']['v1LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v1LogLen']:null): 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">New Release log file lines:</td>
-                        <td>{{deploymentServiceInformation.fileStat ? deploymentServiceInformation.fileStat.v2LogLen: 'N/A'}}</td>
+                        <td>{{deploymentServiceInformation['fileStat'] ? (deploymentServiceInformation['fileStat']['v2LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v2LogLen']:null): 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">Canary Analysis Duration:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.duration: 'N/A'}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['duration']: 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">Interval Minutes:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation.intervalMinutes: 'N/A'}}</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['intervalMinutes']: 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td width="180">Baseline logs:</td>
-                        <td *ngIf="deploymentServiceInformation.baselineKibanaUrl != null"><a href="{{deploymentServiceInformation.baselineKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
-                        <td *ngIf="deploymentServiceInformation.baselineKibanaUrl === null">N/A</td>
+                        <td *ngIf="deploymentServiceInformation['baselineKibanaUrl'] != null"><a href="{{deploymentServiceInformation['baselineKibanaUrl']}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td *ngIf="deploymentServiceInformation['baselineKibanaUrl'] === null">N/A</td>
                       </tr>
                       <tr>
                         <td width="180">New Release logs: </td>
-                        <td *ngIf="deploymentServiceInformation.canaryKibanaUrl != null"><a href="{{deploymentServiceInformation.canaryKibanaUrl}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
-                        <td *ngIf="deploymentServiceInformation.canaryKibanaUrl === null">N/A</td>
+                        <td *ngIf="deploymentServiceInformation['canaryKibanaUrl'] != null"><a href="{{deploymentServiceInformation['canaryKibanaUrl']}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
+                        <td *ngIf="deploymentServiceInformation['canaryKibanaUrl'] === null">N/A</td>
                         
                       </tr>
                     </tbody>
@@ -539,10 +542,10 @@
                 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane p-4 fade show active" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
-                        <app-log-analysis [canaryId]="this.control.value" [serviceId]="selectedServiceId"></app-log-analysis>
+                        <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId"></app-log-analysis>
                       </div>
                     <div class="tab-pane mp-4 fade" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
-                        <app-metric-analysis></app-metric-analysis>
+                        <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId"></app-metric-analysis>
                       </div>
                 </div>
               </div>
