@@ -309,10 +309,14 @@
                 <!-- /.rightBox_header -->
                 <div class="rightBox_body pt-0">
                   <div class="chart_ratio mb-3 text-center d-flex">
-                    <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">Low</div>
+                    <!--  -->
+                    <div class="chart_value flex-grow-1"  [ngClass]= "{'cv_high':serviceNameInfo['finalScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['finalScore'] < deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':(serviceNameInfo['finalScore'] > deploymentApplicationHealth['minimumCanaryScore']) && (serviceNameInfo['finalScore'] <= deploymentApplicationHealth['maximumCanaryScore'])}">
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore'] >= deploymentApplicationHealth['maximumCanaryScore']">High</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore'] < deploymentApplicationHealth['minimumCanaryScore']">Low</div>
+                      <div class="cv_heighlight" *ngIf="(serviceNameInfo['finalScore'] > deploymentApplicationHealth['minimumCanaryScore']) && (serviceNameInfo['finalScore'] <= deploymentApplicationHealth['maximumCanaryScore'])">Medium</div>
                       <!-- /.cv_heighlight -->
-                      <div class="cv_name">Confidence</div>
+                      <div class="cv_name">Confidence  
+                      </div>
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value low -->
@@ -470,7 +474,7 @@
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr>
-                        <td width="180">Log Score: {{baseLineFileSize}} {{canaryFileSize}}</td>
+                        <td width="180">Log Score:</td>
                         <td>{{serviceNameInfo['logsScore']}}</td>
                       </tr>
                       <tr>
