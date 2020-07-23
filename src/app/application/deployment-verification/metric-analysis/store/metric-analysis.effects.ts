@@ -44,10 +44,10 @@ export class MetricAnalysisEffect {
     fetchHealthChartData = createEffect(() =>
         this.actions$.pipe(
             ofType(MetricAnalysisdActions.loadMetricAnalysis),
-            switchMap(() => {
-                return this.http.get('../../../../../assets/data/metricAnalysisData.json').pipe(
+            switchMap((action) => {
+                return this.http.get(this.environment.config.autoPilotEndPointUrl +'cas/getCanaryOutputNew?canaryId='+action.canaryId+'&serviceId='+action.serviceId).pipe(
                     map(resdata => {
-                       return MetricAnalysisdActions.fetchCanaryOutput({cararyData:resdata['canaryOutputData']});
+                       return MetricAnalysisdActions.fetchCanaryOutput({cararyData:resdata});
                     }),
                 );
             })

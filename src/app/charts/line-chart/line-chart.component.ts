@@ -29,7 +29,6 @@ export class LineChartComponent implements OnInit {
   constructor() {}
 
   ngOnInit(){
-    debugger
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : true;
     this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
     this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;

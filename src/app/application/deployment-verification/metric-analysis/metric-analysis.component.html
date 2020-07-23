@@ -258,7 +258,7 @@
               </div>
               <div class="card-body" *ngSwitchCase="'INFRA'">
                 <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-                <div class="graph mb-3">
+                <div class="graph mb-3" #subChartSize>
                   <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
                 </div>
                 <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
@@ -318,7 +318,7 @@
               </div>
               <div class="card-body" *ngSwitchCase="'ADVANCED'">
                 <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-                <div class="graph mb-3">
+                <div class="graph mb-3" #subChartSize>
                   <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
                 </div>
                 <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
@@ -377,6 +377,9 @@
                 </div>
               </div>
               <div class="type-not-exist" *ngSwitchDefault>
+                <div class="graph mb-3" #subChartSize>
+                  <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
+                </div>
                 <h4>Work In Progress !!</h4>
               </div>
             </div>
