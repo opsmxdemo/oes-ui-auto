@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, SimpleChanges, OnChanges, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromFeature from '../store/feature.reducer';
 import { SharedService } from '../../../services/shared.service';
@@ -10,10 +10,13 @@ import * as MetricAnalysisActions from './store/metric-analysis.actions';
   templateUrl: './metric-analysis.component.html',
   styleUrls: ['./metric-analysis.component.less']
 })
-export class MetricAnalysisComponent implements OnInit {
+export class MetricAnalysisComponent implements OnInit,OnChanges {
 
   @ViewChild('stickyMenu') menuElement: ElementRef;
   @ViewChild('subChartSize') subChartSize: ElementRef;
+
+  @Input() canaryId: string;
+  @Input() serviceId: number;
 
   menuWidth: any;                                                     // It is use to store offsetTop of matric table.
   menuTop:number = 160;                                               // It define top of metric table.
@@ -51,26 +54,30 @@ export class MetricAnalysisComponent implements OnInit {
               public store: Store<fromFeature.State>) { }
   
   ngOnInit(){
-    this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis());
-    
+
     //fetching data from deployment verification state
     this.store.select(fromFeature.selectMetricAnalysisState).subscribe(
       (resdata)=>{
         if(resdata.canaryOutputData !== null){
           this.metricData = resdata['canaryOutputData'];
-          this.metricData.canary_output.results.forEach((metricData) => {
-            switch(metricData.category){
-              case 'APM':
-                this.APMMetricData.push(metricData);
-                break;
-              case 'Infra':
-                this.InfraMetricData.push(metricData);
-                break;
-              case 'Advanced':
-                this.AdvancedMetricData.push(metricData);
-                break;
-            }
-          });
+          this.APMMetricData = [];
+          this.apmMetricSelectedRow = -1;
+          this.metricType = '';
+          if(this.metricData.canary_output.results !== undefined){
+            this.metricData.canary_output.results.forEach((metricData) => {
+              switch(metricData.category){
+                case 'APM':
+                  this.APMMetricData.push(metricData);
+                  break;
+                case 'Infra':
+                  this.InfraMetricData.push(metricData);
+                  break;
+                case 'Advanced':
+                  this.AdvancedMetricData.push(metricData);
+                  break;
+              }
+            });
+          }
           if(this.APMMetricData.length>0){
             if(this.apmMetricSelectedRow === -1 && this.apmMetricSelectedType === ''){
               this.onClickAPMRow(0,null,'Latency');
@@ -79,6 +86,16 @@ export class MetricAnalysisComponent implements OnInit {
         }
       }
     )
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    for (let propName in changes) {
+      let chng = changes[propName];
+    }
+    // dispatching the action to fetch api by passing updated paeams
+    if(this.canaryId !== undefined && this.serviceId !==undefined){
+      this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.canaryId,serviceId:this.serviceId}));
+    }
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
@@ -109,7 +126,7 @@ export class MetricAnalysisComponent implements OnInit {
         counter++;
       }
     });
-    const averageScore = typeScore/counter;
+    const averageScore = typeScore === 0 ? typeScore : typeScore/counter;
     const assignedColor = this.assignProperColor(averageScore);
     return assignedColor + 'btn';
   }

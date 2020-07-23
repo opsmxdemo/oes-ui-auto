@@ -48,7 +48,7 @@ export class DeploymentVerificationEffect {
         this.actions$.pipe(
             ofType(DeploymentActions.loadLatestRun),
             switchMap(() => {   
-                return this.http.get('http://40.78.28.87:8090/canaries/latestrun',{headers: new HttpHeaders().set('Authorization', 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjEifQ.M_3bBDWxQDGhLy0Dj5a5lxbvnv2ahqTKd4c7lC4CTdrU8bhThL9DfDV2BplDkOWqpnVH08BOv9R0oRERiSJ1TQ').set('Access-Control-Allow-Origin', 'http://40.78.28.87:8090') }).pipe(
+                return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/latestrun').pipe(
                     map(resdata => {
                        return DeploymentActions.fetchLatestRun({canaryRun:resdata});
                     }),
@@ -65,7 +65,7 @@ export class DeploymentVerificationEffect {
        this.actions$.pipe(
            ofType(DeploymentActions.loadApplications),
            switchMap(() => {
-               return this.http.get<any>('http://40.78.28.87:8090/canaries/getApplicationsDetails', {headers: new HttpHeaders().set('Authorization', 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjEifQ.M_3bBDWxQDGhLy0Dj5a5lxbvnv2ahqTKd4c7lC4CTdrU8bhThL9DfDV2BplDkOWqpnVH08BOv9R0oRERiSJ1TQ').set('Access-Control-Allow-Origin', 'http://40.78.28.87:8090')}).pipe(
+               return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/getApplicationsDetails').pipe(
                    map(resdata => {
                        return DeploymentActions.fetchApplications({applicationList:resdata});
                    }),
@@ -83,8 +83,7 @@ export class DeploymentVerificationEffect {
        this.actions$.pipe(
            ofType(DeploymentActions.loadServices),
            switchMap((action) => {
-               return this.http.get<any>('http://40.78.28.87:8090/canaries/getServiceList?canaryId='+action.canaryId
-               , {headers: new HttpHeaders().set('Authorization', 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjEifQ.M_3bBDWxQDGhLy0Dj5a5lxbvnv2ahqTKd4c7lC4CTdrU8bhThL9DfDV2BplDkOWqpnVH08BOv9R0oRERiSJ1TQ').set('Access-Control-Allow-Origin', 'http://40.78.28.87:8090')}).pipe(
+               return this.http.get<any>(this.environment.config.autoPilotEndPointUrl +'canaries/getServiceList?canaryId='+action.canaryId).pipe(
                    map(resdata => {
                        return DeploymentActions.fetchServices({servicesList:resdata});
                    }),
@@ -102,7 +101,7 @@ export class DeploymentVerificationEffect {
         this.actions$.pipe(
             ofType(DeploymentActions.loadApplicationHelath),
             switchMap((action) => {
-                return this.http.get<any>('http://40.78.28.87:8090/canaries/getApplicationHealth?canaryId='+action.canaryId, {headers: new HttpHeaders().set('Authorization', 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjEifQ.M_3bBDWxQDGhLy0Dj5a5lxbvnv2ahqTKd4c7lC4CTdrU8bhThL9DfDV2BplDkOWqpnVH08BOv9R0oRERiSJ1TQ').set('Access-Control-Allow-Origin', 'http://40.78.28.87:8090')}).pipe(
+                return this.http.get<any>(this.environment.config.autoPilotEndPointUrl +'canaries/getApplicationHealth?canaryId='+action.canaryId).pipe(
                     map(resdata => {
                         return DeploymentActions.fetchApplicationHelath({applicationHealthDetails:resdata});
                     }),
@@ -120,7 +119,7 @@ export class DeploymentVerificationEffect {
          this.actions$.pipe(
              ofType(DeploymentActions.loadServiceInformation),
              switchMap((action) => {
-                 return this.http.get<any>('http://40.78.28.87:8090/canaries/getServiceInformation?canaryId=' + action.canaryId + '&serviceId='+ action.serviceId, {headers: new HttpHeaders().set('Authorization', 'Bearer 	eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwOi8vb3BzbXguY29tLyIsInN1YiI6IjEifQ.M_3bBDWxQDGhLy0Dj5a5lxbvnv2ahqTKd4c7lC4CTdrU8bhThL9DfDV2BplDkOWqpnVH08BOv9R0oRERiSJ1TQ').set('Access-Control-Allow-Origin', 'http://40.78.28.87:8090')}).pipe(
+                 return this.http.get<any>(this.environment.config.autoPilotEndPointUrl +'canaries/getServiceInformation?canaryId=' + action.canaryId + '&serviceId='+ action.serviceId).pipe(
                      map(resdata => {
                          return DeploymentActions.fetchServiceInformation({serviceSummary:resdata});
                      }),

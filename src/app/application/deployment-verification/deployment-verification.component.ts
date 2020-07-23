@@ -45,6 +45,7 @@ export class DeploymentVerificationComponent implements OnInit {
   nav_position: string = 'end';
   counter = 1;
   serviceConter = 1;
+  canaryCheckCounter = 1;
   
   ///code for showing select application shows here
   myControl = new FormControl();
@@ -53,8 +54,8 @@ export class DeploymentVerificationComponent implements OnInit {
   isShow = true;
   deployementApplications: any;
   deploymentServices: any;
-  deploymentApplicationHealth: any;
-  deploymentServiceInformation: any;
+  deploymentApplicationHealth = {};
+  deploymentServiceInformation = {};
 
  // App form initia
 
@@ -66,7 +67,7 @@ export class DeploymentVerificationComponent implements OnInit {
   applicationId: any;
   selectedApplicationName: any;
   canaryId: any[];
-  serviceNameInfo: any;
+  serviceNameInfo = {};
 
   //pagination for service table
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
@@ -110,7 +111,7 @@ export class DeploymentVerificationComponent implements OnInit {
   onSelectionChangeApplication(event) {
     
     this.canaries = [];
-    this.selectedApplicationName = event.option.value;
+    this.selectedApplicationName = event;
     const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
     if (d['canaryIdList'].length === 0) {
       this.canaries = [];
@@ -441,40 +442,44 @@ export class DeploymentVerificationComponent implements OnInit {
           if(resData.applicationHealthDetails !== null){
                   this.deployementLoading = resData.applicationHealthDetailsLoading;
                   this.deploymentApplicationHealth = resData.applicationHealthDetails;
-                  this.selectedApplicationName = this.deploymentApplicationHealth.applicationName;
-                  if(this.deploymentApplicationHealth.error != null){
-                    this.notifications.showError('Application health Error:', this.deploymentApplicationHealth.error);
+                  this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
+                  if(this.deploymentApplicationHealth['error'] != null){
+                    this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
                   }
                   //buildApplicationForm() {
                     this.applicationForm = this.fb.group({
                       application: [this.selectedApplicationName],
                     });
-                    this.applicationId = this.deploymentApplicationHealth.applicationId;
+                    this.applicationId = this.deploymentApplicationHealth['applicationId'];
                  // }
                  
                  this.pieData = [
                   {
                     "name": "Failed" ,
-                    "value": this.deploymentApplicationHealth.noOfFailed,
+                    "value": this.deploymentApplicationHealth['noOfFailed'],
                     "label": "Failed"
                   },
                   {
                     "name": "Review",
-                    "value": this.deploymentApplicationHealth.noOfReview,
+                    "value": this.deploymentApplicationHealth['noOfReview'],
                     "label": "Review"
                   },
                   {
                     "name": "Succeess",
-                    "value": this.deploymentApplicationHealth.noOfSuccess,
+                    "value": this.deploymentApplicationHealth['noOfSuccess'],
                     "label": "Success"
                   },
                     {
                     "name": "InProgress",
-                    "value": this.deploymentApplicationHealth.noOfInProgress,
+                    "value": this.deploymentApplicationHealth['noOfInProgress'],
                     "label": "InProgress"
                   }
                 ];
              }
+             if(this.canaryCheckCounter === 1 && this.selectedApplicationName != null){
+              this.onSelectionChangeApplication(this.selectedApplicationName);
+              this.canaryCheckCounter ++;
+            }
         }
       );
     }
@@ -497,8 +502,8 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.baseLineFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v1FileSize,true);
                   this.canaryFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v2FileSize,true);
                  // console.log(this.humanFileSize())
-                  if(this.deploymentServiceInformation.error != null){
-                    this.notifications.showError('Service information Error:', this.deploymentServiceInformation.error);
+                  if(this.deploymentServiceInformation['error'] != null){
+                    this.notifications.showError('Service information Error:', this.deploymentServiceInformation['error']);
                   }
              }
         }
