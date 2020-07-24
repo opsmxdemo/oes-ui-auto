@@ -21,9 +21,11 @@ export function LogAnalysisReducer(
     return createReducer(
         initialState,
         on(LogAnalysisActions.loadLogResults,
-            state => ({
+            (state,action) => ({
                 ...state,
-                deployementLoading: true
+                deployementLoading: true,
+                canaryId: action.canaryId,
+                serviceId: action.serviceId
             })
         ),
         on(LogAnalysisActions.fetchLogsResults,

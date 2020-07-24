@@ -15,12 +15,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { DeploymentVerificationEffect } from './store/deploymentverification.effects';
 import { MetricAnalysisEffect } from './metric-analysis/store/metric-analysis.effects';
 import { LogAnalysisEffect } from './log-analysis/store/log-analysis.effects';
+import { ReplaceLineBreaks } from '../../pipes/keys.pipe';
 
 @NgModule({
     declarations: [
         DeploymentVerificationComponent,
         MetricAnalysisComponent,
         LogAnalysisComponent,
+        ReplaceLineBreaks
     ],
     imports: [
      CommonModule,
