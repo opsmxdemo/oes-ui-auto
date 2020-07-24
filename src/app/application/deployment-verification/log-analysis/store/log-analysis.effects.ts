@@ -44,21 +44,23 @@ export class LogAnalysisEffect {
 
     
     // Below effect is use for fetch latest run
-        fetchLogAnalysisResults = createEffect(() =>
-        this.actions$.pipe(
-            ofType(LogAnalysisActions.loadLogResults),
-            switchMap(() => { 
-                return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/logsData?id=542&serviceId=847').pipe(                  
-                    map(resdata => {
-                       //console.log("----effect-log-analysis",resdata);
-                       return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
+    fetchLogAnalysisResults = createEffect(() =>
+    this.actions$.pipe(
+        ofType(LogAnalysisActions.loadLogResults),
+        switchMap((action) => {                 
+            // return this.http.get('/assets/data/logsData.json').pipe(                    
+            return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
+                map(resdata => {
+                   //console.log("----effect-log-analysis",resdata);
+                    //debugger;
+                   return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
     )
+)
 }

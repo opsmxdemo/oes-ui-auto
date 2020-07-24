@@ -10,3 +10,11 @@ export class KeysPipe implements PipeTransform {
     return keys;
   }
 }
+
+@Pipe({name: 'replaceLineBreaks'})
+export class ReplaceLineBreaks implements PipeTransform {
+  transform(value: string): string {
+    value = value.replace(/DOCUMENT|@n|@r|\\n/g, '<br/>');
+    return value.replace(/@t/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+  }
+}
