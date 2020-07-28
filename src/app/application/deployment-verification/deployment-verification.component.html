@@ -20,19 +20,10 @@
             <i class="far" [ngClass]= "{'fa-check-circle':deploymentApplicationHealth['applicationHealthStatus']==='PASS','fa-times-circle':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','fa-minus-circle': deploymentApplicationHealth['applicationHealthStatus'] === undefined}"></i></a>
           </button>
         </span>
-        <span>
-          <!-- <button type="button" class="btn p-0 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="Score: 90 <br /> RunID: 11869">
-          <a href="#" class="ci_close ml-2"><i class="far fa-times-circle"></i></a>
-        </button> -->
-       
-          <!-- <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='IN PROGRESS'" src="../../../assets/images/pass-icon.png" alt="status"/>
-          <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='PASS'" src="../../../assets/images/pass-icon.png" alt="status"/>
-          <img *ngIf="deploymentApplicationHealth.applicationHealthStatus==='FAIL'" src="../../../assets/images/fail-icon.png" alt="status"/> -->
-
-        </span>
+ 
         <div class="input-group">
           <div class="input-group-prepend">
-            <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(control.value)" type="button" id="button-addon1"><i class="fa fa-minus"></i></button>
+            <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(control.value)" type="button" id="button-addon1"><i class="fa fa-angle-left"></i></button>
           </div>
           <form class="example-form">
             <input type="text" class="form-control text-center"
@@ -45,7 +36,7 @@
             </mat-autocomplete>
           </form>
           <div  class="input-group-prepend">
-            <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementCanaryRun(control.value)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-plus"></i></button>
+            <button  [ngStyle]="{cursor : incredementDisable ? 'no-drop' :'pointer' }" (click)="incrementCanaryRun(control.value)" class="input-group-text" type="button" id="button-addon1"><i class="fa fa-angle-right"></i></button>
           </div>
           <br>
         </div>
@@ -76,38 +67,6 @@
         </table>
         <!-- /.table -->
   
-      <div class="card border-0">
-      <div class="graph-header d-flex align-items-center justify-content-between">
-          <div class="graph-body">
-              <ngx-charts-pie-chart
-              [view]="view"
-              [scheme]="colorScheme"
-              [results]="pieData"
-              [gradient]="gradient"
-              [legendTitle]="'Services'"
-              [legend]="showLegend"
-              [legendPosition]="legendPosition"
-              [labels]="showLabels"
-              [doughnut]="isDoughnut">
-            </ngx-charts-pie-chart>
-        </div>
-        <!-- /.graph-controls -->
-      </div>
-    </div>
-    <!-- <div class="form-group col-12 text-muted">
-      <!-- <select formControlName="serviceName" id="serviceName" class="form-control">
-        <option *ngFor="let service of newServ; let i = index" [value]="service">
-        {{service.serviceName}}
-      </option>
-    </select> -->
-    <!-- <select 
-    [(ngModel)]="filter.status"
-    class="form-control">
-    <option value="all">Filter by gender</option>
-    <option value="Failed">Failed</option>
-    <option value="SUCCESS">SUCCESS</option>
-  </select>
-    </div> --> 
     <div class="page_access d-flex text-right p-3">
       <div class="mr-auto">
           <div class="input-group input-group_search">
@@ -130,7 +89,7 @@
         </ng-container>               
         </tbody>
       </table>
-      <div class="table-footer gray-strip px-3 py-2">
+      <div class="table-footer gray-strip px-3 py-2" *ngIf="serviceListLength >= 10">
         <div class="form-inline">
           <span class="mr-2">Per page</span>
           <select class="form-control" [(ngModel)]="perPageData" (change)="onChangePerPageData()">
@@ -138,12 +97,7 @@
             <option value="15">15</option>
             <option value="20">20</option>
             <option value="25">25</option>
-
           </select>
-          <!-- <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
-            {{page.endPoint < serviceListLength-1?page.endPoint:serviceListLength}} of {{serviceListLength}}</span> -->
-          <!-- <input type="text" class="form-control mr-2" />
-          <button class="btn btn-primary">Go</button> -->
 
           <ul class="pagination ml-auto mb-0">
             <li class="page-item" (click)="pagePrev()"><a class="page-link"><i class="fa fa-angle-left"></i></a></li>
@@ -310,13 +264,11 @@
                 <div class="rightBox_body pt-0">
                   <div class="chart_ratio mb-3 text-center d-flex">
                     <!--  -->
-                    <div class="chart_value flex-grow-1"  [ngClass]= "{'cv_high':serviceNameInfo['finalScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['finalScore'] < deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':(serviceNameInfo['finalScore'] > deploymentApplicationHealth['minimumCanaryScore']) && (serviceNameInfo['finalScore'] <= deploymentApplicationHealth['maximumCanaryScore'])}">
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore'] >= deploymentApplicationHealth['maximumCanaryScore']">High</div>
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore'] < deploymentApplicationHealth['minimumCanaryScore']">Low</div>
-                      <div class="cv_heighlight" *ngIf="(serviceNameInfo['finalScore'] > deploymentApplicationHealth['minimumCanaryScore']) && (serviceNameInfo['finalScore'] <= deploymentApplicationHealth['maximumCanaryScore'])">Medium</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Confidence  
+                    <div class="chart_value flex-grow-1"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Succeess','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
+                      <div class="cv_heighlight"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Succeess','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
+                      <div class="cv_name">Status  
                       </div>
+
                       <!-- /.cv_name -->
                     </div>
                     <!-- /.chart_value low -->
@@ -403,26 +355,15 @@
 
                   <div class="table-responsive">
                     <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
-                    <tbody>
-                      <tr>
-                        <td width="110">User Name:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['userName']: ''}}</td>
-                      </tr>
-                      <tr>
-                        <td width="110">Canary Id:</td>
-                        <td>{{control.value}}</td>
-                      </tr>
-                      <tr>
-                        <td width="110">Application:</td>
-                        <td>{{selectedApplicationName}}</td>
-                      </tr>
-                      <tr>
-                        <td width="110">Service:</td>
-                        <td>{{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <hr />
+                      <tbody>
+                        <tr>
+                          <td width="110">Template:</td>
+                          <td>{{deploymentApplicationHealth['logTemplateName']}}::{{deploymentApplicationHealth['metricTemplateName']}}</td>
+                        </tr>
+                      
+                      </tbody>
+                    </table>
+                    <hr />
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr class="font-weight-bold">
@@ -457,19 +398,7 @@
                     </tbody>
                   </table>
                   <hr />
-                  <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
-                    <tbody>
-                      <tr>
-                        <td width="110">Template:</td>
-                        <td>{{deploymentApplicationHealth['logTemplateName']}}::{{deploymentApplicationHealth['metricTemplateName']}}</td>
-                      </tr>
-                      <tr class="font-weight-bold text-uppercase">
-                        <td width="110">STATUS:</td>
-                        <td class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Succeess','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <hr />
+                
                   
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
