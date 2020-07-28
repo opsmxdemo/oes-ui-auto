@@ -84,18 +84,6 @@ export class DeploymentVerificationComponent implements OnInit {
   }
   currentPage = [];                                                                    // this use to store array of data exists in current page.
   serviceListLength: number = null;
-
- //code for pie chart
-  view: any[] = [230, 150];
-  gradient: boolean = true;
-  showLegend: boolean = false;
-  showLabels: boolean = true;
-  isDoughnut: boolean = true;
-  legendPosition: string = "bottom";
-  pieData: any;
-  colorScheme = {
-    domain: ["#A10A28","#C7B42C","#5AA454",  "#AAAAAA"]
-  }
   baseLineFileSize: any;
   canaryFileSize: any;
 
@@ -260,7 +248,6 @@ export class DeploymentVerificationComponent implements OnInit {
   //on click of service
   getService(item: any) {
     this.selectedServiceId = item.serviceId;
-    
     this.serviceNameInfo = item;
   }
 
@@ -453,28 +440,6 @@ export class DeploymentVerificationComponent implements OnInit {
                     this.applicationId = this.deploymentApplicationHealth['applicationId'];
                  // }
                  
-                 this.pieData = [
-                  {
-                    "name": "Failed" ,
-                    "value": this.deploymentApplicationHealth['noOfFailed'],
-                    "label": "Failed"
-                  },
-                  {
-                    "name": "Review",
-                    "value": this.deploymentApplicationHealth['noOfReview'],
-                    "label": "Review"
-                  },
-                  {
-                    "name": "Succeess",
-                    "value": this.deploymentApplicationHealth['noOfSuccess'],
-                    "label": "Success"
-                  },
-                    {
-                    "name": "InProgress",
-                    "value": this.deploymentApplicationHealth['noOfInProgress'],
-                    "label": "InProgress"
-                  }
-                ];
              }
              if(this.canaryCheckCounter === 1 && this.selectedApplicationName != null){
               this.onSelectionChangeApplication(this.selectedApplicationName);
@@ -483,14 +448,6 @@ export class DeploymentVerificationComponent implements OnInit {
         }
       );
     }
-
-    pieChartLabel(pieData: any[], name: string): string {
-      const item = pieData.filter(data => data.name === name);
-      if (item.length > 0) {
-          return item[0].label;
-      }
-      return name;
-  }
 
     // get service information
     getServiceInformation(){
