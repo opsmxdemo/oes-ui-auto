@@ -46,83 +46,57 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{apmMetricSelectedRow === i ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
+                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{metricSelectedRow === i && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
                   <td>{{apmMetric.name}}</td>
                   <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive" *ngIf="InfraMetricData.length > 0 ? true : false">
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th>INFRA METRIC</th>
-                  <th class="text-center">score</th>
-                  <th>Range</th>
+                  <th [attr.colspan]="4">INFRA METRIC</th>
+                  <th class="text-center scorebox">SCORE </th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="cell-heading"><i class="fas fa-chevron-right"></i> RANK | CRITICAL | WATCHLIST | INTERVALS</td>
-                  <td><span class="countBox countDanger">50</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-heading"><i class="fas fa-chevron-right"></i> Memory Group</td>
-                  <td><span class="countBox countDanger">50</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_cache</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_failcnt</td>
-                  <td><span class="countBox countSuccess">100</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_failcnt</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_mapped_file</td>
-                  <td><span class="countBox countSuccess">100</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_cache</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_rss</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_swap</td>
-                  <td><span class="countBox countSuccess">100</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_usage_bytes</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
+                <ng-container *ngFor="let infraMetric of InfraMetricData | filter:searchData; let i=index">
+                  <tr class="{{i+1 === InfraMetricData.length ? 'tableRowCustom' : ''}}">
+                    <td class="cell-heading" [attr.colspan]="4" id="Infra"><i class="fas fa-chevron-right" id="Infra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
+                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(infraMetric.groupScore)}}">{{infraMetric.groupScore}}</span></td>
+                    <td></td>
+                  </tr>
+                  <tr class="nested_tr">
+                    <ng-container *ngIf="childMetric['Infra'][i]">
+                      <td [attr.colspan]="6">
+                        <div [@expandableRow]="infraChildView_rowanimation">
+                          <app-child-table 
+                            [childData]="infraMetric" 
+                            [searchData]="searchData" 
+                            [selectedType]="metricType" 
+                            [selectedRow]="metricSelectedRow"
+                            [selectedMetricName]="childSelectedMetric" 
+                            [thresholdScore]="thresholdScore"
+                            (selectedElement)="recivedChildData($event)">
+                          </app-child-table>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>
         </div>
         <!-- ########## Below is sticky table ############### -->
-        <div *ngIf="sticky" class="metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
+        <div *ngIf="sticky" class="sticky_metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
           <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
@@ -166,77 +140,51 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{apmMetricSelectedRow === i ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
+                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{metricSelectedRow === i && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
                   <td>{{apmMetric.name}}</td>
                   <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{apmMetricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive" *ngIf="InfraMetricData.length > 0 ? true : false">
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th>INFRA METRIC</th>
-                  <th class="text-center">score</th>
-                  <th>Range</th>
+                  <th [attr.colspan]="4">INFRA METRIC</th>
+                  <th class="text-center scorebox">SCORE </th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="cell-heading"><i class="fas fa-chevron-right"></i> RANK | CRITICAL | WATCHLIST | INTERVALS</td>
-                  <td><span class="countBox countDanger">50</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-heading"><i class="fas fa-chevron-right"></i> Memory Group</td>
-                  <td><span class="countBox countDanger">50</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_cache</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_failcnt</td>
-                  <td><span class="countBox countSuccess">100</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_failcnt</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_mapped_file</td>
-                  <td><span class="countBox countSuccess">100</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_cache</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_rss</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_swap</td>
-                  <td><span class="countBox countSuccess">100</span></td>
-                  <td>123</td>
-                </tr>
-                <tr>
-                  <td class="cell-child">container_memory_usage_bytes</td>
-                  <td><span class="countBox countDanger">0</span></td>
-                  <td>123</td>
-                </tr>
+                <ng-container *ngFor="let infraMetric of InfraMetricData | filter:searchData; let i=index">
+                  <tr class="{{i+1 === InfraMetricData.length ? 'tableRowCustom' : ''}}">
+                    <td class="cell-heading" [attr.colspan]="4" id="stickyInfra"><i class="fas fa-chevron-right" id="stickyInfra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
+                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(infraMetric.groupScore)}}">{{infraMetric.groupScore}}</span></td>
+                    <td></td>
+                  </tr>
+                  <tr class="nested_tr">
+                    <ng-container *ngIf="childMetric['Infra'][i]">
+                      <td [attr.colspan]="6">
+                        <div [@expandableRow]="infraChildView_rowanimation">
+                          <app-child-table 
+                            [childData]="infraMetric" 
+                            [searchData]="searchData" 
+                            [selectedType]="metricType" 
+                            [selectedRow]="metricSelectedRow"
+                            [selectedMetricName]="childSelectedMetric" 
+                            [thresholdScore]="thresholdScore"
+                            (selectedElement)="recivedChildData($event)">
+                          </app-child-table>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
               </tbody>
             </table>
           </div>
@@ -247,8 +195,9 @@
         <div class="p-3">
           <div class="card mb-2">
             <div [ngSwitch]="metricType">
+              <!-- ###### APM Metric graph section start ####### -->
               <div class="card-body" *ngSwitchCase="'APM'">
-                <p class="mb-1"><b class="countDisabledbtn">APM METRIC : </b> <b>{{APMMetricData[apmMetricSelectedRow].name}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">APM METRIC : </b> <b>{{APMMetricData[metricSelectedRow].name}}</b></p>
                 <p class="mb-1"><b class="countDisabledbtn">TYPE : </b> <b class="{{typeColor}}">{{apmMetricSelectedType}}</b></p>
                 <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
                   <hr>
@@ -256,12 +205,18 @@
                   <app-line-chart [dataSource]="chart" [chartProperty]="lineChartProperty" [view]="chartSize"></app-line-chart>
                 </div>
               </div>
-              <div class="card-body" *ngSwitchCase="'INFRA'">
-                <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-                <div class="graph mb-3" #subChartSize>
-                  <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
+              <!-- ###### APM Metric graph section end ####### -->
+
+              <!-- ###### Infrastructure Metric graph section start ####### -->
+              <div class="card-body" *ngSwitchCase="'Infrastructure'">
+                <p class="mb-1"><b class="countDisabledbtn">INFRA METRIC : </b> <b>{{this.parentMetricName | uppercase}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{childSelectedMetric | uppercase}}</b></p>
+                <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
+                  <hr>
+                  <i class="fa fa-line-chart" aria-hidden="true"></i>
+                  <app-line-chart [dataSource]="chart" [chartProperty]="lineChartProperty" [view]="chartSize"></app-line-chart>
                 </div>
-                <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
+                <p class="mb-1"><b class="countDisabledbtn">QUARTILE COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{childSelectedMetric | uppercase}}</b></p>
                 <div class="graph mb-4">
                   <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
                 </div>
@@ -271,13 +226,13 @@
                   </div>
                   <div class="card-body text-wrap-normal">
                     <div class="my-2">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                     {{analysisTableData}}
                     </div>
                   </div>
                 </div>
                 <div class="card">
                   <div class="card-header text-uppercase">
-                    container_memory_failures_total
+                    {{childSelectedMetric}}
                   </div>
                   <div class="table-responsive">
                     <table class="table mb-0">
@@ -293,29 +248,23 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Baseline</td>
-                          <td>7.98</td>
-                          <td>6.33</td>
-                          <td>7.81</td>
-                          <td>8.8</td>
-                          <td>0.14</td>
-                          <td>32.04</td>
-                        </tr>
-                        <tr>
-                          <td>New Release</td>
-                          <td>1.15</td>
-                          <td>1.17</td>
-                          <td>3</td>
-                          <td>1.86</td>
-                          <td>0.69</td>
-                          <td>33.41</td>
+                        <tr *ngFor = "let stats of metricStatsData">
+                          <td>{{stats['name']}}</td>
+                          <td>{{stats['Median']}}</td>
+                          <td>{{stats['1stQuantile']}}</td>
+                          <td>{{stats['Mean']}}</td>
+                          <td>{{stats['3rdQuantile']}}</td>
+                          <td>{{stats['Min']}}</td>
+                          <td>{{stats['Max']}}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
+              <!-- ###### Infrastructure Metric graph section end ####### -->
+
+              <!-- ###### ADVANCED Metric graph section start ####### -->
               <div class="card-body" *ngSwitchCase="'ADVANCED'">
                 <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
                 <div class="graph mb-3" #subChartSize>
@@ -376,12 +325,72 @@
                   </div>
                 </div>
               </div>
+              <!-- ###### ADVANCED Metric graph section end ####### -->
+
+              <!-- ###### Default graph section when no type is exist start ####### -->
               <div class="type-not-exist" *ngSwitchDefault>
+                <h4>Work In Progress !!</h4>
+                <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
                 <div class="graph mb-3" #subChartSize>
                   <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
                 </div>
-                <h4>Work In Progress !!</h4>
+                <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
+                <div class="graph mb-4">
+                  <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
+                </div>
+                <div class="card mb-3">
+                  <div class="card-header text-uppercase">
+                    Analysis
+                  </div>
+                  <div class="card-body text-wrap-normal">
+                    <div class="my-2">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header text-uppercase">
+                    container_memory_failures_total
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table mb-0">
+                      <thead>
+                        <tr class="text-uppercase">
+                          <th>Versions</th>
+                          <th>median</th>
+                          <th>Q1</th>
+                          <th>mean</th>
+                          <th>Q3</th>
+                          <th>MIN</th>
+                          <th>MAX</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Baseline</td>
+                          <td>7.98</td>
+                          <td>6.33</td>
+                          <td>7.81</td>
+                          <td>8.8</td>
+                          <td>0.14</td>
+                          <td>32.04</td>
+                        </tr>
+                        <tr>
+                          <td>New Release</td>
+                          <td>1.15</td>
+                          <td>1.17</td>
+                          <td>3</td>
+                          <td>1.86</td>
+                          <td>0.69</td>
+                          <td>33.41</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
+              <!-- ###### Default graph section when no type is exist end ####### -->
+
             </div>
           </div>
         </div>
