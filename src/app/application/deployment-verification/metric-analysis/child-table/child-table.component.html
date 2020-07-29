@@ -1,0 +1,24 @@
+<table class="table valign-middle table-bottom-border">
+    <thead>
+      <tr>
+        <th>{{childData.name}}</th>
+        <th class="text-center">SCORE </th>
+        <th class="text-center">RANK</th>
+        <th class="text-center scorebox">CRITICAL</th>
+        <th class="text-center scorebox">WATCHLIST</th>
+        <th class="text-center scorebox">INTERVALS</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="{{selectedRow === i && selectedType === childData.category && selectedMetricName === metridata.metricName ? 'selected-row' : ''}}" 
+          *ngFor = "let metridata of childData.metricList | filter:searchData; let i=index" id="{{childData.category}}" 
+          (click)="onSelectRow(i,$event,metridata.metricName)">
+          <td class="cell-heading">{{metridata.metricName}}</td>
+          <td class="text-center"><span class="countBox {{assignProperColor(metridata.metricScore)}}">{{metridata.metricScore}}</span></td>
+          <td class="text-center">N/A</td>
+          <td class="text-center">N/A</td>
+          <td class="text-center">N/A</td>
+          <td class="text-center">N/A</td>
+        </tr>
+    </tbody>
+</table>
