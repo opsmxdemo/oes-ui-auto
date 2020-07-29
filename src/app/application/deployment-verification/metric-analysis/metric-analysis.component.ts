@@ -53,7 +53,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
     Infra:[],
     Advanced:[]
   };                                              
-  infraChildView_rowanimation = 'collapsed';                          // It is use to store value of animation state to represent animation in infra child view.
+  childView_rowanimation = 'collapsed';                          // It is use to store value of animation state to represent animation in infra child view.
 
   // Below variable is use in graph section
 
@@ -76,7 +76,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   parentMetricName = '';                                               // It is use to store name of parent metric whose child is selected.
   metricStatsData = [];                                                // It is use to store data related to stats table exist in Infra and advanced graph section.
   analysisTableData = '';                                              // It is use to store data related to analysis table exist in Infra and advanced graph section.
-
+  
 
   constructor(private sharedServices: SharedService,
               public store: Store<fromFeature.State>,
@@ -106,7 +106,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
                 case 'Infrastructure':
                   this.InfraMetricData.push(metricData);
                   break;
-                case 'Advanced':
+                case 'ADVANCED':
                   this.AdvancedMetricData.push(metricData);
                   break;
               }
@@ -120,6 +120,14 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             })
           }
 
+           // creating initial array for Advanced metric
+           if(this.AdvancedMetricData.length > 0){
+            this.childMetric['Advanced'] = [];
+            this.AdvancedMetricData.forEach(advancedChildData => {
+              this.childMetric['Advanced'].push(false);
+            })
+          }
+
           // load initial chart in chart section
           if(this.APMMetricData.length>0){
             if(this.metricSelectedRow === -1 && this.apmMetricSelectedType === ''){
@@ -127,7 +135,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             }
           }else if(this.InfraMetricData.length>0){
             this.childMetric['Infra'][0] = true;
-            this.infraChildView_rowanimation = 'expanded';
+            this.childView_rowanimation = 'expanded';
             setTimeout(() => {
               this.elRef.nativeElement.querySelector('#Infra0').style.transform = 'rotate(90deg)';
             },500);
@@ -136,6 +144,19 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
               selectedMetricName:this.InfraMetricData[0].metricList[0].metricName,
               index:0,
               parent:this.InfraMetricData[0].name
+            }
+            this.recivedChildData(initialData);
+          }else if(this.AdvancedMetricData.length > 0){
+            this.childMetric['Advanced'][0] = true;
+            this.childView_rowanimation = 'expanded';
+            setTimeout(() => {
+              this.elRef.nativeElement.querySelector('#Advanced0').style.transform = 'rotate(90deg)';
+            },500);
+            const initialData = {
+              type:'ADVANCED',
+              selectedMetricName:this.AdvancedMetricData[0].metricList[0].metricName,
+              index:0,
+              parent:this.AdvancedMetricData[0].name
             }
             this.recivedChildData(initialData);
           }
@@ -208,7 +229,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
       if( selectedRow >= 0){
         this.elRef.nativeElement.querySelector('#stickyInfra'+selectedRow).style.transform = 'rotate(90deg)';
       }
-    } else if (this.AdvancedMetricData.length > 0 && this.sticky === true){
+    } else if (this.AdvancedMetricData.length > 0 && this.elRef.nativeElement.querySelector('#stickyAdvanced0') !== null){
       let selectedRow = this.childMetric['Advanced'].indexOf(true);
       if( selectedRow >= 0){
         this.elRef.nativeElement.querySelector('#stickyAdvanced'+selectedRow).style.transform = 'rotate(90deg)';
@@ -283,7 +304,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
 onClickParentRow(index,event,parentId){
   if(this.childMetric[parentId].indexOf(true) === -1){
     this.childMetric[parentId][index] = true;
-    this.infraChildView_rowanimation = 'expanded';
+    this.childView_rowanimation = 'expanded';
     if(this.sticky){
       this.elRef.nativeElement.querySelector('#'+event.target.parentNode.id+index).style.transform = 'rotate(90deg)';
       this.elRef.nativeElement.querySelector('#'+parentId+index).style.transform = 'rotate(90deg)';
@@ -292,7 +313,7 @@ onClickParentRow(index,event,parentId){
     }
     
   }else{
-    this.infraChildView_rowanimation = 'collapsed';
+    this.childView_rowanimation = 'collapsed';
     const index_val = this.childMetric[parentId].indexOf(true);
     this.childMetric[parentId][index_val] = false;
     if(this.sticky){
@@ -309,6 +330,7 @@ onClickParentRow(index,event,parentId){
 
 // Below function is execute after click on row exist in child table.
 recivedChildData(event){
+  debugger
   this.metricType = event.type;
   this.metricSelectedRow = event.index;
   this.childSelectedMetric = event.selectedMetricName;
@@ -316,8 +338,23 @@ recivedChildData(event){
   this.metricStatsData = [];
   this.analysisTableData = '';
   let chartData = [];
-  if(this.metricType = 'Infrastructure'){
+  if(this.metricType === 'Infrastructure'){
     this.InfraMetricData.forEach((metricGroupData,index) => {
+      if(metricGroupData.name === this.parentMetricName){
+        chartData.push(metricGroupData.metricList[this.metricSelectedRow].scatterData);
+        this.analysisTableData = metricGroupData.metricList[this.metricSelectedRow].description;
+        this.typeColor = this.assignProperColor(metricGroupData.metricList[this.metricSelectedRow].metricScore);
+        for(const stats in metricGroupData.metricList[this.metricSelectedRow].stats){
+          if(stats === 'version1'){
+            this.createStatsTable('Baseline',metricGroupData.metricList[this.metricSelectedRow].stats[stats]);
+          }else{
+            this.createStatsTable('New Release',metricGroupData.metricList[this.metricSelectedRow].stats[stats]);
+          }
+        }
+      }
+    })
+  }else if(this.metricType === 'ADVANCED'){
+    this.AdvancedMetricData.forEach((metricGroupData,index) => {
       if(metricGroupData.name === this.parentMetricName){
         chartData.push(metricGroupData.metricList[this.metricSelectedRow].scatterData);
         this.analysisTableData = metricGroupData.metricList[this.metricSelectedRow].description;

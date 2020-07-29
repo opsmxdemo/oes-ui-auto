@@ -1,6 +1,7 @@
 <div class="tab-content flex-grow-1" id="myTabContent">
   <div class="tab-pane h-100 fade show active" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab" style="background-color: #f5f7f9;">
     <div class="row h-100 no-gutters">
+      <!-- ############################### Metric Table Section Starts ############################################# -->
       <div class="col-sm-7 col-md-7 col-lg-7 h-100 " #stickyMenu>
         <div class="metric_analysis"  [style.width]="!sticky?menuWidth:''" style="transition: width 0.5s;">
           <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
@@ -32,7 +33,7 @@
               </div>
             </div>
           </div>
-
+          <!-- ######### APM Metric Table start ########## -->
           <div class="table-responsive" *ngIf="APMMetricData.length > 0 ? true : false">
             <table class="table valign-middle table-bottom-border mb-4" >
               <thead>
@@ -57,6 +58,9 @@
               </tbody>
             </table>
           </div>
+          <!-- ######### APM Metric Table end ########## -->
+
+          <!-- ######### INFRA Metric Table start ########## -->
           <div class="table-responsive" *ngIf="InfraMetricData.length > 0 ? true : false">
             <table class="table valign-middle table-bottom-border">
               <thead>
@@ -76,7 +80,7 @@
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
                       <td [attr.colspan]="6">
-                        <div [@expandableRow]="infraChildView_rowanimation">
+                        <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="infraMetric" 
                             [searchData]="searchData" 
@@ -94,8 +98,49 @@
               </tbody>
             </table>
           </div>
+          <!-- ######### INFRA Metric Table end ########## -->
+
+          <!-- ######### ADVANCED Metric Table start ########## -->
+          <div class="table-responsive" *ngIf="AdvancedMetricData.length > 0 ? true : false">
+            <table class="table valign-middle table-bottom-border">
+              <thead>
+                <tr>
+                  <th [attr.colspan]="4">ADVANCED METRIC</th>
+                  <th class="text-center scorebox">SCORE </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let advancedMetric of AdvancedMetricData | filter:searchData; let i=index">
+                  <tr class="{{i+1 === AdvancedMetricData.length ? 'tableRowCustom' : ''}}">
+                    <td class="cell-heading" [attr.colspan]="4" id="Advanced"><i class="fas fa-chevron-right" id="Advanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
+                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}}">{{advancedMetric.groupScore}}</span></td>
+                    <td></td>
+                  </tr>
+                  <tr class="nested_tr">
+                    <ng-container *ngIf="childMetric['Advanced'][i]">
+                      <td [attr.colspan]="6">
+                        <div [@expandableRow]="childView_rowanimation">
+                          <app-child-table 
+                            [childData]="advancedMetric" 
+                            [searchData]="searchData" 
+                            [selectedType]="metricType" 
+                            [selectedRow]="metricSelectedRow"
+                            [selectedMetricName]="childSelectedMetric" 
+                            [thresholdScore]="thresholdScore"
+                            (selectedElement)="recivedChildData($event)">
+                          </app-child-table>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <!-- ######### ADVANCED Metric Table end ########## -->
         </div>
-        <!-- ########## Below is sticky table ############### -->
+        <!-- ############################## Below is sticky table starts ################################### -->
         <div *ngIf="sticky" class="sticky_metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
           <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
             <div class="input-group input-group_search">
@@ -126,7 +171,7 @@
               </div>
             </div>
           </div>
-
+           <!-- ######### APM Metric Sticky Table start ########## -->
           <div class="table-responsive" *ngIf="APMMetricData.length > 0 ? true : false">
             <table class="table valign-middle table-bottom-border mb-4" >
               <thead>
@@ -151,6 +196,9 @@
               </tbody>
             </table>
           </div>
+           <!-- ######### APM Metric Sticky Table end ########## -->
+
+          <!-- ######### INFRA Metric Sticky Table start ########## -->
           <div class="table-responsive" *ngIf="InfraMetricData.length > 0 ? true : false">
             <table class="table valign-middle table-bottom-border">
               <thead>
@@ -170,7 +218,7 @@
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
                       <td [attr.colspan]="6">
-                        <div [@expandableRow]="infraChildView_rowanimation">
+                        <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="infraMetric" 
                             [searchData]="searchData" 
@@ -188,15 +236,58 @@
               </tbody>
             </table>
           </div>
+          <!-- ######### INFRA Metric Sticky Table end ########## -->
+
+          <!-- ######### ADVANCED Metric Sticky Table start ########## -->
+          <div class="table-responsive" *ngIf="AdvancedMetricData.length > 0 ? true : false">
+            <table class="table valign-middle table-bottom-border">
+              <thead>
+                <tr>
+                  <th [attr.colspan]="4">ADVANCED METRIC</th>
+                  <th class="text-center scorebox">SCORE </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let advancedMetric of AdvancedMetricData | filter:searchData; let i=index">
+                  <tr class="{{i+1 === AdvancedMetricData.length ? 'tableRowCustom' : ''}}">
+                    <td class="cell-heading" [attr.colspan]="4" id="stickyAdvanced"><i class="fas fa-chevron-right" id="stickyAdvanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
+                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}}">{{advancedMetric.groupScore}}</span></td>
+                    <td></td>
+                  </tr>
+                  <tr class="nested_tr">
+                    <ng-container *ngIf="childMetric['Advanced'][i]">
+                      <td [attr.colspan]="6">
+                        <div [@expandableRow]="childView_rowanimation">
+                          <app-child-table 
+                            [childData]="advancedMetric" 
+                            [searchData]="searchData" 
+                            [selectedType]="metricType" 
+                            [selectedRow]="metricSelectedRow"
+                            [selectedMetricName]="childSelectedMetric" 
+                            [thresholdScore]="thresholdScore"
+                            (selectedElement)="recivedChildData($event)">
+                          </app-child-table>
+                        </div>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <!-- ######### ADVANCED Metric Sticky Table end ########## -->
         </div>
+        <!-- ############################## Below is sticky table ends ##################################### -->
       </div>
-      <!-- /.col-sm-5 -->
+      <!-- ############################### Metric Table Section Ends ############################################### -->
+      <!-- ############################### Metric Graph Section Starts ############################################# -->
       <div class="col-sm-5">
         <div class="p-3">
           <div class="card mb-2">
-            <div [ngSwitch]="metricType">
+            <div [ngSwitch]="true">
               <!-- ###### APM Metric graph section start ####### -->
-              <div class="card-body" *ngSwitchCase="'APM'">
+              <div class="card-body" *ngSwitchCase="metricType === 'APM'">
                 <p class="mb-1"><b class="countDisabledbtn">APM METRIC : </b> <b>{{APMMetricData[metricSelectedRow].name}}</b></p>
                 <p class="mb-1"><b class="countDisabledbtn">TYPE : </b> <b class="{{typeColor}}">{{apmMetricSelectedType}}</b></p>
                 <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
@@ -207,9 +298,12 @@
               </div>
               <!-- ###### APM Metric graph section end ####### -->
 
-              <!-- ###### Infrastructure Metric graph section start ####### -->
-              <div class="card-body" *ngSwitchCase="'Infrastructure'">
-                <p class="mb-1"><b class="countDisabledbtn">INFRA METRIC : </b> <b>{{this.parentMetricName | uppercase}}</b></p>
+              <!-- ###### Infrastructure and ADVANCED Metric graph section start ####### -->
+              <div class="card-body" *ngSwitchCase="metricType === 'Infrastructure' || metricType === 'ADVANCED'">
+                <p class="mb-1">
+                  <b class="countDisabledbtn">{{metricType === 'Infrastructure'?'INFRA' : metricType==='ADVANCED' ? 'ADVANCED' : 'UNKNOWN'}} METRIC : </b> 
+                  <b>{{this.parentMetricName | uppercase}}</b>
+                </p>
                 <p class="mb-1"><b class="countDisabledbtn">COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{childSelectedMetric | uppercase}}</b></p>
                 <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
                   <hr>
@@ -262,70 +356,7 @@
                   </div>
                 </div>
               </div>
-              <!-- ###### Infrastructure Metric graph section end ####### -->
-
-              <!-- ###### ADVANCED Metric graph section start ####### -->
-              <div class="card-body" *ngSwitchCase="'ADVANCED'">
-                <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-                <div class="graph mb-3" #subChartSize>
-                  <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
-                </div>
-                <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-                <div class="graph mb-4">
-                  <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
-                </div>
-                <div class="card mb-3">
-                  <div class="card-header text-uppercase">
-                    Analysis
-                  </div>
-                  <div class="card-body text-wrap-normal">
-                    <div class="my-2">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    </div>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-header text-uppercase">
-                    container_memory_failures_total
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table mb-0">
-                      <thead>
-                        <tr class="text-uppercase">
-                          <th>Versions</th>
-                          <th>median</th>
-                          <th>Q1</th>
-                          <th>mean</th>
-                          <th>Q3</th>
-                          <th>MIN</th>
-                          <th>MAX</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Baseline</td>
-                          <td>7.98</td>
-                          <td>6.33</td>
-                          <td>7.81</td>
-                          <td>8.8</td>
-                          <td>0.14</td>
-                          <td>32.04</td>
-                        </tr>
-                        <tr>
-                          <td>New Release</td>
-                          <td>1.15</td>
-                          <td>1.17</td>
-                          <td>3</td>
-                          <td>1.86</td>
-                          <td>0.69</td>
-                          <td>33.41</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <!-- ###### ADVANCED Metric graph section end ####### -->
+              <!-- ###### Infrastructure and ADVANCED Metric graph section end ####### -->
 
               <!-- ###### Default graph section when no type is exist start ####### -->
               <div class="type-not-exist" *ngSwitchDefault>
@@ -395,6 +426,7 @@
           </div>
         </div>
       </div>
+      <!-- ############################### Metric Graph Section Ends ############################################### -->
     </div>
   </div> 
 </div>
