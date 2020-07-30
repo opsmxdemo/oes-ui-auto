@@ -264,8 +264,8 @@
                 <div class="rightBox_body pt-0">
                   <div class="chart_ratio mb-3 text-center d-flex">
                     <!--  -->
-                    <div class="chart_value flex-grow-1"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Succeess','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
-                      <div class="cv_heighlight"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Succeess','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
+                    <div class="chart_value flex-grow-1"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Success','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
+                      <div class="cv_heighlight"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
                       <div class="cv_name">Status  
                       </div>
 
@@ -290,7 +290,7 @@
                     <!-- /.chart_value alert -->
                   </div>
                   <!-- /.chart_ratio -->
-                  <div class="chart_ratio mb-3 text-center d-flex">
+                  <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-3 text-center d-flex">
                     <div class="chart_value cv_low flex-grow-1">
                       <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['total']:''}}</div>
                       <!-- /.cv_heighlight -->
@@ -321,7 +321,7 @@
                   </div>
                   <!-- /.chart_ratio -->
 
-                  <div class="chart_ratio text-center d-flex">
+                  <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio text-center d-flex">
                     <div class="chart_value cv_low flex-grow-1">
                       <div class="cv_heighlight">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['critical']:''}}</div>
                       <!-- /.cv_heighlight -->
@@ -400,7 +400,7 @@
                   <hr />
                 
                   
-                  <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
+                  <table *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr>
                         <td width="180">Log Score:</td>
@@ -465,19 +465,21 @@
               <div class="pt-1">
                 <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist">
                   <li class="nav-item" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
-                    <a class="nav-link active" id="log-analysis-tab" data-toggle="tab" href="#log-analysis" role="tab" aria-controls="log-analysis" aria-selected="true">Log Analysis</a>
+                    <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}" data-toggle="tab" href="#log-analysis" role="tab" aria-controls="log-analysis" aria-selected="true">Log Analysis</a>
                   </li>
                   <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
-                    <a class="nav-link" id="metric-analysis-tab" data-toggle="tab" href="#metric-analysis" role="tab" aria-controls="metric-analysis" aria-selected="false">Metric Analysis</a>
+                    <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}" id="metric-analysis-tab" data-toggle="tab" href="#metric-analysis" role="tab" aria-controls="metric-analysis" aria-selected="true">Metric Analysis</a>
                   </li>
                  
                 </ul>
                 
                 <div class="tab-content" id="myTabContent">
-                    <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="tab-pane p-4 fade show active" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
+                    <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="tab-pane p-4 fade show"
+                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
                         <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-log-analysis>
                       </div>
-                    <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="tab-pane mp-4 fade" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
+                    <div class="tab-pane mp-4 fade" 
+                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
                         <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
                       </div>
                 </div>
