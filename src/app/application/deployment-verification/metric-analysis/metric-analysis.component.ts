@@ -96,6 +96,8 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             minScore: +this.metricData.canary_output.minimumCanaryScore
           }
           this.APMMetricData = [];
+          this.InfraMetricData = [];
+          this.AdvancedMetricData = [];
           this.metricSelectedRow = -1;
           this.apmMetricSelectedType = '';
           this.metricType = '';
