@@ -288,11 +288,11 @@
             <div [ngSwitch]="true">
               <!-- ###### APM Metric graph section start ####### -->
               <div class="card-body" *ngSwitchCase="metricType === 'APM'">
-                <p class="mb-1"><b class="countDisabledbtn">APM METRIC : </b> <b>{{APMMetricData[metricSelectedRow].name}}</b></p>
-                <p class="mb-1"><b class="countDisabledbtn">TYPE : </b> <b class="{{typeColor}}">{{apmMetricSelectedType}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">APM METRIC : </b> <b>{{APMMetricData[metricSelectedRow].name | uppercase}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">TYPE : </b> <b class="{{typeColor}}">{{apmMetricSelectedType | uppercase}}</b></p>
                 <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
                   <hr>
-                  <i class="fa fa-line-chart" aria-hidden="true"></i>
+                  <span><i class="fa fa-line-chart" aria-hidden="true"></i> : {{apmGraphProperty[i]}}</span>
                   <app-line-chart [dataSource]="chart" [chartProperty]="lineChartProperty" [view]="chartSize"></app-line-chart>
                 </div>
               </div>

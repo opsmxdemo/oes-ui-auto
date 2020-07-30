@@ -68,6 +68,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
     showYAxisLabel: false,
     showXAxisLabel: true,
     xAxisLabel: 'Time',
+    yAxisLabel:'',
     timeline: true,
     colorScheme:{domain: ['#33b3f1','#f29798']}
   }
@@ -76,6 +77,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   parentMetricName = '';                                               // It is use to store name of parent metric whose child is selected.
   metricStatsData = [];                                                // It is use to store data related to stats table exist in Infra and advanced graph section.
   analysisTableData = '';                                              // It is use to store data related to analysis table exist in Infra and advanced graph section.
+  apmGraphProperty = [];                                               // It is use to store apmChart property of chart showing in graph section.
   
 
   constructor(private sharedServices: SharedService,
@@ -243,7 +245,8 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   onClickAPMRow(rowIndex,event,id){
     this.metricSelectedRow = rowIndex;
     this.metricType = 'APM';
-    let chartsData = []; 
+    let chartsData = [];
+    this.apmGraphProperty = []; 
     if(event !== null){
       this.apmMetricSelectedType = event.target.id;
       this.typeColor = event.target.parentNode.classList[0];
@@ -253,6 +256,8 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
     }
     this.APMMetricData[rowIndex].metricList.forEach(metricListData => {
       if(this.apmMetricSelectedType === metricListData.label){
+        let chartname = metricListData.metricName.split(';');
+        this.apmGraphProperty.push(chartname[1]);
         chartsData.push(metricListData.scatterData);
       }
     });
@@ -330,7 +335,6 @@ onClickParentRow(index,event,parentId){
 
 // Below function is execute after click on row exist in child table.
 recivedChildData(event){
-  debugger
   this.metricType = event.type;
   this.metricSelectedRow = event.index;
   this.childSelectedMetric = event.selectedMetricName;
