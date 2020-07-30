@@ -16,13 +16,15 @@ import { DeploymentVerificationEffect } from './store/deploymentverification.eff
 import { MetricAnalysisEffect } from './metric-analysis/store/metric-analysis.effects';
 import { LogAnalysisEffect } from './log-analysis/store/log-analysis.effects';
 import { ReplaceLineBreaks } from '../../pipes/keys.pipe';
+import { ChildTableComponent } from './metric-analysis/child-table/child-table.component';
 
 @NgModule({
     declarations: [
         DeploymentVerificationComponent,
         MetricAnalysisComponent,
         LogAnalysisComponent,
-        ReplaceLineBreaks
+        ReplaceLineBreaks,
+        ChildTableComponent
     ],
     imports: [
      CommonModule,

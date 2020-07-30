@@ -1,4 +1,4 @@
-import { Component, OnInit, Input ,OnChanges,SimpleChanges} from '@angular/core';
+import { Component, OnInit, Input ,OnChanges,SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
@@ -9,7 +9,10 @@ import { Store } from '@ngrx/store';
   templateUrl: './log-analysis.component.html',
   styleUrls: ['./log-analysis.component.less']
 })
-export class LogAnalysisComponent implements OnInit ,OnChanges{
+export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
+ 
+  @ViewChild('ChartSize') ChartSize: ElementRef;
+
   @Input() canaryId: any[];
   @Input() serviceId: any[];
 
@@ -22,7 +25,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges{
   errorArray : any;
   warningArray :any;
   //bubbleChartProperty :any;
-  view: any[] = [700, 200];
+  chartSize: any[];                                                   // It is use to store graph width on change of layout widyh.
   bubbleChartProperty = {
     "showLegend":true,
     "showLabels": true,
@@ -33,12 +36,21 @@ export class LogAnalysisComponent implements OnInit ,OnChanges{
     "xAxisLabel": "Log Events",
     "yAxisLabel":"Event Repeations",
     "tooltipDisabled": false,
+    "animations":true,
     "showGridLines": true,
     "colorScheme":{
       "domain":["#a70000","#dc3545","#ffc107","#c2c2c2"]
     }
 };
-  constructor(public store: Store<fromFeature.State>) { }
+  constructor(public store: Store<fromFeature.State>,
+              public cdr: ChangeDetectorRef) {}
+
+
+  ngAfterViewInit(){
+    //setting initial width of graph
+    this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300];
+    this.cdr.detectChanges();
+  }
 
   ngOnInit(): void {
   
@@ -51,6 +63,17 @@ export class LogAnalysisComponent implements OnInit ,OnChanges{
     console.log('value changed', this.canaryId, this.serviceId);
     this.getLogAnalysis()
   }
+
+  // below function is use to make page responsive
+  @HostListener('window:click', ['$event.target'])
+    handleClick(target){
+      if(target.classList['value'] === 'fa fa-chevron-right' || target.classList['value'] === 'fa fa-chevron-left' || target.classList['value'] === 'ng-star-inserted' || target.classList[1] === 'fa-bars' || target.textContent === 'Log Analysis'){
+        this.chartSize = [0,300];
+        setTimeout(() =>{
+          this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
+        },500)
+      }
+    }
 
   getDetails(){
     console.log(this.canaryId,this.serviceId);

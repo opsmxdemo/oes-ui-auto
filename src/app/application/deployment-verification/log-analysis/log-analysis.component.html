@@ -2,10 +2,12 @@
   <div class="d-flex px-3 align-items-center mb-2">
     <ul class="nav nav-tabs nav-tabs-btns p-0" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="graph01-tab" data-toggle="tab" href="#graph01" role="tab" aria-controls="graph01" aria-selected="true"><img src="../../../assets/images/chart_line.png" alt=""></a>
+        <a class="nav-link active" id="graph01-tab" data-toggle="tab" href="#graph01" role="tab" aria-controls="graph01"
+          aria-selected="true"><img src="../../../assets/images/chart_line.png" alt=""></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="graph02-tab" data-toggle="tab" href="#graph02" role="tab" aria-controls="graph02" aria-selected="false"><img src="../../../assets/images/bar_lines.png" alt=""></a>
+        <a class="nav-link" id="graph02-tab" data-toggle="tab" href="#graph02" role="tab" aria-controls="graph02"
+          aria-selected="false"><img src="../../../assets/images/bar_lines.png" alt=""></a>
       </li>
     </ul>
 
@@ -16,13 +18,14 @@
       </div>
       <!-- /.risk -->
       <div class="dropdown ml-3">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           Low
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" href="#">Low</a>
-          <a class="dropdown-item" href="#">High</a>  
-          <a class="dropdown-item" href="#">Medium</a>  
+          <a class="dropdown-item" href="#">High</a>
+          <a class="dropdown-item" href="#">Medium</a>
         </div>
       </div>
       <!-- <span id="sensitivityDropdown">{{logAnalysisResults?.sensitivity}}</span>
@@ -31,7 +34,7 @@
           <option *ngFor="let sensitivity of sensitivityLevels" value="{{sensitivity}}">{{sensitivity}}
           </option>
         </select> -->
-                                          
+
       <button class="btn ml-3 btn-primary" (click)="getDetails()">Reclassify</button>
     </div>
     <!-- /.ml-auto -->
@@ -39,45 +42,50 @@
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="graph01" role="tabpanel" aria-labelledby="graph01-tab">
       <div class="dot_container p-3">
-        <div class="dropdown dropdown-icon-remove float-right">
-          <button class="btn p-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="../../../assets/images/dotted-icon.png" alt="">
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-            <li class="dropdown-item">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="customCheckdot1">
-                <label class="custom-control-label" for="customCheckdot1"><span class="dot_ind" style="background-color: #a32133;"></span>Critical</label>
-              </div>
-            </li>
-            <li class="dropdown-item">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="customCheckdot2">
-                <label class="custom-control-label" for="customCheckdot2"><span class="dot_ind" style="background-color: #e0392e;"></span>Error</label>
-              </div>
-            </li>
-            <li class="dropdown-item">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="customCheckdot3">
-                <label class="custom-control-label" for="customCheckdot3"><span class="dot_ind" style="background-color: #f3af70;"></span>Warning</label>
-              </div>
-            </li>
-            <li class="dropdown-item">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="customCheckdot4">
-                <label class="custom-control-label" for="customCheckdot4"><span class="dot_ind" style="background-color: #babebd;"></span>Others</label>
-              </div>
-            </li>
-          </ul>
+        <div class="graph" #ChartSize>
+          <div class="dropdown dropdown-icon-remove float-right">
+            <button class="btn p-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <img src="../../../assets/images/dotted-icon.png" alt="">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <li class="dropdown-item">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheckdot1">
+                  <label class="custom-control-label" for="customCheckdot1"><span class="dot_ind"
+                      style="background-color: #a32133;"></span>Critical</label>
+                </div>
+              </li>
+              <li class="dropdown-item">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheckdot2">
+                  <label class="custom-control-label" for="customCheckdot2"><span class="dot_ind"
+                      style="background-color: #e0392e;"></span>Error</label>
+                </div>
+              </li>
+              <li class="dropdown-item">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheckdot3">
+                  <label class="custom-control-label" for="customCheckdot3"><span class="dot_ind"
+                      style="background-color: #f3af70;"></span>Warning</label>
+                </div>
+              </li>
+              <li class="dropdown-item">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="customCheckdot4">
+                  <label class="custom-control-label" for="customCheckdot4"><span class="dot_ind"
+                      style="background-color: #babebd;"></span>Others</label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <app-bubble-chart [dataSource]="bubbleChartData" [view]="chartSize" [chartProperty]="bubbleChartProperty"></app-bubble-chart>
         </div>
-        <app-bubble-chart [dataSource]="bubbleChartData" [view]= "view" [chartProperty]="bubbleChartProperty">
-      </app-bubble-chart>
-        <!-- <img src="../../../assets/images/dot-chart.jpg" class="img-fluid"  alt="dot chart" /> -->
       </div>
       <!-- /.dot_container -->
     </div>
     <div class="tab-pane fade" id="graph02" role="tabpanel" aria-labelledby="graph02-tab">
-      <img src="../../../assets/images/dot-chart.jpg" class="img-fluid"  alt="dot chart" />
+      <img src="../../../assets/images/dot-chart.jpg" class="img-fluid" alt="dot chart" />
     </div>
   </div>
 </div>
@@ -86,19 +94,24 @@
 <div class="tab-default pt-3">
   <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" id="unexpected-tab" data-toggle="tab" href="#unexpected" role="tab" aria-controls="unexpected" aria-selected="true">Unexpected</a>
+      <a class="nav-link active" id="unexpected-tab" data-toggle="tab" href="#unexpected" role="tab"
+        aria-controls="unexpected" aria-selected="true">Unexpected</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="expected-tab" data-toggle="tab" href="#expected" role="tab" aria-controls="expected" aria-selected="false">Expected</a>
+      <a class="nav-link" id="expected-tab" data-toggle="tab" href="#expected" role="tab" aria-controls="expected"
+        aria-selected="false">Expected</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="baseline-tab" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline" aria-selected="false">Baseline</a>
+      <a class="nav-link" id="baseline-tab" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline"
+        aria-selected="false">Baseline</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="ignored-tab" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored" aria-selected="false">Ignored</a>
+      <a class="nav-link" id="ignored-tab" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored"
+        aria-selected="false">Ignored</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
+      <a class="nav-link" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all"
+        aria-selected="false">All</a>
     </li>
   </ul>
   <div class="tab-content" id="myTabDefaultContent">
@@ -110,13 +123,16 @@
             <div class="score ml-auto">Impact On Score {{log.scoreReduction?.high}}</div>
             <div class="times"><b>{{log.v1Len}}</b>Baseline</div>
             <div class="times"><b>{{log.v2Len}}</b>New Release</div>
-            <div class="error_graph"><img src="../../../assets/images/graph_lines_01.png" class="img-fluid" alt="graph" /></div>
-            
+            <div class="error_graph"><img src="../../../assets/images/graph_lines_01.png" class="img-fluid"
+                alt="graph" /></div>
+
             <div class="dropdown error_dropdown">
-              <button class="btn text-danger pt-0 pl-0 pb-0 pr-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn text-danger pt-0 pl-0 pb-0 pr-2 dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="../../../assets/images/error_icon.png" class="d-inline-block" alt="icon" /> Error
               </button>
-              <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
+                aria-labelledby="dropdownMenuButton">
                 <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
                   <span>Reason for Reclassification</span>
                   <i class="fa text-muted fa-times"></i>
@@ -135,14 +151,14 @@
               </div>
             </div>
             <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="'#log' + log.id"
-            aria-expanded="true" aria-controls="collapse01">
+              aria-expanded="true" aria-controls="collapse01">
               <i class="fa fa-sort-down"></i>
             </button>
           </div>
 
           <div id="log{{log.id}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
-            <div class="card-body text-wrap-normal" >                  
-               <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>
+            <div class="card-body text-wrap-normal">
+              <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>
             </div>
           </div>
         </div>
@@ -163,7 +179,7 @@
                 </div>
                 /.dropdown_header -->
 
-                <!-- <div>
+        <!-- <div>
                   <div class="form-group mb-2">
                     <textarea class="form-control" rows="5"></textarea>
                   </div>
@@ -201,7 +217,7 @@
           </div>
         </div>  -->
 
-  
+
       </div>
     </div>
     <div class="tab-pane p-4 fade" id="expected" role="tabpanel" aria-labelledby="expected-tab">
