@@ -474,12 +474,12 @@
                 </ul>
                 
                 <div class="tab-content" id="myTabContent">
-                    <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="tab-pane p-4 fade show"
-                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
+                    <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="tab-pane p-4 fade "
+                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}" id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab">
                         <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-log-analysis>
                       </div>
-                    <div class="tab-pane mp-4 fade" 
-                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
+                    <div class="tab-pane mp-4 fade"
+                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}" id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab">
                         <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
                       </div>
                 </div>
