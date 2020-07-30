@@ -50,10 +50,10 @@
                 <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{metricSelectedRow === i && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
                   <td>{{apmMetric.name}}</td>
                   <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
@@ -188,10 +188,10 @@
                 <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{metricSelectedRow === i && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
                   <td>{{apmMetric.name}}</td>
                   <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
