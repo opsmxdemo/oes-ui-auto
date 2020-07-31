@@ -67,6 +67,33 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       "textclass" : "text-muted"
     }
   ];
+  clusterTagList = [
+    {	
+      "value":"BUILD ERROR",
+      "displayValue":"Build Error",
+      "textclass" : "text-danger"
+    },
+    {	
+      "value":"INFRA ERROR",
+      "displayValue":"Infra Error",
+      "textclass" : "text-error"
+    },
+    {	
+      "value":"BUILD WARNING",
+      "displayValue":"Build Warning",
+      "textclass" : "text-warning"
+    },
+    {	
+      "value":"INFRA WARNING",
+      "displayValue":"Infra Warning",
+      "textclass" : "text-warning"
+    },
+    {	
+      "value":"UNCLASSIFIED",
+      "displayValue":"UnClassified",
+      "textclass" : "text-muted"
+    }
+  ];
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef) {}
 
@@ -221,6 +248,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     console.log(e.target.value);
     console.log(log);
   }
+
+  changeClusterTag(e,log){
+    console.log(e.target.value);
+    console.log(log);
+  };
 
   onClickLogEventTab(eventTab){
       console.log(eventTab);
