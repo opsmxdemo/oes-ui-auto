@@ -7,12 +7,14 @@ export interface State {
     logsResults: any;
     errorMessage: string;
     deployementLoading: boolean;
+    logsEventResults: any;
 }
 
 export const initialState: State = {
     logsResults: null,
     errorMessage: null,
-    deployementLoading: false
+    deployementLoading: false,
+    logsEventResults : null
 }
 
 export function LogAnalysisReducer(
@@ -32,6 +34,21 @@ export function LogAnalysisReducer(
             (state, action) => ({
                 ...state,
                 logsResults: action.logsResults,
+                deployementLoading: false
+            })
+        ),on(LogAnalysisActions.loadEventLogResults,
+            (state,action) => ({
+                ...state,
+                deployementLoading: true,
+                canaryId: action.canaryId,
+                serviceId: action.serviceId,
+                event : action.event
+            })
+        ),
+        on(LogAnalysisActions.fetchEventLogsResults,
+            (state, action) => ({
+                ...state,
+                logsEventResults: action.logsEventResults,
                 deployementLoading: false
             })
         )

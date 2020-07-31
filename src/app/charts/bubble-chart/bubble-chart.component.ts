@@ -26,6 +26,8 @@ export class BubbleChartComponent implements OnInit {
   gradient: boolean;
   autoScale: boolean;
   colorScheme :any;
+  legendTitle: string;
+  //tooltipTemplate : any;
 
   constructor() { }
 
@@ -42,7 +44,9 @@ export class BubbleChartComponent implements OnInit {
     this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
     this.autoScale = this.chartProperty.autoScale !== undefined ? this.chartProperty.autoScale : true;
     this.legendPosition = this.chartProperty.legendPosition !== undefined ? this.chartProperty.legendPosition : "below";
+    this.legendTitle = this.chartProperty.legendTitle !== undefined ? this.chartProperty.legendTitle : "";
     this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798','#fed856','#c2c2c2']};
+    //this.tooltipTemplate = this.chartProperty.tooltipTemplate !== undefined ? this.chartProperty.tooltipTemplate
   }
 
 

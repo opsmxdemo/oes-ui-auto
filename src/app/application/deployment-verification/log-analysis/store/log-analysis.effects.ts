@@ -43,16 +43,14 @@ export class LogAnalysisEffect {
     ) { }
 
     
-    // Below effect is use for fetch latest run
-    fetchLogAnalysisResults = createEffect(() =>
+// Below effect is use for fetch logs on unexpected events run
+fetchLogAnalysisResults = createEffect(() =>
     this.actions$.pipe(
         ofType(LogAnalysisActions.loadLogResults),
         switchMap((action) => {                 
             // return this.http.get('/assets/data/logsData.json').pipe(                    
             return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
                 map(resdata => {
-                   //console.log("----effect-log-analysis",resdata);
-                    //debugger;
                    return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
                 }),
                 catchError(errorRes => {
@@ -63,4 +61,23 @@ export class LogAnalysisEffect {
         })
     )
 )
+
+//The effect is used to fetch logs resulst based on each tab ( expected, ignore, baseline etc)
+fetchEventLogsResults = createEffect(() =>
+    this.actions$.pipe(
+        ofType(LogAnalysisActions.loadEventLogResults),
+        switchMap((action) => {  
+            return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/clustersByEvent?canaryId=' + action.canaryId + '&serviceId=' + action.serviceId + '&event=' + action.event).pipe(                  
+                map(resdata => {
+                   return LogAnalysisActions.fetchEventLogsResults({logsEventResults:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 }
