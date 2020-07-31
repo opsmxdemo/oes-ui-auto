@@ -130,10 +130,11 @@
                 alt="graph" /></div>
 
             <div class="dropdown error_dropdown">
-              <button class="btn text-danger pt-0 pl-0 pb-0 pr-2 dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="../../../assets/images/error_icon.png" class="d-inline-block" alt="icon" /> Error
-              </button>
+              <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}"> 
+                <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor" class="{{criticality.textclass}}">
+                  {{criticality.displayValue}}
+                </option>
+              </select>
               <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
                 aria-labelledby="dropdownMenuButton">
                 <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
@@ -167,19 +168,7 @@
         </div>
       </div>
       <h3 *ngIf="logAnalysisData?.clusters?.length == 0">No Content</h3>
-    </div>
-    <!-- <div class="tab-pane p-4 fade" id="expected" role="tabpanel" aria-labelledby="expected-tab">
-      <h3>No Content</h3>
-    </div>
-    <div class="tab-pane p-4 fade" id="baseline" role="tabpanel" aria-labelledby="baseline-tab">
-      <h3>No Content</h3>
-    </div>
-    <div class="tab-pane p-4 fade" id="ignored" role="tabpanel" aria-labelledby="ignored-tab">
-      <h3>No Content</h3>
-    </div>
-    <div class="tab-pane p-4 fade" id="all" role="tabpanel" aria-labelledby="all-tab">
-      <h3>No Content</h3>
-    </div> -->
+    </div>    
   </div>
 </div>
 
