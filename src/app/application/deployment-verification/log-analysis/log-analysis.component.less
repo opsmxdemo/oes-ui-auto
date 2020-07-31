@@ -1,4 +1,26 @@
 .criticality-select{
-    border-left: 5px solid;
-    padding-left: 5px !important;    
+    border-left: 7px solid;
+    padding-left: 5px !important;
+}
+.chart-bg-color{
+    background: #f4f8fb;
+}
+.diamond {
+    position: relative;
+    height: 27px;
+    width: 27px;
+    line-height: 29px;
+    text-align: center;
+    margin: 10px;
+}
+.diamond:before {
+    position: absolute;
+    content: '';
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    transform: rotateX(25deg) rotateZ(45deg);
+    border: 2px solid #a4a9a5;
+    border-radius: 4px;
 }
