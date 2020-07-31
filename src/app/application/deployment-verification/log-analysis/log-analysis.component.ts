@@ -19,7 +19,9 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   logAnalysisResults :any;
   logAnalysisClusters :[] ;
   logAnalysisData : any;
-  sensitivityLevels :any = ["HIGH", "MEDIUM", "LOW"];
+  sensitivityLevels :any = ["high", "medium", "low"];
+  logSensitivityScores:any= [{"high":{}}, {"low":{}}, {"medium":{}}];
+  selectedSensitivity:string = "";
   bubbleChartData : any = [];
   criticalArray :any;
   errorArray : any;
@@ -39,7 +41,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     "animations":true,
     "showGridLines": true,
     "colorScheme":{
-      "domain":["#a70000","#dc3545","#ffc107","#c2c2c2"]
+      "domain":["#a70000","#f1727f","#ffc107","#c2c2c2"]
     }
 };
   constructor(public store: Store<fromFeature.State>,
@@ -86,7 +88,9 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       if(resData.logsResults !== null){
           // this.deployementLoading = resData.deployementLoading;
           this.logAnalysisResults = resData.logsResults; 
-          this.logAnalysisResults.data ? this.logAnalysisData = this.logAnalysisResults.data : [];          
+          this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
+          this.logAnalysisResults.data ? this.logAnalysisData = this.logAnalysisResults.data : this.logAnalysisData = [];          
+          
           //this.logAnalysisData.clusters ? this.logAnalysisClusters = this.logAnalysisData.clusters : [];
           
           this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
@@ -140,6 +144,40 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
             "series":warningClusters
           }
         ];
+
+        if(this.logAnalysisResults.scores){
+          this.logSensitivityScores = [];
+          if(parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.high){
+            let obj = {"high":{ "score" : this.logAnalysisResults.scores.high, "risk" : "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success"}};
+            this.logSensitivityScores.push(obj);
+          }else if(parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.high){
+            let obj = {"high":{ "score" : this.logAnalysisResults.scores.high, "risk" : "High", "iconclass":"fa-arrow-up text-danger", "textclass": "text-danger"}};
+            this.logSensitivityScores.push(obj);            
+          }else{
+            let obj = {"high":{ "score" : this.logAnalysisResults.scores.high, "risk" : "Medium", "iconclass":"fa-arrow-up text-warning", "textclass": "text-warning"}};
+            this.logSensitivityScores.push(obj);            
+          }
+          if(parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.medium){
+            let obj = {"medium":{ "score" : this.logAnalysisResults.scores.medium, "risk" : "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success"}};
+            this.logSensitivityScores.push(obj);
+          }else if(parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.medium){
+            let obj = {"medium":{ "score" : this.logAnalysisResults.scores.medium, "risk" : "High", "iconclass":" text-danger", "textclass": "text-danger"}};
+            this.logSensitivityScores.push(obj);            
+          }else{
+            let obj = {"medium":{ "score" : this.logAnalysisResults.scores.medium, "risk" : "Medium", "iconclass":"fa-arrow-up text-warning", "textclass": "text-warning"}};
+            this.logSensitivityScores.push(obj);            
+          }
+          if(parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.low){
+            let obj = {"low":{ "score" : this.logAnalysisResults.scores.low, "risk" : "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success"}};
+            this.logSensitivityScores.push(obj);
+          }else if(parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.high){
+            let obj = {"low":{ "score" : this.logAnalysisResults.scores.low, "risk" : "High", "iconclass":"fa-arrow-up text-danger", "textclass": "text-danger"}};
+            this.logSensitivityScores.push(obj);            
+          }else{
+            let obj = {"low":{ "score" : this.logAnalysisResults.scores.low, "risk" : "Medium", "iconclass":"fa-arrow-up text-warning", "text-class": "text-warning"}};
+            this.logSensitivityScores.push(obj);            
+          }
+        }
         
           // this.store.dispatch(LogAnalysisAction.loadLogResults({canaryId: this.deployementRun}));
         

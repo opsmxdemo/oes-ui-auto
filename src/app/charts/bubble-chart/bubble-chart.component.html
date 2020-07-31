@@ -11,10 +11,16 @@
   [yAxisLabel]="yAxisLabel"  
   [autoScale]="autoScale"
   [legendPosition]="legendPosition"
+  [legendTitle]="legendTitle"
   [minRadius]="5"
   [maxRadius]="5"
   [results]="dataSource"
   (select)="onSelect($event)"
   style="fill: #999999;"
   >
+  <ng-template #tooltipTemplate let-model="model">
+    <div class="tooltip" style="background-color: blue;">
+      {{model}}
+    </div>
+  </ng-template>
 </ngx-charts-bubble-chart>
