@@ -45,6 +45,28 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       "domain":["#a70000","#f1727f","#ffc107","#c2c2c2"]
     }
   };
+  criticalityList = [
+    {	
+      "criticalityColor":"dark red",
+      "displayValue":"Critical Error",
+      "textclass" : "text-danger"
+    },
+    {	
+      "criticalityColor":"red",
+      "displayValue":"Error",
+      "textclass" : "text-error"
+    },
+    {	
+      "criticalityColor":"yellow",
+      "displayValue":"Warning",
+      "textclass" : "text-warning"
+    },
+    {	
+      "criticalityColor":"green",
+      "displayValue":"Ignore",
+      "textclass" : "text-muted"
+    }
+  ];
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef) {}
 
@@ -193,6 +215,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   changeSensitivity(e) {
     console.log(e.target.value);
+  }
+
+  changeCriticality(e,log){
+    console.log(e.target.value);
+    console.log(log);
   }
 
   onClickLogEventTab(eventTab){
