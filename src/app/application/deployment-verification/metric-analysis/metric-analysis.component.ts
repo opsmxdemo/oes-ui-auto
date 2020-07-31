@@ -35,6 +35,10 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   @Input() canaryId: string;
   @Input() serviceId: number;
 
+  statusSearchData = [false,false,false];                             // It is use to store data related to status level checkbox for search.
+  coreAPMData = [];                                                   // It is use to store without filtered APM Data.
+  coreInfraData = [];                                                 // It is use to store without filtered Infra Data.
+  coreAdvancedData = [];                                              // It is use to store without filtered Advanced Data.
   menuWidth: any;                                                     // It is use to store offsetWeidth of matric table.
   menuTop:number = 220;                                               // It define top of metric table.
   sticky: boolean = false;                                            // It is use to perform operation whether matric menu is sticky or not. 
@@ -73,7 +77,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
     colorScheme:{domain: ['#33b3f1','#f29798']}
   }
   typeColor = '';                                                      // It is use to store style class of current active metric type.
-  childSelectedMetric = '';                                            // It is use to store Child Metric name selected in child component.
+  selectedMetricName = '';                                             // It is use to store Metric name selected in component to display charts.
   parentMetricName = '';                                               // It is use to store name of parent metric whose child is selected.
   metricStatsData = [];                                                // It is use to store data related to stats table exist in Infra and advanced graph section.
   analysisTableData = '';                                              // It is use to store data related to analysis table exist in Infra and advanced graph section.
@@ -101,6 +105,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
           this.metricSelectedRow = -1;
           this.apmMetricSelectedType = '';
           this.metricType = '';
+          this.statusSearchData = [false,false,false];
           if(this.metricData.canary_output.results !== undefined){
             this.metricData.canary_output.results.forEach((metricData) => {
               switch(metricData.category){
@@ -116,6 +121,12 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
               }
             });
           }
+
+          // populating core data to use in status checkbox filter functionality.
+          this.coreAPMData = this.APMMetricData;
+          this.coreInfraData = this.InfraMetricData;
+          this.coreAdvancedData = this.AdvancedMetricData;
+
           // creating initial array for Infra metric
           if(this.InfraMetricData.length > 0){
             this.childMetric['Infra'] = [];
@@ -124,8 +135,8 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             })
           }
 
-           // creating initial array for Advanced metric
-           if(this.AdvancedMetricData.length > 0){
+          // creating initial array for Advanced metric
+          if(this.AdvancedMetricData.length > 0){
             this.childMetric['Advanced'] = [];
             this.AdvancedMetricData.forEach(advancedChildData => {
               this.childMetric['Advanced'].push(false);
@@ -135,7 +146,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
           // load initial chart in chart section
           if(this.APMMetricData.length>0){
             if(this.metricSelectedRow === -1 && this.apmMetricSelectedType === ''){
-              this.onClickAPMRow(0,null,'Latency');
+              this.onClickAPMRow(0,null,'Latency',this.APMMetricData[0].name);
             }
           }else if(this.InfraMetricData.length>0){
             this.childMetric['Infra'][0] = true;
@@ -180,8 +191,6 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
- 
-  //@HostListener('window:mousemove', ['$event'])
   @HostListener('window:click', ['$event'])
   @HostListener('window:scroll', ['$event'])
     handleScroll(){
@@ -224,7 +233,82 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
     } else if(score>this.thresholdScore.maxScore){
       return 'countSuccess';
     }
-  } 
+  }
+
+  // Below function is execute when user perform search on table using search input.
+  onSearch(){
+
+  }
+  
+  // Below function is use to filter table based on selected checkbox
+  onSelectCheckbox(event){
+    let filteredAPMData = [];
+    let filteredInfraData = [];
+    let filteredAdvancedData = [];
+    if(event.target.checked){
+      this.updateStatusSearchData(event.target.id,true);
+    }else{
+      this.updateStatusSearchData(event.target.id,false);
+    }
+    //filtering apm metric data on status search basics
+    if(this.coreAPMData.length > 0){
+      filteredAPMData = this.coreAPMData.filter(metric => {
+        return this.filterMetricData(metric);
+      })
+    }
+    
+    // filtering Infra metric data on status search basics
+    if(this.coreInfraData.length > 0){
+      filteredInfraData = this.coreInfraData.filter(metric => {
+        return this.filterMetricData(metric);
+      })
+    }
+
+    // filtering Advanced metric data on status search basics
+    if(this.coreAdvancedData.length > 0){
+      filteredAdvancedData = this.coreAdvancedData.filter(metric => {
+        return this.filterMetricData(metric);
+      })
+    }
+    
+    // checking whether status search is enabled or not
+    if(this.statusSearchData.indexOf(true) === -1){
+      this.APMMetricData = this.coreAPMData;
+      this.InfraMetricData = this.coreInfraData;
+      this.AdvancedMetricData = this.coreAdvancedData;
+    }else {
+      this.APMMetricData = filteredAPMData;
+      this.InfraMetricData = filteredInfraData;
+      this.AdvancedMetricData = filteredAdvancedData;
+    }
+    
+  }
+  
+  // Below function is use to update statusSearchData after click on checkbox
+  updateStatusSearchData(id,value){
+    if(id === 'indigatorRed'){
+      this.statusSearchData[0] = value;
+    }else if(id === 'indigatorWarning'){
+      this.statusSearchData[1] = value;
+    }else{
+      this.statusSearchData[2] = value;
+    }
+  }
+
+  // Below function is use to filtering the data after click on checkbox
+  filterMetricData(metric){
+    if(this.statusSearchData[0] && metric.groupScore < this.thresholdScore.minScore){
+       return metric;
+     }else if(this.statusSearchData[1] && metric.groupScore > this.thresholdScore.minScore && metric.groupScore < this.thresholdScore.maxScore){
+       return metric;
+     }else if(this.statusSearchData[2] && metric.groupScore > this.thresholdScore.maxScore){
+       return metric
+     }else{
+       if(this.statusSearchData.indexOf(true) === -1){
+         return metric;
+       }
+     }
+  }
 
   // Below function is execute when sticky table is visible to make selected row highlited.
   selectedTableSticky(){
@@ -244,14 +328,15 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   }
 
   // Below function is execute on click of APM metric table row
-  onClickAPMRow(rowIndex,event,id){
+  onClickAPMRow(rowIndex,event,id,metricNmae){
     this.metricSelectedRow = rowIndex;
+    this.selectedMetricName = metricNmae;
     this.metricType = 'APM';
     let chartsData = [];
     this.apmGraphProperty = []; 
     if(event !== null){
       this.apmMetricSelectedType = event.target.id;
-      this.typeColor = event.target.parentNode.classList[0];
+      this.typeColor = this.AvgerageScore(rowIndex,event.target.id);
     }else{
       this.apmMetricSelectedType = id;
       this.typeColor = this.AvgerageScore(rowIndex,id);
@@ -339,7 +424,7 @@ onClickParentRow(index,event,parentId){
 recivedChildData(event){
   this.metricType = event.type;
   this.metricSelectedRow = event.index;
-  this.childSelectedMetric = event.selectedMetricName;
+  this.selectedMetricName = event.selectedMetricName;
   this.parentMetricName = event.parent;
   this.metricStatsData = [];
   this.analysisTableData = '';

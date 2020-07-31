@@ -10,7 +10,7 @@
       </tr>
     </thead>
     <tbody>
-        <tr class="{{selectedRow === i && selectedType === childData.category && selectedMetricName === metridata.metricName ? 'selected-row' : ''}}" 
+        <tr class="{{selectedType === childData.category && selectedMetricName === metridata.metricName ? 'selected-row' : ''}}" 
           *ngFor = "let metridata of childData.metricList | filter:searchData; let i=index" id="{{childData.category}}" 
           (click)="onSelectRow(i,$event,metridata.metricName)">
           <td class="cell-heading">{{metridata.metricName}}</td>

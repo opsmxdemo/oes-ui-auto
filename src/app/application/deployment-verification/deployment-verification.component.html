@@ -83,7 +83,7 @@
           <ng-container *ngFor="let service of currentPage | filter:searchData; let i=index">
           <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
             <td class="service-selection" (click)="getService(service)">{{service.serviceName}}</td>
-            <td width="30" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore | number: '1.0-0'}}</td>
+            <td width="30" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore >= 0 ? (service.finalScore | number: '1.0-0') : 'N/A'}}</td>
             <td width="30"  [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.status}}</td>
           </tr> 
         </ng-container>               
