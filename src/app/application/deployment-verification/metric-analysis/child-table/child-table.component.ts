@@ -17,11 +17,12 @@ export class ChildTableComponent implements OnInit {
 
   constructor() { }
 
+
   ngOnInit(){}
 
   // Below function is use to return appropriate color on the basics of matric score calculation
   assignProperColor(score){
-    if(score === 0 || score === undefined){
+    if(score === undefined){
       return 'countDisabled';
     } else if(score < this.thresholdScore['minScore']){
       return 'countDanger';

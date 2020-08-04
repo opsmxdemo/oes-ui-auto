@@ -201,7 +201,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
         const windowScroll = window.pageYOffset;
         if(windowScroll >= this.menuTop){
             this.sticky = true;
-            this.selectedTableSticky();
+            this.selectedTableSticky(false);
         } else {
             this.sticky = false;
         }
@@ -218,13 +218,13 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
       }
     });
     const averageScore = typeScore === 0 ? typeScore : typeScore/counter;
-    const assignedColor = this.assignProperColor(averageScore);
+    const assignedColor = counter > 0 ? this.assignProperColor(averageScore) : this.assignProperColor(undefined);
     return assignedColor + 'btn';
   }
 
   // Below function is use to return appropriate color on the basics of matric score calculation
   assignProperColor(score){
-    if(score === 0 || score === undefined){
+    if(score === undefined){
       return 'countDisabled';
     } else if(score<this.thresholdScore.minScore){
       return 'countDanger';
@@ -237,7 +237,11 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
 
   // Below function is execute when user perform search on table using search input.
   onSearch(){
-
+    if(this.searchData === ''){
+      // below code is use to show selected row while searching
+      this.selectedTableSticky(true);
+    }
+    
   }
   
   // Below function is use to filter table based on selected checkbox
@@ -282,7 +286,28 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
       this.AdvancedMetricData = filteredAdvancedData;
     }
     
+    this.childMetric['Infra'].forEach((el,index) => {
+        this.resetCarret('Infra'+index,el)
+    })
+    
   }
+
+  // Below function is use to execute when status Checkbox is selected to reset carret present in group level row
+  resetCarret(selectorId,rowSelected){
+    setTimeout(()=>{
+      if(rowSelected){
+        if(this.elRef.nativeElement.querySelector('#sticky'+selectorId) !== null){
+          this.elRef.nativeElement.querySelector('#sticky'+selectorId).style.transform = 'rotate(90deg)';
+        }
+        this.elRef.nativeElement.querySelector('#'+selectorId).style.transform = 'rotate(90deg)';
+      }else{
+        if(this.elRef.nativeElement.querySelector('#sticky'+selectorId) !== null){
+          this.elRef.nativeElement.querySelector('#sticky'+selectorId).style.transform = 'rotate(0deg)';
+        }
+        this.elRef.nativeElement.querySelector('#'+selectorId).style.transform = 'rotate(0deg)';
+      }  
+    },200)
+  } 
   
   // Below function is use to update statusSearchData after click on checkbox
   updateStatusSearchData(id,value){
@@ -311,16 +336,30 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   }
 
   // Below function is execute when sticky table is visible to make selected row highlited.
-  selectedTableSticky(){
-    if(this.InfraMetricData.length > 0 && this.elRef.nativeElement.querySelector('#stickyInfra0') !== null){
+  selectedTableSticky(searchEnabled){
+    if(this.InfraMetricData.length > 0){
       let selectedRow = this.childMetric['Infra'].indexOf(true);
       if( selectedRow >= 0){
-        this.elRef.nativeElement.querySelector('#stickyInfra'+selectedRow).style.transform = 'rotate(90deg)';
+        if(this.elRef.nativeElement.querySelector('#stickyInfra0') !== null){
+          this.elRef.nativeElement.querySelector('#stickyInfra'+selectedRow).style.transform = 'rotate(90deg)';
+        }
+        if(searchEnabled){
+          setTimeout(()=>{
+            this.elRef.nativeElement.querySelector('#Infra'+selectedRow).style.transform = 'rotate(90deg)';
+          },200)
+        }
       }
-    } else if (this.AdvancedMetricData.length > 0 && this.elRef.nativeElement.querySelector('#stickyAdvanced0') !== null){
+    } else if (this.AdvancedMetricData.length > 0){
       let selectedRow = this.childMetric['Advanced'].indexOf(true);
       if( selectedRow >= 0){
-        this.elRef.nativeElement.querySelector('#stickyAdvanced'+selectedRow).style.transform = 'rotate(90deg)';
+        if(this.elRef.nativeElement.querySelector('#stickyAdvanced0') !== null){
+          this.elRef.nativeElement.querySelector('#stickyAdvanced'+selectedRow).style.transform = 'rotate(90deg)';
+        }
+        if(searchEnabled){
+          setTimeout(()=>{
+            this.elRef.nativeElement.querySelector('#Advanced'+selectedRow).style.transform = 'rotate(90deg)';
+          },200)
+        }
       }
     } else {
       return 0;

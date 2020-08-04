@@ -9,14 +9,14 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
               </div>
-              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
+              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData" (keyup)="onSearch()">
             </div>
             <div class="field col-4">
-              <select class="form-control">
+              <!-- <select class="form-control">
                 <option value="">All</option>
                 <option value="">1</option>
                 <option value="">2</option>
-              </select>
+              </select> -->
             </div>
             <div class="checkbox-indigators d-flex align-items-center">
               <div class="cb_indigator cd_red">
@@ -40,10 +40,10 @@
                 <tr>
                   <th>APM METRIC</th>
                   <th class="text-center">SCORE</th>
-                  <th>LATENCY</th>
-                  <th>ERROR RATE</th>
-                  <th>THROUGHPUT</th>
-                  <th>APDEX</th>
+                  <th class="text-center">LATENCY</th>
+                  <th class="text-center">ERROR RATE</th>
+                  <th class="text-center">THROUGHPUT</th>
+                  <th class="text-center">APDEX</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,14 +147,14 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
               </div>
-              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData" (change)="onSearch()">
+              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData" (keyup)="onSearch()">
             </div>
             <div class="field col-4">
-              <select class="form-control">
+              <!-- <select class="form-control">
                 <option value="">All</option>
                 <option value="">1</option>
                 <option value="">2</option>
-              </select>
+              </select> -->
             </div>
             <div class="checkbox-indigators d-flex align-items-center">
               <div class="cb_indigator cd_red">
@@ -178,10 +178,10 @@
                 <tr>
                   <th>APM METRIC</th>
                   <th class="text-center">SCORE</th>
-                  <th>LATENCY</th>
-                  <th>ERROR RATE</th>
-                  <th>THROUGHPUT</th>
-                  <th>APDEX</th>
+                  <th class="text-center">LATENCY</th>
+                  <th class="text-center">ERROR RATE</th>
+                  <th class="text-center">THROUGHPUT</th>
+                  <th class="text-center">APDEX</th>
                 </tr>
               </thead>
               <tbody>
