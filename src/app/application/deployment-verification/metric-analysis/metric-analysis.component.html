@@ -9,26 +9,26 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
               </div>
-              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
+              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData" (keyup)="onSearch()">
             </div>
             <div class="field col-4">
-              <select class="form-control">
+              <!-- <select class="form-control">
                 <option value="">All</option>
                 <option value="">1</option>
                 <option value="">2</option>
-              </select>
+              </select> -->
             </div>
             <div class="checkbox-indigators d-flex align-items-center">
               <div class="cb_indigator cd_red">
-                <input type="checkbox" id="indigatorRed" checked>
+                <input type="checkbox" id="indigatorRed" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[0]">
                 <label for="indigatorRed"></label>
               </div>
               <div class="cb_indigator cb_warning">
-                <input type="checkbox" id="indigatorWarning">
+                <input type="checkbox" id="indigatorWarning" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[1]">
                 <label for="indigatorWarning"></label>
               </div>
               <div class="cb_indigator cb_success">
-                <input type="checkbox" id="indigatorSuccess">
+                <input type="checkbox" id="indigatorSuccess" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[2]">
                 <label for="indigatorSuccess"></label>
               </div>
             </div>
@@ -40,20 +40,20 @@
                 <tr>
                   <th>APM METRIC</th>
                   <th class="text-center">SCORE</th>
-                  <th>LATENCY</th>
-                  <th>ERROR RATE</th>
-                  <th>THROUGHPUT</th>
-                  <th>APDEX</th>
+                  <th class="text-center">LATENCY</th>
+                  <th class="text-center">ERROR RATE</th>
+                  <th class="text-center">THROUGHPUT</th>
+                  <th class="text-center">APDEX</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{metricSelectedRow === i && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
+                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{selectedMetricName === apmMetric.name && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null,apmMetric.name)">
                   <td>{{apmMetric.name}}</td>
                   <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Latency' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Error' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Throughput' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Apdex' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
@@ -65,17 +65,27 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">INFRA METRIC</th>
+                  <th>INFRA METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
-                  <th></th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let infraMetric of InfraMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === InfraMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="Infra"><i class="fas fa-chevron-right" id="Infra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(infraMetric.groupScore)}}">{{infraMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="Infra"><i class="fas fa-chevron-right" id="Infra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(infraMetric.groupScore)}} scorebox">{{infraMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{infraMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(infraMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
@@ -86,7 +96,7 @@
                             [searchData]="searchData" 
                             [selectedType]="metricType" 
                             [selectedRow]="metricSelectedRow"
-                            [selectedMetricName]="childSelectedMetric" 
+                            [selectedMetricName]="selectedMetricName" 
                             [thresholdScore]="thresholdScore"
                             (selectedElement)="recivedChildData($event)">
                           </app-child-table>
@@ -105,28 +115,39 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">ADVANCED METRIC</th>
+                  <th>ADVANCED METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let advancedMetric of AdvancedMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === AdvancedMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="Advanced"><i class="fas fa-chevron-right" id="Advanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}}">{{advancedMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="Advanced"><i class="fas fa-chevron-right" id="Advanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}} scorebox">{{advancedMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{advancedMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(advancedMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">
-                      <td [attr.colspan]="6">
+                      <td [attr.colspan]="5">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="advancedMetric" 
                             [searchData]="searchData" 
                             [selectedType]="metricType" 
                             [selectedRow]="metricSelectedRow"
-                            [selectedMetricName]="childSelectedMetric" 
+                            [selectedMetricName]="selectedMetricName" 
                             [thresholdScore]="thresholdScore"
                             (selectedElement)="recivedChildData($event)">
                           </app-child-table>
@@ -147,26 +168,26 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
               </div>
-              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData">
+              <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData" (keyup)="onSearch()">
             </div>
             <div class="field col-4">
-              <select class="form-control">
+              <!-- <select class="form-control">
                 <option value="">All</option>
                 <option value="">1</option>
                 <option value="">2</option>
-              </select>
+              </select> -->
             </div>
             <div class="checkbox-indigators d-flex align-items-center">
               <div class="cb_indigator cd_red">
-                <input type="checkbox" id="indigatorRed" checked>
+                <input type="checkbox" id="indigatorRed" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[0]">
                 <label for="indigatorRed"></label>
               </div>
               <div class="cb_indigator cb_warning">
-                <input type="checkbox" id="indigatorWarning">
+                <input type="checkbox" id="indigatorWarning" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[1]">
                 <label for="indigatorWarning"></label>
               </div>
               <div class="cb_indigator cb_success">
-                <input type="checkbox" id="indigatorSuccess">
+                <input type="checkbox" id="indigatorSuccess" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[2]">
                 <label for="indigatorSuccess"></label>
               </div>
             </div>
@@ -178,20 +199,20 @@
                 <tr>
                   <th>APM METRIC</th>
                   <th class="text-center">SCORE</th>
-                  <th>LATENCY</th>
-                  <th>ERROR RATE</th>
-                  <th>THROUGHPUT</th>
-                  <th>APDEX</th>
+                  <th class="text-center">LATENCY</th>
+                  <th class="text-center">ERROR RATE</th>
+                  <th class="text-center">THROUGHPUT</th>
+                  <th class="text-center">APDEX</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{metricSelectedRow === i && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null)">
+                <tr *ngFor = "let apmMetric of APMMetricData | filter:searchData; let i=index;" class="{{selectedMetricName === apmMetric.name && metricType === 'APM' ? 'selected-row' : ''}}" (click)="onClickAPMRow(i,$event,null,apmMetric.name)">
                   <td>{{apmMetric.name}}</td>
                   <td><span class="countBox {{assignProperColor(apmMetric.groupScore)}}" id="Score">{{apmMetric.groupScore}}</span></td>
-                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Latency' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Error' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Throughput' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
-                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{metricSelectedRow === i && apmMetricSelectedType === 'Apdex' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Latency')}}"><i id="Latency" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Latency' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Error')}}"><i id="Error" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Error' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Throughput')}}"><i id="Throughput" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Throughput' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
+                  <td class="text-center {{AvgerageScore(i,'Apdex')}}"><i id="Apdex" class="fa fa-square matricstatusicon {{selectedMetricName === apmMetric.name && apmMetricSelectedType === 'Apdex' && metricType === 'APM' ? 'activeBtn' : ''}}" aria-hidden="true"></i></td>
                 </tr>
               </tbody>
             </table>
@@ -203,17 +224,27 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">INFRA METRIC</th>
+                  <th>INFRA METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
-                  <th></th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let infraMetric of InfraMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === InfraMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="stickyInfra"><i class="fas fa-chevron-right" id="stickyInfra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(infraMetric.groupScore)}}">{{infraMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="stickyInfra"><i class="fas fa-chevron-right" id="stickyInfra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(infraMetric.groupScore)}} scorebox">{{infraMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{infraMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(infraMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
@@ -224,7 +255,7 @@
                             [searchData]="searchData" 
                             [selectedType]="metricType" 
                             [selectedRow]="metricSelectedRow"
-                            [selectedMetricName]="childSelectedMetric" 
+                            [selectedMetricName]="selectedMetricName" 
                             [thresholdScore]="thresholdScore"
                             (selectedElement)="recivedChildData($event)">
                           </app-child-table>
@@ -243,17 +274,27 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">ADVANCED METRIC</th>
+                  <th>ADVANCED METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
-                  <th></th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let advancedMetric of AdvancedMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === AdvancedMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="stickyAdvanced"><i class="fas fa-chevron-right" id="stickyAdvanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}}">{{advancedMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="stickyAdvanced"><i class="fas fa-chevron-right" id="stickyAdvanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}} scorebox">{{advancedMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{advancedMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(advancedMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">
@@ -264,7 +305,7 @@
                             [searchData]="searchData" 
                             [selectedType]="metricType" 
                             [selectedRow]="metricSelectedRow"
-                            [selectedMetricName]="childSelectedMetric" 
+                            [selectedMetricName]="selectedMetricName" 
                             [thresholdScore]="thresholdScore"
                             (selectedElement)="recivedChildData($event)">
                           </app-child-table>
@@ -304,13 +345,13 @@
                   <b class="countDisabledbtn">{{metricType === 'Infrastructure'?'INFRA' : metricType==='ADVANCED' ? 'ADVANCED' : 'UNKNOWN'}} METRIC : </b> 
                   <b>{{this.parentMetricName | uppercase}}</b>
                 </p>
-                <p class="mb-1"><b class="countDisabledbtn">COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{childSelectedMetric | uppercase}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{selectedMetricName | uppercase}}</b></p>
                 <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
                   <hr>
                   <i class="fa fa-line-chart" aria-hidden="true"></i>
                   <app-line-chart [dataSource]="chart" [chartProperty]="lineChartProperty" [view]="chartSize"></app-line-chart>
                 </div>
-                <p class="mb-1"><b class="countDisabledbtn">QUARTILE COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{childSelectedMetric | uppercase}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">QUARTILE COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{selectedMetricName | uppercase}}</b></p>
                 <div class="graph mb-4">
                   <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
                 </div>
@@ -326,7 +367,7 @@
                 </div>
                 <div class="card">
                   <div class="card-header text-uppercase">
-                    {{childSelectedMetric}}
+                    {{selectedMetricName}}
                   </div>
                   <div class="table-responsive">
                     <table class="table mb-0">

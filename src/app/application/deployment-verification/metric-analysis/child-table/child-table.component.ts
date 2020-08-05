@@ -17,11 +17,12 @@ export class ChildTableComponent implements OnInit {
 
   constructor() { }
 
+
   ngOnInit(){}
 
   // Below function is use to return appropriate color on the basics of matric score calculation
   assignProperColor(score){
-    if(score === 0 || score === undefined){
+    if(score === undefined){
       return 'countDisabled';
     } else if(score < this.thresholdScore['minScore']){
       return 'countDanger';
@@ -40,6 +41,15 @@ export class ChildTableComponent implements OnInit {
       index:rowIndex,
       parent:this.childData.name
     });
+  }
+
+  // Below function is return interval in form of array after calculating bucket score
+  intervalCount(intervalObj){
+    let intervalArr = [];
+    for(const interval in intervalObj){
+      intervalArr.push(intervalObj[interval].score);
+    }
+    return intervalArr;
   }
 
 }
