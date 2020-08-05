@@ -65,17 +65,27 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">INFRA METRIC</th>
+                  <th>INFRA METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
-                  <th></th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let infraMetric of InfraMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === InfraMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="Infra"><i class="fas fa-chevron-right" id="Infra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(infraMetric.groupScore)}}">{{infraMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="Infra"><i class="fas fa-chevron-right" id="Infra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(infraMetric.groupScore)}} scorebox">{{infraMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{infraMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(infraMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
@@ -105,21 +115,32 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">ADVANCED METRIC</th>
+                  <th>ADVANCED METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let advancedMetric of AdvancedMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === AdvancedMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="Advanced"><i class="fas fa-chevron-right" id="Advanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}}">{{advancedMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="Advanced"><i class="fas fa-chevron-right" id="Advanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}} scorebox">{{advancedMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{advancedMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(advancedMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">
-                      <td [attr.colspan]="6">
+                      <td [attr.colspan]="5">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="advancedMetric" 
@@ -203,17 +224,27 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">INFRA METRIC</th>
+                  <th>INFRA METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
-                  <th></th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let infraMetric of InfraMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === InfraMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="stickyInfra"><i class="fas fa-chevron-right" id="stickyInfra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(infraMetric.groupScore)}}">{{infraMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="stickyInfra"><i class="fas fa-chevron-right" id="stickyInfra{{i}}" (click)="onClickParentRow(i,$event,'Infra')"></i> {{infraMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(infraMetric.groupScore)}} scorebox">{{infraMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{infraMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(infraMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(infraMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(infraMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
@@ -243,17 +274,27 @@
             <table class="table valign-middle table-bottom-border">
               <thead>
                 <tr>
-                  <th [attr.colspan]="4">ADVANCED METRIC</th>
+                  <th>ADVANCED METRIC</th>
                   <th class="text-center scorebox">SCORE </th>
-                  <th></th>
+                  <th class="text-center">RANK</th>
+                  <th class="text-center">CRITICAL</th>
+                  <th class="text-center">WATCHLIST</th>
+                  <th class="text-center">INTERVALS</th>
                 </tr>
               </thead>
               <tbody>
                 <ng-container *ngFor="let advancedMetric of AdvancedMetricData | filter:searchData; let i=index">
                   <tr class="{{i+1 === AdvancedMetricData.length ? 'tableRowCustom' : ''}}">
-                    <td class="cell-heading" [attr.colspan]="4" id="stickyAdvanced"><i class="fas fa-chevron-right" id="stickyAdvanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
-                    <td class="text-center scorebox"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}}">{{advancedMetric.groupScore}}</span></td>
-                    <td></td>
+                    <td class="cell-heading" id="stickyAdvanced"><i class="fas fa-chevron-right" id="stickyAdvanced{{i}}" (click)="onClickParentRow(i,$event,'Advanced')"></i> {{advancedMetric.name}}</td>
+                    <td class="text-center"><span class="countBox {{assignProperColor(advancedMetric.groupScore)}} scorebox">{{advancedMetric.groupScore}}</span></td>
+                    <td class="text-center customtd">{{advancedMetric.groupRelevance}}</td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'critical')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'critical')">-</span></td>
+                    <td class="text-center customtd"><i *ngIf="containProperty(advancedMetric.metricList,'watchlist')" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!containProperty(advancedMetric.metricList,'watchlist')">-</span></td>
+                    <td class="text-center customtd">
+                      <ng-container *ngFor="let interval of intervalCount(advancedMetric.groupBucketScore);let j=index">
+                        <span class="countBox {{assignProperColor(interval)}} scorebox" data-toggle="tooltip" data-placement="top" title="Interval {{j+1}}">{{interval}}</span>
+                      </ng-container>
+                    </td>
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">

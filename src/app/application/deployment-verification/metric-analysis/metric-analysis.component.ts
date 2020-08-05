@@ -517,4 +517,23 @@ createStatsTable(versionName,restData){
   this.metricStatsData.push(statsObj);
 }
 
+// Below function is return true if group contain CRITICAL or WATCHLIST in it.
+containProperty(childObj,type){
+  let propertyexist = false;
+  childObj.forEach(childElement => {
+    if(childElement[type]){
+      propertyexist = true;
+    }
+  })
+  return propertyexist;
+}
+
+  // Below function is return interval in form of array after calculating bucket score
+  intervalCount(intervalObj){
+    let intervalArr = [];
+    for(const interval in intervalObj){
+      intervalArr.push(intervalObj[interval]);
+    }
+    return intervalArr;
+  }
 }
