@@ -43,4 +43,13 @@ export class ChildTableComponent implements OnInit {
     });
   }
 
+  // Below function is return interval in form of array after calculating bucket score
+  intervalCount(intervalObj){
+    let intervalArr = [];
+    for(const interval in intervalObj){
+      intervalArr.push(intervalObj[interval].score);
+    }
+    return intervalArr;
+  }
+
 }
