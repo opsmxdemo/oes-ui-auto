@@ -121,7 +121,6 @@
                   <th class="text-center">CRITICAL</th>
                   <th class="text-center">WATCHLIST</th>
                   <th class="text-center">INTERVALS</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -140,7 +139,7 @@
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">
-                      <td [attr.colspan]="5">
+                      <td [attr.colspan]="6">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="advancedMetric" 
@@ -160,6 +159,15 @@
             </table>
           </div>
           <!-- ######### ADVANCED Metric Table end ########## -->
+
+          <!-- ######### Data Not Found div starts ########### -->
+          <div class="table-responsive" *ngIf="metricType === ''">
+            <div class="noDataDiv">
+              <img src="../../assets/images/no-found.png" alt="" width="90px">
+              <p>No data found</p>
+            </div>
+          </div>
+          <!-- ######### Data Not Found div ends  ########### -->
         </div>
         <!-- ############################## Below is sticky table starts ################################### -->
         <div *ngIf="sticky" class="sticky_metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
@@ -318,6 +326,15 @@
             </table>
           </div>
           <!-- ######### ADVANCED Metric Sticky Table end ########## -->
+
+          <!-- ######### Data Not Found div starts ########### -->
+          <div class="table-responsive" *ngIf="metricType === ''">
+            <div class="noDataDiv">
+              <img src="../../assets/images/no-found.png" alt="" width="90px">
+              <p>No data found</p>
+            </div>
+          </div>
+          <!-- ######### Data Not Found div ends  ########### -->
         </div>
         <!-- ############################## Below is sticky table ends ##################################### -->
       </div>
@@ -401,63 +418,12 @@
 
               <!-- ###### Default graph section when no type is exist start ####### -->
               <div class="type-not-exist" *ngSwitchDefault>
-                <h4>Work In Progress !!</h4>
-                <p class="mb-1">COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
                 <div class="graph mb-3" #subChartSize>
-                  <img src="../../../../assets/images/matric_graph01.jpg" class="img-fluid" alt="image" />
-                </div>
-                <p class="mb-1">QUARTILE COMPARISON : CONTAINER_MEMORY_FAILURES_TOTAL</p>
-                <div class="graph mb-4">
-                  <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
-                </div>
-                <div class="card mb-3">
-                  <div class="card-header text-uppercase">
-                    Analysis
-                  </div>
-                  <div class="card-body text-wrap-normal">
-                    <div class="my-2">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    </div>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-header text-uppercase">
-                    container_memory_failures_total
-                  </div>
                   <div class="table-responsive">
-                    <table class="table mb-0">
-                      <thead>
-                        <tr class="text-uppercase">
-                          <th>Versions</th>
-                          <th>median</th>
-                          <th>Q1</th>
-                          <th>mean</th>
-                          <th>Q3</th>
-                          <th>MIN</th>
-                          <th>MAX</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Baseline</td>
-                          <td>7.98</td>
-                          <td>6.33</td>
-                          <td>7.81</td>
-                          <td>8.8</td>
-                          <td>0.14</td>
-                          <td>32.04</td>
-                        </tr>
-                        <tr>
-                          <td>New Release</td>
-                          <td>1.15</td>
-                          <td>1.17</td>
-                          <td>3</td>
-                          <td>1.86</td>
-                          <td>0.69</td>
-                          <td>33.41</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="noDataDiv">
+                      <img src="../../assets/images/no-found.png" alt="" width="90px">
+                      <p>No data found</p>
+                    </div>
                   </div>
                 </div>
               </div>
