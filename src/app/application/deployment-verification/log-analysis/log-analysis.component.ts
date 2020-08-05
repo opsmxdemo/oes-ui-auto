@@ -242,6 +242,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   changeSensitivity(e) {
     console.log(e.target.value);
+    console.log(this.selectedSensitivity);
   }
 
   changeCriticality(e,log){
