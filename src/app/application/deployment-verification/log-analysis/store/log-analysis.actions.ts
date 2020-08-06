@@ -9,3 +9,9 @@ export const fetchLogsResults = createAction('[LogAnalysis] FetchLogsResults', p
 export const loadEventLogResults = createAction('[LogAnalysis] LoadEventLogResults', props<{canaryId: any,serviceId: any,event:any}>());
 export const fetchEventLogsResults = createAction('[LogAnalysis] FetchEventLogsResults', props<{logsEventResults:any}>());
 
+
+export const rerunLogs = createAction('[LogAnalysis] ReRunLogs', props<{logTemplate:any, userName:any, canaryId: any,serviceId: any,postData:any}>())
+export const fetchRerunLogsResults = createAction('[LogAnalysis] FetchRerunLogsResults', props<{rerunResponse:any}>());
+
+
+
