@@ -6,7 +6,8 @@ import { HorizontalBarChartComponent } from '../charts/horizontal-bar-chart/hori
 import { PieChartComponent } from '../charts/pie-chart/pie-chart.component';
 import { StacketHorizontalBarChartComponent } from '../charts/stacket-horizontal-bar-chart/stacket-horizontal-bar-chart.component';
 import { LineChartComponent } from '../charts/line-chart/line-chart.component';
-import { BubbleChartComponent } from '../charts/bubble-chart/bubble-chart.component'
+import { BubbleChartComponent } from '../charts/bubble-chart/bubble-chart.component';
+import { NetworkChartComponent } from '../charts/network-chart/network-chart.component';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { BubbleChartComponent } from '../charts/bubble-chart/bubble-chart.compon
         PieChartComponent,
         StacketHorizontalBarChartComponent,
         LineChartComponent,
-        BubbleChartComponent
+        BubbleChartComponent,
+        NetworkChartComponent
     ],
     imports: [
         CommonModule,
@@ -27,7 +29,8 @@ import { BubbleChartComponent } from '../charts/bubble-chart/bubble-chart.compon
         PieChartComponent,
         StacketHorizontalBarChartComponent,
         LineChartComponent,
-        BubbleChartComponent
+        BubbleChartComponent,
+        NetworkChartComponent
     ]
   })
 

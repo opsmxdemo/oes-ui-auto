@@ -18,7 +18,9 @@ import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
 const routes: Routes = [
   {path:'application', component: ApplicationComponent, children:[
     {path:'', component: ApplicationDashboardComponent},
-    {path:'deploymentverification', component: DeploymentVerificationComponent}
+    {path:'deploymentverification', component: DeploymentVerificationComponent},
+    {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent}
+
   ]},
   {path:'oesdashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},

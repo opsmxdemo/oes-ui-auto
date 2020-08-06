@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
               private router: Router,
               private route: ActivatedRoute,
               public environment: AppConfigService) {
-                this.endpointUrl = environment.config.endPointUrl;
+                this.endpointUrl = environment.config.plartFormEndPoint;
                }
   // For tooltip
   ngAfterViewChecked() {
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
         }else if(response.authResponse === 'success'){
-
+          console.log("successfully logged in satyauser");
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
 
@@ -66,16 +66,16 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.store.dispatch(AppDashboardAction.loadAppDashboard());
 
           //Dispatching action to fetch Cd dashboard data from API
-          this.store.dispatch(CdDashboardActions.loadCdDashboard());
+          //this.store.dispatch(CdDashboardActions.loadCdDashboard());
 
           //Dispatching action to fetch application Onboarding data from API
-          this.store.dispatch(OnboardingActions.loadAppList());
+         // this.store.dispatch(OnboardingActions.loadAppList());
 
           //Dispatching action to fetch audit initial data
-          this.store.dispatch(AuditActions.loadAudit());
+          //this.store.dispatch(AuditActions.loadAudit());
 
           //Dispatching action for policy management initial data
-          this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
+         // this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
 
         }
       }

@@ -132,6 +132,16 @@ export class DeploymentVerificationEffect {
             )
          )
 
+         //Below effect is use to redirect to application onboardind page in create& edit phase
+    apponboardingRedirect = createEffect(() =>
+    this.actions$.pipe(
+        ofType(DeploymentActions.loadDeploymentApp),
+        tap(() => {
+            this.router.navigate(['/deploymentverification'])
+        })
+    ), { }
+)
+
        
 
 }

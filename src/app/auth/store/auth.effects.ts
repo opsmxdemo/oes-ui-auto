@@ -18,7 +18,7 @@ export class AuthEffect {
        authLogin = this.actions$.pipe(
            ofType(AuthAction.AuthActionTypes.LOGINSTART),
            switchMap(() => {
-               return this.http.get(this.environment.config.endPointUrl+'auth/user', {observe: 'response'})
+               return this.http.get(this.environment.config.plartFormEndPoint+'auth/user', {observe: 'response'})
                 .pipe(
                    map(resData => {
                        if(resData.body !== null){
@@ -38,7 +38,7 @@ export class AuthEffect {
         authLogout = this.actions$.pipe(
             ofType(AuthAction.AuthActionTypes.LOGOUT),
             switchMap(() => {
-                return this.http.get(this.environment.config.endPointUrl+'auth/logout', {observe: 'response'})
+                return this.http.get(this.environment.config.plartFormEndPoint+'auth/logout', {observe: 'response'})
                  .pipe(
                     map(resData => {
                         return new AuthAction.LoginStart();

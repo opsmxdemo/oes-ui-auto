@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
 import { NotificationService } from '../../services/notification.service';
@@ -89,7 +90,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // App form end
 
-   constructor(public sharedService: SharedService, public store: Store<fromFeature.State>,
+   constructor(private route: ActivatedRoute ,public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService,
     private fb: FormBuilder) { 
     }
@@ -178,9 +179,17 @@ export class DeploymentVerificationComponent implements OnInit {
 
     
   ngOnInit(): void {
-    this.getApplicationHealth();
-    this.getLatestRun();
     this.getAllApplications();
+    console.log(this.route.params['_value']);
+    this.getApplicationHealth();
+    if(this.route.params['_value'].canaryId != null){
+      this.control.setValue(this.route.params['_value'].canaryId);
+      this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.route.params['_value'].canaryId }));
+      this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: this.route.params['_value'].canaryId}));
+    }else{
+      this.getLatestRun();
+    }
+    
     this.getAllServices();
     this.getServiceInformation();
  
@@ -434,10 +443,18 @@ export class DeploymentVerificationComponent implements OnInit {
                     this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
                   }
                   //buildApplicationForm() {
-                    this.applicationForm = this.fb.group({
-                      application: [this.selectedApplicationName],
-                    });
-                    this.applicationId = this.deploymentApplicationHealth['applicationId'];
+                    if(this.route.params['_value'].applicationName != null){
+                      this.applicationForm = this.fb.group({
+                        application: [this.route.params['_value'].applicationName],
+                      });
+                  //    this.applicationId = this.deploymentApplicationHealth.applicationId;
+                    }else{
+                      this.applicationForm = this.fb.group({
+                        application: [this.selectedApplicationName],
+                      });
+                   //   this.applicationId = this.deploymentApplicationHealth.applicationId;
+                    }
+                    
                  // }
                  
              }
