@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
  
   @ViewChild('ChartSize') ChartSize: ElementRef;
+  @ViewChild('expColBtn') expColBtn: ElementRef;
 
   @Input() canaryId: any[];
   @Input() serviceId: any[];
@@ -285,11 +286,25 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   // Below function is use to colapse and expand templates on click of collapse or expand link
   onChangeTemplateState(){
+    debugger
     if(this.switchToState==="Collapse"){
       this.switchToState = "Expand";
     }else{
       this.switchToState = "Collapse";
     }
+    setTimeout(() => {
+      this.expColBtn.nativeElement.click();
+    })
+  }
+
+  // Below function is use to assign dynamic id
+  assignId(idObj){
+    if(this.switchToState==="Collapse"){
+      return 'log';
+    }else{
+      return 'log'+idObj;
+    }
+    
   }
 
 }
