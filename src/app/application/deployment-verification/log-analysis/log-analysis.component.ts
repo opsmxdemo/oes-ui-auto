@@ -2,6 +2,7 @@ import { Component, OnInit, Input ,OnChanges,SimpleChanges, HostListener, ViewCh
 import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -94,6 +95,9 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       "textclass" : "text-muted"
     }
   ];
+  classifiedLogsList = [];
+  logTemplate = "";
+  selectedClusterInfo : any;
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef) {}
 
@@ -132,6 +136,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       if(resData.logsResults !== null){          
           this.logAnalysisResults = resData.logsResults; 
           this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
+          this.logAnalysisResults.templateName ? this.logTemplate = this.logAnalysisResults.templateName.split(":").pop() : this.logTemplate = "";
           this.logAnalysisResults.data ? this.logAnalysisData = this.logAnalysisResults.data : this.logAnalysisData = [];          
           if(this.logAnalysisData.clusters){
               this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
@@ -245,10 +250,45 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     console.log(this.selectedSensitivity);
   }
 
-  changeCriticality(e,log){
-    console.log(e.target.value);
+  changeCriticality(e,log){    
     console.log(log);
+    this.selectedClusterInfo = log;
+    let changedTopic = "";
+    //code to get topic which is selected on change of criticality drop down
+    if(e.target.value == 'dark red'){
+      changedTopic = 'CRITICAL ERROR';
+    }else if(e.target.value == 'red'){
+      changedTopic = 'ERROR';
+    }else if(e.target.value == 'yellow'){
+      changedTopic = 'WARN';
+    }else if(e.target.value == 'green'){
+      changedTopic = 'IGNORE';
+    }
+    var feedbackErrorTopicsList = {
+      "type":"topic",
+      "topic": changedTopic,
+      "cluster": log.clusterTemplate,
+      "logId": log.id,
+      "feedbackComment": (log.comment == "" || log.comment == undefined) == true ? "" :log.comment ,
+      "version": log.version,
+      "existingTopic": log.topic,
+      "ratio" : log.version == 'v1v2' ? log.v1Len/log.v2Len : ""
+  }  
+  var idValue = this.classifiedLogsList.findIndex(x => x.logId === feedbackErrorTopicsList.logId);
+  if(idValue != -1){
+    if(this.classifiedLogsList[idValue].type == "topic"){
+      this.classifiedLogsList.splice(idValue,1);  
+    }
   }
+  this.classifiedLogsList.push(feedbackErrorTopicsList);
+  console.log(this.classifiedLogsList);
+  }
+
+  saveCriticalityComments(){
+    var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
+    this.classifiedLogsList[idValue].feedbackComment = this.selectedClusterInfo.comment;
+    
+  };
 
   changeClusterTag(e,log){
     console.log(e.target.value);
@@ -268,5 +308,27 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
         }
       );
   }
+
+    //Function to rerun logs after reclassification
+    rerunLogs(){ 
+      var postDataToRerun = {
+        "feedbackErrorTopics": this.classifiedLogsList,
+        "sensitivity": this.selectedSensitivity
+      };     
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Rerun'
+      }).then((result) => {
+        if (result.value) {
+          this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));
+        }
+      })
+      
+    }
 
 }
