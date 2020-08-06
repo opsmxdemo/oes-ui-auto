@@ -16,6 +16,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   @Input() canaryId: any[];
   @Input() serviceId: any[];
 
+  showChart = true;                                                   // It is use to hide or show the bubble chart.
+  switchToState = 'Collapse';                                         // It is use to store value of Template State which user want to switch.
   logAnalysisResults :any;
   logAnalysisClusters :[] ;
   logAnalysisData : any;
@@ -116,10 +118,12 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   @HostListener('window:click', ['$event.target'])
   handleClick(target){
     if(target.classList['value'] === 'fa fa-chevron-right' || target.classList['value'] === 'fa fa-chevron-left' || target.classList['value'] === 'ng-star-inserted' || target.classList[1] === 'fa-bars' || target.textContent === 'Log Analysis'){
-      this.chartSize = [0,300];
-      setTimeout(() =>{
-        this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
-      },500)
+      if(this.showChart){
+        this.chartSize = [0,300];
+        setTimeout(() =>{
+          this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
+        },500)
+      }
     }
   }
    
@@ -267,6 +271,25 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
           }
         }
       );
+  }
+
+  // Below function is use to show or hide the bubble chart
+  toggleGraph(event){
+    this.showChart = !this.showChart;
+    if(this.showChart){
+      event.currentTarget.childNodes[0].style.transform = 'rotate(0deg)';
+    }else{
+      event.currentTarget.childNodes[0].style.transform = 'rotate(-90deg)';
+    }
+  }
+
+  // Below function is use to colapse and expand templates on click of collapse or expand link
+  onChangeTemplateState(){
+    if(this.switchToState==="Collapse"){
+      this.switchToState = "Expand";
+    }else{
+      this.switchToState = "Collapse";
+    }
   }
 
 }

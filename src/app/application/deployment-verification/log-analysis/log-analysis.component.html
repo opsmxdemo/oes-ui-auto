@@ -1,5 +1,6 @@
 <div class="graph_area">
   <div class="d-flex px-3 align-items-center mb-2">
+    <div class="toggleGraph" (click)="toggleGraph($event)"><i class="fas fa-chevron-down carret" style="transition: transform 200ms ease-in-out;"></i> Graph View <i class="fa fa-bar-chart" aria-hidden="true"></i></div>
     <div class="ml-auto d-flex">
       <div class="risk d-flex align-items-center">
         <span class="diamond">
@@ -14,7 +15,7 @@
             Precieved Risk
           </span>
       </div>      
-      <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity" class="form-control"> 
+      <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity" class="form-control sensitivitySelect"> 
         <option *ngFor='let sensitivity of sensitivityLevels' [value]="sensitivity">
           {{sensitivity}}
         </option>
@@ -22,7 +23,7 @@
     </div>
     <!-- /.ml-auto -->
   </div>
-  <div class="tab-content" id="myTabContent">
+  <div class="tab-content" id="myTabContent" *ngIf="showChart">
     <div class="tab-pane fade show active" id="graph01" role="tabpanel" aria-labelledby="graph01-tab">
       <div class="dot_container p-3 chart-bg-color">
         <div class="graph" #ChartSize>
@@ -75,23 +76,30 @@
 <!-- /.graph_area -->
 
 <div class="tab-default pt-3">
-  <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
-    <li class="nav-item" (click)="getLogAnalysis()">
-      <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab" aria-controls="unexpected" aria-selected="true">Unexpected</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('expected')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab" aria-controls="expected" aria-selected="false">Expected</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('baseline')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline" aria-selected="false">Baseline</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('ignored')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored" aria-selected="false">Ignored</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('all')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
-    </li>
-  </ul>
+  <div class="row">
+    <div class="col-10" style="padding-right: 0px;">
+      <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
+        <li class="nav-item" (click)="getLogAnalysis()">
+          <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab" aria-controls="unexpected" aria-selected="true">Unexpected</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('expected')">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab" aria-controls="expected" aria-selected="false">Expected</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('baseline')">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline" aria-selected="false">Baseline</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('ignored')">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored" aria-selected="false">Ignored</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('all')">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-2 expColDiv">
+    <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
+    </div>
+  </div>
   <div class="tab-content" id="myTabDefaultContent">
     <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0"> 
