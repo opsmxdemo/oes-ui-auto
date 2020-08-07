@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
          take(1),
         switchMap((authState: fromAuth.State) => {
           const requrl = req.url;
-          if(requrl.includes('/auth/user') || requrl.includes('oes') || requrl.includes('auth/logout') || requrl.includes('app-config.json')){
+          if(requrl.includes('/auth/user') || requrl.includes('platformservice') || requrl.includes('oes') || requrl.includes('auth/logout') || requrl.includes('app-config.json')){
             const oesreq = req.clone({
               withCredentials: true
           });

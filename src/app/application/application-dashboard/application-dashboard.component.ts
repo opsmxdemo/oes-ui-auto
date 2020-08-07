@@ -29,6 +29,7 @@ export class ApplicationDashboardComponent implements OnInit {
   public parentReleaseData: any;
   releaseErrorMessage: string;
   dashboardLoading: boolean = true;
+  serviceDemoDataList: { canaryId: number; serviceId: number; serviceName: string; finalScore: number; logsScore: number; metricsScore: number; status: string; }[];
 
 
 
@@ -103,6 +104,7 @@ export class ApplicationDashboardComponent implements OnInit {
   public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
     this.showAppDataType = labelType;
     if (labelType === 'Services') {
+      this.fetchAllServices();
     //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
       this.getReleases(labelType, app, index, event);
@@ -116,6 +118,50 @@ export class ApplicationDashboardComponent implements OnInit {
     event.stopPropagation();
   }
 
+  public fetchAllServices(){
+    this.showReleaseTable = false;
+    this.showAppDataType = "Services";
+    this.serviceDemoDataList = [
+      {
+        "canaryId": 123,
+        "serviceId": 292,
+        "serviceName": "multiservice_2",
+        "finalScore": 85,
+        "logsScore":90,
+        "metricsScore": 85,
+        "status": "PASS"
+      },
+      {
+        "canaryId": 123,
+        "serviceId": 293,
+        "serviceName": "multiservice_3",
+        "finalScore": 85,
+        "logsScore":90,
+        "metricsScore": 85,
+        "status": "FAIL"
+      },
+      {
+        "canaryId": 198,
+        "serviceId": 294,
+        "serviceName": "multiservice_4",
+        "finalScore": 85,
+        "logsScore":90,
+        "metricsScore": 85,
+        "status": "PASS"
+      },
+      {
+        "canaryId": 188,
+        "serviceId": 291,
+        "serviceName": "multiservice_1",
+        "finalScore": 85,
+        "logsScore":90,
+        "metricsScore": 85,
+        "status": "PASS"
+      }
+    ];
+  
+  }
+
   public addNewApplication() {
    this.store.dispatch(AppOnboardingAction.loadApp({page:'application'}));
   }
@@ -126,44 +172,6 @@ export class ApplicationDashboardComponent implements OnInit {
     return href;
   }
 
-  serviceDemoDataList = [
-    {
-      "canaryId": 123,
-      "serviceId": 292,
-      "serviceName": "multiservice_2",
-      "finalScore": 85,
-      "logsScore":90,
-      "metricsScore": 85,
-      "status": "PASS"
-    },
-    {
-      "canaryId": 123,
-      "serviceId": 293,
-      "serviceName": "multiservice_3",
-      "finalScore": 85,
-      "logsScore":90,
-      "metricsScore": 85,
-      "status": "FAIL"
-    },
-    {
-      "canaryId": 198,
-      "serviceId": 294,
-      "serviceName": "multiservice_4",
-      "finalScore": 85,
-      "logsScore":90,
-      "metricsScore": 85,
-      "status": "PASS"
-    },
-    {
-      "canaryId": 188,
-      "serviceId": 291,
-      "serviceName": "multiservice_1",
-      "finalScore": 85,
-      "logsScore":90,
-      "metricsScore": 85,
-      "status": "PASS"
-    }
-  ];
-
+  
 
 }

@@ -12,7 +12,7 @@ export class ApplicationService {
     public childApplication: string;
     // tslint:disable-next-line: no-shadowed-variable
     constructor(public environment: AppConfigService, private httpClient: HttpClient, public notifications: NotificationService) {
-        this.endpointUrl = environment.config.platFormEndPointUrl;
+        this.endpointUrl = environment.config.endPointUrl;
      }
     getApplicationList() {
         return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications').pipe(
@@ -25,23 +25,23 @@ export class ApplicationService {
         );
     }
     getServiceListDemo(applicationId) {
-        return this.httpClient.get('http://137.117.94.95:8084/oes/dashboard/applications/'+ applicationId +'services').pipe(
+        return this.httpClient.get(this.endpointUrl +'/oes/dashboard/applications/'+ applicationId +'services').pipe(
             catchError(this.handleError)
         );
     }
     
     getReleaseList(applicationName) {
-        return this.httpClient.get('http://137.117.94.95:8084/' + 'oes/dashboard/applications/' + applicationName + '/releases').pipe(
+        return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/releases').pipe(
             catchError(this.handleError)
         );
     }
     doNewRelease(applicationName) {
-        return this.httpClient.get('http://137.117.94.95:8084/' + 'oes/dashboard/applications/' + applicationName + '/releases/newRelease').pipe(
+        return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/releases/newRelease').pipe(
             catchError(this.handleError)
         );
     }
     promoteRelease(releaseData, applicationName) {
-        return this.httpClient.post('http://137.117.94.95:8084/' + 'oes/dashboard/applications/' + applicationName + '/releases/newRelease', releaseData).pipe(
+        return this.httpClient.post(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/releases/newRelease', releaseData).pipe(
             catchError(this.handleError)
         );
     }

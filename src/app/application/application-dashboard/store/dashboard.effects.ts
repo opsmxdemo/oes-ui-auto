@@ -48,7 +48,7 @@ export class AppDashboardEffect {
             ofType(DashboardActions.loadAppDashboard),
             withLatestFrom(this.store.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get(this.environment.config.platFormEndPointUrl + 'platformservice/v1/dashboard/applications').pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'platformservice/v1/dashboard/applications').pipe(
                     map(resdata => {
                        return DashboardActions.fetchedAppData({appData:resdata});
                     }),
