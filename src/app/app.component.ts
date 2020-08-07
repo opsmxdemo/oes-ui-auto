@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
               private router: Router,
               private route: ActivatedRoute,
               public environment: AppConfigService) {
-                this.endpointUrl = environment.config.uiEndPoint;
+                this.endpointUrl = environment.config.endPointUrl;
                }
   // For tooltip
   ngAfterViewChecked() {
