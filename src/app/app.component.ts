@@ -75,7 +75,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.store.dispatch(AuditActions.loadAudit());
 
           //Dispatching action for policy management initial data
-          this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
+         this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
 
         }
       }

@@ -48,7 +48,7 @@ export class DeploymentVerificationEffect {
         this.actions$.pipe(
             ofType(DeploymentActions.loadLatestRun),
             switchMap(() => {   
-                return this.http.get(this.environment.config.endPointUrl +'canaries/latestrun').pipe(
+                return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/latestrun').pipe(
                     map(resdata => {
                        return DeploymentActions.fetchLatestRun({canaryRun:resdata});
                     }),
@@ -65,7 +65,7 @@ export class DeploymentVerificationEffect {
        this.actions$.pipe(
            ofType(DeploymentActions.loadApplications),
            switchMap(() => {
-               return this.http.get(this.environment.config.endPointUrl +'canaries/getApplicationsDetails').pipe(
+               return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/getApplicationsDetails').pipe(
                    map(resdata => {
                        return DeploymentActions.fetchApplications({applicationList:resdata});
                    }),
@@ -83,7 +83,7 @@ export class DeploymentVerificationEffect {
        this.actions$.pipe(
            ofType(DeploymentActions.loadServices),
            switchMap((action) => {
-               return this.http.get<any>(this.environment.config.endPointUrl +'canaries/getServiceList?canaryId='+action.canaryId).pipe(
+               return this.http.get<any>(this.environment.config.autoPilotEndPointUrl +'canaries/getServiceList?canaryId='+action.canaryId).pipe(
                    map(resdata => {
                        return DeploymentActions.fetchServices({servicesList:resdata});
                    }),
@@ -101,7 +101,7 @@ export class DeploymentVerificationEffect {
         this.actions$.pipe(
             ofType(DeploymentActions.loadApplicationHelath),
             switchMap((action) => {
-                return this.http.get<any>(this.environment.config.endPointUrl +'canaries/getApplicationHealth?canaryId='+action.canaryId).pipe(
+                return this.http.get<any>(this.environment.config.autoPilotEndPointUrl +'canaries/getApplicationHealth?canaryId='+action.canaryId).pipe(
                     map(resdata => {
                         return DeploymentActions.fetchApplicationHelath({applicationHealthDetails:resdata});
                     }),
@@ -119,7 +119,7 @@ export class DeploymentVerificationEffect {
          this.actions$.pipe(
              ofType(DeploymentActions.loadServiceInformation),
              switchMap((action) => {
-                 return this.http.get<any>(this.environment.config.endPointUrl +'canaries/getServiceInformation?canaryId=' + action.canaryId + '&serviceId='+ action.serviceId).pipe(
+                 return this.http.get<any>(this.environment.config.autoPilotEndPointUrl +'canaries/getServiceInformation?canaryId=' + action.canaryId + '&serviceId='+ action.serviceId).pipe(
                      map(resdata => {
                          return DeploymentActions.fetchServiceInformation({serviceSummary:resdata});
                      }),
