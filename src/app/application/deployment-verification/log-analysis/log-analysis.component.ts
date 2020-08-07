@@ -13,10 +13,13 @@ import Swal from 'sweetalert2';
 export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
  
   @ViewChild('ChartSize') ChartSize: ElementRef;
+  @ViewChild('expColBtn') expColBtn: ElementRef;
 
   @Input() canaryId: any[];
   @Input() serviceId: any[];
 
+  showChart = true;                                                   // It is use to hide or show the bubble chart.
+  switchToState = 'Collapse All';                                     // It is use to store value of Template State which user want to switch.
   logAnalysisResults :any;
   logAnalysisClusters :[] ;
   logAnalysisData : any;
@@ -99,7 +102,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   logTemplate = "";
   selectedClusterInfo : any;
   constructor(public store: Store<fromFeature.State>,
-              public cdr: ChangeDetectorRef) {}
+              public cdr: ChangeDetectorRef,
+              private elRef:ElementRef) {}
 
 
   ngAfterViewInit(){
@@ -119,11 +123,17 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   // below function is use to make page responsive
   @HostListener('window:click', ['$event.target'])
   handleClick(target){
-    if(target.classList['value'] === 'fa fa-chevron-right' || target.classList['value'] === 'fa fa-chevron-left' || target.classList['value'] === 'ng-star-inserted' || target.classList[1] === 'fa-bars' || target.textContent === 'Log Analysis'){
-      this.chartSize = [0,300];
-      setTimeout(() =>{
-        this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
-      },500)
+    if(target.classList['value'] === 'fa fa-chevron-right' || target.classList['value'] === 'fa fa-chevron-left' || 
+       target.classList['value'] === 'ng-star-inserted' || 
+       target.classList[1] === 'fa-bars' || 
+       target.textContent === 'Log Analysis' ||
+       target.classList['value'] === 'toggleGraph'){
+      if(this.showChart){
+        this.chartSize = [0,300];
+        setTimeout(() =>{
+          this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
+        },500)
+      }
     }
   }
    
@@ -238,7 +248,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               let obj = {"low":{ "score" : this.logAnalysisResults.scores.low, "risk" : "Medium", "iconclass":"fa-arrow-up text-warning", "text-class": "text-warning"}};
               this.logSensitivityScores.push(obj);            
             }
-          }        
+          } 
+          // below logic is use to expand the template initially.
+          setTimeout(() => {
+            this.expColBtn.nativeElement.click();
+          })     
       }
     }
   );
@@ -309,6 +323,42 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       );
   }
 
+  // Below function is use to show or hide the bubble chart
+  toggleGraph(event){
+    this.showChart = !this.showChart;
+    if(this.showChart){
+      event.currentTarget.childNodes[0].style.transform = 'rotate(0deg)';
+    }else{
+      event.currentTarget.childNodes[0].style.transform = 'rotate(-90deg)';
+    }
+  }
+
+  // Below function is use to colapse and expand templates on click of collapse or expand link
+  onChangeTemplateState(){
+    if(this.switchToState==="Collapse All"){
+      this.switchToState = "Expand All";
+    }else{
+      this.switchToState = "Collapse All";
+    }
+    setTimeout(() => {
+      this.expColBtn.nativeElement.click();
+      // below condtion is use to collapse all template.
+      if(this.switchToState==="Expand All"){
+        setTimeout(()=>{
+          this.elRef.nativeElement.querySelector(this.expColBtn.nativeElement.dataset.target).classList.remove('show');
+        },400)
+      }
+    })
+  }
+
+  // Below function is use to assign dynamic id
+  assignId(idObj){
+    if(this.switchToState==="Collapse All"){
+      return 'log';
+    }else{
+      return 'log'+idObj;
+    }
+  }
     //Function to rerun logs after reclassification
     rerunLogs(){ 
       var postDataToRerun = {
