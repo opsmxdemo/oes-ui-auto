@@ -51,6 +51,22 @@ export function LogAnalysisReducer(
                 logsEventResults: action.logsEventResults,
                 deployementLoading: false
             })
+        ),on(LogAnalysisActions.rerunLogs,
+            (state,action) => ({
+                ...state,
+                deployementLoading: true,
+                canaryId: action.canaryId,
+                serviceId: action.serviceId,
+                logTemplate : action.logTemplate,
+                userName :action.userName
+            })
+        ),
+        on(LogAnalysisActions.fetchRerunLogsResults,
+            (state, action) => ({
+                ...state,
+                rerunResponse: action.rerunResponse,
+                deployementLoading: false
+            })
         )
     )(logAnalysisState,logAnalysisAction);
 }

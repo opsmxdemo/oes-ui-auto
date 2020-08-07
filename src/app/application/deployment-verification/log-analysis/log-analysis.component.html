@@ -1,5 +1,6 @@
 <div class="graph_area">
   <div class="d-flex px-3 align-items-center mb-2">
+    <div class="toggleGraph" (click)="toggleGraph($event)"><i class="fas fa-chevron-down carret" style="transition: transform 200ms ease-in-out;"></i> Graph View <i class="fa fa-bar-chart" aria-hidden="true"></i></div>
     <div class="ml-auto d-flex">
       <div class="risk d-flex align-items-center">
         <span class="diamond">
@@ -14,7 +15,7 @@
             Precieved Risk
           </span>
       </div>      
-      <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity" class="form-control"> 
+      <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity" class="form-control sensitivitySelect"> 
         <option *ngFor='let sensitivity of sensitivityLevels' [value]="sensitivity">
           {{sensitivity}}
         </option>
@@ -22,7 +23,7 @@
     </div>
     <!-- /.ml-auto -->
   </div>
-  <div class="tab-content" id="myTabContent">
+  <div class="tab-content" id="myTabContent" *ngIf="showChart">
     <div class="tab-pane fade show active" id="graph01" role="tabpanel" aria-labelledby="graph01-tab">
       <div class="dot_container p-3 chart-bg-color">
         <div class="graph" #ChartSize>
@@ -75,23 +76,30 @@
 <!-- /.graph_area -->
 
 <div class="tab-default pt-3">
-  <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
-    <li class="nav-item" (click)="getLogAnalysis()">
-      <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab" aria-controls="unexpected" aria-selected="true">Unexpected</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('expected')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab" aria-controls="expected" aria-selected="false">Expected</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('baseline')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline" aria-selected="false">Baseline</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('ignored')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored" aria-selected="false">Ignored</a>
-    </li>
-    <li class="nav-item" (click)="onClickLogEventTab('all')">
-      <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
-    </li>
-  </ul>
+  <div class="row">
+    <div class="col-10" style="padding-right: 0px;">
+      <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
+        <li class="nav-item" (click)="getLogAnalysis()" data-toggle="tooltip" title="Errors and warnings appearing only in Release version and the common Errors/Warnings that occur more often in Release version as compared to Baseline.">
+          <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab" aria-controls="unexpected" aria-selected="true">Unexpected</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('expected')" data-toggle="tooltip" title="The Info/Debug events common to both Baseline & Release and the Errors/Warnings that occur less often in Release version as compared to Baseline.">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab" aria-controls="expected" aria-selected="false">Expected</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('baseline')" data-toggle="tooltip" title="The Info/Debug events that are unique to Baseline.">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline" aria-selected="false">Baseline</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('ignored')" data-toggle="tooltip" title="The Info/Debug events of Release version.">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored" aria-selected="false">Ignored</a>
+        </li>
+        <li class="nav-item" (click)="onClickLogEventTab('all')" data-toggle="tooltip" title="All events of Baseline and Release versions.">
+          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-2 expColDiv">
+    <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse All'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand All'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
+    </div>
+  </div>
   <div class="tab-content" id="myTabDefaultContent">
     <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0"> 
@@ -106,14 +114,16 @@
             <!-- <div class="error_graph"><img src="../../../assets/images/graph_lines_01.png" class="img-fluid"
                 alt="graph" /></div> -->
 
-            <div class="dropdown error_dropdown">
-              <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}"> 
+            <div class="dropdown error_dropdown" >
+              <select (change)="changeCriticality($event,log)" data-toggle="dropdown" [(ngModel)]="log.color" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}"> 
                 <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor" class="{{criticality.textclass}}">
                   {{criticality.displayValue}}
                 </option>
               </select>
+              
+              <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="criticalityComment" data-toggle="dropdown"></i>
               <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
-                aria-labelledby="dropdownMenuButton">
+                aria-labelledby="criticalityComment">
                 <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
                   <span>Reason for Reclassification</span>
                   <i class="fa text-muted fa-times"></i>
@@ -126,22 +136,24 @@
                   </div>
                   <div class="text-right">
                     <button type="submit" class="btn btn-default">Close</button>
-                    <button type="submit" class="btn  btn-primary">Submit</button>
+                    <button type="submit" class="btn  btn-primary" (click)="saveCriticalityComments()">Submit</button>
                   </div>
                 </div>
               </div>
             </div>
             <div class="dropdown error_dropdown">
-               <select (change)="changeClusterTag($event,log)" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" > 
+               <select (change)="changeClusterTag($event,log)" data-toggle="dropdown" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" > 
                <!-- [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
                 <option *ngFor='let tag of clusterTagList' [value]="tag.value" class="{{tag.textclass}}">
                   {{tag.displayValue}}
                 </option>
               </select>
+              
+              <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
               <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
-                aria-labelledby="dropdownMenuButton">
+                aria-labelledby="clustertagComment">
                 <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
-                  <span>Reason for Reclassification</span>
+                  <span>Logs cluster tag</span>
                   <i class="fa text-muted fa-times"></i>
                 </div>
                 <!-- /.dropdown_header -->
@@ -157,15 +169,14 @@
                 </div>
               </div>
             </div>
-            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart" aria-hidden="true"></i></div>
+            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true"></i></div>
             <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
-            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="'#log' + log.id"
-              aria-expanded="true" aria-controls="collapse01">
+            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
+              aria-expanded="true" aria-controls="collapse">
               <i class="fa fa-sort-down"></i>
             </button>
           </div>
-
-          <div id="log{{log.id}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
+          <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
             <div class="card-body text-wrap-normal">
               <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>
             </div>
@@ -177,6 +188,10 @@
   </div>
 </div>
 
+<div class="bottom_btns mt-auto bg-white position-sticky text-right">
+  <button class="btn mr-2 btn-default">Reset</button>
+  <button class="btn mr-2 btn-default" (click)="rerunLogs()">Re-run</button>
+</div>
 
 <!-- /.col-sm-4 -->
 

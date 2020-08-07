@@ -80,4 +80,23 @@ fetchEventLogsResults = createEffect(() =>
     )
 )
 
+
+//The effect is used to fetch logs resulst based on each tab ( expected, ignore, baseline etc)
+fetchRerunLogsResults = createEffect(() =>
+    this.actions$.pipe(
+        ofType(LogAnalysisActions.rerunLogs),
+        switchMap((action) => {             
+            return this.http.post(this.environment.config.autoPilotEndPointUrl +'logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + action.userName + '&serviceId='+ action.serviceId, action.postData).pipe(                  
+                map(resdata => {
+                   return LogAnalysisActions.fetchRerunLogsResults({rerunResponse:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 }
