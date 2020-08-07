@@ -120,8 +120,8 @@
                   {{criticality.displayValue}}
                 </option>
               </select>
-              <!-- <i class="fa fa-commenting-o" aria-hidden="true" id="criticalityComment" data-toggle="dropdown"></i> -->
-              <i class="fa fa-commenting" aria-hidden="true" id="criticalityComment" data-toggle="dropdown"></i>
+              
+              <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="criticalityComment" data-toggle="dropdown"></i>
               <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
                 aria-labelledby="criticalityComment">
                 <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
@@ -148,8 +148,8 @@
                   {{tag.displayValue}}
                 </option>
               </select>
-              <!-- <i class="fa fa-commenting-o" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i> -->
-              <i class="fa fa-commenting" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
+              
+              <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
               <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
                 aria-labelledby="clustertagComment">
                 <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
@@ -169,7 +169,7 @@
                 </div>
               </div>
             </div>
-            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart" aria-hidden="true"></i></div>
+            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true"></i></div>
             <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
             <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
               aria-expanded="true" aria-controls="collapse">
