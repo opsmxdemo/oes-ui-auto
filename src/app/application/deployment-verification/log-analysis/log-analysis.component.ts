@@ -364,20 +364,21 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       var postDataToRerun = {
         "feedbackErrorTopics": this.classifiedLogsList,
         "sensitivity": this.selectedSensitivity
-      };     
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Rerun'
-      }).then((result) => {
-        if (result.value) {
-          this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));
-        }
-      })
+      };  
+      this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));   
+      // Swal.fire({
+      //   title: 'Are you sure?',
+      //   text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#3085d6',
+      //   cancelButtonColor: '#d33',
+      //   confirmButtonText: 'Yes, Rerun'
+      // }).then((result) => {
+      //   if (result.value) {
+      //     this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));
+      //   }
+      // })
       
     }
 
