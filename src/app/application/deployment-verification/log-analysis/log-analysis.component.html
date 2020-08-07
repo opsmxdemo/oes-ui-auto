@@ -97,7 +97,7 @@
       </ul>
     </div>
     <div class="col-2 expColDiv">
-    <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
+    <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse All'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand All'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
     </div>
   </div>
   <div class="tab-content" id="myTabDefaultContent">
@@ -167,12 +167,11 @@
             </div>
             <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart" aria-hidden="true"></i></div>
             <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
-            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="switchToState === 'Expand'?'#log' + log.id:'#log'" #expColBtn
-              aria-expanded="true" aria-controls="collapse01">
+            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
+              aria-expanded="true" aria-controls="collapse">
               <i class="fa fa-sort-down"></i>
             </button>
           </div>
-
           <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
             <div class="card-body text-wrap-normal">
               <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>

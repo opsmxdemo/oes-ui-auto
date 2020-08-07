@@ -18,7 +18,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   @Input() serviceId: any[];
 
   showChart = true;                                                   // It is use to hide or show the bubble chart.
-  switchToState = 'Collapse';                                         // It is use to store value of Template State which user want to switch.
+  switchToState = 'Collapse All';                                         // It is use to store value of Template State which user want to switch.
   logAnalysisResults :any;
   logAnalysisClusters :[] ;
   logAnalysisData : any;
@@ -98,7 +98,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     }
   ];
   constructor(public store: Store<fromFeature.State>,
-              public cdr: ChangeDetectorRef) {}
+              public cdr: ChangeDetectorRef,
+              private elRef:ElementRef) {}
 
 
   ngAfterViewInit(){
@@ -238,7 +239,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               let obj = {"low":{ "score" : this.logAnalysisResults.scores.low, "risk" : "Medium", "iconclass":"fa-arrow-up text-warning", "text-class": "text-warning"}};
               this.logSensitivityScores.push(obj);            
             }
-          }        
+          } 
+          // below logic is use to expand the template initially.
+          setTimeout(() => {
+            this.expColBtn.nativeElement.click();
+          })     
       }
     }
   );
@@ -286,25 +291,28 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   // Below function is use to colapse and expand templates on click of collapse or expand link
   onChangeTemplateState(){
-    debugger
-    if(this.switchToState==="Collapse"){
-      this.switchToState = "Expand";
+    if(this.switchToState==="Collapse All"){
+      this.switchToState = "Expand All";
     }else{
-      this.switchToState = "Collapse";
+      this.switchToState = "Collapse All";
     }
     setTimeout(() => {
       this.expColBtn.nativeElement.click();
+      // below condtion is use to collapse all template.
+      if(this.switchToState==="Expand All"){
+        setTimeout(()=>{
+          this.elRef.nativeElement.querySelector(this.expColBtn.nativeElement.dataset.target).classList.remove('show');
+        },400)
+      }
     })
   }
 
   // Below function is use to assign dynamic id
   assignId(idObj){
-    if(this.switchToState==="Collapse"){
+    if(this.switchToState==="Collapse All"){
       return 'log';
     }else{
       return 'log'+idObj;
     }
-    
   }
-
 }
