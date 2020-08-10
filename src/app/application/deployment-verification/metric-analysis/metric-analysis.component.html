@@ -89,7 +89,7 @@
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
-                      <td [attr.colspan]="6">
+                      <td [attr.colspan]="6" class="childRow">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="infraMetric" 
@@ -139,7 +139,7 @@
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">
-                      <td [attr.colspan]="6">
+                      <td [attr.colspan]="6" class="childRow">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="advancedMetric" 
@@ -256,7 +256,7 @@
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Infra'][i]">
-                      <td [attr.colspan]="6">
+                      <td [attr.colspan]="6" class="childRow">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="infraMetric" 
@@ -306,7 +306,7 @@
                   </tr>
                   <tr class="nested_tr">
                     <ng-container *ngIf="childMetric['Advanced'][i]">
-                      <td [attr.colspan]="6">
+                      <td [attr.colspan]="6" class="childRow">
                         <div [@expandableRow]="childView_rowanimation">
                           <app-child-table 
                             [childData]="advancedMetric" 
