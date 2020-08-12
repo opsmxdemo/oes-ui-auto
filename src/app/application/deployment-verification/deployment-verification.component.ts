@@ -8,7 +8,6 @@ import {Observable} from 'rxjs';
 import {map, startWith, tap} from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
-import * as deploymentApp from './store/deploymentverification.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
 import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.actions';
 import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
@@ -49,7 +48,6 @@ export class DeploymentVerificationComponent implements OnInit {
   serviceConter = 1;
   canaryCheckCounter = 1;
   selectedTab = '';                                 // this variable is use to store value of selected tab.
-  metricCounter = 0;                                // It is use to dispatch metric Analysis action to load initial data of metric if application consist metric in it.
   
   ///code for showing select application shows here
   myControl = new FormControl();
