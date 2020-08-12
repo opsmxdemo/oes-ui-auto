@@ -8,8 +8,8 @@ import {Observable} from 'rxjs';
 import {map, startWith, tap} from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
-import * as deploymentApp from './store/deploymentverification.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
+import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.actions';
 import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
 import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
@@ -29,10 +29,11 @@ export interface User {
   styleUrls: ['./deployment-verification.component.less']
 })
 export class DeploymentVerificationComponent implements OnInit {
-  size = 5343454545;
 
-  applicationForm: FormGroup;
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
+
+  size = 5343454545;
+  applicationForm: FormGroup;
   deployementRun: any;
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
@@ -46,6 +47,7 @@ export class DeploymentVerificationComponent implements OnInit {
   counter = 1;
   serviceConter = 1;
   canaryCheckCounter = 1;
+  selectedTab = '';                                 // this variable is use to store value of selected tab.
   
   ///code for showing select application shows here
   myControl = new FormControl();
@@ -411,6 +413,10 @@ export class DeploymentVerificationComponent implements OnInit {
                   if (this.serviceConter === 1) {
                     this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun, serviceId: this.selectedServiceId }));
                     this.serviceConter++;
+                  }
+                   // Below we are dispatching action of metric analysis to load initial data of metric analysis tab if metric is exist in application.
+                   if(this.deploymentApplicationHealth['analysisType'].includes('Metrics')){
+                    this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.control.value,serviceId:this.selectedServiceId}));
                   } 
             
              }else{
@@ -438,7 +444,17 @@ export class DeploymentVerificationComponent implements OnInit {
                       application: [this.selectedApplicationName],
                     });
                     this.applicationId = this.deploymentApplicationHealth['applicationId'];
-                 // }
+
+                    // Below logic is use to fetch initiall selected tab
+                    if(this.deploymentApplicationHealth['analysisType'].includes('Logs and Metrics')){
+                      if(this.selectedTab === ''){
+                        this.selectedTab = 'log-analysis';
+                      }
+                    }else if(this.deploymentApplicationHealth['analysisType'].includes('Logs')){
+                      this.selectedTab = 'log-analysis';
+                    }else {
+                      this.selectedTab = 'metric-analysis';
+                    }
                  
              }
              if(this.canaryCheckCounter === 1 && this.selectedApplicationName != null){
@@ -489,5 +505,14 @@ export class DeploymentVerificationComponent implements OnInit {
     
       return bytes.toFixed(dp) + ' ' + units[u];
     }
+
+  // Below function is execute on click of log or metric Analysis tab.
+  onClickTab(event){
+    if(event.target.id === 'log-analysis-tab'){
+      this.selectedTab = 'log-analysis';
+    } else if(event.target.id === 'metric-analysis-tab') {
+      this.selectedTab = 'metric-analysis';
+    }
+  }
 
 }

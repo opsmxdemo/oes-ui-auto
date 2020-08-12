@@ -10,10 +10,12 @@
       </tr>
     </thead>
     <tbody>
-        <tr class="{{selectedType === childData.category && selectedMetricName === metridata.metricName && selectedRow === i ? 'selected-row' : ''}}" 
+        <tr class="{{selectedType === childData.category && selectedMetricName === metridata.metricName && selectedRow === i ? 'selected-row' : ''}} dataRow" 
           *ngFor = "let metridata of childData.metricList | filter:searchData; let i=index" id="{{childData.category}}" 
-          (click)="onSelectRow(i,$event,metridata.metricName)">
-          <td class="cell-heading">{{metridata.metricName}}</td>
+          (click)="onSelectRow(i,childData.category,metridata.metricName)">
+          <td class="cell-heading">
+            <div [innerHTML] = "childMetricName(metridata.metricName)"></div>
+          </td>
           <td class="text-center"><span class="countBox {{assignProperColor(metridata.metricScore)}} scorebox">{{metridata.metricScore}}</span></td>
           <td class="text-center customtd">{{metridata.relevance}}</td>
           <td class="text-center customtd"><i *ngIf="metridata.critical" class="fa fa-check" aria-hidden="true"></i><span *ngIf="!metridata.critical">-</span></td>

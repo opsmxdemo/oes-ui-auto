@@ -34,9 +34,9 @@ export class ChildTableComponent implements OnInit {
   } 
 
   // Below function is execute when click on any table row
-  onSelectRow(rowIndex,event,selectedMetricName){
+  onSelectRow(rowIndex,categoryType,selectedMetricName){
     this.selectedElement.emit({
-      type:event.target.parentElement.id,
+      type:categoryType,
       selectedMetricName:selectedMetricName,
       index:rowIndex,
       parent:this.childData.name
@@ -50,6 +50,27 @@ export class ChildTableComponent implements OnInit {
       intervalArr.push(intervalObj[interval].score);
     }
     return intervalArr;
+  }
+
+  // Below function is use to break long words into smaller parts
+  childMetricName(name){
+    let metricname = name.split('');
+    let transformString = '';
+    let counter = 1;
+    metricname.forEach((element,index) => {
+      if(index === 0){
+        transformString += '<span">'+element;
+      }else if(counter*45 === index){
+        transformString += '</span><br><span>'+element;
+        counter++;
+      }else if(index === metricname.length-1){
+        transformString += element+'</span>'
+      }
+      else{
+        transformString += element;
+      }
+    });
+    return transformString;
   }
 
 }
