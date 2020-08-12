@@ -35,6 +35,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   @Input() canaryId: string;
   @Input() serviceId: number;
 
+  initialCall = true;                                                 // It is use to restrict to calling api at component load.
   statusSearchData = [false,false,false];                             // It is use to store data related to status level checkbox for search.
   coreAPMData = [];                                                   // It is use to store without filtered APM Data.
   coreInfraData = [];                                                 // It is use to store without filtered Infra Data.
@@ -57,7 +58,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
     Infra:[],
     Advanced:[]
   };                                              
-  childView_rowanimation = 'collapsed';                          // It is use to store value of animation state to represent animation in infra child view.
+  childView_rowanimation = 'collapsed';                               // It is use to store value of animation state to represent animation in infra child view.
 
   // Below variable is use in graph section
 
@@ -181,12 +182,13 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    for (let propName in changes) {
-      let chng = changes[propName];
-    }
     // dispatching the action to fetch api by passing updated paeams
-    if(this.canaryId !== undefined && this.serviceId !==undefined){
-      this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.canaryId,serviceId:this.serviceId}));
+    if(!this.initialCall){
+      if(this.canaryId !== undefined && this.serviceId !==undefined){
+        this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.canaryId,serviceId:this.serviceId}));
+      }
+    }else{
+      this.initialCall = false;
     }
   }
 

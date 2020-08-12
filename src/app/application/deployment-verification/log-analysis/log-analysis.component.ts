@@ -250,11 +250,12 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
             }
           } 
           // below logic is use to expand the template initially.
-          if( this.expColBtn !==undefined){
-            setTimeout(() => {
+          setTimeout(() => {
+            if( this.expColBtn !==undefined){
               this.expColBtn.nativeElement.click();
-            }) 
-          }  
+            } 
+          }) 
+          
       }
     }
   );

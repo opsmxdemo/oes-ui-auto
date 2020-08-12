@@ -60,7 +60,7 @@ export class ChildTableComponent implements OnInit {
     metricname.forEach((element,index) => {
       if(index === 0){
         transformString += '<span">'+element;
-      }else if(counter*35 === index){
+      }else if(counter*45 === index){
         transformString += '</span><br><span>'+element;
         counter++;
       }else if(index === metricname.length-1){
