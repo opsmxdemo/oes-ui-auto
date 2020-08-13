@@ -100,8 +100,8 @@
     <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse All'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand All'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
     </div>
   </div>
-  <div class="tab-content" id="myTabDefaultContent">
-    <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="">
+  <div class="tab-content" id="myTabDefaultContent" #LogClusterWidth>
+    <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="" [style.width]="logClusterWidth">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0"> 
 
         <div class="card mb-2" *ngFor="let log of logAnalysisData?.clusters">

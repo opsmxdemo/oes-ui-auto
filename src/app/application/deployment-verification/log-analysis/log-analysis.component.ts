@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
  
   @ViewChild('ChartSize') ChartSize: ElementRef;
+  @ViewChild('LogClusterWidth') LogClusterWidth: ElementRef;
   @ViewChild('expColBtn') expColBtn: ElementRef;
 
   @Input() canaryId: any[];
@@ -32,6 +33,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   warningArray :any; 
   eventTab : any;
   eventTabLabeledBy: any; 
+  logClusterWidth = "0px";
   chartSize: any[];                                                   // It is use to store graph width on change of layout widyh.
   bubbleChartProperty = {
     "showLegend":true,
@@ -109,6 +111,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   ngAfterViewInit(){
     //setting initial width of graph
     this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300];
+    this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + 35 + "px";
     this.cdr.detectChanges();
   }
 
@@ -132,6 +135,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
         this.chartSize = [0,300];
         setTimeout(() =>{
           this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
+          this.logClusterWidth = this.ChartSize.nativeElement.offsetWidth + 35 + "px" ;          
         },500)
       }
     }
