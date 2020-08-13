@@ -14,8 +14,10 @@ import { DeploymentVerificationComponent } from '../application/deployment-verif
 import { ApplicationComponent } from '../application/application.component';
 import { CreateApplicationComponent } from '../application-onboarding/application/application.component';
 import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
+import {LoginComponent} from '../auth/login/login.component';
 
 const routes: Routes = [
+  
   {path:'application', component: ApplicationComponent, children:[
     {path:'', component: ApplicationDashboardComponent},
     {path:'deploymentverification', component: DeploymentVerificationComponent},

@@ -4,10 +4,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthRoutingModule } from './auth-routing.module';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
     declarations: [
-      ForgotpasswordComponent
+      ForgotpasswordComponent,
+      LoginComponent
     ],
     imports: [
      CommonModule,

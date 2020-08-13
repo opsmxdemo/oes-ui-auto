@@ -98,6 +98,7 @@
         </div>
         <!-- /.rightBox_header -->
         <div class="rightBox_body">
+       
           <!-- <div id="particle_chart">
                                   <img src="../../../assets/chart_placeholder_01.png" class="img-fluid" alt="chart" />
                                 </div> -->
@@ -107,7 +108,7 @@
           <div *ngIf="serviceErrorMessage != ''" class="alert alert-danger" role="alert">
             <p>{{serviceErrorMessage}}</p>
           </div>
-          <div class="table-responsive" *ngIf="showAppDataType === 'Services'">
+          <div class="table-responsive" *ngIf="showAppDataType === 'Services' && serviceData.length>0">
             <table class="table table-pet-service mb-0">
               <thead>
                 <tr>
@@ -117,7 +118,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let service of serviceDemoDataList; let i=index">
+                <tr *ngFor="let service of serviceData; let i=index">
                   <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}"><a target="_blank" href="{{service.href}}">{{service.serviceName}}</a></td>
                   <td>{{service.finalScore}}</td>
                   <td

@@ -8,6 +8,7 @@ import * as DeploymentAcion from '../deployment-verification/store/deploymentver
 import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -18,12 +19,13 @@ import * as $ from 'jquery';
 
 export class ApplicationDashboardComponent implements OnInit {
 
+
   public applicationData: any[] = [];
   selectedIndex = 0;
   public serviceData: any[] = [];
   public selectedApplicationName: string;
   public serviceErrorMessage: string;
-  showAppDataType = 'Services';
+  showAppDataType = '';
   showReleaseTable = false;
   public spinnerService = true;
   public parentReleaseData: any;
@@ -32,12 +34,11 @@ export class ApplicationDashboardComponent implements OnInit {
   serviceDemoDataList: { canaryId: number; serviceId: number; serviceName: string; finalScore: number; logsScore: number; metricsScore: number; status: string; }[];
 
 
-
-
   // tslint:disable-next-line:max-line-length
   constructor(private applicationService: ApplicationService, private notifications: NotificationService, public store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
+   
     //fetching appData from dashboard state
     this.store.select('appDashboard').subscribe(
       (resdata) => {
@@ -46,7 +47,6 @@ export class ApplicationDashboardComponent implements OnInit {
           this.applicationData = resdata.appData;
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
-         // this.showAppDataType = 'Services';
           this.selectedApplication(0, this.applicationData[0]);
         }
       }
@@ -60,7 +60,21 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
   public selectedApplication(index: number, app: any) {
+    if(this.showAppDataType === 'Services'){
     this.spinnerService = true;
+    this.selectedIndex = index;
+    this.selectedApplicationName = app.applicationName;
+    this.showReleaseTable = false;
+    this.serviceErrorMessage = '';
+    this.applicationService.getServiceListDemo(app.applicationId).subscribe((serviceDataList: any) => {
+      this.serviceData = serviceDataList;
+      this.spinnerService = false;
+      if (serviceDataList.length === 0) {
+        this.serviceErrorMessage = 'No services found in this application'; 
+      }
+    });
+    }else{
+      this.spinnerService = true;
     this.showAppDataType = 'Deployment Verification';
     this.selectedIndex = index;
     this.selectedApplicationName = app.applicationName;
@@ -73,14 +87,17 @@ export class ApplicationDashboardComponent implements OnInit {
         this.serviceErrorMessage = 'No services found in this application'; 
       }
     });
+    }
+
+    
   }
   
 
 // redirection to canary reports
   getServiceCanaryReport(canary){
-    //  this.store.dispatch('deploymentverification'({page:'application'}));
+     // hide tooltip 
+     $("[data-toggle='tooltip']").tooltip('hide');
     this.store.dispatch(DeploymentAcion.loadDeploymentApp({page:'application/deploymentverification'}));
-  
   
     }
 
@@ -104,7 +121,7 @@ export class ApplicationDashboardComponent implements OnInit {
   public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
     this.showAppDataType = labelType;
     if (labelType === 'Services') {
-      this.fetchAllServices();
+      this.selectedApplication(index, app);
     //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
       this.getReleases(labelType, app, index, event);
@@ -118,49 +135,6 @@ export class ApplicationDashboardComponent implements OnInit {
     event.stopPropagation();
   }
 
-  public fetchAllServices(){
-    this.showReleaseTable = false;
-    this.showAppDataType = "Services";
-    this.serviceDemoDataList = [
-      {
-        "canaryId": 123,
-        "serviceId": 292,
-        "serviceName": "multiservice_2",
-        "finalScore": 85,
-        "logsScore":90,
-        "metricsScore": 85,
-        "status": "PASS"
-      },
-      {
-        "canaryId": 123,
-        "serviceId": 293,
-        "serviceName": "multiservice_3",
-        "finalScore": 85,
-        "logsScore":90,
-        "metricsScore": 85,
-        "status": "FAIL"
-      },
-      {
-        "canaryId": 198,
-        "serviceId": 294,
-        "serviceName": "multiservice_4",
-        "finalScore": 85,
-        "logsScore":90,
-        "metricsScore": 85,
-        "status": "PASS"
-      },
-      {
-        "canaryId": 188,
-        "serviceId": 291,
-        "serviceName": "multiservice_1",
-        "finalScore": 85,
-        "logsScore":90,
-        "metricsScore": 85,
-        "status": "PASS"
-      }
-    ];
-  
-  }
 
   public addNewApplication() {
    this.store.dispatch(AppOnboardingAction.loadApp({page:'application'}));

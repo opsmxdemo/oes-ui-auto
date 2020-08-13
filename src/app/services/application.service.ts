@@ -25,7 +25,7 @@ export class ApplicationService {
         );
     }
     getServiceListDemo(applicationId) {
-        return this.httpClient.get(this.endpointUrl +'/oes/dashboard/applications/'+ applicationId +'services').pipe(
+        return this.httpClient.get(this.endpointUrl +'oes/dashboard/applications/'+ applicationId +'/services').pipe(
             catchError(this.handleError)
         );
     }

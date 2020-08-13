@@ -1,7 +1,7 @@
 {
     "baseUrl":"https://137.117.94.95:8090/",
     "endPointUrl":"http://52.165.24.107:8084/",
-    "autoPilotEndPointUrl":"https://40.78.28.87:9094/",
+    "autoPilotEndPointUrl":"http://52.165.24.107:8084/autopilot/",
     "plartFormEndPoint": "http://52.165.24.107:8084/",
     "uiEndPoint": "http://52.165.24.107:4200/"
 }

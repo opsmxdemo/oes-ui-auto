@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isAuthenticate: Boolean;
-  username: string;
+  userDetails: any;
   imgcolor: string = '#00796b';
   firstAlphabet: any;
+  username: string;
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }
@@ -25,14 +26,19 @@ export class HeaderComponent implements OnInit {
       (response) => {
         if(response.authenticated){
           this.isAuthenticate = response.authenticated;
-          this.username = response.user;
-          this.firstAlphabet = response.user.split('');
+          this.userDetails = JSON.parse(localStorage.getItem('userData'));
+          this.username = this.userDetails['username'];
+          this.firstAlphabet = this.username.split('');
         }
       }
     );
+    
   }
 
   onLogout(){
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userData');
+    this.isAuthenticate = false;
     this.store.dispatch(new AuthAction.Logout())
   }
 

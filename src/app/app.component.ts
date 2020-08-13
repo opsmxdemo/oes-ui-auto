@@ -44,21 +44,21 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   ngOnInit() {
 
-    //Dispatching action for login functionality
-    this.store.dispatch(new AuthAction.LoginStart());
+    this.store.select('auth').subscribe(
+      (response) => {
+          this.isAuthenticate = response.authenticated;
+          
+      }
+    );
 
     //fetching data from AuthState
+    
     this.store.select('auth').subscribe(
       (response) => {
         this.isAuthenticate = response.authenticated;
-        if (response.authResponse === null) {
-          var browserUrl = window.location.href;
-          var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/application";
-          var encodedUrl = encodeURIComponent(resultUrl);
-          this.loginRedirect(encodedUrl)
-        }else if(response.authResponse === 'success'){
-          console.log("successfully logged in satyauser");
+        if (!this.isAuthenticate) {
+          this.router.navigate(['login']);
+        }else{
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
 
@@ -81,8 +81,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
       }
     );
 
-   
-
     // fetching data from LayoutState
     this.store.select('layout').subscribe(
       (response) => {
@@ -102,7 +100,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   loginRedirect(callback): void {
-    window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
+    this.store.dispatch(OnboardingActions.loadApp({page:'application'}));
+   // window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
   }
 
   toggleNavbar() {
