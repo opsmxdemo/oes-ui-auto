@@ -44,15 +44,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   ngOnInit() {
 
-    this.store.select('auth').subscribe(
-      (response) => {
-          this.isAuthenticate = response.authenticated;
-          
-      }
-    );
-
-    //fetching data from AuthState
-    
+    //fetching data from AuthState    
     this.store.select('auth').subscribe(
       (response) => {
         this.isAuthenticate = response.authenticated;
@@ -97,11 +89,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
         }
       }
     )
-  }
-
-  loginRedirect(callback): void {
-    this.store.dispatch(OnboardingActions.loadApp({page:'application'}));
-   // window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
   }
 
   toggleNavbar() {
