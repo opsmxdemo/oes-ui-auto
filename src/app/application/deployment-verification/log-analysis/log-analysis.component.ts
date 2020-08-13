@@ -112,12 +112,12 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     this.cdr.detectChanges();
   }
 
-  ngOnInit(): void {  
-      this.getLogAnalysis();      
-  }
+  ngOnInit() {}
  
-  ngOnChanges(changes: SimpleChanges): void {    
-    this.getLogAnalysis()
+  ngOnChanges(changes: SimpleChanges): void { 
+    if(this.canaryId !== undefined && this.serviceId !==undefined){
+      this.getLogAnalysis()
+    } 
   }
 
   // below function is use to make page responsive
