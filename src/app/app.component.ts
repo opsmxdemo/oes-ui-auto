@@ -99,6 +99,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
         }
       }
     )
+     
+    // fetching current route if deploymentVerification is exist then collapse left side menu.
+    setTimeout(()=>{
+      if(this.router.url.includes('deploymentverification')){
+        this.addclass = true;
+      }
+    },1000)
+    
   }
 
   loginRedirect(callback): void {
@@ -111,8 +119,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   // Below function is use to nevigate to proper page while click on submenu link
-  navigateMenu(event){
+  navigateMenu(event,menuName){
     event.stopPropagation();
+    if(menuName === 'Deployment Verification'){
+      setTimeout(()=>{
+        this.addclass = true;
+      },1000)
+    }
   }
 
   // Below function is use to return appropriate class for submenu link

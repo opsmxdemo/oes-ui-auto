@@ -459,7 +459,6 @@
                 <button class="pull-right" data-toggle="tooltip" data-placement="left" title="Overall canary run inforamtion for the selected application"  mat-button>
                   <div *ngIf="isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-right"></i></div>
                   <div *ngIf="!isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-left"></i></div>
-
                 </button>
                </div>
               <div class="pt-1">
@@ -473,7 +472,7 @@
                  
                 </ul>
                 
-                <div class="tab-content" id="myTabContent">
+                <div class="tab-content" id="myTabContent" (click)="onClickAnalysisSection($event)">
                   <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
                   [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
                       <ng-container *ngIf = "selectedTab === 'log-analysis'">
