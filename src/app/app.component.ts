@@ -6,7 +6,7 @@ import * as LayoutAction from './layout/store/layout.actions';
 import * as AuditActions from './audit/store/audit.actions';
 import * as CdDashboardActions from './cd-dashboard/store/cd-dashboard.actions';
 import * as PolicyActions from './policy-management/store/policyManagement.actions';
-import * as OnboardingActions from './application-onboarding/store/onBoarding.actions';
+import * as OnboardingApplicationActions from './application-onboarding/application/store/application.actions';
 import * as AppDashboardAction from './application/application-dashboard/store/dashboard.actions';
 import * as DeploymentVerificationAction from './application/deployment-verification/store/deploymentverification.actions';
 import { Menu } from './models/layoutModel/sidenavModel/menu.model';
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.store.dispatch(CdDashboardActions.loadCdDashboard());
 
           //Dispatching action to fetch application Onboarding data from API
-          this.store.dispatch(OnboardingActions.loadAppList());
+          this.store.dispatch(OnboardingApplicationActions.loadAppList());
 
           //Dispatching action to fetch audit initial data
           this.store.dispatch(AuditActions.loadAudit());
