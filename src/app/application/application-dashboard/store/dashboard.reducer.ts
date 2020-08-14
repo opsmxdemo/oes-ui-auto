@@ -5,12 +5,15 @@ export interface State {
     appData: any;
     errorMessage: string;
     dashboardLoading: boolean;
+    topologyChartData: any;
 }
 
 export const initialState: State = {
     appData: null,
     errorMessage: null,
-    dashboardLoading: false
+    dashboardLoading: false,
+    topologyChartData: null
+
 }
 
 export function DashboardReducer(
@@ -22,6 +25,13 @@ export function DashboardReducer(
             state => ({
                 ...state,
                 dashboardLoading: true
+            })
+        ),
+        on(DashboardActions.fetchNetworkChartData,
+            (state, action) => ({
+                ...state,
+                topologyChartData:action.networkChartData,
+                dashboardLoading:false
             })
         ),
         on(DashboardActions.fetchedAppData,

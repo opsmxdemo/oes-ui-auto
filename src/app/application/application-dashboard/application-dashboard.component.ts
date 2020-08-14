@@ -8,7 +8,10 @@ import * as DeploymentAcion from '../deployment-verification/store/deploymentver
 import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
+import { Layout,Node, Edge , ClusterNode} from '@swimlane/ngx-graph';
 import { Subject } from 'rxjs';
+import { nodes, clusters, links } from './data';
+
 
 
 @Component({
@@ -18,6 +21,11 @@ import { Subject } from 'rxjs';
 })
 
 export class ApplicationDashboardComponent implements OnInit {
+
+  nodes= [];                      // getting nodes data for network chart
+  clusters: null;                    // getting cluster data for network chart
+  links= [];                      // getting edges data for network chart
+  networkChartData = null;              // It is use to store network chart data fetched from api.
 
 
   public applicationData: any[] = [];
@@ -49,8 +57,47 @@ export class ApplicationDashboardComponent implements OnInit {
           this.spinnerService = false;
           this.selectedApplication(0, this.applicationData[0]);
         }
+        if(resdata.topologyChartData !== null){
+          this.dashboardLoading = resdata.dashboardLoading;
+          this.networkChartData = resdata.topologyChartData;
+          // this.nodes = [...resdata.topologyChartData.nodes];
+          // this.links = [...resdata.topologyChartData.edges];
+          // console.log(this.networkChartData);
+         // this.store.dispatch(new LayoutAction.(this.applicationData.length));
+        }
       }
     )
+
+    // Below logic is use to fetch data from Cd-dashboard state
+
+     //fetching appData from dashboard state
+    //  this.store.select('appDashboard').subscribe(
+    //   (resdata) => {
+    //     if(resdata.topologyChartData !== null){
+    //       this.dashboardLoading = resdata.dashboardLoading;
+    //       this.networkChartData = resdata.topologyChartData;
+    //       this.nodes = JSON.stringify(resdata.topologyChartData.nodes);
+    //       this.links = JSON.stringify(resdata.topologyChartData.edges);
+    //       console.log(this.networkChartData);
+    //      // this.store.dispatch(new LayoutAction.(this.applicationData.length));
+    //     }
+    //   }
+    // )
+      
+
+    // this.store.select('cdDashboard').subscribe(
+    //   (networkData) => {
+    //     this.dashboardLoading = networkData.dashboardLoading;
+    //     if (networkData.topologyChartData !== null) {
+    //       this.mainChartData = dashboardData.healthChartData;
+    //     }
+        
+    //   }
+    // );
+
+   
+
+
   }
   
   // code to load applications
@@ -89,7 +136,66 @@ export class ApplicationDashboardComponent implements OnInit {
     });
     }
 
-    
+    this.nodes = [
+      {
+        id: 'a1',
+        label: 'application',
+        data: {
+          customColor: '#58a5cc'
+        }
+      },
+      {
+        id: 'b1',
+        label: 'multiservice_1',
+        data: {
+          customColor: '#dc3545'
+        }
+      }, {
+        id: 'b2',
+        label: 'multiservice_2',
+        data: {
+          customColor: '#dc3545'
+        }
+      }, {
+        id: 'b3',
+        label: 'multiservice_3',
+        data: {
+          customColor: '#dc3545'
+        }
+      }, 
+      {
+        id: 'b4',
+        label: 'multiservice_4',
+        data: {
+          customColor: '#dc3545'
+        }
+      }
+    ];
+
+    this.links = [
+      {
+        id: 'a',
+        source: 'a1',
+        target: 'b2',
+        label: 'is parent of'
+      }, {
+        id: 'b',
+        source: 'a1',
+        target: 'b1',
+        label: 'custom label'
+      }, {
+        id: 'c',
+        source: 'a1',
+        target: 'b3',
+        label: 'custom label'
+      },
+      {
+        id: 'd',
+        source: 'a1',
+        target: 'b4',
+        label: 'custom label'
+      }
+    ];
   }
   
 

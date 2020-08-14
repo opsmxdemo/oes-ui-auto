@@ -49,7 +49,7 @@ fetchLogAnalysisResults = createEffect(() =>
         ofType(LogAnalysisActions.loadLogResults),
         switchMap((action) => {                 
             // return this.http.get('/assets/data/logsData.json').pipe(                    
-            return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
                 map(resdata => {
                    return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
                 }),
@@ -67,7 +67,7 @@ fetchEventLogsResults = createEffect(() =>
     this.actions$.pipe(
         ofType(LogAnalysisActions.loadEventLogResults),
         switchMap((action) => {  
-            return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/clustersByEvent?canaryId=' + action.canaryId + '&serviceId=' + action.serviceId + '&event=' + action.event).pipe(                  
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/clustersByEvent?canaryId=' + action.canaryId + '&serviceId=' + action.serviceId + '&event=' + action.event).pipe(                  
                 map(resdata => {
                    return LogAnalysisActions.fetchEventLogsResults({logsEventResults:resdata});
                 }),
@@ -86,7 +86,7 @@ fetchRerunLogsResults = createEffect(() =>
     this.actions$.pipe(
         ofType(LogAnalysisActions.rerunLogs),
         switchMap((action) => {             
-            return this.http.post(this.environment.config.autoPilotEndPointUrl +'logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + action.userName + '&serviceId='+ action.serviceId, action.postData).pipe(                  
+            return this.http.post(this.environment.config.endPointUrl +'autopilot/logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + action.userName + '&serviceId='+ action.serviceId, action.postData).pipe(                  
                 map(resdata => {
                    return LogAnalysisActions.fetchRerunLogsResults({rerunResponse:resdata});
                 }),

@@ -61,6 +61,21 @@ export class AppDashboardEffect {
         )
     )
 
+    // Below effect is use for fetch network chart data to display network graph
+    fetchNetworkChartData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DashboardActions.loadAppDashboard),
+            switchMap(() => {
+                return this.http.get('../../../assets/data/network-topology.json').pipe(
+                    map(resdata => {
+                       return DashboardActions.fetchNetworkChartData({networkChartData:resdata});
+                    }),
+
+                );
+            })
+        )
+    )
+
    
 
 }

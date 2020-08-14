@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
     //Below function execute when user click on login button
     onSubmit(){
         if (this.loginForm.valid) {
-            console.log("login form Submit",this.loginForm.value);
              this.user = {
                     username: this.loginForm.value.username,
                 }
