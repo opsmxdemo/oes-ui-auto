@@ -5,9 +5,9 @@ import { SharedService } from 'src/app/services/shared.service';
 import { PipelineTemplate } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipelineTemplate.model';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../store/app.reducer';
+import * as fromFeature from '../../store/feature.reducer';
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
-import * as OnboardingActions from '../store/onBoarding.actions';
+import * as ApplicationActions from '../store/application.actions';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { Service } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/serviceModel';
 import { Router } from '@angular/router';
@@ -43,13 +43,13 @@ export class CreateApplicationComponent implements OnInit {
   userGroupDropdownData = [];                                     // It is use to store userGroupDropdown data .
 
   constructor(public sharedService: SharedService,
-              public store: Store<fromApp.AppState>,
+              public store: Store<fromFeature.State>,
               public router: Router) { }
 
   ngOnInit() {
 
     // fetching data from store and check editMode mode is enable or disabled
-    this.store.select('appOnboarding').subscribe(
+    this.store.select(fromFeature.selectApplication).subscribe(
       (responseData) => {
         this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
@@ -159,7 +159,7 @@ export class CreateApplicationComponent implements OnInit {
     )
 
     // Below function is use to fetching data from state related to pipelineData
-    this.store.select('appOnboarding').subscribe(
+    this.store.select(fromFeature.selectApplication).subscribe(
       (response) => {
         if (response.pipelineData !== null) {
           this.pipelineExists = response.pipelineData;
@@ -291,7 +291,7 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
   onImageSourceSelect(ImageSourceValue){
-    this.store.dispatch(OnboardingActions.loadDockerImageName({imageSourceName:ImageSourceValue}));
+    this.store.dispatch(ApplicationActions.loadDockerImageName({imageSourceName:ImageSourceValue}));
   }
 
   // Below function is use to populate Docker Image name dropdown after selecting DockerAccountName
@@ -589,7 +589,7 @@ export class CreateApplicationComponent implements OnInit {
 
         //Below action is use to save updated application form in database
         if(formUpdated){
-          this.store.dispatch(OnboardingActions.updateApplication({appData:this.mainForm}));
+          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
         }else{
           Swal.fire({
             icon: 'error',
@@ -635,7 +635,7 @@ export class CreateApplicationComponent implements OnInit {
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
         
         //Below action is use to save created form in database
-        this.store.dispatch(OnboardingActions.createApplication({appData:this.mainForm}));
+        this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
       } else {
         this.validForms();
       }
