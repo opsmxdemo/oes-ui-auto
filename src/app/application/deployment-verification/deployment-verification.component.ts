@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
@@ -9,7 +9,6 @@ import {Observable} from 'rxjs';
 import {map, startWith, tap} from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
-import * as deploymentApp from './store/deploymentverification.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
 import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.actions';
 import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
@@ -17,6 +16,7 @@ import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NumberLiteralType } from 'typescript';
+import { MatSidenav } from '@angular/material/sidenav';
 
 
 
@@ -33,6 +33,7 @@ export interface User {
 export class DeploymentVerificationComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
+  @ViewChild('sideNav') Sidenav: MatSidenav;
 
   size = 5343454545;
   applicationForm: FormGroup;
@@ -76,7 +77,7 @@ export class DeploymentVerificationComponent implements OnInit {
   //pagination for service table
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
   serviceListData: any;
-  selectedServiceId: number;                                              // It use to store Accountlist data fetched from state.
+  selectedServiceId: number;                                                           // It use to store Accountlist data fetched from state.
   searchData: string = '';                                                             // this is use to fetch value from search field.
   perPageData: number = 10;                                                            // this is use to populate value in perPage dropdown exist in pagination.
   page = {                                                                             // this is use to support pagination in accunt page.
@@ -96,6 +97,18 @@ export class DeploymentVerificationComponent implements OnInit {
    constructor(private route: ActivatedRoute ,public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService,
     private fb: FormBuilder) { 
+    }
+
+   // Below function is use to capture events occur in matric analysis component and make responsive to table.
+   @HostListener('window:click', ['$event'])
+     handleClick(target){
+       const targetnode = target.target;
+      if(targetnode.textContent === 'Log Analysis' ||
+        targetnode.textContent === 'Metric Analysis' || 
+        targetnode.classList['value'] === 'service-selection'){
+          this.Sidenav.close();
+          this.isShow = false;
+      }
     }
 
 // code for application dropdown display starts here
@@ -123,8 +136,9 @@ export class DeploymentVerificationComponent implements OnInit {
             
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
       this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: Math.max.apply(null, selectedCan)}));
-      this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: Math.max.apply(null, selectedCan), serviceId: this.selectedServiceId }));
-
+      if(this.selectedServiceId !== undefined){
+        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: Math.max.apply(null, selectedCan), serviceId: this.selectedServiceId !== undefined?this.selectedServiceId:null }));
+      }
     }
   }
   //code for change the canary
@@ -140,7 +154,9 @@ export class DeploymentVerificationComponent implements OnInit {
     // );
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
-    this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId }));
+    if(this.selectedServiceId !== undefined){
+      this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
+    }
   }
 
     buildApplicationForm() {
@@ -228,8 +244,9 @@ export class DeploymentVerificationComponent implements OnInit {
         this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index + 1]}));
         this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index + 1]}));
         this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index + 1]}));
-        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index + 1], serviceId: this.selectedServiceId }));
-
+        if(this.selectedServiceId !== undefined){
+          this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index + 1], serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
+        }
       } 
     }
   }
@@ -251,8 +268,9 @@ export class DeploymentVerificationComponent implements OnInit {
       this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index - 1]}));
        this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index - 1]}));
        this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index - 1]}));
-       this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index - 1], serviceId: this.selectedServiceId }));
-
+       if(this.selectedServiceId !== undefined){
+        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index - 1], serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
+       }
     } else if (index === 0) {
       this.control.setValue(this.canaryList[index]);
     }
@@ -280,6 +298,12 @@ export class DeploymentVerificationComponent implements OnInit {
     this.nav_position = position === 'start' ? 'end' : 'start';
 
   }
+
+  // Below function is use to hide sidenav
+  hideSidenav(){
+    this.Sidenav.close();
+  }
+
   getOverallInfo() {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.isShow = !this.isShow;
@@ -422,8 +446,8 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.tableIsEmpty = false;
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
                   this.serviceNameInfo = this.deploymentServices.services[0];   
-                  if (this.serviceConter === 1) {
-                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun, serviceId: this.selectedServiceId }));
+                  if (this.serviceConter === 1 && this.selectedServiceId !== undefined) {
+                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun, serviceId: this.selectedServiceId}));
                     this.serviceConter++;
                   }
                    // Below we are dispatching action of metric analysis to load initial data of metric analysis tab if metric is exist in application.
@@ -529,6 +553,14 @@ export class DeploymentVerificationComponent implements OnInit {
       this.selectedTab = 'log-analysis';
     } else if(event.target.id === 'metric-analysis-tab') {
       this.selectedTab = 'metric-analysis';
+    }
+  }
+
+  // Below function is use to hide sidenav if click happen in Analysis section.
+  onClickAnalysisSection(event){
+    if(event.target.id !== 'expColBtn'){
+      this.Sidenav.close();
+      this.isShow = false;
     }
   }
 

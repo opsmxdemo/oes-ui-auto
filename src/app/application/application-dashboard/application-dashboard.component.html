@@ -25,7 +25,7 @@
               </div>
               <!-- /.data_list_title -->
               <div class="data_list_actionsc d-flex align-items-center ml-auto">
-               <div class="card_indigators mr-3 d-flex" *ngFor="let canaries of application.recentCanaries; let i=index">
+               <div class="card_indigators d-flex" *ngFor="let canaries of application.recentCanaries; let i=index">
                     <button type="button" class="btn p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Score: {{canaries.finalScore}}, RunID: {{canaries.canaryId}}">
                       <a [routerLink]="['/application/deploymentverification/',application.applicationName,canaries.canaryId]" class="ml-2" [ngClass]= "{'ci_check':canaries.finalScore >= canaries.maximumCanaryScore,'ci_close':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'ci_minus': canaries.finalScore === 'N/A' || canaries.finalScore === ''}">
                       <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore >= canaries.maximumCanaryScore,'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === ''}"></i></a>

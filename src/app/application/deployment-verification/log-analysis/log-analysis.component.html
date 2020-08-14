@@ -100,8 +100,8 @@
     <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse All'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand All'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
     </div>
   </div>
-  <div class="tab-content" id="myTabDefaultContent">
-    <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="">
+  <div class="tab-content" id="myTabDefaultContent" #LogClusterWidth>
+    <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="" [style.width]="logClusterWidth">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0"> 
 
         <div class="card mb-2" *ngFor="let log of logAnalysisData?.clusters">
@@ -171,7 +171,7 @@
             </div>
             <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true"></i></div>
             <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
-            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
+            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
               aria-expanded="true" aria-controls="collapse">
               <i class="fa fa-sort-down"></i>
             </button>
