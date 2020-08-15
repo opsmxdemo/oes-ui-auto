@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 import { ViewChild, ElementRef} from '@angular/core';
 import {DataSourceComponent} from 'src/app/application-onboarding/data-source/data-source.component'
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../../store/app.reducer';
-import * as OnboardingActions from '../../store/onBoarding.actions';
+import * as fromFeature from '../../store/feature.reducer';
+import * as DataSourceActions from '../store/data-source.actions';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,7 +27,7 @@ export class GithubFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,private sharedService: SharedService,
     private notifications: NotificationService, private datasource: DataSourceComponent,
-    public store: Store<fromApp.AppState>,
+    public store: Store<fromFeature.State>,
               public router: Router) { }
 
   ngOnInit(): void {
@@ -131,7 +131,7 @@ export class GithubFormComponent implements OnInit {
         this.sharedService.saveData(this.gitForm.value).subscribe((response: any) => {
           if(response.status === 200){
             this.notifications.showSuccess("Success",response.message);
-            this.store.dispatch(OnboardingActions.loadDatasourceList());
+            this.store.dispatch(DataSourceActions.loadDatasourceList());
             this.datasource.getClose();
           }
         },
@@ -142,7 +142,7 @@ export class GithubFormComponent implements OnInit {
         this.sharedService.updateData(this.gitForm.value).subscribe((response: any) => {
           if(response.status === 200){
             this.notifications.showSuccess("Success",response.message);
-            this.store.dispatch(OnboardingActions.loadDatasourceList());
+            this.store.dispatch(DataSourceActions.loadDatasourceList());
             this.datasource.getClose();
           }
         },

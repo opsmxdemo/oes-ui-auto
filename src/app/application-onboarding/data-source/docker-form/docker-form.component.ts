@@ -4,10 +4,9 @@ import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import {DataSourceComponent} from 'src/app/application-onboarding/data-source/data-source.component';
-import { ViewChild, ElementRef} from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../../store/app.reducer';
-import * as OnboardingActions from '../../store/onBoarding.actions';
+import * as fromFeature from '../../store/feature.reducer';
+import * as DataSourceActions from '../store/data-source.actions';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,7 +21,7 @@ export class DockerFormComponent implements OnInit {
   
   constructor(private formBuilder: FormBuilder,private sharedService: SharedService,
     private notifications: NotificationService, private datasource: DataSourceComponent,
-    public store: Store<fromApp.AppState>,
+    public store: Store<fromFeature.State>,
               public router: Router) { }
 
   ngOnInit(): void {
@@ -73,7 +72,7 @@ export class DockerFormComponent implements OnInit {
       if(this.form_type === 'new'){
         this.sharedService.saveData(this.dockerForm.value).subscribe((response: any) => {
           this.notifications.showSuccess("Success",response.message);
-          this.store.dispatch(OnboardingActions.loadDatasourceList());
+          this.store.dispatch(DataSourceActions.loadDatasourceList());
         },
         (error) => {
           console.log("erroeUI",error);
@@ -83,7 +82,7 @@ export class DockerFormComponent implements OnInit {
       }else{
         this.sharedService.updateData(this.dockerForm.value).subscribe((response: any) => {
           this.notifications.showSuccess("Success",response.message);
-          this.store.dispatch(OnboardingActions.loadDatasourceList());
+          this.store.dispatch(DataSourceActions.loadDatasourceList());
         },
         (error) => {
           console.log("erroeUI",error);

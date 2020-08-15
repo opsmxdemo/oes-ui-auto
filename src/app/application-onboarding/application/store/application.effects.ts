@@ -4,9 +4,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../store/app.reducer';
-import * as OnboardingAction from './onBoarding.actions';
-import * as AppDashboardAction from '../../application/application-dashboard/store/dashboard.actions';
+import * as fromFeature from '../../store/feature.reducer';
+import * as fromApp from '../../../store/app.reducer';
+import * as ApplicationAction from './application.actions';
+import * as AppDashboardAction from '../../../application/application-dashboard/store/dashboard.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
@@ -14,15 +15,13 @@ import { CreateApplication } from 'src/app/models/applicationOnboarding/createAp
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import { NotificationService } from 'src/app/services/notification.service';
-import { CreateAccount } from 'src/app/models/applicationOnboarding/createAccountModel/createAccount.model';
-import Swal from 'sweetalert2';
 import { AppConfigService } from 'src/app/services/app-config.service';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
     let errorMessage = 'An unknown error occurred';
     if (!errorRes.error) {
-        return of(OnboardingAction.errorOccured({ errorMessage }));
+        return of(ApplicationAction.errorOccured({ errorMessage }));
     }
     switch (errorRes.error.message) {
         case 'Authentication Error':
@@ -35,15 +34,16 @@ const handleError = (errorRes: any) => {
             errorMessage = 'Error Occurred';
             break;
     }
-    return of(OnboardingAction.errorOccured({ errorMessage }));
+    return of(ApplicationAction.errorOccured({ errorMessage }));
 }
 
 @Injectable()
-export class ApplicationOnBoardingEffect {
+export class ApplicationEffect {
     user: any;
     constructor(public actions$: Actions,
         public http: HttpClient,
-        public store: Store<fromApp.AppState>,
+        public store: Store<fromFeature.State>,
+        public appStore: Store<fromApp.AppState>,
         public router: Router,
         public toastr: NotificationService,
         private environment: AppConfigService
@@ -52,11 +52,11 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch pipline dropdown data.
     fetchPipeline = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
             switchMap(() => {
                 return this.http.get<Pipeline>(this.environment.config.endPointUrl + 'oes/appOnboarding/pipelineTemplates').pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchPipeline({ pipelineData: resdata['data'] });
+                        return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -70,12 +70,12 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch dockerImageName dropdown data.
     fetchDockerImageName = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadDockerImageName),
+            ofType(ApplicationAction.loadDockerImageName),
             switchMap((action) => {
 
                 return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/images?imageSource='+action.imageSourceName).pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchDockerImageName({dockerImageData:resdata['results']});
+                        return ApplicationAction.fetchDockerImageName({dockerImageData:resdata['results']});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR');
@@ -108,12 +108,12 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch cloudAccount dropdown data.
     fetchUserData = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
             switchMap(() => {
 
                 return this.http.get<string[]>(this.environment.config.endPointUrl + 'oes/authorize/groups').pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchUserGrops({userGroupData:resdata['data']})
+                        return ApplicationAction.fetchUserGrops({userGroupData:resdata['data']})
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -127,12 +127,12 @@ export class ApplicationOnBoardingEffect {
      // Below effect is use for fetch imageSource dropdown data.
      fetchImageSource = createEffect(() =>
      this.actions$.pipe(
-         ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+         ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
          switchMap(() => {
 
              return this.http.get(this.environment.config.endPointUrl + 'oes/accountsConfig/getDockerAccounts').pipe(
                  map(resdata => {
-                     return OnboardingAction.fetchImageSource({imageSource:resdata['data']});
+                     return ApplicationAction.fetchImageSource({imageSource:resdata['data']});
                  }),
                  catchError(errorRes => {
                      this.toastr.showError('Server Error !!', 'ERROR')
@@ -147,12 +147,12 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch Application data on edit mode.
     onEditApplication = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.enableEditMode),
+            ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
                 return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'oes/appOnboarding/editApplication?applicationName=' + action.applicationName).pipe(
                     map(resdata => {
 
-                        return OnboardingAction.fetchAppData({ appData: resdata })
+                        return ApplicationAction.fetchAppData({ appData: resdata })
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -166,11 +166,11 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for saved data in create application phase
     onsavedCreateApplicationData = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.createApplication),
+            ofType(ApplicationAction.createApplication),
             switchMap(action => {
                 return this.http.post<CreateApplication>(this.environment.config.endPointUrl + 'oes/appOnboarding/createApplication', action.appData).pipe(
                     map(resdata => {
-                        return OnboardingAction.dataSaved();
+                        return ApplicationAction.dataSaved();
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -184,11 +184,11 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for saved data in create application phase
     onUpdateExistApplicationData = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.updateApplication),
+            ofType(ApplicationAction.updateApplication),
             switchMap(action => {
                 return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'oes/appOnboarding/updateApplication', action.appData).pipe(
                     map(resdata => {
-                        return OnboardingAction.dataSaved();
+                        return ApplicationAction.dataSaved();
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -203,12 +203,12 @@ export class ApplicationOnBoardingEffect {
     // Below effect is use for fetch data related to Application List page
     fetchAppListData = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadAppList),
-            withLatestFrom(this.store.select('auth')),
+            ofType(ApplicationAction.loadAppList),
+            withLatestFrom(this.appStore.select('auth')),
             switchMap(([action,authState]) => {
                 return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList/'+authState.user).pipe(
                     map(resdata => {
-                        return OnboardingAction.fetchAppList({ Applist: resdata['data'] });
+                        return ApplicationAction.fetchAppList({ Applist: resdata['data'] });
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -222,7 +222,7 @@ export class ApplicationOnBoardingEffect {
     //Below effect is use to redirect to application onboardind page in create& edit phase
     apponboardingRedirect = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
+            ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
             tap(() => {
                 this.router.navigate(['/setup/newApplication'])
             })
@@ -232,13 +232,13 @@ export class ApplicationOnBoardingEffect {
     //Below effect is use to redirect to application dashboard page after successfull submission
     appdashboardRedirect = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.dataSaved),
-            withLatestFrom(this.store.select('appOnboarding')),
+            ofType(ApplicationAction.dataSaved),
+            withLatestFrom(this.store.select(fromFeature.selectApplication)),
             tap(([actiondata, appOnboardingState]) => {
                 this.toastr.showSuccess('Data saved successfully !!', 'SUCCESS')
                 this.router.navigate([appOnboardingState.parentPage]);
-                this.store.dispatch(OnboardingAction.loadAppList());
-                this.store.dispatch(AppDashboardAction.loadAppDashboard());
+                this.store.dispatch(ApplicationAction.loadAppList());
+                this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
             })
         ), { dispatch: false }
     )
@@ -246,115 +246,22 @@ export class ApplicationOnBoardingEffect {
     //Below effect is use to refresh appDashboard list on delete of application
     refreshDashboard = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.appDeletedSuccessfully),
+            ofType(ApplicationAction.appDeletedSuccessfully),
             tap((actiondata) => {
-                this.store.dispatch(AppDashboardAction.loadAppDashboard());
+                this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
             })
         ), { dispatch: false }
-    )
-
-    //Below effect is use to redirect to application dashboard page after successfull submission
-    accountsRedirect = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.accountDataSaved),
-            withLatestFrom(this.store.select('appOnboarding')),
-            tap(([actiondata, appOnboardingState]) => {
-                this.toastr.showSuccess('Data saved successfully !!', 'SUCCESS')
-                //this.store.dispatch(OnboardingAction.loadAccountList());
-                this.router.navigate([appOnboardingState.accountParentPage]);
-            })
-        ), { dispatch: false }
-    )
-
-    // Below effect is use for saved data in create account phase
-    onsavedCreateAccountData = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.createAccount),
-            switchMap(action => {
-                const params = new HttpParams()
-                    .set('postData', action.postData)
-                return this.http.post<CreateAccount>(this.environment.config.endPointUrl + 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData, { params: params }).pipe(
-                    map(resdata => {
-                        // this.router.navigate([]);
-                        return OnboardingAction.accountDataSaved();
-                    }),
-                    catchError(errorRes => {
-                        //  this.toastr.showError('Server Error !!','ERROR')
-                        this.toastr.showError('Error', errorRes);
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
-
-    // Below effect is use for update account 
-    onsavedUpdateAccountData = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.updateAccount),
-            switchMap(action => {
-                const params = new HttpParams()
-                .set('postData', action.postData)
-                return this.http.put<CreateAccount>(this.environment.config.endPointUrl+ 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
-                    map(resdata => {
-                       // this.router.navigate([]);
-                        return OnboardingAction.accountDataSaved();
-                    }),
-                    catchError(errorRes => {
-                      //  this.toastr.showError('Server Error !!','ERROR')
-                        this.toastr.showError('Error', errorRes);
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
-
-    // Below effect is use for fetch data related to Accounts List page
-    fetchDatasourcesListData = createEffect(() =>
-    this.actions$.pipe(
-        ofType(OnboardingAction.loadDatasourceList),
-        switchMap(() => {
-            return this.http.get<any>(this.environment.config.endPointUrl+'oes/accountsConfig/getAccounts').pipe(
-                map(resdata => {
-                    return OnboardingAction.fetchDatasourceList({DatasourceList:resdata['data']});
-                }),
-                catchError(errorRes => {
-                    this.toastr.showError('Server Error !!','ERROR')
-                    return handleError(errorRes);
-                })
-            );
-        })
-       )
-   )
-
-     // Below effect is use for fetch data related to Accounts List page
-     fetchAccountListData = createEffect(() =>
-     this.actions$.pipe(
-         ofType(OnboardingAction.loadAccountList),
-         switchMap(() => {
-             return this.http.get<any>(this.environment.config.endPointUrl+'oes/accountsConfig/getDynamicAccounts').pipe(
-                 map(resdata => {
-                     return OnboardingAction.fetchAccountList({Accountlist:resdata['accounts']});
-                 }),
-                 catchError(errorRes => {
-                     this.toastr.showError('Server Error !!','ERROR')
-                     return handleError(errorRes);
-                 })
-             );
-         })
-        )
     )
 
     // Below effect is use for delete application present in application
     deleteApplication = createEffect(() =>
         this.actions$.pipe(
-            ofType(OnboardingAction.appDelete),
+            ofType(ApplicationAction.appDelete),
             switchMap((action) => {
                 return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/deleteApplication/' + action.applicationName).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS')
-                        return OnboardingAction.appDeletedSuccessfully({ index: action.index });
+                        return ApplicationAction.appDeletedSuccessfully({ index: action.index });
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -364,67 +271,4 @@ export class ApplicationOnBoardingEffect {
             })
         )
     )
-
-
-    // Below effect is use for delete Account .
-    deleteAccountData = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.deleteAccount),
-            switchMap(action => {
-                return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/dynamicAccount/' + action.accountName).pipe(
-                    map(resdata => {
-                        this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
-                        // return OnboardingAction.appDeletedSuccessfully({index:action.index});
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                        return OnboardingAction.accountDeleted({ index: action.index })
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
-
-
-    // Below effect is use for delete datasource Account .
-    deleteDatasourceData = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.deleteDatasourceAccount),
-            switchMap(action => {
-                return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/deleteAccount/' + action.accountName).pipe(
-                    map(resdata => {
-                        this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
-                        // return OnboardingAction.appDeletedSuccessfully({index:action.index});
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                        return OnboardingAction.DatasourceaccountDeleted({ index: action.index })
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
-
-    //Below effect is use to redirect to application onboardind page in create& edit phase
-    accountRedirect = createEffect(() =>
-        this.actions$.pipe(
-            ofType(OnboardingAction.loadAccount),
-            tap(() => {
-                this.router.navigate(['/setup/newAccount'])
-            })
-        ), { dispatch: false }
-    )
-
 }

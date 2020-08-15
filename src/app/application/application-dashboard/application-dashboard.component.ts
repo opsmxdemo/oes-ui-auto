@@ -3,7 +3,8 @@ import { ApplicationService } from '../../services/application.service';
 import {NotificationService} from '../../services/notification.service';
 import * as fromApp from '../../store/app.reducer';
 import * as AppDashboardAction from './store/dashboard.actions';
-import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
+import * as fromApplicationFeature from '../../application-onboarding/store/feature.reducer';
+import * as ApplicationActions from '../../application-onboarding/application/store/application.actions';
 import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
@@ -31,7 +32,10 @@ export class ApplicationDashboardComponent implements OnInit {
 
 
   // tslint:disable-next-line:max-line-length
-  constructor(private applicationService: ApplicationService, private notifications: NotificationService, public store: Store<fromApp.AppState>) { }
+  constructor(private applicationService: ApplicationService, 
+              private notifications: NotificationService, 
+              public store: Store<fromApp.AppState>,
+              public applicationFeatureStore: Store<fromApplicationFeature.State>) { }
 
   ngOnInit(): void {
     //fetching appData from dashboard state
@@ -99,7 +103,7 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
   public addNewApplication() {
-   this.store.dispatch(AppOnboardingAction.loadApp({page:'application'}));
+   this.applicationFeatureStore.dispatch(ApplicationActions.loadApp({page:'application'}));
   }
 
   // Below function is use to get proper href

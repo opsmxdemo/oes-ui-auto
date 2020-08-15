@@ -1,10 +1,9 @@
-
-import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
+import { Pipeline } from '../../../models/applicationOnboarding/pipelineTemplate/pipeline.model';
 import { Action, createReducer, on } from '@ngrx/store';
-import * as OnboardingAction from './onBoarding.actions';
-import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
-import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
-import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import * as ApplicationAction from './application.actions';
+import { CreateApplication } from '../../../models/applicationOnboarding/createApplicationModel/createApplication.model';
+import { CloudAccount } from '../../../models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
+import { ApplicationList } from '../../../models/applicationOnboarding/applicationList/applicationList.model';
 
 
 export interface State {
@@ -25,12 +24,6 @@ export interface State {
     // Application List variables
     applicationList: ApplicationList[];
     appListLoading: boolean;
-
-    // Account variables
-    accountList: any;
-    datasourceList: any;
-    accountParentPage: string;
-    accountDeleted: boolean;
 }
 
 export const initialState: State = {
@@ -41,10 +34,6 @@ export const initialState: State = {
     applicationData: null,
     cloudAccountExist: null,
     applicationList: null,
-    accountList: null,
-    datasourceList: null,
-    accountParentPage: null,
-    accountDeleted: false,
     appListLoading: false,
     applicationLoading: false,
     imageSource: null,
@@ -53,32 +42,32 @@ export const initialState: State = {
     userGropsData: null
 }
 
-export function AppOnboardingReducer(
-    onboardingState: State | undefined,
-    onboardingAction: Action) {
+export function ApplicationReducer(
+    applicationState: State | undefined,
+    applicationAction: Action) {
     return createReducer(
         initialState,
         // #### CreateApplication screen logic start ####
-        on(OnboardingAction.loadApp,
+        on(ApplicationAction.loadApp,
             (state, action) => ({
                 ...state,
                 editMode:false,
                 parentPage: action.page
             })
         ),
-        on(OnboardingAction.fetchPipeline,
+        on(ApplicationAction.fetchPipeline,
             (state, action) => ({
                 ...state,
                 pipelineData: action.pipelineData
             })
         ),
-        on(OnboardingAction.fetchUserGrops,
+        on(ApplicationAction.fetchUserGrops,
             (state, action) => ({
                 ...state,
                 userGropsData: action.userGroupData
             })
         ),
-        on(OnboardingAction.errorOccured,
+        on(ApplicationAction.errorOccured,
             (state,action) => ({
                 ...state,
                 erroeMessage:action.errorMessage,
@@ -86,7 +75,7 @@ export function AppOnboardingReducer(
                 applicationLoading: false
             })
         ),
-        on(OnboardingAction.enableEditMode,
+        on(ApplicationAction.enableEditMode,
             (state,action) => ({
                 ...state,
                 editMode:action.editMode,
@@ -95,56 +84,56 @@ export function AppOnboardingReducer(
             })    
         ),
         
-        on(OnboardingAction.fetchAppData,
+        on(ApplicationAction.fetchAppData,
             (state,action) => ({
                 ...state,
                 applicationData:action.appData,
                 applicationLoading: false
             })
         ),
-        on(OnboardingAction.disabledEditMode,
+        on(ApplicationAction.disabledEditMode,
             state => ({
                 ...state,
                 editMode:false
             })
         ),
-        on(OnboardingAction.createApplication,
+        on(ApplicationAction.createApplication,
             state => ({
                 ...state,
                 applicationLoading:true
             })
         ),
-        on(OnboardingAction.updateApplication,
+        on(ApplicationAction.updateApplication,
             state => ({
                 ...state,
                 applicationLoading:true
             })
         ),
-        on(OnboardingAction.dataSaved,
+        on(ApplicationAction.dataSaved,
             state => ({
                 ...state,
                 applicationLoading:false
             })
         ),
-        on(OnboardingAction.fetchCloudAccount,
+        on(ApplicationAction.fetchCloudAccount,
             (state,action) => ({
                 ...state,
                 cloudAccountExist:action.cloudAccount
             })
         ),
-        on(OnboardingAction.fetchImageSource,
+        on(ApplicationAction.fetchImageSource,
             (state,action) => ({
                 ...state,
                 imageSource:action.imageSource
             })
         ),
-        on(OnboardingAction.loadDockerImageName,
+        on(ApplicationAction.loadDockerImageName,
             (state,action) => ({
                 ...state,
                 callDockerImageDataAPI: false
             })
         ),
-        on(OnboardingAction.fetchDockerImageName,
+        on(ApplicationAction.fetchDockerImageName,
             (state,action) => ({
                 ...state,
                 dockerImageData: action.dockerImageData
@@ -154,26 +143,26 @@ export function AppOnboardingReducer(
         // #### CreateApplication screen logic start ####//
 
         // ###  Applist screen logic start ### // 
-        on(OnboardingAction.loadAppList,
+        on(ApplicationAction.loadAppList,
             state => ({
                 ...state,
                 appListLoading:true
             })
         ),
-        on(OnboardingAction.fetchAppList,
+        on(ApplicationAction.fetchAppList,
             (state,action) => ({
                 ...state,
                 applicationList: action.Applist,
                 appListLoading:false
             })
         ),
-        on(OnboardingAction.appDelete,
+        on(ApplicationAction.appDelete,
             state => ({
                 ...state,
                 appListLoading:true
             })
         ),
-        on(OnboardingAction.appDeletedSuccessfully,
+        on(ApplicationAction.appDeletedSuccessfully,
             (state,action) => ({
                 ...state,
                 applicationList: state.applicationList.filter((applist,index) => index !== action.index),
@@ -181,53 +170,5 @@ export function AppOnboardingReducer(
             })
         ),
         // ###  Applist screen logic End ### // 
-
-        // ###  Account screen logic Starts ### // 
-        on(OnboardingAction.fetchAccountList,
-            (state,action) => ({
-                ...state,
-                accountList: action.Accountlist,
-            })
-        ),
-        on(OnboardingAction.loadAccount,
-            (state, action) => ({
-                ...state,
-                accountParentPage: action.page
-            })
-        ),
-        on(OnboardingAction.deleteAccount,
-            (state, action) => ({
-                ...state,
-                accountDeleted: false
-            })
-        ),
-        // on(OnboardingAction.accountDeleted,
-        //     state => ({
-        //         ...state,
-        //         accountDeleted: true
-        //     })
-        // ),
-        on(OnboardingAction.accountDeleted,
-            (state,action) => ({
-                ...state,
-                accountList: state.accountList.filter((accountList,index) => index !== action.index)
-            })
-        ),
-        // ###  Account screen logic End ### // 
-
-        // ###  Datasource screen logic start ### // 
-
-        on(OnboardingAction.fetchDatasourceList,
-            (state,action) => ({
-                ...state,
-                datasourceList: action.DatasourceList,
-            })
-        ),
-        on(OnboardingAction.DatasourceaccountDeleted,
-            (state,action) => ({
-                ...state,
-                datasourceList: state.datasourceList.filter((datasourceList,index) => index !== action.index)
-            })
-        ),
-    )(onboardingState,onboardingAction);
+    )(applicationState,applicationAction);
 }
