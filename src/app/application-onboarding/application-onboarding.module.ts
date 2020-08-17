@@ -29,6 +29,10 @@ import { AccountsEffect } from './accounts/store/accounts.effects';
 import { DataSourceEffect } from './data-source/store/data-source.effects';
 import { AppOnboardingRoutingModule } from './application-onboarding-routing.module';
 import { SharedModule } from '../subModules/shared.module';
+import { MetricTemplateComponent } from './application/application-creation/metric-template/metric-template.component';
+import { LogTemplateComponent } from './application/application-creation/log-template/log-template.component';
+import { LogTemplateEffect } from './application/application-creation/log-template/store/logTemplate.effects';
+import { MetricTemplateEffect } from './application/application-creation/metric-template/store/metricTemplate.effects';
 
 
 @NgModule({
@@ -49,7 +53,9 @@ import { SharedModule } from '../subModules/shared.module';
       AppDynamicsFormComponent,
       AwsCloudwatchFormComponent,
       ElasticsearchFormComponent,
-      DockerFormComponent
+      DockerFormComponent,
+      MetricTemplateComponent,
+      LogTemplateComponent
     ],
     imports: [
      CommonModule,
@@ -64,7 +70,9 @@ import { SharedModule } from '../subModules/shared.module';
      EffectsModule.forFeature([
       ApplicationEffect,
       AccountsEffect,
-      DataSourceEffect
+      DataSourceEffect,
+      LogTemplateEffect,
+      MetricTemplateEffect
      ])
     ],
   })
