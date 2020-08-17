@@ -96,8 +96,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.addclass = true;
       }
     },1000)
-    
   }
+  // platform-service-ui
 
   toggleNavbar() {
     this.addclass = !this.addclass;

@@ -5,7 +5,6 @@
         <div class="logo"><img src="../../../assets/images/logo.png" alt="logo"></div>
         <div class="menu_toggle" (click)="toggleNavbar()"><i class="fa fa-bars"></i></div>
       </div>
-      <!-- /.sidebar_header -->
       <div class="sidebar_nav">
         <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;">
           <li class="{{SideMenu.disabled === true? 'disabled_menu':''}}" routerLink="{{SideMenu.link}}" [routerLinkActiveOptions]="{exact: false}" routerLinkActive="active"><a><i class="icon {{SideMenu.link}}"></i> <span>{{SideMenu.name }} 
@@ -18,23 +17,18 @@
                 <li class="{{submenu.disabled === true? 'disabled_menu':''}}" routerLink="{{submenu.link}}" (click)="navigateMenu($event,submenu.name)" routerLinkActive="Subactive"><a><i class="icon {{subMenuclass(submenu.link)}}"></i> <span>{{submenu.name}}</span></a></li>
               </ul>
             </ng-template>
-            <!-- /.subnav -->
           </li>
         </ul>
       </div>
-      <!-- /.sidebar_nav -->
       <a class="sidebar_bottom d-flex align-items-center justify-content-between">
         <span>Help</span>
         <i class="fa fa-angle-down"></i>
       </a>
-      <!-- /.sidebar_bottom -->
     </div>
-    <!-- /.sidebar -->
     <div class=" {{isAuthenticate == true ? 'content_section' : 'col-md-12 col-sm-12 col-lg-12 col-xs-12'}}">
       <app-header></app-header>
       <!-- content of application -->
       <router-outlet></router-outlet>
     </div>
-    <!-- /.content_section -->
   </div>
 </div>

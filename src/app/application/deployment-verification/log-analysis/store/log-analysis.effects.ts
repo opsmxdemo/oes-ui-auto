@@ -86,7 +86,9 @@ fetchRerunLogsResults = createEffect(() =>
     this.actions$.pipe(
         ofType(LogAnalysisActions.rerunLogs),
         switchMap((action) => {             
+// platform-service-ui change
             return this.http.post(this.environment.config.endPointUrl +'autopilot/logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + action.userName + '&serviceId='+ action.serviceId, action.postData).pipe(                  
+
                 map(resdata => {
                    return LogAnalysisActions.fetchRerunLogsResults({rerunResponse:resdata});
                 }),
