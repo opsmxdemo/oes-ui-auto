@@ -21,6 +21,7 @@ import * as $ from 'jquery';
 })
 export class CreateApplicationComponent implements OnInit {
 
+  userType = 'OES and Autopilot';                                 // It contain type of user i.e, Autopilot Only, OES Only or both.
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
@@ -184,12 +185,23 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to define all forms exist in application On boarding component
   defineAllForms() {
     // defining reactive form approach for createApplicationForm
-    this.createApplicationForm = new FormGroup({
-      name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
-      emailId: new FormControl('',[Validators.required,Validators.email]),
-      description: new FormControl(''),
-      imageSource: new FormControl('',Validators.required)
-    });
+    if(this.userType === 'Autopilot Only'){
+      // For autopilot only mode
+      this.createApplicationForm = new FormGroup({
+        name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+        emailId: new FormControl('',[Validators.required,Validators.email]),
+        description: new FormControl('')
+      });
+    }else{
+      // For OES only and both oes and autopilot mode.
+      this.createApplicationForm = new FormGroup({
+        name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+        emailId: new FormControl('',[Validators.required,Validators.email]),
+        description: new FormControl(''),
+        imageSource: new FormControl('',Validators.required)
+      });
+    }
+    
 
     // defining reactive form for Permission Section
     this.groupPermissionForm = new FormGroup({
@@ -202,22 +214,59 @@ export class CreateApplicationComponent implements OnInit {
     });
 
     // defining reactive form for Services Section
-    this.servicesForm = new FormGroup({
-      services: new FormArray([
-        new FormGroup({
-          serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-          status: new FormControl('NEW'),
-          pipelines: new FormArray([
+    switch(this.userType){
+      case 'OES Only':
+        this.servicesForm = new FormGroup({
+          services: new FormArray([
             new FormGroup({
-              pipelinetemplate: new FormControl('', Validators.required),
-              cloudAccount: new FormControl(''),
-              dockerImageName: new FormControl('', Validators.required),
-              pipelineParameters: new FormArray([])
+              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+              status: new FormControl('NEW'),
+              pipelines: new FormArray([
+                new FormGroup({
+                  pipelinetemplate: new FormControl('', Validators.required),
+                  cloudAccount: new FormControl(''),
+                  dockerImageName: new FormControl('', Validators.required),
+                  pipelineParameters: new FormArray([])
+                })
+              ])
+            })
+          ])
+        });
+        break;
+      case 'Autopilot Only':
+        this.servicesForm = new FormGroup({
+          services: new FormArray([
+            new FormGroup({
+              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+              status: new FormControl('NEW'),
+              logTemp: new FormControl(''),
+              metricTemp: new FormControl('')
+            })
+          ])
+        });
+        break;
+      case 'OES and Autopilot':
+        this.servicesForm = new FormGroup({
+          services: new FormArray([
+            new FormGroup({
+              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+              status: new FormControl('NEW'),
+              logTemp: new FormControl(''),
+              metricTemp: new FormControl(''),
+              pipelines: new FormArray([
+                new FormGroup({
+                  pipelinetemplate: new FormControl('', Validators.required),
+                  cloudAccount: new FormControl(''),
+                  dockerImageName: new FormControl('', Validators.required),
+                  pipelineParameters: new FormArray([])
+                })
+              ])
             })
           ])
         })
-      ])
-    })
+        break;
+    }
+    
   }
   
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
@@ -461,6 +510,11 @@ export class CreateApplicationComponent implements OnInit {
     }
   }
 
+  // Below function is execute after click on add template btn.
+  onAddTemplate(){
+    $("[data-toggle='tooltip']").tooltip('hide');
+  }
+
   //Below function is use to fetch proper value from pipelineExist array and return in result in string format. i.e, related to pipeline templateParameter section
   getProperValue(serviceIndex, pipelineIndex, pipelineTemplateIndex) {
     const pipelineServiceName = this.servicesForm.value.services[serviceIndex].pipelines[pipelineIndex].pipelinetemplate;
@@ -487,7 +541,11 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    // Execute when user editing application data ########### EDIT APPLICATION MODE ############
+    debugger
+    // Execute when user editing application data 
+    //########### EDIT APPLICATION MODE ############
+    //##############################################
+
     if (this.editMode) {
       const existServiceLength = this.editServiceForm['services'].length;
       let serviceFormValidation = null;
@@ -605,34 +663,41 @@ export class CreateApplicationComponent implements OnInit {
         this.groupPermissionForm.markAllAsTouched();
       }
     }
-    // Execute when user creating application data. ######### CREATE APPLICATION MODE ###############
+    // Execute when user creating application data. 
+    //############# CREATE APPLICATION MODE ###############
+    //#####################################################
     else {
       if (this.createApplicationForm.valid && this.servicesForm && this.environmentForm.valid && this.groupPermissionForm.valid) {
 
         // Saving all 4 forms data into one
         this.mainForm = this.createApplicationForm.value;
-        // Below is configuration related to service section
-        this.servicesForm.value.services.forEach((ServiceArr, i) => {
-          ServiceArr.pipelines.forEach((PipelineArr, j) => {
-            // if (typeof (PipelineArr.cloudAccount) === 'string') {
-            //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
-            // }
-            // below code is removed in future when clound account implements
-            PipelineArr.cloudAccount = {
-              "name": "",
-              "type": "",
-              "providerVersion": ""
-            }
-            PipelineArr.pipelineParameters.forEach((DataArr, k) => {
-              if (DataArr.value === '') {
-                DataArr.value = this.getProperValue(i, j, k)
+        // Below is configuration related to service section when userType contain OES.
+        if(this.userType.includes('OES')){
+          this.servicesForm.value.services.forEach((ServiceArr, i) => {
+            ServiceArr.pipelines.forEach((PipelineArr, j) => {
+              // if (typeof (PipelineArr.cloudAccount) === 'string') {
+              //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
+              // }
+              // below code is removed in future when clound account implements
+              PipelineArr.cloudAccount = {
+                "name": "",
+                "type": "",
+                "providerVersion": ""
               }
+              PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+                if (DataArr.value === '') {
+                  DataArr.value = this.getProperValue(i, j, k)
+                }
+              })
             })
           })
-        })
+        }
+        
         this.mainForm.services = this.servicesForm.value.services;
-        this.mainForm.environments = this.environmentForm.value.environments;
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
+        if(this.userType.includes('OES')){
+          this.mainForm.environments = this.environmentForm.value.environments;
+        }
         
         //Below action is use to save created form in database
         this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
