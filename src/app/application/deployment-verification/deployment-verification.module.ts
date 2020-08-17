@@ -8,7 +8,6 @@ import { DeploymentVerificationComponent } from './deployment-verification.compo
 import * as fromdeploymentVarification from './store/feature.reducer'
 import { AppMaterialModule } from 'src/app/subModules/app-material.module';
 import { ChartsModule } from 'src/app/subModules/charts.module';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -33,7 +32,6 @@ import { ChildTableComponent } from './metric-analysis/child-table/child-table.c
      HttpClientModule,
      AppMaterialModule,
      ChartsModule,
-     NgxChartsModule,
      Ng2SearchPipeModule,
      StoreModule.forFeature('deploymentVerification',fromdeploymentVarification.deploymentVerificationReducers),
      EffectsModule.forFeature([

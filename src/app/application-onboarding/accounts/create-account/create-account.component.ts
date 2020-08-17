@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../store/app.reducer';
+import * as fromFeature from '../../store/feature.reducer';
 import { CreateAccount } from 'src/app/models/applicationOnboarding/createAccountModel/createAccount.model';
-import { DynamicAccountsComponent } from 'src/app/application-onboarding/dynamic-accounts/dynamic-accounts.component'
-import * as OnboardingActions from '../store/onBoarding.actions';
+import * as AccountActions from '../store/accounts.actions';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
 
@@ -41,11 +39,11 @@ export class CreateAccountComponent implements OnInit {
 
 
   constructor(public sharedService: SharedService,
-    public store: Store<fromApp.AppState>,
+    public store: Store<fromFeature.State>,
               public router: Router) { }
 
   ngOnInit(): void {
-    this.store.select('appOnboarding').subscribe(
+    this.store.select(fromFeature.selectAccounts).subscribe(
       (response)=> {
         if(response.accountParentPage){
           this.parentRedirection = response.accountParentPage;
@@ -117,9 +115,9 @@ export class CreateAccountComponent implements OnInit {
     formData.append('files', this.fileContent,'kubeconfig');
 
     if(this.sharedService.getAccountType() === 'editAcc'){
-      this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData: JSON.stringify(this.postDataForm)}));
+      this.store.dispatch(AccountActions.createAccount({accountData: formData,postData: JSON.stringify(this.postDataForm)}));
     }else{
-     this.store.dispatch(OnboardingActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
+     this.store.dispatch(AccountActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
     }
   }
 

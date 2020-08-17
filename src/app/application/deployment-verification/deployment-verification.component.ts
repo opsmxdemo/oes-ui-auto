@@ -11,11 +11,8 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
 import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.actions';
-import * as AppOnboardingAction from '../../application-onboarding/store/onBoarding.actions';
-import * as LayoutAction from '../../layout/store/layout.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
-import { NumberLiteralType } from 'typescript';
 import { MatSidenav } from '@angular/material/sidenav';
 
 

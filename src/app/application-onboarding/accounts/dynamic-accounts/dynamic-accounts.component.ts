@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromApp from '../../store/app.reducer';
-import * as OnboardingActions from '../store/onBoarding.actions';
+import * as fromFeature from '../../store/feature.reducer';
+import * as AccountsActions from '../store/accounts.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 })
 export class DynamicAccountsComponent implements OnInit {
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
-  accountListData: any;                                               // It use to store Accountlist data fetched from state.
+  accountListData: any;                                                                // It use to store Accountlist data fetched from state.
   searchData: string = '';                                                             // this is use to fetch value from search field.
   perPageData: number = 10;                                                            // this is use to populate value in perPage dropdown exist in pagination.
   page = {                                                                             // this is use to support pagination in accunt page.
@@ -27,14 +27,14 @@ export class DynamicAccountsComponent implements OnInit {
   currentPage = [];                                                                    // this use to store array of data exists in current page.
   accountListLength: number = null;
   nameOfAccount: null;
-  constructor(public store: Store<fromApp.AppState>, public notifications: NotificationService,
+  constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
               public sharedAccountData: SharedService) { }
 
   ngOnInit(): void {
-    this.store.dispatch(OnboardingActions.loadAccountList());
+    this.store.dispatch(AccountsActions.loadAccountList());
 
      // fetching data from state
-     this.store.select('appOnboarding').subscribe(
+     this.store.select(fromFeature.selectAccounts).subscribe(
       (response) => {
        if (response.accountList !== null) {
         this.accountListData = response.accountList;
@@ -53,7 +53,7 @@ export class DynamicAccountsComponent implements OnInit {
 
    // Below function is used if user want to refresh list data
    refreshList(){
-    this.store.dispatch(OnboardingActions.loadAccountList());
+    this.store.dispatch(AccountsActions.loadAccountList());
   } 
 
   //Below function is execute on search
@@ -141,7 +141,7 @@ export class DynamicAccountsComponent implements OnInit {
   createAccount() {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.sharedAccountData.setUserData([]);
-    this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
+    this.store.dispatch(AccountsActions.loadAccount({page:'/setup/accounts'}));
   }
 
   // Below function is use to edit existing account
@@ -150,7 +150,7 @@ export class DynamicAccountsComponent implements OnInit {
     //this.sharedAccountData.setUserData(data.name === 'kubernetes')
     this.sharedAccountData.setUserData(data);
     this.sharedAccountData.setAccountType(type);
-    this.store.dispatch(OnboardingActions.loadAccount({page:'/setup/accounts'}));
+    this.store.dispatch(AccountsActions.loadAccount({page:'/setup/accounts'}));
   }
 
   // Below function is use to delete existiong account
@@ -167,7 +167,7 @@ export class DynamicAccountsComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         $("[data-toggle='tooltip']").tooltip('hide');
-        this.store.dispatch(OnboardingActions.deleteAccount({accountName: account.name,index:index}));
+        this.store.dispatch(AccountsActions.deleteAccount({accountName: account.name,index:index}));
       }else{
         //alert('dont delete'); 
       }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromApp from '../../store/app.reducer';
-import * as OnboardingActions from '../store/onBoarding.actions';
+import * as fromFeature from '../store/feature.reducer';
+import * as DataSourceActions from '../data-source/store/data-source.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -34,7 +34,7 @@ export class DataSourceComponent implements OnInit {
   nameOfAccount: null;
   typeOfForm: any;
 
-  constructor(public store: Store<fromApp.AppState>, public notifications: NotificationService,
+  constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
     public sharedAccountData: SharedService) { }
 
   ngOnInit(): void {
@@ -90,10 +90,10 @@ export class DataSourceComponent implements OnInit {
       "name": "Docker",
       "path": "../../assets/images/docker.png"
     }];
-    this.store.dispatch(OnboardingActions.loadDatasourceList());
+    this.store.dispatch(DataSourceActions.loadDatasourceList());
 
     // fetching data from state
-    this.store.select('appOnboarding').subscribe(
+    this.store.select(fromFeature.selectDataSource).subscribe(
      (response) => {
       if (response.datasourceList !== null) {
        this.datasourceListData = response.datasourceList;
@@ -119,7 +119,7 @@ export class DataSourceComponent implements OnInit {
 
    // Below function is used if user want to refresh list data
    refreshList(){
-    this.store.dispatch(OnboardingActions.loadDatasourceList());
+    this.store.dispatch(DataSourceActions.loadDatasourceList());
   } 
 
   //Below function is execute on search
@@ -216,7 +216,7 @@ export class DataSourceComponent implements OnInit {
       }).then((result) => {
         if (result.value) {
           $("[data-toggle='tooltip']").tooltip('hide');
-        this.store.dispatch(OnboardingActions.deleteDatasourceAccount({accountName: account.name,index:index}));
+        this.store.dispatch(DataSourceActions.deleteDatasourceAccount({accountName: account.name,index:index}));
         }else{
          
         }

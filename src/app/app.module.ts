@@ -15,38 +15,21 @@ import { AuditComponent } from './audit/audit.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { WildcardRoutingModule } from './subModules/wildcardRouting.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApplicationOnboardingComponent } from './application-onboarding/application-onboarding.component';
-import { DataSourceComponent } from './application-onboarding/data-source/data-source.component';
 import { ReleaseComponent } from './release/release.component';
-import { CloudServicesComponent } from './application-onboarding/cloud-services/cloud-services.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { KeysPipe } from './pipes/keys.pipe';
-import { AppliactionListComponent } from './application-onboarding/appliaction-list/appliaction-list.component';
-import { DynamicAccountsComponent } from './application-onboarding/dynamic-accounts/dynamic-accounts.component';
 import { PolicyManagementComponent } from './policy-management/policy-management.component';
-import { CreateAccountComponent } from './application-onboarding/create-account/create-account.component';
-import { GithubFormComponent } from './application-onboarding/data-source/github-form/github-form.component';
-import { NewrelicFormComponent } from './application-onboarding/data-source/newrelic-form/newrelic-form.component';
-import { PrometheusFormComponent } from './application-onboarding/data-source/prometheus-form/prometheus-form.component';
-import { DynatraceFormComponent } from './application-onboarding/data-source/dynatrace-form/dynatrace-form.component';
-import { GcpStackdriverFormComponent } from './application-onboarding/data-source/gcp-stackdriver-form/gcp-stackdriver-form.component';
-import { DatadogFormComponent } from './application-onboarding/data-source/datadog-form/datadog-form.component';
-import { AppDynamicsFormComponent } from './application-onboarding/data-source/app-dynamics-form/app-dynamics-form.component';
-import { AwsCloudwatchFormComponent } from './application-onboarding/data-source/aws-cloudwatch-form/aws-cloudwatch-form.component';
-import { ElasticsearchFormComponent } from './application-onboarding/data-source/elasticsearch-form/elasticsearch-form.component';
-import { DockerFormComponent } from './application-onboarding/data-source/docker-form/docker-form.component';
 import { DeploymentVerificationModule } from './application/deployment-verification/deployment-verification.module';
-import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { AppConfigService } from './services/app-config.service';
 import { TreeViewComponent } from './audit/tree-view/tree-view.component';
 import { TableRowComponent } from './audit/tree-view/table-row/table-row.component';
 import { ApplicationComponent } from './application/application.component';
-import { CreateApplicationComponent } from './application-onboarding/application/application.component';
 import { HasChildComponent } from './audit/tree-view/has-child/has-child.component';
 import { CdDashboardComponent } from './cd-dashboard/cd-dashboard.component';
 import { ChartsModule } from './subModules/charts.module';
 import { EffectModule } from './store/app.effects';
+import { ApplicationOnboardingModule } from './application-onboarding/application-onboarding.module';
+import { SharedModule } from './subModules/shared.module';
 
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -62,28 +45,9 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HeaderComponent,
     ApplicationDashboardComponent,
     AuditComponent,
-    ApplicationOnboardingComponent,
     ApplicationComponent,
-    CreateApplicationComponent,
-    DataSourceComponent,
-    CloudServicesComponent,
     ReleaseComponent,
-    KeysPipe,
-    AppliactionListComponent,
-    DynamicAccountsComponent,
     PolicyManagementComponent,
-    CreateAccountComponent,
-    GithubFormComponent,
-    NewrelicFormComponent,
-    PrometheusFormComponent,
-    DynatraceFormComponent,
-    GcpStackdriverFormComponent,
-    DatadogFormComponent,
-    AppDynamicsFormComponent,
-    AwsCloudwatchFormComponent,
-    ElasticsearchFormComponent,
-    DockerFormComponent,
-    LoadingScreenComponent,
     TreeViewComponent,
     TableRowComponent,
     HasChildComponent,
@@ -93,6 +57,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     BrowserModule,
     AppRoutingModule,
     ChartsModule,
+    SharedModule,
     BrowserAnimationsModule,
     AuthModule,
     FormsModule,
@@ -101,6 +66,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AppMaterialModule,
     Ng2SearchPipeModule,
     EffectModule,
+    ApplicationOnboardingModule,
     DeploymentVerificationModule,
     NgMultiSelectDropDownModule.forRoot(),
     StoreModule.forRoot(fromApp.appReducers),

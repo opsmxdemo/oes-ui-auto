@@ -1,8 +1,8 @@
 import { Component, OnInit} from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromApp from '../../store/app.reducer';
-import * as OnboardingActions from '../store/onBoarding.actions';
-import * as AppDashboardAction from '../../application/application-dashboard/store/dashboard.actions';
+import * as fromFeature from '../../store/feature.reducer';
+import * as ApplicationActions from '../store/application.actions';
+import * as AppDashboardAction from '../../../application/application-dashboard/store/dashboard.actions';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -30,14 +30,14 @@ export class AppliactionListComponent implements OnInit {
   appListLength: number = null;                                                        // It use to store AppList array length
   loading = false;                                                                     // It is use to show and hide loading screen
 
-  constructor(public store: Store<fromApp.AppState>,
+  constructor(public store: Store<fromFeature.State>,
               public toastr: NotificationService) { }
   
   ngOnInit(): void {
 
     
     //fetching data from state
-    this.store.select('appOnboarding').subscribe(
+    this.store.select(fromFeature.selectApplication).subscribe(
       (response) => {
         if (response.applicationList !== null) {
           this.loading = response.appListLoading;
@@ -55,7 +55,7 @@ export class AppliactionListComponent implements OnInit {
   // Below function is used if user want to refresh list data
   refreshList(){
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(OnboardingActions.loadAppList());
+    this.store.dispatch(ApplicationActions.loadAppList());
   } 
 
   //Below function is execute on search
@@ -72,7 +72,7 @@ export class AppliactionListComponent implements OnInit {
 
   // Below function is use to redirect to create application page
   createApplication() {
-    this.store.dispatch(OnboardingActions.loadApp({page:'/setup/applications'}));
+    this.store.dispatch(ApplicationActions.loadApp({page:'/setup/applications'}));
   }
 
   //Below function is used to implement pagination
@@ -160,7 +160,7 @@ export class AppliactionListComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value) {
-        this.store.dispatch(OnboardingActions.appDelete({applicationName:name,index:index}));
+        this.store.dispatch(ApplicationActions.appDelete({applicationName:name,index:index}));
       }
     })
     
@@ -169,7 +169,7 @@ export class AppliactionListComponent implements OnInit {
   // Below function is use for edit application
   editApplication(index){
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(OnboardingActions.enableEditMode({ editMode: true, applicationName: this.appListData[index].name,page:'/setup/applications'}));
+    this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: this.appListData[index].name,page:'/setup/applications'}));
   }
 
 }
