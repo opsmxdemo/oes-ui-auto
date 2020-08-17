@@ -24,6 +24,7 @@
     "@ngrx/effects": "^9.0.0",
     "@ngrx/store": "^9.0.0",
     "@swimlane/ngx-charts": "^14.0.0",
+    "@swimlane/ngx-graph": "^7.1.1",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
     "ng-multiselect-dropdown": "^0.2.10",

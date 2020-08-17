@@ -19,11 +19,17 @@ export class ApplicationService {
             catchError(this.handleError)
         );
     }
-    getServiceList(applicationName) {
-        return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/services').pipe(
+    getServiceList(applicationId) {
+        return this.httpClient.get(this.endpointUrl + 'platformservice/v1/dashboard/applications/' + applicationId).pipe(
             catchError(this.handleError)
         );
     }
+    getServiceListDemo(applicationId) {
+        return this.httpClient.get(this.endpointUrl +'oes/dashboard/applications/'+ applicationId +'/services').pipe(
+            catchError(this.handleError)
+        );
+    }
+    
     getReleaseList(applicationName) {
         return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/releases').pipe(
             catchError(this.handleError)

@@ -48,7 +48,7 @@ export class AppDashboardEffect {
             ofType(DashboardActions.loadAppDashboard),
             withLatestFrom(this.store.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get(this.environment.config.endPointUrl + 'oes/dashboard/applications/'+authState.user).pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'platformservice/v1/dashboard/applications').pipe(
                     map(resdata => {
                        return DashboardActions.fetchedAppData({appData:resdata});
                     }),
@@ -56,6 +56,21 @@ export class AppDashboardEffect {
                         this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch network chart data to display network graph
+    fetchNetworkChartData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DashboardActions.loadAppDashboard),
+            switchMap(() => {
+                return this.http.get('../../../assets/data/network-topology.json').pipe(
+                    map(resdata => {
+                       return DashboardActions.fetchNetworkChartData({networkChartData:resdata});
+                    }),
+
                 );
             })
         )

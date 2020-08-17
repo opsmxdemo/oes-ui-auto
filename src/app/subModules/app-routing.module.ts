@@ -7,11 +7,15 @@ import { PolicyManagementComponent } from '../policy-management/policy-managemen
 import { DeploymentVerificationComponent } from '../application/deployment-verification/deployment-verification.component';
 import { ApplicationComponent } from '../application/application.component';
 import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
+import {LoginComponent} from '../auth/login/login.component';
 
 const routes: Routes = [
+  
   {path:'application', component: ApplicationComponent, children:[
     {path:'', component: ApplicationDashboardComponent},
-    {path:'deploymentverification', component: DeploymentVerificationComponent}
+    {path:'deploymentverification', component: DeploymentVerificationComponent},
+    {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent}
+
   ]},
   {path:'oesdashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},

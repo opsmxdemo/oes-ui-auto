@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+// platform-service-ui change
+import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
 import { NotificationService } from '../../services/notification.service';
@@ -90,7 +92,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // App form end
 
-   constructor(public sharedService: SharedService, public store: Store<fromFeature.State>,
+   constructor(private route: ActivatedRoute ,public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService,
     private fb: FormBuilder) { 
     }
@@ -194,9 +196,19 @@ export class DeploymentVerificationComponent implements OnInit {
 
     
   ngOnInit(): void {
-    this.getApplicationHealth();
-    this.getLatestRun();
+     // hide tooltip 
+     $("[data-toggle='tooltip']").tooltip('hide');
     this.getAllApplications();
+    console.log(this.route.params['_value']);
+    this.getApplicationHealth();
+    if(this.route.params['_value'].canaryId != null){
+      this.control.setValue(this.route.params['_value'].canaryId);
+      this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.route.params['_value'].canaryId }));
+      this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: this.route.params['_value'].canaryId}));
+    }else{
+      this.getLatestRun();
+    }
+    
     this.getAllServices();
     this.getServiceInformation();
  
@@ -461,10 +473,15 @@ export class DeploymentVerificationComponent implements OnInit {
                   if(this.deploymentApplicationHealth['error'] != null){
                     this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
                   }
-                  //buildApplicationForm() {
+                  if(this.route.params['_value'].applicationName != null){
+                    this.applicationForm = this.fb.group({
+                      application: [this.route.params['_value'].applicationName],
+                    });
+                  }else{
                     this.applicationForm = this.fb.group({
                       application: [this.selectedApplicationName],
                     });
+                  }
                     this.applicationId = this.deploymentApplicationHealth['applicationId'];
 
                     // Below logic is use to fetch initiall selected tab

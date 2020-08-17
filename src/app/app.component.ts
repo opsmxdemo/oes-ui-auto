@@ -44,21 +44,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   ngOnInit() {
 
-    //Dispatching action for login functionality
-    this.store.dispatch(new AuthAction.LoginStart());
-
-    //fetching data from AuthState
+    //fetching data from AuthState    
     this.store.select('auth').subscribe(
       (response) => {
         this.isAuthenticate = response.authenticated;
-        if (response.authResponse === null) {
-          var browserUrl = window.location.href;
-          var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/application";
-          var encodedUrl = encodeURIComponent(resultUrl);
-          this.loginRedirect(encodedUrl)
-        }else if(response.authResponse === 'success'){
-
+        if (!this.isAuthenticate) {
+          this.router.navigate(['login']);
+        }else{
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
 
@@ -75,13 +67,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.store.dispatch(AuditActions.loadAudit());
 
           //Dispatching action for policy management initial data
-          this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
+         this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
 
         }
       }
     );
-
-   
 
     // fetching data from LayoutState
     this.store.select('layout').subscribe(
@@ -106,12 +96,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.addclass = true;
       }
     },1000)
-    
   }
-
-  loginRedirect(callback): void {
-    window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
-  }
+  // platform-service-ui
 
   toggleNavbar() {
     this.addclass = !this.addclass;

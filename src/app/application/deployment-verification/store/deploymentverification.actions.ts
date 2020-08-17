@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
 // actions related to deployement verification common display of logs and metrics
+export const loadDeploymentApp = createAction('[DeploymentVerification] LoadDeploymentApp' , props<{page:string}>());
+
 
 export const loadLatestRun = createAction('[DeploymentVerification] LoadLatestRun');
 export const errorOccured = createAction('[DeploymentVerification] ErrorOccured', props<{errorMessage:string}>());
