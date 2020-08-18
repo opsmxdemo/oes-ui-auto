@@ -206,7 +206,7 @@ export class ApplicationEffect {
             ofType(ApplicationAction.loadAppList),
             withLatestFrom(this.appStore.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList/'+authState.user).pipe(
+                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList/'+localStorage.getItem('userData')).pipe(
                     map(resdata => {
                         return ApplicationAction.fetchAppList({ Applist: resdata['data'] });
                     }),
@@ -238,7 +238,7 @@ export class ApplicationEffect {
                 this.toastr.showSuccess('Data saved successfully !!', 'SUCCESS')
                 this.router.navigate([appOnboardingState.parentPage]);
                 this.store.dispatch(ApplicationAction.loadAppList());
-                this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
+                this.appStore.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
             })
         ), { dispatch: false }
     )
@@ -248,7 +248,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.appDeletedSuccessfully),
             tap((actiondata) => {
-                this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
+                this.appStore.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
             })
         ), { dispatch: false }
     )

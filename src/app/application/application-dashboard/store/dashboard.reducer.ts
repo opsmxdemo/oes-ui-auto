@@ -22,9 +22,10 @@ export function DashboardReducer(
     return createReducer(
         initialState,
         on(DashboardActions.loadAppDashboard,
-            state => ({
+            (state,action )=> ({
                 ...state,
-                dashboardLoading: true
+                dashboardLoading: true,
+                username: action.username
             })
         ),
         on(DashboardActions.fetchNetworkChartData,

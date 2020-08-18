@@ -66,43 +66,12 @@ export class ApplicationDashboardComponent implements OnInit {
         }
       }
     )
-
-    // Below logic is use to fetch data from Cd-dashboard state
-
-     //fetching appData from dashboard state
-    //  this.store.select('appDashboard').subscribe(
-    //   (resdata) => {
-    //     if(resdata.topologyChartData !== null){
-    //       this.dashboardLoading = resdata.dashboardLoading;
-    //       this.networkChartData = resdata.topologyChartData;
-    //       this.nodes = JSON.stringify(resdata.topologyChartData.nodes);
-    //       this.links = JSON.stringify(resdata.topologyChartData.edges);
-    //       console.log(this.networkChartData);
-    //      // this.store.dispatch(new LayoutAction.(this.applicationData.length));
-    //     }
-    //   }
-    // )
-      
-
-    // this.store.select('cdDashboard').subscribe(
-    //   (networkData) => {
-    //     this.dashboardLoading = networkData.dashboardLoading;
-    //     if (networkData.topologyChartData !== null) {
-    //       this.mainChartData = dashboardData.healthChartData;
-    //     }
-        
-    //   }
-    // );
-
-   
-
-
   }
   
   // code to load applications
   public getApplications() {
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(AppDashboardAction.loadAppDashboard());
+    this.store.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
   }
 
   public selectedApplication(index: number, app: any) {

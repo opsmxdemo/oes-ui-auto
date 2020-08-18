@@ -44,6 +44,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   ngOnInit() {
 
+  
     //fetching data from AuthState    
     this.store.select('auth').subscribe(
       (response) => {
@@ -55,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.store.dispatch(new LayoutAction.LoadPage());
 
           //Dispatching action to fetch application dashboard data from API
-          this.store.dispatch(AppDashboardAction.loadAppDashboard());
+          this.store.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
 
           //Dispatching action to fetch Cd dashboard data from API
           this.store.dispatch(CdDashboardActions.loadCdDashboard());
