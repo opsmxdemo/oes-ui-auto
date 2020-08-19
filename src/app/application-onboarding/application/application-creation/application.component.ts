@@ -21,7 +21,7 @@ import * as $ from 'jquery';
 })
 export class CreateApplicationComponent implements OnInit {
 
-  userType = 'OES and Autopilot';                                 // It contain type of user i.e, Autopilot Only, OES Only or both.
+  userType = 'OES Only';                                    // It contain type of user i.e, Autopilot Only, OES Only or both.
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
@@ -63,57 +63,103 @@ export class CreateApplicationComponent implements OnInit {
 
           if (responseData.applicationData !== null) {
             //populating createApplicationForm ################################################################
-            this.createApplicationForm = new FormGroup({
-              name: new FormControl(this.appData.name),
-              emailId: new FormControl(this.appData.emailId),
-              description: new FormControl(this.appData.description),
-              imageSource: new FormControl({ value: this.appData.imageSource, disabled: true })
-            });
-            //populating dockerImagenamedropdown.
-            if(responseData.callDockerImageDataAPI){
-              this.onImageSourceSelect(this.appData.imageSource);
+            if(this.userType === 'Autopilot Only'){
+              // Autopilot Only mode
+              this.createApplicationForm = new FormGroup({
+                name: new FormControl(this.appData.name),
+                emailId: new FormControl(this.appData.emailId),
+                description: new FormControl(this.appData.description)
+              });
+            }else{
+              // user belongs to OES mode also.
+              this.createApplicationForm = new FormGroup({
+                name: new FormControl(this.appData.name),
+                emailId: new FormControl(this.appData.emailId),
+                description: new FormControl(this.appData.description),
+                imageSource: new FormControl({ value: this.appData.imageSource, disabled: true })
+              });
+              //populating dockerImagenamedropdown.
+              if(responseData.callDockerImageDataAPI){
+                this.onImageSourceSelect(this.appData.imageSource);
+              }
             }
+            
 
             //populating serviceForm############################################################################
             if (this.appData.services.length !== 0) {
               this.servicesForm = new FormGroup({
                 services: new FormArray([])
               });
-              //populating services array
-              this.appData.services.forEach((serviceArr, serviceindex) => {
-                (<FormArray>this.servicesForm.get('services')).push(
-                  new FormGroup({
-                    serviceName: new FormControl(serviceArr.serviceName),
-                    status: new FormControl(serviceArr.status),
-                    pipelines: new FormArray([])
-                  })
-                );
-                //populating pipeline array
-                serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
-                  const serviceArray = this.servicesForm.get('services') as FormArray;
-                  const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
-                  pipelineArray.push(
-                    new FormGroup({
-                      pipelinetemplate: new FormControl({ value: pipelineArr.pipelinetemplate, disabled: true }),
-                      cloudAccount: new FormControl({ value: '', disabled: true }),
-                      dockerImageName: new FormControl({ value: pipelineArr.dockerImageName, disabled: true }),
-                      pipelineParameters: new FormArray([])
-                    })
-                  )
+              switch(this.userType){
+                case 'OES Only':
+                case 'OES and Autopilot':
+                  //populating services array in OES Only mode
+                  this.appData.services.forEach((serviceArr, serviceindex) => {
+                    if(this.userType === 'OES and Autopilot'){
+                      (<FormArray>this.servicesForm.get('services')).push(
+                        new FormGroup({
+                          serviceName: new FormControl(serviceArr.serviceName),
+                          status: new FormControl(serviceArr.status),
+                          logTemp: new FormControl(serviceArr.logTemp),
+                          metricTemp: new FormControl(serviceArr.metricTemp),
+                          pipelines: new FormArray([])
+                        })
+                      );
+                    }else{
+                      (<FormArray>this.servicesForm.get('services')).push(
+                        new FormGroup({
+                          serviceName: new FormControl(serviceArr.serviceName),
+                          status: new FormControl(serviceArr.status),
+                          pipelines: new FormArray([])
+                        })
+                      );
+                    }
+                    
+                    //populating pipeline array
+                    serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
+                      const serviceArray = this.servicesForm.get('services') as FormArray;
+                      const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
+                      pipelineArray.push(
+                        new FormGroup({
+                          pipelinetemplate: new FormControl({ value: pipelineArr.pipelinetemplate, disabled: true }),
+                          cloudAccount: new FormControl({ value: '', disabled: true }),
+                          dockerImageName: new FormGroup({
+                            accountName: new FormControl({ value: pipelineArr.dockerImageName.accountName, disabled: true }),
+                            imageName: new FormControl({ value: pipelineArr.dockerImageName.imageName, disabled: true })
+                          }),
+                          pipelineParameters: new FormArray([])
+                        })
+                      )
 
-                  //populating pipelieParameter array
-                  pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
-                    const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
-                    pipelineParameter.push(
+                      //populating pipelieParameter array
+                      pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
+                        const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
+                        pipelineParameter.push(
+                          new FormGroup({
+                            value: new FormControl(pipelineParameterArr.value),
+                            name: new FormControl(pipelineParameterArr.name),
+                            type: new FormControl(pipelineParameterArr.type)
+                          })
+                        );
+                      })
+                    })
+                  })
+                  break;
+                case 'Autopilot Only':
+                  //populating services array in OES Only mode
+                  this.appData.services.forEach(serviceArr => {
+                    (<FormArray>this.servicesForm.get('services')).push(
                       new FormGroup({
-                        value: new FormControl(pipelineParameterArr.value),
-                        name: new FormControl(pipelineParameterArr.name),
-                        type: new FormControl(pipelineParameterArr.type)
+                        serviceName: new FormControl(serviceArr.serviceName),
+                        status: new FormControl(serviceArr.status),
+                        logTemp: new FormControl(serviceArr.logTemp),
+                        metricTemp: new FormControl(serviceArr.metricTemp)
                       })
                     );
-                  })
-                })
-              })
+                  });
+                  break;
+              }
+              
               this.editServiceForm = this.servicesForm.getRawValue();
             }
 
@@ -201,7 +247,11 @@ export class CreateApplicationComponent implements OnInit {
         imageSource: new FormControl('',Validators.required)
       });
     }
-    
+
+    // defining reactive form for Services Section
+    this.servicesForm = new FormGroup({
+      services: new FormArray([this.setServiceForm()])
+    });
 
     // defining reactive form for Permission Section
     this.groupPermissionForm = new FormGroup({
@@ -212,61 +262,6 @@ export class CreateApplicationComponent implements OnInit {
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
     });
-
-    // defining reactive form for Services Section
-    switch(this.userType){
-      case 'OES Only':
-        this.servicesForm = new FormGroup({
-          services: new FormArray([
-            new FormGroup({
-              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              status: new FormControl('NEW'),
-              pipelines: new FormArray([
-                new FormGroup({
-                  pipelinetemplate: new FormControl('', Validators.required),
-                  cloudAccount: new FormControl(''),
-                  dockerImageName: new FormControl('', Validators.required),
-                  pipelineParameters: new FormArray([])
-                })
-              ])
-            })
-          ])
-        });
-        break;
-      case 'Autopilot Only':
-        this.servicesForm = new FormGroup({
-          services: new FormArray([
-            new FormGroup({
-              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              status: new FormControl('NEW'),
-              logTemp: new FormControl(''),
-              metricTemp: new FormControl('')
-            })
-          ])
-        });
-        break;
-      case 'OES and Autopilot':
-        this.servicesForm = new FormGroup({
-          services: new FormArray([
-            new FormGroup({
-              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              status: new FormControl('NEW'),
-              logTemp: new FormControl(''),
-              metricTemp: new FormControl(''),
-              pipelines: new FormArray([
-                new FormGroup({
-                  pipelinetemplate: new FormControl('', Validators.required),
-                  cloudAccount: new FormControl(''),
-                  dockerImageName: new FormControl('', Validators.required),
-                  pipelineParameters: new FormArray([])
-                })
-              ])
-            })
-          ])
-        })
-        break;
-    }
-    
   }
   
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
@@ -283,6 +278,59 @@ export class CreateApplicationComponent implements OnInit {
       )
     });
     return promise;
+  }
+
+  // Below function is use to return relavent service form on basics of userType. i.e,Autopilot Only , OESOnly or both.
+  setServiceForm(){
+    let serviceForm = null;
+    switch(this.userType){
+      case 'OES Only':
+        serviceForm =  new FormGroup({
+              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+              status: new FormControl('NEW'),
+              pipelines: new FormArray([
+                new FormGroup({
+                  pipelinetemplate: new FormControl('', Validators.required),
+                  cloudAccount: new FormControl(''),
+                  dockerImageName: new FormGroup({
+                    accountName: new FormControl('', Validators.required),
+                    imageName: new FormControl('', Validators.required)
+                  }),
+                  pipelineParameters: new FormArray([])
+                })
+              ])
+            })
+        break;
+      case 'Autopilot Only':
+        serviceForm = new FormGroup({
+              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+              status: new FormControl('NEW'),
+              logTemp: new FormControl(''),
+              metricTemp: new FormControl('')
+            })
+         
+        break;
+      case 'OES and Autopilot':
+        serviceForm = new FormGroup({
+              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+              status: new FormControl('NEW'),
+              logTemp: new FormControl(''),
+              metricTemp: new FormControl(''),
+              pipelines: new FormArray([
+                new FormGroup({
+                  pipelinetemplate: new FormControl('', Validators.required),
+                  cloudAccount: new FormControl(''),
+                  dockerImageName: new FormGroup({
+                    accountName: new FormControl('', Validators.required),
+                    imageName: new FormControl('', Validators.required)
+                  }),
+                  pipelineParameters: new FormArray([])
+                })
+              ])
+            })
+        break;
+    }
+    return serviceForm;
   }
 
   //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
@@ -429,22 +477,11 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to add new service in existing Service Section
   addService() {
-    (<FormArray>this.servicesForm.get('services')).push(
-      new FormGroup({
-        serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-        status: new FormControl('NEW'),
-        pipelines: new FormArray([
-          new FormGroup({
-            pipelinetemplate: new FormControl('', Validators.required),
-            cloudAccount: new FormControl(''),
-            dockerImageName: new FormControl('', Validators.required),
-            pipelineParameters: new FormArray([])
-          })
-        ])
-      })
-    );
+    (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
     // Update dockerImageDropdownData array
-    this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+    if(this.userType.includes('OES')){
+      this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+    }
   }
 
   //Below function is use to delete existing service fron Service Section
@@ -541,8 +578,8 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    debugger
     // Execute when user editing application data 
+
     //########### EDIT APPLICATION MODE ############
     //##############################################
 
@@ -594,46 +631,54 @@ export class CreateApplicationComponent implements OnInit {
         this.editServiceForm['services'].forEach((ServiceArr, i) => {
           if(ServiceArr.status === 'DELETE'){
             delete_counter++;
-            ServiceArr.pipelines.forEach((PipelineArr, j) => {
-              // if (typeof (PipelineArr.cloudAccount) === 'string') {
-              //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
-              // }
-              PipelineArr.cloudAccount = {
-                "name": "",
-                "type": "",
-                "providerVersion": ""
-              }
-            })
-          }else{
-            ServiceArr.pipelines.forEach((PipelineArr, j) => {
-              // if (typeof (PipelineArr.cloudAccount) === 'string') {
-              //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
-              // }
-              PipelineArr.cloudAccount = {
-                "name": "",
-                "type": "",
-                "providerVersion": ""
-              }
-              PipelineArr.pipelineParameters.forEach((DataArr, k) => {
-                  if (DataArr.value === '') {
-                    DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
-                  }
+            // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
+            if(this.userType.includes('OES')){
+              ServiceArr.pipelines.forEach((PipelineArr, j) => {
+                // if (typeof (PipelineArr.cloudAccount) === 'string') {
+                //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
+                // }
+                PipelineArr.cloudAccount = {
+                  "name": "",
+                  "type": "",
+                  "providerVersion": ""
+                }
               })
-            })
+            }
+          }else{
+            // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
+            if(this.userType.includes('OES')){
+              ServiceArr.pipelines.forEach((PipelineArr, j) => {
+                // if (typeof (PipelineArr.cloudAccount) === 'string') {
+                //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
+                // }
+                PipelineArr.cloudAccount = {
+                  "name": "",
+                  "type": "",
+                  "providerVersion": ""
+                }
+                PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+                    if (DataArr.value === '') {
+                      DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
+                    }
+                })
+              })
+            }
           }
         })
         //#############ServiceFormSection###################
         this.mainForm.services = this.editServiceForm['services'];
         //#############EnvironmentFormSection###############
-        // when environment is updated make all service status as UPDATE
-        if(this.environmentUpdated){
-          this.mainForm.services.forEach(el => {
-            if(el.status === 'ACTIVE') {
-              el.status = 'UPDATE';
-            }
-          })
+        if(this.userType.includes('OES')){
+          // when environment is updated make all service status as UPDATE
+          if(this.environmentUpdated){
+            this.mainForm.services.forEach(el => {
+              if(el.status === 'ACTIVE') {
+                el.status = 'UPDATE';
+              }
+            })
+          }
+          this.mainForm.environments = this.environmentForm.value.environments;
         }
-        this.mainForm.environments = this.environmentForm.value.environments;
         //#############GroupPermissionSection###############
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
 

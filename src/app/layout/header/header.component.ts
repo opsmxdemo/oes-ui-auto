@@ -26,8 +26,7 @@ export class HeaderComponent implements OnInit {
       (response) => {
         if(response.authenticated){
           this.isAuthenticate = response.authenticated;
-          //this.userDetails = JSON.parse(localStorage.getItem('userData'));
-          this.username = localStorage.getItem('userData');
+          this.username = response.user;
           this.firstAlphabet = this.username.split('');
         }
       }
@@ -36,7 +35,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout(){
-    localStorage.removeItem('userId');
     localStorage.removeItem('userData');
     this.isAuthenticate = false;
     this.store.dispatch(new AuthAction.Logout())

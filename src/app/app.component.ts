@@ -44,14 +44,16 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
   ngOnInit() {
 
-  
+    //Dispatching action for autoLogin functionality
+    this.store.dispatch(new AuthAction.AutoLoginStart());
+
     //fetching data from AuthState    
     this.store.select('auth').subscribe(
       (response) => {
         this.isAuthenticate = response.authenticated;
-        if (!this.isAuthenticate) {
+        if (!this.isAuthenticate && response.autologinSucceed) {
           this.router.navigate(['login']);
-        }else{
+        }else if(response.autologinSucceed && this.isAuthenticate){
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
 

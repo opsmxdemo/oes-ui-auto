@@ -8,7 +8,10 @@ export enum AuthActionTypes {
     LOGINFAIL = '[Auth] LoginFail',
     AUTHENTICATIONSUCCESS = '[Auth] AuthenticationSuccess',
     LOGINRESPONSE = '[Auth] LoginResponse',
-    LOGOUT = '[Auth] Logout'
+    LOGOUT = '[Auth] Logout',
+    AUTOLOGINSTART = '[Auth] AutoLoginStart',
+    AUTOLOGIN = '[Auth] AutoLogin',
+    AUTOLOGINFAIL = '[Auth] AutoLoginFail'
 }
 
 
@@ -27,7 +30,10 @@ export class LoginStart implements Action{
 
 export class Login implements Action{
     readonly type = AuthActionTypes.LOGIN;
-    constructor(public payload: string) {}
+    constructor(public payload:{
+        username:string,
+        token:string
+    }) {}
 }
 
 export class LoginResponse implements Action {
@@ -44,6 +50,22 @@ export class Logout implements Action {
     readonly type = AuthActionTypes.LOGOUT;
 }
 
+export class AutoLoginStart implements Action {
+    readonly type = AuthActionTypes.AUTOLOGINSTART;
+}
+
+export class AutoLogin implements Action {
+    readonly type = AuthActionTypes.AUTOLOGIN;
+    constructor(public payload:{
+        username:any,
+        token:any
+    }) { }
+}
+
+export class AutoLoginFail implements Action {
+    readonly type = AuthActionTypes.AUTOLOGINFAIL;
+}
+
 
 
 export type AuthActions = LoginFail
@@ -51,4 +73,7 @@ export type AuthActions = LoginFail
                         | LoginStart 
                         | LoginResponse
                         | AuthenticationSuccess
-                        | Logout;
+                        | Logout
+                        | AutoLogin 
+                        | AutoLoginStart
+                        | AutoLoginFail;
