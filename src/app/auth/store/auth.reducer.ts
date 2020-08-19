@@ -8,6 +8,7 @@ export interface State {
     authError: string;
     loading: Boolean;
     token: string;
+    autologinSucceed: Boolean;
 }
 
 export const initialState: State = {
@@ -17,6 +18,7 @@ export const initialState: State = {
     authenticated: false,
     authResponse: 'dummy',
     token: null,
+    autologinSucceed: false
 }
 
 export function authReducer(
@@ -43,17 +45,35 @@ export function authReducer(
         case AuthAction.AuthActionTypes.LOGIN:
             return {
                 ...state,
-                // user: action.payload.user,
+                user: action.payload.username,
+                token: action.payload.token,
                 loading: false,
                 authError: null,
-                authenticated: true,
-                token: action.payload,
+                authenticated: true
             }
         case AuthAction.AuthActionTypes.LOGOUT:
             return {
                 ...state,
                 authError: null,
                 authenticated:false
+            }
+        case AuthAction.AuthActionTypes.AUTOLOGIN:
+            return {
+                ...state,
+                user: action.payload.username,
+                token: action.payload.token,
+                loading: false,
+                authError: null,
+                authenticated: true,
+                autologinSucceed: true
+            }
+        case AuthAction.AuthActionTypes.AUTOLOGINFAIL:
+            return {
+                ...state,
+                loading: false,
+                authError: null,
+                authenticated: false,
+                autologinSucceed: true
             }
         default:
             return state;
