@@ -44,21 +44,21 @@ export class LogTemplateEffect {
     ) { }
 
     // Below effect is use for fetch pipline dropdown data.
-    fetchPipeline = createEffect(() =>
-        this.actions$.pipe(
-            ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
-            switchMap(() => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'anyUrl').pipe(
-                    map(resdata => {
-                        return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
-                    }),
-                    catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
+    // fetchPipeline = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
+    //         switchMap(() => {
+    //             return this.http.get<any>(this.environment.config.endPointUrl + 'anyUrl').pipe(
+    //                 map(resdata => {
+    //                     return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
+    //                 }),
+    //                 catchError(errorRes => {
+    //                     this.toastr.showError('Server Error !!', 'ERROR')
+    //                     return handleError(errorRes);
+    //                 })
+    //             );
+    //         })
+    //     )
+    // )
 
 }

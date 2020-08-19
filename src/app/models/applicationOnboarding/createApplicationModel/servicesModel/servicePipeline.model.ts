@@ -1,10 +1,11 @@
 import { PipelineTemplate } from '../../pipelineTemplate/pipelineTemplate.model';
 import { CloudAccount } from './cloudAccount.model';
+import { DockerImageName } from './dockerImageName.model';
 
 export class ServicePipeline {
     pipelinetemplate: string;
     cloudAccount: CloudAccount;
-    dockerImageName: string;
+    dockerImageName: DockerImageName;
     pipelineParameters:PipelineTemplate[];
 
     constructor(data: any) {

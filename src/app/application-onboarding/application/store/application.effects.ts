@@ -206,7 +206,8 @@ export class ApplicationEffect {
             ofType(ApplicationAction.loadAppList),
             withLatestFrom(this.appStore.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList/'+authState.user).pipe(
+                debugger
+                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'oes/appOnboarding/applicationList').pipe(
                     map(resdata => {
                         return ApplicationAction.fetchAppList({ Applist: resdata['data'] });
                     }),
