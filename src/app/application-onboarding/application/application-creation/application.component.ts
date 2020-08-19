@@ -578,7 +578,6 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    debugger
     // Execute when user editing application data 
 
     //########### EDIT APPLICATION MODE ############
