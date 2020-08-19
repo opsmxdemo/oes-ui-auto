@@ -41,7 +41,6 @@ export class AuthEffect {
                         token: resData['jwt']
                     }
                     localStorage.setItem('userData', JSON.stringify(this.user));
-                    debugger
                     return new AuthAction.Login(this.user);
                 }),
                 catchError(errorRes => {

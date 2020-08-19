@@ -26,8 +26,8 @@ export class HeaderComponent implements OnInit {
       (response) => {
         if(response.authenticated){
           this.isAuthenticate = response.authenticated;
-          this.userDetails = JSON.parse(localStorage.getItem('userData'));
-          this.username = this.userDetails['username'];
+          //this.userDetails = JSON.parse(localStorage.getItem('userData'));
+          this.username = localStorage.getItem('userData');
           this.firstAlphabet = this.username.split('');
         }
       }
