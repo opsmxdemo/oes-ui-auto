@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
@@ -21,7 +21,10 @@ import * as $ from 'jquery';
 })
 export class CreateApplicationComponent implements OnInit {
 
-  userType = 'OES Only';                                    // It contain type of user i.e, Autopilot Only, OES Only or both.
+  @ViewChild('logModel') logModel: ElementRef;
+  @ViewChild('metricModel') metricModel: ElementRef;
+
+  userType = 'OES and Autopilot';                                 // It contain type of user i.e, Autopilot Only, OES Only or both.
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
@@ -40,8 +43,10 @@ export class CreateApplicationComponent implements OnInit {
   dockerImageData = null;                                         // It is use to store data related to dockerImage fetched from state.
   dockerImageDropdownData = [];                                   // It is use to store dockerImage dropdown data on selection of Image Source
   dockerAccountName = '';                                         // It is use to store default docker Account name.
-  userGroupData = [''];                                           // It is use to store array value of userGroups. 
+  userGroupData = [];                                           // It is use to store array value of userGroups. 
   userGroupDropdownData = [];                                     // It is use to store userGroupDropdown data .
+  logTemplateData = [];                                           // It is use to store log Template data created from json editor.
+  metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
 
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -223,6 +228,16 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.userGropsData !== null) {
           this.userGroupData = response.userGropsData;
+          console.log("usergroup",this.userGroupData);
+        }
+        if (response.logtemplate.length > 0){
+          this.logTemplateData = response.logtemplate;
+          this.logModel.nativeElement.click();
+          console.log("logdata",this.logTemplateData);
+        }
+        if (response.metrictemplate.length > 0){
+          this.metricTemplateData = response.metrictemplate;
+          this.metricModel.nativeElement.click();
         }
       }
     )
@@ -367,7 +382,6 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to populate docker image name dropdown 
   populateDockerImagenDropdown(){
-    debugger
     const arrayControl = this.servicesForm.get('services') as FormArray;
     const innerarrayControl = arrayControl.at(0).get('pipelines') as FormArray;
     const mainData = innerarrayControl.at(0).get('dockerImageName');
@@ -389,7 +403,7 @@ export class CreateApplicationComponent implements OnInit {
       if(index<1){
         this.userGroupDropdownData.push(this.userGroupData);
       }else{
-        this.userGroupDropdownData[index] = this.userGroupDropdownData[index-1].filter(el =>el !== this.groupPermissionForm.value.userGroups[index-1].userGroup);
+        this.userGroupDropdownData[index] = this.userGroupDropdownData[index-1].filter(el => el.userGroupId !== +this.groupPermissionForm.value.userGroups[index-1].userGroup);
       }
     })
   }
@@ -406,6 +420,27 @@ export class CreateApplicationComponent implements OnInit {
         this.dockerImageDropdownData[serviceIndex] = imageName.images;
       }
     })
+  }
+
+  // Below function is use to return proper group value
+  groupProperties(name,props){
+    let prop = '';
+    if(name){
+      this.userGroupData.forEach(group => {
+        if(group.userGroupId === +props){
+          prop = group.userGroupName;
+        }
+      })
+    }else{
+      if(props === 'r'){
+        prop = 'Read Only';
+      }else if(props === 'rx'){
+        prop = 'Read & Execute';
+      }else{
+        prop = 'Read, Execute & Write';
+      }
+    }
+    return prop;
   }
 
   //Below function is use to add more permission group
@@ -593,7 +628,6 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    debugger
     // Execute when user editing application data 
 
     //########### EDIT APPLICATION MODE ############
@@ -654,9 +688,13 @@ export class CreateApplicationComponent implements OnInit {
                 //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
                 // }
                 PipelineArr.cloudAccount = {
-                  "name": "",
-                  "type": "",
-                  "providerVersion": ""
+                  "name": "my-openshift-account",
+                  "type": "kubernetes",
+                  "providerVersion": "v2",
+                  "requiredGroupMembership": [],
+                  "skin": "v2",
+                  "permissionId" : "r",
+                  "authorized": true
                 }
               })
             }
@@ -728,7 +766,7 @@ export class CreateApplicationComponent implements OnInit {
     //############# CREATE APPLICATION MODE ###############
     //#####################################################
     else {
-      if (this.createApplicationForm.valid && this.servicesForm && this.environmentForm.valid && this.groupPermissionForm.valid) {
+      if (this.createApplicationForm) {
 
         // Saving all 4 forms data into one
         this.mainForm = this.createApplicationForm.value;
@@ -741,9 +779,13 @@ export class CreateApplicationComponent implements OnInit {
               // }
               // below code is removed in future when clound account implements
               PipelineArr.cloudAccount = {
-                "name": "",
-                "type": "",
-                "providerVersion": ""
+                "name": "my-openshift-account",
+                "type": "kubernetes",
+                "providerVersion": "v2",
+                "requiredGroupMembership": [],
+                "skin": "v2",
+                "permissionId" : "r",
+                "authorized": true
               }
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
                 if (DataArr.value === '') {
@@ -759,9 +801,14 @@ export class CreateApplicationComponent implements OnInit {
         if(this.userType.includes('OES')){
           this.mainForm.environments = this.environmentForm.value.environments;
         }
+        if(this.userType.includes('Autopilot')){
+          this.mainForm.logtemplate = this.logTemplateData;
+          this.mainForm.metricttemplate = this.metricTemplateData;
+        }
         
         //Below action is use to save created form in database
-        this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
+        console.log(JSON.stringify(this.mainForm));
+        //this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
       } else {
         this.validForms();
       }
