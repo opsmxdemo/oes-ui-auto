@@ -367,7 +367,7 @@ export class CreateApplicationComponent implements OnInit {
     let counter = 0;
     if(startingValue.length > 0){
       this.groupPermissionForm.value.userGroups.forEach(groupName => {
-        if(groupName.userGroup === control.value){
+        if(this.groupProperties(true,groupName.userGroup) === control.value){
           counter++;
         }
       })
