@@ -33,7 +33,7 @@
       
                   </div>
                   <!-- <a href="#" class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="65% Complete"><i class="fas fa-circle-notch fa-spin"></i></a> -->
-                  <a href="#" class="ci_tack ml-3" data-toggle="tooltip" data-placement="top" title="Unpin"><i class="fas fa-thumbtack"></i></a>
+                  <!-- <a href="#" class="ci_tack ml-3" data-toggle="tooltip" data-placement="top" title="Unpin"><i class="fas fa-thumbtack"></i></a> -->
 
                         <div class="dropdown dropdown-icon-remove">
                           <button class="btn btn-default ml-3 px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -98,10 +98,10 @@
         </div>
         <!-- /.rightBox_header -->
         <div class="rightBox_body">
-          <div id="particle_chart" *ngIf="nodes.length>0">
+          <!-- <div id="particle_chart" *ngIf="nodes.length>0">
                    <app-network-chart [nodes]="nodes" [clusters]="clusters" [links]="links"></app-network-chart>
 
-                  </div>
+                  </div> -->
           <!-- /#particle_chart -->
               
           <!-- /.chart_ratio -->
@@ -130,7 +130,7 @@
             </table>
           </div>
 
-          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'">
+          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && serviceData.length>0">
             <table class="table table-pet-service text-center mb-0">
             <thead>
               <tr>

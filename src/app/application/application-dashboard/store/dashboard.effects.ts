@@ -39,16 +39,17 @@ export class AppDashboardEffect {
         public store: Store<fromApp.AppState>,
         public router: Router,
         public toastr: NotificationService,
-        private environment: AppConfigService
+        private environment: AppConfigService,
+        public appStore: Store<fromApp.AppState>,
     ) { }
 
     // Below effect is use for fetch application data present in appdashboard
     fetchappData = createEffect(() =>
         this.actions$.pipe(
             ofType(DashboardActions.loadAppDashboard),
-            withLatestFrom(this.store.select('auth')),
+            withLatestFrom(this.appStore.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get(this.environment.config.endPointUrl + 'dashboardservice/v1/dashboard/'+ action.username +'/applications').pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'dashboardservice/v1/dashboard/'+ authState.user +'/applications').pipe(
                     map(resdata => {
                        return DashboardActions.fetchedAppData({appData:resdata});
                     }),
