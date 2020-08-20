@@ -16,6 +16,9 @@
                       </div>
                       <!-- /.form-group -->
                     </div>
+                    <div class="col-12">
+                      <json-editor [options]="editorOptions" [data]="data" (change)="showJson($event)"></json-editor>
+                    </div>
                     <!-- /.col-6 -->
                   </div>
                   <!-- /.row -->
