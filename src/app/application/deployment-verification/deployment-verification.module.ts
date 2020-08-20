@@ -28,7 +28,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         MetricAnalysisComponent,
         LogAnalysisComponent,
         ReplaceLineBreaks,
-        ChildTableComponent
+        ChildTableComponent,
     ],
     imports: [
      CommonModule,

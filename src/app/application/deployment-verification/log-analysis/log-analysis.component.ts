@@ -128,7 +128,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
                     subcaption: "",
                     xAxisMinValue: "0",
                     xAxisMaxValue: "",
-                    yAxisMinValue: "",
+                    yAxisMinValue : "",
                     yAxisMaxValue: "",
                     xAxisName: "Log Events",
                     yAxisName: "Event Repeations",
