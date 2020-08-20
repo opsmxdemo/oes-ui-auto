@@ -33,6 +33,7 @@ import { MetricTemplateComponent } from './application/application-creation/metr
 import { LogTemplateComponent } from './application/application-creation/log-template/log-template.component';
 import { LogTemplateEffect } from './application/application-creation/log-template/store/logTemplate.effects';
 import { MetricTemplateEffect } from './application/application-creation/metric-template/store/metricTemplate.effects';
+import { NgJsonEditorModule } from 'ang-jsoneditor';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { MetricTemplateEffect } from './application/application-creation/metric-
      AppMaterialModule,
      Ng2SearchPipeModule,
      AppOnboardingRoutingModule,
+     NgJsonEditorModule,
      StoreModule.forFeature('applicationOnboarding',fromapplicationOnboarding.applicationOnboardingReducers),
      EffectsModule.forFeature([
       ApplicationEffect,

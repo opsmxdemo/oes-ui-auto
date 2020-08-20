@@ -30,6 +30,7 @@ import { ChartsModule } from './subModules/charts.module';
 import { EffectModule } from './store/app.effects';
 import { ApplicationOnboardingModule } from './application-onboarding/application-onboarding.module';
 import { SharedModule } from './subModules/shared.module';
+import { NgJsonEditorModule } from 'ang-jsoneditor';
 
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -65,6 +66,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HttpClientModule,
     AppMaterialModule,
     Ng2SearchPipeModule,
+    NgJsonEditorModule,
     EffectModule,
     ApplicationOnboardingModule,
     DeploymentVerificationModule,

@@ -199,7 +199,6 @@ export class DeploymentVerificationComponent implements OnInit {
      // hide tooltip 
      $("[data-toggle='tooltip']").tooltip('hide');
     this.getAllApplications();
-    console.log(this.route.params['_value']);
     this.getApplicationHealth();
     if(this.route.params['_value'].canaryId != null){
       this.control.setValue(this.route.params['_value'].canaryId);
@@ -513,7 +512,6 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.deploymentServiceInformation = resData.serviceInformation;
                   this.baseLineFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v1FileSize,true);
                   this.canaryFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v2FileSize,true);
-                 // console.log(this.humanFileSize())
                   if(this.deploymentServiceInformation['error'] != null){
                     this.notifications.showError('Service information Error:', this.deploymentServiceInformation['error']);
                   }

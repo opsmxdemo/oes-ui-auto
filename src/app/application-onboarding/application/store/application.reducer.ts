@@ -24,6 +24,12 @@ export interface State {
     // Application List variables
     applicationList: ApplicationList[];
     appListLoading: boolean;
+
+    // Log Template variables 
+    logtemplate: any[];
+
+    // Metric Template variables 
+    metrictemplate: any[];
 }
 
 export const initialState: State = {
@@ -39,7 +45,9 @@ export const initialState: State = {
     imageSource: null,
     dockerImageData: null,
     callDockerImageDataAPI: true,
-    userGropsData: null
+    userGropsData: null,
+    logtemplate: [],
+    metrictemplate:[]
 }
 
 export function ApplicationReducer(
@@ -170,5 +178,27 @@ export function ApplicationReducer(
             })
         ),
         // ###  Applist screen logic End ### // 
+
+        // ###  LogTemplate screen logic start ### // 
+
+        on(ApplicationAction.createdLogTemplate,
+            (state,action) => ({
+                ...state,
+                logtemplate: state.logtemplate.concat({ ...action.logTemplateData })
+            })
+        ),
+
+        // ###  LogTemplate screen logic start ### // 
+
+         // ###  MeticTemplate screen logic start ### // 
+
+         on(ApplicationAction.createdMetricTemplate,
+            (state,action) => ({
+                ...state,
+                metrictemplate: state.metrictemplate.concat({ ...action.metricTemplateData })
+            })
+        ),
+
+        // ###  MeticTemplate screen logic start ### // 
     )(applicationState,applicationAction);
 }
