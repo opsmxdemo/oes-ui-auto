@@ -238,7 +238,7 @@ export class ApplicationEffect {
                 this.toastr.showSuccess('Data saved successfully !!', 'SUCCESS')
                 this.router.navigate([appOnboardingState.parentPage]);
                 this.store.dispatch(ApplicationAction.loadAppList());
-                this.appStore.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
+                this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
             })
         ), { dispatch: false }
     )
@@ -248,7 +248,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.appDeletedSuccessfully),
             tap((actiondata) => {
-                this.appStore.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
+                this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
             })
         ), { dispatch: false }
     )

@@ -24,8 +24,7 @@ export function DashboardReducer(
         on(DashboardActions.loadAppDashboard,
             (state,action )=> ({
                 ...state,
-                dashboardLoading: true,
-                username: action.username
+                dashboardLoading: true
             })
         ),
         on(DashboardActions.fetchNetworkChartData,

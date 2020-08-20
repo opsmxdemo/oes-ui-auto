@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.store.dispatch(new LayoutAction.LoadPage());
 
           //Dispatching action to fetch application dashboard data from API
-          this.store.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
+          this.store.dispatch(AppDashboardAction.loadAppDashboard());
 
           //Dispatching action to fetch Cd dashboard data from API
           this.store.dispatch(CdDashboardActions.loadCdDashboard());

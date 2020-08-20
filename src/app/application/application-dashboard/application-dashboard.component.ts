@@ -71,7 +71,7 @@ export class ApplicationDashboardComponent implements OnInit {
   // code to load applications
   public getApplications() {
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
+    this.store.dispatch(AppDashboardAction.loadAppDashboard());
   }
 
   public selectedApplication(index: number, app: any) {
@@ -95,7 +95,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.selectedApplicationName = app.applicationName;
     this.showReleaseTable = false;
     this.serviceErrorMessage = '';
-    this.applicationService.getServiceList(app.applicationName).subscribe((serviceDataList: any) => {
+    this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
       this.serviceData = serviceDataList;
       this.spinnerService = false;
       if (serviceDataList.length === 0) {
