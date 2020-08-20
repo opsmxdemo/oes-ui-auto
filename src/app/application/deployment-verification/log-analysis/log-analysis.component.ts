@@ -18,7 +18,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   @Input() canaryId: any[];
   @Input() serviceId: any[];
-
+  dataSource: Object;
   showChart = true;                                                   // It is use to hide or show the bubble chart.
   switchToState = 'Collapse All';                                     // It is use to store value of Template State which user want to switch.
   logAnalysisResults :any;
@@ -105,7 +105,52 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   selectedClusterInfo : any;
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef,
-              private elRef:ElementRef) {}
+              private elRef:ElementRef) {
+                this.dataSource = {
+                  chart: {
+                    
+                    "xnumbersuffix": "",
+								"ynumberprefix": "",
+								"numDivlines": "0",
+								"numVDivLines": "0",
+								"showVZeroPlane": "0", //Vertical zero plane  	    	           
+								"theme": "fusion",
+								// "bgColor": "#DDDDDD",
+								"canvasBgColor": "#f5f5f5",
+								"showcanvasborder": "0",
+								"showLegend": "1",
+								"showaxislines": "0",
+								"showXAxisLine": "0",
+								"showYAxisLine": "0",
+								"showYAxisValues": "0",
+								"showXAxisValues": "0",
+                    caption: "",
+                    subcaption: "",
+                    xAxisMinValue: "0",
+                    xAxisMaxValue: "",
+                    yAxisMinValue : "",
+                    yAxisMaxValue: "",
+                    xAxisName: "Log Events",
+                    yAxisName: "Event Repeations",
+                    
+                    showValues: "",
+                    bubbleScale:".20",
+                    showTrendlineLabels: "0",
+                    plotTooltext: "$zvalue",
+                    drawQuadrant: "0",
+                  },
+                  categories: [
+                    {
+                      category: [
+                        
+                      ]
+                    }
+                  ],
+                  dataset: [],
+                 
+                  
+                };
+              }
 
 
   ngAfterViewInit(){
@@ -158,10 +203,10 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               });
               let criticalClusters = this.criticalArray.map(obj => {
                 let rObj = {
-                  "name" : obj.id,
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "r" : 5
+                  "z" : obj.combineClust,
+                  "name" : obj.id,
                 };
                 return rObj
               })
@@ -170,10 +215,10 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               });
               let errorClusters = this.errorArray.map(obj => {
                 let rObj = {
-                  "name" : obj.id,
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "r" : 5
+                  "z" : obj.combineClust,
+                  "name" : obj.id,
                 };
                 return rObj
               })
@@ -182,13 +227,37 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               });
               let warningClusters = this.warningArray.map(obj => {
                 let rObj = {
-                  "name" : obj.id,
+                  
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "r" : 5
+                  "z" : obj.combineClust,
+                  "name" : obj.id,
                 };
                 return rObj
-              })        
+              })
+              
+              this.dataSource["dataset"]=[];
+              let newobjcriticalClusters = {
+                "color": "#a32133",
+                "seriesName": "Critical",
+                "data": criticalClusters
+              };
+              this.dataSource["dataset"].push(newobjcriticalClusters);
+
+              let newobjerrorClusters = {
+                  "color": "#e0392e",
+                  "seriesName": "Errors",
+                  "data": errorClusters
+                };
+              this.dataSource["dataset"].push(newobjerrorClusters);
+
+              let newobjwarningClusters = {
+                "color": "#f3af70",
+                "seriesName": "Warning",
+                "data": warningClusters
+              };
+            this.dataSource["dataset"].push(newobjwarningClusters);
+            
               this.bubbleChartData = [
                 {
                   "name": "Critical",

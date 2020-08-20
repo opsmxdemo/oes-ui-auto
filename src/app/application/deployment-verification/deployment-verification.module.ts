@@ -16,6 +16,11 @@ import { MetricAnalysisEffect } from './metric-analysis/store/metric-analysis.ef
 import { LogAnalysisEffect } from './log-analysis/store/log-analysis.effects';
 import { ReplaceLineBreaks } from '../../pipes/keys.pipe';
 import { ChildTableComponent } from './metric-analysis/child-table/child-table.component';
+import { FusionChartsModule } from 'angular-fusioncharts';
+import * as FusionCharts from "fusioncharts";
+import * as charts from "fusioncharts/fusioncharts.charts";
+import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
 @NgModule({
     declarations: [
@@ -23,10 +28,11 @@ import { ChildTableComponent } from './metric-analysis/child-table/child-table.c
         MetricAnalysisComponent,
         LogAnalysisComponent,
         ReplaceLineBreaks,
-        ChildTableComponent
+        ChildTableComponent,
     ],
     imports: [
      CommonModule,
+     FusionChartsModule,
      ReactiveFormsModule,
      FormsModule,
      HttpClientModule,
