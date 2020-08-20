@@ -111,9 +111,9 @@ export class ApplicationEffect {
             ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
             switchMap(() => {
 
-                return this.http.get<string[]>(this.environment.config.endPointUrl + 'oes/authorize/groups').pipe(
+                return this.http.get<string[]>(this.environment.config.endPointUrl + 'platformservice/v1/usergroups').pipe(
                     map(resdata => {
-                        return ApplicationAction.fetchUserGrops({userGroupData:resdata['data']})
+                        return ApplicationAction.fetchUserGrops({userGroupData:resdata})
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
