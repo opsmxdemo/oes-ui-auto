@@ -249,20 +249,20 @@
                                   <div class="d-flex  mr-5 align-items-center">
                                       <div class="col-5 dockerImageSource">
                                         <select class="form-control customAcc {{isReadonly(i)?'disabledinput':''}}" formControlName="accountName" value="{{dockerAccountName}}" (change)="onChangeDockerAcc($event,i)" [disabled]="isReadonly(i)" 
-                                        [ngClass]="!pipelineArr.get('dockerImageName').valid && pipelineArr.get('dockerImageName').touched ? 'wheninvalid':''">
+                                        [ngClass]="!pipelineArr.get('dockerImageName.imageName').valid && pipelineArr.get('dockerImageName.imageName').touched ? 'wheninvalid':''">
                                           <option value="" [disabled]="true">Select</option>
                                           <option *ngFor="let dockerimages of dockerImageData" value="{{dockerimages.imageSource}}">{{dockerimages.imageSource}}</option>
                                         </select>
                                       </div>
                                       <div class="col-7 dockerImageSource">
                                         <select class="form-control customImg" formControlName="imageName" 
-                                        [ngClass]="!pipelineArr.get('dockerImageName').valid && pipelineArr.get('dockerImageName').touched ? 'is-invalid':''">
+                                        [ngClass]="!pipelineArr.get('dockerImageName.imageName').valid && pipelineArr.get('dockerImageName.imageName').touched ? 'is-invalid':''">
                                           <option value="" [disabled]="true">Select</option>
                                           <option *ngFor="let dockerimages of dockerImageDropdownData[i]" value="{{dockerimages}}">{{dockerimages}}</option>
                                         </select>
                                       </div>
                                   </div>
-                                  <span *ngIf="!pipelineArr.get('dockerImageName').valid && pipelineArr.get('dockerImageName').touched"
+                                  <span *ngIf="!pipelineArr.get('dockerImageName.imageName').valid && pipelineArr.get('dockerImageName.imageName').touched"
                                   class="help-block">Docker Image Name is required</span>
                                 </div>
                                 <div class="col-12 " formArrayName="pipelineParameters">

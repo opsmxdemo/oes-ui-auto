@@ -367,8 +367,16 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to populate docker image name dropdown 
   populateDockerImagenDropdown(){
+    debugger
+    const arrayControl = this.servicesForm.get('services') as FormArray;
+    const innerarrayControl = arrayControl.at(0).get('pipelines') as FormArray;
+    const mainData = innerarrayControl.at(0).get('dockerImageName');
+
     this.dockerImageDropdownData = [];
     this.dockerAccountName = this.dockerImageData[0].imageSource;
+    mainData.patchValue({
+        'accountName': this.dockerImageData[0].imageSource
+    });
     this.servicesForm.value.services.forEach(() => {
       this.dockerImageDropdownData.push(this.dockerImageData[0].images);
     })
@@ -481,6 +489,13 @@ export class CreateApplicationComponent implements OnInit {
     // Update dockerImageDropdownData array
     if(this.userType.includes('OES')){
       this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+      const arrayControl = this.servicesForm.get('services') as FormArray;
+      const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
+      const mainData = innerarrayControl.at(0).get('dockerImageName');
+      this.dockerAccountName = this.dockerImageData[0].imageSource;
+      mainData.patchValue({
+          'accountName': this.dockerImageData[0].imageSource
+      });
     }
   }
 
@@ -578,6 +593,7 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
+    debugger
     // Execute when user editing application data 
 
     //########### EDIT APPLICATION MODE ############
