@@ -7,12 +7,14 @@ export interface State {
 
     datasourceList: any;
     errorMessage: string;
+    supportedDatasource: any;
     
 }
 
 export const initialState: State = {
     errorMessage: null,
-    datasourceList: null
+    datasourceList: null,
+    supportedDatasource: null
 }
 
 export function DataSourceReducer(
@@ -37,6 +39,12 @@ export function DataSourceReducer(
             (state,action) => ({
                 ...state,
                 erroeMessage:action.errorMessage
+            })
+        ),
+        on(DataSourceAction.fetchSupportedDatasources,
+            (state,action) => ({
+                ...state,
+                supportedDatasource:action.SupportedDataSource 
             })
         ),
 

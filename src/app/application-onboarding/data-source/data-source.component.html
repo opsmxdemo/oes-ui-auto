@@ -120,7 +120,8 @@
             <div class="form-group text-muted">
               <label>Select Monitoring Provider </label>
               <div class="box-icon-group">
-                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.id)" [ngClass]="{'disabledMenu':d.id !== 'DOCKERHUB' && d.id !==  'GITHUB'}">
+                <!-- [ngClass]="{'disabledMenu':d.id !== 'DOCKERHUB' && d.id !==  'GITHUB'}" -->
+                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.name)" >
                   <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === selectedDataProvider" />
                   <label for="{{d.id}}">
                     <span class="bi-lbl">
@@ -145,7 +146,7 @@
            <div *ngIf="selectedDataProvider === 'Dynatrace'"><app-dynatrace-form></app-dynatrace-form></div>
            <div *ngIf="selectedDataProvider === 'GCP Stackdriver'"><app-gcp-stackdriver-form></app-gcp-stackdriver-form></div>
            <div *ngIf="selectedDataProvider === 'Prometheus'"><app-prometheus-form></app-prometheus-form></div>
-           <div *ngIf="selectedDataProvider === 'Elastic Search'"><app-elasticsearch-form></app-elasticsearch-form></div>
+           <div *ngIf="selectedDataProvider === 'Elastic Search' && typeOfForm === 'new'"><app-elasticsearch-form></app-elasticsearch-form></div>
            <div *ngIf="selectedDataProvider === 'AWS Cloudwatch'"><app-aws-cloudwatch-form></app-aws-cloudwatch-form></div>
            <div *ngIf="selectedDataProvider === 'App Dynamics'"><app-app-dynamics-form></app-app-dynamics-form></div> 
            <div *ngIf="selectedDataProvider === 'Datadog'"><app-datadog-form></app-datadog-form></div>

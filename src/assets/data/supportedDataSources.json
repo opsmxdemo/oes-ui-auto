@@ -1,0 +1,222 @@
+[
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["metric"],
+		"configurationFields": [
+			{
+				"name": "controllerHost",
+				"displayName": "Controller Host",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "temporaryAccessToken",
+				"displayName": "Temporary Access Token",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "sslEnabled",
+				"displayName": "SSL ENABLED",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "appdynamics",
+		"displayName": "App Dynamics"
+	},
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["metric"],
+		"configurationFields": [
+			{
+				"name": "apikey",
+				"displayName": "API Key",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "applicationKey",
+				"displayName": "Application Key",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "datadog",
+		"displayName": "Datadog"
+	},
+	{
+		"usage": ["log"],
+		"configurationFields": [
+			{
+				"name": "endPoint",
+				"displayName": "End Point",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "dockerswarm",
+		"displayName": "Docker Swarm"
+	},
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["metric"],
+		"configurationFields": [
+			{
+				"name": "apiToken",
+				"displayName": "Api Token",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "enviromentId",
+				"displayName": "Enviroment Id",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "dynatrace",
+		"displayName": "Dynatrace"
+	},
+	{
+		"usage": ["log"],
+		"configurationFields": [
+			{
+				"name": "endPoint",
+				"displayName": "End Point",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "userName",
+				"displayName": "User Name",
+				"dataType": "string",
+				"required": false
+			},
+			{
+				"name": "password",
+				"displayName": "Password ",
+				"dataType": "string",
+				"required": false
+			},
+			{
+				"name": "queryFilterKeyword",
+				"displayName": "Query Filter Keyword",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "responseKeywords",
+				"displayName": "Response Keywords",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "kibanaEndPoint",
+				"displayName": "Kibana Endpoint",
+				"dataType": "string",
+				"required": false
+			},
+			{
+				"name": "kibanaUserName",
+				"displayName": "Kibana UserName",
+				"dataType": "string",
+				"required": false
+			},
+			{
+				"name": "kibanaPassword",
+				"displayName": "Kibana Password",
+				"dataType": "string",
+				"required": false
+			}
+		],
+		"type": "elasticsearch",
+		"displayName": "Elastic Search"
+	},
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["metric"],
+		"configurationFields": [
+			{
+				"name": "endPoint",
+				"displayName": "End Point",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "graphite",
+		"displayName": "Graphite"
+	},
+	{
+		"usage": ["log"],
+		"configurationFields": [],
+		"type": "kubernetes",
+		"displayName": "Kubernetes"
+	},
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["metric"],
+		"configurationFields": [
+			{
+				"name": "apiKey",
+				"displayName": "API Key",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "applicationKey",
+				"displayName": "Application Key",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "newrelic",
+		"displayName": "New Relic"
+	},
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["metric"],
+		"configurationFields": [
+			{
+				"name": "endPoint",
+				"displayName": "End Point",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "prometheus",
+		"displayName": "Prometheus"
+	},
+	{
+		"metricTypes": ["apm", "infrastructure", "custom"],
+		"usage": ["log", "metric"],
+		"configurationFields": [],
+		"type": "stackdriver",
+		"displayName": "Stackdriver"
+	},
+	{
+		"usage": ["log"],
+		"configurationFields": [
+			{
+				"name": "accessId",
+				"displayName": "Access Id",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "accessKey",
+				"displayName": "Access Key",
+				"dataType": "string",
+				"required": true
+			},
+			{
+				"name": "zone",
+				"displayName": "Zone",
+				"dataType": "string",
+				"required": true
+			}
+		],
+		"type": "sumologic",
+		"displayName": "Sumo Logic"
+	}
+]
