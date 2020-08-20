@@ -78,7 +78,7 @@ export class AuthEffect {
                 username,
                 token
             } = JSON.parse(localStorage.getItem('userData'));
-            if (userData.token === null || userData.token === undefined) {
+            if (userData === null || userData.token === undefined) {
                 return new AuthAction.AutoLoginFail();
             }
 
