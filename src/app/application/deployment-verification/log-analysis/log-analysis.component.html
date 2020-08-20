@@ -63,7 +63,15 @@
               </li>
             </ul>
           </div>
-          <app-bubble-chart [dataSource]="bubbleChartData" [view]="chartSize" [chartProperty]="bubbleChartProperty"></app-bubble-chart>
+          <fusioncharts
+  width="600"
+  height="350"
+  type="bubble"
+  dataFormat="JSON"
+  [dataSource]="dataSource"
+></fusioncharts>
+
+
         </div>
       </div>
       <!-- /.dot_container -->
