@@ -61,6 +61,25 @@ export class DataSourceEffect {
        )
    )
 
+
+    // Below effect is use for fetch data related to supported DataSource
+    fetchSupportedDatasources = createEffect(() =>
+    this.actions$.pipe(
+        ofType(DataSourceAction.loadDatasource),
+        switchMap(() => {
+            return this.http.get<any>(this.environment.config.endPointUrl+'autopilot/api/v1/supportedDatasources').pipe(
+                map(resdata => {
+                    return DataSourceAction.fetchSupportedDatasources({SupportedDataSource:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!','ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+       )
+   )
+
     // Below effect is use for delete datasource Account .
     deleteDatasourceData = createEffect(() =>
         this.actions$.pipe(

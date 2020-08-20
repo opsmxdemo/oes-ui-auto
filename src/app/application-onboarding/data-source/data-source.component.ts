@@ -33,6 +33,7 @@ export class DataSourceComponent implements OnInit {
   datasourceListLength: number = null;
   nameOfAccount: null;
   typeOfForm: any;
+  eachDataSourceItem: any;
 
   constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
     public sharedAccountData: SharedService) { }
@@ -40,57 +41,60 @@ export class DataSourceComponent implements OnInit {
   ngOnInit(): void {
     this.selectedDataProvider = '';
    // this.getDataProvider("Docker");
-    this.dataSourceList = [{
-      "id": "new_relic",
-      "name": "New Relic",
-      "path": "../../assets/images/new_relic.png"
-    },
-    {
-      "id": "prometheus",
-      "name": "Prometheus",
-      "path": "../../assets/images/promethics.png"
-    },
-    {
-      "id": "dyna-trace",
-      "name": "Dynatrace",
-      "path": "../../assets/images/dyna-trace.png"
-    },
-    {
-      "id": "gcp_stackdriver",
-      "name": "GCP Stackdriver",
-      "path": "../../assets/images/gcp-icon.png"
-    },
-    {
-      "id": "datadog",
-      "name": "Datadog",
-      "path": "../../assets/images/data-dog.png"
-    },
-    {
-      "id": "app_dynamics",
-      "name": "App Dynamics",
-      "path": "../../assets/images/app-dynamics.png"
-    },
-    {
-      "id": "aws_cloudwatch",
-      "name": "AWS Cloudwatch",
-      "path": "../../assets/images/aws-cloudwatch.png"
-    },
-    {
-      "id": "elastic_search",
-      "name": "Elastic Search",
-      "path": "../../assets/images/elastic-search.png"
-    },
-    {
-      "id": "GITHUB",
-      "name": "Github",
-      "path": "../../assets/images/github.png"
-    },
-    {
-      "id": "DOCKERHUB",
-      "name": "Docker",
-      "path": "../../assets/images/docker.png"
-    }];
+    // this.dataSourceList = [{
+    //   "id": "new_relic",
+    //   "name": "New Relic",
+    //   "path": "../../assets/images/new_relic.png"
+    // },
+    // {
+    //   "id": "prometheus",
+    //   "name": "Prometheus",
+    //   "path": "../../assets/images/promethics.png"
+    // },
+    // {
+    //   "id": "dyna-trace",
+    //   "name": "Dynatrace",
+    //   "path": "../../assets/images/dyna-trace.png"
+    // },
+    // {
+    //   "id": "gcp_stackdriver",
+    //   "name": "GCP Stackdriver",
+    //   "path": "../../assets/images/gcp-icon.png"
+    // },
+    // {
+    //   "id": "datadog",
+    //   "name": "Datadog",
+    //   "path": "../../assets/images/data-dog.png"
+    // },
+    // {
+    //   "id": "app_dynamics",
+    //   "name": "App Dynamics",
+    //   "path": "../../assets/images/app-dynamics.png"
+    // },
+    // {
+    //   "id": "aws_cloudwatch",
+    //   "name": "AWS Cloudwatch",
+    //   "path": "../../assets/images/aws-cloudwatch.png"
+    // },
+    // {
+    //   "id": "elastic_search",
+    //   "name": "Elastic Search",
+    //   "path": "../../assets/images/elastic-search.png"
+    // },
+    // {
+    //   "id": "GITHUB",
+    //   "name": "Github",
+    //   "path": "../../assets/images/github.png"
+    // },
+    // {
+    //   "id": "DOCKERHUB",
+    //   "name": "Docker",
+    //   "path": "../../assets/images/docker.png"
+    // }];
     this.store.dispatch(DataSourceActions.loadDatasourceList());
+
+    //Dispatch  load Data Source
+    this.store.dispatch(DataSourceActions.loadDatasource());
 
     // fetching data from state
     this.store.select(fromFeature.selectDataSource).subscribe(
@@ -115,6 +119,8 @@ export class DataSourceComponent implements OnInit {
   }
   getDataProvider(e){
     this.selectedDataProvider = e;
+    console.log("this.selectedDataProvider: ", this.selectedDataProvider);
+    
   }
 
    // Below function is used if user want to refresh list data
@@ -226,9 +232,38 @@ export class DataSourceComponent implements OnInit {
     //Below function is to get the typeof the form used
     addDataSourceAccount(type:string){
       this.typeOfForm = type;
-      this.selectedDataProvider = 'DOCKERHUB';
+      this.selectedDataProvider = 'Elastic Search';
       this.sharedAccountData.setDataSourceType(this.typeOfForm);
       this.sharedAccountData.setDataSourceData('');
+
+    this.dataSourceList = [];
+
+    //Fetch supported data Source
+    this.store
+      .select(fromFeature.selectDataSource)
+      .subscribe((datasourceData) => {
+        if (datasourceData.supportedDatasource !== null) {
+          console.log(
+            "Supported Data Source:  ",
+            datasourceData.supportedDatasource
+          );
+
+          datasourceData.supportedDatasource.forEach((eachDataSource) => {
+            if (eachDataSource.type === "elasticsearch") {
+              console.log("this DataSources New: ", eachDataSource);
+              this.eachDataSourceItem = {
+                id: eachDataSource.type,
+                name: eachDataSource.displayName,
+                path: "../../assets/images/elastic-search.png"
+              };
+              this.dataSourceList.push(this.eachDataSourceItem);
+            }
+          });
+        }
+      });
+
+      
+
     }
 
     // Below funcion is use to edit existing account
