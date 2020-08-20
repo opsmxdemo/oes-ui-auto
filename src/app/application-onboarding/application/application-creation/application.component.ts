@@ -228,12 +228,10 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.userGropsData !== null) {
           this.userGroupData = response.userGropsData;
-          console.log("usergroup",this.userGroupData);
         }
         if (response.logtemplate.length > 0){
           this.logTemplateData = response.logtemplate;
           this.logModel.nativeElement.click();
-          console.log("logdata",this.logTemplateData);
         }
         if (response.metrictemplate.length > 0){
           this.metricTemplateData = response.metrictemplate;
@@ -807,12 +805,11 @@ export class CreateApplicationComponent implements OnInit {
         }
         
         //Below action is use to save created form in database
-        console.log(JSON.stringify(this.mainForm));
-        //this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
+        console.log("post data create application",JSON.stringify(this.mainForm));
+        this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
       } else {
         this.validForms();
       }
     }
-
   }
 }
