@@ -45,8 +45,7 @@ export class ApplicationDashboardComponent implements OnInit {
               public applicationFeatureStore: Store<fromApplicationFeature.State>) { }
 
   ngOnInit(): void {
-    console.log(localStorage.getItem('userData'));
-    console.log(localStorage.getItem('userData')['username']);
+   
     //fetching appData from dashboard state
     this.store.select('appDashboard').subscribe(
       (resdata) => {
@@ -71,10 +70,8 @@ export class ApplicationDashboardComponent implements OnInit {
   
   // code to load applications
   public getApplications() {
-    
-    debugger
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(AppDashboardAction.loadAppDashboard({username: localStorage.getItem('userData')}));
+    this.store.dispatch(AppDashboardAction.loadAppDashboard());
   }
 
   public selectedApplication(index: number, app: any) {
