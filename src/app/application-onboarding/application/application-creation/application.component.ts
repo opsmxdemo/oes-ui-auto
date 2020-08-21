@@ -6,6 +6,7 @@ import { PipelineTemplate } from 'src/app/models/applicationOnboarding/pipelineT
 import { Pipeline } from 'src/app/models/applicationOnboarding/pipelineTemplate/pipeline.model';
 import { Store } from '@ngrx/store';
 import * as fromFeature from '../../store/feature.reducer';
+import * as fromApp from '../../../store/app.reducer';
 import { CreateApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/createApplication.model';
 import * as ApplicationActions from '../store/application.actions';
 import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
@@ -24,7 +25,7 @@ export class CreateApplicationComponent implements OnInit {
   @ViewChild('logModel') logModel: ElementRef;
   @ViewChild('metricModel') metricModel: ElementRef;
 
-  userType = 'OES and Autopilot';                                 // It contain type of user i.e, Autopilot Only, OES Only or both.
+  userType = 'OES-AP';                                            // It contain type of user i.e, Autopilot Only, OES Only or both.
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
@@ -50,6 +51,7 @@ export class CreateApplicationComponent implements OnInit {
 
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
+              public appStore: Store<fromApp.AppState>,
               public router: Router) { }
 
   ngOnInit() {
@@ -97,10 +99,10 @@ export class CreateApplicationComponent implements OnInit {
               });
               switch(this.userType){
                 case 'OES Only':
-                case 'OES and Autopilot':
+                case 'OES-AP':
                   //populating services array in OES Only mode
                   this.appData.services.forEach((serviceArr, serviceindex) => {
-                    if(this.userType === 'OES and Autopilot'){
+                    if(this.userType === 'OES-AP'){
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
                           serviceName: new FormControl(serviceArr.serviceName),
@@ -239,6 +241,15 @@ export class CreateApplicationComponent implements OnInit {
         }
       }
     )
+
+    // Below function is use to fetch data from AppState to update usertype
+    this.appStore.select('layout').subscribe(
+      (layoutRes) => {
+        if(layoutRes.installationMode !== ''){
+          this.userType = layoutRes.installationMode;
+        }
+      }
+    )
   }
 
   // Below function is use to define all forms exist in application On boarding component
@@ -323,7 +334,7 @@ export class CreateApplicationComponent implements OnInit {
             })
          
         break;
-      case 'OES and Autopilot':
+      case 'OES-AP':
         serviceForm = new FormGroup({
               serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
               status: new FormControl('NEW'),

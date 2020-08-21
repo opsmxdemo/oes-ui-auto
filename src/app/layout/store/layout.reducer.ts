@@ -6,12 +6,14 @@ export interface State {
     menu: Menu;
     appliactionData: number;
     sidebarVisible: string;
+    installationMode: string;
 }
 
 export const initialState: State = {
     menu: null,
     appliactionData: 0,
-    sidebarVisible: ''
+    sidebarVisible: '',
+    installationMode:''
 }
 
 export function layoutReducer(
@@ -37,6 +39,11 @@ export function layoutReducer(
             return {
                 ...state,
                 sidebarVisible: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.INSTALLATIONMODE:
+            return {
+                ...state,
+                installationMode: action.payload
             }
         default:
             return state;

@@ -93,9 +93,6 @@ export class DataSourceComponent implements OnInit {
     // }];
     this.store.dispatch(DataSourceActions.loadDatasourceList());
 
-    //Dispatch  load Data Source
-    this.store.dispatch(DataSourceActions.loadDatasource());
-
     // fetching data from state
     this.store.select(fromFeature.selectDataSource).subscribe(
      (response) => {
