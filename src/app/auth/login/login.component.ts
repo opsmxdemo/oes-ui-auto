@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
              this.user = {
                     username: this.loginForm.value.username,
                 }
-            localStorage.setItem('userData', this.loginForm.value.username);
             this.store.dispatch(new AuthAction.LoginStart(this.loginForm.value))
             
         }

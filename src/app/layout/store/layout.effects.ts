@@ -43,12 +43,28 @@ export class LayoutEffect {
 
     // Below effect is use for fetch sidebar data. 
     @Effect()
-    authLogin = this.actions$.pipe(
+    fetchDynamicMenu = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
             return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
                 map(resData => {
                     return new LayoutAction.SideBarFetch(resData['menu']);
+                }),
+                catchError(errorRes => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    );
+
+    // Below effect is use for fetch installation mode data. 
+    @Effect()
+    fetchInstallationMode = this.actions$.pipe(
+        ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
+        switchMap(() => {
+            return this.http.get<string>(this.environment.config.endPointUrl+'dashboardservice/v1/installation/installationmode').pipe(
+                map(resData => {
+                    return new LayoutAction.InstallationMode(resData['mode']);
                 }),
                 catchError(errorRes => {
                     return handleError(errorRes);

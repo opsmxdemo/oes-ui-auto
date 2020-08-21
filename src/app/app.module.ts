@@ -31,6 +31,7 @@ import { EffectModule } from './store/app.effects';
 import { ApplicationOnboardingModule } from './application-onboarding/application-onboarding.module';
 import { SharedModule } from './subModules/shared.module';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
+import { ErrorListingComponent } from './error-listing/error-listing.component';
 
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -52,7 +53,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     TreeViewComponent,
     TableRowComponent,
     HasChildComponent,
-    CdDashboardComponent
+    CdDashboardComponent,
+    ErrorListingComponent
   ],
   imports: [
     BrowserModule,
