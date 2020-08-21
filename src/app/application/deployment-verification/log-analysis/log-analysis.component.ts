@@ -108,7 +108,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               private elRef:ElementRef) {
                 this.dataSource = {
                   chart: {
-                    
+                    "showValues": "0",
                     "xnumbersuffix": "",
 								"ynumberprefix": "",
 								"numDivlines": "0",
@@ -118,7 +118,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 								// "bgColor": "#DDDDDD",
 								"canvasBgColor": "#f5f5f5",
 								"showcanvasborder": "0",
-								"showLegend": "1",
+                "showLegend": "1",
+                "valueFontAlpha":"0",
 								"showaxislines": "0",
 								"showXAxisLine": "0",
 								"showYAxisLine": "0",
@@ -128,16 +129,21 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
                     subcaption: "",
                     xAxisMinValue: "0",
                     xAxisMaxValue: "",
-                    yAxisMinValue : "",
+                    yAxisMinValue : "0",
+                    showBorder:"0",
                     yAxisMaxValue: "",
+                    setAdaptiveYMin:"1",
+                    setAdaptiveXMin:"1",
+                    minBubbleRadius:".5",
                     xAxisName: "Log Events",
                     yAxisName: "Event Repeations",
                     
-                    showValues: "",
+                    
                     bubbleScale:".20",
                     showTrendlineLabels: "0",
                     plotTooltext: "$zvalue",
                     drawQuadrant: "0",
+                    
                   },
                   categories: [
                     {
@@ -205,8 +211,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
                 let rObj = {
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "z" : obj.combineClust,
-                  "name" : obj.id,
+                  "z" : obj.combineClust.substring(0, 500),
+                  "name" : "aaaa",
                 };
                 return rObj
               })
@@ -217,8 +223,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
                 let rObj = {
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "z" : obj.combineClust,
-                  "name" : obj.id,
+                  "z" : obj.combineClust.substring(0, 500),
+                  "name" : "aaaa",
                 };
                 return rObj
               })
@@ -230,8 +236,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
                   
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "z" : obj.combineClust,
-                  "name" : obj.id,
+                  "z" : obj.combineClust.substring(0, 500),
+                  "name" : "aaaa",
                 };
                 return rObj
               })
