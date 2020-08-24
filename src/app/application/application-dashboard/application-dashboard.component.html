@@ -53,8 +53,8 @@
             <!-- /.data_list_header -->
             <div class="data_list_body d-flex">
               <div class="data_list_values text-center">
-                <ul class="list-unstyled m-0 d-flex flex-wrap justify-content-around">
-                  <li class="showElementHover" *ngFor="let applicationInfo of application.appInfo; let i=index"
+                <ul class="list-unstyled m-0 d-flex flex-wrap">
+                  <li class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let i=index"
                     [ngClass]="{'active':application.applicationName === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
                     (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
                     <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
