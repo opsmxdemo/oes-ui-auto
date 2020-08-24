@@ -25,7 +25,7 @@ export class CreateApplicationComponent implements OnInit {
   @ViewChild('logModel') logModel: ElementRef;
   @ViewChild('metricModel') metricModel: ElementRef;
 
-  userType = 'OES-AP';                                            // It contain type of user i.e, Autopilot Only, OES Only or both.
+  userType = 'OES-AP';                                            // It contain type of user i.e, AP, OES or both.
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
@@ -70,8 +70,8 @@ export class CreateApplicationComponent implements OnInit {
 
           if (responseData.applicationData !== null) {
             //populating createApplicationForm ################################################################
-            if(this.userType === 'Autopilot Only'){
-              // Autopilot Only mode
+            if(this.userType === 'AP'){
+              // AP mode
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
                 emailId: new FormControl(this.appData.emailId),
@@ -98,9 +98,9 @@ export class CreateApplicationComponent implements OnInit {
                 services: new FormArray([])
               });
               switch(this.userType){
-                case 'OES Only':
+                case 'OES':
                 case 'OES-AP':
-                  //populating services array in OES Only mode
+                  //populating services array in OES mode
                   this.appData.services.forEach((serviceArr, serviceindex) => {
                     if(this.userType === 'OES-AP'){
                       (<FormArray>this.servicesForm.get('services')).push(
@@ -152,8 +152,8 @@ export class CreateApplicationComponent implements OnInit {
                     })
                   })
                   break;
-                case 'Autopilot Only':
-                  //populating services array in OES Only mode
+                case 'AP':
+                  //populating services array in OES mode
                   this.appData.services.forEach(serviceArr => {
                     (<FormArray>this.servicesForm.get('services')).push(
                       new FormGroup({
@@ -195,8 +195,8 @@ export class CreateApplicationComponent implements OnInit {
               this.appData.userGroups.forEach(groupData => {
                 (<FormArray>this.groupPermissionForm.get('userGroups')).push(
                   new FormGroup({
-                    userGroup: new FormControl(groupData.userGroup, Validators.required),
-                    permission: new FormControl(groupData.permission, Validators.required),
+                    userGroupId: new FormControl(groupData.userGroupId, Validators.required),
+                    permissionId: new FormControl(groupData.permissionId, Validators.required),
                   })
                 );
               })
@@ -255,15 +255,15 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to define all forms exist in application On boarding component
   defineAllForms() {
     // defining reactive form approach for createApplicationForm
-    if(this.userType === 'Autopilot Only'){
-      // For autopilot only mode
+    if(this.userType === 'AP'){
+      // For AP mode
       this.createApplicationForm = new FormGroup({
         name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
         emailId: new FormControl('',[Validators.required,Validators.email]),
         description: new FormControl('')
       });
     }else{
-      // For OES only and both oes and autopilot mode.
+      // For OES and both oes and autopilot mode.
       this.createApplicationForm = new FormGroup({
         name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
         emailId: new FormControl('',[Validators.required,Validators.email]),
@@ -304,11 +304,11 @@ export class CreateApplicationComponent implements OnInit {
     return promise;
   }
 
-  // Below function is use to return relavent service form on basics of userType. i.e,Autopilot Only , OESOnly or both.
+  // Below function is use to return relavent service form on basics of userType. i.e,AP , OESOnly or both.
   setServiceForm(){
     let serviceForm = null;
     switch(this.userType){
-      case 'OES Only':
+      case 'OES':
         serviceForm =  new FormGroup({
               serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
               status: new FormControl('NEW'),
@@ -325,7 +325,7 @@ export class CreateApplicationComponent implements OnInit {
               ])
             })
         break;
-      case 'Autopilot Only':
+      case 'AP':
         serviceForm = new FormGroup({
               serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
               status: new FormControl('NEW'),
@@ -378,7 +378,7 @@ export class CreateApplicationComponent implements OnInit {
     let counter = 0;
     if(startingValue.length > 0){
       this.groupPermissionForm.value.userGroups.forEach(groupName => {
-        if(this.groupProperties(true,groupName.userGroup) === control.value){
+        if(this.groupProperties(true,groupName.userGroupId) === control.value){
           counter++;
         }
       })
@@ -412,7 +412,7 @@ export class CreateApplicationComponent implements OnInit {
       if(index<1){
         this.userGroupDropdownData.push(this.userGroupData);
       }else{
-        this.userGroupDropdownData[index] = this.userGroupDropdownData[index-1].filter(el => el.userGroupId !== +this.groupPermissionForm.value.userGroups[index-1].userGroup);
+        this.userGroupDropdownData[index] = this.userGroupDropdownData[index-1].filter(el => el.userGroupId !== +this.groupPermissionForm.value.userGroups[index-1].userGroupId);
       }
     })
   }
@@ -456,8 +456,8 @@ export class CreateApplicationComponent implements OnInit {
   addGroup() {
     (<FormArray>this.groupPermissionForm.get('userGroups')).push(
       new FormGroup({
-        userGroup: new FormControl('',[Validators.required,this.usergroupExist.bind(this)]),
-        permission: new FormControl('', Validators.required),
+        userGroupId: new FormControl('',[Validators.required,this.usergroupExist.bind(this)]),
+        permissionId: new FormControl('', Validators.required),
       })
     );
     // populating user group dropdown data
