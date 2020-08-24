@@ -1,11 +1,11 @@
 
 export class GroupPermission {
-    userGroup: string;
-    permission: string;
+    userGroupId: string;
+    permissionId: string;
 
     constructor(data: any) {
         data = data || {};
-        this.userGroup = data.userGroup;
-        this.permission = data.permission;
+        this.userGroupId = data.userGroupId;
+        this.permissionId = data.permissionId;
     }
 }
