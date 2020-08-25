@@ -225,7 +225,6 @@ export class ApplicationDashboardComponent implements OnInit {
 
   // Below function is use to delete application
   deleteApplication(application: any,index) {
-    debugger
     $("[data-toggle='tooltip']").tooltip('hide');
     Swal.fire({
       title: 'Are you sure?',
