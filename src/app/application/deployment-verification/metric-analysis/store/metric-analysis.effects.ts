@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../../store/app.reducer';
 import * as MetricAnalysisdActions from './metric-analysis.actions';
@@ -18,9 +18,12 @@ const handleError = (errorRes: any) => {
     if (!errorRes.error) {
         return of(MetricAnalysisdActions.errorOccured({ errorMessage }));
     }
-    switch (errorRes.error.message) {
-        case 'Authentication Error':
-            errorMessage = 'Invalid login credentials';
+    switch (errorRes.status) {
+        case 500:
+            errorMessage = 'Server is down, Please contact to admin';
+            break;
+        case 404:
+            errorMessage = 'Unknown error occurred, Please contact to admin';
             break;
         default:
             errorMessage = 'Error Occurred';
@@ -49,6 +52,10 @@ export class MetricAnalysisEffect {
                     map(resdata => {
                        return MetricAnalysisdActions.fetchCanaryOutput({cararyData:resdata});
                     }),
+                    catchError(errorRes =>{
+                        this.toastr.showError(errorRes.error.message, 'Error')
+                        return handleError(errorRes);
+                    })
                 );
             })
         )

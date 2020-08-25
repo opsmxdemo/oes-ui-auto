@@ -40,7 +40,6 @@ export class AppliactionListComponent implements OnInit {
     this.store.select(fromFeature.selectApplication).subscribe(
       (response) => {
         if (response.applicationList !== null) {
-          debugger
           this.loading = response.appListLoading;
           this.appListData = response.applicationList;
           this.appListLength = this.appListData.length;

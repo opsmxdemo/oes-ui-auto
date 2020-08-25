@@ -16,6 +16,7 @@ import { MetricAnalysisEffect } from './metric-analysis/store/metric-analysis.ef
 import { LogAnalysisEffect } from './log-analysis/store/log-analysis.effects';
 import { ReplaceLineBreaks } from '../../pipes/keys.pipe';
 import { ChildTableComponent } from './metric-analysis/child-table/child-table.component';
+import { SharedModule } from 'src/app/subModules/shared.module';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { ChildTableComponent } from './metric-analysis/child-table/child-table.c
      AppMaterialModule,
      ChartsModule,
      Ng2SearchPipeModule,
+     SharedModule,
      StoreModule.forFeature('deploymentVerification',fromdeploymentVarification.deploymentVerificationReducers),
      EffectsModule.forFeature([
         DeploymentVerificationEffect,
