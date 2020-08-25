@@ -44,10 +44,14 @@ export class CreateApplicationComponent implements OnInit {
   dockerImageData = null;                                         // It is use to store data related to dockerImage fetched from state.
   dockerImageDropdownData = [];                                   // It is use to store dockerImage dropdown data on selection of Image Source
   dockerAccountName = '';                                         // It is use to store default docker Account name.
-  userGroupData = [];                                           // It is use to store array value of userGroups. 
+  userGroupData = [];                                             // It is use to store array value of userGroups. 
   userGroupDropdownData = [];                                     // It is use to store userGroupDropdown data .
   logTemplateData = [];                                           // It is use to store log Template data created from json editor.
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
+  currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
+  currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
+  // logTemplateSelectedName = []                                    // It is use to store array of log template name which need to populat in field.
+  // metricTemplateSelectedName = []                                 // It is use to store array of metric template name which need to populat in field.
 
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -234,10 +238,12 @@ export class CreateApplicationComponent implements OnInit {
         if (response.logtemplate.length > 0){
           this.logTemplateData = response.logtemplate;
           this.logModel.nativeElement.click();
+          this.populateSelectedTemplateName(this.currentLogTemplateIndex,'logTemp')
         }
         if (response.metrictemplate.length > 0){
           this.metricTemplateData = response.metrictemplate;
           this.metricModel.nativeElement.click();
+          this.populateSelectedTemplateName(this.currentMetricTemplateIndex,'metricTemp')
         }
       }
     )
@@ -431,6 +437,19 @@ export class CreateApplicationComponent implements OnInit {
     })
   }
 
+  // Below function is use to populate newley created template into appropriate service field
+  populateSelectedTemplateName(index,type){
+    const arrayControl = this.servicesForm.get('services') as FormArray;
+    const innerarrayControl = arrayControl.at(index).get(type) 
+    if(this.userType.includes('AP')){
+      if(type === 'logTemp'){
+        innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length-1].templateName);
+      }else{
+        innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length-1].templateName);
+      }
+    }
+  }
+
   // Below function is use to return proper group value
   groupProperties(name,props){
     let prop = '';
@@ -607,8 +626,13 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is execute after click on add template btn.
-  onAddTemplate(){
+  onAddTemplate(index,type){
     $("[data-toggle='tooltip']").tooltip('hide');
+    if(type === "log"){
+      this.currentLogTemplateIndex = index;
+    }else{
+      this.currentMetricTemplateIndex = index;
+    }
   }
 
   //Below function is use to fetch proper value from pipelineExist array and return in result in string format. i.e, related to pipeline templateParameter section
@@ -789,8 +813,8 @@ export class CreateApplicationComponent implements OnInit {
           this.mainForm.environments = this.environmentForm.value.environments;
         }
         if(this.userType.includes('AP')){
-          this.mainForm.logtemplate = this.logTemplateData;
-          this.mainForm.metricttemplate = this.metricTemplateData;
+          this.mainForm.logTemplate = this.logTemplateData;
+          this.mainForm.metricTemplate = this.metricTemplateData;
         }
         
         //Below action is use to save created form in database

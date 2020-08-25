@@ -10,7 +10,7 @@ export const fetchPipeline = createAction('[Application] FetchPipeline', props<{
 export const errorOccured = createAction('[Application] ErrorOccured', props<{errorMessage:string}>());
 export const fetchAppData = createAction('[Application] FetchAppData', props<{appData:CreateApplication}>())
 export const createApplication = createAction('[Application] CreateApplication', props<{appData:CreateApplication}>())
-export const dataSaved = createAction('[Application] DataSaved');
+export const dataSaved = createAction('[Application] DataSaved', props<{applicationName:string,dataType:string}>());
 export const fetchCloudAccount = createAction('[Application] FetchCloudAccount', props<{cloudAccount:CloudAccount}>());
 export const fetchImageSource = createAction('[Application] FetchImageSource', props<{imageSource: string[]}>());
 export const loadDockerImageName = createAction('[Application] LoadDockerImageName', props<{imageSourceName:string}>());
@@ -24,7 +24,7 @@ export const disabledEditMode = createAction('[Application] DisabledEditMode');
 
 // Below action is related to application list
 export const loadAppList = createAction('[Application] LoadAppList');
-export const fetchAppList = createAction('[Application] FetchAppList', props<{Applist:ApplicationList[]}>());
+export const fetchAppList = createAction('[Application] FetchAppList', props<{Applist:any}>());
 export const appDelete = createAction('[Application] AppDelete', props<{applicationName:string,index:number}>());
 export const appDeletedSuccessfully = createAction('[Application] AppDeletedSuccessfully', props<{index:number}>());
 

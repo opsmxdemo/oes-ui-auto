@@ -7,8 +7,8 @@ export class CreateApplication {
     description: string;
     imageSource: string;
     emailId: string;
-    logtemplate: any;
-    metricttemplate: any;
+    logTemplate: any;
+    metricTemplate: any;
     services:Service[];
     environments:Environment[];
     userGroups:GroupPermission[];
@@ -19,8 +19,8 @@ export class CreateApplication {
         this.description = data.description;
         this.imageSource = data.imageSource;
         this.emailId = data.emailId;
-        this.logtemplate = data.logtemplate;
-        this.metricttemplate = data.metricttemplate;
+        this.logTemplate = data.logTemplate;
+        this.metricTemplate = data.metricTemplate;
         this.services=[];
         data.services.forEach(element => {
             this.services.push(new Service(element));

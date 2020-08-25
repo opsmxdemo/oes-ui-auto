@@ -2,12 +2,12 @@
 export class ApplicationList {
     name: string;
     description:string
-    status: string;
+    email: string;
 
     constructor(data: any) {
         data = data || {};
         this.name = data.name;
         this.description = data.description;
-        this.status = data.status;
+        this.email = data.status;
     }
 }
