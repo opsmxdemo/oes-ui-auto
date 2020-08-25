@@ -85,6 +85,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
       (response) => {
         this.Sidebar = response.menu;
         this.applicationCount = response.appliactionData;
+        // if(response.apiErrorCounter.length > 0){
+        //   this.router.navigate(['error']);
+        // }
       }
     );
 

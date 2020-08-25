@@ -7,7 +7,7 @@ import { PolicyManagementComponent } from '../policy-management/policy-managemen
 import { DeploymentVerificationComponent } from '../application/deployment-verification/deployment-verification.component';
 import { ApplicationComponent } from '../application/application.component';
 import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
-import {LoginComponent} from '../auth/login/login.component';
+import { AppErrorListingComponent } from '../error-handling/app-error-listing/app-error-listing.component';
 
 const routes: Routes = [
   
@@ -19,7 +19,8 @@ const routes: Routes = [
   ]},
   {path:'oesdashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
-  {path:'policymanagement', component:PolicyManagementComponent}
+  {path:'policymanagement', component:PolicyManagementComponent},
+  {path:'error', component:AppErrorListingComponent}
 ];
 
 @NgModule({

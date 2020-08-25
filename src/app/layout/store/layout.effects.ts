@@ -13,22 +13,15 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
-    let errorMessage = 'An unknown error occurred';
-    if (!errorRes.error) {
-        return of(new LayoutAction.ErrorResponse(errorMessage));
-    }
-    switch (errorRes.error.message) {
-        case 'Authentication Error':
-            errorMessage = 'Invalid login credentials';
-            break;
-        case 'Email Exist':
-            errorMessage = 'This email exist already';
-            break;
+    
+    switch (errorRes.status) {
+        case 500:
+            return of(new LayoutAction.ServerError(errorRes.error.error));
+        case 404:
+            return of(new LayoutAction.ServerError(errorRes.error.error));
         default:
-            errorMessage = 'Error Occurred';
-            break;
+            return of(new LayoutAction.ServerError(errorRes.error.error));
     }
-    return of(new LayoutAction.ErrorResponse(errorMessage));
 }
 
 @Injectable()
