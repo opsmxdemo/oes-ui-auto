@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError,withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../store/app.reducer';
 import * as DeploymentActions from './deploymentverification.actions';
@@ -47,8 +47,9 @@ export class DeploymentVerificationEffect {
         fetchlatestRunDetails = createEffect(() =>
         this.actions$.pipe(
             ofType(DeploymentActions.loadLatestRun),
-            switchMap(() => {   
-                return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/latestrun').pipe(
+            withLatestFrom(this.store.select('auth')),
+            switchMap(([action,authState]) => {   
+                return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/users/'+authState.user+'/applications/latest-canary').pipe(
                     map(resdata => {
                        return DeploymentActions.fetchLatestRun({canaryRun:resdata});
                     }),
