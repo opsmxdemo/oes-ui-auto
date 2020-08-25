@@ -59,7 +59,7 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('PipelineTemplate Data: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -78,7 +78,7 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchDockerImageName({dockerImageData:resdata['results']});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR');
+                        this.toastr.showError('DockerImageName Data: '+errorRes.error.error, 'ERROR');
                         return handleError(errorRes);
                     })
                 );
@@ -105,7 +105,7 @@ export class ApplicationEffect {
     //     )
     // )
 
-    // Below effect is use for fetch cloudAccount dropdown data.
+    // Below effect is use for fetch userGroup dropdown data.
     fetchUserData = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
@@ -116,7 +116,7 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchUserGrops({userGroupData:resdata})
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('UserGroups Data: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -135,7 +135,7 @@ export class ApplicationEffect {
                      return ApplicationAction.fetchImageSource({imageSource:resdata['data']});
                  }),
                  catchError(errorRes => {
-                     this.toastr.showError('Server Error !!', 'ERROR')
+                     this.toastr.showError('ImageSource Data: '+errorRes.error.error, 'ERROR')
                      return handleError(errorRes);
                  })
              );
@@ -155,7 +155,7 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchAppData({ appData: resdata })
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('Application Data: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -173,7 +173,7 @@ export class ApplicationEffect {
                         return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'createApplication'});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('Application is not created due to: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -191,7 +191,7 @@ export class ApplicationEffect {
                         return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'updateApplication'});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('Application is not updated due to: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -211,7 +211,7 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchAppList({ Applist: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('ApplicationList Data: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -269,7 +269,7 @@ export class ApplicationEffect {
                         return ApplicationAction.appDeletedSuccessfully({ index: action.index });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('Application is not deleted due to: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
