@@ -9,6 +9,8 @@ import * as LayoutAction from '../../layout/store/layout.actions';
 import * as DeploymentAcion from '../deployment-verification/store/deploymentverification.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-application-dashboard',
@@ -175,6 +177,7 @@ export class ApplicationDashboardComponent implements OnInit {
   
     }
 
+  // code related to get releases
   public getReleases(menu: string, application: any, index: number, event: Event) {
     this.spinnerService = true;
     this.applicationService.childApplication = application.applicationName;
@@ -218,6 +221,29 @@ export class ApplicationDashboardComponent implements OnInit {
   redirectLink(ServiceName,applicationName){
     const href = 'http://52.255.164.169:9000/#/applications/'+applicationName+'/executions?pipeline='+ServiceName;
     return href;
+  }
+
+  // Below function is use to delete application
+  deleteApplication(application: any,index) {
+    $("[data-toggle='tooltip']").tooltip('hide');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.value) {
+        $("[data-toggle='tooltip']").tooltip('hide');
+        // this.applicationFeatureStore.dispatch(ApplicationActions.({accountName: account.name,index:index}));
+        // this.store.dispatch(AppDashboardAction.loadAppDashboard());
+        this.store.dispatch(AppDashboardAction.deleteApplication({applicationId: application.applicationId,index:index}));
+      }else{
+        //alert('dont delete'); 
+      }
+    })
   }
 
   
