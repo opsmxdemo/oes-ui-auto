@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import Swal from 'sweetalert2';
+
 
 
 //below function is use to fetch error and return appropriate comments
@@ -76,6 +78,31 @@ export class AppDashboardEffect {
             })
         )
     )
+
+      // Below effect is use for delete Account .
+      deleteApplication = createEffect(() =>
+      this.actions$.pipe(
+          ofType(DashboardActions.deleteApplication),
+          switchMap(action => {
+              return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.applicationId).pipe(
+                  map(resdata => {
+                      this.toastr.showSuccess(action.applicationId + ' is deleted successfully!!', 'SUCCESS')
+                      // return OnboardingAction.appDeletedSuccessfully({index:action.index});
+                      Swal.fire(
+                          'Deleted!',
+                          'Your file has been deleted.',
+                          'success'
+                      )
+                      return DashboardActions.applicationDeleted({ index: action.index })
+                  }),
+                  catchError(errorRes => {
+                      this.toastr.showError('Server Error !!', 'ERROR')
+                      return handleError(errorRes);
+                  })
+              );
+          })
+      )
+  )
 
    
 

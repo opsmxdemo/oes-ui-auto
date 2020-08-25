@@ -20,7 +20,7 @@ export class ApplicationService {
     //     );
     // }
     getServiceList(applicationId) {
-        return this.httpClient.get(this.endpointUrl + 'dashboardservice/v1/application/' + applicationId).pipe(
+        return this.httpClient.get(this.endpointUrl + 'dashboardservice/v1/applications/' + applicationId).pipe(
             catchError(this.handleError)
         );
     }

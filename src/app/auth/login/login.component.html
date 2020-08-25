@@ -11,9 +11,13 @@
                                         <div class="login-reg-icon text-center">
                                             <img src="../../../assets/images/login-icon.png" class="img-fluid" alt="login" />
                                         </div>
+                                        <div class="text-center">
+                                            <span *ngIf="error != null ? true : false" class="help-block">{{error}}</span>
+                                        </div>
+                                        <br>
                                         <!-- /.login-reg-icon -->
                                         <h3>Login to your account</h3>
-                                        <form [formGroup]="loginForm">
+                                        <form [formGroup]="loginForm"> 
                                             <div class="form-group mb-3">
                                                 <label>User Name</label>
                                                 <input type="text" class="form-control" placeholder="Username" formControlName="username" />
