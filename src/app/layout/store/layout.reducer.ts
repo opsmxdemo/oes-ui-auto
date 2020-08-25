@@ -7,13 +7,17 @@ export interface State {
     appliactionData: number;
     sidebarVisible: string;
     installationMode: string;
+    apiErrorCounter: number[];
+    errorMessage: string;
 }
 
 export const initialState: State = {
     menu: null,
     appliactionData: 0,
     sidebarVisible: '',
-    installationMode:''
+    installationMode:'',
+    apiErrorCounter:[],
+    errorMessage: ''
 }
 
 export function layoutReducer(
@@ -28,7 +32,8 @@ export function layoutReducer(
         case LayoutAction.LayoutActionTypes.SIDEBAR_FETCH:
             return {
                 ...state,
-                menu: action.payload
+                menu: action.payload,
+                apiErrorCounter: []
             }
         case LayoutAction.LayoutActionTypes.APPLICATIONDATA:
             return {
@@ -44,6 +49,12 @@ export function layoutReducer(
             return {
                 ...state,
                 installationMode: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.SERVERERROR:
+            return {
+                ...state,
+                apiErrorCounter: state.apiErrorCounter ,
+                errorMessage: action.payload
             }
         default:
             return state;

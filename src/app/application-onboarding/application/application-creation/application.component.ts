@@ -129,7 +129,7 @@ export class CreateApplicationComponent implements OnInit {
                       pipelineArray.push(
                         new FormGroup({
                           pipelinetemplate: new FormControl({ value: pipelineArr.pipelinetemplate, disabled: true }),
-                          cloudAccount: new FormControl({ value: '', disabled: true }),
+                          //cloudAccount: new FormControl({ value: '', disabled: true }),
                           dockerImageName: new FormGroup({
                             accountName: new FormControl({ value: pipelineArr.dockerImageName.accountName, disabled: true }),
                             imageName: new FormControl({ value: pipelineArr.dockerImageName.imageName, disabled: true })
@@ -315,7 +315,7 @@ export class CreateApplicationComponent implements OnInit {
               pipelines: new FormArray([
                 new FormGroup({
                   pipelinetemplate: new FormControl('', Validators.required),
-                  cloudAccount: new FormControl(''),
+                  //cloudAccount: new FormControl(''),
                   dockerImageName: new FormGroup({
                     accountName: new FormControl('', Validators.required),
                     imageName: new FormControl('', Validators.required)
@@ -343,7 +343,7 @@ export class CreateApplicationComponent implements OnInit {
               pipelines: new FormArray([
                 new FormGroup({
                   pipelinetemplate: new FormControl('', Validators.required),
-                  cloudAccount: new FormControl(''),
+                  //cloudAccount: new FormControl(''),
                   dockerImageName: new FormGroup({
                     accountName: new FormControl('', Validators.required),
                     imageName: new FormControl('', Validators.required)
@@ -696,15 +696,6 @@ export class CreateApplicationComponent implements OnInit {
                 // if (typeof (PipelineArr.cloudAccount) === 'string') {
                 //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
                 // }
-                PipelineArr.cloudAccount = {
-                  "name": "my-openshift-account",
-                  "type": "kubernetes",
-                  "providerVersion": "v2",
-                  "requiredGroupMembership": [],
-                  "skin": "v2",
-                  "permissionId" : "r",
-                  "authorized": true
-                }
               })
             }
           }else{
@@ -714,11 +705,7 @@ export class CreateApplicationComponent implements OnInit {
                 // if (typeof (PipelineArr.cloudAccount) === 'string') {
                 //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
                 // }
-                PipelineArr.cloudAccount = {
-                  "name": "",
-                  "type": "",
-                  "providerVersion": ""
-                }
+                
                 PipelineArr.pipelineParameters.forEach((DataArr, k) => {
                     if (DataArr.value === '') {
                       DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
@@ -775,7 +762,7 @@ export class CreateApplicationComponent implements OnInit {
     //############# CREATE APPLICATION MODE ###############
     //#####################################################
     else {
-      if (this.createApplicationForm) {
+      if (this.createApplicationForm.valid && this.servicesForm && this.groupPermissionForm.valid) {
 
         // Saving all 4 forms data into one
         this.mainForm = this.createApplicationForm.value;
@@ -786,16 +773,7 @@ export class CreateApplicationComponent implements OnInit {
               // if (typeof (PipelineArr.cloudAccount) === 'string') {
               //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
               // }
-              // below code is removed in future when clound account implements
-              PipelineArr.cloudAccount = {
-                "name": "my-openshift-account",
-                "type": "kubernetes",
-                "providerVersion": "v2",
-                "requiredGroupMembership": [],
-                "skin": "v2",
-                "permissionId" : "r",
-                "authorized": true
-              }
+              
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
                 if (DataArr.value === '') {
                   DataArr.value = this.getProperValue(i, j, k)
@@ -810,7 +788,7 @@ export class CreateApplicationComponent implements OnInit {
         if(this.userType.includes('OES')){
           this.mainForm.environments = this.environmentForm.value.environments;
         }
-        if(this.userType.includes('Autopilot')){
+        if(this.userType.includes('AP')){
           this.mainForm.logtemplate = this.logTemplateData;
           this.mainForm.metricttemplate = this.metricTemplateData;
         }
