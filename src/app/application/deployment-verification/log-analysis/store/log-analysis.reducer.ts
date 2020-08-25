@@ -57,8 +57,7 @@ export function LogAnalysisReducer(
                 deployementLoading: true,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
-                logTemplate : action.logTemplate,
-                userName :action.userName
+                logTemplate : action.logTemplate
             })
         ),
         on(LogAnalysisActions.fetchRerunLogsResults,
