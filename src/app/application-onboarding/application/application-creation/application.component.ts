@@ -814,7 +814,7 @@ export class CreateApplicationComponent implements OnInit {
         }
         if(this.userType.includes('AP')){
           this.mainForm.logTemplate = this.logTemplateData;
-          this.mainForm.metrictTemplate = this.metricTemplateData;
+          this.mainForm.metricTemplate = this.metricTemplateData;
         }
         
         //Below action is use to save created form in database

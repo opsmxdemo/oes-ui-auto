@@ -170,7 +170,7 @@ export class ApplicationEffect {
             switchMap(action => {
                 return this.http.post<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application', action.appData).pipe(
                     map(resdata => {
-                        return ApplicationAction.dataSaved();
+                        return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'createApplication'});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -188,7 +188,7 @@ export class ApplicationEffect {
             switchMap(action => {
                 return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'oes/appOnboarding/updateApplication', action.appData).pipe(
                     map(resdata => {
-                        return ApplicationAction.dataSaved();
+                        return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'updateApplication'});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -235,7 +235,12 @@ export class ApplicationEffect {
             ofType(ApplicationAction.dataSaved),
             withLatestFrom(this.store.select(fromFeature.selectApplication)),
             tap(([actiondata, appOnboardingState]) => {
-                this.toastr.showSuccess('Data saved successfully !!', 'SUCCESS')
+                if(actiondata.dataType === 'createApplication'){
+                    this.toastr.showSuccess("Application '"+actiondata.applicationName+"' created successfully !!", 'SUCCESS')
+                }else{
+                    this.toastr.showSuccess("Application '"+actiondata.applicationName+"' updated successfully !!", 'SUCCESS')
+                }
+                
                 this.router.navigate([appOnboardingState.parentPage]);
                 this.store.dispatch(ApplicationAction.loadAppList());
                 this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
