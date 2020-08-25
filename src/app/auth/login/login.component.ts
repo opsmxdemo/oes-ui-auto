@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading:Boolean;
     user: any;
+    error: any;
 
     
 
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
         //fetching value from Authstate
         this.store.select('auth').subscribe(
             (response) => {
-                this.loading = response.loading
+                this.loading = response.loading,
+                this.error = response.authError
             }
           );
     }

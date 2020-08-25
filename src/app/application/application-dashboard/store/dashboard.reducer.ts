@@ -6,13 +6,16 @@ export interface State {
     errorMessage: string;
     dashboardLoading: boolean;
     topologyChartData: any;
+    applicationDeleted: boolean;
 }
 
 export const initialState: State = {
     appData: null,
     errorMessage: null,
     dashboardLoading: false,
-    topologyChartData: null
+    topologyChartData: null,
+    applicationDeleted: false,
+    
 
 }
 
@@ -46,6 +49,18 @@ export function DashboardReducer(
                 ...state,
                 errorMessage: action.errorMessage,
                 dashboardLoading: false
+            })
+        ),
+        on(DashboardActions.deleteApplication,
+            (state, action) => ({
+                ...state,
+                applicationDeleted: false
+            })
+        ),
+        on(DashboardActions.deleteApplication,
+            (state,action) => ({
+                ...state,
+                appData: state.appData.filter((appData,index) => index !== action.index)
             })
         ),
     )(dashboardState,dashboardActions);
