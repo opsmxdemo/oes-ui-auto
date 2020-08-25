@@ -31,5 +31,9 @@ export const appDeletedSuccessfully = createAction('[Application] AppDeletedSucc
 // Below action is related to create log template 
 export const createdLogTemplate = createAction('[Application] CreatedLogTemplate', props<{logTemplateData:any}>());
 
+
 // Below action is related to create Metric template 
 export const createdMetricTemplate = createAction('[Application] CreatedMetricTemplate', props<{metricTemplateData:any}>());
+
+// Below action is used for both reseting metric and log template data
+export const resetTemplateData = createAction('[Application] ResetTemplateData');
