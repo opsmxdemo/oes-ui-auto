@@ -372,7 +372,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
         "feedbackErrorTopics": this.classifiedLogsList,
         "sensitivity": this.selectedSensitivity
       };  
-      this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));   
+      this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate,canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));   
       // Swal.fire({
       //   title: 'Are you sure?',
       //   text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        

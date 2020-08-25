@@ -2,7 +2,7 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError,withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../../../store/app.reducer';
 import * as LogAnalysisActions from './log-analysis.actions';
@@ -85,9 +85,10 @@ fetchEventLogsResults = createEffect(() =>
 fetchRerunLogsResults = createEffect(() =>
     this.actions$.pipe(
         ofType(LogAnalysisActions.rerunLogs),
-        switchMap((action) => {             
+        withLatestFrom(this.store.select('auth')),
+        switchMap(([action,authState]) => {             
 // platform-service-ui change
-            return this.http.post(this.environment.config.endPointUrl +'autopilot/logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + action.userName + '&serviceId='+ action.serviceId, action.postData).pipe(                  
+            return this.http.post(this.environment.config.endPointUrl +'autopilot/logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + authState.user + '&serviceId='+ action.serviceId, action.postData).pipe(                  
 
                 map(resdata => {
                    return LogAnalysisActions.fetchRerunLogsResults({rerunResponse:resdata});
