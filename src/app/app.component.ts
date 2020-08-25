@@ -28,6 +28,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   Sidebar: Menu;
   applicationCount: number = 0;
   endpointUrl: string;
+  installationMode = '';
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -85,6 +86,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       (response) => {
         this.Sidebar = response.menu;
         this.applicationCount = response.appliactionData;
+        this.installationMode = response.installationMode;
         // if(response.apiErrorCounter.length > 0){
         //   this.router.navigate(['error']);
         // }
@@ -122,6 +124,31 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.addclass = true;
       },1000)
     }
+  }
+
+  // Below function is use ro disabled link by checking installation mode 
+  disabledLink(linkName){
+    let className = '';
+    switch(this.installationMode){
+      case 'AP':
+        if(linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification'){
+          className = '';
+        }else{
+          className = 'disabled_menu';
+        }
+        break;
+      case 'OES':
+        if(linkName !== 'Deployment Verification'){
+          className = '';
+        }else{
+          className = 'disabled_menu';
+        }
+        break;
+      case 'OES-AP':
+        className = '';
+        break;
+    }
+    return className;
   }
 
   // Below function is use to return appropriate class for submenu link
