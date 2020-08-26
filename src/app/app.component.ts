@@ -93,8 +93,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
             this.apiError = true;
             this.router.navigate(['error']);
           }else{
-            this.apiError = false;
-            this.router.navigate(['application']);
+            const url = this.router.url;
+            if(url.includes('error')){
+              this.apiError = false;
+              this.router.navigate(['application']);
+            }
           }
         }
       }
