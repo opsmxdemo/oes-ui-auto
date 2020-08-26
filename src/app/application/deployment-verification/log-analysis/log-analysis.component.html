@@ -182,8 +182,19 @@
             </button>
           </div>
           <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
-            <div class="card-body text-wrap-normal">
-              <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>
+          <div *ngIf="log.more">           
+            <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+            <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>            
+          </div>
+            <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+              <span [outerHTML]="log.combineClust | replaceLineBreaks" ></span>              
+            </div>
+            <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">             
+              <span [outerHTML]="completeCluster?.clusterData | replaceLineBreaks" ></span>            
+            </div>
+            <div *ngIf="log.more"> 
+              <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+              <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>                       
             </div>
           </div>
         </div>
