@@ -23,6 +23,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   switchToState = 'Collapse All';                                     // It is use to store value of Template State which user want to switch.
   logAnalysisResults :any;
   dataSource: Object;
+  dataSourceColumnChart: Object;
+  chart:any;
+  previousClickedId:any;
+  timeStampResponse:any;
+  slectedTimeAnalysis:any;
   clusterId:string;
   logAnalysisClusters :[] ;
   logAnalysisData : any;
@@ -111,60 +116,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef,
               private elRef:ElementRef) {
-                this.dataSource = {
-                  chart: {
-                    "showValues": "0",
-                    "showxaxisline":"1",
-                    "showyaxisline":"1",
-                    "legendPosition":"bottom-left",
-                    "labelPadding":"0",
-                    "xnumbersuffix": "",
-                    "ynumberprefix": "",
-                    "numDivlines": "0",
-                    "numVDivLines": "0",
-                    "showVZeroPlane": "0", //Vertical zero plane  	    	           
-                    "theme": "fusion",
-                    "bgColor": "#f4f8fb",
-                    "canvasBgColor": "#f5f5f5",
-                    "showcanvasborder": "0",
-                    "showLegend": "1",
-                    "valueFontAlpha":"0",
-                    "showYAxisValues": "0",
-                    "showXAxisValues": "0",
-                    "canvasBottomPadding": "15",
-                    "canvasLeftPadding": "15",
-                    "canvasTopPadding": "15",
-                    "canvasRightPadding": "15",
-                    "canvasBorderThickness": "1",
-                    "caption": "",
-                    "subcaption": "",
-                    "xAxisMinValue": "0",
-                    "xAxisMaxValue": "",
-                    "yAxisMinValue" : "0",
-                    "showBorder":"0",
-                    "yAxisMaxValue": "",
-                    "minBubbleRadius":".5",
-                    "xAxisName": "Log Events",
-                    "yAxisName": "Event Repeations",
-                    "bubbleScale":".20",
-                    "showTrendlineLabels": "0",
-                    "plotTooltext": "$zvalue",
-                    "divlinealpha":"0",
-                    "canvasBorderAlpha":"100",
-                    
-                    
-                  },
-                  categories: [
-                    {
-                      category: [
-                        
-                      ]
-                    }
-                  ],
-                  dataset: [],
-                 
-                  
-                };
+                
               }
 
 
@@ -177,7 +129,72 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     },1000)
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dataSource = {
+      chart: {
+        "showValues": "0",
+        "showxaxisline":"1",
+        "showyaxisline":"1",
+        "legendPosition":"bottom-left",
+        "labelPadding":"0",
+        "xnumbersuffix": "",
+        "ynumberprefix": "",
+        "numDivlines": "0",
+        "numVDivLines": "0",
+        "showVZeroPlane": "0", //Vertical zero plane  	    	           
+        "theme": "fusion",
+         "bgColor": "#f4f8fb",
+        "canvasBgColor": "#f5f5f5",
+        "showcanvasborder": "0",
+        "showLegend": "1",
+        "valueFontAlpha":"0",
+        "showYAxisValues": "0",
+        "showXAxisValues": "0",
+        "canvasBottomPadding": "15",
+        "canvasLeftPadding": "15",
+        "canvasTopPadding": "15",
+        "canvasRightPadding": "15",
+        "canvasBorderThickness": "1",
+        "caption": "",
+        "subcaption": "",
+        "xAxisMinValue": "0",
+        "xAxisMaxValue": "",
+        "yAxisMinValue" : "0",
+        "showBorder":"0",
+        "yAxisMaxValue": "",
+        "minBubbleRadius":".5",
+        "xAxisName": "Log Events",
+        "yAxisName": "Event Repeations",
+        "bubbleScale":".20",
+        "showTrendlineLabels": "0",
+        "plotTooltext": "$zvalue",
+        "divlinealpha":"0",
+        "canvasBorderAlpha":"100",
+        
+        
+      },
+      categories: [
+        {
+          category: [
+            
+          ]
+        }
+      ],
+      dataset: [],
+     
+      
+    };
+    this.dataSourceColumnChart = {
+      chart: {
+        caption: "",
+        subcaption: "",
+        xaxisname: "Time",
+        yaxisname: "Repetition",
+        theme: "fusion"
+      },
+      data: []
+    };
+  }
  
   ngOnChanges(changes: SimpleChanges): void { 
     if(this.canaryId !== undefined && this.serviceId !==undefined){
@@ -559,5 +576,117 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
     showLessCluster(log){      
       this.showFullLogLine[log.id] = false;
+    }
+    initialized($event){
+      this.chart = $event.chart; // Storing the chart instance
+    }
+    timeAnalysisGraph(log){
+      this.dataSourceColumnChart["data"]=[];
+      let clusterId:any = log.id;
+      let version:any =log.version;
+      this.slectedTimeAnalysis = clusterId
+       
+      this.store.dispatch(LogAnalysisAction.fetchTimeAnalysisGraphData({canaryId: this.canaryId, serviceId: this.serviceId, clusterId:clusterId ,version:version }));    
+      this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+        (resData1) => {
+          if(resData1.timeStampData !== null){
+            this.timeStampResponse = {
+              timestamps: resData1.timeStampData.timestamps
+            };
+            if (this.timeStampResponse.timestamps.length > 0) {
+              this.timeAnalysisBarChartBuckets(this.timeStampResponse.timestamps, this.slectedTimeAnalysis);
+            }
+              
+          }
+        })
+    
+    }
+    timeAnalysisBarChartBuckets(timestamp:any,renderId:any){
+      let timeInMillisecondsArray:any[]=[];
+      let logsDuration:any=null
+      let startTime:any=null
+      let endTime:any=null
+     
+      logsDuration =  this.logAnalysisResults.duration
+       startTime = this.logAnalysisResults.version2StartTime;
+			 endTime = this.logAnalysisResults.version2EndTime;
+          //getting seconds from startTime 
+          var sSec = new Date(startTime).getSeconds();
+	        //getting miniutes start of startTime ie. the starting bucket 
+	        var miniuteStartOfStartTime = startTime - (sSec * 1000);
+	        //getting seconds from endTime 
+	        var eSec = new Date(endTime).getSeconds();
+	        //getting miniutes start of endTime ie. the end bucket 
+          var miniuteStartOfEndTime = endTime - (eSec * 1000);
+          var miniutesBucketArray = [];
+	        var nextMinuteStart = miniuteStartOfStartTime;
+	        miniutesBucketArray.push(miniuteStartOfStartTime);
+	        for (var i = 1; i <= logsDuration; i++) {
+	            if (nextMinuteStart <= miniuteStartOfEndTime) {
+	                //next minute in milliseconds - startminute + 60000
+	                nextMinuteStart = nextMinuteStart + 60000;
+	                miniutesBucketArray.push(nextMinuteStart);
+	            }
+          }
+          miniutesBucketArray.push(miniuteStartOfEndTime + 60000);
+	        //preparing array as buckets of nearest elements also added count
+	        var bucketsOfMinutes = [];
+	        for (var i = 0; i < miniutesBucketArray.length - 1; i++) {
+	            var prev = i;
+	            var next = i + 1;
+	            var obj = {
+	                bucketStartTime: miniutesBucketArray[prev],
+	                bucketEndTime: miniutesBucketArray[next],
+	                repeatedCount: 0
+	            };
+	            bucketsOfMinutes.push(obj);
+          }
+          
+          
+        timestamp.forEach(function (value) {
+          var obj = {
+            "timeInMillis": Date.parse(value)
+        };
+        timeInMillisecondsArray.push(obj);
+        });
+        
+        timeInMillisecondsArray.sort()
+
+      timeInMillisecondsArray.forEach(function (timestamp) {
+        for (var i = 0; i < bucketsOfMinutes.length; i++) {
+          if (bucketsOfMinutes[i].bucketStartTime <= timestamp.timeInMillis && timestamp.timeInMillis <= bucketsOfMinutes[i].bucketEndTime) {
+              bucketsOfMinutes[i].repeatedCount = bucketsOfMinutes[i].repeatedCount + 1;
+              break;
+          }
+      }
+      }); 
+      var chartRows = [];
+      var eachChartRow = [];
+      var dataobjTimeseries:any;
+      this.dataSourceColumnChart["data"]=[];
+      for (var i = 0; i < bucketsOfMinutes.length; i++) {
+       
+          eachChartRow = [new Date(bucketsOfMinutes[i].bucketStartTime), bucketsOfMinutes[i].repeatedCount,new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes()];
+           chartRows.push(eachChartRow)
+           let myobj = {
+            label: new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes(),
+            value: bucketsOfMinutes[i].repeatedCount
+           }
+           this.dataSourceColumnChart["data"].push(myobj)
+      };
+      //if(this.slectedTimeAnalysis==this.previousClickedId)
+       //{
+        //this.chart.dispose()
+        //this.ngOnInit();
+        //this.previousClickedId=null;
+
+       //}
+       //else
+       //{
+       //this.previousClickedId=this.slectedTimeAnalysis
+       //}
+      
+      console.log("hii")
+
     }
 }
