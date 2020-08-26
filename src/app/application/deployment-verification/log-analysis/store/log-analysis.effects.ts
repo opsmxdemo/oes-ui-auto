@@ -62,6 +62,23 @@ fetchLogAnalysisResults = createEffect(() =>
     )
 )
 
+fetchtimeAnalysisData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(LogAnalysisActions.fetchTimeAnalysisGraphData),
+        switchMap((action) => {                    // return this.http.get('/assets/data/logsData.json').pipe(                    
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/clusterTimeStamps?canaryId=' + action.canaryId + '&serviceId=' + action.serviceId + '&clusterId=' + action.clusterId + '&version=' + action.version).pipe(                  
+                map(resdata => {
+                   return LogAnalysisActions.loadTimeAnalysisGraphData({logTimeAnalysisResults:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 //The effect is used to fetch logs resulst based on each tab ( expected, ignore, baseline etc)
 fetchEventLogsResults = createEffect(() =>
     this.actions$.pipe(

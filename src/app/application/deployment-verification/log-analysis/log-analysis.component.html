@@ -106,7 +106,7 @@
     <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="" [style.width]="logClusterWidth">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0"> 
 
-        <div class="card mb-2" *ngFor="let log of logAnalysisData?.clusters">
+        <div  class="card mb-2 data_list" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters">
           <div class="card-header d-flex align-items-center justify-content-between" id="heading01">
             <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
             <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}</div>
@@ -171,12 +171,22 @@
                 </div>
               </div>
             </div>
-            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true"></i></div>
+            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true" (click)="timeAnalysisGraph(log)"></i></div>
             <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
             <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
               aria-expanded="true" aria-controls="collapse">
               <i class="fa fa-sort-down"></i>
             </button>
+          </div>
+          <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis"   >
+            <fusioncharts
+            width="100%"
+            height="350"
+            type="column2d"
+            dataFormat="JSON"
+            [dataSource]="dataSourceColumnChart"
+            (initialized)="initialized($event)"
+          ></fusioncharts>
           </div>
           <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
             <div *ngIf="log.more">           
