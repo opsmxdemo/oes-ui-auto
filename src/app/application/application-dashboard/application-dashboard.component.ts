@@ -10,7 +10,6 @@ import * as DeploymentAcion from '../deployment-verification/store/deploymentver
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import Swal from 'sweetalert2';
-//import { debugger } from 'fusioncharts';
 
 
 @Component({

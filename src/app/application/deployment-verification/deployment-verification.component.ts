@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation } from '@angular/core';
 // platform-service-ui change
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
@@ -26,7 +26,8 @@ export interface User {
 @Component({
   selector: 'app-deployment-verification',
   templateUrl: './deployment-verification.component.html',
-  styleUrls: ['./deployment-verification.component.less']
+  styleUrls: ['./deployment-verification.component.less'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class DeploymentVerificationComponent implements OnInit {
 

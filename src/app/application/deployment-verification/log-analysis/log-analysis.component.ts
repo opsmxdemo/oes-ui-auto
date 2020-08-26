@@ -41,7 +41,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   eventTab : any;
   eventTabLabeledBy: any; 
   logClusterWidth = "0px";
-  chartSize: any[];                                                   // It is use to store graph width on change of layout widyh.
+  chartSize: string;                                                   // It is use to store graph width on change of layout widyh.
   bubbleChartProperty = {
     "showLegend":true,
     "showLabels": true,
@@ -122,9 +122,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   ngAfterViewInit(){
     //setting initial width of graph
-    this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300];
-    this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + 35 + "px";
-    this.cdr.detectChanges();
+    setTimeout(() =>{
+      this.chartSize = this.ChartSize.nativeElement.offsetWidth
+      this.logClusterWidth = this.ChartSize.nativeElement.offsetWidth + 35 + "px" ; 
+      this.cdr.detectChanges();         
+    },1000)
   }
 
   ngOnInit() {
@@ -207,11 +209,13 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
        target.classList['value'] === 'ng-star-inserted' || 
        target.classList[1] === 'fa-bars' || 
        target.textContent === 'Log Analysis' ||
-       target.classList['value'] === 'toggleGraph'){
+       target.classList['value'] === 'toggleGraph' ||
+       target.id === 'expColBtn'){
       if(this.showChart){
-        this.chartSize = [0,300];
+        this.chartSize = "800px";
+        this.logClusterWidth = "800px"
         setTimeout(() =>{
-          this.chartSize = [this.ChartSize.nativeElement.offsetWidth,300]
+          this.chartSize = this.ChartSize.nativeElement.offsetWidth
           this.logClusterWidth = this.ChartSize.nativeElement.offsetWidth + 35 + "px" ;          
         },500)
       }
