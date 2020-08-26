@@ -105,6 +105,9 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   classifiedLogsList = [];
   logTemplate = "";
   selectedClusterInfo : any;
+  completeCluster : any;
+  showFullLogLine:any = {};
+  
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef,
               private elRef:ElementRef) {
@@ -531,5 +534,26 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
       document.getElementById(this.clusterId).scrollIntoView();
       
+    }
+
+    showMoreCluster(log){
+      let clusterId = log.id;
+      let version = log.version;
+      this.store.dispatch(LogAnalysisAction.fetchClusterLogData({canaryId: this.canaryId, serviceId: this.serviceId , clusterId: clusterId, version: version}));    
+      this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+        (resData) => {
+          if(resData.clusterLogs !== null){          
+              this.completeCluster = resData.clusterLogs; 
+              Object.keys(this.showFullLogLine).forEach(h => {
+                this.showFullLogLine[h] = false;
+              });
+              this.showFullLogLine[log.id] = true;        
+          }
+        }
+      );
+    }
+
+    showLessCluster(log){      
+      this.showFullLogLine[log.id] = false;
     }
 }
