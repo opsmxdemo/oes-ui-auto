@@ -103,6 +103,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   classifiedLogsList = [];
   logTemplate = "";
   selectedClusterInfo : any;
+  completeCluster : any;
+  showFullLogLine:any = {};
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef,
               private elRef:ElementRef) {
@@ -365,7 +367,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       "topic": changedTopic,
       "cluster": log.clusterTemplate,
       "logId": log.id,
-      "feedbackComment": (log.comment == "" || log.comment == undefined) == true ? "" :log.comment ,
+      "feedbackComment": (log.feedbackComment == "" || log.feedbackComment == undefined) == true ? "" :log.feedbackComment ,
       "version": log.version,
       "existingTopic": log.topic,
       "ratio" : log.version == 'v1v2' ? log.v1Len/log.v2Len : ""
@@ -382,8 +384,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
 
   saveCriticalityComments(){
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
-    this.classifiedLogsList[idValue].feedbackComment = this.selectedClusterInfo.comment;
-    
+    this.classifiedLogsList[idValue].feedbackComment = this.selectedClusterInfo.comment;    
   };
 
   changeClusterTag(e,log){
@@ -447,7 +448,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
         "feedbackErrorTopics": this.classifiedLogsList,
         "sensitivity": this.selectedSensitivity
       };  
-      this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));   
+      this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));   
       // Swal.fire({
       //   title: 'Are you sure?',
       //   text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        
@@ -462,6 +463,30 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       //   }
       // })
       
+    }
+
+    showMoreCluster(log){
+      let clusterId = log.id;
+      let version = log.version;
+      this.store.dispatch(LogAnalysisAction.fetchClusterLogData({canaryId: this.canaryId, serviceId: this.serviceId , clusterId: clusterId, version: version}));    
+      this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+        (resData) => {
+          if(resData.clusterLogs !== null){          
+              this.completeCluster = resData.clusterLogs; 
+              //this.completeCluster  ="meeraaa meera DOCUMENT merra mmeera DOCUMENT meera";              
+              Object.keys(this.showFullLogLine).forEach(h => {
+                this.showFullLogLine[h] = false;
+              });
+              this.showFullLogLine[log.id] = true;
+              //console.log("Complate Cluster");
+              //console.log(this.completeCluster);        
+          }
+        }
+      );
+    }
+
+    showLessCluster(log){      
+      this.showFullLogLine[log.id] = false;
     }
 
 }

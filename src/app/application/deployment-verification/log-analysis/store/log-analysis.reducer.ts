@@ -8,13 +8,15 @@ export interface State {
     errorMessage: string;
     deployementLoading: boolean;
     logsEventResults: any;
+    clusterLogs:any;
 }
 
 export const initialState: State = {
     logsResults: null,
     errorMessage: null,
     deployementLoading: false,
-    logsEventResults : null
+    logsEventResults : null,
+    clusterLogs : null
 }
 
 export function LogAnalysisReducer(
@@ -57,14 +59,30 @@ export function LogAnalysisReducer(
                 deployementLoading: true,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
-                logTemplate : action.logTemplate,
-                userName :action.userName
+                logTemplate : action.logTemplate
+                //userName :action.userName
             })
         ),
         on(LogAnalysisActions.fetchRerunLogsResults,
             (state, action) => ({
                 ...state,
                 rerunResponse: action.rerunResponse,
+                deployementLoading: false
+            })
+        ),on(LogAnalysisActions.fetchClusterLogData,
+            (state,action) => ({
+                ...state,
+                deployementLoading: true,
+                canaryId: action.canaryId,
+                serviceId: action.serviceId,
+                clusterId : action.clusterId,
+                version : action.version
+            })
+        ),
+        on(LogAnalysisActions.loadClusterLogData,
+            (state, action) => ({
+                ...state,
+                clusterLogs: action.clusterLogs,
                 deployementLoading: false
             })
         )
