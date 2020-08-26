@@ -15,11 +15,15 @@
         </form>
     
         <span>{{selectedApplicationName}}  
-          <button type="button" class="btn p-0" >
+          <!-- <button type="button" class="btn p-0" >
             <a href="#" class="ml-2" [ngClass]= "{'ci_check':deploymentApplicationHealth['applicationHealthStatus']==='PASS','ci_close':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','ci_minus': deploymentApplicationHealth['applicationHealthStatus'] === undefined}">
             <i class="far" [ngClass]= "{'fa-check-circle':deploymentApplicationHealth['applicationHealthStatus']==='PASS','fa-times-circle':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','fa-minus-circle': deploymentApplicationHealth['applicationHealthStatus'] === undefined}"></i></a>
-          </button>
+          </button> -->
         </span>
+        <div class="app-status">
+          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus'] === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus'] === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus'] === 'Review','text-muted':deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'}">{{deploymentApplicationHealth['applicationHealthStatus']}}</div>
+          <div class="pull-right">{{calculateDiff(deploymentApplicationHealth['runStartTime'])}} </div>
+        </div>
  
         <div class="input-group">
           <div class="input-group-prepend">
