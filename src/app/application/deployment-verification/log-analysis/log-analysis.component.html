@@ -27,11 +27,7 @@
     <div class="tab-pane fade show active" id="graph01" role="tabpanel" aria-labelledby="graph01-tab">
       <div class="dot_container p-3 chart-bg-color">
         <div class="graph" #ChartSize>
-          <div class="dropdown dropdown-icon-remove float-right">
-            <button class="btn p-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <img src="../../../assets/images/dotted-icon.png" alt="">
-            </button>
+          
             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
               <li class="dropdown-item">
                 <div class="custom-control custom-checkbox">
@@ -62,9 +58,15 @@
                 </div>
               </li>
             </ul>
-          </div>
-          <app-bubble-chart [dataSource]="bubbleChartData" [view]="chartSize" [chartProperty]="bubbleChartProperty"></app-bubble-chart>
-        </div>
+            <fusioncharts
+            width="100%"
+            height="350"
+            type="bubble"
+            dataFormat="JSON"
+            [dataSource]="dataSource "
+            (dataplotClick)="plotRollOver($event)"
+          ></fusioncharts>
+           </div>
       </div>
       <!-- /.dot_container -->
     </div>
