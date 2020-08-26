@@ -46,7 +46,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     $('[data-toggle="popover"]').popover();
   }
   ngOnInit() {
-
+    
     //Dispatching action for autoLogin functionality
     this.store.dispatch(new AuthAction.AutoLoginStart());
 
@@ -85,15 +85,17 @@ export class AppComponent implements OnInit, AfterViewChecked {
     // fetching data from LayoutState
     this.store.select('layout').subscribe(
       (response) => {
-        this.Sidebar = response.menu;
-        this.applicationCount = response.appliactionData;
-        this.installationMode = response.installationMode;
-        if(response.apiErrorCollection.indexOf(true) > -1){
-          this.apiError = true;
-          this.router.navigate(['error']);
-        }else{
-          this.apiError = false;
-          this.router.navigate(['application']);
+        if(this.isAuthenticate){
+          this.Sidebar = response.menu;
+          this.applicationCount = response.appliactionData;
+          this.installationMode = response.installationMode;
+          if(response.apiErrorCollection.indexOf(true) > -1){
+            this.apiError = true;
+            this.router.navigate(['error']);
+          }else{
+            this.apiError = false;
+            this.router.navigate(['application']);
+          }
         }
       }
     );
