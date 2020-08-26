@@ -179,9 +179,20 @@
             </button>
           </div>
           <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
-            <div class="card-body text-wrap-normal">
-              <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>
+            <div *ngIf="log.more">           
+              <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+              <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>            
             </div>
+              <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <span [outerHTML]="log.combineClust | replaceLineBreaks" ></span>              
+              </div>
+              <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">             
+                <span [outerHTML]="completeCluster?.clusterData | replaceLineBreaks" ></span>            
+              </div>
+              <div *ngIf="log.more"> 
+                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>                       
+              </div>
           </div>
         </div>
       </div>
@@ -191,8 +202,8 @@
 </div>
 
 <div class="bottom_btns mt-auto bg-white position-sticky text-right">
-  <button class="btn mr-2 btn-default">Reset</button>
-  <button class="btn mr-2 btn-default" (click)="rerunLogs()">Re-run</button>
+  <button class="btn mr-2 btn-default" data-toggle="tooltip" title="Clear the reclassification done by the user">Reset</button>
+  <button class="btn mr-2 btn-default" (click)="rerunLogs()" data-toggle="tooltip" title="Update and Rerun the canary with the updated classification from the user">Re-run</button>
 </div>
 
 <!-- /.col-sm-4 -->
