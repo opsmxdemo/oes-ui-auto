@@ -25,7 +25,8 @@ export class ApplicationDashboardComponent implements OnInit {
   links= [];                      // getting edges data for network chart
   networkChartData = null;              // It is use to store network chart data fetched from api.
 
-
+  applicationFinalData: any[] = [];
+  finalLabelArray = [];
   public applicationData: any[] = [];
   selectedIndex = 0;
   public serviceData: any[] = [];
@@ -56,7 +57,33 @@ export class ApplicationDashboardComponent implements OnInit {
           this.applicationData = resdata.appData;
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
-          this.selectedApplication(0, this.applicationData[0]);
+         // this.selectedApplication(0, this.applicationData[0]);
+          this.applicationFinalData = resdata.appData;
+         
+          // code to add new finalLabel in application level
+          let index = -1;
+          let i = 0;
+          let label = "";
+          this.applicationFinalData.forEach((ele,index) => {
+            // let j = 0;
+            ele['appInfo'].forEach(e => {
+              debugger
+              if (e.applicationInfolabel == 'Services') {
+                index = i;
+                label = e.applicationInfolabel;
+              } else if (e.applicationInfolabel === 'Deployment Verification') {
+                
+                if(label == '' || label != 'Services'){
+                  index = i;
+                  label = e.applicationInfolabel;
+                }
+              }
+              // j++;
+            });
+            i++;
+            this.finalLabelArray.push(label);
+          })
+          this.selectedApplication(0, this.applicationFinalData[0],this.finalLabelArray[0]);
         }
         if(resdata.topologyChartData !== null){
           this.dashboardLoading = resdata.dashboardLoading;
@@ -76,7 +103,8 @@ export class ApplicationDashboardComponent implements OnInit {
     this.store.dispatch(AppDashboardAction.loadAppDashboard());
   }
 
-  public selectedApplication(index: number, app: any) {
+  public selectedApplication(index: number, app: any,appType: string) {
+    this.showAppDataType = appType;
     if(this.showAppDataType === 'Services'){
     this.spinnerService = true;
     this.selectedIndex = index;
@@ -200,13 +228,13 @@ export class ApplicationDashboardComponent implements OnInit {
   public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
     this.showAppDataType = labelType;
     if (labelType === 'Services') {
-      this.selectedApplication(index, app);
+      this.selectedApplication(index, app, this.showAppDataType);
     //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
       this.getReleases(labelType, app, index, event);
      // this.selectedApplication(index, app);
     } else if (labelType === 'Deployment Verification') {
-      this.selectedApplication(index, app);
+      this.selectedApplication(index, app, this.showAppDataType);
     }
      else {
 
