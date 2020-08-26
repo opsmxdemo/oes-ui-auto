@@ -7,7 +7,7 @@ export interface State {
     appliactionData: number;
     sidebarVisible: string;
     installationMode: string;
-    apiErrorCounter: number[];
+    apiErrorCollection: boolean[];
     errorMessage: string;
 }
 
@@ -16,7 +16,7 @@ export const initialState: State = {
     appliactionData: 0,
     sidebarVisible: '',
     installationMode:'',
-    apiErrorCounter:[],
+    apiErrorCollection:[false,false],
     errorMessage: ''
 }
 
@@ -32,8 +32,7 @@ export function layoutReducer(
         case LayoutAction.LayoutActionTypes.SIDEBAR_FETCH:
             return {
                 ...state,
-                menu: action.payload,
-                apiErrorCounter: []
+                menu: action.payload
             }
         case LayoutAction.LayoutActionTypes.APPLICATIONDATA:
             return {
@@ -53,8 +52,13 @@ export function layoutReducer(
         case LayoutAction.LayoutActionTypes.SERVERERROR:
             return {
                 ...state,
-                apiErrorCounter: state.apiErrorCounter ,
-                errorMessage: action.payload
+                apiErrorCollection: state.apiErrorCollection.map((el,index) => index === action.payload.index ? true : el),
+                errorMessage: action.payload.errorMessage
+            }
+        case LayoutAction.LayoutActionTypes.APISUCCESS:
+            return {
+                ...state,
+                apiErrorCollection: state.apiErrorCollection.map((el,index) => index === action.payload ? false : el)
             }
         default:
             return state;

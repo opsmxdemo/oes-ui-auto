@@ -1,12 +1,12 @@
 <div class="row">
   <div class="col-md-12 {{addclass == true ? 'view_in' : ''}}">
-    <div class="sidebar" *ngIf="isAuthenticate">
+    <div class="sidebar" *ngIf="isAuthenticate && !apiError">
       <div class="sidebar_header d-flex align-items-center justify-content-between">
         <div class="logo"><img src="../../../assets/images/logo.png" alt="logo"></div>
         <div class="menu_toggle" (click)="toggleNavbar()"><i class="fa fa-bars"></i></div>
       </div>
       <div class="sidebar_nav">
-        <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;">
+        <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;" (mouseenter)="expandMenu()">
           <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}}" routerLink="{{SideMenu.link}}" [routerLinkActiveOptions]="{exact: false}" routerLinkActive="active"><a><i class="icon {{SideMenu.link}}"></i> <span>{{SideMenu.name }} 
             <ng-template [ngIf]="SideMenu.name === 'Applications' ?true:false">
               <span class="badge badge-primary">{{applicationCount}}</span>
@@ -26,7 +26,10 @@
       </a>
     </div>
     <div class=" {{isAuthenticate == true ? 'content_section' : 'col-md-12 col-sm-12 col-lg-12 col-xs-12'}}">
-      <app-header></app-header>
+      <ng-container *ngIf = "isAuthenticate && !apiError">
+        <app-header></app-header>
+      </ng-container>
+      
       <!-- content of application -->
       <router-outlet></router-outlet>
     </div>

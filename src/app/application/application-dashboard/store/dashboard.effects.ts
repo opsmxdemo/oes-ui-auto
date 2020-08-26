@@ -20,17 +20,6 @@ const handleError = (errorRes: any) => {
     if (!errorRes.error) {
         return of(DashboardActions.errorOccured({ errorMessage }));
     }
-    switch (errorRes.error.message) {
-        case 'Authentication Error':
-            errorMessage = 'Invalid login credentials';
-            break;
-        case 'Email Exist':
-            errorMessage = 'This email exist already';
-            break;
-        default:
-            errorMessage = 'Error Occurred';
-            break;
-    }
     return of(DashboardActions.errorOccured({ errorMessage }));
 }
 
@@ -42,21 +31,23 @@ export class AppDashboardEffect {
         public router: Router,
         public toastr: NotificationService,
         private environment: AppConfigService,
-        public appStore: Store<fromApp.AppState>,
     ) { }
 
     // Below effect is use for fetch application data present in appdashboard
     fetchappData = createEffect(() =>
         this.actions$.pipe(
             ofType(DashboardActions.loadAppDashboard),
-            withLatestFrom(this.appStore.select('auth')),
+            withLatestFrom(this.store.select('auth')),
             switchMap(([action,authState]) => {
                 return this.http.get(this.environment.config.endPointUrl + 'dashboardservice/v1/dashboard/'+ authState.user +'/applications').pipe(
                     map(resdata => {
-                       return DashboardActions.fetchedAppData({appData:resdata});
+                        return DashboardActions.fetchedAppData({appData:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        let errorObj = {
+                            errorMessage: errorRes.error.error,
+                            index: 2
+                        }
                         return handleError(errorRes);
                     })
                 );
@@ -103,6 +94,22 @@ export class AppDashboardEffect {
           })
       )
   )
+
+  //Below effect is use to redirect to error page while failing get application API
+  errorRedirect = createEffect(() =>
+  this.actions$.pipe(
+      ofType(DashboardActions.errorOccured,DashboardActions.fetchedAppData),
+      withLatestFrom(this.store.select('appDashboard')),
+      tap(([actiondata, dashboardState]) => {
+          if(dashboardState.errorMessage === null){
+            this.router.navigate(['application']);
+          }else{
+            this.router.navigate(['error']);
+          }
+          
+      })
+  ), { dispatch: false }
+)
 
    
 
