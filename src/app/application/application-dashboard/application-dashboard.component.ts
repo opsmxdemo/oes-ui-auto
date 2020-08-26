@@ -10,6 +10,7 @@ import * as DeploymentAcion from '../deployment-verification/store/deploymentver
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import Swal from 'sweetalert2';
+//import { debugger } from 'fusioncharts';
 
 
 @Component({
@@ -39,6 +40,8 @@ export class ApplicationDashboardComponent implements OnInit {
   releaseErrorMessage: string;
   dashboardLoading: boolean = true;
   serviceDemoDataList: { canaryId: number; serviceId: number; serviceName: string; finalScore: number; logsScore: number; metricsScore: number; status: string; }[];
+  oesServiceData: any;
+  autoPilotServiceData: any;
 
 
   // tslint:disable-next-line:max-line-length
@@ -63,11 +66,12 @@ export class ApplicationDashboardComponent implements OnInit {
           // code to add new finalLabel in application level
           let index = -1;
           let i = 0;
-          let label = "";
+         
           this.applicationFinalData.forEach((ele,index) => {
             // let j = 0;
+            let label = '';
             ele['appInfo'].forEach(e => {
-              debugger
+              
               if (e.applicationInfolabel == 'Services') {
                 index = i;
                 label = e.applicationInfolabel;
@@ -75,14 +79,17 @@ export class ApplicationDashboardComponent implements OnInit {
                 
                 if(label == '' || label != 'Services'){
                   index = i;
+                  
                   label = e.applicationInfolabel;
                 }
               }
               // j++;
             });
             i++;
+            
             this.finalLabelArray.push(label);
           })
+          console.log(this.finalLabelArray);
           this.selectedApplication(0, this.applicationFinalData[0],this.finalLabelArray[0]);
         }
         if(resdata.topologyChartData !== null){
@@ -105,19 +112,27 @@ export class ApplicationDashboardComponent implements OnInit {
 
   public selectedApplication(index: number, app: any,appType: string) {
     this.showAppDataType = appType;
+    this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
+      this.serviceData = serviceDataList;
+      this.oesServiceData = serviceDataList['oesService'];
+      this.autoPilotServiceData = serviceDataList['autopilotService'];
+      this.spinnerService = false;
+      if (this.oesServiceData.length === 0) {
+        this.serviceErrorMessage = 'No services found in this application'; 
+      }
+      if (this.autoPilotServiceData.length === 0) {
+        this.serviceErrorMessage = 'No services found in this application'; 
+      }
+     
+    });
     if(this.showAppDataType === 'Services'){
     this.spinnerService = true;
     this.selectedIndex = index;
     this.selectedApplicationName = app.applicationName;
     this.showReleaseTable = false;
     this.serviceErrorMessage = '';
-    this.applicationService.getServiceListDemo(app.applicationId).subscribe((serviceDataList: any) => {
-      this.serviceData = serviceDataList;
-      this.spinnerService = false;
-      if (serviceDataList.length === 0) {
-        this.serviceErrorMessage = 'No services found in this application'; 
-      }
-    });
+    this.oesServiceData = this.serviceData['oesService'];
+
     }else{
       this.spinnerService = true;
     this.showAppDataType = 'Deployment Verification';
@@ -125,14 +140,11 @@ export class ApplicationDashboardComponent implements OnInit {
     this.selectedApplicationName = app.applicationName;
     this.showReleaseTable = false;
     this.serviceErrorMessage = '';
-    this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
-      this.serviceData = serviceDataList;
-      this.spinnerService = false;
-      if (serviceDataList.length === 0) {
-        this.serviceErrorMessage = 'No services found in this application'; 
-      }
-    });
-    }
+    this.autoPilotServiceData = this.serviceData['autopilotService'];
+    // if (this.autoPilotServiceData.length === 0) {
+    //   this.serviceErrorMessage = 'No services found in this application'; 
+    // }
+   }
 
     this.nodes = [
       {
