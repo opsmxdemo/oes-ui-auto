@@ -50,15 +50,25 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
   currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
-  // logTemplateSelectedName = []                                    // It is use to store array of log template name which need to populat in field.
-  // metricTemplateSelectedName = []                                 // It is use to store array of metric template name which need to populat in field.
-
+  
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
               public appStore: Store<fromApp.AppState>,
               public router: Router) { }
 
   ngOnInit() {
+
+    // Reseting metric and log Templates data
+    this.store.dispatch(ApplicationActions.resetTemplateData());
+
+    // Below function is use to fetch data from AppState to update usertype
+    this.appStore.select('layout').subscribe(
+      (layoutRes) => {
+        if(layoutRes.installationMode !== ''){
+          this.userType = layoutRes.installationMode;
+        }
+      }
+    )
 
     // fetching data from store and check editMode mode is enable or disabled
     this.store.select(fromFeature.selectApplication).subscribe(
@@ -244,15 +254,6 @@ export class CreateApplicationComponent implements OnInit {
           this.metricTemplateData = response.metrictemplate;
           this.metricModel.nativeElement.click();
           this.populateSelectedTemplateName(this.currentMetricTemplateIndex,'metricTemp')
-        }
-      }
-    )
-
-    // Below function is use to fetch data from AppState to update usertype
-    this.appStore.select('layout').subscribe(
-      (layoutRes) => {
-        if(layoutRes.installationMode !== ''){
-          this.userType = layoutRes.installationMode;
         }
       }
     )

@@ -190,9 +190,9 @@ export function ApplicationReducer(
 
         // ###  LogTemplate screen logic start ### // 
 
-         // ###  MeticTemplate screen logic start ### // 
+        // ###  MeticTemplate screen logic start ### // 
 
-         on(ApplicationAction.createdMetricTemplate,
+        on(ApplicationAction.createdMetricTemplate,
             (state,action) => ({
                 ...state,
                 metrictemplate: state.metrictemplate.concat({ ...action.metricTemplateData })
@@ -200,5 +200,17 @@ export function ApplicationReducer(
         ),
 
         // ###  MeticTemplate screen logic start ### // 
+
+        // ###  Reseting template data for both metric and log ### // 
+
+        on(ApplicationAction.resetTemplateData,
+            (state,action) => ({
+                ...state,
+                metrictemplate: [],
+                logtemplate: []
+            })
+        ),
+
+        // ###  Reseting template data for both metric and log ### // 
     )(applicationState,applicationAction);
 }
