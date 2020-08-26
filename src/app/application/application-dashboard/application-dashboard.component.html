@@ -105,11 +105,12 @@
           <!-- /#particle_chart -->
               
           <!-- /.chart_ratio -->
-          <div *ngIf="serviceErrorMessage != ''" class="alert alert-danger" role="alert">
+          <div *ngIf="oesServiceData.length === 0 && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
             <p>{{serviceErrorMessage}}</p>
           </div>
          
-          <div class="table-responsive" *ngIf="showAppDataType === 'Services' && serviceData.length>0">
+         
+          <div class="table-responsive" *ngIf="showAppDataType === 'Services' && oesServiceData.length>0">
             <table class="table table-pet-service mb-0">
               <thead>
                 <tr>
@@ -119,7 +120,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let service of serviceData; let i=index">
+                <tr *ngFor="let service of oesServiceData; let i=index">
                   <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}"><a target="_blank" href="{{service.href}}">{{service.serviceName}}</a></td>
                   <td>{{service.finalScore}}</td>
                   <td
@@ -129,8 +130,10 @@
               </tbody>
             </table>
           </div>
-
-          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && serviceData.length>0">
+          <div *ngIf="autoPilotServiceData.length === 0 && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
+            <p>{{serviceErrorMessage}}</p>
+          </div>
+          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData.length>0">
             <table class="table table-pet-service text-center mb-0">
             <thead>
               <tr>
@@ -142,7 +145,7 @@
               </tr>
             </thead>
             <tbody >
-              <tr *ngFor="let service of serviceData;let i=index;">
+              <tr *ngFor="let service of autoPilotServiceData;let i=index;">
                 <td href="" (click)="getServiceCanaryReport(service.canaryId)" class="showElementHover">
                  <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId]" >{{service.serviceName}} </a></td>
                 <td>{{service.finalScore}} </td>
