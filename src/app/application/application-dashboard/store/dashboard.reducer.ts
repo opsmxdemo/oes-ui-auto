@@ -41,7 +41,8 @@ export function DashboardReducer(
             (state, action) => ({
                 ...state,
                 appData: action.appData,
-                dashboardLoading: false
+                dashboardLoading: false,
+                errorMessage:null
             })
         ),
         on(DashboardActions.errorOccured,

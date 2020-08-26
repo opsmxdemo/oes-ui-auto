@@ -163,7 +163,7 @@
           <!-- ######### Data Not Found div starts ########### -->
           <div class="table-responsive" *ngIf="metricType === ''">
             <div class="noDataDiv">
-              <app-component-error-listing [errorString] = "'No data found to display'"></app-component-error-listing>
+              <app-component-error-listing [errorString] = "dataNotFound"></app-component-error-listing>
             </div>
           </div>
           <!-- ######### Data Not Found div ends  ########### -->
@@ -329,7 +329,7 @@
           <!-- ######### Data Not Found div starts ########### -->
           <div class="table-responsive" *ngIf="metricType === ''">
             <div class="noDataDiv">
-              <app-component-error-listing [errorString] = "'No data found to display'"></app-component-error-listing>
+              <app-component-error-listing [errorString] = "dataNotFound"></app-component-error-listing>
             </div>
           </div>
           <!-- ######### Data Not Found div ends  ########### -->
@@ -419,7 +419,7 @@
                 <div class="graph mb-3" #subChartSize>
                   <div class="table-responsive">
                     <div class="noDataDiv">
-                      <app-component-error-listing [errorString] = "'No data found to display'"></app-component-error-listing>
+                      <app-component-error-listing [errorString] = "dataNotFound"></app-component-error-listing>
                     </div>
                   </div>
                 </div>

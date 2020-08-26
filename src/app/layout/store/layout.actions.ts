@@ -10,6 +10,7 @@ export enum LayoutActionTypes {
     SIDEBARTOGGLE = '[Layout] Sidebar Toggle',
     INSTALLATIONMODE = '[Layout] Installation Mode',
     SERVERERROR = '[Layout] Server Error',
+    APISUCCESS = '[Layout] Api Success',
 }
 
 export class LoadPage implements Action {
@@ -43,7 +44,15 @@ export class InstallationMode implements Action {
 
 export class ServerError implements Action {
     readonly type = LayoutActionTypes.SERVERERROR;
-    constructor(public payload:string){}
+    constructor(public payload:{
+        errorMessage:string,
+        index:number
+    }) {}
+}
+
+export class ApiSuccess implements Action {
+    readonly type = LayoutActionTypes.APISUCCESS;
+    constructor(public payload:number){}
 }
 
 export type LayoutActions = LoadPage   
@@ -52,4 +61,5 @@ export type LayoutActions = LoadPage
                         |   ApplicationData
                         |   SideBarToggle
                         |   InstallationMode
-                        |   ServerError;
+                        |   ServerError
+                        |   ApiSuccess;

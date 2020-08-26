@@ -21,15 +21,15 @@ export class CompLevelErrorListingComponent implements OnInit {
     let counter = 1;
     errorString.forEach((element,index) => {
       if(index === 0){
-        transformString += '<span">'+element;
+        transformString += '<span>'+element+'&nbsp';
       }else if(counter*60 === index){
-        transformString += '</span><br><span>'+element;
+        transformString += '</span><br><span>'+element+'&nbsp';
         counter++;
       }else if(index === errorString.length-1){
         transformString += element+'</span>'
       }
       else{
-        transformString += element;
+        transformString += element+'&nbsp';
       }
     });
     return transformString;

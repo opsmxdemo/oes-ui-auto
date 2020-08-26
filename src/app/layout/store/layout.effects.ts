@@ -12,16 +12,13 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 import { AppConfigService } from 'src/app/services/app-config.service';
 
 //below function is use to fetch error and return appropriate comments
-const handleError = (errorRes: any) => {
-    
-    switch (errorRes.status) {
-        case 500:
-            return of(new LayoutAction.ServerError(errorRes.error.error));
-        case 404:
-            return of(new LayoutAction.ServerError(errorRes.error.error));
-        default:
-            return of(new LayoutAction.ServerError(errorRes.error.error));
+const handleError = (errorRes: any,index:number) => {
+    let errorData = {
+        errorMessage:errorRes.error.error,
+        index:index
     }
+    
+    return of(new LayoutAction.ServerError(errorData));
 }
 
 @Injectable()
@@ -41,10 +38,11 @@ export class LayoutEffect {
         switchMap(() => {
             return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
                 map(resData => {
+                    this.store.dispatch(new LayoutAction.ApiSuccess(0));
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),
                 catchError(errorRes => {
-                    return handleError(errorRes);
+                    return handleError(errorRes,0);
                 })
             );
         })
@@ -57,10 +55,11 @@ export class LayoutEffect {
         switchMap(() => {
             return this.http.get<string>(this.environment.config.endPointUrl+'dashboardservice/v1/installation/installationmode').pipe(
                 map(resData => {
+                    this.store.dispatch(new LayoutAction.ApiSuccess(1));
                     return new LayoutAction.InstallationMode(resData['mode']);
                 }),
                 catchError(errorRes => {
-                    return handleError(errorRes);
+                    return handleError(errorRes,1);
                 })
             );
         })

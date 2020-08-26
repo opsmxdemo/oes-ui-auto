@@ -25,6 +25,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   title = 'OES';
   addclass = false;
   isAuthenticate = false;
+  apiError = false;
   Sidebar: Menu;
   applicationCount: number = 0;
   endpointUrl: string;
@@ -87,9 +88,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.Sidebar = response.menu;
         this.applicationCount = response.appliactionData;
         this.installationMode = response.installationMode;
-        // if(response.apiErrorCounter.length > 0){
-        //   this.router.navigate(['error']);
-        // }
+        if(response.apiErrorCollection.indexOf(true) > -1){
+          this.apiError = true;
+          this.router.navigate(['error']);
+        }else{
+          this.apiError = false;
+          this.router.navigate(['application']);
+        }
       }
     );
 
@@ -113,7 +118,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   toggleNavbar() {
     this.addclass = !this.addclass;
-    this.store.dispatch(new LayoutAction.SideBarToggle(!this.addclass === false?'false':'true'));
+    //this.store.dispatch(new LayoutAction.SideBarToggle(!this.addclass === false?'false':'true'));
   }
 
   // Below function is use to nevigate to proper page while click on submenu link
@@ -124,6 +129,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.addclass = true;
       },1000)
     }
+  }
+
+  // Below function is use to expand sideMenu if it is in collapsed on mouse enter
+  expandMenu(){
+    this.addclass = false;
   }
 
   // Below function is use ro disabled link by checking installation mode 

@@ -83,6 +83,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   metricStatsData = [];                                                // It is use to store data related to stats table exist in Infra and advanced graph section.
   analysisTableData = '';                                              // It is use to store data related to analysis table exist in Infra and advanced graph section.
   apmGraphProperty = [];                                               // It is use to store apmChart property of chart showing in graph section.
+  dataNotFound = 'No data found to display';                           // It is use when expected data not found in component.
   
 
   constructor(private sharedServices: SharedService,
@@ -90,7 +91,6 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
               private elRef:ElementRef) { }
   
   ngOnInit(){
-
     //fetching data from deployment verification state
     this.store.select(fromFeature.selectMetricAnalysisState).subscribe(
       (resdata)=>{
@@ -193,6 +193,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
+  @HostListener('window:mousemove', ['$event'])
   @HostListener('window:click', ['$event'])
   @HostListener('window:scroll', ['$event'])
     handleScroll(){
