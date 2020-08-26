@@ -15,8 +15,8 @@
       <div class="data_listArea">
         <!-- <app-network-chart></app-network-chart> -->
         <!-- <app-cd-dashboard></app-cd-dashboard> -->
-        <ng-container *ngFor="let application of applicationData; let i=index">
-          <div class="data_list" (click)="selectedApplication(i,application)"
+        <ng-container *ngFor="let application of applicationFinalData; let i=index">
+          <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
             [ngClass]="{'active':application.applicationName === selectedApplicationName}">
             <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
