@@ -16,5 +16,9 @@ export const fetchRerunLogsResults = createAction('[LogAnalysis] FetchRerunLogsR
 export const fetchClusterLogData = createAction('[LogAnalysis] FetchClusterLogData', props<{canaryId: any,serviceId: any,clusterId:any, version:any}>());
 export const loadClusterLogData = createAction('[LogAnalysis] LoadClusterLogData', props<{clusterLogs:any}>());
 
+export const fetchTimeAnalysisGraphData = createAction('[LogAnalysis] FetchTimeAnalysisGraphData', props<{canaryId:any,serviceId: any,clusterId: any;version:any;}>());
+export const loadTimeAnalysisGraphData = createAction('[LogAnalysis] LoadTimeAnalysisGraphData', props<{logTimeAnalysisResults:any}>());
+
+
 
 

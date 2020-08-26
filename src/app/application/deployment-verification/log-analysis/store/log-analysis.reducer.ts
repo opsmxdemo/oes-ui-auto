@@ -9,6 +9,7 @@ export interface State {
     deployementLoading: boolean;
     logsEventResults: any;
     clusterLogs:any;
+    timeStampData:any
 }
 
 export const initialState: State = {
@@ -16,7 +17,8 @@ export const initialState: State = {
     errorMessage: null,
     deployementLoading: false,
     logsEventResults : null,
-    clusterLogs: null
+    clusterLogs: null,
+    timeStampData:null
 }
 
 export function LogAnalysisReducer(
@@ -82,6 +84,24 @@ export function LogAnalysisReducer(
             (state, action) => ({
                 ...state,
                 clusterLogs: action.clusterLogs,
+                deployementLoading: false
+            })
+        )
+        ,
+        on(LogAnalysisActions.fetchTimeAnalysisGraphData,
+            (state, action) => ({
+                ...state,
+                canaryId:action.canaryId,
+                serviceId:action.serviceId,
+                clusterId:action.clusterId,
+                version:action.version,
+                deployementLoading: false
+            })
+        ),
+        on(LogAnalysisActions.loadTimeAnalysisGraphData,
+            (state, action) => ({
+                ...state,
+                timeStampData:action.logTimeAnalysisResults,
                 deployementLoading: false
             })
         )
