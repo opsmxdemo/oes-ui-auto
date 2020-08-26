@@ -22,6 +22,8 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   showChart = true;                                                   // It is use to hide or show the bubble chart.
   switchToState = 'Collapse All';                                     // It is use to store value of Template State which user want to switch.
   logAnalysisResults :any;
+  dataSource: Object;
+  clusterId:string;
   logAnalysisClusters :[] ;
   logAnalysisData : any;
   sensitivityLevels :any = ["high", "medium", "low"];
@@ -103,9 +105,67 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   classifiedLogsList = [];
   logTemplate = "";
   selectedClusterInfo : any;
+  completeCluster : any;
+  showFullLogLine:any = {};
+  
   constructor(public store: Store<fromFeature.State>,
               public cdr: ChangeDetectorRef,
-              private elRef:ElementRef) {}
+              private elRef:ElementRef) {
+                this.dataSource = {
+                  chart: {
+                    "showValues": "0",
+                    "showxaxisline":"1",
+                    "showyaxisline":"1",
+                    "legendPosition":"bottom-left",
+                    "labelPadding":"0",
+                    "xnumbersuffix": "",
+                    "ynumberprefix": "",
+                    "numDivlines": "0",
+                    "numVDivLines": "0",
+                    "showVZeroPlane": "0", //Vertical zero plane  	    	           
+                    "theme": "fusion",
+                     "bgColor": "#f4f8fb",
+                    "canvasBgColor": "#f5f5f5",
+                    "showcanvasborder": "0",
+                    "showLegend": "1",
+                    "valueFontAlpha":"0",
+                    "showYAxisValues": "0",
+                    "showXAxisValues": "0",
+                    "canvasBottomPadding": "15",
+                    "canvasLeftPadding": "15",
+                    "canvasTopPadding": "15",
+                    "canvasRightPadding": "15",
+                    "canvasBorderThickness": "1",
+                    "caption": "",
+                    "subcaption": "",
+                    "xAxisMinValue": "0",
+                    "xAxisMaxValue": "",
+                    "yAxisMinValue" : "0",
+                    "showBorder":"0",
+                    "yAxisMaxValue": "",
+                    "minBubbleRadius":".5",
+                    "xAxisName": "Log Events",
+                    "yAxisName": "Event Repeations",
+                    "bubbleScale":".20",
+                    "showTrendlineLabels": "0",
+                    "plotTooltext": "$zvalue",
+                    "divlinealpha":"0",
+                    "canvasBorderAlpha":"100",
+                    
+                    
+                  },
+                  categories: [
+                    {
+                      category: [
+                        
+                      ]
+                    }
+                  ],
+                  dataset: [],
+                 
+                  
+                };
+              }
 
 
   ngAfterViewInit(){
@@ -158,10 +218,10 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               });
               let criticalClusters = this.criticalArray.map(obj => {
                 let rObj = {
-                  "name" : obj.id,
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "r" : 5
+                  "z" : obj.combineClust.substring(0, 500),
+                  "name" : obj.id,
                 };
                 return rObj
               })
@@ -170,10 +230,10 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               });
               let errorClusters = this.errorArray.map(obj => {
                 let rObj = {
-                  "name" : obj.id,
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "r" : 5
+                  "z" : obj.combineClust.substring(0, 500),
+                  "name" : obj.id,
                 };
                 return rObj
               })
@@ -182,13 +242,34 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
               });
               let warningClusters = this.warningArray.map(obj => {
                 let rObj = {
-                  "name" : obj.id,
                   "x" : obj.id,
                   "y" :obj.v2Len + obj.v1Len,
-                  "r" : 5
+                  "z" : obj.combineClust.substring(0, 500),
+                  "name" : obj.id,
                 };
                 return rObj
-              })        
+              })      
+              this.dataSource["dataset"]=[];
+              let newobjcriticalClusters = {
+                "color": "#a32133",
+                "seriesName": "Critical",
+                "data": criticalClusters
+              };
+              this.dataSource["dataset"].push(newobjcriticalClusters);
+
+              let newobjerrorClusters = {
+                  "color": "#e0392e",
+                  "seriesName": "Errors",
+                  "data": errorClusters
+                };
+              this.dataSource["dataset"].push(newobjerrorClusters);
+
+              let newobjwarningClusters = {
+                "color": "#f3af70",
+                "seriesName": "Warning",
+                "data": warningClusters
+              };
+            this.dataSource["dataset"].push(newobjwarningClusters);  
               this.bubbleChartData = [
                 {
                   "name": "Critical",
@@ -317,18 +398,78 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   };
 
   onClickLogEventTab(eventTab){
-      console.log(eventTab);
-      this.eventTab = eventTab;
-      this.eventTabLabeledBy = eventTab + '-tab';
-      this.store.dispatch(LogAnalysisAction.loadEventLogResults({canaryId: this.canaryId, serviceId: this.serviceId , event: eventTab}));    
-      this.store.select(fromFeature.selectLogAnalysisState).subscribe(
-        (resData) => {
-          if(resData.logsEventResults !== null){          
-              this.logAnalysisData = resData.logsEventResults;         
-          }
+    console.log(eventTab);
+    this.eventTab = eventTab;
+    this.eventTabLabeledBy = eventTab + '-tab';
+    this.store.dispatch(LogAnalysisAction.loadEventLogResults({canaryId: this.canaryId, serviceId: this.serviceId , event: eventTab}));    
+    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+      (resData) => {
+        if(resData.logsEventResults !== null){ 
+          this.logAnalysisData = resData.logsEventResults;           
+            this.dataSource["dataset"]=[];
+            if(this.eventTab=="expected")
+            {
+             
+                let expectedcluster = resData.logsEventResults.clusters.map(obj => {
+                  let rObj = {
+                    "x" : obj.id,
+                    "y" :obj.v2Len + obj.v1Len,
+                    "z" : obj.combineClust.substring(0, 500),
+                    "name" :obj.id ,
+                  };
+                  return rObj
+                })
+                let newobjexpectedClusters = {
+                  "color": "#74ddc6",
+                  "seriesName": "Expected",
+                  "data": expectedcluster
+                };
+                this.dataSource["dataset"].push(newobjexpectedClusters);
+            }
+            if(this.eventTab=="baseline")
+            {
+             
+                let baselinecluster = resData.logsEventResults.clusters.map(obj => {
+                  let rObj = {
+                    "x" : obj.id,
+                    "y" :obj.v2Len + obj.v1Len,
+                    "z" : obj.combineClust.substring(0, 500),
+                    "name" :obj.id ,
+                  };
+                  return rObj
+                })
+                let newobjbaselineClusters = {
+                  "color": "#343a40",
+                  "seriesName": "Baseline",
+                  "data": baselinecluster
+                };
+                this.dataSource["dataset"].push(newobjbaselineClusters);
+            }
+            if(this.eventTab=="ignored")
+            {
+             
+                let ignoredcluster = resData.logsEventResults.clusters.map(obj => {
+                  let rObj = {
+                    "x" : obj.id,
+                    "y" :obj.v2Len + obj.v1Len,
+                    "z" : obj.combineClust.substring(0, 500),
+                    "name" :obj.id ,
+                  };
+                  return rObj
+                })
+                let newobjignoredClusters = {
+                  "color": "#6c757d",
+                  "seriesName": "Ignored",
+                  "data": ignoredcluster
+                };
+                this.dataSource["dataset"].push(newobjignoredClusters);
+            }
+          } 
+                  
         }
-      );
-  }
+      
+    );
+}
 
   // Below function is use to show or hide the bubble chart
   toggleGraph(event){
@@ -388,5 +529,31 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       // })
       
     }
+    plotRollOver($event){
+      this.clusterId = $event.dataObj.x
 
+      document.getElementById(this.clusterId).scrollIntoView();
+      
+    }
+
+    showMoreCluster(log){
+      let clusterId = log.id;
+      let version = log.version;
+      this.store.dispatch(LogAnalysisAction.fetchClusterLogData({canaryId: this.canaryId, serviceId: this.serviceId , clusterId: clusterId, version: version}));    
+      this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+        (resData) => {
+          if(resData.clusterLogs !== null){          
+              this.completeCluster = resData.clusterLogs; 
+              Object.keys(this.showFullLogLine).forEach(h => {
+                this.showFullLogLine[h] = false;
+              });
+              this.showFullLogLine[log.id] = true;        
+          }
+        }
+      );
+    }
+
+    showLessCluster(log){      
+      this.showFullLogLine[log.id] = false;
+    }
 }

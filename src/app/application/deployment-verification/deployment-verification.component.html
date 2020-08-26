@@ -68,7 +68,7 @@
         <!-- /.table -->
   
     <div class="page_access d-flex text-right p-3">
-      <div class="mr-auto">
+      <div class="mr-auto" *ngIf="serviceListLength >= 10">
           <div class="input-group input-group_search">
             <div class="input-group-prepend">
               <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -367,8 +367,8 @@
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr class="font-weight-bold">
-                        <td width="110">Baseline:</td>
-                        <td>{{serviceNameInfo['version1name'] !== undefined ? serviceNameInfo['version1name']: ''}}</td>
+                        <td width="110">Baseline: </td>
+                        <td>{{deploymentServiceInformation['version1name']}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -385,7 +385,7 @@
                     <tbody>
                       <tr class="font-weight-bold">
                         <td width="110">New Release:</td>
-                        <td>{{serviceNameInfo['version2name'] !== undefined ? serviceNameInfo['version2name']: ''}}</td>
+                        <td>{{deploymentServiceInformation['version2name']}}</td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
