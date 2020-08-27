@@ -97,13 +97,13 @@
                   <app-loading-screen></app-loading-screen>
                 </div>
                 <div *ngIf="!widgetChartLoading[widgetindex]">
-                  <ng-container *ngIf="widgetChartsData[widgetindex]['type'] === undefined">
+                  <ng-container *ngIf="widgetChartsData[widgetindex]['type'] === undefined || subGraphDataExist(widgetChartsData[widgetindex]['DataSource'],false)">
                     <div class="graph-blank">
                       <img src="../../assets/images/no-found.png" alt="">
                       No data found
                     </div>
                   </ng-container>
-                  <ng-container *ngIf="widgetChartsData[widgetindex]['type'] !== undefined">
+                  <ng-container *ngIf="widgetChartsData[widgetindex]['type'] !== undefined && subGraphDataExist(widgetChartsData[widgetindex]['DataSource'],true)">
                     <!-- switch case for widget chart start -->
                     <div [ngSwitch]="widgetChartsData[widgetindex]['type']">
                       <app-stacket-horizontal-bar-chart *ngSwitchCase="stackedHorizontalBarChart"
