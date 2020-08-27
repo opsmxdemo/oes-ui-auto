@@ -17,7 +17,7 @@ const routes: Routes = [
     {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent}
 
   ]},
-  {path:'oesdashboard', component:CdDashboardComponent},
+  {path:'cddashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
   {path:'error', component:AppErrorListingComponent}

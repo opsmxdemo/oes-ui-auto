@@ -101,10 +101,11 @@ export class AppDashboardEffect {
       ofType(DashboardActions.errorOccured,DashboardActions.fetchedAppData),
       withLatestFrom(this.store.select('appDashboard')),
       tap(([actiondata, dashboardState]) => {
-          if(dashboardState.errorMessage === null){
-            this.router.navigate(['application']);
-          }else{
+          let url = this.router.url;
+          if(dashboardState.errorMessage !== null){
             this.router.navigate(['error']);
+          }else if(dashboardState.errorMessage === null && url.includes('error')){
+            this.router.navigate(['application']);
           }
           
       })
