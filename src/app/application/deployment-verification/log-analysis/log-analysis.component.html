@@ -202,7 +202,8 @@
               <i class="fa fa-sort-down"></i>
             </button>
           </div>
-          <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis"   >
+          <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow"   >
+            <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
             <fusioncharts
             width="100%"
             height="350"

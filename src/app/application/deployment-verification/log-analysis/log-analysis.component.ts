@@ -1,4 +1,4 @@
-import { Component, OnInit, Input ,OnChanges,SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef} from '@angular/core';
+import { Component,  Input ,OnChanges,SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   templateUrl: './log-analysis.component.html',
   styleUrls: ['./log-analysis.component.less']
 })
-export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
+export class LogAnalysisComponent implements OnChanges ,AfterViewInit{
  
   @ViewChild('ChartSize') ChartSize: ElementRef;
   @ViewChild('LogClusterWidth') LogClusterWidth: ElementRef;
@@ -25,6 +25,7 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
   dataSource: Object;
   dataSourceColumnChart: Object;
   chart:any;
+  isShow:any;
   previousClickedId:any;
   timeStampResponse:any;
   slectedTimeAnalysis:any;
@@ -129,7 +130,10 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     },1000)
   }
 
-  ngOnInit() {
+  
+ 
+  ngOnChanges(changes: SimpleChanges): void { 
+     
     this.dataSource = {
       chart: {
         "showValues": "0",
@@ -188,18 +192,17 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       chart: {
         caption: "",
         subcaption: "",
+        "numDivlines": "2",
         xaxisname: "Time",
         yaxisname: "Repetition",
         theme: "fusion"
       },
       data: []
     };
-  }
- 
-  ngOnChanges(changes: SimpleChanges): void { 
+    
     if(this.canaryId !== undefined && this.serviceId !==undefined){
       this.getLogAnalysis()
-    } 
+    }
   }
 
   // below function is use to make page responsive
@@ -615,7 +618,11 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
     initialized($event){
       this.chart = $event.chart; // Storing the chart instance
     }
+    closeTimeAnalysis(){
+      this.isShow=false;
+    }
     timeAnalysisGraph(log){
+      this.isShow=true;
       this.dataSourceColumnChart["data"]=[];
       let clusterId:any = log.id;
       let version:any =log.version;
@@ -698,14 +705,27 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
       var chartRows = [];
       var eachChartRow = [];
       var dataobjTimeseries:any;
+      var tempRepeat:any;
+      var toolTip:any;
       this.dataSourceColumnChart["data"]=[];
       for (var i = 0; i < bucketsOfMinutes.length; i++) {
        
           eachChartRow = [new Date(bucketsOfMinutes[i].bucketStartTime), bucketsOfMinutes[i].repeatedCount,new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes()];
            chartRows.push(eachChartRow)
+           toolTip = new Date(bucketsOfMinutes[i].bucketStartTime).toLocaleString()
+           console.log(typeof(toolTip));
+           if(bucketsOfMinutes[i].repeatedCount==0)
+           {
+            tempRepeat=""
+           }
+           else
+           {
+            tempRepeat=bucketsOfMinutes[i].repeatedCount
+           }
            let myobj = {
             label: new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes(),
-            value: bucketsOfMinutes[i].repeatedCount
+            value: tempRepeat,
+            tooltext:new Date(bucketsOfMinutes[i].bucketStartTime).toLocaleString()+'<br><br>'+"Repetition: &nbsp;"+tempRepeat
            }
            this.dataSourceColumnChart["data"].push(myobj)
       };
@@ -720,8 +740,6 @@ export class LogAnalysisComponent implements OnInit ,OnChanges ,AfterViewInit{
        //{
        //this.previousClickedId=this.slectedTimeAnalysis
        //}
-      
-      console.log("hii")
 
     }
 }
