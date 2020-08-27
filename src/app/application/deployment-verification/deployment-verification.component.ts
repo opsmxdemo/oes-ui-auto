@@ -344,13 +344,13 @@ export class DeploymentVerificationComponent implements OnInit {
       (resData) => {
         if (resData.canaryRun !== null) {
           this.deployementLoading = resData.deployementLoading;
-          this.deployementRun = resData.canaryRun;
-          this.control.setValue(resData.canaryRun);
+          this.deployementRun = resData.canaryRun['canaryId'];
+          this.control.setValue(resData.canaryRun['canaryId']);
 
         //this.control = new FormControl(resData.canaryRun);
           if (this.counter === 1) {
-            this.store.dispatch(DeploymentAction.loadServices({ canaryId: resData.canaryRun }));
-            this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: resData.canaryRun}));
+            this.store.dispatch(DeploymentAction.loadServices({ canaryId: resData.canaryRun['canaryId'] }));
+            this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: resData.canaryRun['canaryId']}));
             this.counter++;
           }
         }
@@ -475,7 +475,7 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
                   this.serviceNameInfo = this.deploymentServices.services[0];   
                   if (this.serviceConter === 1 && this.selectedServiceId !== undefined) {
-                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun, serviceId: this.selectedServiceId}));
+                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun['canaryId'], serviceId: this.selectedServiceId}));
                     this.serviceConter++;
                   }
                    // Below we are dispatching action of metric analysis to load initial data of metric analysis tab if metric is exist in application.
