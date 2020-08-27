@@ -121,11 +121,9 @@ export class AuditComponent implements OnInit{
     this.store.select('audit').subscribe(
       (auditData) => {
         this.cursorWaiting = auditData.cursorWait;
-        if (auditData.pipelineCount !== null){
-          this.pipelineCount = auditData.pipelineCount;
-          this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
-        }
+       
         if (auditData.allPipelineData !== null) {
+          this.pipelineCountValue = auditData.allPipelineData['results'].length;
           switch(this.relatedApi){
             case 'pipelineconfig':
               this.tableData = auditData.allPipelineData;
@@ -205,13 +203,13 @@ export class AuditComponent implements OnInit{
           case 'allPipeline':
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
-            this.pipelineCountValue = this.pipelineCount.totalPipelinesRunCount;
+            this.pipelineCountValue = responseData.allRunningPipelineData['results'].length;;
             this.relatedApi = 'pipeline';
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
             this.pipelineCountName = 'All Pipelines';
-            this.pipelineCountValue = this.pipelineCount.totalPipelinesCount;
+            this.pipelineCountValue = responseData.allPipelineData['results'].length;;
             this.relatedApi = 'pipelineconfig';
             break;
           case 'Policy':

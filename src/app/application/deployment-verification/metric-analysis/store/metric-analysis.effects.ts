@@ -14,7 +14,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
-    let errorMessage = 'An unknown error occurred';
+    let errorMessage = 'An unknown error occurred in server';
     if (!errorRes.error) {
         return of(MetricAnalysisdActions.errorOccured({ errorMessage }));
     }
@@ -23,10 +23,10 @@ const handleError = (errorRes: any) => {
             errorMessage = 'Server is down, Please contact to admin';
             break;
         case 404:
-            errorMessage = 'Unknown error occurred, Please contact to admin';
+            errorMessage = errorRes.error.error;
             break;
         default:
-            errorMessage = 'Error Occurred';
+            errorMessage = errorRes.error.error;
             break;
     }
     return of(MetricAnalysisdActions.errorOccured({ errorMessage }));

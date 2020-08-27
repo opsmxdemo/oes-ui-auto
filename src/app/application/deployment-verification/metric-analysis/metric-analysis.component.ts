@@ -83,7 +83,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   metricStatsData = [];                                                // It is use to store data related to stats table exist in Infra and advanced graph section.
   analysisTableData = '';                                              // It is use to store data related to analysis table exist in Infra and advanced graph section.
   apmGraphProperty = [];                                               // It is use to store apmChart property of chart showing in graph section.
-  dataNotFound = 'No data found to display';                           // It is use when expected data not found in component.
+  errorMessage = 'No data found to display';                           // It is use when expected data not found in component.
   
 
   constructor(private sharedServices: SharedService,
@@ -177,6 +177,14 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             this.recivedChildData(initialData);
           }
         }
+        
+        // Below condition is use for error message fetch
+        if(resdata.errorMessage !== null){
+          this.errorMessage = resdata.errorMessage;
+        }else if(this.metricType === ''){
+          this.errorMessage = 'Insufficient data to display metric analysis'
+        }
+
       }
     )
   }
