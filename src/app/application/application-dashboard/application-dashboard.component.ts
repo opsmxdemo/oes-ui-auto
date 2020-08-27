@@ -88,7 +88,6 @@ export class ApplicationDashboardComponent implements OnInit {
             
             this.finalLabelArray.push(label);
           })
-          console.log(this.finalLabelArray);
           this.selectedApplication(0, this.applicationFinalData[0],this.finalLabelArray[0]);
         }
         if(resdata.topologyChartData !== null){
