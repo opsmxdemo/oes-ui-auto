@@ -172,5 +172,23 @@ export class AppComponent implements OnInit, AfterViewChecked {
     let linkClass = linkArr[linkArr.length-1];
     return linkClass;
   }
+
+  // Below function is returning css class active if current link is selected
+  activeRoutes(linkName){
+    const currentUrl = this.router.url;
+    const selectedLink = currentUrl.split('/');
+    const recivedLink = linkName.split('/');
+    let returnClass = '';
+    if(recivedLink[recivedLink.length-1] === selectedLink[selectedLink.length-1]){
+      returnClass = 'active';
+    }else{
+      returnClass = '';
+    }
+    // Below logic is use to deal with setup links which is exception case
+    if(linkName.includes('setup') && currentUrl.includes('setup')){
+      returnClass = 'active';
+    }
+    return returnClass;
+  }
   
 }
