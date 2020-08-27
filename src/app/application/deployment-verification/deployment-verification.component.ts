@@ -203,6 +203,7 @@ export class DeploymentVerificationComponent implements OnInit {
   ngOnInit(): void {
      // hide tooltip 
      $("[data-toggle='tooltip']").tooltip('hide');
+    this.selectedTab = '';
     this.getAllApplications();
     this.getApplicationHealth();
     if(this.route.params['_value'].canaryId != null){
@@ -513,12 +514,9 @@ export class DeploymentVerificationComponent implements OnInit {
                     });
                   }
                     this.applicationId = this.deploymentApplicationHealth['applicationId'];
-
                     // Below logic is use to fetch initiall selected tab
                     if(this.deploymentApplicationHealth['analysisType'].includes('Logs and Metrics')){
-                      if(this.selectedTab === ''){
-                        this.selectedTab = 'log-analysis';
-                      }
+                      this.selectedTab = 'log-analysis';
                     }else if(this.deploymentApplicationHealth['analysisType'].includes('Logs')){
                       this.selectedTab = 'log-analysis';
                     }else {
