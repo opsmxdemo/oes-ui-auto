@@ -88,16 +88,6 @@ export function LogAnalysisReducer(
             })
         )
         ,
-        on(LogAnalysisActions.fetchTimeAnalysisGraphData,
-            (state, action) => ({
-                ...state,
-                canaryId:action.canaryId,
-                serviceId:action.serviceId,
-                clusterId:action.clusterId,
-                version:action.version,
-                deployementLoading: false
-            })
-        ),
         on(LogAnalysisActions.loadTimeAnalysisGraphData,
             (state, action) => ({
                 ...state,

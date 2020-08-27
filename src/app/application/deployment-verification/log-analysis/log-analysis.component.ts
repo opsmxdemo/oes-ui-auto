@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   templateUrl: './log-analysis.component.html',
   styleUrls: ['./log-analysis.component.less']
 })
-export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
+export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   @ViewChild('ChartSize') ChartSize: ElementRef;
   @ViewChild('LogClusterWidth') LogClusterWidth: ElementRef;
@@ -25,6 +25,7 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
   dataSource: Object;
   dataSourceColumnChart: Object;
   chart: any;
+  isShow: any;
   previousClickedId: any;
   timeStampResponse: any;
   slectedTimeAnalysis: any;
@@ -126,14 +127,12 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
       if (this.showChart) {
         this.chartSize = this.ChartSize.nativeElement.offsetWidth;
       }
-      if(this.LogClusterWidth){
-        this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth+ "px";
+      if (this.LogClusterWidth) {
+        this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
       }
       this.cdr.detectChanges();
     }, 1000)
   }
-
-  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     // reseting variables on tab switch
@@ -194,6 +193,7 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
       chart: {
         caption: "",
         subcaption: "",
+        "numDivlines": "2",
         xaxisname: "Time",
         yaxisname: "Repetition",
         theme: "fusion"
@@ -219,10 +219,10 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
           this.chartSize = this.ChartSize.nativeElement.offsetWidth
         }, 500)
       }
-      if(this.LogClusterWidth){
+      if (this.LogClusterWidth) {
         this.logClusterWidth = "800px"
         setTimeout(() => {
-          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth+ "px";
+          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
         }, 500)
       }
     }
@@ -237,10 +237,10 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
           this.chartSize = this.ChartSize.nativeElement.offsetWidth
         }, 500)
       }
-      if(this.LogClusterWidth){
+      if (this.LogClusterWidth) {
         this.logClusterWidth = "800px"
         setTimeout(() => {
-          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth+ "px";
+          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
         }, 500)
       }
     }
@@ -399,7 +399,6 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   changeCriticality(e, log) {
-    console.log(log);
     this.selectedClusterInfo = log;
     let changedTopic = "";
     //code to get topic which is selected on change of criticality drop down
@@ -412,36 +411,78 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
     } else if (e.target.value == 'green') {
       changedTopic = 'IGNORE';
     }
-    var feedbackErrorTopicsList = {
+    var feedbackErrorTopicsList: any = {};
+    feedbackErrorTopicsList = {
       "type": "topic",
       "topic": changedTopic,
       "cluster": log.clusterTemplate,
       "logId": log.id,
       "feedbackComment": (log.comment == "" || log.comment == undefined) == true ? "" : log.comment,
       "version": log.version,
-      "existingTopic": log.topic,
-      "ratio": log.version == 'v1v2' ? log.v1Len / log.v2Len : ""
+      "existingTopic": log.topic
+    }
+    if (log.version == 'v1v2') {
+      feedbackErrorTopicsList.ratio = log.v1Len / log.v2Len;
     }
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === feedbackErrorTopicsList.logId);
     if (idValue != -1) {
       if (this.classifiedLogsList[idValue].type == "topic") {
         this.classifiedLogsList.splice(idValue, 1);
       }
+      var idValue = this.classifiedLogsList.findIndex(x => x.logId === feedbackErrorTopicsList.logId);
+      if (idValue != -1) {
+        if (this.classifiedLogsList[idValue].type == "topic") {
+          this.classifiedLogsList.splice(idValue, 1);
+        }
+      }
+      this.classifiedLogsList.push(feedbackErrorTopicsList);
+      console.log(this.classifiedLogsList);
     }
-    this.classifiedLogsList.push(feedbackErrorTopicsList);
-    console.log(this.classifiedLogsList);
   }
 
   saveCriticalityComments() {
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
     this.classifiedLogsList[idValue].feedbackComment = this.selectedClusterInfo.comment;
-
   };
 
+
+
+  //function calling when cluster tag value changes
   changeClusterTag(e, log) {
-    console.log(e.target.value);
     console.log(log);
+    //this.selectedClusterInfo = log;
+    // log.isClassified = true;
+    var clusterTagChangeObj: any = {};
+    clusterTagChangeObj = {
+      "type": "tag",
+      "tag": log.clusterTagInfo.tag,
+      "cluster": log.clusterTemplate,
+      "logId": log.id,
+      "comment": (log.clusterTagInfo.comments == "" || log.clusterTagInfo.comments == undefined) == true ? "" : log.clusterTagInfo.comments,
+      "version": log.version,
+      "existingTag": log.originalClusterTagInfo.tag,
+      "clusterIdHash": log.clusterTagInfo.clusterIdHash
+    }
+
+    var idValue = this.classifiedLogsList.findIndex(x => x.logId === clusterTagChangeObj.logId);
+    if (idValue != -1) {
+      if (this.classifiedLogsList[idValue].type == "tag") {
+        this.classifiedLogsList.splice(idValue, 1);
+      }
+    }
+    this.classifiedLogsList.push(clusterTagChangeObj);
+
   };
+
+  saveClusterTag = function () {
+    // var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
+    // this.classifiedLogsList[idValue].feedbackComment = this.selectedClusterInfo.comment;    	
+    // var idValue = this.classifiedLogsList.findIndex(x => x.logId === $scope.selectedCluster.id);
+    // if($classifiedLogsList[idValue].type == "tag"){
+    //   $scope.classifiedLogsList[idValue].comment = $scope.selectedCluster.clusterTagInfo.comments; 
+    // }
+  };
+
 
   onClickLogEventTab(eventTab) {
     console.log(eventTab);
@@ -602,113 +643,128 @@ export class LogAnalysisComponent implements OnInit, OnChanges, AfterViewInit {
   initialized($event) {
     this.chart = $event.chart; // Storing the chart instance
   }
-  timeAnalysisGraph(log) {
-    this.dataSourceColumnChart["data"] = [];
-    let clusterId: any = log.id;
-    let version: any = log.version;
+  closeTimeAnalysis(){
+    this.isShow=false;
+  }
+  timeAnalysisGraph(log){
+    this.isShow=true;
+    this.dataSourceColumnChart["data"]=[];
+    let clusterId:any = log.id;
+    let version:any =log.version;
     this.slectedTimeAnalysis = clusterId
-
-    this.store.dispatch(LogAnalysisAction.fetchTimeAnalysisGraphData({ canaryId: this.canaryId, serviceId: this.serviceId, clusterId: clusterId, version: version }));
+     
+    this.store.dispatch(LogAnalysisAction.fetchTimeAnalysisGraphData({canaryId: this.canaryId, serviceId: this.serviceId, clusterId:clusterId ,version:version }));    
     this.store.select(fromFeature.selectLogAnalysisState).subscribe(
       (resData1) => {
-        if (resData1.timeStampData !== null) {
+        if(resData1.timeStampData !== null){
           this.timeStampResponse = {
             timestamps: resData1.timeStampData.timestamps
           };
           if (this.timeStampResponse.timestamps.length > 0) {
             this.timeAnalysisBarChartBuckets(this.timeStampResponse.timestamps, this.slectedTimeAnalysis);
           }
-
+            
         }
       })
-
+  
   }
-  timeAnalysisBarChartBuckets(timestamp: any, renderId: any) {
-    let timeInMillisecondsArray: any[] = [];
-    let logsDuration: any = null
-    let startTime: any = null
-    let endTime: any = null
-
-    logsDuration = this.logAnalysisResults.duration
-    startTime = this.logAnalysisResults.version2StartTime;
-    endTime = this.logAnalysisResults.version2EndTime;
-    //getting seconds from startTime 
-    var sSec = new Date(startTime).getSeconds();
-    //getting miniutes start of startTime ie. the starting bucket 
-    var miniuteStartOfStartTime = startTime - (sSec * 1000);
-    //getting seconds from endTime 
-    var eSec = new Date(endTime).getSeconds();
-    //getting miniutes start of endTime ie. the end bucket 
-    var miniuteStartOfEndTime = endTime - (eSec * 1000);
-    var miniutesBucketArray = [];
-    var nextMinuteStart = miniuteStartOfStartTime;
-    miniutesBucketArray.push(miniuteStartOfStartTime);
-    for (var i = 1; i <= logsDuration; i++) {
-      if (nextMinuteStart <= miniuteStartOfEndTime) {
-        //next minute in milliseconds - startminute + 60000
-        nextMinuteStart = nextMinuteStart + 60000;
-        miniutesBucketArray.push(nextMinuteStart);
-      }
-    }
-    miniutesBucketArray.push(miniuteStartOfEndTime + 60000);
-    //preparing array as buckets of nearest elements also added count
-    var bucketsOfMinutes = [];
-    for (var i = 0; i < miniutesBucketArray.length - 1; i++) {
-      var prev = i;
-      var next = i + 1;
-      var obj = {
-        bucketStartTime: miniutesBucketArray[prev],
-        bucketEndTime: miniutesBucketArray[next],
-        repeatedCount: 0
-      };
-      bucketsOfMinutes.push(obj);
-    }
-
-
-    timestamp.forEach(function (value) {
-      var obj = {
-        "timeInMillis": Date.parse(value)
+  timeAnalysisBarChartBuckets(timestamp:any,renderId:any){
+    let timeInMillisecondsArray:any[]=[];
+    let logsDuration:any=null
+    let startTime:any=null
+    let endTime:any=null
+   
+    logsDuration =  this.logAnalysisResults.duration
+     startTime = this.logAnalysisResults.version2StartTime;
+     endTime = this.logAnalysisResults.version2EndTime;
+        //getting seconds from startTime 
+        var sSec = new Date(startTime).getSeconds();
+        //getting miniutes start of startTime ie. the starting bucket 
+        var miniuteStartOfStartTime = startTime - (sSec * 1000);
+        //getting seconds from endTime 
+        var eSec = new Date(endTime).getSeconds();
+        //getting miniutes start of endTime ie. the end bucket 
+        var miniuteStartOfEndTime = endTime - (eSec * 1000);
+        var miniutesBucketArray = [];
+        var nextMinuteStart = miniuteStartOfStartTime;
+        miniutesBucketArray.push(miniuteStartOfStartTime);
+        for (var i = 1; i <= logsDuration; i++) {
+            if (nextMinuteStart <= miniuteStartOfEndTime) {
+                //next minute in milliseconds - startminute + 60000
+                nextMinuteStart = nextMinuteStart + 60000;
+                miniutesBucketArray.push(nextMinuteStart);
+            }
+        }
+        miniutesBucketArray.push(miniuteStartOfEndTime + 60000);
+        //preparing array as buckets of nearest elements also added count
+        var bucketsOfMinutes = [];
+        for (var i = 0; i < miniutesBucketArray.length - 1; i++) {
+            var prev = i;
+            var next = i + 1;
+            var obj = {
+                bucketStartTime: miniutesBucketArray[prev],
+                bucketEndTime: miniutesBucketArray[next],
+                repeatedCount: 0
+            };
+            bucketsOfMinutes.push(obj);
+        }
+        
+        
+      timestamp.forEach(function (value) {
+        var obj = {
+          "timeInMillis": Date.parse(value)
       };
       timeInMillisecondsArray.push(obj);
-    });
-
-    timeInMillisecondsArray.sort()
+      });
+      
+      timeInMillisecondsArray.sort()
 
     timeInMillisecondsArray.forEach(function (timestamp) {
       for (var i = 0; i < bucketsOfMinutes.length; i++) {
         if (bucketsOfMinutes[i].bucketStartTime <= timestamp.timeInMillis && timestamp.timeInMillis <= bucketsOfMinutes[i].bucketEndTime) {
-          bucketsOfMinutes[i].repeatedCount = bucketsOfMinutes[i].repeatedCount + 1;
-          break;
+            bucketsOfMinutes[i].repeatedCount = bucketsOfMinutes[i].repeatedCount + 1;
+            break;
         }
-      }
-    });
+    }
+    }); 
     var chartRows = [];
     var eachChartRow = [];
-    var dataobjTimeseries: any;
-    this.dataSourceColumnChart["data"] = [];
+    var dataobjTimeseries:any;
+    var tempRepeat:any;
+    var toolTip:any;
+    this.dataSourceColumnChart["data"]=[];
     for (var i = 0; i < bucketsOfMinutes.length; i++) {
-
-      eachChartRow = [new Date(bucketsOfMinutes[i].bucketStartTime), bucketsOfMinutes[i].repeatedCount, new Date(bucketsOfMinutes[i].bucketStartTime).getHours() + ":" + new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes()];
-      chartRows.push(eachChartRow)
-      let myobj = {
-        label: new Date(bucketsOfMinutes[i].bucketStartTime).getHours() + ":" + new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes(),
-        value: bucketsOfMinutes[i].repeatedCount
-      }
-      this.dataSourceColumnChart["data"].push(myobj)
+     
+        eachChartRow = [new Date(bucketsOfMinutes[i].bucketStartTime), bucketsOfMinutes[i].repeatedCount,new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes()];
+         chartRows.push(eachChartRow)
+         toolTip = new Date(bucketsOfMinutes[i].bucketStartTime).toLocaleString()
+         console.log(typeof(toolTip));
+         if(bucketsOfMinutes[i].repeatedCount==0)
+         {
+          tempRepeat=""
+         }
+         else
+         {
+          tempRepeat=bucketsOfMinutes[i].repeatedCount
+         }
+         let myobj = {
+          label: new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes(),
+          value: tempRepeat,
+          tooltext:new Date(bucketsOfMinutes[i].bucketStartTime).toLocaleString()+'<br><br>'+"Repetition: &nbsp;"+tempRepeat
+         }
+         this.dataSourceColumnChart["data"].push(myobj)
     };
     //if(this.slectedTimeAnalysis==this.previousClickedId)
-    //{
-    //this.chart.dispose()
-    //this.ngOnInit();
-    //this.previousClickedId=null;
+     //{
+      //this.chart.dispose()
+      //this.ngOnInit();
+      //this.previousClickedId=null;
 
-    //}
-    //else
-    //{
-    //this.previousClickedId=this.slectedTimeAnalysis
-    //}
-
-    console.log("hii")
+     //}
+     //else
+     //{
+     //this.previousClickedId=this.slectedTimeAnalysis
+     //}
 
   }
 }
