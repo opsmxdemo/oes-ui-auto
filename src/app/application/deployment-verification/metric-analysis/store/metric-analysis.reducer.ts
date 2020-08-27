@@ -8,7 +8,7 @@ export interface State {
 
 export const initialState: State = {
     canaryOutputData: null,
-    errorMessage: ''
+    errorMessage: null
 }
 
 export function MetricAnalysisReducer(
@@ -20,7 +20,7 @@ export function MetricAnalysisReducer(
             (state, action) => ({
                 ...state,
                 canaryOutputData:action.cararyData,
-                errorMessage:''
+                errorMessage: null
             })
         ),
         on(MetricAnalysisActions.errorOccured,
