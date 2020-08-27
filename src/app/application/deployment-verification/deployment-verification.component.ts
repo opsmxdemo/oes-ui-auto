@@ -124,13 +124,15 @@ export class DeploymentVerificationComponent implements OnInit {
     } else {
       this.canaries = d['canaryIdList'].toString().split(",");
       this.canaries.sort();
+      this.canaries = [...new Set(this.canaries)];
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
       );
       let selectedCan = this.canaries.map(parseFloat).sort();
       if(this.control.value != Math.max.apply(null, selectedCan)) {
-        this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
+        this.control.setValue(Math.max.apply(null, selectedCan));
+        //this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
       }
             
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
@@ -145,7 +147,9 @@ export class DeploymentVerificationComponent implements OnInit {
     // this.canaries.sort();
     // this.canaryList = this.canaries;
     // var length = this.canaryList.length;
-    this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: canary}));
+    this.control.setValue(canary);
+
+    //this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: canary}));
     
     // this.filteredCanaries = this.control.valueChanges.pipe(
     //   startWith(''),
@@ -202,9 +206,23 @@ export class DeploymentVerificationComponent implements OnInit {
     this.getAllApplications();
     this.getApplicationHealth();
     if(this.route.params['_value'].canaryId != null){
-      this.control.setValue(this.route.params['_value'].canaryId);
+     
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.route.params['_value'].canaryId }));
       this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: this.route.params['_value'].canaryId}));
+     // this.onSelectionChangeApplication(this.route.params['_value'].applicationName);
+     this.selectedApplicationName = this.route.params['_value'].applicationName;
+     if(this.route.params['_value'].applicationName != null){
+      const d = this.applicationList.find(c => c.applicationName == this.route.params['_value'].applicationName);
+      this.canaries = d['canaryIdList'].toString().split(",");
+      this.canaries.sort();
+      this.canaries = [...new Set(this.canaries)];
+      this.filteredCanaries = this.control.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterCanaries(value))
+      );
+      this.control.setValue(this.route.params['_value'].canaryId);
+     }
+    
     }else{
       this.getLatestRun();
     }
@@ -238,8 +256,12 @@ export class DeploymentVerificationComponent implements OnInit {
         this.incredementDisable = true;
     
       } else {
-    
-        this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index + 1]}));
+        if(this.route.params['_value'].canaryId != null){
+            this.control.setValue(this.canaryList[index + 1]);
+        }else{
+          this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index + 1]}));
+        }
+
         this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index + 1]}));
         this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index + 1]}));
         if(this.selectedServiceId !== undefined){
@@ -263,7 +285,15 @@ export class DeploymentVerificationComponent implements OnInit {
     }
 
     if (index !== -1 && index !== 0) {
+      if(this.route.params['_value'].canaryId != null){
+        this.control.setValue(this.canaryList[index - 1]);
+    }else{
       this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index - 1]}));
+    }
+
+
+      //this.control.setValue(this.canaryList[index - 1]);
+     
        this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index - 1]}));
        this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index - 1]}));
        if(this.selectedServiceId !== undefined){
@@ -561,4 +591,34 @@ export class DeploymentVerificationComponent implements OnInit {
     }
   }
 
+ // code for calculating difference in time
+  calculateDiff(dateFuture) {
+      var date2:any = new Date();
+
+    let diffInMilliSeconds = Math.abs(dateFuture - date2) / 1000;
+
+    // calculate days
+    const days = Math.floor(diffInMilliSeconds / 86400);
+    diffInMilliSeconds -= days * 86400;
+
+    // calculate hours
+    const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+    diffInMilliSeconds -= hours * 3600;
+
+    // calculate minutes
+    const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+    diffInMilliSeconds -= minutes * 60;
+
+    let difference = '';
+    if (days > 0) {
+      difference += (days === 1) ? `${days}d ` : `${days}d `;
+    }
+
+    difference += (hours === 0 || hours === 1) ? `${hours}h ` : `${hours}h `;
+
+    difference += (minutes === 0 || hours === 1) ? `${minutes}m ago` : `${minutes}m ago`; 
+
+    return difference;
+  }
+  
 }
