@@ -4,7 +4,7 @@
       <!-- ############################### Metric Table Section Starts ############################################# -->
       <div class="col-sm-7 col-md-7 col-lg-7 h-100 " #stickyMenu>
         <div class="metric_analysis"  [style.width]="!sticky?menuWidth:''" style="transition: width 0.5s;">
-          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;"  *ngIf="metricType !== ''">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -170,7 +170,7 @@
         </div>
         <!-- ############################## Below is sticky table starts ################################### -->
         <div *ngIf="sticky" class="sticky_metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
-          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;"  *ngIf="metricType !== ''">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
