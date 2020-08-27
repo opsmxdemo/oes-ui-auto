@@ -19,15 +19,15 @@
               </select> -->
             </div>
             <div class="checkbox-indigators d-flex align-items-center">
-              <div class="cb_indigator cd_red" data-toggle="tooltip" title="Fail">
+              <div class="cb_indigator cd_red">
                 <input type="checkbox" id="indigatorRed" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[0]">
                 <label for="indigatorRed"></label>
               </div>
-              <div class="cb_indigator cb_warning" data-toggle="tooltip" title="Warning">
+              <div class="cb_indigator cb_warning">
                 <input type="checkbox" id="indigatorWarning" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[1]">
                 <label for="indigatorWarning"></label>
               </div>
-              <div class="cb_indigator cb_success" data-toggle="tooltip" title="Pass">
+              <div class="cb_indigator cb_success">
                 <input type="checkbox" id="indigatorSuccess" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[2]">
                 <label for="indigatorSuccess"></label>
               </div>
