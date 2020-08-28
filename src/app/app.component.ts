@@ -179,11 +179,21 @@ export class AppComponent implements OnInit, AfterViewChecked {
     const selectedLink = currentUrl.split('/');
     const recivedLink = linkName.split('/');
     let returnClass = '';
-    if(recivedLink[recivedLink.length-1] === selectedLink[selectedLink.length-1]){
+    let subFactor = 0;
+
+    // Below logic is use to deal with dynamic prams present in routes
+    if(+selectedLink[selectedLink.length-1] > 0){
+      subFactor = 3;
+    }else{
+      subFactor = 1;
+    }
+
+    if(recivedLink[recivedLink.length-1] === selectedLink[selectedLink.length-subFactor]){
       returnClass = 'active';
     }else{
       returnClass = '';
     }
+    
     // Below logic is use to deal with setup links which is exception case
     if(linkName.includes('setup') && currentUrl.includes('setup')){
       returnClass = 'active';
