@@ -110,10 +110,10 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
   // Below function is use to reture true if subgraph data exist
   subGraphDataExist(data,returnSame){
     let returnVal:boolean;
-    if(typeof data === 'object'){
-      returnVal = false;
-    }else{
+    if(data.length > 0){
       returnVal = true;
+    }else{
+      returnVal = false;
     }
 
     if(!returnSame){

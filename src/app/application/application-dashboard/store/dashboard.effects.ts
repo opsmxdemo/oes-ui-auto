@@ -87,7 +87,7 @@ export class AppDashboardEffect {
                       return DashboardActions.applicationDeleted({ index: action.index })
                   }),
                   catchError(errorRes => {
-                      this.toastr.showError('Server Error !!', 'ERROR')
+                      this.toastr.showError('Application is not deleted due to '+errorRes.error.error, 'ERROR')
                       return handleError(errorRes);
                   })
               );
