@@ -113,6 +113,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   selectedClusterInfo: any;
   completeCluster: any;
   showFullLogLine: any = {};
+  rerunResponse : any;
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -430,16 +431,11 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       if (this.classifiedLogsList[idValue].type == "topic") {
         this.classifiedLogsList.splice(idValue, 1);
       }
-      var idValue = this.classifiedLogsList.findIndex(x => x.logId === feedbackErrorTopicsList.logId);
-      if (idValue != -1) {
-        if (this.classifiedLogsList[idValue].type == "topic") {
-          this.classifiedLogsList.splice(idValue, 1);
-        }
-      }
+    }      
       this.classifiedLogsList.push(feedbackErrorTopicsList);
       console.log(this.classifiedLogsList);
-    }
   }
+  
 
   saveCriticalityComments() {
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
@@ -598,21 +594,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       "feedbackErrorTopics": this.classifiedLogsList,
       "sensitivity": this.selectedSensitivity
     };
+    this.rerunResponse = {};
     this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#3085d6',
-    //   cancelButtonColor: '#d33',
-    //   confirmButtonText: 'Yes, Rerun'
-    // }).then((result) => {
-    //   if (result.value) {
-    //     this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));
-    //   }
-    // })
-
   }
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
