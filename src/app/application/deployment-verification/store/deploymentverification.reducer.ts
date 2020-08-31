@@ -48,7 +48,7 @@ export function DeploymentdReducer(
         on(DeploymentActions.fetchLatestRun,
             (state, action) => ({
                 ...state,
-                canaryRun: action.canaryRun,
+                canaryId: action.canaryId,
                 deployementLoading: false
             })
         ),
@@ -116,7 +116,7 @@ export function DeploymentdReducer(
         on(DeploymentActions.updateCanaryRun,
             (state, action) => ({
                 ...state,
-                canaryRun: action.canaryId,
+                canaryId: action.canaryId,
             })
         ),
     )(deploymentVerificationState,deploymentVerificationdActions);

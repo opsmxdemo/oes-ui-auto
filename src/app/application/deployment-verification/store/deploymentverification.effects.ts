@@ -51,7 +51,7 @@ export class DeploymentVerificationEffect {
             switchMap(([action,authState]) => {   
                 return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/users/'+authState.user+'/applications/latest-canary').pipe(
                     map(resdata => {
-                       return DeploymentActions.fetchLatestRun({canaryRun:resdata});
+                       return DeploymentActions.fetchLatestRun({canaryId:resdata['canaryId']});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')

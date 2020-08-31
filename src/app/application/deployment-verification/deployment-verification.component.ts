@@ -90,6 +90,7 @@ export class DeploymentVerificationComponent implements OnInit {
   serviceListLength: number = null;
   baseLineFileSize: any;
   canaryFileSize: any;
+  latestCounter = 1;
 
   // App form end
 
@@ -132,7 +133,7 @@ export class DeploymentVerificationComponent implements OnInit {
       let selectedCan = this.canaries.map(parseFloat).sort();
       if(this.control.value != Math.max.apply(null, selectedCan)) {
         this.control.setValue(Math.max.apply(null, selectedCan));
-        //this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
+       // this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
       }
             
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
@@ -144,17 +145,7 @@ export class DeploymentVerificationComponent implements OnInit {
   }
   //code for change the canary
   onSelectionChangeCanaryRun(canary) {
-    // this.canaries.sort();
-    // this.canaryList = this.canaries;
-    // var length = this.canaryList.length;
     this.control.setValue(canary);
-
-    //this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: canary}));
-    
-    // this.filteredCanaries = this.control.valueChanges.pipe(
-    //   startWith(''),
-    //   map(value => this._filterCanaries(value))
-    // );
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
     if(this.selectedServiceId !== undefined){
@@ -259,8 +250,10 @@ export class DeploymentVerificationComponent implements OnInit {
       } else {
         if(this.route.params['_value'].canaryId != null){
             this.control.setValue(this.canaryList[index + 1]);
+            
         }else{
           this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index + 1]}));
+          this.control.setValue(this.canaryList[index + 1]);
         }
 
         this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index + 1]}));
@@ -290,6 +283,7 @@ export class DeploymentVerificationComponent implements OnInit {
         this.control.setValue(this.canaryList[index - 1]);
     }else{
       this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index - 1]}));
+      this.control.setValue(this.canaryList[index - 1]);
     }
 
 
@@ -340,23 +334,24 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // get latest canary run
   getLatestRun() {
-    this.store.dispatch(DeploymentAction.loadLatestRun());
-    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
-      (resData) => {
-        if (resData.canaryRun !== null) {
-          this.deployementLoading = resData.deployementLoading;
-          this.deployementRun = resData.canaryRun['canaryId'];
-          this.control.setValue(resData.canaryRun['canaryId']);
-
-        //this.control = new FormControl(resData.canaryRun);
-          if (this.counter === 1) {
-            this.store.dispatch(DeploymentAction.loadServices({ canaryId: resData.canaryRun['canaryId'] }));
-            this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: resData.canaryRun['canaryId']}));
-            this.counter++;
+    //if(this.latestCounter === 1){
+      this.store.dispatch(DeploymentAction.loadLatestRun());
+      this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
+        (resData) => {
+          if (resData.canaryId !== null) {
+            this.deployementLoading = resData.deployementLoading;
+            this.deployementRun = resData.canaryId['canaryId'];
+            this.control.setValue(resData.canaryId['canaryId']);
+            this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: resData.canaryId['canaryId']}));
+            if (this.counter === 1) {
+              this.store.dispatch(DeploymentAction.loadServices({ canaryId: resData.canaryId['canaryId'] }));
+              this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: resData.canaryId['canaryId']}));
+              this.counter++;
+            }
           }
         }
-      }
-    );
+      );
+
     }
   
   // get application details
@@ -476,7 +471,7 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
                   this.serviceNameInfo = this.deploymentServices.services[0];   
                   if (this.serviceConter === 1 && this.selectedServiceId !== undefined) {
-                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryRun['canaryId'], serviceId: this.selectedServiceId}));
+                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryId['canaryId'], serviceId: this.selectedServiceId}));
                     this.serviceConter++;
                   }
                    // Below we are dispatching action of metric analysis to load initial data of metric analysis tab if metric is exist in application.
