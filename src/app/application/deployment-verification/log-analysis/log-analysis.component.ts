@@ -247,6 +247,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   }
 
   getLogAnalysis() {
+    this.clusterId = null;
     this.eventTab = 'unexpected';
     this.eventTabLabeledBy = 'unexpected-tab';
     this.store.dispatch(LogAnalysisAction.loadLogResults({ canaryId: this.canaryId, serviceId: this.serviceId }));
@@ -348,30 +349,30 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
           if (this.logAnalysisResults.scores) {
             this.logSensitivityScores = [];
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.high) {
+            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.high) {
               let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
               this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.high) {
+            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
               let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
               this.logSensitivityScores.push(obj);
             } else {
               let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
               this.logSensitivityScores.push(obj);
             }
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.medium) {
+            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.medium) {
               let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
               this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.medium) {
+            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.medium) {
               let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "High", "iconclass": " text-danger", "textclass": "text-danger" } };
               this.logSensitivityScores.push(obj);
             } else {
               let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
               this.logSensitivityScores.push(obj);
             }
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.low) {
+            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.low) {
               let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
               this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.high) {
+            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
               let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
               this.logSensitivityScores.push(obj);
             } else {
@@ -485,7 +486,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
 
   onClickLogEventTab(eventTab) {
-    console.log(eventTab);
+    this.clusterId = null;
     this.eventTab = eventTab;
     this.eventTabLabeledBy = eventTab + '-tab';
     this.store.dispatch(LogAnalysisAction.loadEventLogResults({ canaryId: this.canaryId, serviceId: this.serviceId, event: eventTab }));
@@ -616,7 +617,10 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
 
-    document.getElementById(this.clusterId).scrollIntoView();
+    document.getElementById(this.clusterId).scrollIntoView({
+      block:"center" 
+      
+    });
 
   }
 
