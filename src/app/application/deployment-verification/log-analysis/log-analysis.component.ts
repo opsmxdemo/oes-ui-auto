@@ -113,6 +113,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   selectedClusterInfo: any;
   completeCluster: any;
   showFullLogLine: any = {};
+  rerunResponse : any;
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -247,6 +248,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   }
 
   getLogAnalysis() {
+    this.clusterId = null;
     this.eventTab = 'unexpected';
     this.eventTabLabeledBy = 'unexpected-tab';
     this.store.dispatch(LogAnalysisAction.loadLogResults({ canaryId: this.canaryId, serviceId: this.serviceId }));
@@ -348,30 +350,30 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
           if (this.logAnalysisResults.scores) {
             this.logSensitivityScores = [];
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.high) {
+            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.high) {
               let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
               this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.high) {
+            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
               let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
               this.logSensitivityScores.push(obj);
             } else {
               let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
               this.logSensitivityScores.push(obj);
             }
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.medium) {
+            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.medium) {
               let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
               this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.medium) {
+            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.medium) {
               let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "High", "iconclass": " text-danger", "textclass": "text-danger" } };
               this.logSensitivityScores.push(obj);
             } else {
               let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
               this.logSensitivityScores.push(obj);
             }
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) >= this.logAnalysisResults.scores.low) {
+            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.low) {
               let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
               this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) <= this.logAnalysisResults.scores.high) {
+            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
               let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
               this.logSensitivityScores.push(obj);
             } else {
@@ -429,16 +431,11 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       if (this.classifiedLogsList[idValue].type == "topic") {
         this.classifiedLogsList.splice(idValue, 1);
       }
-      var idValue = this.classifiedLogsList.findIndex(x => x.logId === feedbackErrorTopicsList.logId);
-      if (idValue != -1) {
-        if (this.classifiedLogsList[idValue].type == "topic") {
-          this.classifiedLogsList.splice(idValue, 1);
-        }
-      }
+    }      
       this.classifiedLogsList.push(feedbackErrorTopicsList);
       console.log(this.classifiedLogsList);
-    }
   }
+  
 
   saveCriticalityComments() {
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
@@ -485,7 +482,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
 
   onClickLogEventTab(eventTab) {
-    console.log(eventTab);
+    this.clusterId = null;
     this.eventTab = eventTab;
     this.eventTabLabeledBy = eventTab + '-tab';
     this.store.dispatch(LogAnalysisAction.loadEventLogResults({ canaryId: this.canaryId, serviceId: this.serviceId, event: eventTab }));
@@ -597,26 +594,16 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       "feedbackErrorTopics": this.classifiedLogsList,
       "sensitivity": this.selectedSensitivity
     };
+    this.rerunResponse = {};
     this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: "You won't be able to revert this!Some of the ReClassified Events may be moved to other tab depending on your selection.Do you want to proceed with rerun?",        
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#3085d6',
-    //   cancelButtonColor: '#d33',
-    //   confirmButtonText: 'Yes, Rerun'
-    // }).then((result) => {
-    //   if (result.value) {
-    //     this.store.dispatch(LogAnalysisAction.rerunLogs({logTemplate:this.logTemplate, userName: "OpsMxUser", canaryId:this.canaryId,serviceId: this.serviceId,postData:postDataToRerun}));
-    //   }
-    // })
-
   }
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
 
-    document.getElementById(this.clusterId).scrollIntoView();
+    document.getElementById(this.clusterId).scrollIntoView({
+      block:"center" 
+      
+    });
 
   }
 

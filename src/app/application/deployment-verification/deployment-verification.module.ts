@@ -21,6 +21,7 @@ import { FusionChartsModule } from 'angular-fusioncharts';
 import * as FusionCharts from "fusioncharts";
 import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+import { NgpSortModule } from "ngp-sort-pipe";
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
@@ -37,6 +38,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
      ReactiveFormsModule,
      FormsModule,
      HttpClientModule,
+     NgpSortModule,
      AppMaterialModule,
      ChartsModule,
      FusionChartsModule,

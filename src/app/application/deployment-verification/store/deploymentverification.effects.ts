@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import * as LogAnalysisAction from '../log-analysis/store/log-analysis.actions';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -51,7 +52,7 @@ export class DeploymentVerificationEffect {
             switchMap(([action,authState]) => {   
                 return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/users/'+authState.user+'/applications/latest-canary').pipe(
                     map(resdata => {
-                       return DeploymentActions.fetchLatestRun({canaryRun:resdata});
+                       return DeploymentActions.fetchLatestRun({canaryId:resdata['canaryId']});
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Server Error !!', 'ERROR')
@@ -114,11 +115,10 @@ export class DeploymentVerificationEffect {
             })
            )
         )
-
          // Below effect is use for fetch selected service information
          fetchServiceInformation = createEffect(() =>
          this.actions$.pipe(
-             ofType(DeploymentActions.loadServiceInformation),
+             ofType(DeploymentActions.loadServiceInformation,LogAnalysisAction.reloadAfterRerun),
              switchMap((action) => {
                  return this.http.get<any>(this.environment.config.endPointUrl +'autopilot/canaries/getServiceInformation?canaryId=' + action.canaryId + '&serviceId='+ action.serviceId).pipe(
                      map(resdata => {
