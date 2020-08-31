@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import * as fromFeature from '../../../deployment-verification/store/feature.reducer';
 
 
 //below function is use to fetch error and return appropriate comments
@@ -39,14 +40,15 @@ export class LogAnalysisEffect {
         public store: Store<fromApp.AppState>,
         public router: Router,
         public toastr: NotificationService,
-        private environment: AppConfigService
+        private environment: AppConfigService,
+        public featureStore :Store<fromFeature.State>
     ) { }
 
     
 // Below effect is use for fetch logs on unexpected events run
 fetchLogAnalysisResults = createEffect(() =>
     this.actions$.pipe(
-        ofType(LogAnalysisActions.loadLogResults),
+        ofType(LogAnalysisActions.loadLogResults,LogAnalysisActions.reloadAfterRerun),
         switchMap((action) => {                 
             // return this.http.get('/assets/data/logsData.json').pipe(                    
             return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
@@ -104,14 +106,19 @@ fetchRerunLogsResults = createEffect(() =>
         ofType(LogAnalysisActions.rerunLogs),
         withLatestFrom(this.store.select('auth')),
         switchMap(([action,authState]) => {             
-// platform-service-ui change
+            // platform-service-ui change
             return this.http.post(this.environment.config.endPointUrl +'autopilot/logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + authState.user + '&serviceId='+ action.serviceId, action.postData).pipe(                  
-
-                map(resdata => {
+                map(resdata => {  
+                   if(resdata['status']){
+                    this.store.dispatch(LogAnalysisActions.reloadAfterRerun({canaryId:action.canaryId, serviceId:action.serviceId})); 
+                    this.toastr.showSuccess(resdata['message'], 'SUCCESS')
+                   }else if(!resdata['status']){
+                    this.toastr.showError('Reclassification Failed. PLease try again', 'ERROR')  
+                   }
                    return LogAnalysisActions.fetchRerunLogsResults({rerunResponse:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!', 'ERROR')
+                    this.toastr.showError('Reclassification Failed. PLease try again', 'ERROR')
                     return handleError(errorRes);
                 })
             );

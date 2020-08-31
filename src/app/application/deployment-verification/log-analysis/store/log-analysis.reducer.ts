@@ -9,7 +9,8 @@ export interface State {
     deployementLoading: boolean;
     logsEventResults: any;
     clusterLogs:any;
-    timeStampData:any
+    timeStampData:any;
+    rerunResponse:any;
 }
 
 export const initialState: State = {
@@ -18,7 +19,8 @@ export const initialState: State = {
     deployementLoading: false,
     logsEventResults : null,
     clusterLogs: null,
-    timeStampData:null
+    timeStampData:null,
+    rerunResponse:null
 }
 
 export function LogAnalysisReducer(

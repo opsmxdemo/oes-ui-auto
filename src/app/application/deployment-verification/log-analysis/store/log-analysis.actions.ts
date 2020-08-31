@@ -19,6 +19,6 @@ export const loadClusterLogData = createAction('[LogAnalysis] LoadClusterLogData
 export const fetchTimeAnalysisGraphData = createAction('[LogAnalysis] FetchTimeAnalysisGraphData', props<{canaryId:any,serviceId: any,clusterId: any;version:any;}>());
 export const loadTimeAnalysisGraphData = createAction('[LogAnalysis] LoadTimeAnalysisGraphData', props<{logTimeAnalysisResults:any}>());
 
-
+export const reloadAfterRerun = createAction('[LogAnalysis] ReloadAfterRerun', props<{canaryId: any,serviceId: any}>())
 
 
