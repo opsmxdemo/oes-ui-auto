@@ -53,7 +53,7 @@ export class DataSourceEffect {
                     return DataSourceAction.fetchDatasourceList({DatasourceList:resdata['data']});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!','ERROR')
+                    this.toastr.showError('DataSources List Data: '+errorRes.error.error,'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -72,7 +72,7 @@ export class DataSourceEffect {
                     return DataSourceAction.fetchSupportedDatasources({SupportedDataSource:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!','ERROR')
+                    this.toastr.showError('Supported DataSources Data:'+errorRes.error.error,'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -97,7 +97,7 @@ export class DataSourceEffect {
                         return DataSourceAction.DatasourceaccountDeleted({ index: action.index })
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        this.toastr.showError('DataSource not deleted due to '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );

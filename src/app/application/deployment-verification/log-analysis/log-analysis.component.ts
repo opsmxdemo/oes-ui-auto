@@ -214,13 +214,13 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       target.textContent === 'Log Analysis' ||
       target.classList['value'] === 'toggleGraph') {
       if (this.showChart) {
-        this.chartSize = "800px";
+        this.chartSize = "1px";
         setTimeout(() => {
           this.chartSize = this.ChartSize.nativeElement.offsetWidth
         }, 500)
       }
       if (this.LogClusterWidth) {
-        this.logClusterWidth = "800px"
+        this.logClusterWidth = "1px"
         setTimeout(() => {
           this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
         }, 500)
@@ -232,13 +232,13 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   handleMouseMove(target) {
     if (target.offsetParent.className === 'sidebar_nav') {
       if (this.showChart) {
-        this.chartSize = "800px";
+        this.chartSize = "1px";
         setTimeout(() => {
           this.chartSize = this.ChartSize.nativeElement.offsetWidth
         }, 500)
       }
       if (this.LogClusterWidth) {
-        this.logClusterWidth = "800px"
+        this.logClusterWidth = "1px"
         setTimeout(() => {
           this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
         }, 500)
