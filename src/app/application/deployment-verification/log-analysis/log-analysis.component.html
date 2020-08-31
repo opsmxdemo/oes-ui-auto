@@ -123,7 +123,7 @@
       [style.width]="logClusterWidth">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0">
 
-        <div  class="card mb-2 data_list" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters">
+        <div  class="card mb-2 data_list" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity">
           <div class="card-header d-flex align-items-center justify-content-between" id="heading01">
             <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
             <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}
