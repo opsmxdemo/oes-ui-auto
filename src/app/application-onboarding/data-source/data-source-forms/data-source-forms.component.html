@@ -1,0 +1,27 @@
+
+<div class="row">
+    <div class="col-12" *ngIf="!notSelectedList">
+        <form (ngSubmit)="onSubmit()" #datasourceForm = "ngForm" *ngIf="!fromDataEmpty">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="form-group" *ngFor = "let formField of formData; let i=index;">
+                        <label>{{formField.displayName}}</label>
+                        <input type="{{formField.dataType === 'string'?'text':'number'}}" name="{{formField.name}}" class="form-control" [required]="formField.required" ngModel>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" type="reset" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+        </form>
+        <div class="col-12" *ngIf="fromDataEmpty">
+            <app-component-error-listing [errorString]="'Form do not contain any data !!!'"></app-component-error-listing>
+        </div>
+    </div>
+    <div class="col-12 notSelectedDiv" *ngIf="notSelectedList">
+        <h5>Select Monitoring Provider To Add Data Source. </h5>
+    </div>
+</div>

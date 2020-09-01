@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DynatraceFormComponent } from './dynatrace-form.component';
+import { DataSourceFormsComponent } from './data-source-forms.component';
 
-describe('DynatraceFormComponent', () => {
-  let component: DynatraceFormComponent;
-  let fixture: ComponentFixture<DynatraceFormComponent>;
+describe('DataSourceFormsComponent', () => {
+  let component: DataSourceFormsComponent;
+  let fixture: ComponentFixture<DataSourceFormsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DynatraceFormComponent ]
+      declarations: [ DataSourceFormsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DynatraceFormComponent);
+    fixture = TestBed.createComponent(DataSourceFormsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -15,14 +15,6 @@ import { CloudServicesComponent } from './cloud-services/cloud-services.componen
 import { DynamicAccountsComponent } from './accounts/dynamic-accounts/dynamic-accounts.component';
 import { CreateAccountComponent } from './accounts/create-account/create-account.component';
 import { GithubFormComponent } from './data-source/github-form/github-form.component';
-import { NewrelicFormComponent } from './data-source/newrelic-form/newrelic-form.component';
-import { PrometheusFormComponent } from './data-source/prometheus-form/prometheus-form.component';
-import { DynatraceFormComponent } from './data-source/dynatrace-form/dynatrace-form.component';
-import { GcpStackdriverFormComponent } from './data-source/gcp-stackdriver-form/gcp-stackdriver-form.component';
-import { DatadogFormComponent } from './data-source/datadog-form/datadog-form.component';
-import { AppDynamicsFormComponent } from './data-source/app-dynamics-form/app-dynamics-form.component';
-import { AwsCloudwatchFormComponent } from './data-source/aws-cloudwatch-form/aws-cloudwatch-form.component';
-import { ElasticsearchFormComponent } from './data-source/elasticsearch-form/elasticsearch-form.component';
 import { DockerFormComponent } from './data-source/docker-form/docker-form.component';
 import { ApplicationEffect } from './application/store/application.effects';
 import { AccountsEffect } from './accounts/store/accounts.effects';
@@ -34,6 +26,7 @@ import { LogTemplateComponent } from './application/application-creation/log-tem
 import { LogTemplateEffect } from './application/application-creation/log-template/store/logTemplate.effects';
 import { MetricTemplateEffect } from './application/application-creation/metric-template/store/metricTemplate.effects';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
+import { DataSourceFormsComponent } from './data-source/data-source-forms/data-source-forms.component';
 
 
 @NgModule({
@@ -46,17 +39,10 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
       DynamicAccountsComponent,
       CreateAccountComponent,
       GithubFormComponent,
-      NewrelicFormComponent,
-      PrometheusFormComponent,
-      DynatraceFormComponent,
-      GcpStackdriverFormComponent,
-      DatadogFormComponent,
-      AppDynamicsFormComponent,
-      AwsCloudwatchFormComponent,
-      ElasticsearchFormComponent,
       DockerFormComponent,
       MetricTemplateComponent,
-      LogTemplateComponent
+      LogTemplateComponent,
+      DataSourceFormsComponent
     ],
     imports: [
      CommonModule,

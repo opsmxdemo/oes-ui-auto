@@ -13,15 +13,7 @@ export class AppErrorListingComponent implements OnInit {
 
   constructor(public store: Store<fromApp.AppState>) { }
 
-  ngOnInit(){
-    this.store.select('layout').subscribe(
-      (layoutData) => {
-        if(layoutData.apiErrorCollection.indexOf(true) > -1){
-          this.appLevelError = true;
-        }
-      }
-    )
-  }
+  ngOnInit(){}
 
   // Below function is use to clean cache ie localstorage
   cleanCache(){

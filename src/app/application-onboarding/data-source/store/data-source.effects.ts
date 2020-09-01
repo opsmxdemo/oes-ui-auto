@@ -62,17 +62,17 @@ export class DataSourceEffect {
    )
 
 
-    // Below effect is use for fetch data related to supported DataSource
+    // Below effect is use for fetch data related to DataSource
     fetchSupportedDatasources = createEffect(() =>
     this.actions$.pipe(
         ofType(DataSourceAction.loadDatasource),
         switchMap(() => {
-            return this.http.get<any>(this.environment.config.endPointUrl+'autopilot/api/v1/supportedDatasources').pipe(
+            return this.http.get<any>(this.environment.config.endPointUrl+'autopilot/api/v1/datasources').pipe(
                 map(resdata => {
                     return DataSourceAction.fetchSupportedDatasources({SupportedDataSource:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Supported DataSources Data:'+errorRes.error.error,'ERROR')
+                    this.toastr.showError('DataSources Data:'+errorRes.error.error,'ERROR')
                     return handleError(errorRes);
                 })
             );
