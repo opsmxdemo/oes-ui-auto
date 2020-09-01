@@ -754,4 +754,12 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
      //}
 
   }
+
+  reset(){
+    if(this.eventTab == 'unexpected'){
+      this.getLogAnalysis();
+    }else{
+      this.onClickLogEventTab(this.eventTab);
+    }
+  }
 }
