@@ -91,6 +91,7 @@ export class DeploymentVerificationComponent implements OnInit {
   baseLineFileSize: any;
   canaryFileSize: any;
   latestCounter = 1;
+  latestCanaryCounter = 1;
 
   // App form end
 
@@ -340,12 +341,16 @@ export class DeploymentVerificationComponent implements OnInit {
         (resData) => {
           if (resData.canaryId !== null) {
             this.deployementLoading = resData.deployementLoading;
-            this.deployementRun = resData.canaryId['canaryId'];
-            this.control.setValue(resData.canaryId['canaryId']);
-            this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: resData.canaryId['canaryId']}));
+            if(this.latestCanaryCounter === 1){
+              this.deployementRun = resData.canaryId;
+            this.control.setValue(resData.canaryId);
+            this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: resData.canaryId}));
+            }
+            this.latestCanaryCounter++;
+            
             if (this.counter === 1) {
-              this.store.dispatch(DeploymentAction.loadServices({ canaryId: resData.canaryId['canaryId'] }));
-              this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: resData.canaryId['canaryId']}));
+              this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.deployementRun }));
+              this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: this.deployementRun}));
               this.counter++;
             }
           }
@@ -471,7 +476,7 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
                   this.serviceNameInfo = this.deploymentServices.services[0];   
                   if (this.serviceConter === 1 && this.selectedServiceId !== undefined) {
-                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: resData.canaryId['canaryId'], serviceId: this.selectedServiceId}));
+                    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: this.deployementRun, serviceId: this.selectedServiceId}));
                     this.serviceConter++;
                   }
                    // Below we are dispatching action of metric analysis to load initial data of metric analysis tab if metric is exist in application.

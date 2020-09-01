@@ -6,7 +6,7 @@ export const loadDeploymentApp = createAction('[DeploymentVerification] LoadDepl
 
 export const loadLatestRun = createAction('[DeploymentVerification] LoadLatestRun');
 export const errorOccured = createAction('[DeploymentVerification] ErrorOccured', props<{errorMessage:string}>());
-export const fetchLatestRun = createAction('[DeploymentVerification] FetchLatestRun', props<{canaryId:any}>());
+export const fetchLatestRun = createAction('[DeploymentVerification] FetchLatestRun', props<{canaryId: string[]}>());
 export const updateCanaryRun = createAction('[DeploymentVerification] UpdateCanaryRun', props<{canaryId:any}>());
 
 export const loadApplications = createAction('[DeploymentVerification] LoadApplications');
