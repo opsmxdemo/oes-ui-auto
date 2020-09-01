@@ -156,7 +156,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
     buildApplicationForm() {
       this.applicationForm = this.fb.group({
-        application: [this.selectedApplicationName],
+        application: [''],
       });
       
     }
@@ -506,11 +506,11 @@ export class DeploymentVerificationComponent implements OnInit {
                   }
                   if(this.route.params['_value'].applicationName != null){
                     this.applicationForm = this.fb.group({
-                      application: [this.route.params['_value'].applicationName],
+                      application: [''],
                     });
                   }else{
                     this.applicationForm = this.fb.group({
-                      application: [this.selectedApplicationName],
+                      application: [''],
                     });
                   }
                     this.applicationId = this.deploymentApplicationHealth['applicationId'];
