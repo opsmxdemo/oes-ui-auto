@@ -20,7 +20,7 @@
             class="d-block {{logSensitivityScores[0]?.medium?.textclass}}">{{logSensitivityScores[0]?.medium?.risk}}</b>
           <b *ngIf="logAnalysisResults?.sensitivity == 'low'"
             class="d-block {{logSensitivityScores[0]?.low?.textclass}}">{{logSensitivityScores[0]?.low?.risk}}</b>
-          Precieved Risk
+            Perceived Risk
         </span>
       </div>
       <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity"
