@@ -17,6 +17,7 @@ export interface State {
     applicationHealthDetailsLoading: boolean;
     serviceInformation: any;
     serviceInformationLoading: boolean;
+    cancelRunningCanaryStatus: any;
 }
 
 export const initialState: State = {
@@ -32,6 +33,7 @@ export const initialState: State = {
     applicationHealthDetailsLoading: false,
     serviceInformation: null,
     serviceInformationLoading: false,
+    cancelRunningCanaryStatus: null,
 }
 
 export function DeploymentdReducer(
@@ -117,6 +119,20 @@ export function DeploymentdReducer(
             (state, action) => ({
                 ...state,
                 canaryId: action.canaryId,
+            })
+        ),
+        on(DeploymentActions.loadcancelRunningCanary,
+            (state,action) => ({
+                ...state,
+                deployementLoading: true,
+                canaryId: action.canaryId
+            })
+        ),
+        on(DeploymentActions.fetchcancelRunningCanaryStatus,
+            (state, action) => ({
+                ...state,
+                cancelRunningCanaryStatus: action.cancelRunningCanaryData,
+                deployementLoading: false
             })
         ),
     )(deploymentVerificationState,deploymentVerificationdActions);

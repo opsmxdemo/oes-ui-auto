@@ -92,6 +92,7 @@ export class DeploymentVerificationComponent implements OnInit {
   canaryFileSize: any;
   latestCounter = 1;
   latestCanaryCounter = 1;
+  cancelRunningCanaryData: any;
 
   // App form end
 
@@ -588,6 +589,22 @@ export class DeploymentVerificationComponent implements OnInit {
       this.isShow = false;
     }
   }
+
+  // Below fuction is use to cancel the running canary
+  cancelRunningCanary(id){
+    this.store.dispatch(DeploymentAction.loadcancelRunningCanary({ canaryId: id}));
+    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
+      (resData) => {
+        if(resData.cancelRunningCanaryStatus !== null){
+                this.deployementLoading = resData.deployementLoading;
+                this.cancelRunningCanaryData = resData.cancelRunningCanaryStatus;
+                this.notifications.showSuccess('', resData.cancelRunningCanaryStatus['message']);
+           }
+      }
+    );
+
+  }
+
 
  // code for calculating difference in time
   calculateDiff(dateFuture) {

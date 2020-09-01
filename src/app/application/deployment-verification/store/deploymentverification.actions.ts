@@ -20,3 +20,6 @@ export const fetchApplicationHelath = createAction('[DeploymentVerification] Fet
 
 export const loadServiceInformation = createAction('[DeploymentVerification] LoadServiceInformation', props<{canaryId: any,serviceId: number}>());
 export const fetchServiceInformation = createAction('[DeploymentVerification] FetchServiceInformation', props<{serviceSummary:any}>());
+
+export const loadcancelRunningCanary = createAction('[DeploymentVerification] LoadCancelRunningCanary', props<{canaryId: number}>());
+export const fetchcancelRunningCanaryStatus = createAction('[DeploymentVerification] FetchCancelRunningCanaryStatus', props<{cancelRunningCanaryData:any}>());
