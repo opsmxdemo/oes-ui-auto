@@ -17,7 +17,8 @@
         <!-- <app-cd-dashboard></app-cd-dashboard> -->
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
           <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
-            [ngClass]="{'active':application.applicationName === selectedApplicationName}">
+            [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'InProgress',
+                        'application-lastrun-success':application.applicationStatus === 'PASS','application-lastrun-fail':application.applicationStatus === 'FAIL'}" >
             <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
                 <h3>{{application.applicationName}}</h3>
@@ -30,9 +31,8 @@
                       <a [routerLink]="['/application/deploymentverification/',application.applicationName,canaries.canaryId]" class="ml-2" [ngClass]= "{'ci_check':canaries.finalScore >= canaries.maximumCanaryScore,'ci_close':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'ci_minus': canaries.finalScore === 'N/A' || canaries.finalScore === ''}">
                       <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore >= canaries.maximumCanaryScore,'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === ''}"></i></a>
                     </button>
-      
-                  </div>
-                  <!-- <a href="#" class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="65% Complete"><i class="fas fa-circle-notch fa-spin"></i></a> -->
+              </div>
+                  <a *ngIf="application.applicationStatus === 'InProgress'" href="#" class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="65% Complete">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
                   <!-- <a href="#" class="ci_tack ml-3" data-toggle="tooltip" data-placement="top" title="Unpin"><i class="fas fa-thumbtack"></i></a> -->
 
                         <div class="dropdown dropdown-icon-remove">
@@ -40,10 +40,6 @@
                             <i class="fas fa-ellipsis-v"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                            <!-- <a class="dropdown-item" href="#">Releases</a>
-                            <a class="dropdown-item" href="#">Services</a>
-                            <a class="dropdown-item" href="#">Edit</a>
-                            <div class="dropdown-divider"></div> -->
                             <a class="dropdown-item showElementHover" (click)="deleteApplication(application,i)">Delete</a>
                           </div>
                         </div>
@@ -105,12 +101,12 @@
           <!-- /#particle_chart -->
               
           <!-- /.chart_ratio -->
-          <div *ngIf="oesServiceData.length === 0 && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
+          <div *ngIf="oesServiceData && oesServiceData.length === 0 && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
             <p>{{serviceErrorMessage}}</p>
           </div>
          
          
-          <div class="table-responsive" *ngIf="showAppDataType === 'Services' && oesServiceData.length>0">
+          <div class="table-responsive" *ngIf="showAppDataType === 'Services' && oesServiceData && oesServiceData.length>0">
             <table class="table table-pet-service mb-0">
               <thead>
                 <tr>
@@ -130,10 +126,10 @@
               </tbody>
             </table>
           </div>
-          <div *ngIf="autoPilotServiceData.length === 0 && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
+          <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0 && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
             <p>{{serviceErrorMessage}}</p>
           </div>
-          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData.length>0">
+          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData && autoPilotServiceData.length>0">
             <table class="table table-pet-service text-center mb-0">
             <thead>
               <tr>

@@ -1,3 +1,4 @@
 {
-    "endPointUrl":"http://52.165.24.107:8084/"
+    "endPointUrl":"http://52.165.24.107:8084/",
+    "setApplicationInterval": 16000
 }
