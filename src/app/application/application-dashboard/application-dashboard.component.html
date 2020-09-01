@@ -32,9 +32,7 @@
                       <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore >= canaries.maximumCanaryScore,'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === ''}"></i></a>
                     </button>
               </div>
-                  <a *ngIf="application.applicationStatus === 'InProgress'" href="#" class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="65% Complete">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
-                  <!-- <a href="#" class="ci_tack ml-3" data-toggle="tooltip" data-placement="top" title="Unpin"><i class="fas fa-thumbtack"></i></a> -->
-
+                  <a *ngIf="application.applicationStatus === 'InProgress'"  class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="InProgress">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
                         <div class="dropdown dropdown-icon-remove">
                           <button class="btn btn-default ml-3 px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v"></i>
