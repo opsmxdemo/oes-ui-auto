@@ -20,7 +20,7 @@
             class="d-block {{logSensitivityScores[0]?.medium?.textclass}}">{{logSensitivityScores[0]?.medium?.risk}}</b>
           <b *ngIf="logAnalysisResults?.sensitivity == 'low'"
             class="d-block {{logSensitivityScores[0]?.low?.textclass}}">{{logSensitivityScores[0]?.low?.risk}}</b>
-          Precieved Risk
+            Perceived Risk
         </span>
       </div>
       <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity"
@@ -242,7 +242,7 @@
 
 <div class="bottom_btns mt-auto bg-white position-sticky text-right">
   <button class="btn mr-2 btn-default" data-toggle="tooltip"
-    title="Clear the reclassification done by the user">Reset</button>
+    title="Clear the reclassification done by the user" (click)="reset()">Reset</button>
   <button class="btn mr-2 btn-default" (click)="rerunLogs()" data-toggle="tooltip"
     title="Update and Rerun the canary with the updated classification from the user">Re-run</button>
 </div>

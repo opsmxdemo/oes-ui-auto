@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 import { ApplicationService } from '../../services/application.service';
 import {NotificationService} from '../../services/notification.service';
 import * as fromApp from '../../store/app.reducer';
@@ -10,7 +11,7 @@ import * as DeploymentAcion from '../deployment-verification/store/deploymentver
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import Swal from 'sweetalert2';
-
+import { AppConfigService } from 'src/app/services/app-config.service';
 
 @Component({
   selector: 'app-application-dashboard',
@@ -25,6 +26,7 @@ export class ApplicationDashboardComponent implements OnInit {
   links= [];                      // getting edges data for network chart
   networkChartData = null;              // It is use to store network chart data fetched from api.
 
+  subscription: Subscription;
   applicationFinalData: any[] = [];
   finalLabelArray = [];
   public applicationData: any[] = [];
@@ -41,13 +43,17 @@ export class ApplicationDashboardComponent implements OnInit {
   serviceDemoDataList: { canaryId: number; serviceId: number; serviceName: string; finalScore: number; logsScore: number; metricsScore: number; status: string; }[];
   oesServiceData: any;
   autoPilotServiceData: any;
+  cnt = 0;
+  cnt2 = 0;
+
 
 
   // tslint:disable-next-line:max-line-length
   constructor(private applicationService: ApplicationService, 
               private notifications: NotificationService, 
               public store: Store<fromApp.AppState>,
-              public applicationFeatureStore: Store<fromApplicationFeature.State>) { }
+              public applicationFeatureStore: Store<fromApplicationFeature.State>,
+              private environment: AppConfigService) { }
 
   ngOnInit(): void {
    
@@ -59,7 +65,6 @@ export class ApplicationDashboardComponent implements OnInit {
           this.applicationData = resdata.appData;
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
-         // this.selectedApplication(0, this.applicationData[0]);
           this.applicationFinalData = resdata.appData;
          
           // code to add new finalLabel in application level
@@ -67,7 +72,6 @@ export class ApplicationDashboardComponent implements OnInit {
           let i = 0;
          
           this.applicationFinalData.forEach((ele,index) => {
-            // let j = 0;
             let label = '';
             ele['appInfo'].forEach(e => {
               
@@ -82,7 +86,6 @@ export class ApplicationDashboardComponent implements OnInit {
                   label = e.applicationInfolabel;
                 }
               }
-              // j++;
             });
             i++;
             
@@ -98,8 +101,13 @@ export class ApplicationDashboardComponent implements OnInit {
           // console.log(this.networkChartData);
          // this.store.dispatch(new LayoutAction.(this.applicationData.length));
         }
-      }
-    )
+      });
+      const source = interval(this.environment.config.setApplicationInterval);
+      this.subscription = source.subscribe(val => this.getApplications());
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   
   // code to load applications
@@ -285,6 +293,17 @@ export class ApplicationDashboardComponent implements OnInit {
       }
     })
   }
+
+  // getRunningApplication() {
+  //   this.cnt2 = this.cnt2 + 1;
+  //   console.log ('Count is ' + this.cnt2);
+  // }
+
+  // interval function
+  // setIntrvl(){
+  //   //setInterval(() => this.getRunningApplication(),5000);
+  //   this.subscription = source.subscribe(val => this.getRunningApplication());
+  // }
 
   
 

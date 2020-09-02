@@ -133,6 +133,24 @@ export class DeploymentVerificationEffect {
             )
          )
 
+          // Below effect is use for cancel the running canary
+        cancelRunningCanaryRun= createEffect(() =>
+        this.actions$.pipe(
+            ofType(DeploymentActions.loadcancelRunningCanary),
+            switchMap((action) => {
+                return this.http.get<any>(this.environment.config.endPointUrl +'autopilot/canaries/cancelRunningCanary?id='+action.canaryId).pipe(
+                    map(resdata => {
+                        return DeploymentActions.fetchcancelRunningCanaryStatus({cancelRunningCanaryData:resdata});
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+           )
+        )
+
          //Below effect is use to redirect to application onboardind page in create& edit phase
     apponboardingRedirect = createEffect(() =>
     this.actions$.pipe(

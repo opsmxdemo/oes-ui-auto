@@ -6,7 +6,7 @@ export const loadDeploymentApp = createAction('[DeploymentVerification] LoadDepl
 
 export const loadLatestRun = createAction('[DeploymentVerification] LoadLatestRun');
 export const errorOccured = createAction('[DeploymentVerification] ErrorOccured', props<{errorMessage:string}>());
-export const fetchLatestRun = createAction('[DeploymentVerification] FetchLatestRun', props<{canaryId:any}>());
+export const fetchLatestRun = createAction('[DeploymentVerification] FetchLatestRun', props<{canaryId: string[]}>());
 export const updateCanaryRun = createAction('[DeploymentVerification] UpdateCanaryRun', props<{canaryId:any}>());
 
 export const loadApplications = createAction('[DeploymentVerification] LoadApplications');
@@ -20,3 +20,6 @@ export const fetchApplicationHelath = createAction('[DeploymentVerification] Fet
 
 export const loadServiceInformation = createAction('[DeploymentVerification] LoadServiceInformation', props<{canaryId: any,serviceId: number}>());
 export const fetchServiceInformation = createAction('[DeploymentVerification] FetchServiceInformation', props<{serviceSummary:any}>());
+
+export const loadcancelRunningCanary = createAction('[DeploymentVerification] LoadCancelRunningCanary', props<{canaryId: number}>());
+export const fetchcancelRunningCanaryStatus = createAction('[DeploymentVerification] FetchCancelRunningCanaryStatus', props<{cancelRunningCanaryData:any}>());
