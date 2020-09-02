@@ -1,3 +1,4 @@
+import { CreateDataSource } from 'src/app/models/applicationOnboarding/dataSourceModel/createDataSourceModel';
 import { Component, OnInit } from '@angular/core';
 import * as fromFeature from '../store/feature.reducer';
 import * as DataSourceActions from '../data-source/store/data-source.actions';
@@ -7,6 +8,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
 import { ViewChild, ElementRef} from '@angular/core';
+
 //import { } from '@ng-bo'
 
 @Component({
@@ -15,11 +17,17 @@ import { ViewChild, ElementRef} from '@angular/core';
   styleUrls: ['./data-source.component.less']
 })
 export class DataSourceComponent implements OnInit {
+
   @ViewChild('closeAddExpenseModal') closeAddExpenseModal: ElementRef;
+
+  supportedDataSources = null;                                                         // It is use to store supported datasource information.
+  imgPath = '../../assets/images/';                                                    // It is use to store static path of image folder exist in assets.
+  currentFormData = null;                                                              // It is use to store form data which is currently selected.
+  selectedProviderObj:CreateDataSource = null;                                         // It is use to hold selected Provider object data for post request.
   dataSourceList: { id: string; name: string; path: string; }[];
   selectedDataProvider: any;
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
-  datasourceListData: any;                                               // It use to store Accountlist data fetched from state.
+  datasourceListData: any;                                                             // It use to store Accountlist data fetched from state.
   searchData: string = '';                                                             // this is use to fetch value from search field.
   perPageData: number = 10;                                                            // this is use to populate value in perPage dropdown exist in pagination.
   page = {                                                                             // this is use to support pagination in accunt page.
@@ -40,71 +48,23 @@ export class DataSourceComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedDataProvider = '';
-   // this.getDataProvider("Docker");
-    // this.dataSourceList = [{
-    //   "id": "new_relic",
-    //   "name": "New Relic",
-    //   "path": "../../assets/images/new_relic.png"
-    // },
-    // {
-    //   "id": "prometheus",
-    //   "name": "Prometheus",
-    //   "path": "../../assets/images/promethics.png"
-    // },
-    // {
-    //   "id": "dyna-trace",
-    //   "name": "Dynatrace",
-    //   "path": "../../assets/images/dyna-trace.png"
-    // },
-    // {
-    //   "id": "gcp_stackdriver",
-    //   "name": "GCP Stackdriver",
-    //   "path": "../../assets/images/gcp-icon.png"
-    // },
-    // {
-    //   "id": "datadog",
-    //   "name": "Datadog",
-    //   "path": "../../assets/images/data-dog.png"
-    // },
-    // {
-    //   "id": "app_dynamics",
-    //   "name": "App Dynamics",
-    //   "path": "../../assets/images/app-dynamics.png"
-    // },
-    // {
-    //   "id": "aws_cloudwatch",
-    //   "name": "AWS Cloudwatch",
-    //   "path": "../../assets/images/aws-cloudwatch.png"
-    // },
-    // {
-    //   "id": "elastic_search",
-    //   "name": "Elastic Search",
-    //   "path": "../../assets/images/elastic-search.png"
-    // },
-    // {
-    //   "id": "GITHUB",
-    //   "name": "Github",
-    //   "path": "../../assets/images/github.png"
-    // },
-    // {
-    //   "id": "DOCKERHUB",
-    //   "name": "Docker",
-    //   "path": "../../assets/images/docker.png"
-    // }];
     this.store.dispatch(DataSourceActions.loadDatasourceList());
 
     // fetching data from state
     this.store.select(fromFeature.selectDataSource).subscribe(
      (response) => {
-      if (response.datasourceList !== null) {
-       this.datasourceListData = response.datasourceList;
-       this.datasourceListLength = this.datasourceListData.length;
-       this.renderPage();
-       this.tableIsEmpty = false;
-     }else{
-       this.tableIsEmpty = true;
-     }
-     },
+        if (response.datasourceList !== null && response.datasourceList !== undefined) {
+        this.datasourceListData = response.datasourceList;
+        this.datasourceListLength = this.datasourceListData.length;
+        this.renderPage();
+        this.tableIsEmpty = false;
+        }else{
+          this.tableIsEmpty = true;
+        }
+        if (response.supportedDatasource !== null){
+          this.supportedDataSources = response.supportedDatasource;
+        }
+      },
      (error) => {
        this.notifications.showError('Error',error);
      }
@@ -114,10 +74,12 @@ export class DataSourceComponent implements OnInit {
   getClose(){
     this.closeAddExpenseModal.nativeElement.click();
   }
-  getDataProvider(e){
+  getDataProvider(e,selectedProviderData){
     this.selectedDataProvider = e;
-    console.log("this.selectedDataProvider: ", this.selectedDataProvider);
-    
+    this.currentFormData = selectedProviderData.configurationFields;
+    this.selectedProviderObj.displayName = selectedProviderData.displayName;
+    this.selectedProviderObj.datasourceType = selectedProviderData.datasourceType;
+    this.selectedProviderObj.usage = selectedProviderData.usage;
   }
 
    // Below function is used if user want to refresh list data
@@ -234,33 +196,6 @@ export class DataSourceComponent implements OnInit {
       this.sharedAccountData.setDataSourceData('');
 
     this.dataSourceList = [];
-
-    //Fetch supported data Source
-    this.store
-      .select(fromFeature.selectDataSource)
-      .subscribe((datasourceData) => {
-        if (datasourceData.supportedDatasource !== null) {
-          console.log(
-            "Supported Data Source:  ",
-            datasourceData.supportedDatasource
-          );
-
-          datasourceData.supportedDatasource.forEach((eachDataSource) => {
-            if (eachDataSource.type === "elasticsearch") {
-              console.log("this DataSources New: ", eachDataSource);
-              this.eachDataSourceItem = {
-                id: eachDataSource.type,
-                name: eachDataSource.displayName,
-                path: "../../assets/images/elastic-search.png"
-              };
-              this.dataSourceList.push(this.eachDataSourceItem);
-            }
-          });
-        }
-      });
-
-      
-
     }
 
     // Below funcion is use to edit existing account
@@ -276,6 +211,14 @@ export class DataSourceComponent implements OnInit {
         
       }
       
+    }
+
+    // Below function is use to execute on create dataSource
+    onSaveForm(event){
+      this.selectedProviderObj.configurationFields = event;
+      console.log("datasourceData",this.selectedProviderObj);
+      
+
     }
 
  

@@ -120,38 +120,42 @@
             <div class="form-group text-muted">
               <label>Select Monitoring Provider </label>
               <div class="box-icon-group">
-                <!-- [ngClass]="{'disabledMenu':d.id !== 'DOCKERHUB' && d.id !==  'GITHUB'}" -->
-                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.name)" >
-                  <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === selectedDataProvider" />
-                  <label for="{{d.id}}">
-                    <span class="bi-lbl">
-                      <img src="{{d.path}}" alt="icon" />
-                    </span>
-                    <span class="bi-text">
-                     {{d.name}}
-                    </span>
-                  </label>
-                </div>
-                <!-- /.box-icon -->
-              
+                <!-- for Autopilot -->
+                <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
+                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource.configurationFields)" >
+                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}" [checked]="datasource.datasourceType === selectedDataProvider" />
+                    <label for="{{datasource['datasourceType']}}">
+                      <span class="bi-lbl">
+                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png" onError="this.src='../../assets/images/iconBlank.png'"/>
+                      </span>
+                      <span class="bi-text">
+                       {{datasource['displayName']}}
+                      </span>
+                    </label>
+                  </div>
+                </ng-container>
+               
+                <!-- for OES -->
+                <ng-container *ngFor="let datasource of supportedDataSources['oesDataSources']; let i=index;">
+                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource)" >
+                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}" [checked]="datasource.datasourceType === selectedDataProvider" />
+                    <label for="{{datasource['datasourceType']}}">
+                      <span class="bi-lbl">
+                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png"/>
+                      </span>
+                      <span class="bi-text">
+                       {{datasource['displayName']}}
+                      </span>
+                    </label>
+                  </div>
+                </ng-container>
               </div>
               <!-- /.box-icon-group -->
             </div>
             <!-- /.form-group -->
             <hr />
            <!-- code for form load   -->
-           <div *ngIf="selectedDataProvider === 'GITHUB' && typeOfForm === 'edit'"><app-github-form></app-github-form></div>
-           <div *ngIf="selectedDataProvider === 'GITHUB' && typeOfForm === 'new'"><app-github-form></app-github-form></div>
-           <div *ngIf="selectedDataProvider === 'New Relic'"><app-newrelic-form></app-newrelic-form></div>
-           <div *ngIf="selectedDataProvider === 'Dynatrace'"><app-dynatrace-form></app-dynatrace-form></div>
-           <div *ngIf="selectedDataProvider === 'GCP Stackdriver'"><app-gcp-stackdriver-form></app-gcp-stackdriver-form></div>
-           <div *ngIf="selectedDataProvider === 'Prometheus'"><app-prometheus-form></app-prometheus-form></div>
-           <div *ngIf="selectedDataProvider === 'Elastic Search' && typeOfForm === 'new'"><app-elasticsearch-form></app-elasticsearch-form></div>
-           <div *ngIf="selectedDataProvider === 'AWS Cloudwatch'"><app-aws-cloudwatch-form></app-aws-cloudwatch-form></div>
-           <div *ngIf="selectedDataProvider === 'App Dynamics'"><app-app-dynamics-form></app-app-dynamics-form></div> 
-           <div *ngIf="selectedDataProvider === 'Datadog'"><app-datadog-form></app-datadog-form></div>
-           <div *ngIf="selectedDataProvider === 'DOCKERHUB' && typeOfForm === 'edit'"><app-docker-form></app-docker-form></div>
-           <div *ngIf="selectedDataProvider === 'DOCKERHUB' && typeOfForm === 'new'"><app-docker-form></app-docker-form></div>
+           <app-data-source-forms [formData]="currentFormData" (saveFormEvent)="onSaveForm($event)"></app-data-source-forms>
 
            <!-- </form> -->
         </div>

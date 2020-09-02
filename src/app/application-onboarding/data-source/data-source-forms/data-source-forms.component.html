@@ -1,0 +1,41 @@
+
+<div class="row">
+    <div class="col-12" *ngIf="!notSelectedList">
+        <form (ngSubmit)="onSubmit()" #datasourceForm = "ngForm" *ngIf="!fromDataEmpty">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="form-group" *ngFor = "let formField of formData; let i=index;">
+                        <ng-container *ngIf="formField.dataType === 'string' ? true  : false ">
+                            <label>{{formField.displayName}}</label>
+                            <input type="text" name="{{formField.name}}" class="form-control" #input="ngModel"
+                            [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="formField.required"  ngModel>
+                            <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
+                                {{formField.displayName}} is required
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="formField.dataType === 'boolean' ? true  : false ">
+                            <input type="checkbox" style="margin-right: 4px;" name="{{formField.name}}" [required]="formField.required" #input="ngModel"  ngModel>
+                            <label for="{{formField.name}}" class="form-check-label">{{formField.displayName}}</label>
+                            <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
+                                {{formField.displayName}} is required
+                            </span>
+                        </ng-container>
+                        
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" type="reset" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+        <div class="col-12" *ngIf="fromDataEmpty">
+            <app-component-error-listing [errorString]="'Form do not contain any data !!!'"></app-component-error-listing>
+        </div>
+    </div>
+    <div class="col-12 notSelectedDiv" *ngIf="notSelectedList">
+        <h5>Select Monitoring Provider To Add Data Source. </h5>
+    </div>
+</div>
