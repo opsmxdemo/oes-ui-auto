@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,7 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
 
   @ViewChild('datasourceForm') dynamicForm: NgForm;
   @Input() formData: any[];
+  @Output() saveFormEvent = new EventEmitter<NgForm>();
 
   notSelectedList: boolean;                                        // It is use to display warning while no provider is selected from list.
   fromDataEmpty: boolean;                                          // It is use to display message when form dosen't contain any form field in it.
@@ -32,7 +33,9 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
 
   // Below function is execute after submit the form
   onSubmit(){
-    console.log(this.dynamicForm);
+    if(this.dynamicForm.valid){
+      this.saveFormEvent.emit(this.dynamicForm);
+    }
   }
 
 }

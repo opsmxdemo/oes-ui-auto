@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromFeature from '../../store/feature.reducer';
 import * as ApplicationActions from '../store/application.actions';
 import * as AppDashboardAction from '../../../application/application-dashboard/store/dashboard.actions';
-import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import { ApplicationList } from '../../../models/applicationOnboarding/applicationList/applicationList.model';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import Swal from 'sweetalert2'

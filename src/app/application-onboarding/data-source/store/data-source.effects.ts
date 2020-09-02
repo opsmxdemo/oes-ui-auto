@@ -67,7 +67,7 @@ export class DataSourceEffect {
     this.actions$.pipe(
         ofType(DataSourceAction.loadDatasource),
         switchMap(() => {
-            return this.http.get<any>(this.environment.config.endPointUrl+'autopilot/api/v1/datasources').pipe(
+            return this.http.get<any>(this.environment.config.endPointUrl+'dashboardservice/v1/datasources').pipe(
                 map(resdata => {
                     return DataSourceAction.fetchSupportedDatasources({SupportedDataSource:resdata});
                 }),

@@ -1,3 +1,4 @@
+import { CreateDataSource } from 'src/app/models/applicationOnboarding/dataSourceModel/createDataSourceModel';
 import { Component, OnInit } from '@angular/core';
 import * as fromFeature from '../store/feature.reducer';
 import * as DataSourceActions from '../data-source/store/data-source.actions';
@@ -7,6 +8,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
 import { ViewChild, ElementRef} from '@angular/core';
+
 //import { } from '@ng-bo'
 
 @Component({
@@ -21,6 +23,7 @@ export class DataSourceComponent implements OnInit {
   supportedDataSources = null;                                                         // It is use to store supported datasource information.
   imgPath = '../../assets/images/';                                                    // It is use to store static path of image folder exist in assets.
   currentFormData = null;                                                              // It is use to store form data which is currently selected.
+  selectedProviderObj:CreateDataSource = null;                                         // It is use to hold selected Provider object data for post request.
   dataSourceList: { id: string; name: string; path: string; }[];
   selectedDataProvider: any;
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
@@ -71,9 +74,12 @@ export class DataSourceComponent implements OnInit {
   getClose(){
     this.closeAddExpenseModal.nativeElement.click();
   }
-  getDataProvider(e,selectedFormData){
+  getDataProvider(e,selectedProviderData){
     this.selectedDataProvider = e;
-    this.currentFormData = selectedFormData;
+    this.currentFormData = selectedProviderData.configurationFields;
+    this.selectedProviderObj.displayName = selectedProviderData.displayName;
+    this.selectedProviderObj.datasourceType = selectedProviderData.datasourceType;
+    this.selectedProviderObj.usage = selectedProviderData.usage;
   }
 
    // Below function is used if user want to refresh list data
@@ -190,33 +196,6 @@ export class DataSourceComponent implements OnInit {
       this.sharedAccountData.setDataSourceData('');
 
     this.dataSourceList = [];
-
-    //Fetch supported data Source
-    this.store
-      .select(fromFeature.selectDataSource)
-      .subscribe((datasourceData) => {
-        if (datasourceData.supportedDatasource !== null) {
-          console.log(
-            "Supported Data Source:  ",
-            datasourceData.supportedDatasource
-          );
-
-          datasourceData.supportedDatasource.forEach((eachDataSource) => {
-            if (eachDataSource.type === "elasticsearch") {
-              console.log("this DataSources New: ", eachDataSource);
-              this.eachDataSourceItem = {
-                id: eachDataSource.type,
-                name: eachDataSource.displayName,
-                path: "../../assets/images/elastic-search.png"
-              };
-              this.dataSourceList.push(this.eachDataSourceItem);
-            }
-          });
-        }
-      });
-
-      
-
     }
 
     // Below funcion is use to edit existing account
@@ -232,6 +211,14 @@ export class DataSourceComponent implements OnInit {
         
       }
       
+    }
+
+    // Below function is use to execute on create dataSource
+    onSaveForm(event){
+      this.selectedProviderObj.configurationFields = event;
+      console.log("datasourceData",this.selectedProviderObj);
+      
+
     }
 
  
