@@ -16,8 +16,6 @@ export class LoginComponent implements OnInit {
     user: any;
     error: any;
 
-    
-
     constructor(
         public store:Store<fromApp.AppState>
     ) { }
@@ -32,8 +30,8 @@ export class LoginComponent implements OnInit {
         //fetching value from Authstate
         this.store.select('auth').subscribe(
             (response) => {
-                this.loading = response.loading,
-                this.error = response.authError
+                // this.loading = response.loading,
+                // this.error = response.authError
             }
           );
     }
@@ -44,7 +42,7 @@ export class LoginComponent implements OnInit {
              this.user = {
                     username: this.loginForm.value.username,
                 }
-            this.store.dispatch(new AuthAction.LoginStart(this.loginForm.value))
+            //this.store.dispatch(new AuthAction.LoginStart(this.loginForm.value))
             
         }
         
