@@ -33,16 +33,15 @@ export class LayoutEffect {
 
     // Below effect is use for fetch sidebar data. 
     @Effect()
-    fetchDynamicMenu = this.actions$.pipe(
+    authLogin = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
             return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
                 map(resData => {
-                    this.store.dispatch(new LayoutAction.ApiSuccess(0));
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),
                 catchError(errorRes => {
-                    return handleError(errorRes,0);
+                    return handleError(errorRes,1);
                 })
             );
         })
