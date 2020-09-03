@@ -6,7 +6,7 @@
             <div class="tab-content h-100 p-3 flex-grow-1">
                 <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access text-right p-3">
-                    <button class="btn btn-default" (click)="addDataSourceAccount('new')" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
                   </div>
                   <!-- /.page_access ml-auto -->
                   <div class="gray-strip"></div>
@@ -31,7 +31,7 @@
                             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                           </div>
                         </div>
-                        <button class="btn btn-default" (click)="addDataSourceAccount('new')"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
                       </div>
                   <!-- /.page_access ml-auto -->
                   <div class="table-content">
@@ -53,7 +53,7 @@
                             <td>{{datasourceData.accountType}}</td>
                             <td>{{datasourceData.username}}</td>
                              <td>
-                              <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editAccount(datasourceData,i,'edit')" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  
+                              <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  
                               <a (click)="deleteAccount(datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>
@@ -119,14 +119,14 @@
           <!-- <form> -->
             <div class="form-group text-muted">
               <label>Select Monitoring Provider </label>
-              <div class="box-icon-group">
+              <div class="box-icon-group" *ngIf = "supportedDataSources !== null ? true : false">
                 <!-- for Autopilot -->
                 <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
-                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource.configurationFields)" >
+                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource,'AP')" >
                     <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}" [checked]="datasource.datasourceType === selectedDataProvider" />
                     <label for="{{datasource['datasourceType']}}">
                       <span class="bi-lbl">
-                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png" onError="this.src='../../assets/images/iconBlank.png'"/>
+                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png" onError="this.src='../../assets/images/blankicon.png'"/>
                       </span>
                       <span class="bi-text">
                        {{datasource['displayName']}}
@@ -137,7 +137,7 @@
                
                 <!-- for OES -->
                 <ng-container *ngFor="let datasource of supportedDataSources['oesDataSources']; let i=index;">
-                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource)" >
+                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource,'OES')" >
                     <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}" [checked]="datasource.datasourceType === selectedDataProvider" />
                     <label for="{{datasource['datasourceType']}}">
                       <span class="bi-lbl">

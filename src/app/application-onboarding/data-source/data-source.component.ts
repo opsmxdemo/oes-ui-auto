@@ -23,9 +23,13 @@ export class DataSourceComponent implements OnInit {
   supportedDataSources = null;                                                         // It is use to store supported datasource information.
   imgPath = '../../assets/images/';                                                    // It is use to store static path of image folder exist in assets.
   currentFormData = null;                                                              // It is use to store form data which is currently selected.
-  selectedProviderObj:CreateDataSource = null;                                         // It is use to hold selected Provider object data for post request.
-  dataSourceList: { id: string; name: string; path: string; }[];
-  selectedDataProvider: any;
+  providerBelongsTo = null;                                                            // It is use to store type of datasource belongs to i.e, AP or OES.
+  selectedProviderObj:CreateDataSource = {
+    datasourceType : '',
+    displayName : '',
+    configurationFields  : {}
+  };                                                                                   // It is use to hold selected Provider object data for post request.              
+  selectedDataProvider: string;                                                        // It is use to store type of selected datasource provider.
   tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
   datasourceListData: any;                                                             // It use to store Accountlist data fetched from state.
   searchData: string = '';                                                             // this is use to fetch value from search field.
@@ -64,6 +68,7 @@ export class DataSourceComponent implements OnInit {
         if (response.supportedDatasource !== null){
           this.supportedDataSources = response.supportedDatasource;
         }
+        
       },
      (error) => {
        this.notifications.showError('Error',error);
@@ -71,15 +76,22 @@ export class DataSourceComponent implements OnInit {
    );
   }
 
+  // Below function is use to close the model.
   getClose(){
     this.closeAddExpenseModal.nativeElement.click();
   }
-  getDataProvider(e,selectedProviderData){
+
+  // Below function is execute when user select any datasource from list of datasource.
+  getDataProvider(e,selectedProviderData,providerBelongsTo){
+    // resetting the value selectedProviderObj
+    this.selectedProviderObj = {
+      datasourceType : selectedProviderData.datasourceType,
+      displayName : selectedProviderData.displayName,
+      configurationFields  : {}
+    }; 
+    this.providerBelongsTo = providerBelongsTo;
     this.selectedDataProvider = e;
     this.currentFormData = selectedProviderData.configurationFields;
-    this.selectedProviderObj.displayName = selectedProviderData.displayName;
-    this.selectedProviderObj.datasourceType = selectedProviderData.datasourceType;
-    this.selectedProviderObj.usage = selectedProviderData.usage;
   }
 
    // Below function is used if user want to refresh list data
@@ -188,36 +200,23 @@ export class DataSourceComponent implements OnInit {
       })
     }
 
-    //Below function is to get the typeof the form used
-    addDataSourceAccount(type:string){
-      this.typeOfForm = type;
-      this.selectedDataProvider = 'Elastic Search';
-      this.sharedAccountData.setDataSourceType(this.typeOfForm);
-      this.sharedAccountData.setDataSourceData('');
-
-    this.dataSourceList = [];
-    }
-
-    // Below funcion is use to edit existing account
-    editAccount(account:any,index,type:string){
-      this.typeOfForm = type;
-      this.sharedAccountData.setDataSourceData(account);
-      this.sharedAccountData.setDataSourceType(this.typeOfForm);
-      if(account.account_type === 'DOCKERHUB'){
-        this.selectedDataProvider = 'DOCKERHUB';
-      }else if(account.account_type === 'GITHUB'){
-        this.selectedDataProvider = 'GITHUB';
-      }else{
-        
-      }
-      
-    }
-
     // Below function is use to execute on create dataSource
     onSaveForm(event){
-      this.selectedProviderObj.configurationFields = event;
-      console.log("datasourceData",this.selectedProviderObj);
-      
+      let postData = {...this.selectedProviderObj};
+      postData['configurationFields'] = event.form.value;
+      if(this.providerBelongsTo === 'AP'){
+        this.store.dispatch(DataSourceActions.postAPDatasources({CreatedDataSource:postData}));
+      }else{
+        this.store.dispatch(DataSourceActions.postOESDatasources({CreatedDataSource:postData}));
+      }
+
+      this.store.select(fromFeature.selectDataSource).subscribe(
+        (response) => {
+          if(response.datasaved){
+            this.getClose();
+          }
+        }
+      )
 
     }
 

@@ -8,13 +8,16 @@ export interface State {
     datasourceList: any;
     errorMessage: string;
     supportedDatasource: any;
-    
+    loadingDatasource: boolean;
+    datasaved: boolean;
 }
 
 export const initialState: State = {
     errorMessage: null,
     datasourceList: null,
-    supportedDatasource: null
+    supportedDatasource: null,
+    loadingDatasource: false,
+    datasaved: false
 }
 
 export function DataSourceReducer(
@@ -38,13 +41,39 @@ export function DataSourceReducer(
         on(DataSourceAction.errorOccured,
             (state,action) => ({
                 ...state,
-                erroeMessage:action.errorMessage
+                erroeMessage:action.errorMessage,
+                datasaved: false,
+                loadingDatasource:true,
             })
         ),
         on(DataSourceAction.fetchSupportedDatasources,
             (state,action) => ({
                 ...state,
                 supportedDatasource:action.SupportedDataSource 
+            })
+        ),
+        on(DataSourceAction.postAPDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.postOESDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.successResponse,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:false,
+                erroeMessage:null,
+                datasaved:true
             })
         ),
 
