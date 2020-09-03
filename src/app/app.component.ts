@@ -46,23 +46,17 @@ export class AppComponent implements OnInit, AfterViewChecked {
     $('[data-toggle="popover"]').popover();
   }
   ngOnInit() {
-
-    //Dispatching action for login functionality
-    this.store.dispatch(new AuthAction.LoginStart());
+    
+    //Dispatching action for autoLogin functionality
+    this.store.dispatch(new AuthAction.AutoLoginStart());
 
     //fetching data from AuthState    
     this.store.select('auth').subscribe(
       (response) => {
         this.isAuthenticate = response.authenticated;
-        
-        if (response.authResponse === null) {
-          var browserUrl = window.location.href;
-          var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/application";
-          var encodedUrl = encodeURIComponent(resultUrl);
-          this.loginRedirect(encodedUrl)
-        }else if(response.authResponse === 'success'){
-
+        if (!this.isAuthenticate && response.autologinSucceed) {
+          this.router.navigate(['login']);
+        }else if(response.autologinSucceed && this.isAuthenticate){
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
 
@@ -125,10 +119,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       }
     },1000)
   }
-
-  loginRedirect(callback): void {
-    window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
-  }
+  // platform-service-ui
 
   toggleNavbar() {
     this.addclass = !this.addclass;

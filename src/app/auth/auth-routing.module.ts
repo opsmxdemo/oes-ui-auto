@@ -4,8 +4,8 @@ import { LoginComponent } from './login/login.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 
 const authroutes: Routes = [
-  // {path:'login', component:LoginComponent},
-  //   {path:'forgotpassword', component:ForgotpasswordComponent},
+  {path:'login', component:LoginComponent},
+    {path:'forgotpassword', component:ForgotpasswordComponent},
 
 ];
 
