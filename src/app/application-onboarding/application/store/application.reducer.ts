@@ -30,6 +30,8 @@ export interface State {
 
     // Metric Template variables 
     metrictemplate: any[];
+    customDSAccounts:any;
+    datasource : any;
 }
 
 export const initialState: State = {
@@ -47,7 +49,9 @@ export const initialState: State = {
     callDockerImageDataAPI: true,
     userGropsData: null,
     logtemplate: [],
-    metrictemplate:[]
+    metrictemplate:[],
+    customDSAccounts : null,
+    datasource : null
 }
 
 export function ApplicationReducer(
@@ -145,7 +149,8 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 dockerImageData: action.dockerImageData
-            })
+            }),
+        
         ),
         
         // #### CreateApplication screen logic start ####//
@@ -196,6 +201,18 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 metrictemplate: state.metrictemplate.concat({ ...action.metricTemplateData })
+            })
+        ),
+        on(ApplicationAction.fetchAccountForCustomDataSource,
+            (state,action) => ({
+                ...state,
+                datasource: action.datasource
+            })
+        ),
+        on(ApplicationAction.loadAccountForCustomDataSource,
+            (state,action) => ({
+                ...state,
+                customDSAccounts: action.customDSAccounts
             })
         ),
 

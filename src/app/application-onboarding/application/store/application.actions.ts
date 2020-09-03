@@ -34,6 +34,9 @@ export const createdLogTemplate = createAction('[Application] CreatedLogTemplate
 
 // Below action is related to create Metric template 
 export const createdMetricTemplate = createAction('[Application] CreatedMetricTemplate', props<{metricTemplateData:any}>());
+export const fetchAccountForCustomDataSource = createAction('[Application] FetchAccountCustomForDataSource', props<{datasource:any}>());
+export const loadAccountForCustomDataSource = createAction('[Application] LoadAccountCustomForDataSource', props<{customDSAccounts:any}>());
+
 
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');
