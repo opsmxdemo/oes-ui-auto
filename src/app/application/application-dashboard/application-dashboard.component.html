@@ -17,9 +17,11 @@
         <!-- <app-cd-dashboard></app-cd-dashboard> -->
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
           <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
-            [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'InProgress',
-                        'application-lastrun-success':application.applicationStatus === 'PASS','application-lastrun-fail':application.applicationStatus === 'FAIL'}" >
-            <div class="data_list_header d-flex align-items-center">
+            [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
+                        'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
+                        'application-lastrun-review':application.applicationStatus === 'Review'}" >
+                        
+                        <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
                 <h3>{{application.applicationName}}</h3>
                 <span class="datetime">{{application.date | date:'medium'}} </span>
@@ -32,7 +34,7 @@
                       <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore >= canaries.maximumCanaryScore,'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === ''}"></i></a>
                     </button>
               </div>
-                  <a *ngIf="application.applicationStatus === 'InProgress'"  class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="InProgress">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
+                  <a *ngIf="application.applicationStatus === 'RUNNING'"  class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="InProgress">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
                         <div class="dropdown dropdown-icon-remove">
                           <button class="btn btn-default ml-3 px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v"></i>
@@ -51,7 +53,8 @@
                   <li class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let i=index"
                     [ngClass]="{'active':application.applicationName === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
                     (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
-                    <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
+                    <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
+                    <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">0</div>
                     <div class="dl_value_text">{{applicationInfo.applicationInfolabel}} </div>
                     <span
                       *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
