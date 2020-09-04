@@ -477,11 +477,13 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.groupPermissionForm.get('userGroups')).push(
       new FormGroup({
         userGroupId: new FormControl('',[Validators.required,this.usergroupExist.bind(this)]),
-        permissionId: new FormControl('', Validators.required),
+        read: new FormControl(false),
+        write: new FormControl(false),
+        execute: new FormControl(false),
       })
     );
     // populating user group dropdown data
-    this.populateUserGroupsDropdown();
+    //this.populateUserGroupsDropdown();
   }
 
   // Below function is use to remove exist permission group 

@@ -14,12 +14,21 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 import { CreateDataSource } from 'src/app/models/applicationOnboarding/dataSourceModel/createDataSourceModel';
 
 //below function is use to fetch error and return appropriate comments
-const handleError = (errorRes: any) => {
+const handleError = (errorRes: any, type:string) => {
     let errorMessage = 'An unknown error occurred';
-    if (!errorRes.error) {
-        return of(DataSourceAction.errorOccured({ errorMessage }));
+    switch(type){
+        case 'create':
+            if (!errorRes.error) {
+                return of(DataSourceAction.errorOccured({ errorMessage }));
+            }
+            return of(DataSourceAction.errorOccured({ errorMessage:errorRes.error.message }));
+        case 'list':
+            if (!errorRes.error) {
+                return of(DataSourceAction.listErrorOccured({ errorMessage }));
+            }
+            return of(DataSourceAction.listErrorOccured({ errorMessage:errorRes.error.message }));
     }
-    return of(DataSourceAction.errorOccured({ errorMessage:errorRes.error.message }));
+    
 }
 
 @Injectable()
@@ -40,12 +49,8 @@ export class DataSourceEffect {
             switchMap(() => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/getAccounts').pipe(
                     map(resdata => {
-                        return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata['data'] });
+                        return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
                     }),
-                    catchError(errorRes => {
-                        this.toastr.showError('DataSources List Data: ' + errorRes.error.error, 'ERROR')
-                        return handleError(errorRes);
-                    })
                 );
             })
         )
@@ -63,7 +68,7 @@ export class DataSourceEffect {
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('DataSources Data:' + errorRes.error.error, 'ERROR')
-                        return handleError(errorRes);
+                        return handleError(errorRes,'create');
                     })
                 );
             })
@@ -77,12 +82,13 @@ export class DataSourceEffect {
             switchMap(action => {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials', action.CreatedDataSource).pipe(
                     map(resdata => {
-                        this.toastr.showSuccess('Datasource "'+action.CreatedDataSource.displayName+'" is created successfully','Success');
+                        this.toastr.showSuccess('Datasource "'+action.CreatedDataSource.name+'" is created successfully','Success');
+                        this.store.dispatch(DataSourceAction.loadDatasourceList());
                         return DataSourceAction.successResponse();
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Datasource "'+action.CreatedDataSource.displayName+'" is not created due to: '+errorRes.error.message, 'ERROR')
-                        return handleError(errorRes);
+                        this.toastr.showError('Datasource "'+action.CreatedDataSource.name+'" is not created due to: '+errorRes.error.message, 'ERROR')
+                        return handleError(errorRes,'create');
                     })
                 );
             })
@@ -97,11 +103,12 @@ export class DataSourceEffect {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/saveAccount', action.CreatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(resdata['message'],'Success');
+                        this.store.dispatch(DataSourceAction.loadDatasourceList());
                         return DataSourceAction.successResponse();
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Datasource "'+action.CreatedDataSource.displayName+'" is not created due to: '+errorRes.error.error, 'ERROR')
-                        return handleError(errorRes);
+                        this.toastr.showError('Datasource "'+action.CreatedDataSource.name+'" is not created due to: '+errorRes.error.message, 'ERROR')
+                        return handleError(errorRes,'create');
                     })
                 );
             })
@@ -111,21 +118,16 @@ export class DataSourceEffect {
     // Below effect is use for delete datasource Account .
     deleteDatasourceData = createEffect(() =>
         this.actions$.pipe(
-            ofType(DataSourceAction.deleteDatasourceAccount),
+            ofType(DataSourceAction.deleteOESDatasourceAccount),
             switchMap(action => {
-                return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/deleteAccount/' + action.accountName).pipe(
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/deleteAccount/?accountName=' + action.accountName).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
                         return DataSourceAction.DatasourceaccountDeleted({ index: action.index })
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('DataSource not deleted due to ' + errorRes.error.error, 'ERROR')
-                        return handleError(errorRes);
+                        this.toastr.showError('DataSource not deleted due to ' + errorRes.error.message, 'ERROR')
+                        return handleError(errorRes,'list');
                     })
                 );
             })

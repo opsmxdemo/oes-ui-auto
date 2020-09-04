@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import * as fromFeature from '../../store/feature.reducer';
+import * as fromFeature from '../../../store/feature.reducer';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -16,7 +16,7 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
 
   notSelectedList: boolean;                                        // It is use to display warning while no provider is selected from list.
   fromDataEmpty: boolean;                                          // It is use to display message when form dosen't contain any form field in it.
-  loading: boolean = false;
+  loading: boolean = false;                                        // It is use to show or hide loading wheel at saving time.
 
   constructor(public store: Store<fromFeature.State>) { }
   ngOnChanges(changes: SimpleChanges): void {

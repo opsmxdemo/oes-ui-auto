@@ -1,5 +1,4 @@
-import { CreateDataSource } from 'src/app/models/applicationOnboarding/dataSourceModel/createDataSourceModel';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as fromFeature from '../store/feature.reducer';
 import * as DataSourceActions from '../data-source/store/data-source.actions';
 import { Store } from '@ngrx/store';
@@ -7,7 +6,6 @@ import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
-import { ViewChild, ElementRef} from '@angular/core';
 
 //import { } from '@ng-bo'
 
@@ -20,17 +18,6 @@ export class DataSourceComponent implements OnInit {
 
   @ViewChild('closeAddExpenseModal') closeAddExpenseModal: ElementRef;
 
-  supportedDataSources = null;                                                         // It is use to store supported datasource information.
-  imgPath = '../../assets/images/';                                                    // It is use to store static path of image folder exist in assets.
-  currentFormData = null;                                                              // It is use to store form data which is currently selected.
-  providerBelongsTo = null;                                                            // It is use to store type of datasource belongs to i.e, AP or OES.
-  selectedProviderObj:CreateDataSource = {
-    datasourceType : '',
-    displayName : '',
-    configurationFields  : {}
-  };                                                                                   // It is use to hold selected Provider object data for post request.              
-  selectedDataProvider: string;                                                        // It is use to store type of selected datasource provider.
-  tableIsEmpty: boolean = false;                                                       // It use to hide table if no record exist in it.
   datasourceListData: any;                                                             // It use to store Accountlist data fetched from state.
   searchData: string = '';                                                             // this is use to fetch value from search field.
   perPageData: number = 10;                                                            // this is use to populate value in perPage dropdown exist in pagination.
@@ -42,71 +29,52 @@ export class DataSourceComponent implements OnInit {
     pageNo: 1,
   }
   currentPage = [];                                                                    // this use to store array of data exists in current page.
-  datasourceListLength: number = null;
-  nameOfAccount: null;
-  typeOfForm: any;
-  eachDataSourceItem: any;
+  datasourceListLength: number = null;                                                 // It is use to store length of datasource list.
+  tableIsEmpty: boolean = false;                                                       // It is use to show or hide the empty table page.
+  accountBelongsTo: string = null;                                                     // It is use to store value of account belongs to i.e, AP or OES.
+  supportedDatasources = null;                                                         // It is use to store all supported datasource available datasource.
+  loading = false;
+
 
   constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
     public sharedAccountData: SharedService) { }
 
-  ngOnInit(): void {
-    this.selectedDataProvider = '';
-    this.store.dispatch(DataSourceActions.loadDatasourceList());
-
+  ngOnInit(){
+   
     // fetching data from state
     this.store.select(fromFeature.selectDataSource).subscribe(
-     (response) => {
-        if (response.datasourceList !== null && response.datasourceList !== undefined) {
-        this.datasourceListData = response.datasourceList;
-        this.datasourceListLength = this.datasourceListData.length;
-        this.renderPage();
-        this.tableIsEmpty = false;
-        }else{
+      (response) => {
+        this.loading = response.listLoading;
+        if (response.datasourceList.length > 0) {
+          this.datasourceListData = response.datasourceList;
+          this.datasourceListLength = this.datasourceListData.length;
+          this.renderPage();
+          this.tableIsEmpty = false;
+        } else {
           this.tableIsEmpty = true;
         }
+
+        // fetching suported datasources
         if (response.supportedDatasource !== null){
-          this.supportedDataSources = response.supportedDatasource;
+          this.supportedDatasources = response.supportedDatasource;
         }
-        
-      },
-     (error) => {
-       this.notifications.showError('Error',error);
-     }
-   );
+      }
+    );
   }
 
-  // Below function is use to close the model.
-  getClose(){
-    this.closeAddExpenseModal.nativeElement.click();
-  }
-
-  // Below function is execute when user select any datasource from list of datasource.
-  getDataProvider(e,selectedProviderData,providerBelongsTo){
-    // resetting the value selectedProviderObj
-    this.selectedProviderObj = {
-      datasourceType : selectedProviderData.datasourceType,
-      displayName : selectedProviderData.displayName,
-      configurationFields  : {}
-    }; 
-    this.providerBelongsTo = providerBelongsTo;
-    this.selectedDataProvider = e;
-    this.currentFormData = selectedProviderData.configurationFields;
-  }
-
-   // Below function is used if user want to refresh list data
-   refreshList(){
+  // Below function is used if user want to refresh list data
+  refreshList() {
     this.store.dispatch(DataSourceActions.loadDatasourceList());
-  } 
+  }
 
   //Below function is execute on search
-  onSearch(){
-    if(this.searchData !== ''){
+  onSearch() {
+    if (this.searchData !== '') {
       this.currentPage = [];
       for (let i = 0; i < this.datasourceListLength; i++) {
         this.currentPage.push(this.datasourceListData[i]);
       }
-    }else{
+    } else {
       this.renderPage();
     }
   }
@@ -114,11 +82,11 @@ export class DataSourceComponent implements OnInit {
   //Below function is used to implement pagination
   renderPage() {
     this.currentPage = [];
-    if(this.page.endPoint < this.datasourceListLength-1){
+    if (this.page.endPoint < this.datasourceListLength - 1) {
       for (let i = this.page.startingPoint; i < this.page.endPoint; i++) {
         this.currentPage.push(this.datasourceListData[i]);
       }
-    }else{
+    } else {
       for (let i = this.page.startingPoint; i < this.datasourceListLength; i++) {
         this.currentPage.push(this.datasourceListData[i]);
       }
@@ -138,7 +106,7 @@ export class DataSourceComponent implements OnInit {
 
   //Below function is execute on click of page next btn
   pageNext() {
-    if (this.page.endPoint < this.datasourceListLength-1) {
+    if (this.page.endPoint < this.datasourceListLength - 1) {
       this.page.pageNo += 1;
       this.page.currentPage = this.page.pageNo;
       if ((this.page.endPoint + this.page.pageSize) < this.datasourceListLength) {
@@ -146,7 +114,7 @@ export class DataSourceComponent implements OnInit {
         this.page.endPoint += this.page.pageSize;
       } else if (this.page.endPoint < this.datasourceListLength) {
         this.page.startingPoint = this.page.endPoint;
-        this.page.endPoint = this.datasourceListLength-1;
+        this.page.endPoint = this.datasourceListLength - 1;
       }
       this.renderPage();
     }
@@ -175,50 +143,60 @@ export class DataSourceComponent implements OnInit {
     if (currentPage * this.page.pageSize < this.datasourceListLength) {
       this.page.endPoint = currentPage * this.page.pageSize;
     } else {
-      this.page.endPoint = this.datasourceListLength-1;
+      this.page.endPoint = this.datasourceListLength - 1;
     }
     this.renderPage();
   }
 
-    // Below function is use to delete existiong account
-    deleteAccount(account: any,index) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
-      }).then((result) => {
-        if (result.value) {
-          $("[data-toggle='tooltip']").tooltip('hide');
-        this.store.dispatch(DataSourceActions.deleteDatasourceAccount({accountName: account.name,index:index}));
-        }else{
-         
-        }
-      })
-    }
-
-    // Below function is use to execute on create dataSource
-    onSaveForm(event){
-      let postData = {...this.selectedProviderObj};
-      postData['configurationFields'] = event.form.value;
-      if(this.providerBelongsTo === 'AP'){
-        this.store.dispatch(DataSourceActions.postAPDatasources({CreatedDataSource:postData}));
-      }else{
-        this.store.dispatch(DataSourceActions.postOESDatasources({CreatedDataSource:postData}));
+  // Below function is use to rectify type of datasource belong to onselect of datasource from list
+  onselectDatasource(operationPerform,accountData,index){
+    this.accountBelongsTo = '';
+    this.supportedDatasources['oesDataSources'].forEach(oeslist => {
+      if(oeslist.datasourceType === accountData.datasourceType){
+        this.accountBelongsTo = 'OES'
       }
-
-      this.store.select(fromFeature.selectDataSource).subscribe(
-        (response) => {
-          if(response.datasaved){
-            this.getClose();
-          }
+    });
+    if(this.accountBelongsTo === ''){
+      this.supportedDatasources['autopilotDataSources'].forEach(oeslist => {
+        if(oeslist.datasourceType === accountData.datasourceType){
+          this.accountBelongsTo = 'AP'
         }
-      )
-
+      });
     }
 
- 
+    // below logic is use to perform specific operation
+    if(operationPerform === 'Delete'){
+      this.deleteAccount(accountData,index);
+    }
+   
+  }
+
+  // Below function is use to delete existiong account
+  deleteAccount(account: any, index) {
+    $("[data-toggle='tooltip']").tooltip('hide');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.value) {
+        if(this.accountBelongsTo === 'OES'){
+          this.store.dispatch(DataSourceActions.deleteOESDatasourceAccount({ accountName: account.displayName, index: index }));
+        }
+      } 
+    })
+  }
+
+  // Below function is use to close the model.
+  getClose(event) {
+    if (event) {
+      this.closeAddExpenseModal.nativeElement.click();
+    }
+  }
+
+  
 }

@@ -1,13 +1,13 @@
 
 export class CreateDataSource {
     datasourceType: string;
-    displayName:string;
+    name:string;
     configurationFields:{};
     
     constructor(data: any) {
         data = data || {};
         this.datasourceType = data.datasourceType;
-        this.displayName = data.displayName;
+        this.name = data.name;
         this.configurationFields = data.configurationFields;
     }
 }

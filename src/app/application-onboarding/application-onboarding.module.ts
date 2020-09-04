@@ -14,8 +14,6 @@ import { DataSourceComponent } from './data-source/data-source.component';
 import { CloudServicesComponent } from './cloud-services/cloud-services.component';
 import { DynamicAccountsComponent } from './accounts/dynamic-accounts/dynamic-accounts.component';
 import { CreateAccountComponent } from './accounts/create-account/create-account.component';
-import { GithubFormComponent } from './data-source/github-form/github-form.component';
-import { DockerFormComponent } from './data-source/docker-form/docker-form.component';
 import { ApplicationEffect } from './application/store/application.effects';
 import { AccountsEffect } from './accounts/store/accounts.effects';
 import { DataSourceEffect } from './data-source/store/data-source.effects';
@@ -26,7 +24,8 @@ import { LogTemplateComponent } from './application/application-creation/log-tem
 import { LogTemplateEffect } from './application/application-creation/log-template/store/logTemplate.effects';
 import { MetricTemplateEffect } from './application/application-creation/metric-template/store/metricTemplate.effects';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
-import { DataSourceFormsComponent } from './data-source/data-source-forms/data-source-forms.component';
+import { CreateDataSourceComponent } from './data-source/create-data-source/create-data-source.component';
+import { DataSourceFormsComponent } from './data-source/create-data-source/data-source-forms/data-source-forms.component';
 
 
 @NgModule({
@@ -38,11 +37,10 @@ import { DataSourceFormsComponent } from './data-source/data-source-forms/data-s
       CloudServicesComponent,
       DynamicAccountsComponent,
       CreateAccountComponent,
-      GithubFormComponent,
-      DockerFormComponent,
       MetricTemplateComponent,
       LogTemplateComponent,
-      DataSourceFormsComponent
+      DataSourceFormsComponent,
+      CreateDataSourceComponent
     ],
     imports: [
      CommonModule,
