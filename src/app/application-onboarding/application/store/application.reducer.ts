@@ -27,6 +27,13 @@ export interface State {
 
     // Log Template variables 
     logtemplate: any[];
+      // Log Template variables 
+      logListLoading: boolean;
+      logTopicsList: [];
+      logAccountsData: any,
+      callGetLogAccountsAPI: boolean;
+      logDataSourcesLoading: boolean;
+      logDataSources: [];
 
     // Metric Template variables 
     metrictemplate: any[];
@@ -49,9 +56,17 @@ export const initialState: State = {
     callDockerImageDataAPI: true,
     userGropsData: null,
     logtemplate: [],
+    logAccountsData: null,
+    callGetLogAccountsAPI: true,
+    logListLoading: false,
+    logTopicsList: null,
+    logDataSources: null,
+    logDataSourcesLoading: false,
+
     metrictemplate:[],
     customDSAccounts : null,
-    datasource : null
+    datasource : null,
+    
 }
 
 export function ApplicationReducer(
@@ -190,6 +205,47 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 logtemplate: state.logtemplate.concat({ ...action.logTemplateData })
+            })
+        ),
+
+
+         // ### log Template creation logic starts
+         on(ApplicationAction.loadMonitoringAccountName,
+            (state,action) => ({
+                ...state,
+                callGetLogAccountsAPI: false
+            })
+        ),
+        on(ApplicationAction.fetchMonitoringAccounts,
+            (state,action) => ({
+                ...state,
+                logAccountsData: action.logAccounts
+            })
+        ),
+        on(ApplicationAction.loadLogTopics,
+            state => ({
+                ...state,
+                logListLoading:true
+            })
+        ),
+        on(ApplicationAction.fetchLogTopics,
+            (state,action) => ({
+                ...state,
+                logTopicsList: action.logslist,
+                logListLoading:false
+            })
+        ),
+        on(ApplicationAction.loadSupportingDatasources,
+            state => ({
+                ...state,
+                logDataSourcesLoading:true
+            })
+        ),
+        on(ApplicationAction.fetchDatasources,
+            (state,action) => ({
+                ...state,
+                logDataSources: action.datasources,
+                logDataSourcesLoading:false
             })
         ),
 

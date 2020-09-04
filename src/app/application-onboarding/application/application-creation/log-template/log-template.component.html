@@ -1,8 +1,335 @@
-
+<!-- 
   <div class="col-12 maindiv">
     <json-editor [options]="editorOptions" [data]="data" (change)="showJson($event)"></json-editor>
   </div>
   <hr>
   <div class="col-12">
     <button class="btn btn-primary ml-2 savebtn" (click)="Submitlogdata()">Save</button>
-  </div>
+  </div> -->
+
+  <div class="pt-1">
+
+    <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist" (click)="onClickTab($event.target.id)">
+      <li class="nav-item" >
+        <a class="nav-link active" id="logtemplate-form-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-form" aria-selected="true">Form</a>
+      </li>
+      <li  class="nav-item">
+        <a class="nav-link"  id="logtemplate-editor-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-editor" aria-selected="true">Editor</a>
+      </li>
+    </ul>
+  
+    <div class="tab-content" id="myTabContent">
+      <div id="logtemplate-form" role="tabpanel" aria-labelledby="logtemplate-form-tab">
+          <div *ngIf ="selectedTab === 'logtemplate-form'" class="col-12 maindiv">
+            <mat-horizontal-stepper  [labelPosition]="'bottom'" #stepper>
+              <mat-step [stepControl]="createLogForm">
+                <form [formGroup]="createLogForm">
+                  <ng-template matStepLabel>Log Provider</ng-template>
+                  <div id="step-1">
+                    <div class="multisteps-form__content">
+                       <div class="px-4 py-3">
+                         <div class="row">
+                           <div class="col-6">
+                            <!-- form group log template name -->
+                            <div class="form-group">
+                              <label>Log Template Name</label>
+                              <input type="text" class="form-control" formControlName="templateName" [ngClass]="createLogForm.get('templateName').invalid && createLogForm.get('templateName').touched ? 'is-invalid':''">
+                              <span *ngIf="createLogForm.get('templateName').invalid && createLogForm.get('templateName').touched"
+                                class="invalid-feedback">
+                                <span *ngIf="createLogForm.get('templateName').errors['required']">Template Name is
+                                  required</span>
+                                <span *ngIf="createLogForm.get('templateName').errors['templateExist']">Template already
+                                  exists with same name. Please choose a unique template name</span>
+                                <span *ngIf="createLogForm.get('templateName').errors['containSpace']">Space is not allowed in template name</span>
+                                <span *ngIf="createLogForm.get('templateName').errors['startingFromNumber']">The template name must begin with a letter.</span>
+                                <span *ngIf="createLogForm.get('templateName').errors['symbols']">No Special characters are allowed.</span>
+                              </span>
+                            </div>
+                            <!-- / form group log template name -->
+                           </div>
+                           <!-- /.col-6 -->
+                         </div>
+                         <!-- /.row -->
+            
+                         <div class="text-divider">
+                           <h4>Log Metrics </h4>
+                         </div>
+                         
+                         <div class="row">
+                           <div class="col-6">
+                            <!-- form group log monitoring provider -->
+                            <div class="form-group">
+                              <label>Log Monitoring Provider</label>
+                              <select class="form-control" formControlName="monitoringProvider" (change)="onDataSourceSelect($event.target.value)">
+                                <option value="" [disabled]="true">Select</option>
+                                <ng-container *ngFor="let datasourceList of autoDatasources">
+                                <option *ngIf="datasourceList.usage[0] == 'log'" value="{{datasourceList.datasourceType}}" >
+                                  {{datasourceList.displayName}}</option>
+                                </ng-container>
+                              </select>
+                              <span *ngIf="createLogForm.get('monitoringProvider').invalid && createLogForm.get('monitoringProvider').touched"
+                                class="invalid-feedback">
+                                Datasource S ource is required
+                              </span>
+                            </div>
+                            <!--/ form group log monitoring provider -->
+                            
+                             <!-- form group logaccounts -->
+                             <div class="form-group" *ngIf="selectedDataSource != null && selectedDataSource != 'kubernetes'">
+                              <label>Log Account</label>
+                              <div *ngIf="logAccountsList.length === 0" class="text-danger">No accounts present</div>
+                              <select class="form-control" formControlName="accountName" *ngIf="logAccountsList.length > 0">
+                                <option value="" [disabled]="true">Select</option>
+                                <ng-container *ngFor="let account of logAccountsList">
+                                <option  value="{{account}}" >
+                                  {{account}}</option>
+                                </ng-container>
+                              </select>
+                              <span *ngIf="createLogForm.get('accountName').invalid && createLogForm.get('accountName').touched"
+                                class="invalid-feedback">
+                                Account Name is required
+                              </span>
+                            </div>
+                            <!--/ form group logaccounts -->
+            
+                             <!-- form group log namespace -->
+                             <div class="form-group" *ngIf="selectedDataSource === 'kubernetes'">
+                              <label>Name Space</label>
+                              <input type="text" class="form-control" formControlName="namespace" [ngClass]="createLogForm.get('namespace').invalid && createLogForm.get('namespace').touched ? 'is-invalid':''">
+                              <span *ngIf="createLogForm.get('namespace').invalid && createLogForm.get('namespace').touched"
+                                class="invalid-feedback">
+                                <span *ngIf="createLogForm.get('namespace').errors['required']">Namespace is
+                                  required</span>    
+                                <!-- <span *ngIf="createLogForm.get('namespace').errors['containSpace']">Space is not allowed in template name</span>
+                                <span *ngIf="createLogForm.get('namespace').errors['symbols']">No Special characters are allowed.</span> -->
+                              </span>
+                            </div>
+                            <!-- / form group namespace -->
+                              </div>
+                           <!-- /.col-6 -->
+                         </div>
+                         <!-- /.row -->
+            
+            
+                             <div class="text-divider" *ngIf="selectedDataSource === 'elasticsearch' && logAccountsList.length > 0">
+                               <h4>Elastic Configuration</h4>
+                             </div>
+                 <!-- /.col-6 -->
+                
+                <!-- /.col-12 -->
+                         <div class="row" *ngIf="selectedDataSource === 'elasticsearch' && logAccountsList.length > 0">
+                           <div class="col-6">
+                            <!-- elastic index pattern -->
+                            <div class="form-group">
+                              <label>Index Pattern</label>
+                              <input type="text" class="form-control" formControlName="index" [ngClass]="createLogForm.get('index').invalid && createLogForm.get('index').touched ? 'is-invalid':''">
+                              <span *ngIf="createLogForm.get('index').invalid && createLogForm.get('index').touched"
+                                class="invalid-feedback">
+                                <span *ngIf="createLogForm.get('index').errors['required']">Index pattern is
+                                  required</span>    
+                              </span>
+                            </div>
+                            <!-- / elastic index pattern -->
+                             <!-- elastic kibana index -->
+                             <div class="form-group">
+                              <label>Kibana Default Index</label>
+                              <input type="text" class="form-control" formControlName="kibanaIndex" [ngClass]="createLogForm.get('kibanaIndex').invalid && createLogForm.get('kibanaIndex').touched ? 'is-invalid':''">
+                              <span *ngIf="createLogForm.get('kibanaIndex').invalid && createLogForm.get('kibanaIndex').touched"
+                                class="invalid-feedback">
+                                <span *ngIf="createLogForm.get('kibanaIndex').errors['required']">Index pattern is
+                                  required</span>    
+                              </span>
+                            </div>
+                            <!-- / elastic kibana index -->
+                           </div>
+                           <!-- /.col-6 -->
+                           
+                           <div class="col-12 mt-4">
+                             <div class="form-group">
+                               <div class="custom-control custom-checkbox">
+                                 <input type="checkbox" class="custom-control-input"  id="regExFilter" formControlName="regExFilter" (change)="onCheckboxChange($event)">
+                                 <label class="custom-control-label text-muted" for="regExFilter">Custom regular expression filter Required</label>
+                               </div>
+                             </div>
+                             <!-- /.form-group -->
+            
+                             <div class="form-inline" *ngIf="regFilterStatus === true">
+                               <div class="form-group mr-2">
+                                 <label>Response Key</label>
+                                 <input type="text" class="form-control w-100" formControlName="regExResponseKey" [ngClass]="createLogForm.get('regExResponseKey').invalid && createLogForm.get('regExResponseKey').touched ? 'is-invalid':''">
+                                 <span *ngIf="createLogForm.get('regExResponseKey').invalid && createLogForm.get('regExResponseKey').touched"
+                                   class="invalid-feedback">
+                                   <!-- <span *ngIf="createLogForm.get('regExResponseKey').errors['required']">Response Key is
+                                     required</span>     -->
+                                 </span>
+                               </div>
+                               <!-- /.form-group -->
+                               <div class="form-group mr-2">
+                                 <label>Regular Expression</label>
+                                 <input type="text" class="form-control w-100" formControlName="regularExpression" [ngClass]="createLogForm.get('regularExpression').invalid && createLogForm.get('regularExpression').touched ? 'is-invalid':''">
+                                 <span *ngIf="createLogForm.get('regularExpression').invalid && createLogForm.get('regularExpression').touched"
+                                   class="invalid-feedback">
+                                   <!-- <span *ngIf="createLogForm.get('regularExpression').errors['required']">regularExpression is
+                                     required</span>     -->
+                                 </span>
+                               </div>
+                               <!-- /.form-group -->
+                             </div>
+                             <!-- /.form-inline -->
+                           </div>
+                           <!-- /.col-12 -->
+                         </div>
+                         <!-- /.row -->
+            
+            
+                         <hr class="ml-0 mt-3 mb-3" />
+            
+                         <div class="row">
+                           <div class="col-4">
+                             <!-- form group sensitivity -->
+                             <div class="form-group" *ngIf="selectedDataSource != null">
+                              <label>Level of Sensitivity</label>
+                              <select class="form-control" formControlName="sensitivity">
+                                <option value="" [disabled]="true">Select</option>
+                                <ng-container *ngFor="let sensitivity of logSensitivityTypes">
+                                <option  value="{{sensitivity}}" >
+                                  {{sensitivity}}</option>
+                                </ng-container>
+                              </select>
+                              <span *ngIf="createLogForm.get('sensitivity').invalid && createLogForm.get('sensitivity').touched"
+                                class="invalid-feedback">
+                                Account Name is required
+                              </span>
+                            </div>
+                            <!--/ form group sensitivity -->
+            
+            
+                             <!-- /.form-group -->
+                           </div>
+                           <!-- /.col-6 -->
+                         </div>
+                         <!-- /.row -->                            
+                       </div>
+                     </div>
+                  </div>
+                  <div>
+                    <button type="button" mat-button matStepperNext class="btn btn-secondary sw-btn-next" (click)="getLogTopics()">Next</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="logTopicsForm">
+                <form [formGroup]="logTopicsForm">
+                  <ng-template matStepLabel>Log Topic</ng-template>
+                  <!-- <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                           required>
+                  </mat-form-field> -->
+                  <div id="step-2">
+                    <div class="multisteps-form__content">                          
+                       <div class="px-4 py-3">
+                         <div class="d-flex align-items-center mb-4">
+                           <div class="text-divider flex-grow-1 p-0">
+                             <h4>New Log Topic</h4>
+                           </div>
+                           <div class="btn btn-sm btn-default ml-3">Copy from existing Log Topic </div>
+                         </div>
+            
+                         <div class="row">
+                           <div class="col-10">
+                             <table class="table table-outline table-md" formArrayName="topicsList">
+                               <thead>
+                                 <tr>
+                                   <th>STRING PATTERN</th>
+                                   <th>CHARACTERIZATION TOPIC</th>
+                                   <th>TYPE</th>
+                                   <th width="30"></th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                <!-- <tr *ngFor="let logTopics of logTopicsData;let i=index;">
+                                  
+                                  <td><input type="text" class="form-control" value="{{logTopics['string']}}"/></td>
+                                  <td>
+                                    <select class="form-control" formControlName="topic">
+                                     <option value="" [disabled]="true">Select</option>
+                                     
+                                     <option  value="{{topic}}" >
+                                       {{topic}}</option>
+                                     
+                                   </select>
+                                  </td> 
+                                  <td><input type="text" class="form-control" value="{{logTopics['type']}}"/></td>
+                                </tr> -->
+            
+                               <!-- {{logTopicsData}}---{{logCharacterization}} -->
+                                 <tr *ngFor="let logTopics of logTopicsForm.get('topicsList')['controls'];let i=index;">
+                                  <ng-container [formGroupName]="i">
+                                   <td>
+                                     <input type="text" class="form-control" value="{{logTopics.string}}" formControlName="string">
+                                     <!-- 
+                                      [ngClass]="logTopicsForm.get('string').invalid && logTopicsForm.get('string').touched ? 'is-invalid':''" 
+                                      <span *ngIf="logTopicsForm.get('string').invalid && logTopicsForm.get('string').touched"
+                                     class="invalid-feedback">
+                                     <span *ngIf="logTopicsForm.get('string').errors['required']">String Name is
+                                       required</span>
+                                     <span *ngIf="logTopicsForm.get('string').errors['containSpace']">Space is not allowed in string name</span>
+                                     <span *ngIf="logTopicsForm.get('string').errors['startingFromNumber']">The string name must begin with a letter.</span>
+                                     <span *ngIf="logTopicsForm.get('string').errors['symbols']">No Special characters are allowed.</span>
+                                   </span> -->
+                                   </td>
+                                   <td>
+                                     <select class="form-control" formControlName="topic">
+                                      <option value="" [disabled]="true">Select</option>
+                                      
+                                      <option *ngFor="let topic of logCharacterization" value="{{topic}}" >
+                                        {{topic}}</option>
+                                      
+                                    </select>
+                                   </td>
+                                   <td>
+                                    <input type="text" class="form-control" value="{{logTopics.type}}" formControlName="type">
+                                    <!-- <span *ngIf="logTopicsForm.get('type').invalid && logTopicsForm.get('type').touched"
+                                       [ngClass]="logTopicsForm.get('type').invalid && logTopicsForm.get('type').touched ? 'is-invalid':''"
+                                    class="invalid-feedback">
+                                    <span *ngIf="logTopicsForm.get('type').errors['required']">Type is
+                                      required</span>
+                                    <span *ngIf="logTopicsForm.get('type').errors['containSpace']">Space is not allowed in type name</span>
+                                    <span *ngIf="logTopicsForm.get('type').errors['startingFromNumber']">The type must begin with a letter.</span>
+                                    <span *ngIf="logTopicsForm.get('type').errors['symbols']">No Special characters are allowed.</span>
+                                  </span> -->
+                                   </td>
+                                   <td>
+                                     <a href="#" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                   </td>
+                                   </ng-container>
+                                 </tr>
+                               </tbody>
+                             </table>
+                             <!-- /.table table-sm -->
+                           </div>
+                           <!-- /.col-8 -->
+                         </div>
+                         <!-- /.row -->
+                       </div>
+                     </div>
+                  </div>
+                  <div>
+                    <button mat-button matStepperPrevious class="pull-left">Back</button>
+                    <button mat-button matStepperNext type="button" class="btn btn-secondary sw-btn-next pull-right" (click)="SubmitForm()">Submit</button>
+                  </div>
+                </form>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </div>
+          
+        </div>
+        <div id="logtemplate-editor" role="tabpanel" aria-labelledby="logtemplate-editor-tab">          
+          <div class="col-12 maindiv" *ngIf = "selectedTab === 'logtemplate-editor'">
+            <json-editor [options]="editorOptions" [data]="data" (change)="showJson($event)"></json-editor>
+           </div> <hr>
+           <div class="col-12" *ngIf = "selectedTab === 'logtemplate-editor'">
+            <button class="btn btn-primary ml-2 savebtn" (click)="Submitlogdata()">Save</button>
+          </div> 
+        </div>
+    </div>
