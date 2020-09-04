@@ -36,6 +36,7 @@ export class LogTemplateComponent implements OnInit {
     logCharacterization: any;
     autoDatasources: null;
 
+    
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
   ngOnInit(): void {
@@ -46,7 +47,6 @@ export class LogTemplateComponent implements OnInit {
         if(responseData.supportedDatasource != null){
           if(responseData.supportedDatasource.autopilotDataSources != null){
             this.autoDatasources = responseData.supportedDatasource.autopilotDataSources;
-            console.log(this.autoDatasources);
           }
         }
       }
@@ -60,6 +60,16 @@ export class LogTemplateComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
+
+    $(document).ready(function () {
+      $('#dtVerticalScrollExample').DataTable({
+      "scrollY": "200px",
+      "scrollCollapse": true,
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+
+
   }
 
   // Below function is use to fetched json from json editor
@@ -73,8 +83,8 @@ export class LogTemplateComponent implements OnInit {
     this.data = {};
   }
 
-  // changes related to FORM submission goes here
    // define log form
+
    defineForms() {
     this.createLogForm = new FormGroup({
      templateName: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
@@ -89,39 +99,59 @@ export class LogTemplateComponent implements OnInit {
      sensitivity:  new FormControl('',Validators.required),
 
    });
-
-  // this.logTopicsForm = new FormGroup
-
    this.logTopicsForm = new FormGroup({
      topicsList: new FormArray([])
    });
-
-
- 
  this.logSensitivityTypes = ["high","low","medium"];
 }
 
-// Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
-onDataSourceSelect(dataSourceValue){
-  debugger
-    this.selectedDataSource = dataSourceValue;
-   //this.store.dispatch(ApplicationActions.loa({dataSource:dataSourceValue}));
-   this.store.dispatch(ApplicationActions.loadMonitoringAccountName({monitoringSourceName:dataSourceValue}));
 
+// Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
+
+onDataSourceSelect(dataSourceValue){
+
+  if(dataSourceValue === 'elasticsearch'){
+    this.createLogForm = new FormGroup({
+      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
+      monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      accountName:  new FormControl('',Validators.required),
+      index: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
+      kibanaIndex: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
+      regExFilter: new FormControl(false),
+      regExResponseKey: new FormControl(''),
+      regularExpression: new FormControl(''),
+      sensitivity:  new FormControl('',Validators.required),
+    });
+  } else if (dataSourceValue === 'kubernetes'){
+    
+    this.createLogForm = new FormGroup({
+      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
+      monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      namespace: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
+      sensitivity:  new FormControl('',Validators.required),
+    });
+    
+  } else {
+    this.createLogForm = new FormGroup({
+      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
+      monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      accountName:  new FormControl('',Validators.required),
+      sensitivity:  new FormControl('',Validators.required),
+    });
+  }
+
+    this.selectedDataSource = dataSourceValue;
+   this.store.dispatch(ApplicationActions.loadMonitoringAccountName({monitoringSourceName:dataSourceValue}));
    this.store.select(fromFeature.selectApplication).subscribe(
      (response) => {
      if(response.logAccountsData != null) {
-         //this.loading = response.l;
          this.logAccountsList = response.logAccountsData;
-         console.log(response.logDataSources);
      }
- })
-
-   //this.logAccountsList = ["account1","account2","account3","account4","account5"];
- 
+ }) 
 }
 
 // Below function is use to fetch the log topics
+
 getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
@@ -130,7 +160,6 @@ getLogTopics(){
      (response) => {
        if(response.logTopicsList !== null) {
          this.loading = response.logListLoading;
-         
          this.logTopicsData = response.logTopicsList['logTopics'];
          this.logCharacterization = response.logTopicsList['topics'];
           // Populating logtopics 
@@ -147,65 +176,57 @@ getLogTopics(){
      if(response.logDataSources != null) {
          this.loading = response.logDataSourcesLoading;
          this.dataSourceData = response.logDataSources;
-         console.log(response.logDataSources);
      }
- })
-
-    
+ })   
 }
 
 
 //Below function is use to display elastic serach related fields
+
 onCheckboxChange(status){
    this.regFilterStatus = status.target.checked;
 }
 
+// Below function to get final form input details
+
 SubmitForm(){
-
- if(this.selectedDataSource === 'ealsticsearch'){
-     this.createLogForm = new FormGroup({
-         templateName: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
-         monitoringProvider:  new FormControl('',Validators.required),
-         accountName:  new FormControl('',Validators.required),
-         index: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
-         kibanaIndex: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
-         regExFilter: new FormControl(false),
-         regExResponseKey: new FormControl(''),
-         regularExpression: new FormControl(''),
-         sensitivity:  new FormControl('',Validators.required),
- 
-       });
- }else if(this.selectedDataSource === 'kubernetes'){
-
- }else{
-
- }
-
-   console.log(this.createLogForm.value);
-   console.log(this.logTopicsForm.value);
    this.logForm = this.createLogForm.value;
    this.logForm.errorTopics = this.logTopicsForm.value;
-   console.log(this.logForm);
+   this.logTemplateData = this.logForm;
+
+   // Action to create the log template
+
+   this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
 
 }
 
 
 //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
-cannotContainSpace(control: FormControl): {[s: string]: boolean} {
- let startingValue = control.value.split('');
-if(startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0){
- return {containSpace: true}
-}
-if( +startingValue[0] > -1 && startingValue.length > 0){
- return {startingFromNumber: true}
-}
-if ( !/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
- return {symbols: true};
-}
-return null;
+
+cannotContainSpace(control: FormControl): {
+  [s: string]: boolean
+} {
+  let startingValue = control.value.split('');
+  if (startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0) {
+      return {
+          containSpace: true
+      }
+  }
+  if (+startingValue[0] > -1 && startingValue.length > 0) {
+      return {
+          startingFromNumber: true
+      }
+  }
+  if (!/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
+      return {
+          symbols: true
+      };
+  }
+  return null;
 }
 
    // Below function is execute on click of Form or Editor tab.
+
    onClickTab(event){
     if(event === 'logtemplate-form-tab'){
       this.selectedTab = 'logtemplate-form';

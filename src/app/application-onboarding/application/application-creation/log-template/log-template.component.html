@@ -230,14 +230,13 @@
                        <div class="px-4 py-3">
                          <div class="d-flex align-items-center mb-4">
                            <div class="text-divider flex-grow-1 p-0">
-                             <h4>New Log Topic</h4>
+                             <h4>Log Topic</h4>
                            </div>
-                           <div class="btn btn-sm btn-default ml-3">Copy from existing Log Topic </div>
                          </div>
             
                          <div class="row">
-                           <div class="col-10">
-                             <table class="table table-outline table-md" formArrayName="topicsList">
+                           <div class="col-12">
+                             <table id="dtVerticalScrollExample"  class="table table-outline table-md" formArrayName="topicsList">
                                <thead>
                                  <tr>
                                    <th>STRING PATTERN</th>
@@ -247,22 +246,6 @@
                                  </tr>
                                </thead>
                                <tbody>
-                                <!-- <tr *ngFor="let logTopics of logTopicsData;let i=index;">
-                                  
-                                  <td><input type="text" class="form-control" value="{{logTopics['string']}}"/></td>
-                                  <td>
-                                    <select class="form-control" formControlName="topic">
-                                     <option value="" [disabled]="true">Select</option>
-                                     
-                                     <option  value="{{topic}}" >
-                                       {{topic}}</option>
-                                     
-                                   </select>
-                                  </td> 
-                                  <td><input type="text" class="form-control" value="{{logTopics['type']}}"/></td>
-                                </tr> -->
-            
-                               <!-- {{logTopicsData}}---{{logCharacterization}} -->
                                  <tr *ngFor="let logTopics of logTopicsForm.get('topicsList')['controls'];let i=index;">
                                   <ng-container [formGroupName]="i">
                                    <td>
