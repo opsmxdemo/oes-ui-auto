@@ -19,7 +19,8 @@
           <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
             [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
                         'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
-                        'application-lastrun-review':application.applicationStatus === 'Review'}" >
+                        'application-lastrun-review':application.applicationStatus === 'Review',
+                        'application-lastrun-empty': application.applicationStatus === ''}" >
                         
                         <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
@@ -148,7 +149,7 @@
                 <td>{{service.finalScore}} </td>
                 <td>{{service.metricsScore}} </td>
                 <td>{{service.logsScore}}</td>
-                <td [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
+                <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
               </tr>
             </tbody>
           </table>

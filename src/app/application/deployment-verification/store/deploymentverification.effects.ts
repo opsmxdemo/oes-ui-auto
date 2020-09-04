@@ -55,7 +55,7 @@ export class DeploymentVerificationEffect {
                        return DeploymentActions.fetchLatestRun({canaryId:resdata['canaryId']});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                      //  this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -72,7 +72,7 @@ export class DeploymentVerificationEffect {
                        return DeploymentActions.fetchApplications({applicationList:resdata});
                    }),
                    catchError(errorRes => {
-                       this.toastr.showError('Server Error !!','ERROR')
+                     //  this.toastr.showError('Server Error !!','ERROR')
                        return handleError(errorRes);
                    })
                );
@@ -90,7 +90,7 @@ export class DeploymentVerificationEffect {
                        return DeploymentActions.fetchServices({servicesList:resdata});
                    }),
                    catchError(errorRes => {
-                       this.toastr.showError('Server Error !!','ERROR')
+                      // this.toastr.showError('Server Error !!','ERROR')
                        return handleError(errorRes);
                    })
                );
@@ -108,7 +108,7 @@ export class DeploymentVerificationEffect {
                         return DeploymentActions.fetchApplicationHelath({applicationHealthDetails:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!','ERROR')
+                      //  this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -125,7 +125,7 @@ export class DeploymentVerificationEffect {
                          return DeploymentActions.fetchServiceInformation({serviceSummary:resdata});
                      }),
                      catchError(errorRes => {
-                         this.toastr.showError('Server Error !!','ERROR')
+                     //    this.toastr.showError('Server Error !!','ERROR')
                          return handleError(errorRes);
                      })
                  );
@@ -143,7 +143,7 @@ export class DeploymentVerificationEffect {
                         return DeploymentActions.fetchcancelRunningCanaryStatus({cancelRunningCanaryData:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!','ERROR')
+                       // this.toastr.showError('Server Error !!','ERROR')
                         return handleError(errorRes);
                     })
                 );
