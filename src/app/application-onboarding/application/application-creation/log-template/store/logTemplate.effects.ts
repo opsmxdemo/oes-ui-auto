@@ -48,8 +48,7 @@ export class LogTemplateEffect {
      this.actions$.pipe(
          ofType(ApplicationAction.loadMonitoringAccountName),
          switchMap((action) => {
-
-             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getUserListOfAccounts?sourceType='+action.monitoringSourceName).pipe(
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.monitoringSourceName).pipe(
                  map(resdata => {
                      return ApplicationAction.fetchMonitoringAccounts({logAccounts:resdata});
                  }),
