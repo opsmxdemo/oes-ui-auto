@@ -54,7 +54,7 @@ export class LogTemplateEffect {
                      return ApplicationAction.fetchMonitoringAccounts({logAccounts:resdata});
                  }),
                  catchError(errorRes => {
-                     this.toastr.showError('Server Error !!', 'ERROR');
+                     //this.toastr.showError('Server Error !!', 'ERROR');
                      return handleError(errorRes);
                  })
              );
@@ -72,7 +72,7 @@ export class LogTemplateEffect {
                      return ApplicationAction.fetchLogTopics({ logslist: resdata });
                  }),
                  catchError(errorRes => {
-                     this.toastr.showError('Server Error !!', 'ERROR')
+                    // this.toastr.showError('Server Error !!', 'ERROR')
                      return handleError(errorRes);
                  })
              );
