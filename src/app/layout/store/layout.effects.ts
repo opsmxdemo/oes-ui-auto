@@ -2,7 +2,7 @@ import { Effect, ofType } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as LayoutAction from './layout.actions';
@@ -31,18 +31,35 @@ export class LayoutEffect {
         private environment: AppConfigService
     ) { }
 
+      // Below effect is use to refresh the usergroups in gate
+      @Effect()
+      refreshUserGroups = this.actions$.pipe(
+          ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
+          withLatestFrom(this.store.select('auth')),
+          switchMap(([action,authState]) => {
+              return this.http.put<string>(this.environment.config.endPointUrl+'platformservice/v1/users/'+ authState.user +'/usergroups/refresh',{}).pipe(
+                  map(resData => {
+                      this.store.dispatch(new LayoutAction.ApiSuccess(1));
+                      return new LayoutAction.usergroupRefresh(resData);
+                  }),
+                  catchError(errorRes => {
+                      return handleError(errorRes,1);
+                  })
+              );
+          })
+      );
+
     // Below effect is use for fetch sidebar data. 
     @Effect()
-    fetchDynamicMenu = this.actions$.pipe(
+    authLogin = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
             return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
                 map(resData => {
-                    this.store.dispatch(new LayoutAction.ApiSuccess(0));
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),
                 catchError(errorRes => {
-                    return handleError(errorRes,0);
+                    return handleError(errorRes,1);
                 })
             );
         })

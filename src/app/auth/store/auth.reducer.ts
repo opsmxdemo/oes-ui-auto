@@ -5,20 +5,12 @@ export interface State {
     user: string;
     authenticated: boolean;
     authResponse: any;
-    authError: string;
-    loading: Boolean;
-    token: string;
-    autologinSucceed: Boolean;
 }
 
 export const initialState: State = {
     user: null,
-    authError: null,
-    loading: null,
     authenticated: false,
-    authResponse: 'dummy',
-    token: null,
-    autologinSucceed: false
+    authResponse: 'dummy'
 }
 
 export function authReducer(
@@ -27,54 +19,25 @@ export function authReducer(
 ) {
     
     switch (action.type) {
-        case AuthAction.AuthActionTypes.LOGINFAIL:
+
+        case AuthAction.AuthActionTypes.LOGINRESPONSE:
             return {
                 ...state,
-                authError: action.payload,
-                user: null,
-                loading: false,
-                authenticated: false
+                authResponse: action.payload
             }
-        case AuthAction.AuthActionTypes.LOGINSTART:
+        case AuthAction.AuthActionTypes.AUTHENTICATIONSUCCESS:
             return {
                 ...state,
-                authError: null,
-                loading: true,
-                authenticated: false
+                user: action.payload,
+                authenticated:true,
+                authResponse:'success'
             }
-        case AuthAction.AuthActionTypes.LOGIN:
-            return {
-                ...state,
-                user: action.payload.username,
-                token: action.payload.token,
-                loading: false,
-                authError: null,
-                authenticated: true
-            }
-        case AuthAction.AuthActionTypes.LOGOUT:
-            return {
-                ...state,
-                authError: null,
-                authenticated:false
-            }
-        case AuthAction.AuthActionTypes.AUTOLOGIN:
-            return {
-                ...state,
-                user: action.payload.username,
-                token: action.payload.token,
-                loading: false,
-                authError: null,
-                authenticated: true,
-                autologinSucceed: true
-            }
-        case AuthAction.AuthActionTypes.AUTOLOGINFAIL:
-            return {
-                ...state,
-                loading: false,
-                authError: null,
-                authenticated: false,
-                autologinSucceed: true
-            }
+            case AuthAction.AuthActionTypes.LOGOUT:
+                return {
+                    ...state,
+                    authenticated:false,
+                    authResponse:null
+                }
         default:
             return state;
     }

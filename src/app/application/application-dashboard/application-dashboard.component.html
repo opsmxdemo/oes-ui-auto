@@ -55,7 +55,7 @@
                     [ngClass]="{'active':application.applicationName === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
                     (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
                     <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
-                    <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">0</div>
+                    <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                     <div class="dl_value_text">{{applicationInfo.applicationInfolabel}} </div>
                     <span
                       *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
