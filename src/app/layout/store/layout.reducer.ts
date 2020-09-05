@@ -7,6 +7,7 @@ export interface State {
     appliactionData: number;
     sidebarVisible: string;
     installationMode: string;
+    usergroupRefresh: any;
     apiErrorCollection: boolean[];
     errorMessage: string;
 }
@@ -16,6 +17,7 @@ export const initialState: State = {
     appliactionData: 0,
     sidebarVisible: '',
     installationMode:'',
+    usergroupRefresh: null,
     apiErrorCollection:[false,false],
     errorMessage: ''
 }
@@ -48,6 +50,11 @@ export function layoutReducer(
             return {
                 ...state,
                 installationMode: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.USERGROUPREFRESH:
+            return {
+                    ...state,
+                    usergroupRefresh: action.payload
             }
         case LayoutAction.LayoutActionTypes.SERVERERROR:
             return {
