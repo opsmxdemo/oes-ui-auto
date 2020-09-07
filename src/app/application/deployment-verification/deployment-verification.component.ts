@@ -36,7 +36,10 @@ export class DeploymentVerificationComponent implements OnInit {
 
   size = 5343454545;
   applicationForm: FormGroup;
+  ShowLogTemplateName:boolean=false;
   deployementRun: any;
+  arr = ["aa","bb","cc"]
+  sent = "aa bb cc dd ee ff gg"
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
   control = new FormControl(this.deployementRun);
