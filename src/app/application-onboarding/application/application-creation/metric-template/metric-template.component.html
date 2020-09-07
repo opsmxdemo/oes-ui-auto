@@ -13,10 +13,11 @@
       <div id="metric-form" role="tabpanel" aria-labelledby="metric-form-tab">         
           <div *ngIf = "selectedTab === 'metric-form'" class="col-12 maindiv">
             
-            <form [formGroup]="createMetricForm">              
+                       
               <div id="step-1">
                 <div class="multisteps-form__content">
                    <div class="px-4 py-3">
+                    <form [formGroup]="createMetricForm">  
                      <div class="row">
                        <div class="col-6">
                          <div class="form-group">
@@ -40,10 +41,8 @@
                           <select class="form-control" (change)="onChangeDatasource($event.target.value)">
                             <option value="" [disabled]="true">Select</option>
                             <ng-container *ngFor="let datasource of autoDatasources">
-                            <ng-container *ngIf="datasource.usage[0] == 'metric'">
-                            <option *ngIf="datasource.metricTypes[0] == 'custom'" value="{{datasource.datasourceType}}" >
+                            <option *ngIf="datasource.metricTypes[0] == 'custom' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
                               {{datasource.displayName}}</option>
-                            </ng-container>
                             </ng-container>
                           </select>                          
                         </div>
@@ -57,46 +56,69 @@
                               {{dsaccount}}</option>                           
                           </select>                          
                         </div>
-                         <!-- /.form-group -->
-
-                         <!-- <div class="form-group">
-                           <label>Select Newrelic Application</label>
-                           <select class="form-control">
-                             <option>canary-autopilot</option>
-                           </select>
-                         </div> -->
-                         <!-- /.form-group -->
+                        
                        </div>
                        <!-- /.col-6 -->
                      </div>
                      <!-- /.row -->
-
+                    </form>
 
                      <hr class="ml-0 mt-3 mb-3" />
-
+                     <form [formGroup]="queryForm">
                      <div class="row">
-                       <div class="col-10">
+                       <div class="col-12">
                          <div class="form-group">
-                           <label>API Selection</label>
-                           <table class="table table-outline">
+                           <label>Query Selection</label>
+                           <table class="table table-outline table-md" formArrayName="queryList">
                              <thead>
                                <tr>
-                                 <th>
-                                   <div class="custom-control custom-checkbox">
-                                     <input type="checkbox" class="custom-control-input" id="selectAll">
-                                     <label class="custom-control-label" for="selectAll">Select All</label>
-                                   </div>
-                                 </th>
+                                <th>Query Name</th>
+                                <th>Query String</th>
+                                <th>Risk Direction</th>
+                                <th><div class="key-value-th key-value-height">Threshold (%)<br>
+																	<div style="width: 50%;float: left;text-align: center;">High</div>
+																	<div style="width: 50%;float: right;text-align: center;">Low</div>
+																	</div></th>
+                                <!-- <th>Threshold Low</th> -->
+                                <th>Critical</th>
+                                <th>Watchlist</th>
+                                <th>Weight</th>
+                                <th></th>
                                </tr>
                              </thead>
-                             <tbody>
-                              
-                               <tr>
-                                 <td>
-                                   <div class="custom-control custom-checkbox">
-                                     <input type="checkbox" class="custom-control-input" checked id="selectItem7">
-                                     <label class="custom-control-label" for="selectItem7">/SpringController/logs/updateFeedbackLogTemplate (POST)</label>
-                                   </div>
+                             <tbody *ngFor="let query of queryForm.get('queryList')['controls']; let i=index">                              
+                               <tr [formGroupName]=i>
+                                 <td class="px-1" style="width:15%"><input type="text" class="form-control" formControlName="group"></td>
+                                 <td class="px-1" style="width:40%"><input type="text" class="form-control" formControlName="name"></td>
+                                 <td class="px-1" style="width:5%">
+                                  <select class="form-control" formControlName="riskDirection">
+                                    <option value="" [disabled]="true">Select</option>                            
+                                    <option *ngFor="let riskDirection of riskDirectionList" value="{{riskDirection}}"  >
+                                      {{riskDirection}}</option>                           
+                                  </select>
+                                </td>
+                                 <td class="px-1">
+                                  <div>
+                                    <div style="width: 49%; float: left;"><input id="queryInputCustomThreshold" type="number"  style="text-align: center;height:35px;" formControlName="customThresholdHigher"></div>
+                                    <div style="width: 50%; float: right;"><input id="queryInputCustomThreshold"  type="number"  style="text-align: center;height:35px;" formControlName="customThresholdLower"></div>
+                                  </div>
+                                 </td>
+                                 <!-- <td class="px-1"><input type="text" class="form-control" value="" formControlName=""></td> -->
+                                 <td class="px-1" style="width:5%">
+                                  <div>
+                                    <input type="checkbox" id="query-watchlist" formControlName="watchlist">
+                                  </div>
+                                </td>
+                                 <td class="px-1">
+                                    <input type="checkbox" id="in_selectAll" formControlName="critical">
+                                 </td>
+                                 <td class="px-1"> 
+                                  <input type="text" class="form-control" value="" formControlName="metricWeight">
+                                </td>
+                                 <td class="px-1">
+                                  <div (click)="addNewQuery()">
+                                    <span class="fa fa-plus"></span>
+                                  </div>
                                  </td>
                                </tr>
                              </tbody>
@@ -106,11 +128,12 @@
                        </div>
                        <!-- /.col-6 -->
                      </div>
-                     <!-- /.row -->                            
+                     <!-- /.row -->   
+                    </form>                         
                    </div>
                  </div>
               </div>
-            </form>
+            
             <div class="col-12">
               <button class="btn btn-primary ml-2 savebtn" (click)="savemetrictemplate()">SaveForm</button>
             </div>

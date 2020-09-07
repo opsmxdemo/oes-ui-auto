@@ -26,7 +26,8 @@ export class MetricTemplateComponent implements OnInit {
   metricTemplateFormData = null;
   selectedCustomDataSource : any;
   customDataSourceAccounts : any;
-  
+  queryForm :FormGroup;
+  riskDirectionList = ["Higher", "Lower", "HigherOrLower"];
 
   constructor(private _formBuilder: FormBuilder,
     public store: Store<fromFeature.State>) { }
@@ -59,8 +60,29 @@ export class MetricTemplateComponent implements OnInit {
     this.createMetricForm = new FormGroup({
       templateName: new FormControl(),
       applicationName: new FormControl(),
-      data: new FormArray([])
+      accountName : new FormControl(),
+      data: new FormGroup({
+        groups : new FormArray([])
+      })
     });
+
+    this.queryForm = new FormGroup({
+      queryList: new FormArray([])
+    });
+
+    (<FormArray>this.queryForm.get('queryList')).push(
+      new FormGroup({
+        group : new FormControl(),
+        name: new FormControl(),
+        riskDirection: new FormControl(),
+        customThresholdHigher : new FormControl(),
+        customThresholdLower : new FormControl(),
+        critical: new FormControl(),
+        watchlist : new FormControl(),
+        metricWeight: new FormControl()
+      })
+    );
+
     
   }
 
@@ -96,11 +118,56 @@ export class MetricTemplateComponent implements OnInit {
     console.log(customDSAccount);
   }
 
-  savemetrictemplate(){
-    console.log(this.createMetricForm);   
-    this.metricTemplateFormData = this.createMetricForm.value;
-    console.log( this.metricTemplateFormData )
-    //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateData}));
+  savemetrictemplate(){    
+    this.metricTemplateFormData = {
+      "templateName" : this.createMetricForm.value.templateName,
+      "applicationName": "",
+      "data": {
+        "groups" : []
+      }
+    };
+    let groupObj = {
+      metrics: [],
+      group : ""
+    };
+    this.queryForm.value.queryList.forEach(eachItem => {
+      groupObj = {
+        "group" : eachItem.group,
+        "metrics": [
+          {
+            "metricType": 'ADVANCED',
+            "name": eachItem.name,
+            "accountName": this.createMetricForm.value.accountName,
+            "customThresholdHigher": eachItem.customThresholdHigher,
+            "customThresholdLower": eachItem.customThresholdLower,
+            "riskDirection": eachItem.riskDirection,
+            "critical": eachItem.critical,
+            "watchlist": eachItem.watchlist,
+            "metricWeight": Number(eachItem.metricWeight)                
+          }      
+        ]
+      };      
+      this.metricTemplateFormData.data.groups.push(groupObj);
+    });
+    //this.metricTemplateFormData.data.groups=groupObj;
+    console.log(this.metricTemplateFormData);
+    this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateFormData}));
   }
+
+  addNewQuery(){
+    (<FormArray>this.queryForm.get('queryList')).push(
+      new FormGroup({
+        group : new FormControl(),
+        name: new FormControl(),
+        riskDirection: new FormControl(),
+        customThresholdHigher : new FormControl(),
+        customThresholdLower : new FormControl(),
+        critical: new FormControl(),
+        watchlist : new FormControl(),
+        metricWeight: new FormControl()
+      })
+    );
+  }
+
 
 }

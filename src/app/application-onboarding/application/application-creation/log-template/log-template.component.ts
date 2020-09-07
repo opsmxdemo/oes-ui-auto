@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { Store } from '@ngrx/store';
 import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
@@ -15,7 +15,7 @@ import * as DataSourceActions from '../../../data-source/store/data-source.actio
   styleUrls: ['./log-template.component.less']
 })
 export class LogTemplateComponent implements OnInit {
-
+  @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
 
 
@@ -23,6 +23,7 @@ export class LogTemplateComponent implements OnInit {
   public data: any = null;
   logTemplateData = null;
   selectedTab = 'logtemplate-form';
+  isLinear = true;
   createLogForm: FormGroup;                      // log template create form
   logTopicsForm: FormGroup;                      // log topics create form
   logForm: CreateLogTemplate = null;             // It contain data of all 2 forms which send to backend after successful submission.
@@ -60,15 +61,6 @@ export class LogTemplateComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
-
-    $(document).ready(function () {
-      $('#dtVerticalScrollExample').DataTable({
-      "scrollY": "200px",
-      "scrollCollapse": true,
-      });
-      $('.dataTables_length').addClass('bs-select');
-      });
-
 
   }
 
@@ -146,6 +138,8 @@ onDataSourceSelect(dataSourceValue){
      (response) => {
      if(response.logAccountsData != null) {
          this.logAccountsList = response.logAccountsData;
+     }else{
+       this.logAccountsList = [];
      }
  }) 
 }
@@ -191,13 +185,34 @@ onCheckboxChange(status){
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
-   this.logForm.errorTopics = this.logTopicsForm.value;
+   this.logForm['errorTopics'] = this.logTopicsForm.value;
    this.logTemplateData = this.logForm;
 
    // Action to create the log template
 
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
 
+}
+
+// Below function to add new log topics
+
+addNewLogTopics(){
+  //this.scroll.nativeElement. = this.scroll.nativeElement.
+  this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+  debugger
+  (<FormArray>this.logTopicsForm.get('topicsList')).push(
+    new FormGroup({
+      string: new FormControl('INFO', Validators.required),
+      topic: new FormControl('CRITICAL', Validators.required),
+      type: new FormControl('default', Validators.required)
+    })
+  );
+}
+
+// delete log topics
+
+deleteLogTopic(topic,index){
+  this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
 
