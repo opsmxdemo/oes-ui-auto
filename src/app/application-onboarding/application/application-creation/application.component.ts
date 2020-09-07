@@ -51,7 +51,7 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
   currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
-  userGroupPermissions = ['read','write','execute'];              // It is use to store value of checkbox need to display in group section.
+  userGroupPermissions:Object[] = [];                             // It is use to store value of checkbox need to display in group section.
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -244,8 +244,9 @@ export class CreateApplicationComponent implements OnInit {
           this.dockerImageData = response.dockerImageData;
           this.populateDockerImagenDropdown();
         }
-        if (response.userGropsData !== null) {
+        if (response.userGropsData !== null && response.userGroupsPermissions !== null) {
           this.userGroupData = response.userGropsData;
+          this.userGroupPermissions = response.userGroupsPermissions;
         }
         if (response.logtemplate.length > 0){
           this.logTemplateData = response.logtemplate;
@@ -472,6 +473,22 @@ export class CreateApplicationComponent implements OnInit {
     return prop;
   }
 
+  // Below function is use to check whether permission is selected or not after selection of usergroup.
+  permissionContrlValid(controlvalue){
+    let counter = 0;
+    controlvalue.value.forEach(permission => {
+      if(permission.value === true){
+        counter++;
+      }
+    });
+    if(counter > 0){
+      controlvalue.setErrors(null);
+    }else{
+      controlvalue.setErrors({'incorrect': true});
+    }
+    return counter > 0 ? false : true;
+  } 
+
   //Below function is use to add more permission group
   addGroup() {
     const index = this.groupPermissionForm.value.userGroups.length > 0 ? this.groupPermissionForm.value.userGroups.length : 0;
@@ -490,7 +507,7 @@ export class CreateApplicationComponent implements OnInit {
       permissionIdGroupControl.push(
         new FormGroup({
           value: new FormControl(false),
-          name: new FormControl(permissionId)
+          name: new FormControl(permissionId['permissionId'])
         })
       )
     })
