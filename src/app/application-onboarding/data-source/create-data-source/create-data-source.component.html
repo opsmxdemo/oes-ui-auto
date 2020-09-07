@@ -1,41 +1,46 @@
-<div class="form-group text-muted">
-    <label>Select Monitoring Provider </label>
-    <div class="box-icon-group" *ngIf="supportedDataSources !== null ? true : false">
-        <!-- for Autopilot -->
-        <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
-            <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
-                (click)="getDataProvider(datasource.datasourceType,datasource,'AP')">
-                <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
-                    [checked]="datasource.datasourceType === selectedDataProvider" />
-                <label for="{{datasource['datasourceType']}}">
-                    <span class="bi-lbl">
-                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png"
-                            onError="this.src='../../../../assets/images/blankicon.png'" />
-                    </span>
-                    <span class="bi-text">
-                        {{datasource['displayName']}}
-                    </span>
-                </label>
-            </div>
-        </ng-container>
-
-        <!-- for OES -->
-        <ng-container *ngFor="let datasource of supportedDataSources['oesDataSources']; let i=index;">
-            <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
-                (click)="getDataProvider(datasource.datasourceType,datasource,'OES')">
-                <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
-                    [checked]="datasource.datasourceType === selectedDataProvider" />
-                <label for="{{datasource['datasourceType']}}">
-                    <span class="bi-lbl">
-                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png" />
-                    </span>
-                    <span class="bi-text">
-                        {{datasource['displayName']}}
-                    </span>
-                </label>
-            </div>
-        </ng-container>
+<div *ngIf="supportedDataSources !== null">
+    <div class="form-group text-muted">
+        <label>Select Monitoring Provider </label>
+        <div class="box-icon-group" *ngIf="supportedDataSources !== null ? true : false">
+            <!-- for Autopilot -->
+            <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
+                <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
+                    (click)="getDataProvider(datasource.datasourceType,datasource,'AP')">
+                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
+                        [checked]="datasource.datasourceType === selectedDataProvider" />
+                    <label for="{{datasource['datasourceType']}}">
+                        <span class="bi-lbl">
+                            <img src="{{imgPath}}{{datasource['datasourceType']}}.png"
+                                onError="this.src='../../../../assets/images/blankicon.png'" />
+                        </span>
+                        <span class="bi-text">
+                            {{datasource['displayName']}}
+                        </span>
+                    </label>
+                </div>
+            </ng-container>
+    
+            <!-- for OES -->
+            <ng-container *ngFor="let datasource of supportedDataSources['oesDataSources']; let i=index;">
+                <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
+                    (click)="getDataProvider(datasource.datasourceType,datasource,'OES')">
+                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
+                        [checked]="datasource.datasourceType === selectedDataProvider" />
+                    <label for="{{datasource['datasourceType']}}">
+                        <span class="bi-lbl">
+                            <img src="{{imgPath}}{{datasource['datasourceType']}}.png" />
+                        </span>
+                        <span class="bi-text">
+                            {{datasource['displayName']}}
+                        </span>
+                    </label>
+                </div>
+            </ng-container>
+        </div>
     </div>
+    <hr />
+    <app-data-source-forms [formData]="currentFormData" (saveFormEvent)="onSaveForm($event)"></app-data-source-forms>
 </div>
-<hr />
-<app-data-source-forms [formData]="currentFormData" (saveFormEvent)="onSaveForm($event)"></app-data-source-forms>
+<div *ngIf="supportedDataSources === null">
+    <app-component-error-listing [errorString]="'DataSource provider not available to select.'"></app-component-error-listing>
+</div>
