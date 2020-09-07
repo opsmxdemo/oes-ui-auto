@@ -11,15 +11,27 @@
   <!-- /.page_title d-flex -->
 
   <div class="row no-gutters">
+    <div *ngIf="applicationFinalData.length === 0" class="col-md-12">
+      <div>
+        <div class="d-flex w-100 h-100">
+          <div class="no_content m-auto">
+           <p class="no-applications">No Applications.</p>
+            <p>Use application for continuous verification and production monitoring <br><small>(To create application, add at least 1 Cloud service and 1 Data source)</small></p>
+          </div>
+          <!-- /.no_content -->
+        </div>
+      </div>
+    </div>
     <div class="col-sm-8">
       <div class="data_listArea">
-        <!-- <app-network-chart></app-network-chart> -->
-        <!-- <app-cd-dashboard></app-cd-dashboard> -->
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
           <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
-            [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'InProgress',
-                        'application-lastrun-success':application.applicationStatus === 'PASS','application-lastrun-fail':application.applicationStatus === 'FAIL'}" >
-            <div class="data_list_header d-flex align-items-center">
+            [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
+                        'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
+                        'application-lastrun-review':application.applicationStatus === 'Review',
+                        'application-lastrun-empty': application.applicationStatus === ''}" >
+                        
+                        <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
                 <h3>{{application.applicationName}}</h3>
                 <span class="datetime">{{application.date | date:'medium'}} </span>
@@ -32,7 +44,7 @@
                       <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore >= canaries.maximumCanaryScore,'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore,'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === ''}"></i></a>
                     </button>
               </div>
-                  <a *ngIf="application.applicationStatus === 'InProgress'"  class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="InProgress">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
+                  <a *ngIf="application.applicationStatus === 'RUNNING'"  class="ci_run ico24 popover-hover" data-container="body" data-toggle="popover" data-placement="top" data-content="InProgress">&nbsp;<i class="fas fa-circle-notch fa-spin"></i></a> 
                         <div class="dropdown dropdown-icon-remove">
                           <button class="btn btn-default ml-3 px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v"></i>
@@ -51,7 +63,8 @@
                   <li class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let i=index"
                     [ngClass]="{'active':application.applicationName === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
                     (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
-                    <div class="dl_value_count">{{applicationInfo.applicationInfoValue}}</div>
+                    <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
+                    <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                     <div class="dl_value_text">{{applicationInfo.applicationInfolabel}} </div>
                     <span
                       *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
@@ -84,11 +97,6 @@
       <div class="rightBox position-sticky">
         <div class="rightBox_header d-flex align-items-center">
           <h3>{{selectedApplicationName}}</h3>
-          <!-- <div class="btns_icon d-flex ml-auto">
-                                  <button class="btn p-0"><img src="../../../assets/plus_icon.png" alt="plus" /></button>
-                                  <button class="btn p-0 ml-2"><img src="../../../assets/edit_icon.png" alt="edit" /></button>
-                                </div> -->
-          <!-- /.btns_icon -->
         </div>
         <!-- /.rightBox_header -->
         <div class="rightBox_body">
@@ -145,7 +153,7 @@
                 <td>{{service.finalScore}} </td>
                 <td>{{service.metricsScore}} </td>
                 <td>{{service.logsScore}}</td>
-                <td [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
+                <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
               </tr>
             </tbody>
           </table>

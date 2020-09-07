@@ -27,9 +27,18 @@ export interface State {
 
     // Log Template variables 
     logtemplate: any[];
+      // Log Template variables 
+      logListLoading: boolean;
+      logTopicsList: [];
+      logAccountsData: any,
+      callGetLogAccountsAPI: boolean;
+      logDataSourcesLoading: boolean;
+      logDataSources: [];
 
     // Metric Template variables 
     metrictemplate: any[];
+    customDSAccounts:any;
+    datasource : any;
 }
 
 export const initialState: State = {
@@ -47,7 +56,17 @@ export const initialState: State = {
     callDockerImageDataAPI: true,
     userGropsData: null,
     logtemplate: [],
-    metrictemplate:[]
+    logAccountsData: null,
+    callGetLogAccountsAPI: true,
+    logListLoading: false,
+    logTopicsList: null,
+    logDataSources: null,
+    logDataSourcesLoading: false,
+
+    metrictemplate:[],
+    customDSAccounts : null,
+    datasource : null,
+    
 }
 
 export function ApplicationReducer(
@@ -145,7 +164,8 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 dockerImageData: action.dockerImageData
-            })
+            }),
+        
         ),
         
         // #### CreateApplication screen logic start ####//
@@ -188,6 +208,47 @@ export function ApplicationReducer(
             })
         ),
 
+
+         // ### log Template creation logic starts
+         on(ApplicationAction.loadMonitoringAccountName,
+            (state,action) => ({
+                ...state,
+                callGetLogAccountsAPI: false
+            })
+        ),
+        on(ApplicationAction.fetchMonitoringAccounts,
+            (state,action) => ({
+                ...state,
+                logAccountsData: action.logAccounts
+            })
+        ),
+        on(ApplicationAction.loadLogTopics,
+            state => ({
+                ...state,
+                logListLoading:true
+            })
+        ),
+        on(ApplicationAction.fetchLogTopics,
+            (state,action) => ({
+                ...state,
+                logTopicsList: action.logslist,
+                logListLoading:false
+            })
+        ),
+        on(ApplicationAction.loadSupportingDatasources,
+            state => ({
+                ...state,
+                logDataSourcesLoading:true
+            })
+        ),
+        on(ApplicationAction.fetchDatasources,
+            (state,action) => ({
+                ...state,
+                logDataSources: action.datasources,
+                logDataSourcesLoading:false
+            })
+        ),
+
         // ###  LogTemplate screen logic start ### // 
 
         // ###  MeticTemplate screen logic start ### // 
@@ -196,6 +257,18 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 metrictemplate: state.metrictemplate.concat({ ...action.metricTemplateData })
+            })
+        ),
+        on(ApplicationAction.fetchAccountForCustomDataSource,
+            (state,action) => ({
+                ...state,
+                datasource: action.datasource
+            })
+        ),
+        on(ApplicationAction.loadAccountForCustomDataSource,
+            (state,action) => ({
+                ...state,
+                customDSAccounts: action.customDSAccounts
             })
         ),
 

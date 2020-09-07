@@ -43,22 +43,58 @@ export class LogTemplateEffect {
         private environment: AppConfigService
     ) { }
 
-    // Below effect is use for fetch pipline dropdown data.
-    // fetchPipeline = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
-    //         switchMap(() => {
-    //             return this.http.get<any>(this.environment.config.endPointUrl + 'anyUrl').pipe(
-    //                 map(resdata => {
-    //                     return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
-    //                 }),
-    //                 catchError(errorRes => {
-    //                     this.toastr.showError('Server Error !!', 'ERROR')
-    //                     return handleError(errorRes);
-    //                 })
-    //             );
-    //         })
-    //     )
-    // )
+     // Below effect is use for fetch log accounts dropdown data.
+     fetchLogAccounts = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadMonitoringAccountName),
+         switchMap((action) => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.monitoringSourceName).pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchMonitoringAccounts({logAccounts:resdata});
+                 }),
+                 catchError(errorRes => {
+                     //this.toastr.showError('Server Error !!', 'ERROR');
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
+ // Below effect is use for fetch logtopics table data.
+ fetchLogTopics = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadLogTopics),
+         switchMap(() => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/defaultLogTemplate').pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchLogTopics({ logslist: resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
+//  // Below effect is use for fetch logtopics table data.
+//  fetchDatasources = createEffect(() =>
+//      this.actions$.pipe(
+//          ofType(ApplicationAction.loadSupportingDatasources),
+//          switchMap(() => {
+//              return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/supportedDatasources').pipe(
+//                  map(resdata => {
+//                      return ApplicationAction.fetchDatasources({ datasources: resdata });
+//                  }),
+//                  catchError(errorRes => {
+//                      this.toastr.showError('Server Error !!', 'ERROR')
+//                      return handleError(errorRes);
+//                  })
+//              );
+//          })
+//      )
+//  )
 
 }
