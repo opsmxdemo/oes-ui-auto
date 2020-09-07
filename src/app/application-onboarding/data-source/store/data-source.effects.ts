@@ -42,12 +42,26 @@ export class DataSourceEffect {
         private environment: AppConfigService
     ) { }
 
-    // Below effect is use for fetch data related to Accounts List page
-    fetchDatasourcesListData = createEffect(() =>
+    // Below effect is use for fetch OES data related to Accounts List page
+    fetchOESDatasourcesListData = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.loadDatasourceList),
             switchMap(() => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/getAccounts').pipe(
+                    map(resdata => {
+                        return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
+                    }),
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch AP data related to Accounts List page
+    fetchAPDatasourcesListData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DataSourceAction.loadDatasourceList),
+            switchMap(() => {
+                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials').pipe(
                     map(resdata => {
                         return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
                     }),
@@ -116,7 +130,7 @@ export class DataSourceEffect {
     )
 
     // Below effect is use for delete datasource Account .
-    deleteDatasourceData = createEffect(() =>
+    deleteOESDatasourceData = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.deleteOESDatasourceAccount),
             switchMap(action => {
@@ -133,6 +147,25 @@ export class DataSourceEffect {
             })
         )
     )
+
+     // Below effect is use for delete datasource Account .
+     deleteAPDatasourceData = createEffect(() =>
+     this.actions$.pipe(
+         ofType(DataSourceAction.deleteAPDatasourceAccount),
+         switchMap(action => {
+             return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials/' + action.id).pipe(
+                 map(resdata => {
+                     this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
+                     return DataSourceAction.DatasourceaccountDeleted({ index: action.index })
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('DataSource not deleted due to ' + errorRes.error.message, 'ERROR')
+                     return handleError(errorRes,'list');
+                 })
+             );
+         })
+     )
+ )
 
 
 

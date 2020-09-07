@@ -14,5 +14,5 @@ export const loadDatasourceList = createAction('[Data-Source] LoadDatasourceList
 export const fetchDatasourceList  = createAction('[Data-Source] FetchDatasourceList', props<{DatasourceList:any}>());
 export const DatasourceaccountDeleted = createAction('[Data-Source] DatasourceAccountDeleted', props<{index:number}>());
 export const listErrorOccured = createAction('[Data-Source] ListErrorOccured', props<{errorMessage:string}>());
-export const deleteAPDatasourceAccount = createAction('[Data-Source] DeleteAPDatasourceAccount', props<{accountName:any,id:number}>())
+export const deleteAPDatasourceAccount = createAction('[Data-Source] DeleteAPDatasourceAccount', props<{accountName:any,id:number,index:number}>())
 export const deleteOESDatasourceAccount = createAction('[Data-Source] DeleteOESDatasourceAccount', props<{accountName:any,index:number}>())
