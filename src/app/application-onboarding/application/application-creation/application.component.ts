@@ -463,13 +463,11 @@ export class CreateApplicationComponent implements OnInit {
         }
       })
     }else{
-      if(props === 'r'){
-        prop = 'Read Only';
-      }else if(props === 'rx'){
-        prop = 'Read & Execute';
-      }else{
-        prop = 'Read, Execute & Write';
-      }
+      props.forEach((permission,index) => {
+        if(permission.value === true){
+          prop +=  prop === '' ? permission.name : ','+permission.name;
+        }
+      });
     }
     return prop;
   }

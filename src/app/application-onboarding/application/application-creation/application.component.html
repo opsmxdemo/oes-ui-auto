@@ -87,9 +87,9 @@
                 <span>Group Permissions Details</span>
               </li>
               <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
-                <i class="{{group.permission !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <i class="{{group.userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
                 <span>{{group.userGroupId !== ''?groupProperties(true,group.userGroupId):''}} :</span>
-                <strong *ngIf="group.permission !== ''? true:false">{{group.permissionId !== ''?groupProperties(false,group.permissionId):''}}</strong>
+                <strong *ngIf="group.permission !== ''? true:false">{{groupProperties(false,group.permissionIds)}}</strong>
               </li>
             </ul>
            
@@ -406,7 +406,7 @@
                                   </div>
                                   
                                 </td>
-                                <td style="padding-top: 20px;" formArrayName="permissionIds">
+                                <td class="{{userGroupPermissions.length<4?'usergroupCheckbox':''}}" formArrayName="permissionIds">
                                     <div class="custom-control custom-checkbox">
                                       <div class="row">
                                         <div class="col-4" *ngFor="let permissionIds of optionsArr.get('permissionIds')['controls'];let j=index">
