@@ -16,6 +16,7 @@ export const fetchImageSource = createAction('[Application] FetchImageSource', p
 export const loadDockerImageName = createAction('[Application] LoadDockerImageName', props<{imageSourceName:string}>());
 export const fetchDockerImageName = createAction('[Application] FetchDockerImageName', props<{dockerImageData:any}>());
 export const fetchUserGrops = createAction('[Application] FetchUserGrops', props<{userGroupData:string[]}>());
+export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());

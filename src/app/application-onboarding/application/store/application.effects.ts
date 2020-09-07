@@ -124,6 +124,25 @@ export class ApplicationEffect {
         )
     )
 
+     // Below effect is use for fetch userGroup dropdown data.
+     fetchUserPermissionData = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
+         switchMap(() => {
+
+             return this.http.get<any>(this.environment.config.endPointUrl + 'platformservice/v1/permissions').pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchUserGropsPermissions({userGroupPermissionsData:resdata})
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('UserGroups Data: '+errorRes.error.error, 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
      // Below effect is use for fetch imageSource dropdown data.
      fetchImageSource = createEffect(() =>
      this.actions$.pipe(
