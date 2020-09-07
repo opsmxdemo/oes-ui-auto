@@ -11,18 +11,18 @@
 
     <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist" (click)="onClickTab($event.target.id)">
       <li class="nav-item" >
-        <a class="nav-link active" id="logtemplate-form-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-form" aria-selected="true">Form</a>
+        <a class="nav-link active" id="logtemplate-form-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-form" aria-selected="true">Log Template</a>
       </li>
       <li  class="nav-item">
-        <a class="nav-link"  id="logtemplate-editor-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-editor" aria-selected="true">Editor</a>
+        <a class="nav-link"  id="logtemplate-editor-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-editor" aria-selected="true">Advanced</a>
       </li>
     </ul>
   
     <div class="tab-content" id="myTabContent">
       <div id="logtemplate-form" role="tabpanel" aria-labelledby="logtemplate-form-tab">
           <div *ngIf ="selectedTab === 'logtemplate-form'" class="col-12 maindiv">
-            <mat-horizontal-stepper  [labelPosition]="'bottom'" #stepper>
-              <mat-step [stepControl]="createLogForm">
+            <mat-horizontal-stepper  [labelPosition]="'bottom'" linear #stepper >
+              <mat-step  [stepControl]="createLogForm">
                 <form [formGroup]="createLogForm">
                   <ng-template matStepLabel>Log Provider</ng-template>
                   <div id="step-1">
@@ -77,12 +77,12 @@
                              <!-- form group logaccounts -->
                              <div class="form-group" *ngIf="selectedDataSource != null && selectedDataSource != 'kubernetes'">
                               <label>Log Account</label>
-                              <div *ngIf="logAccountsList.length === 0" class="text-danger">No accounts present</div>
+                              <div *ngIf="logAccountsList.length === 0" class="text-danger">No accounts exists, Please try with other monitoring providers.</div>
                               <select class="form-control" formControlName="accountName" *ngIf="logAccountsList.length > 0">
                                 <option value="" [disabled]="true">Select</option>
                                 <ng-container *ngFor="let account of logAccountsList">
-                                <option  value="{{account}}" >
-                                  {{account}}</option>
+                                <option  value="{{account.name}}" >
+                                  {{account.name}}</option>
                                 </ng-container>
                               </select>
                               <span *ngIf="createLogForm.get('accountName').invalid && createLogForm.get('accountName').touched"
@@ -235,14 +235,15 @@
                          </div>
             
                          <div class="row">
-                           <div class="col-12">
+                           <div class="col-12" style="height:400px; overflow-y:auto;" #scroll>
                              <table id="dtVerticalScrollExample"  class="table table-outline table-md" formArrayName="topicsList">
                                <thead>
                                  <tr>
                                    <th>STRING PATTERN</th>
                                    <th>CHARACTERIZATION TOPIC</th>
                                    <th>TYPE</th>
-                                   <th width="30"></th>
+                                   <th class="text-right"><a (click)="addNewLogTopics()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Topic"><i class="fas fa-plus"></i></a></th>
+
                                  </tr>
                                </thead>
                                <tbody>
@@ -265,7 +266,7 @@
                                      <select class="form-control" formControlName="topic">
                                       <option value="" [disabled]="true">Select</option>
                                       
-                                      <option *ngFor="let topic of logCharacterization" value="{{topic}}" >
+                                      <option *ngFor="let topic of logCharacterization;let i=index" value="{{topic}}" >
                                         {{topic}}</option>
                                       
                                     </select>
@@ -283,7 +284,7 @@
                                   </span> -->
                                    </td>
                                    <td>
-                                     <a href="#" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                     <a (click)="deleteLogTopic(logTopics,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
                                    </td>
                                    </ng-container>
                                  </tr>

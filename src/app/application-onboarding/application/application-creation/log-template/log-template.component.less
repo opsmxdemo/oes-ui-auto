@@ -5,3 +5,23 @@
     float: right;
     margin-bottom: 12px;
 }
+/**
+    Change color of stepper icon to green, when completed.
+    - NOTE: requires 'encapsulation: ViewEncapsulation.None' in component definition
+ */
+ ::ng-deep .mat-step-header .mat-step-icon-state-done,
+ ::ng-deep .mat-step-header .mat-step-icon-state-edit {
+     background-color: #007bff !important;
+ }
+ ::ng-deep .mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit {
+    background-color: #007bff !important;
+    color: #fff;
+}
+ ::ng-deep .mat-horizontal-content-container {
+    overflow: hidden;
+    padding: 0 0px 0px 0px !important;
+}
+.table-scroll {
+height:500px;
+overflow-y:auto;
+}
