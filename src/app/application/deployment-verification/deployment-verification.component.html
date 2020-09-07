@@ -272,20 +272,38 @@
       
                   <div class="table-responsive">
                     <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
-                      <tbody>
-                        <tr>
-                          <td width="110">Template:</td>
-                          <td>{{deploymentApplicationHealth['logTemplateName']}}::{{deploymentApplicationHealth['metricTemplateName']}}</td>
+                        <!-- <tr>
+                          <td>
+                            <p [innerHTML]=" sent | changetextcolor:arr"></p>
+                          </td>
+                        </tr> -->
+                        <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                          <td width="110">Log Template:</td>
+                          <td data-toggle="tooltip" data-placement="top" title="{{deploymentApplicationHealth['logTemplateName']}}">{{deploymentApplicationHealth['logTemplateName'] | ellipsis:22}} 
+                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentApplicationHealth['logTemplateName']"></i>  
+                          </td>
                         </tr>
-                      
-                      </tbody>
+                        <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                          <td width="110">Metric Template:</td>
+                          <td data-toggle="tooltip" data-placement="top" title="{{deploymentApplicationHealth['metricTemplateName']}}">{{deploymentApplicationHealth['metricTemplateName'] | ellipsis:22}} 
+                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentApplicationHealth['metricTemplateName']"></i>  
+                          </td>
+                        </tr>
                     </table>
                     <hr />
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
-                      <tr class="font-weight-bold">
-                        <td width="110">Baseline: </td>
-                        <td>{{deploymentServiceInformation['version1name']}}</td>
+                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110">Log Baseline: </td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['version1name']}}">{{deploymentServiceInformation['version1name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version1name']"></i>  
+                        </td>
+                      </tr>
+                      <tr class="font-weight-bold" *ngIf=" deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110">Metric Baseline: </td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['metricVersion1Name']}}">{{deploymentServiceInformation['metricVersion1Name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricVersion1Name']"></i>  
+                        </td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -300,9 +318,17 @@
                   <hr />
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
-                      <tr class="font-weight-bold">
-                        <td width="110">New Release:</td>
-                        <td>{{deploymentServiceInformation['version2name']}}</td>
+                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110"> Log New Release:</td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['version2name']}}">{{deploymentServiceInformation['version2name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version2name']"></i>  
+                        </td>
+                      </tr>
+                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110"> Metric New Release:</td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['metricVersion2Name']}}">{{deploymentServiceInformation['metricVersion2Name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricVersion2Name']"></i>  
+                        </td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -317,42 +343,67 @@
                   <hr />
                 
                   
-                  <table *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="table table-sm table-sm-text text-left table-no-bordered mb-0">
+                  <table  class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr>
-                        <td width="180">Log Score:</td>
-                        <td>{{serviceNameInfo['logsScore']}}</td>
+                        <td width="180">Analysis type:</td>
+                        <td>{{deploymentApplicationHealth['analysisType']}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Log Status:</td>
+                        <td>{{deploymentServiceInformation['logStatus']}}</td>
+                      </tr>
+                      
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Metric Status:</td>
+                        <td>{{deploymentServiceInformation['metricStatus']}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Log Score:</td>
+                        <td>{{deploymentServiceInformation['logScore']}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Metric Score:</td>
+                        <td>{{deploymentServiceInformation['metricScore']}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline log file size:</td>
                         <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v1FileSize']:null,true)}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">New Release log file size:</td>
                         <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v2FileSize']:null,true)}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline log file lines:</td>
                         <td>{{deploymentServiceInformation['fileStat'] ? (deploymentServiceInformation['fileStat']['v1LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v1LogLen']:null): 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">New Release log file lines:</td>
                         <td>{{deploymentServiceInformation['fileStat'] ? (deploymentServiceInformation['fileStat']['v2LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v2LogLen']:null): 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Canary Analysis Duration:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['duration']: 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Interval Minutes:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['intervalMinutes']: 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Regular Expression:</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['regularExpression']: 'N/A'}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Algorithm:</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['algorithm']: 'N/A'}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline logs:</td>
                         <td *ngIf="deploymentServiceInformation['baselineKibanaUrl'] != null"><a href="{{deploymentServiceInformation['baselineKibanaUrl']}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
                         <td *ngIf="deploymentServiceInformation['baselineKibanaUrl'] === null">N/A</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">New Release logs: </td>
                         <td *ngIf="deploymentServiceInformation['canaryKibanaUrl'] != null"><a href="{{deploymentServiceInformation['canaryKibanaUrl']}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
                         <td *ngIf="deploymentServiceInformation['canaryKibanaUrl'] === null">N/A</td>
