@@ -20,6 +20,7 @@ export interface State {
     dockerImageData:any;
     callDockerImageDataAPI: boolean;
     userGropsData: string[];
+    userGroupsPermissions: [];
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -55,6 +56,7 @@ export const initialState: State = {
     dockerImageData: null,
     callDockerImageDataAPI: true,
     userGropsData: null,
+    userGroupsPermissions: null,
     logtemplate: [],
     logAccountsData: null,
     callGetLogAccountsAPI: true,
@@ -92,6 +94,12 @@ export function ApplicationReducer(
             (state, action) => ({
                 ...state,
                 userGropsData: action.userGroupData
+            })
+        ),
+        on(ApplicationAction.fetchUserGropsPermissions,
+            (state, action) => ({
+                ...state,
+                userGroupsPermissions: action.userGroupPermissionsData
             })
         ),
         on(ApplicationAction.errorOccured,
@@ -168,7 +176,7 @@ export function ApplicationReducer(
         
         ),
         
-        // #### CreateApplication screen logic start ####//
+        // #### CreateApplication screen logic ends ####//
 
         // ###  Applist screen logic start ### // 
         on(ApplicationAction.loadAppList,

@@ -14,10 +14,4 @@ export class AppErrorListingComponent implements OnInit {
   constructor(public store: Store<fromApp.AppState>) { }
 
   ngOnInit(){}
-
-  // Below function is use to clean cache ie localstorage
-  cleanCache(){
-    localStorage.removeItem('userData');
-  }
-
 }

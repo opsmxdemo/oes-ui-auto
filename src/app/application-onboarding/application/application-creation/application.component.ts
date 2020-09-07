@@ -14,6 +14,7 @@ import { Service } from 'src/app/models/applicationOnboarding/createApplicationM
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as $ from 'jquery';
+import { GroupPermission } from 'src/app/models/applicationOnboarding/createApplicationModel/groupPermissionModel/groupPermission.model';
 
 @Component({
   selector: 'app-application',
@@ -50,6 +51,7 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
   currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
+  userGroupPermissions:Object[] = [];                             // It is use to store value of checkbox need to display in group section.
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -242,8 +244,9 @@ export class CreateApplicationComponent implements OnInit {
           this.dockerImageData = response.dockerImageData;
           this.populateDockerImagenDropdown();
         }
-        if (response.userGropsData !== null) {
+        if (response.userGropsData !== null && response.userGroupsPermissions !== null) {
           this.userGroupData = response.userGropsData;
+          this.userGroupPermissions = response.userGroupsPermissions;
         }
         if (response.logtemplate.length > 0){
           this.logTemplateData = response.logtemplate;
@@ -461,25 +464,54 @@ export class CreateApplicationComponent implements OnInit {
         }
       })
     }else{
-      if(props === 'r'){
-        prop = 'Read Only';
-      }else if(props === 'rx'){
-        prop = 'Read & Execute';
-      }else{
-        prop = 'Read, Execute & Write';
-      }
+      props.forEach((permission,index) => {
+        if(permission.value === true){
+          prop +=  prop === '' ? permission.name : ','+permission.name;
+        }
+      });
     }
     return prop;
   }
 
+  // Below function is use to check whether permission is selected or not after selection of usergroup.
+  permissionContrlValid(controlvalue){
+    let counter = 0;
+    controlvalue.value.forEach(permission => {
+      if(permission.value === true){
+        counter++;
+      }
+    });
+    if(counter > 0){
+      controlvalue.setErrors(null);
+    }else{
+      controlvalue.setErrors({'incorrect': true});
+    }
+    return counter > 0 ? false : true;
+  } 
+
   //Below function is use to add more permission group
   addGroup() {
-    (<FormArray>this.groupPermissionForm.get('userGroups')).push(
+    const index = this.groupPermissionForm.value.userGroups.length > 0 ? this.groupPermissionForm.value.userGroups.length : 0;
+    // pushing controls in usergroup form.
+    const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
+    userGroupControl.push(
       new FormGroup({
         userGroupId: new FormControl('',[Validators.required,this.usergroupExist.bind(this)]),
-        permissionId: new FormControl('', Validators.required),
+        permissionIds: new FormArray([])
       })
     );
+
+    // pushing controls in permissionIDs
+    const permissionIdGroupControl = userGroupControl.at(index).get('permissionIds') as FormArray;
+    this.userGroupPermissions.forEach(permissionId => {
+      permissionIdGroupControl.push(
+        new FormGroup({
+          value: new FormControl(false),
+          name: new FormControl(permissionId['permissionId'])
+        })
+      )
+    })
+    
     // populating user group dropdown data
     this.populateUserGroupsDropdown();
   }
@@ -809,7 +841,20 @@ export class CreateApplicationComponent implements OnInit {
         }
         
         this.mainForm.services = this.servicesForm.value.services;
-        this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
+        // usergroups section
+        this.mainForm.userGroups = this.groupPermissionForm.value.userGroups.map(usergroupData => {
+          let usergroupObj:GroupPermission = {
+            userGroupId: usergroupData.userGroupId,
+            permissionId:[]
+          }
+          usergroupData.permissionIds.forEach(permission => {
+            if(permission.value === true){
+              usergroupObj.permissionId.push(permission.name);
+            }
+          });
+          return usergroupObj;
+        });
+
         if(this.userType.includes('OES')){
           this.mainForm.environments = this.environmentForm.value.environments;
         }

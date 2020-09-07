@@ -87,9 +87,9 @@
                 <span>Group Permissions Details</span>
               </li>
               <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
-                <i class="{{group.permission !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <i class="{{group.userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
                 <span>{{group.userGroupId !== ''?groupProperties(true,group.userGroupId):''}} :</span>
-                <strong *ngIf="group.permission !== ''? true:false">{{group.permissionId !== ''?groupProperties(false,group.permissionId):''}}</strong>
+                <strong *ngIf="group.permission !== ''? true:false">{{groupProperties(false,group.permissionIds)}}</strong>
               </li>
             </ul>
            
@@ -375,58 +375,69 @@
                   <div class="col-12">
                     <hr class="ml-0 mt-3 mb-3" />
                   </div>
-                  <div class="row" *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
-                    <div class="col-12">
-                      <form [formGroup]="groupPermissionForm">
-                        <table class="table table-outline" formArrayName="userGroups">
-                          <thead>
-                            <tr>
-                              <th>Group</th>
-                              <th>Permissions</th>
-                              <th class="text-right"><a (click)="addGroup()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Group"><i class="fas fa-plus"></i></a></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
-                              <ng-container [formGroupName]="i">
-                                <td>
-                                  <select class="form-control" formControlName="userGroupId"
-                                  [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').touched ? 'is-invalid':''">
-                                    <option value="" [disabled]="true">Select</option>
-                                    <option *ngFor = "let user of userGroupDropdownData[i]" value="{{user.userGroupId}}">{{user.userGroupName}}</option>
-                                  </select>
-                                  <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').invalid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').touched"
-                                  class="invalid-feedback">
-                                    <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').errors['required']">Group name is required</span>
-                                    <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').errors['groupNameExist']">Group name already exist</span>
-                                  </span>
-                                </td>
-                                <td>
-                                  <select class="form-control" formControlName="permissionId"
-                                  [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('permissionId').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permissionId').touched ? 'is-invalid':''">
-                                    <option value="" [disabled]="true">Select</option>
-                                    <option value="r">Read Only</option>
-                                    <option value="rx">Read & Execute</option>
-                                    <option value="rwx">Read, Execute & Write</option>
-                                  </select>
-                                  <span *ngIf="!groupPermissionForm.get('userGroups')['controls'][i].get('permissionId').valid && groupPermissionForm.get('userGroups')['controls'][i].get('permissionId').touched"
-                                  class="invalid-feedback">Permission is required</span>
-                                </td>
-                                <td>
-                                  <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete" 
-                                  (click)="removeGroup(i)">
-                                    <i class="mt_custom-3 fas fa-trash-alt"></i></a>
-                                </td>
-                              </ng-container>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </form>
+                  <ng-container *ngIf = "userGroupData.length > 0 && userGroupPermissions.length > 0">
+                    <div class="row" *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
+                      <div class="col-12">
+                        <form [formGroup]="groupPermissionForm">
+                          <table class="table table-outline" formArrayName="userGroups">
+                            <thead>
+                              <tr>
+                                <th>Group</th>
+                                <th>Permissions</th>
+                                <th class="text-right"><a (click)="addGroup()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Group"><i class="fas fa-plus"></i></a></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let optionsArr of groupPermissionForm.get('userGroups')['controls'];let i=index">
+                                <ng-container [formGroupName]="i">
+                                  <td>
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <select class="form-control" formControlName="userGroupId" (change)="permissionContrlValid(groupPermissionForm.get('userGroups')['controls'][i].get('permissionIds'))"
+                                        [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').touched ? 'is-invalid':''">
+                                          <option value="" [disabled]="true">Select</option>
+                                          <option *ngFor = "let user of userGroupDropdownData[i]" value="{{user.userGroupId}}">{{user.userGroupName}}</option>
+                                        </select>
+                                        <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').invalid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').touched"
+                                        class="invalid-feedback">
+                                          <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').errors['required']">Group name is required</span>
+                                          <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').errors['groupNameExist']">Group name already exist</span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                    
+                                  </td>
+                                  <td class="{{userGroupPermissions.length<4?'usergroupCheckbox':''}}" formArrayName="permissionIds">
+                                      <div class="custom-control custom-checkbox">
+                                        <div class="row">
+                                          <div class="col-4" *ngFor="let permissionIds of optionsArr.get('permissionIds')['controls'];let j=index">
+                                            <ng-container [formGroupName]="j">
+                                              <input type="checkbox" class="custom-control-input" formControlName="value" id="value{{i}}{{j}}">
+                                              <label class="custom-control-label" for="value{{i}}{{j}}">{{permissionIds.get('name').value}}</label>
+                                            </ng-container>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <span class="checkboxErrorText" *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('permissionIds').touched && 
+                                    permissionContrlValid(groupPermissionForm.get('userGroups')['controls'][i].get('permissionIds'))">At least one permissions is selected. please select</span>
+                                  </td>
+                                  <td>
+                                    <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete" 
+                                    (click)="removeGroup(i)">
+                                      <i class="mt_custom-3 fas fa-trash-alt"></i></a>
+                                  </td>
+                                </ng-container>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </form>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-6">
-                    <a class="btn btn-link btn-link-black" *ngIf="groupPermissionForm.value.userGroups.length === 0 ? true : false " (click)="addGroup()">Add Group</a>
-                  </div>
+                    <div class="col-6">
+                      <a class="btn btn-link btn-link-black" *ngIf="groupPermissionForm.value.userGroups.length === 0 ? true : false " (click)="addGroup()">Add Group</a>
+                    </div>
+                  </ng-container>
+                  <h6 class="userGroupErrorMessage" *ngIf = "userGroupData.length == 0 && userGroupPermissions.length == 0"> User Group is not available to set the permissions !!</h6>
                 </div>
                 <!-- /.form-group -->
               </div>

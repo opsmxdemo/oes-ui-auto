@@ -4,9 +4,9 @@
         <div class="col-sm-12 d-flex flex-column">
           <div class="h-100 d-flex flex-column">
             <div class="tab-content h-100 p-3 flex-grow-1">
-                <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                <div *ngIf="tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access text-right p-3">
-                    <button class="btn btn-default" (click)="addDataSourceAccount('new')" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
                   </div>
                   <!-- /.page_access ml-auto -->
                   <div class="gray-strip"></div>
@@ -20,7 +20,7 @@
                     <!-- /.no_content -->
                   </div>
                 </div>
-                <div *ngIf="!tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                <div *ngIf="!tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access d-flex text-right p-3">
                       <div class="mr-auto">
                           <div class="input-group input-group_search">
@@ -31,7 +31,7 @@
                             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                           </div>
                         </div>
-                        <button class="btn btn-default" (click)="addDataSourceAccount('new')"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
                       </div>
                   <!-- /.page_access ml-auto -->
                   <div class="table-content">
@@ -39,9 +39,7 @@
                       <thead>
                         <tr>
                           <th class="font-weight-bold">Account Name</th>
-                          <th class="font-weight-bold">End Point</th>
                           <th class="font-weight-bold">Account Type</th>
-                          <th class="font-weight-bold">User name</th>
                           <th class="font-weight-bold">Action</th>
                           <!-- <th class="font-weight-bold">ACTION</th> -->
                         </tr>
@@ -49,12 +47,10 @@
                       <tbody>
                           <tr *ngFor="let datasourceData of currentPage | filter:searchData; let i=index">
                             <td>{{datasourceData.name}}</td>
-                            <td>{{datasourceData.endPoint}}</td>
-                            <td>{{datasourceData.accountType}}</td>
-                            <td>{{datasourceData.username}}</td>
+                            <td>{{datasourceData.datasourceType}}</td>
                              <td>
-                              <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editAccount(datasourceData,i,'edit')" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  
-                              <a (click)="deleteAccount(datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                              <!-- <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>   -->
+                              <a (click)="onselectDatasource('Delete',datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>
                       </tbody>
@@ -71,9 +67,7 @@
                         </select>
                         <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
                           {{page.endPoint < datasourceListLength-1?page.endPoint:datasourceListLength}} of {{datasourceListLength}}</span>
-                        <!-- <input type="text" class="form-control mr-2" />
-                        <button class="btn btn-primary">Go</button> -->
-    
+                       
                         <ul class="pagination ml-auto mb-0">
                           <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
                           <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
@@ -98,69 +92,29 @@
                   </div>
                   <!-- /.table-content -->
                 </div>
+                <div *ngIf="loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                  <app-loading-screen></app-loading-screen>
+                 </div>
               </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modal -->
+
+  <!-- ########### Create DataSource model ########### -->
   <div class="modal bd-example-modal-lg fade" id="dataSource" tabindex="-1" role="dialog" aria-labelledby="dataSourceLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 *ngIf="typeOfForm === 'new'" class="modal-title">New Data Source</h5>
-          <h5 *ngIf="typeOfForm === 'edit'" class="modal-title">{{selectedDataProvider}}</h5>
+          <h5 class="modal-title">New Data Source</h5>
           <button type="button" class="close" data-dismiss="modal" #closeAddExpenseModal aria-label="Close">
             <i class="fa fa-times"></i>
           </button>
         </div>
         <div class="modal-body">
-          <!-- <form> -->
-            <div class="form-group text-muted">
-              <label>Select Monitoring Provider </label>
-              <div class="box-icon-group">
-                <!-- for Autopilot -->
-                <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
-                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource.configurationFields)" >
-                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}" [checked]="datasource.datasourceType === selectedDataProvider" />
-                    <label for="{{datasource['datasourceType']}}">
-                      <span class="bi-lbl">
-                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png" onError="this.src='../../assets/images/iconBlank.png'"/>
-                      </span>
-                      <span class="bi-text">
-                       {{datasource['displayName']}}
-                      </span>
-                    </label>
-                  </div>
-                </ng-container>
-               
-                <!-- for OES -->
-                <ng-container *ngFor="let datasource of supportedDataSources['oesDataSources']; let i=index;">
-                  <div  class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"  (click)="getDataProvider(datasource.datasourceType,datasource)" >
-                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}" [checked]="datasource.datasourceType === selectedDataProvider" />
-                    <label for="{{datasource['datasourceType']}}">
-                      <span class="bi-lbl">
-                        <img src="{{imgPath}}{{datasource['datasourceType']}}.png"/>
-                      </span>
-                      <span class="bi-text">
-                       {{datasource['displayName']}}
-                      </span>
-                    </label>
-                  </div>
-                </ng-container>
-              </div>
-              <!-- /.box-icon-group -->
-            </div>
-            <!-- /.form-group -->
-            <hr />
-           <!-- code for form load   -->
-           <app-data-source-forms [formData]="currentFormData" (saveFormEvent)="onSaveForm($event)"></app-data-source-forms>
-
-           <!-- </form> -->
+          <app-create-data-source (closemodel)="getClose($event)"></app-create-data-source>
         </div>
-       
-        <!-- /.modal-footer -->
       </div>
     </div>
   </div>
