@@ -1,6 +1,6 @@
 import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { options } from 'fusioncharts';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
@@ -44,11 +45,15 @@ export class MetricTemplateEffect {
     ) { }
 
     //Below effect is use for fetch pipline dropdown data.
-    fetchAccountForCustomDataSource = createEffect(() =>
+    fetchAccountForCustomDataSource = createEffect(() =>        
         this.actions$.pipe(
             ofType(ApplicationAction.fetchAccountForCustomDataSource),
-            switchMap((action) => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getUserListOfAccounts?sourceType='+action.datasource).pipe(
+            withLatestFrom(this.store.select('auth')),
+            switchMap(([action,authState]) => {               
+                const httpHeaders: HttpHeaders = new HttpHeaders({
+                    'x-spinner-user': authState.user 
+                });                
+                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.datasource,{ headers: httpHeaders }).pipe(
                     map(resdata => {
                         return ApplicationAction.loadAccountForCustomDataSource({ customDSAccounts: resdata });
                     }),
