@@ -47,7 +47,7 @@ export class CreateDataSourceComponent implements OnInit {
     // resetting the value selectedProviderObj
     this.selectedProviderObj = {
       datasourceType: selectedProviderData.datasourceType,
-      name: selectedProviderData.displayName,
+      name: '',
       configurationFields: {}
     };
     this.providerBelongsTo = providerBelongsTo;
@@ -58,7 +58,8 @@ export class CreateDataSourceComponent implements OnInit {
   // Below function is use to execute on create dataSource
   onSaveForm(event) {
     let postData = { ...this.selectedProviderObj };
-    postData['configurationFields'] = event.form.value;
+    postData['name']=event.form.value.name;
+    postData['configurationFields'] = event.form.value.configFields;
     if (this.providerBelongsTo === 'AP') {
       this.store.dispatch(DataSourceActions.postAPDatasources({ CreatedDataSource: postData }));
     } else {
