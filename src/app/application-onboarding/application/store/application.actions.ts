@@ -45,6 +45,15 @@ export const fetchLogTopics = createAction('[Application] FetchLogTopics', props
 export const createdMetricTemplate = createAction('[Application] CreatedMetricTemplate', props<{metricTemplateData:any}>());
 export const fetchAccountForCustomDataSource = createAction('[Application] FetchAccountCustomForDataSource', props<{datasource:any}>());
 export const loadAccountForCustomDataSource = createAction('[Application] LoadAccountCustomForDataSource', props<{customDSAccounts:any}>());
+export const fetchAccountForAPMDataSource = createAction('[Application] FetchAccountAPMForDataSource', props<{datasource:any}>());
+export const loadAccountForAPMDataSource = createAction('[Application] LoadAccountAPMForDataSource', props<{APMDSAccounts:any}>());
+export const fetchAccountForInfraDataSource = createAction('[Application] FetchAccountInfraForDataSource', props<{datasource:any}>());
+export const loadAccountForInfraDataSource = createAction('[Application] LoadAccountInfraForDataSource', props<{InfraDSAccounts:any}>());
+
+export const fetchApplicationForAPMAccounts = createAction('[Application] FetchApplicationForAPMAccounts', props<{account:any,sourceType:any}>());
+export const loadApplicationForAPMAccounts = createAction('[Application] LoadApplicationForAPMAccounts', props<{APMApplicationForAccounts:any}>());
+export const fetchApplicationForInfraAccounts = createAction('[Application] FetchApplicationForInfraAccounts', props<{account:any,sourceType:any}>());
+export const loadApplicationForInfraAccounts = createAction('[Application] LoadApplicationForInfraAccounts', props<{INFRAApplicationForAccounts:any}>());
 
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');

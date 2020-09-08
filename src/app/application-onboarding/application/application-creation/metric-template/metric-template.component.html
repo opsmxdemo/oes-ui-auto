@@ -1,7 +1,10 @@
   <div class="pt-1">
     <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist" (click)="onClickTab($event)">
       <li class="nav-item" >
-        <a class="nav-link" id="metric-form-tab" data-toggle="tab" role="tab" aria-controls="metric-form" aria-selected="true">Form</a>
+        <a class="nav-link" id="metric-apminfra-tab" data-toggle="tab" role="tab" aria-controls="metric-apminfra" aria-selected="true">APM & INFRA</a>
+      </li>
+      <li class="nav-item" >
+        <a class="nav-link" id="metric-form-tab" data-toggle="tab" role="tab" aria-controls="metric-form" aria-selected="true">CUSTOM</a>
       </li>
       <li  class="nav-item">
         <a class="nav-link"  id="metric-editor-tab" data-toggle="tab" role="tab" aria-controls="metric-editor" aria-selected="true">Editor</a>
@@ -10,11 +13,602 @@
     </ul>
     
     <div class="tab-content" id="myTabContent">
+      <div id="metric-apminfra" role="tabpanel" aria-labelledby="metric-apminfra-tab">          
+        <div class="col-12 maindiv" *ngIf = "selectedTab === 'metric-apminfra'"> 
+          <mat-horizontal-stepper [labelPosition]="'bottom'" #stepper>
+            <mat-step [stepControl]="apmFormGroup">
+              <form [formGroup]="apmFormGroup">
+                <ng-template matStepLabel>APM Metrics</ng-template>
+                <div id="step-1">
+                  <div class="multisteps-form__content">
+                     <div class="px-4 py-3">
+                       <div class="row">
+                         <div class="col-6">
+                           <div class="form-group">
+                             <label>Metric Template Name</label>
+                             <input type="text" class="form-control" autofocus="true" formControlName="templateName"/>
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                       </div>
+                       <!-- /.row -->
+
+                       <div class="text-divider">
+                         <h4>APM Metrics</h4>
+                       </div>
+                       
+                       <div class="row">
+                         <div class="col-6">
+                           <div class="form-group">
+                             <label>APM Monitoring Provider</label>
+                             <select class="form-control" (change)="onChangeDatasource($event.target.value,'apm')">
+                              <option value="" [disabled]="true">Select</option>
+                              <ng-container *ngFor="let datasource of autoDatasources">
+                              <option *ngIf="datasource.metricTypes[0] == 'apm' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
+                                {{datasource.displayName}}</option>
+                              </ng-container>
+                            </select>
+                             <!-- <select name="webmenu" id="platform2">
+                               <option value="" title="images/new_relic.png">New Relic</option>
+                               <option value="" title="images/kubarnates.png">Kubernates</option>
+                               <option value="" title="images/gcp-icon.png">GCP</option>
+                             </select> -->
+                           </div>
+                           <!-- /.form-group -->
+
+                           <div class="form-group">
+                            <label>Select {{selectedAPMDataSource}} Accounts</label>
+                            <select class="form-control" (change)="onChangeDSAccount($event.target.value,'apm')">
+                              <option value="" [disabled]="true">Select</option>                            
+                              <option *ngFor="let dsaccount of APMDSAccounts" value="{{dsaccount.name}}"  >
+                                {{dsaccount.name}}</option>                           
+                            </select>                          
+                          </div>
+                           <!-- /.form-group -->
+
+                           <div class="form-group">
+                             <label>Select Newrelic Application</label>
+                             <select class="form-control">
+                               <option>canary-autopilot</option>
+                             </select>
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                       </div>
+                       <!-- /.row -->
+
+
+                       <hr class="ml-0 mt-3 mb-3" />
+
+                       <div class="row">
+                         <div class="col-10">
+                           <div class="form-group">
+                             <label>API Selection</label>
+                             <table class="table table-outline">
+                               <thead>
+                                 <tr>
+                                   <th>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" id="selectAll">
+                                       <label class="custom-control-label" for="selectAll">Select All</label>
+                                     </div>
+                                   </th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                
+                                 <tr>
+                                   <td>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" checked id="selectItem7">
+                                       <label class="custom-control-label" for="selectItem7">/SpringController/logs/updateFeedbackLogTemplate (POST)</label>
+                                     </div>
+                                   </td>
+                                 </tr>
+                               </tbody>
+                             </table>
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                       </div>
+                       <!-- /.row -->                            
+                     </div>
+                   </div>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [stepControl]="infraFormGroup">
+              <form [formGroup]="infraFormGroup">
+                <ng-template matStepLabel>INFRA Metrics</ng-template>
+                <div id="step-2">
+                  <div class="multisteps-form__content">
+                     <div class="px-4 py-3">
+                       <div class="text-divider pt-0">
+                         <h4>APM Metrics</h4>
+                       </div>
+
+                       <div class="row">
+                         <div class="col-6">
+                           <div class="form-group">
+                             <label>APM Monitoring Provider <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="images/help_icon.png" alt="icon" /></span></label>
+                             <select name="webmenu" id="platform3">
+                               <option value="" title="images/promethics.png">New Relic</option>
+                               <option value="" title="images/kubarnates.png">Kubernates</option>
+                               <option value="" title="images/gcp-icon.png">GCP</option>
+                             </select>
+                           </div>
+                           <!-- /.form-group -->
+                           <div class="form-group">
+                             <label>Infrastructure Account <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="images/help_icon.png" alt="icon" /></span></label>
+                             <select class="form-control">
+                               <option>Newrelic-DS-Demo</option>
+                             </select>
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                       </div>
+                       <!-- /.row -->
+
+                       <hr class="ml-0 mt-3 mb-3" />
+
+                       <div class="row">
+                         <div class="col-6">
+                           <div class="form-group">
+                             <label>Infrastructure metric Groups</label>
+                             <table class="table table-outline">
+                               <thead>
+                                 <tr>
+                                   <th>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" id="in_selectAll">
+                                       <label class="custom-control-label" for="in_selectAll">Select All</label>
+                                     </div>
+                                   </th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                 <tr>
+                                   <td>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" checked id="in_selectItem1">
+                                       <label class="custom-control-label" for="in_selectItem1">MEMORY GROUP</label>
+                                     </div>
+                                   </td>
+                                 </tr>
+                                 <tr>
+                                   <td>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" id="in_selectItem2">
+                                       <label class="custom-control-label" for="in_selectItem2">IO KPI</label>
+                                     </div>
+                                   </td>
+                                 </tr>
+                                 <tr>
+                                   <td>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" id="in_selectItem3">
+                                       <label class="custom-control-label" for="in_selectItem3">COMPUTE KPI</label>
+                                     </div>
+                                   </td>
+                                 </tr>
+                                 <tr>
+                                   <td>
+                                     <div class="custom-control custom-checkbox">
+                                       <input type="checkbox" class="custom-control-input" id="selectItem4">
+                                       <label class="custom-control-label" for="selectItem4">NETWORK GROUP</label>
+                                     </div>
+                                   </td>
+                                 </tr>
+                               </tbody>
+                             </table>
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                       </div>
+                       <!-- /.row -->   
+
+                       <hr class="ml-0 mt-3 mb-3" />
+
+                       <div class="row">
+                         <div class="col-6">
+                           <div class="form-group">
+                             <label>Apply load based normalization</label>
+                             <div class="d-flex mt-3 text-muted align-items-center">
+                               <span>No</span>
+                               <div class="custom-control custom-switch ml-2 mr-1">
+                                 <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                 <label class="custom-control-label" for="customSwitch1"></label>
+                               </div>
+                               <span>Yes</span>
+                             </div>
+                             <!-- /.d-flex -->
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                         <div class="col-6">
+                           <div class="form-group">
+                             <label>Threshold for Metric failure</label>
+                             <div class="d-flex mt-3 text-muted align-items-center">
+                               <span>Hard</span>
+                               <div class="custom-control custom-switch ml-2 mr-1">
+                                 <input type="checkbox" class="custom-control-input" checked id="customSwitch2">
+                                 <label class="custom-control-label" for="customSwitch2"></label>
+                               </div>
+                               <span>Easy</span>
+                             </div>
+                             <!-- /.d-flex -->
+                           </div>
+                           <!-- /.form-group -->
+                         </div>
+                         <!-- /.col-6 -->
+                       </div>
+                       <!-- /.row -->
+
+                     </div>
+                   </div>
+                </div>
+                <!-- <div>
+                  <button mat-button matStepperPrevious>Back</button>
+                  <button mat-button matStepperNext>Next</button>
+                </div> -->
+              </form>
+            </mat-step>            
+            <mat-step>
+              <ng-template matStepLabel>Metric Config</ng-template>
+              <div id="step-4" class="">
+                <div class="multisteps-form__content">                          
+                   <div class="px-4 py-3">
+                     <div class="text-divider pt-0">
+                       <h4>Specify critical/watchlist/weights for metrics</h4>
+                     </div>
+
+                     <div class="row">
+                       <div class="col-12">
+                         <div class="form-group">
+                           <label>APM</label>
+                           
+                           <div class="custom-collapse">
+                             <a class="btn btn-default" data-toggle="collapse" href="#apmCollapse" role="button" aria-expanded="false" aria-controls="apmCollapse">
+                               <i class="fas fa-caret-right"></i> APM
+                             </a>
+                             <div class="collapse" id="apmCollapse">
+                               <div class="collapse-child">
+                                 <table class="table mb-0">
+                                   <tbody>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-down"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td colspan="2">
+                                         <table class="table-sm">
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>rpm</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>rpm</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>throughput</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>rpm</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                         </table>
+                                       </td>
+                                     </tr>
+                                   </tbody>
+                                 </table>
+                                 <!-- /.table -->
+                               </div>
+                               <!-- /.collapse-child -->
+                             </div>
+                           </div>
+                           <!-- /.custom-collapse -->
+                           <div class="custom-collapse">
+                             <a class="btn btn-default" data-toggle="collapse" href="#loadCollapse" role="button" aria-expanded="false" aria-controls="loadCollapse">
+                               <i class="fas fa-caret-right"></i> LOAD
+                             </a>
+                             <div class="collapse" id="loadCollapse">
+                               <div class="collapse-child">
+                                 <table class="table mb-0">
+                                   <tbody>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td>
+                                         <i class="fas fa-caret-down"></i> /SpringController/canaries/getActiveCanaries (GET)
+                                       </td>
+                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
+                                     </tr>
+                                     <tr>
+                                       <td colspan="2">
+                                         <table class="table-sm">
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>rpm</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>rpm</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>throughput</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                           <tr>
+                                             <td><input type="text" value="requests_per_minute"></td>
+                                             <td>
+                                               <select>
+                                                 <option>Avg</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <select>
+                                                 <option>rpm</option>
+                                               </select>
+                                             </td>
+                                             <td>
+                                               <input type="text" value="Label" style="width: 90px;" />
+                                             </td>
+                                             <td>
+                                               <div class="btn-group">
+                                                 <input type="text" class="btn btn-input" value="0" />
+                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
+                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
+                                               </div>
+                                             </td>
+                                             <td>
+                                               <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                             </td>
+                                           </tr>
+                                         </table>
+                                       </td>
+                                     </tr>
+                                   </tbody>
+                                 </table>
+                                 <!-- /.table -->
+                               </div>
+                               <!-- /.collapse-child -->
+                             </div>
+                           </div>
+                           <!-- /.custom-collapse -->
+                         </div>
+                         <!-- /.form-group -->
+                       </div>
+                       <!-- /.col-6 -->
+                     </div>
+                     <!-- /.row -->
+
+                   </div>
+                 </div>
+              </div>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>         
+          <div class="col-12">
+            <button class="btn btn-primary ml-2 savebtn" (click)="saveapminfra()">Save</button>
+          </div>
+         </div>            
+      </div>
       <div id="metric-form" role="tabpanel" aria-labelledby="metric-form-tab">         
           <div *ngIf = "selectedTab === 'metric-form'" class="col-12 maindiv">
-            
-                       
-              <div id="step-1">
+              
                 <div class="multisteps-form__content">
                    <div class="px-4 py-3">
                     <form [formGroup]="createMetricForm">  
@@ -22,7 +616,7 @@
                        <div class="col-6">
                          <div class="form-group">
                            <label>Metric Template Name</label>
-                           <input type="text" class="form-control" autofocus="true" formControlName="templateName"/>
+                           <input type="text" class="form-control" autofocus="true" formControlName="templateName" required/>
                          </div>
                          <!-- /.form-group -->
                        </div>
@@ -38,7 +632,7 @@
                        <div class="col-6">
                         <div class="form-group">
                           <label>Select Datasource</label>
-                          <select class="form-control" (change)="onChangeDatasource($event.target.value)">
+                          <select class="form-control" (change)="onChangeDatasource($event.target.value,'custom')">
                             <option value="" [disabled]="true">Select</option>
                             <ng-container *ngFor="let datasource of autoDatasources">
                             <option *ngIf="datasource.metricTypes[0] == 'custom' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
@@ -50,10 +644,10 @@
 
                          <div class="form-group">
                           <label>Select {{selectedCustomDataSource}} Accounts</label>
-                          <select class="form-control" (change)="onChangeCustomDSAccount($event.target.value)">
+                          <select class="form-control" (change)="onChangeDSAccount($event.target.value,'custom')" formControlName="accountName">
                             <option value="" [disabled]="true">Select</option>                            
-                            <option *ngFor="let dsaccount of customDataSourceAccounts" value="{{dsaccount}}" formControlName="accountName" >
-                              {{dsaccount}}</option>                           
+                            <option *ngFor="let dsaccount of customDataSourceAccounts" value="{{dsaccount.name}}"  >
+                              {{dsaccount.name}}</option>                           
                           </select>                          
                         </div>
                         
@@ -83,7 +677,7 @@
                                 <th>Critical</th>
                                 <th>Watchlist</th>
                                 <th>Weight</th>
-                                <th></th>
+                                <th class="text-right"><a (click)="addNewQuery()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Query"><i class="fas fa-plus"></i></a></th>
                                </tr>
                              </thead>
                              <tbody *ngFor="let query of queryForm.get('queryList')['controls']; let i=index">                              
@@ -116,9 +710,7 @@
                                   <input type="text" class="form-control" value="" formControlName="metricWeight">
                                 </td>
                                  <td class="px-1">
-                                  <div (click)="addNewQuery()">
-                                    <span class="fa fa-plus"></span>
-                                  </div>
+                                  <a (click)="deleteQuery(query,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
                                  </td>
                                </tr>
                              </tbody>
@@ -132,7 +724,7 @@
                     </form>                         
                    </div>
                  </div>
-              </div>
+              
             
             <div class="col-12">
               <button class="btn btn-primary ml-2 savebtn" (click)="savemetrictemplate()">SaveForm</button>
