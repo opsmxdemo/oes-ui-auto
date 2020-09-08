@@ -79,22 +79,22 @@ export class LogTemplateEffect {
      )
  )
 
-//  // Below effect is use for fetch logtopics table data.
-//  fetchDatasources = createEffect(() =>
-//      this.actions$.pipe(
-//          ofType(ApplicationAction.loadSupportingDatasources),
-//          switchMap(() => {
-//              return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/supportedDatasources').pipe(
-//                  map(resdata => {
-//                      return ApplicationAction.fetchDatasources({ datasources: resdata });
-//                  }),
-//                  catchError(errorRes => {
-//                      this.toastr.showError('Server Error !!', 'ERROR')
-//                      return handleError(errorRes);
-//                  })
-//              );
-//          })
-//      )
-//  )
+ // Below effect is use for fetch cluster tags table data.
+ fetchClusterTags = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadClusterTags),
+         switchMap(() => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/getClusterTags').pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchClusterTags({ clusterTags: resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
 
 }

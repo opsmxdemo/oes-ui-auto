@@ -27,10 +27,11 @@ export interface State {
     appListLoading: boolean;
 
     // Log Template variables 
-    logtemplate: any[];
-      // Log Template variables 
+      logtemplate: any[];
       logListLoading: boolean;
       logTopicsList: [];
+      logClusterLoading: boolean;
+      logClusterTags: [];
       logAccountsData: any,
       callGetLogAccountsAPI: boolean;
       logDataSourcesLoading: boolean;
@@ -66,6 +67,8 @@ export const initialState: State = {
     callGetLogAccountsAPI: true,
     logListLoading: false,
     logTopicsList: null,
+    logClusterLoading: false,
+    logClusterTags: null,
     logDataSources: null,
     logDataSourcesLoading: false,
 
@@ -247,6 +250,19 @@ export function ApplicationReducer(
                 ...state,
                 logTopicsList: action.logslist,
                 logListLoading:false
+            })
+        ),
+        on(ApplicationAction.loadClusterTags,
+            state => ({
+                ...state,
+                logClusterLoading:true
+            })
+        ),
+        on(ApplicationAction.fetchClusterTags,
+            (state,action) => ({
+                ...state,
+                logClusterTags: action.clusterTags,
+                logClusterLoading:false
             })
         ),
         on(ApplicationAction.loadSupportingDatasources,

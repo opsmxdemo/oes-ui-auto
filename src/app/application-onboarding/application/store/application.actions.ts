@@ -39,6 +39,8 @@ export const loadMonitoringAccountName = createAction('[Application] LoadMonitor
 export const fetchMonitoringAccounts = createAction('[Application] fetchMonitoringAccounts', props<{logAccounts:any}>());
 export const loadLogTopics = createAction('[Application] LoadLogTopics');
 export const fetchLogTopics = createAction('[Application] FetchLogTopics', props<{logslist:[]}>());
+export const loadClusterTags = createAction('[Application] LoadClusterTags');
+export const fetchClusterTags = createAction('[Application] FetchClusterTags', props<{clusterTags:[]}>());
 
 
 // Below action is related to create Metric template 
