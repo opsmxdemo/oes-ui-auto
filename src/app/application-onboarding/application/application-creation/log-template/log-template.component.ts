@@ -36,6 +36,9 @@ export class LogTemplateComponent implements OnInit {
     logTopicsData: any;
     logCharacterization: any;
     autoDatasources: null;
+    clusterTagFlag: boolean = false;
+  logClusterData: any;
+  clusterTagConfig: any;
 
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
@@ -79,20 +82,24 @@ export class LogTemplateComponent implements OnInit {
 
    defineForms() {
     this.createLogForm = new FormGroup({
-     templateName: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
+     templateName: new FormControl('',[Validators.required]),
      monitoringProvider:  new FormControl('',Validators.required),
      accountName:  new FormControl('',Validators.required),
-     namespace: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
+     namespace: new FormControl('',[Validators.required]),
      index: new FormControl('',[Validators.required]),
      kibanaIndex: new FormControl('',[Validators.required]),
      regExFilter: new FormControl(false),
+     autoBaseline: new FormControl(false),
      regExResponseKey: new FormControl(''),
      regularExpression: new FormControl(''),
      sensitivity:  new FormControl('',Validators.required),
+   //  clusterTagId: new FormControl(false)
+
 
    });
    this.logTopicsForm = new FormGroup({
-     topicsList: new FormArray([])
+     topicsList: new FormArray([]),
+     clusterList: new FormArray([]),
    });
  this.logSensitivityTypes = ["high","low","medium"];
 }
@@ -104,7 +111,7 @@ onDataSourceSelect(dataSourceValue){
 
   if(dataSourceValue === 'elasticsearch'){
     this.createLogForm = new FormGroup({
-      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
+      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
       accountName:  new FormControl('',Validators.required),
       index: new FormControl('',[Validators.required]),
@@ -112,15 +119,20 @@ onDataSourceSelect(dataSourceValue){
       regExFilter: new FormControl(false),
       regExResponseKey: new FormControl(''),
       regularExpression: new FormControl(''),
+      autoBaseline: new FormControl(false),
       sensitivity:  new FormControl('',Validators.required),
+     // clusterTagId: new FormControl(false)
     });
   } else if (dataSourceValue === 'kubernetes'){
     
     this.createLogForm = new FormGroup({
-      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
+      templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
-      namespace: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)]),
+      namespace: new FormControl('',[Validators.required]),
+      autoBaseline: new FormControl(false),
       sensitivity:  new FormControl('',Validators.required),
+     // clusterTagId: new FormControl(false)
+
     });
     
   } else {
@@ -128,7 +140,10 @@ onDataSourceSelect(dataSourceValue){
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
       accountName:  new FormControl('',Validators.required),
+      autoBaseline: new FormControl(false),
       sensitivity:  new FormControl('',Validators.required),
+   //   clusterTagId: new FormControl(false)
+
     });
   }
 
@@ -149,6 +164,8 @@ onDataSourceSelect(dataSourceValue){
 getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
+ this.store.dispatch(ApplicationActions.loadClusterTags());
+
  //fetching data from state
  this.store.select(fromFeature.selectApplication).subscribe(
      (response) => {
@@ -167,10 +184,11 @@ getLogTopics(){
          );
  });
      }
-     if(response.logDataSources != null) {
+     if(response.logDataSources !== null) {
          this.loading = response.logDataSourcesLoading;
          this.dataSourceData = response.logDataSources;
      }
+    
  })   
 }
 
@@ -181,15 +199,45 @@ onCheckboxChange(status){
    this.regFilterStatus = status.target.checked;
 }
 
+// onCheckboonBaselineChangexChange(status){
+//   //this.autoBaselineStatus = status.target.checked;
+// }
+
+onClusterChange(status){
+  this.clusterTagFlag = status.target.checked;
+  this.store.select(fromFeature.selectApplication).subscribe(
+    (response) => {
+  if(response.logClusterTags !== null){
+    this.loading = response.logClusterLoading;
+    this.logClusterData = response.logClusterTags['clusterTopics'];
+    this.clusterTagConfig = response.logClusterTags['clusterTags'];
+           // Populating Cluster 
+  this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+   (<FormArray>this.logTopicsForm.get('clusterList')).push(
+     new FormGroup({
+       string: new FormControl(logClusterData.string),
+       tag: new FormControl(logClusterData.tag)
+     })
+   );
+});
+  }
+})   
+
+}
+
 // Below function to get final form input details
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
-   this.logForm['errorTopics'] = this.logTopicsForm.value;
+   if(this.clusterTagFlag === true){
+    this.logForm['Tags'] = this.logTopicsForm.value['clusterList'];
+   }else{
+    this.logForm['Tags'] = '';
+   }
+   this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
-
    // Action to create the log template
-
+    
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
 
 }
@@ -199,12 +247,11 @@ SubmitForm(){
 addNewLogTopics(){
   //this.scroll.nativeElement. = this.scroll.nativeElement.
   this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
-  debugger
   (<FormArray>this.logTopicsForm.get('topicsList')).push(
     new FormGroup({
-      string: new FormControl('INFO', Validators.required),
-      topic: new FormControl('CRITICAL', Validators.required),
-      type: new FormControl('default', Validators.required)
+      string: new FormControl('', Validators.required),
+      topic: new FormControl('', Validators.required),
+      type: new FormControl('', Validators.required)
     })
   );
 }
@@ -215,6 +262,24 @@ deleteLogTopic(topic,index){
   this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
+addNewClusterTag(){
+  //this.scroll.nativeElement. = this.scroll.nativeElement.
+  this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+  
+  (<FormArray>this.logTopicsForm.get('clusterList')).push(
+    new FormGroup({
+      string: new FormControl('', Validators.required),
+      tag: new FormControl('', Validators.required)
+    })
+  );
+}
+
+
+// delete cluster tag
+
+deleteClusterTag(cluster,index){
+  this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
+}
 
 //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
 

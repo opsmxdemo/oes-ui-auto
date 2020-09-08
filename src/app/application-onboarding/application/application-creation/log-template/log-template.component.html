@@ -14,7 +14,7 @@
         <a class="nav-link active" id="logtemplate-form-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-form" aria-selected="true">Log Template</a>
       </li>
       <li  class="nav-item">
-        <a class="nav-link"  id="logtemplate-editor-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-editor" aria-selected="true">Advanced</a>
+        <a class="nav-link"  id="logtemplate-editor-tab" data-toggle="tab" role="tab" aria-controls="logtemplate-editor" aria-selected="true">Editor</a>
       </li>
     </ul>
   
@@ -169,7 +169,7 @@
                                  <input type="text" class="form-control w-100" formControlName="regularExpression" [ngClass]="createLogForm.get('regularExpression').invalid && createLogForm.get('regularExpression').touched ? 'is-invalid':''">
                                  <span *ngIf="createLogForm.get('regularExpression').invalid && createLogForm.get('regularExpression').touched"
                                    class="invalid-feedback">
-                                   <!-- <span *ngIf="createLogForm.get('regularExpression').errors['required']">regularExpression is
+                                   Cookie: SESSION=OTk1NjM1NmYtNGRmMi00YzY1LWI5YTMtZDA1MGZmZDIxMTIw                        <!-- <span *ngIf="createLogForm.get('regularExpression').errors['required']">regularExpression is
                                      required</span>     -->
                                  </span>
                                </div>
@@ -185,6 +185,14 @@
                          <hr class="ml-0 mt-3 mb-3" />
             
                          <div class="row">
+                           <div class="col-12">
+                            <div class="form-group" *ngIf="selectedDataSource != null">
+                              <div class="custom-control custom-checkbox" >
+                                <input type="checkbox"  class="custom-control-input"  id="autoBaseline" formControlName="autoBaseline" >
+                                <label class="custom-control-label text-muted" for="autoBaseline">Auto Baseline</label> &nbsp; <i data-toggle="tooltip" data-placement="top" data-original-title="ML based learning of the baseline from historic analysis" class="fa fa-question-circle" aria-hidden="true"></i>
+                              </div>
+                            </div>
+                           </div>
                            <div class="col-4">
                              <!-- form group sensitivity -->
                              <div class="form-group" *ngIf="selectedDataSource != null">
@@ -198,7 +206,7 @@
                               </select>
                               <span *ngIf="createLogForm.get('sensitivity').invalid && createLogForm.get('sensitivity').touched"
                                 class="invalid-feedback">
-                                Account Name is required
+                                Sensitivity is required
                               </span>
                             </div>
                             <!--/ form group sensitivity -->
@@ -227,6 +235,58 @@
                   </mat-form-field> -->
                   <div id="step-2">
                     <div class="multisteps-form__content">                          
+                      <div class="px-4 py-3">
+                        <div class="d-flex align-items-center mb-4">
+                          <div class="text-divider flex-grow-1 p-0">
+                            <h4>Cluster Tag</h4>
+                          </div>
+                        </div>
+           
+                        <div class="row">
+                          <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input"  id="clusterTagId"  (change)="onClusterChange($event)">
+                              <label class="custom-control-label text-muted" for="clusterTagId">Add Cluster Tag</label>
+                            </div>
+                          </div>
+                          <div *ngIf="clusterTagFlag === true"  class="col-12" style="height:150px; overflow-y:auto;" #scroll>
+                            <table id="dtVerticalScrollExample"  class="table table-outline table-md" formArrayName="clusterList">
+                              <thead>
+                                <tr>
+                                  <th>CLUSTER TAG STRING</th>
+                                  <th>CLUSTER TAG</th>
+                                  <th class="text-right"><a (click)="addNewClusterTag()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Cluster"><i class="fas fa-plus"></i></a></th>
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let clusterTags of logTopicsForm.get('clusterList')['controls'];let i=index;">
+                                 <ng-container [formGroupName]="i">
+                                  <td>
+                                    <input type="text"  class="form-control" value="{{clusterTags.string}}" formControlName="string" required>
+                                  </td>
+                                  <td>
+                                    <select class="form-control" formControlName="tag">
+                                     <option value="" [disabled]="true">Select</option>
+                                     <option *ngFor="let clusterConfig of clusterTagConfig;let i=index" value="{{clusterConfig}}" required >
+                                       {{clusterConfig}}</option>
+                                  </select>
+                                  </td>
+                                  <td>
+                                    <a (click)="deleteClusterTag(clusterTags,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                  </td>
+                                  </ng-container>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <!-- /.table table-sm -->
+                          </div>
+                          <!-- /.col-8 -->
+                        </div>
+                        <!-- /.row -->
+                      </div>
+                    </div>
+                    <div class="multisteps-form__content">                          
                        <div class="px-4 py-3">
                          <div class="d-flex align-items-center mb-4">
                            <div class="text-divider flex-grow-1 p-0">
@@ -250,7 +310,7 @@
                                  <tr *ngFor="let logTopics of logTopicsForm.get('topicsList')['controls'];let i=index;">
                                   <ng-container [formGroupName]="i">
                                    <td>
-                                     <input type="text" class="form-control" value="{{logTopics.string}}" formControlName="string">
+                                     <input type="text"  class="form-control" value="{{logTopics.string}}" formControlName="string" required>
                                      <!-- 
                                       [ngClass]="logTopicsForm.get('string').invalid && logTopicsForm.get('string').touched ? 'is-invalid':''" 
                                       <span *ngIf="logTopicsForm.get('string').invalid && logTopicsForm.get('string').touched"
@@ -266,13 +326,13 @@
                                      <select class="form-control" formControlName="topic">
                                       <option value="" [disabled]="true">Select</option>
                                       
-                                      <option *ngFor="let topic of logCharacterization;let i=index" value="{{topic}}" >
+                                      <option *ngFor="let topic of logCharacterization;let i=index" value="{{topic}}" required >
                                         {{topic}}</option>
                                       
                                     </select>
                                    </td>
                                    <td>
-                                    <input type="text" class="form-control" value="{{logTopics.type}}" formControlName="type">
+                                    <input type="text" class="form-control" value="{{logTopics.type}}" formControlName="type" required>
                                     <!-- <span *ngIf="logTopicsForm.get('type').invalid && logTopicsForm.get('type').touched"
                                        [ngClass]="logTopicsForm.get('type').invalid && logTopicsForm.get('type').touched ? 'is-invalid':''"
                                     class="invalid-feedback">
