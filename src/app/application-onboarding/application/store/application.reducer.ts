@@ -40,6 +40,10 @@ export interface State {
     metrictemplate: any[];
     customDSAccounts:any;
     datasource : any;
+    InfraDSAccounts : any;
+    APMDSAccounts:any;
+    APMApplicationForAccounts:any;
+
 }
 
 export const initialState: State = {
@@ -68,7 +72,9 @@ export const initialState: State = {
     metrictemplate:[],
     customDSAccounts : null,
     datasource : null,
-    
+    InfraDSAccounts:null,
+    APMDSAccounts:null,
+    APMApplicationForAccounts:null
 }
 
 export function ApplicationReducer(
@@ -277,6 +283,43 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 customDSAccounts: action.customDSAccounts
+            })
+        ),
+        on(ApplicationAction.fetchAccountForAPMDataSource,
+            (state,action) => ({
+                ...state,
+                datasource: action.datasource
+            })
+        ),
+        on(ApplicationAction.loadAccountForAPMDataSource,
+            (state,action) => ({
+                ...state,
+                APMDSAccounts: action.APMDSAccounts
+            })
+        ),
+        on(ApplicationAction.fetchAccountForInfraDataSource,
+            (state,action) => ({
+                ...state,
+                datasource: action.datasource
+            })
+        ),
+        on(ApplicationAction.loadAccountForInfraDataSource,
+            (state,action) => ({
+                ...state,
+                InfraDSAccounts: action.InfraDSAccounts
+            })
+        ),
+        on(ApplicationAction.fetchApplicationForAPMAccounts,
+            (state,action) => ({
+                ...state,
+                sourceType: action.sourceType,
+                accountName : action.account
+            })
+        ),
+        on(ApplicationAction.loadApplicationForAPMAccounts,
+            (state,action) => ({
+                ...state,
+                APMApplicationForAccounts: action.APMApplicationForAccounts
             })
         ),
 

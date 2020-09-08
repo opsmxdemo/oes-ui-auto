@@ -44,16 +44,16 @@ export class MetricTemplateEffect {
         private environment: AppConfigService
     ) { }
 
-    //Below effect is use for fetch pipline dropdown data.
+    //Below effect is use for fetch Accounts for custom datasources
     fetchAccountForCustomDataSource = createEffect(() =>        
         this.actions$.pipe(
             ofType(ApplicationAction.fetchAccountForCustomDataSource),
             withLatestFrom(this.store.select('auth')),
             switchMap(([action,authState]) => {               
-                const httpHeaders: HttpHeaders = new HttpHeaders({
-                    'x-spinner-user': authState.user 
-                });                
-                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.datasource,{ headers: httpHeaders }).pipe(
+                // const httpHeaders: HttpHeaders = new HttpHeaders({
+                //     'x-spinner-user': authState.user 
+                // }); ,{ headers: httpHeaders }               
+                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.datasource).pipe(
                     map(resdata => {
                         return ApplicationAction.loadAccountForCustomDataSource({ customDSAccounts: resdata });
                     }),
@@ -65,5 +65,61 @@ export class MetricTemplateEffect {
             })
         )
     )
+            
+    //Below effect is use for fetch Accounts for APM datasources
+    fetchAccountForAPMDataSource = createEffect(() =>        
+        this.actions$.pipe(
+            ofType(ApplicationAction.fetchAccountForAPMDataSource),
+            switchMap((action) => {              
+                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.datasource).pipe(
+                    map(resdata => {
+                        return ApplicationAction.loadAccountForAPMDataSource({ APMDSAccounts: resdata });
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+     //Below effect is use for fetch Accounts for INFRA datasources
+     fetchAccountForINFRADataSource = createEffect(() =>        
+     this.actions$.pipe(
+         ofType(ApplicationAction.fetchAccountForInfraDataSource),
+         switchMap((action) => {              
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.datasource).pipe(
+                 map(resdata => {
+                     return ApplicationAction.loadAccountForInfraDataSource({ InfraDSAccounts: resdata });
+                 }),
+                 catchError(errorRes => {
+                     //this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+    )
+
+    //Below effect is use for fetch Applications for particular apm accounts
+    fetchApplicationforAPM = createEffect(() =>        
+    this.actions$.pipe(
+        ofType(ApplicationAction.fetchApplicationForAPMAccounts),
+        switchMap((action) => {              
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getApplicationsOrServices?accountName='+ action.account+ '&sourceType='+action.sourceType).pipe(
+                map(resdata => {
+                    return ApplicationAction.loadApplicationForAPMAccounts({ APMApplicationForAccounts: resdata });
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+    )
+
+ //autopilot/canaries/getApplicationsOrServices?accountName=TestMeera-Newrelic&sourceType=newrelic
 
 }
