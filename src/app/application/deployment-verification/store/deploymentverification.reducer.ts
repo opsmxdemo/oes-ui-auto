@@ -18,6 +18,7 @@ export interface State {
     serviceInformation: any;
     serviceInformationLoading: boolean;
     cancelRunningCanaryStatus: any;
+    manualTriggerResponse: any;
 }
 
 export const initialState: State = {
@@ -34,6 +35,7 @@ export const initialState: State = {
     serviceInformation: null,
     serviceInformationLoading: false,
     cancelRunningCanaryStatus: null,
+    manualTriggerResponse: null
 }
 
 export function DeploymentdReducer(
@@ -126,6 +128,14 @@ export function DeploymentdReducer(
                 ...state,
                 deployementLoading: true,
                 canaryId: action.canaryId
+            })
+        ), on(DeploymentActions.manualTriggerData,
+            (state, action) => ({
+                ...state, data: action.data,
+            })
+        ), on(DeploymentActions.fetchManualTriggerResults,
+            (state, action) => ({
+                ...state, manualTriggerResponse: action.manualTriggerResponse,
             })
         ),
         on(DeploymentActions.fetchcancelRunningCanaryStatus,

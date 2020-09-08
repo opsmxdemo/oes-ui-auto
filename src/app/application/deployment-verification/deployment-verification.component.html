@@ -142,101 +142,124 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group text-muted">
-                <label>Application <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                <select class="form-control col-sm-6">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group text-muted">
-                <label>User Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" autofocus="true" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Canary Lifetime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <div class="d-flex align-items-center">
-                  <input type="text" class="form-control mr-2 col-sm-6" />
-                  <span>hours</span>
-                </div>
-              </div>
-              <div class="form-group text-muted">
-                <label>Combined Canary Result Strategy <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <select class="form-control col-sm-6">
-                  <option value="">Select Strategy</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                </select>
-              </div>
-              <div class="form-group text-muted position-relative">
-                <label>Successful Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control is-invalid col-sm-6" />
-                <div class="invalid-feedback">
-                  Error message goes here.
-                </div>
-              </div>
-              <div class="form-group text-muted">
-                <label>Unhealthy Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
+            <!-- Enable the below code for Form / Editor options -->
 
-              <div class="text-divider">
-                <h4>Analysis Config</h4>
-              </div>
+            <!-- <ul class="nav tab-lined nav-tabs mb-2" id="myTab" role="tablist" (click)="onManualTriggerClickTab($event)">
+              <li class="nav-item" >
+                <a class="nav-link active" id="manualTrigger-form-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-form-tab" aria-selected="true">Form</a>
+              </li>
+              <li  class="nav-item">
+                <a class="nav-link active"  id="manualTrigger-editor-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-editor-tab" aria-selected="true">Editor</a>
+              </li>            
+            </ul> -->
+            <div class="tab-content" id="myTabContent">
+              <div id="metric-form" role="tabpanel" aria-labelledby="manualTrigger-form-tab">         
+                  <div *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" class="col-12 maindiv">
+                    <form #manualTriggerData="ngForm" >
+                      <div class="form-group text-muted">
+                        <label>Application <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <select class="form-control col-sm-6">
+                          <option value=""></option>
+                          <option>Choose</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>User Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" autofocus="true" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Lifetime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <div class="d-flex align-items-center">
+                          <input type="text" class="form-control mr-2 col-sm-6" />
+                          <span>hours</span>
+                        </div>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Combined Canary Result Strategy <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <select class="form-control col-sm-6">
+                          <option value="">Select Strategy</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted position-relative">
+                        <label>Successful Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control is-invalid col-sm-6" />
+                        <div class="invalid-feedback">
+                          Error message goes here.
+                        </div>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Unhealthy Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
 
-              <div class="form-group text-muted">
-                <label>Metric Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <select class="form-control col-sm-6">
-                  <option value="">Select Metric Template</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                </select>
-              </div>
-              <div class="form-group text-muted">
-                <label>Log Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <select class="form-control col-sm-6">
-                  <option value="">Select Log Template</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                </select>
-              </div>
-              <div class="form-group text-muted">
-                <label>Begin Canary Analysis After Mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Canary Analysis interval mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
+                      <div class="text-divider">
+                        <h4>Analysis Config</h4>
+                      </div>
 
-              <div class="text-divider">
-                <h4>Matric Scope</h4>
+                      <div class="form-group text-muted">
+                        <label>Metric Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <select class="form-control col-sm-6">
+                          <option value="">Select Metric Template</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Log Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <select class="form-control col-sm-6">
+                          <option value="">Select Log Template</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Begin Canary Analysis After Mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Analysis interval mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+
+                      <div class="text-divider">
+                        <h4>Matric Scope</h4>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Baseline Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Baseline StartTtime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Start Time <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                    </form>
+                  </div>
               </div>
-              <div class="form-group text-muted">
-                <label>Baseline Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
+              
+              <div id="manualTrigger-editor-tab" role="tabpanel" aria-labelledby="manualTrigger-editor-tab">          
+                <div class="col-12 maindiv" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'">
+                  <json-editor [options]="editorOptions" [data]="data" (change)="showManualTriggerJson($event)"></json-editor>
+                </div>            
               </div>
-              <div class="form-group text-muted">
-                <label>Canary Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Baseline StartTtime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Canary Start Time <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-            </form>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
-            <button type="submit" class="btn  btn-primary">Trigger</button>
+            <button type="submit" class="btn  btn-primary"*ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerData()">Trigger</button>
+            <button type="submit" class="btn  btn-primary"*ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()">Trigger</button>
           </div>
           <!-- /.modal-footer -->
         </div>
