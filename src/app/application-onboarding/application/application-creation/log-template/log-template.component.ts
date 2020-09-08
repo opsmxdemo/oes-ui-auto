@@ -15,7 +15,8 @@ import * as DataSourceActions from '../../../data-source/store/data-source.actio
   styleUrls: ['./log-template.component.less']
 })
 export class LogTemplateComponent implements OnInit {
-  @ViewChild('scroll', { read: ElementRef }) public scroll: ElementRef;
+  @ViewChild('scrollLogTopics', { read: ElementRef }) public scrollLogTopics: ElementRef;
+  @ViewChild('scrollLogTags', { read: ElementRef }) public scrollLogTags: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
 
 
@@ -246,7 +247,7 @@ SubmitForm(){
 
 addNewLogTopics(){
   //this.scroll.nativeElement. = this.scroll.nativeElement.
-  this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+  this.scrollLogTopics.nativeElement.scrollTop = this.scrollLogTopics.nativeElement.scrollHeight;
   (<FormArray>this.logTopicsForm.get('topicsList')).push(
     new FormGroup({
       string: new FormControl('', Validators.required),
@@ -264,7 +265,7 @@ deleteLogTopic(topic,index){
 
 addNewClusterTag(){
   //this.scroll.nativeElement. = this.scroll.nativeElement.
-  this.scroll.nativeElement.scrollTop = this.scroll.nativeElement.scrollHeight;
+  this.scrollLogTags.nativeElement.scrollTop = this.scrollLogTags.nativeElement.scrollHeight;
   
   (<FormArray>this.logTopicsForm.get('clusterList')).push(
     new FormGroup({
