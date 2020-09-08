@@ -23,3 +23,6 @@ export const fetchServiceInformation = createAction('[DeploymentVerification] Fe
 
 export const loadcancelRunningCanary = createAction('[DeploymentVerification] LoadCancelRunningCanary', props<{canaryId: number}>());
 export const fetchcancelRunningCanaryStatus = createAction('[DeploymentVerification] FetchCancelRunningCanaryStatus', props<{cancelRunningCanaryData:any}>());
+
+export const manualTriggerData = createAction('[DeploymentVerification] ManualTriggerData', props<{data: any}>())
+export const fetchManualTriggerResults = createAction('[DeploymentVerification] FetchManualTriggerResults', props<{ manualTriggerResponse: any }>());

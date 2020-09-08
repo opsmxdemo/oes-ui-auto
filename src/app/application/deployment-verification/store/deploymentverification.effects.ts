@@ -151,6 +151,32 @@ export class DeploymentVerificationEffect {
            )
         )
 
+        //The effect is used to fetch logs resulst based on each tab ( expected, ignore, baseline etc)
+fetchManualTriggerResults = createEffect(() =>
+    this.actions$.pipe(
+        ofType(DeploymentActions.manualTriggerData),
+        switchMap((action) => {
+            // platform-service-ui change
+            return this.http.post(this.environment.config.endPointUrl + 'autopilot/registerCanary', action.data).pipe(
+                map(resdata => {
+                    
+                    // if (resdata['status']) {
+                    //     // this.store.dispatch(DeploymentActions.reloadAfterRerun({ canaryId: action.canaryId, serviceId: action.serviceId }));
+                    //     this.toastr.showSuccess(resdata['message'], 'SUCCESS')
+                    // } else if (!resdata['status']) {
+                    //     this.toastr.showError('Manual Trigger Canary Error!', 'ERROR')
+                    // }
+                    return DeploymentActions.fetchManualTriggerResults({ manualTriggerResponse: resdata });
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Manual Trigger Canary Error!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
          //Below effect is use to redirect to application onboardind page in create& edit phase
     apponboardingRedirect = createEffect(() =>
     this.actions$.pipe(
