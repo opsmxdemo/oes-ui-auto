@@ -25,6 +25,7 @@ import { NgpSortModule } from "ngp-sort-pipe";
 import { EllipsisPipe } from '../../pipes/keys.pipe';
 import { ChangetextcolorPipe } from '../../pipes/keys.pipe';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NgJsonEditorModule } from "ang-jsoneditor";
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
@@ -49,6 +50,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
      ChartsModule,
      FusionChartsModule,
      Ng2SearchPipeModule,
+     NgJsonEditorModule,
      SharedModule,
      StoreModule.forFeature('deploymentVerification',fromdeploymentVarification.deploymentVerificationReducers),
      EffectsModule.forFeature([

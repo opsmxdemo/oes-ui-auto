@@ -1,3 +1,4 @@
+import { JsonEditorComponent, JsonEditorOptions } from "ang-jsoneditor";
 import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation } from '@angular/core';
 // platform-service-ui change
 import { ActivatedRoute } from '@angular/router';
@@ -33,6 +34,75 @@ export class DeploymentVerificationComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   @ViewChild('sideNav') Sidenav: MatSidenav;
+  @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
+  public editorOptions: JsonEditorOptions;
+  // public data: any = null;
+  data = {
+  "application": "applicationdemo1",
+  "isJsonResponse": true,
+  "canaryConfig": {
+    "canaryAnalysisConfig": {
+      "beginCanaryAnalysisAfterMins": "0",
+      "canaryAnalysisIntervalMins": "6",
+      "notificationHours": []
+    },
+    "canaryHealthCheckHandler": {
+      "minimumCanaryResultScore": "60",
+      "minimumMetricsResultScore": "95"
+    },
+    "canarySuccessCriteria": {
+      "canaryResultScore": "80",
+      "successMetricsResultScore": "80"
+    },
+    "combinedCanaryResultStrategy": "AGGREGATE",
+    "lifetimeHours": "0.1",
+    "name": "user2"
+  },
+  "canaryDeployments": [
+    {
+      "baseline": {
+         
+        "log": {
+          "CasService": {
+					"container_name": "baseapp_rest_1"
+				},
+				"PetService": {
+					 "container_name": "baseapp_rest_1"
+				}
+        },
+			"metric": {
+				"CasService": {
+					"variable1": "service:baseapp"
+				},
+				"PetService": {
+					"variable1": "service:baseapp"
+				}
+			}
+      },
+      "baselineStartTimeMs": 1595516400000,
+      "canaryStartTimeMs": 1595516400000,
+      "canary": {
+        
+        "log": {
+          "CasService": {
+					 "container_name": "canaryapp_rest_1"
+				},
+				"PetService": {
+					 "container_name": "canaryapp_rest_1"
+				}
+        },
+			"metric": {
+				"CasService": {
+					"variable1": "service:canaryapp"
+				},
+				"PetService": {
+					"variable1": "service:canaryapp"
+				}
+			}
+      }
+    }
+  ]
+}
 
   size = 5343454545;
   applicationForm: FormGroup;
@@ -97,6 +167,10 @@ export class DeploymentVerificationComponent implements OnInit {
   latestCanaryCounter = 1;
   cancelRunningCanaryData: any;
 
+    wizardView: boolean = true;
+    manualTriggerData: any;
+    selectedManualTriggerTab: string;
+
   // App form end
 
    constructor(private route: ActivatedRoute ,public sharedService: SharedService, public store: Store<fromFeature.State>,
@@ -115,6 +189,35 @@ export class DeploymentVerificationComponent implements OnInit {
           this.isShow = false;
       }
     }
+
+    //code while submitting the manual trigger form
+    
+  // Below function is use to fetched json from json editor
+  showManualTriggerJson(event = null){
+    this.manualTriggerData = this.editor.get();
+  }
+  // Below function is use to save manualTrigger data on click of triggerBtn
+  submitManualTriggerData(){
+    this.store.dispatch(
+      DeploymentAction.manualTriggerData({ 
+        data: this.manualTriggerData,
+      })
+    );
+    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
+        (resData) => {
+          console.log("submitManualTriggerData", resData.manualTriggerResponse);
+        });
+    // this.data = {};
+  }
+
+   // Below function is execute on click of Form or Editor tab.
+   onManualTriggerClickTab(event){
+    if(event.target.id === 'manualTrigger-form-tab'){
+      this.selectedManualTriggerTab = "manualTrigger-form-tab";
+    } else if(event.target.id === 'manualTrigger-editor-tab') {
+      this.selectedManualTriggerTab = "manualTrigger-editor-tab";
+    }
+  }
 
 // code for application dropdown display starts here
 
@@ -192,11 +295,14 @@ export class DeploymentVerificationComponent implements OnInit {
   private _normalizeValue(value: string): string {
     return value;
   }
-
-
-
     
   ngOnInit(): void {
+  
+    this.editorOptions = new JsonEditorOptions()
+    this.editorOptions.mode = 'code';
+    this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
+    this.selectedManualTriggerTab = 'manualTrigger-editor-tab'; //setting default tab selected as form
+
      // hide tooltip 
      $("[data-toggle='tooltip']").tooltip('hide');
     this.selectedTab = '';
