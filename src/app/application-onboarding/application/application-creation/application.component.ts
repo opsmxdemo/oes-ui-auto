@@ -122,7 +122,7 @@ export class CreateApplicationComponent implements OnInit {
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
                           serviceName: new FormControl(serviceArr.serviceName),
-                          status: new FormControl(serviceArr.status),
+                          id: new FormControl(serviceArr.id),
                           logTemp: new FormControl(serviceArr.logTemp),
                           metricTemp: new FormControl(serviceArr.metricTemp),
                           pipelines: new FormArray([])
@@ -132,7 +132,7 @@ export class CreateApplicationComponent implements OnInit {
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
                           serviceName: new FormControl(serviceArr.serviceName),
-                          status: new FormControl(serviceArr.status),
+                          id: new FormControl(serviceArr.id),
                           pipelines: new FormArray([])
                         })
                       );
@@ -174,7 +174,7 @@ export class CreateApplicationComponent implements OnInit {
                     (<FormArray>this.servicesForm.get('services')).push(
                       new FormGroup({
                         serviceName: new FormControl(serviceArr.serviceName),
-                        status: new FormControl(serviceArr.status),
+                        id: new FormControl(serviceArr.id),
                         logTemp: new FormControl(serviceArr.logTemp),
                         metricTemp: new FormControl(serviceArr.metricTemp)
                       })
@@ -212,7 +212,7 @@ export class CreateApplicationComponent implements OnInit {
                 (<FormArray>this.groupPermissionForm.get('userGroups')).push(
                   new FormGroup({
                     userGroupId: new FormControl(groupData.userGroupId, Validators.required),
-                    permissionId: new FormControl(groupData.permissionId, Validators.required),
+                    permissionIds: new FormControl(groupData.permissionIds, Validators.required),
                   })
                 );
               })
@@ -321,7 +321,6 @@ export class CreateApplicationComponent implements OnInit {
       case 'OES':
         serviceForm =  new FormGroup({
               serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              status: new FormControl('NEW'),
               pipelines: new FormArray([
                 new FormGroup({
                   pipelinetemplate: new FormControl('', Validators.required),
@@ -338,7 +337,6 @@ export class CreateApplicationComponent implements OnInit {
       case 'AP':
         serviceForm = new FormGroup({
               serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              status: new FormControl('NEW'),
               logTemp: new FormControl(''),
               metricTemp: new FormControl('')
             })
@@ -347,7 +345,6 @@ export class CreateApplicationComponent implements OnInit {
       case 'OES-AP':
         serviceForm = new FormGroup({
               serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              status: new FormControl('NEW'),
               logTemp: new FormControl(''),
               metricTemp: new FormControl(''),
               pipelines: new FormArray([
@@ -540,19 +537,6 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.environmentForm.get('environments')).removeAt(index);
   }
 
-  // Below function is use to change status of service on update of environment Form value
-  onEnvironmentUpdate(index,key,event){
-    if(this.editMode){
-      if(this.appData.environments.length > index) {
-        if(event.target.value !== this.appData.environments[index][key]){
-          this.environmentUpdated = true;
-        }
-      }else {
-        this.environmentUpdated = true;
-      }
-    }
-  }
-
   // Below function is execute on select of pipeline type in Services Section
   onPipelineSelect(service_index: number, pipeline_parameter_index: number, selectedTemplate: string) {
 
@@ -597,14 +581,6 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to delete existing service fron Service Section
   deleteService(index) {
-    //below's logice is for edit mode only
-    if (this.editMode && this.appData !== null) {
-      this.editServiceForm['services'].forEach(serviceArr => {
-        if (serviceArr.serviceName === this.servicesForm.value.services[index].serviceName) {
-          serviceArr.status = 'DELETE';
-        }
-      })
-    }
     $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
      // Update dockerImageDropdownData array
@@ -621,24 +597,7 @@ export class CreateApplicationComponent implements OnInit {
   //   }
   //   return CloudData;
   // }
-
-  //below function is use to make field readonly when form is in edit mode
-  isReadonly(index) {
-    let result: boolean = null;
-    if (this.editMode === true && this.appData !== null) {
-      this.appData.services.forEach(servicArr => {
-        if (servicArr.serviceName === this.servicesForm.value.services[index].serviceName && (this.servicesForm.value.services[index].status === 'ACTIVE' || this.servicesForm.value.services[index].status === 'UPDATE')) {
-          result = true;
-          return result;
-        }
-      })
-    } else {
-      result = false;
-      return result;
-    }
-    return result;
-  }
-
+  
   //valid all form data if something is left
   validForms() {
     // displaying error on reqd field which is invalid
@@ -646,16 +605,6 @@ export class CreateApplicationComponent implements OnInit {
     this.servicesForm.markAllAsTouched();
     this.environmentForm.markAllAsTouched();
     this.groupPermissionForm.markAllAsTouched();
-  }
-
-  // Below functon is use to change the service status in editmode
-  onChangeValue(serviceIndex, pipelineIndex, pipelineTemplateIndex,event){
-    const serviceInfo = this.servicesForm.value.services[serviceIndex];
-    if( serviceInfo.status === 'ACTIVE' && this.editMode){
-      if(event.target.value !== this.getProperValue(serviceIndex, pipelineIndex, pipelineTemplateIndex)){
-        this.servicesForm.value.services[serviceIndex].status = 'UPDATE';
-      }
-    }
   }
 
   // Below function is execute after click on add template btn.
@@ -700,126 +649,126 @@ export class CreateApplicationComponent implements OnInit {
     //##############################################
 
     if (this.editMode) {
-      const existServiceLength = this.editServiceForm['services'].length;
-      let serviceFormValidation = null;
-      // Below logic check whether newely added service is valid or not
-      this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
-        let new_ServiceCounter = 0;
-        if (serviceArr.status === 'NEW') {
-          const arrayControl = this.servicesForm.get('services') as FormArray;
-          const innerarrayControl = arrayControl.at(serviceIndex)
-          innerarrayControl.markAllAsTouched();
-          serviceFormValidation = innerarrayControl.valid;
-          new_ServiceCounter++;
-        }else if (serviceArr.status === 'ACTIVE' || serviceArr.status === 'UPDATE'){
-          if(new_ServiceCounter === 0){
-            serviceFormValidation = true;
-          }
-        }
-      })
+      // const existServiceLength = this.editServiceForm['services'].length;
+      // let serviceFormValidation = null;
+      // // Below logic check whether newely added service is valid or not
+      // this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
+      //   let new_ServiceCounter = 0;
+      //   if (serviceArr.status === 'NEW') {
+      //     const arrayControl = this.servicesForm.get('services') as FormArray;
+      //     const innerarrayControl = arrayControl.at(serviceIndex)
+      //     innerarrayControl.markAllAsTouched();
+      //     serviceFormValidation = innerarrayControl.valid;
+      //     new_ServiceCounter++;
+      //   }else if (serviceArr.status === 'ACTIVE' || serviceArr.status === 'UPDATE'){
+      //     if(new_ServiceCounter === 0){
+      //       serviceFormValidation = true;
+      //     }
+      //   }
+      // })
       
-      if (serviceFormValidation && this.environmentForm.valid && this.groupPermissionForm.valid) {
-        // Saving all 4 forms data into one
-        //#############CreateApplicationForm###############
-        this.mainForm = this.createApplicationForm.getRawValue();
+      // if (serviceFormValidation && this.environmentForm.valid && this.groupPermissionForm.valid) {
+      //   // Saving all 4 forms data into one
+      //   //#############CreateApplicationForm###############
+      //   this.mainForm = this.createApplicationForm.getRawValue();
 
-        // Below configuration related to service form
-        this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
-          if (serviceArr.status === 'NEW') {
-            let counter = 0;
-            this.editServiceForm['services'].forEach((el,index) => {
-              if(el.serviceName === serviceArr.serviceName){
-                counter++;
-              }
-            })
-            if(counter === 0){
-              this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
-            }
-          }else if (serviceArr.status === 'UPDATE') {
-            this.editServiceForm['services'].forEach((el,index) => {
-              if(el.serviceName === serviceArr.serviceName){
-                this.editServiceForm['services'][index] = this.servicesForm.value.services[serviceIndex];
-              }
-            })
-          }
-        })
-        let delete_counter = 0;
-        this.editServiceForm['services'].forEach((ServiceArr, i) => {
-          if(ServiceArr.status === 'DELETE'){
-            delete_counter++;
-            // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
-            if(this.userType.includes('OES')){
-              ServiceArr.pipelines.forEach((PipelineArr, j) => {
-                // if (typeof (PipelineArr.cloudAccount) === 'string') {
-                //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
-                // }
-              })
-            }
-          }else{
-            // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
-            if(this.userType.includes('OES')){
-              ServiceArr.pipelines.forEach((PipelineArr, j) => {
-                // if (typeof (PipelineArr.cloudAccount) === 'string') {
-                //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
-                // }
+      //   // Below configuration related to service form
+      //   this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
+      //     if (serviceArr.status === 'NEW') {
+      //       let counter = 0;
+      //       this.editServiceForm['services'].forEach((el,index) => {
+      //         if(el.serviceName === serviceArr.serviceName){
+      //           counter++;
+      //         }
+      //       })
+      //       if(counter === 0){
+      //         this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
+      //       }
+      //     }else if (serviceArr.status === 'UPDATE') {
+      //       this.editServiceForm['services'].forEach((el,index) => {
+      //         if(el.serviceName === serviceArr.serviceName){
+      //           this.editServiceForm['services'][index] = this.servicesForm.value.services[serviceIndex];
+      //         }
+      //       })
+      //     }
+      //   })
+      //   let delete_counter = 0;
+      //   this.editServiceForm['services'].forEach((ServiceArr, i) => {
+      //     if(ServiceArr.status === 'DELETE'){
+      //       delete_counter++;
+      //       // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
+      //       if(this.userType.includes('OES')){
+      //         ServiceArr.pipelines.forEach((PipelineArr, j) => {
+      //           // if (typeof (PipelineArr.cloudAccount) === 'string') {
+      //           //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
+      //           // }
+      //         })
+      //       }
+      //     }else{
+      //       // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
+      //       if(this.userType.includes('OES')){
+      //         ServiceArr.pipelines.forEach((PipelineArr, j) => {
+      //           // if (typeof (PipelineArr.cloudAccount) === 'string') {
+      //           //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
+      //           // }
                 
-                PipelineArr.pipelineParameters.forEach((DataArr, k) => {
-                    if (DataArr.value === '') {
-                      DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
-                    }
-                })
-              })
-            }
-          }
-        })
-        //#############ServiceFormSection###################
-        this.mainForm.services = this.editServiceForm['services'];
-        //#############EnvironmentFormSection###############
-        if(this.userType.includes('OES')){
-          // when environment is updated make all service status as UPDATE
-          if(this.environmentUpdated){
-            this.mainForm.services.forEach(el => {
-              if(el.status === 'ACTIVE') {
-                el.status = 'UPDATE';
-              }
-            })
-          }
-          this.mainForm.environments = this.environmentForm.value.environments;
-        }
-        //#############GroupPermissionSection###############
-        this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
+      //           PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+      //               if (DataArr.value === '') {
+      //                 DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
+      //               }
+      //           })
+      //         })
+      //       }
+      //     }
+      //   })
+      //   //#############ServiceFormSection###################
+      //   this.mainForm.services = this.editServiceForm['services'];
+      //   //#############EnvironmentFormSection###############
+      //   if(this.userType.includes('OES')){
+      //     // when environment is updated make all service status as UPDATE
+      //     if(this.environmentUpdated){
+      //       this.mainForm.services.forEach(el => {
+      //         if(el.status === 'ACTIVE') {
+      //           el.status = 'UPDATE';
+      //         }
+      //       })
+      //     }
+      //     this.mainForm.environments = this.environmentForm.value.environments;
+      //   }
+      //   //#############GroupPermissionSection###############
+      //   this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
 
-        //Below function is checking user updated the form or not
-        let formUpdated = false;
-        this.mainForm.services.forEach(el => {
-          if(el.status !== "ACTIVE"){
-            formUpdated = true;
-          }
-        })
+      //   //Below function is checking user updated the form or not
+      //   let formUpdated = false;
+      //   this.mainForm.services.forEach(el => {
+      //     if(el.status !== "ACTIVE"){
+      //       formUpdated = true;
+      //     }
+      //   })
 
-        //Below action is use to save updated application form in database
-        if(formUpdated){
-          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
-        }else{
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            html:
-                '<h5>None of the application parameter is edited !!</h5>' +
-                '<p style="font-size: small;">Please edit the application parameters to proceed further.</p>',
-          })
-        }
+      //   //Below action is use to save updated application form in database
+      //   if(formUpdated){
+      //     this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
+      //   }else{
+      //     Swal.fire({
+      //       icon: 'error',
+      //       title: 'Oops...',
+      //       html:
+      //           '<h5>None of the application parameter is edited !!</h5>' +
+      //           '<p style="font-size: small;">Please edit the application parameters to proceed further.</p>',
+      //     })
+      //   }
         
-      } else {
-        this.environmentForm.markAllAsTouched();
-        this.groupPermissionForm.markAllAsTouched();
-      }
+      // } else {
+      //   this.environmentForm.markAllAsTouched();
+      //   this.groupPermissionForm.markAllAsTouched();
+      // }
     }
     // Execute when user creating application data. 
     //############# CREATE APPLICATION MODE ###############
     //#####################################################
     else {
-      if (this.createApplicationForm.valid && this.servicesForm && this.groupPermissionForm.valid) {
+      if (this.createApplicationForm.valid && this.servicesForm.valid && this.groupPermissionForm.valid) {
 
         // Saving all 4 forms data into one
         this.mainForm = this.createApplicationForm.value;
@@ -845,11 +794,11 @@ export class CreateApplicationComponent implements OnInit {
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups.map(usergroupData => {
           let usergroupObj:GroupPermission = {
             userGroupId: usergroupData.userGroupId,
-            permissionId:[]
+            permissionIds:[]
           }
           usergroupData.permissionIds.forEach(permission => {
             if(permission.value === true){
-              usergroupObj.permissionId.push(permission.name);
+              usergroupObj.permissionIds.push(permission.name);
             }
           });
           return usergroupObj;

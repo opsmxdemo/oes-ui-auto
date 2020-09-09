@@ -168,7 +168,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'oes/appOnboarding/editApplication?applicationName=' + action.applicationName).pipe(
+                return this.http.get<CreateApplication>('../../../../assets/data/editApplication.json').pipe(
                     map(resdata => {
 
                         return ApplicationAction.fetchAppData({ appData: resdata })
@@ -282,7 +282,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.appDelete),
             switchMap((action) => {
-                return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/deleteApplication/' + action.applicationName).pipe(
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.id).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS')
                         return ApplicationAction.appDeletedSuccessfully({ index: action.index });

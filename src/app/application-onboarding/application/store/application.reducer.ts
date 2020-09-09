@@ -54,7 +54,7 @@ export const initialState: State = {
     parentPage: '/setup/applications',
     applicationData: null,
     cloudAccountExist: null,
-    applicationList: null,
+    applicationList: [],
     appListLoading: false,
     applicationLoading: false,
     imageSource: null,
