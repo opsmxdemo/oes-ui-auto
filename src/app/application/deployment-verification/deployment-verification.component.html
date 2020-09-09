@@ -454,7 +454,7 @@
                   </div>
                   <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}"></div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">{{serviceNameInfo['metricScore']}}</div>
                       <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']<0 || serviceNameInfo['metricScore']==null"> - </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name" >Metrics</div>
