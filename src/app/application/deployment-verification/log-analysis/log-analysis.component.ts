@@ -813,25 +813,25 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       (resData) => {
         if (resData.reclassificationHistoryResults !== null) {
             }
-            this.reclassificationHistory={"feedbackHistory":[
-              {
-              "existingTopic":"CRITICAL ERROR",
-              "clusterString":"FATAL HttpMethod PUT URL REGEXURL Content-Type FILEPATH Authorization ***** User **** Sending request to url REGEXURL Response Code FILEPATH NUMBER OK Response VARIABLEDICT \"result\" VARIABLEDICT \"arrival_time\" \" \"branch\" \"DEV_COMMON_BRANCH\" \"build_cmd\" \"mk -j15 FILEPATH \"build_density\" \"light\" \"build_duration\" null \"build_end_time\" \" \"build_mode\" \"remote\" \"build_path\" FILEPATH \"build_start_time\" \" \"build_state\" <*> \"build_status\" \"failed\" \"build_target\" \"unknown\" \"cloud_env\" \"c0\" \"completed_time\" <*> \"container_tag\" FILEPATH \"cpu\" \"8\" \"created_at\" \" \"email_to\" \"kevinwong@juniper.net\" \"exit_mode\" true \"geo_id\" 1 \"host_ip\" \" IPADDRESS \" \"kickoff_time\" \" \"local_mode\" false \"memory\" \"20Gi\" \"parent_id\" null \"product\" \"junos\" \"region\" \"qnc\" \"requested_build_path\" FILEPATH \"resultant_build_path\" null \"snapshot_id\" null \"source_host\" \"editsb\" \"source_mount_path\" FILEPATH \"updated_at\" \" \"user\" VARIABLEDICT \"name\" \"kevinwong\" \"username\" \"kevinwong\" } \"user_group\" \"ipg\" \"user_id\" 3391 \"user_sandbox\" VARIABLEDICT \"deleted\" false \"name\" \"dcb-bcm\" \"user\" VARIABLEDICT \"name\" \"kevinwong\" \"username\" \"kevinwong\" } \"uuid\" \"02d07baa203046d0857957247e33f6ef\" \"volume_id\" \"15104\" \"volume_name\" \"kevinwong-dcb-bcm-ee8bc\" } \"uuid\" \"br-31c44d267c3d492ca295dcc9242589eb\" \"volume_size_after\" null \"volume_size_before\" null } \"success\" true }",
-              "newTopic":"WARN",
-              "feedbackComment":"CE to Warn -- cid=3",
-              "timestamp":1594733251095,
-              "triggeredUser":"user2"
-              },
-              {
-              "existingTopic":"CRITICAL ERROR",
-              "clusterString":"FATAL json_out VARIABLEDICT \"build_end_time\" \" \"build_status\" \"failed\" \"build_state\" \"running\" }",
-              "newTopic":"ERROR",
-              "feedbackComment":"critical to error - id3",
-              "timestamp":1594733251094,
-              "triggeredUser":"user2"
-              }
-              ]
-            }
+            // this.reclassificationHistory={"feedbackHistory":[
+            //   {
+            //   "existingTopic":"CRITICAL ERROR",
+            //   "clusterString":"FATAL HttpMethod PUT URL REGEXURL Content-Type FILEPATH Authorization ***** User **** Sending request to url REGEXURL Response Code FILEPATH NUMBER OK Response VARIABLEDICT \"result\" VARIABLEDICT \"arrival_time\" \" \"branch\" \"DEV_COMMON_BRANCH\" \"build_cmd\" \"mk -j15 FILEPATH \"build_density\" \"light\" \"build_duration\" null \"build_end_time\" \" \"build_mode\" \"remote\" \"build_path\" FILEPATH \"build_start_time\" \" \"build_state\" <*> \"build_status\" \"failed\" \"build_target\" \"unknown\" \"cloud_env\" \"c0\" \"completed_time\" <*> \"container_tag\" FILEPATH \"cpu\" \"8\" \"created_at\" \" \"email_to\" \"kevinwong@juniper.net\" \"exit_mode\" true \"geo_id\" 1 \"host_ip\" \" IPADDRESS \" \"kickoff_time\" \" \"local_mode\" false \"memory\" \"20Gi\" \"parent_id\" null \"product\" \"junos\" \"region\" \"qnc\" \"requested_build_path\" FILEPATH \"resultant_build_path\" null \"snapshot_id\" null \"source_host\" \"editsb\" \"source_mount_path\" FILEPATH \"updated_at\" \" \"user\" VARIABLEDICT \"name\" \"kevinwong\" \"username\" \"kevinwong\" } \"user_group\" \"ipg\" \"user_id\" 3391 \"user_sandbox\" VARIABLEDICT \"deleted\" false \"name\" \"dcb-bcm\" \"user\" VARIABLEDICT \"name\" \"kevinwong\" \"username\" \"kevinwong\" } \"uuid\" \"02d07baa203046d0857957247e33f6ef\" \"volume_id\" \"15104\" \"volume_name\" \"kevinwong-dcb-bcm-ee8bc\" } \"uuid\" \"br-31c44d267c3d492ca295dcc9242589eb\" \"volume_size_after\" null \"volume_size_before\" null } \"success\" true }",
+            //   "newTopic":"WARN",
+            //   "feedbackComment":"CE to Warn -- cid=3",
+            //   "timestamp":1594733251095,
+            //   "triggeredUser":"user2"
+            //   },
+            //   {
+            //   "existingTopic":"CRITICAL ERROR",
+            //   "clusterString":"FATAL json_out VARIABLEDICT \"build_end_time\" \" \"build_status\" \"failed\" \"build_state\" \"running\" }",
+            //   "newTopic":"ERROR",
+            //   "feedbackComment":"critical to error - id3",
+            //   "timestamp":1594733251094,
+            //   "triggeredUser":"user2"
+            //   }
+            //   ]
+            // }
       });
   }
 }
