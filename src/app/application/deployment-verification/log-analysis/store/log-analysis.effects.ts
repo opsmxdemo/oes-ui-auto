@@ -126,6 +126,25 @@ fetchRerunLogsResults = createEffect(() =>
     )
 )
 
+//for getting reclassification history
+
+fetchReclassificationHistory = createEffect(() =>
+    this.actions$.pipe(
+        ofType(LogAnalysisActions.fetchReclassificationHistoryData),
+        switchMap((action) => {                    // return this.http.get('/assets/data/logsData.json').pipe(                    
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/logs/feedbackHistory?logTemplateName=' + action.logTemplateName ).pipe(                  
+                map(resdata => {
+                   return LogAnalysisActions.loadReclassificationHistoryData({reclassificationHistoryResults:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 //The effect is used to fetch complete log line
 fetchClusterLogsData = createEffect(() =>
     this.actions$.pipe(

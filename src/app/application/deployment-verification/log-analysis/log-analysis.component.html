@@ -3,6 +3,9 @@
     <div class="toggleGraph" (click)="toggleGraph($event)"><i class="fas fa-chevron-down carret"
         style="transition: transform 200ms ease-in-out;"></i> Graph View <i class="fa fa-bar-chart"
         aria-hidden="true"></i></div>
+        <!-- <span class="ml-auto"  data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="getReclassifiactionHistory()" >
+          <a data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false" class="btn-link" data-backdrop="false">Reclassification History</a></span>
+         -->
     <div class="ml-auto d-flex">
       <div class="risk d-flex align-items-center">
         <span class="diamond">
@@ -156,7 +159,7 @@
 
                 <div>
                   <div class="form-group mb-2">
-                    <textarea class="form-control" rows="5"></textarea>
+                    <textarea class="form-control" rows="5" [(ngModel)]="comments"></textarea>
                   </div>
                   <div class="text-right">
                     <button type="submit" class="btn btn-default">Close</button>
@@ -220,11 +223,37 @@
               <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span
                   class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
             </div>
-            <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
-              <span [outerHTML]="log.combineClust | replaceLineBreaks"></span>
+            <div *ngIf="log.color == 'dark red'">
+              <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:criticalTopicStrings"></span>
+              </div>
+              <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:criticalTopicStrings"></span>
+              </div>
             </div>
-            <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
-              <span [outerHTML]="completeCluster?.clusterData | replaceLineBreaks"></span>
+            <div *ngIf="log.color=='red'">
+              <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:errorTopicStrings"></span>
+              </div>
+              <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:errorTopicStrings"></span>
+              </div>
+            </div>
+            <div *ngIf="log.color=='yellow'">
+              <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:warningTopicStrings"></span>
+              </div>
+              <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:warningTopicStrings"></span>
+              </div>
+            </div>
+            <div *ngIf="log.color=='green'">
+              <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:ignoreTopicStrings"></span>
+              </div>
+              <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:ignoreTopicStrings"></span>
+              </div>
             </div>
             <div *ngIf="log.more">
               <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
@@ -246,7 +275,29 @@
   <button class="btn mr-2 btn-default" (click)="rerunLogs()" data-toggle="tooltip"
     title="Update and Rerun the canary with the updated classification from the user">Re-run</button>
 </div>
-
+<!-- <div class="modal bd-example-modal-lg fade show " id="reclassificationHistory" tabindex="-1" role="dialog" aria-labelledby="reclassificationHistorLabel" aria-hidden="true" aria-modal="true"    >
+  <div class="modal-dialog modal-dialog-centered mw-100 w60 ml20" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Logs Reclassification History</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      <div style="min-height: 400px;" class="modal-body">
+        <div *ngFor='let feedbackHistory of reclassificationHistory.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
+          <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>
+          <div style="padding-top:10px ; padding: 3px;" >ReClassified From <span [ngClass]="{'text-danger':feedbackHistory.existingTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.existingTopic == 'ERROR','text-warning':feedbackHistory.existingTopic == 'WARN','text-muted':feedbackHistory.existingTopic=='IGNORE'}">{{feedbackHistory.existingTopic}}</span> To {{feedbackHistory.newTopic}}</div>
+          <div style="padding-top:10px ; padding: 3px;"><span>{{feedbackHistory.timestamp | changeTImestamptotime}}</span> Comments : {{feedbackHistory.feedbackComment}}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">OK</button>
+      </div>
+      
+    </div>
+  </div>
+</div> -->
 <!-- /.col-sm-4 -->
 
 <!-- /.tab-default -->

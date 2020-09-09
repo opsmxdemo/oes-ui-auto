@@ -11,6 +11,7 @@ export interface State {
     clusterLogs:any;
     timeStampData:any;
     rerunResponse:any;
+    reclassificationHistoryResults:any;
 }
 
 export const initialState: State = {
@@ -20,7 +21,8 @@ export const initialState: State = {
     logsEventResults : null,
     clusterLogs: null,
     timeStampData:null,
-    rerunResponse:null
+    rerunResponse:null,
+    reclassificationHistoryResults:null,
 }
 
 export function LogAnalysisReducer(

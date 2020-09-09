@@ -38,7 +38,7 @@ export class EllipsisPipe {
 
 @Pipe({
   name: 'changetextcolor'
-})
+}) 
 export class ChangetextcolorPipe {
   transform(val, args) {
     if (args === undefined) {
@@ -46,8 +46,20 @@ export class ChangetextcolorPipe {
     }
     for(var i=0;i<args.length;i++)
     {
-    val = val.replace(args[i], '<span class="high">'+args[i]+'</span>');
+    var regex = new RegExp(args[i], 'g');
+    val = val.replace(regex, '<span class="high"> '+args[i]+'</span>');
     }
     return val
+  }
+}
+
+@Pipe({
+  name: 'changeTImestamptotime'
+}) 
+export class ChangeTImestamptotimePipe {
+  transform(val) {
+   var date
+    return  date = new Date(val);
+    
   }
 }
