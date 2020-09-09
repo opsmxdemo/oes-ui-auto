@@ -103,6 +103,7 @@ export class LogTemplateComponent implements OnInit {
      clusterList: new FormArray([]),
    });
  this.logSensitivityTypes = ["high","low","medium"];
+
 }
 
 
@@ -121,7 +122,7 @@ onDataSourceSelect(dataSourceValue){
       regExResponseKey: new FormControl(''),
       regularExpression: new FormControl(''),
       autoBaseline: new FormControl(false),
-      sensitivity:  new FormControl('',Validators.required),
+      sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
      // clusterTagId: new FormControl(false)
     });
   } else if (dataSourceValue === 'kubernetes'){
@@ -131,7 +132,7 @@ onDataSourceSelect(dataSourceValue){
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
       namespace: new FormControl('',[Validators.required]),
       autoBaseline: new FormControl(false),
-      sensitivity:  new FormControl('',Validators.required),
+      sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
      // clusterTagId: new FormControl(false)
 
     });
@@ -142,11 +143,12 @@ onDataSourceSelect(dataSourceValue){
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
       accountName:  new FormControl('',Validators.required),
       autoBaseline: new FormControl(false),
-      sensitivity:  new FormControl('',Validators.required),
+      sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
    //   clusterTagId: new FormControl(false)
 
     });
   }
+  //this.createLogForm.controls.logSensitivityTypes.patchValue(this.logSensitivityTypes[0]);
 
     this.selectedDataSource = dataSourceValue;
    this.store.dispatch(ApplicationActions.loadMonitoringAccountName({monitoringSourceName:dataSourceValue}));
