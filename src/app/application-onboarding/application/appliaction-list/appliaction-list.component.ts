@@ -39,8 +39,8 @@ export class AppliactionListComponent implements OnInit {
     //fetching data from state
     this.store.select(fromFeature.selectApplication).subscribe(
       (response) => {
-        if (response.applicationList !== null) {
-          this.loading = response.appListLoading;
+        this.loading = response.appListLoading;
+        if (response.applicationList.length > 0) {
           this.appListData = response.applicationList;
           this.appListLength = this.appListData.length;
           this.renderPage();
@@ -148,7 +148,7 @@ export class AppliactionListComponent implements OnInit {
   }
 
   //Below function is use to delete application fron existing list
-  appDelete(name,index){
+  appDelete(name,index,AppId){
     $("[data-toggle='tooltip']").tooltip('hide');
     Swal.fire({
       title: 'Are you sure?',
@@ -160,7 +160,7 @@ export class AppliactionListComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value) {
-        this.store.dispatch(ApplicationActions.appDelete({applicationName:name,index:index}));
+        this.store.dispatch(ApplicationActions.appDelete({applicationName:name,index:index,id:AppId}));
       }
     })
     
