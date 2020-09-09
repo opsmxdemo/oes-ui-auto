@@ -21,4 +21,8 @@ export const loadTimeAnalysisGraphData = createAction('[LogAnalysis] LoadTimeAna
 
 export const reloadAfterRerun = createAction('[LogAnalysis] ReloadAfterRerun', props<{canaryId: any,serviceId: any}>())
 
+export const fetchReclassificationHistoryData = createAction('[LogAnalysis] FetchReclassificationHistoryData', props<{logTemplateName: any;}>());
+export const loadReclassificationHistoryData = createAction('[LogAnalysis] loadReclassificationHistoryData', props<{reclassificationHistoryResults:any}>());
+
+
 

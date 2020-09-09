@@ -24,6 +24,7 @@ import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 import { NgpSortModule } from "ngp-sort-pipe";
 import { EllipsisPipe } from '../../pipes/keys.pipe';
 import { ChangetextcolorPipe } from '../../pipes/keys.pipe';
+import { ChangeTImestamptotimePipe } from '../../pipes/keys.pipe';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgJsonEditorModule } from "ang-jsoneditor";
 
@@ -38,6 +39,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         ChildTableComponent,
         EllipsisPipe,
         ChangetextcolorPipe,
+        ChangeTImestamptotimePipe,
     ],
     imports: [
      CommonModule,
