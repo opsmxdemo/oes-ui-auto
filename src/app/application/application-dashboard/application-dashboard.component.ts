@@ -45,6 +45,7 @@ export class ApplicationDashboardComponent implements OnInit {
   autoPilotServiceData: any;
   cnt = 0;
   cnt2 = 0;
+  statusMessage: string;
 
 
 
@@ -129,8 +130,12 @@ export class ApplicationDashboardComponent implements OnInit {
       if (this.autoPilotServiceData.length === 0) {
         this.serviceErrorMessage = 'No services found in this application'; 
       }
-     
-    });
+    },
+    (error) => {                 
+      this.statusMessage = 'error';              //Error callback
+      this.serviceErrorMessage = error;
+    }
+    );
     if(this.showAppDataType === 'Services'){
     this.spinnerService = true;
     this.selectedIndex = index;
