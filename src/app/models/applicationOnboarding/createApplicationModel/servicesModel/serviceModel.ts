@@ -2,7 +2,7 @@ import { ServicePipeline } from './servicePipeline.model';
 
 export class Service {
     serviceName: string;
-    status: string;
+    id: string;
     logTemp: string;
     metricTemp: string;
     pipelines:ServicePipeline[];
@@ -10,7 +10,7 @@ export class Service {
     constructor(data: any) {
         data = data || {};
         this.serviceName = data.serviceName;
-        this.status = data.status;
+        this.id = data.id;
         this.logTemp = data.logTemp;
         this.metricTemp = data.metricTemp;
         this.pipelines=[];
