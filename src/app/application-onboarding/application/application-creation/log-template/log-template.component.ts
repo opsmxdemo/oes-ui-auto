@@ -237,6 +237,7 @@ SubmitForm(){
    }
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
+   console.log(this.logForm);
    // Action to create the log template
     
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
@@ -260,6 +261,7 @@ addNewLogTopics(){
 // delete log topics
 
 deleteLogTopic(topic,index){
+  (<FormArray>this.logTopicsForm.get('topicsList')).removeAt(index);
   this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
@@ -279,6 +281,7 @@ addNewClusterTag(){
 // delete cluster tag
 
 deleteClusterTag(cluster,index){
+  (<FormArray>this.logTopicsForm.get('clusterList')).removeAt(index);
   this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
 }
 
