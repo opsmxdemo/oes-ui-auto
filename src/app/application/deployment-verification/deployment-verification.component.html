@@ -383,11 +383,13 @@
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Log Score:</td>
-                        <td>{{deploymentServiceInformation['logScore']}}</td>
+                        <td><span *ngIf="deploymentServiceInformation['logScore']>-1">{{deploymentServiceInformation['logScore']}}</span>
+                        <span *ngIf="deploymentServiceInformation['logScore']<0 || deploymentServiceInformation['logScore']==null"> - </span></td>
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Metric Score:</td>
-                        <td>{{deploymentServiceInformation['metricScore']}}</td>
+                        <td><span *ngIf="deploymentServiceInformation['metricScore']>-1">{{deploymentServiceInformation['metricScore']}}</span>
+                        <span *ngIf="deploymentServiceInformation['metricScore']<0 || deploymentServiceInformation['metricScore']==null"> - </span></td>
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline log file size:</td>
@@ -452,35 +454,42 @@
                   </div>
                   <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['total']:''}}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}"></div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']<0 || serviceNameInfo['metricScore']==null"> - </div>
                       <!-- /.cv_heighlight -->
-                      <div class="cv_name">Metrics</div>
+                      <div class="cv_name" >Metrics</div>
                       <!-- /.cv_name -->
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['fail']:''}} </div>
+                      <div class="cv_heighlight lightRed">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['fail']:''}} </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Failed</div>
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['critical']:''}}</div>
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['critical']:''}}</div>
                       <!-- /.cv_heighlight -->
-                      <div class="cv_name">Critical</div>
+                      <div class="cv_name ">Critical</div>
                     </div>
                     <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['watchlist']:''}}</div>
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['watchlist']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Watchlist</div>
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['total']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Count</div>
                     </div>
                   </div>
                   <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20" >
                     <div class="chart_value padding5LeftRight  flex-grow-1" [ngClass]= "{'cv_high':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}">
-                      <div class="cv_heighlight" [ngClass]= "{'text-danger':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}" >{{serviceNameInfo['logsScore'] }}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}" >{{serviceNameInfo['logsScore'] }}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']<0 || serviceNameInfo['logsScore']==null"> - </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Logs</div>
                     </div>
                     <div class="chart_value flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['critical']:''}}</div>
+                      <div class="cv_heighlight lightRed">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['critical']:''}}</div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Critical</div>
                     </div>
