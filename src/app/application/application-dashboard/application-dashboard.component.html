@@ -108,10 +108,10 @@
               
           <!-- /.chart_ratio -->
           <div *ngIf="oesServiceData && oesServiceData.length === 0 && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
-            <p>{{serviceErrorMessage}}</p>
+            <p class="error-service-msg">{{serviceErrorMessage}}</p>
           </div>
           <div *ngIf="showAppDataType === 'Services' && statusMessage === 'error'" class="alert alert-danger" role="alert">
-            <p>{{serviceErrorMessage}}</p>
+            <p class="error-service-msg">{{serviceErrorMessage}}</p>
           </div>
          
           <div class="table-responsive" *ngIf="showAppDataType === 'Services' && oesServiceData && oesServiceData.length>0">
@@ -135,10 +135,10 @@
             </table>
           </div>
         <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0 && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
-            <p>{{serviceErrorMessage}}</p>
+            <p class="error-service-msg">{{serviceErrorMessage}}</p>
           </div>
           <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
-            <p>{{serviceErrorMessage}}</p>
+            <p class="error-service-msg">{{serviceErrorMessage}}</p>
           </div>
           
           <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData && autoPilotServiceData.length>0">
