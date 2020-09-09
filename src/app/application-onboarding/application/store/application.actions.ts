@@ -26,7 +26,7 @@ export const disabledEditMode = createAction('[Application] DisabledEditMode');
 // Below action is related to application list
 export const loadAppList = createAction('[Application] LoadAppList');
 export const fetchAppList = createAction('[Application] FetchAppList', props<{Applist:any}>());
-export const appDelete = createAction('[Application] AppDelete', props<{applicationName:string,index:number}>());
+export const appDelete = createAction('[Application] AppDelete', props<{applicationName:string,index:number,id:number}>());
 export const appDeletedSuccessfully = createAction('[Application] AppDeletedSuccessfully', props<{index:number}>());
 
 // Below action is related to create log template 
