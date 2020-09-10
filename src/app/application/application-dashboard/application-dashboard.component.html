@@ -18,7 +18,6 @@
            <p class="no-applications">No Applications.</p>
             <p>Use application for continuous verification and production monitoring <br><small>(To create application, add at least 1 Cloud service and 1 Data source)</small></p>
           </div>
-          <!-- /.no_content -->
         </div>
       </div>
     </div>
@@ -26,7 +25,7 @@
       <div class="data_listArea">
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
           <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
-            [ngClass]="{'active':application.applicationName === selectedApplicationName,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
+            [ngClass]="{'active':i === finalSelectedTabNumber,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
                         'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
                         'application-lastrun-review':application.applicationStatus === 'Review',
                         'application-lastrun-empty': application.applicationStatus === ''}" >
@@ -45,8 +44,8 @@
                       'ci_close':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
                       'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
                       'ci_minus': canaries.finalScore === 'N/A' || canaries.finalScore === '',
-                      'ci_run ico24 popover-hover disabledLink': canaries.status === 'RUNNING'}">
-                      <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore >= canaries.maximumCanaryScore,
+                      'ci_run ico24 popover-hover': canaries.status === 'RUNNING'}">
+                      <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore && canaries.finalScore >= canaries.maximumCanaryScore,
                         'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
                         'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
                         'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === '',
@@ -69,9 +68,9 @@
             <div class="data_list_body d-flex">
               <div class="data_list_values text-center">
                 <ul class="list-unstyled m-0 d-flex flex-wrap">
-                  <li class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let i=index"
+                  <li class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let j=index"
                     [ngClass]="{'active':application.applicationName === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
-                    (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event)">
+                    (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event,j)">
                     <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
                     <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                     <div class="dl_value_text">{{applicationInfo.applicationInfolabel}} </div>
