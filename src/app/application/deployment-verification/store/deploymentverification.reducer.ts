@@ -19,6 +19,7 @@ export interface State {
     serviceInformationLoading: boolean;
     cancelRunningCanaryStatus: any;
     manualTriggerResponse: any;
+    reclassificationHistoryResults:any;
 }
 
 export const initialState: State = {
@@ -35,7 +36,8 @@ export const initialState: State = {
     serviceInformation: null,
     serviceInformationLoading: false,
     cancelRunningCanaryStatus: null,
-    manualTriggerResponse: null
+    manualTriggerResponse: null,
+    reclassificationHistoryResults:null
 }
 
 export function DeploymentdReducer(
@@ -145,5 +147,12 @@ export function DeploymentdReducer(
                 deployementLoading: false
             })
         ),
+        on(DeploymentActions.loadReclassificationHistoryData,
+            (state, action) => ({
+                ...state,
+                reclassificationHistoryResults:action.reclassificationHistoryResults,
+                deployementLoading: false
+            })
+        )
     )(deploymentVerificationState,deploymentVerificationdActions);
 }
