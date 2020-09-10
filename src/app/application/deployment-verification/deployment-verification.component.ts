@@ -107,6 +107,7 @@ export class DeploymentVerificationComponent implements OnInit {
   size = 5343454545;
   applicationForm: FormGroup;
   deployementRun: any;
+  reclassificationHistory:any;
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
   control = new FormControl(this.deployementRun);
@@ -740,6 +741,19 @@ export class DeploymentVerificationComponent implements OnInit {
     difference += (minutes === 0 || hours === 1) ? `${minutes}m ago` : `${minutes}m ago`; 
 
     return difference;
+  }
+
+   // for getting reclassification history data
+   getReclassifiactionHistory(){
+    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'] }));
+    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+      (resData) => {
+        if (resData.reclassificationHistoryResults !== null) {
+          this.reclassificationHistory=resData.reclassificationHistoryResults
+        }
+            
+
+      });
   }
   
 }
