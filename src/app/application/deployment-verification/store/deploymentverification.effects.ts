@@ -91,7 +91,7 @@ export class DeploymentVerificationEffect {
                     return DeploymentActions.loadReclassificationHistoryData({reclassificationHistoryResults:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
+                        //this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
