@@ -39,12 +39,12 @@
               <div class="data_list_actionsc d-flex align-items-center ml-auto">
                <div class="card_indigators d-flex" *ngFor="let canaries of application.recentCanaries; let i=index">
                     <button type="button" class="btn p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Score: {{canaries.finalScore}}, RunID: {{canaries.canaryId}}">
-                      <a [routerLink]="['/application/deploymentverification/',application.applicationName,canaries.canaryId]" class="ml-2" 
+                      <a  [routerLink]="['/application/deploymentverification/',application.applicationName,canaries.canaryId]" class="ml-2" 
                       [ngClass]= "{'ci_check':canaries.finalScore >= canaries.maximumCanaryScore,
                       'ci_close':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
                       'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
                       'ci_minus': canaries.finalScore === 'N/A' || canaries.finalScore === '',
-                      'ci_run ico24 popover-hover': canaries.status === 'RUNNING'}">
+                      'ci_run ico24 popover-hover disable_a_href': canaries.status === 'RUNNING'}">
                       <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore && canaries.finalScore >= canaries.maximumCanaryScore,
                         'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
                         'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,

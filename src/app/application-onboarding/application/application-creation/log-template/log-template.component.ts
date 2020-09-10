@@ -239,7 +239,6 @@ SubmitForm(){
    }
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
-   console.log(this.logForm);
    // Action to create the log template
     
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
@@ -255,7 +254,7 @@ addNewLogTopics(){
     new FormGroup({
       string: new FormControl('', Validators.required),
       topic: new FormControl('', Validators.required),
-      type: new FormControl('', Validators.required)
+      type: new FormControl('custom', Validators.required)
     })
   );
 }
