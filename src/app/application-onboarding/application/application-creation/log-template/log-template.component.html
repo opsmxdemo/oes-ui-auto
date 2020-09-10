@@ -211,7 +211,7 @@
                      </div>
                   </div>
                   <div>
-                    <button type="button" mat-button matStepperNext class="btn btn-secondary sw-btn-next" (click)="getLogTopics()">Next</button>
+                    <button type="button" mat-button matStepperNext class="btn btn-primary sw-btn-next" (click)="getLogTopics()">Next</button>
                   </div>
                 </form>
               </mat-step>
@@ -293,7 +293,7 @@
                   </div>
                   <div>
                     <button mat-button matStepperPrevious class="pull-left">Back</button>
-                    <button type="button" mat-button matStepperNext class="btn btn-secondary sw-btn-next pull-right">Next</button>
+                    <button type="button" mat-button matStepperNext class="btn btn-primary sw-btn-next pull-right">Next</button>
                   </div>
                 </form>
               </mat-step>
@@ -355,8 +355,8 @@
                     </div>
                   </div>
                   <div>
-                    <button mat-button matStepperPrevious class="pull-left">Back</button>
-                    <button mat-button matStepperNext type="button" class="btn btn-secondary sw-btn-next pull-right" (click)="SubmitForm()">Submit</button>
+                    <button mat-button matStepperPrevious class="pull-left btn btn-primary">Back</button>
+                    <button mat-button matStepperNext type="button" class="btn btn-primary sw-btn-next pull-right" (click)="SubmitForm()">Submit</button>
                   </div>
                 </form>
               </mat-step>
@@ -369,7 +369,7 @@
             <json-editor [options]="editorOptions" [data]="data" (change)="showJson($event)"></json-editor>
            </div> <hr>
            <div class="col-12" *ngIf = "selectedTab === 'logtemplate-editor'">
-            <button class="btn btn-primary ml-2 savebtn" (click)="Submitlogdata()">Save</button>
+            <button class="btn btn-primary ml-2 savebtn btn btn-primary" (click)="Submitlogdata()">Save</button>
           </div> 
         </div>
     </div>
