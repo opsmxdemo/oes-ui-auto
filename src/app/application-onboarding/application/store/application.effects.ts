@@ -205,7 +205,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.updateApplication),
             switchMap(action => {
-                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'oes/appOnboarding/updateApplication', action.appData).pipe(
+                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/'+action.applicationId, action.appData).pipe(
                     map(resdata => {
                         return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'updateApplication'});
                     }),
