@@ -46,6 +46,10 @@ export class ApplicationDashboardComponent implements OnInit {
   cnt = 0;
   cnt2 = 0;
   statusMessage: string;
+  finalSelectedTabNumber: number = -1;
+  previouSelectedApp: any;
+  
+  finalApplicationId: any;
 
 
 
@@ -57,8 +61,8 @@ export class ApplicationDashboardComponent implements OnInit {
               private environment: AppConfigService) { }
 
   ngOnInit(): void {
-   
     //fetching appData from dashboard state
+    this.finalSelectedTabNumber = 0;
     this.store.select('appDashboard').subscribe(
       (resdata) => {
         if(resdata.appData !== null){
@@ -67,7 +71,11 @@ export class ApplicationDashboardComponent implements OnInit {
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
           this.applicationFinalData = resdata.appData;
-         
+         if(this.previouSelectedApp != null){
+          this.previouSelectedApp = this.previouSelectedApp;
+         }else{
+          this.previouSelectedApp = this.applicationFinalData[0];
+         }
           // code to add new finalLabel in application level
           let index = -1;
           let i = 0;
@@ -92,7 +100,15 @@ export class ApplicationDashboardComponent implements OnInit {
             
             this.finalLabelArray.push(label);
           })
-          this.selectedApplication(0, this.applicationFinalData[0],this.finalLabelArray[0]);
+    
+          if(this.showAppDataType  === ''){
+            this.showAppDataType = this.finalLabelArray[0];
+          }else{
+            this.showAppDataType = this.showAppDataType;
+          }
+          
+            this.selectedApplication(this.finalSelectedTabNumber, this.previouSelectedApp,this.showAppDataType);
+     
         }
         if(resdata.topologyChartData !== null){
           this.dashboardLoading = resdata.dashboardLoading;
@@ -118,24 +134,30 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
   public selectedApplication(index: number, app: any,appType: string) {
+    this.finalSelectedTabNumber = index;
+    this.previouSelectedApp = app;
     this.showAppDataType = appType;
-    this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
-      this.serviceData = serviceDataList;
-      this.oesServiceData = serviceDataList['oesService'];
-      this.autoPilotServiceData = serviceDataList['autopilotService'];
-      this.spinnerService = false;
-      if (this.oesServiceData.length === 0) {
-        this.serviceErrorMessage = 'No services found in this application'; 
+    if(app.applicationId === undefined){
+    }else{
+      this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
+        this.serviceData = serviceDataList;
+        this.oesServiceData = serviceDataList['oesService'];
+        this.autoPilotServiceData = serviceDataList['autopilotService'];
+        this.spinnerService = false;
+        if (this.oesServiceData.length === 0) {
+          this.serviceErrorMessage = 'No services found in this application'; 
+        }
+        if (this.autoPilotServiceData.length === 0) {
+          this.serviceErrorMessage = 'No services found in this application'; 
+        }
+      },
+      (error) => {                 
+        this.statusMessage = 'error';              //Error callback
+        this.serviceErrorMessage = error;
       }
-      if (this.autoPilotServiceData.length === 0) {
-        this.serviceErrorMessage = 'No services found in this application'; 
-      }
-    },
-    (error) => {                 
-      this.statusMessage = 'error';              //Error callback
-      this.serviceErrorMessage = error;
+      );
     }
-    );
+  
     if(this.showAppDataType === 'Services'){
     this.spinnerService = true;
     this.selectedIndex = index;
@@ -230,6 +252,7 @@ export class ApplicationDashboardComponent implements OnInit {
 
   // code related to get releases
   public getReleases(menu: string, application: any, index: number, event: Event) {
+   // this.subscription.unsubscribe();
     this.spinnerService = true;
     this.applicationService.childApplication = application.applicationName;
     this.selectedApplicationName = application.applicationName;
@@ -248,16 +271,18 @@ export class ApplicationDashboardComponent implements OnInit {
     });
     event.stopPropagation();
   }
-  public getAppDataDetails(index: number, app: any, labelType: string, event: Event) {
+  public getAppDataDetails(index: number, app: any, labelType: string, event: Event, subIndex:number) {
     this.showAppDataType = labelType;
+   this.finalSelectedTabNumber = index;
     if (labelType === 'Services') {
-      this.selectedApplication(index, app, this.showAppDataType);
+      this.selectedApplication(this.finalSelectedTabNumber, app, this.showAppDataType);
     //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
-      this.getReleases(labelType, app, index, event);
+      this.getReleases(labelType, app, subIndex, event);
+
      // this.selectedApplication(index, app);
     } else if (labelType === 'Deployment Verification') {
-      this.selectedApplication(index, app, this.showAppDataType);
+      this.selectedApplication(this.finalSelectedTabNumber, app, this.showAppDataType);
     }
      else {
 
@@ -290,26 +315,11 @@ export class ApplicationDashboardComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         $("[data-toggle='tooltip']").tooltip('hide');
-        // this.applicationFeatureStore.dispatch(ApplicationActions.({accountName: account.name,index:index}));
-        // this.store.dispatch(AppDashboardAction.loadAppDashboard());
+      
         this.store.dispatch(AppDashboardAction.deleteApplication({applicationId: application.applicationId,index:index}));
       }else{
-        //alert('dont delete'); 
+         
       }
     })
   }
-
-  // getRunningApplication() {
-  //   this.cnt2 = this.cnt2 + 1;
-  //   console.log ('Count is ' + this.cnt2);
-  // }
-
-  // interval function
-  // setIntrvl(){
-  //   //setInterval(() => this.getRunningApplication(),5000);
-  //   this.subscription = source.subscribe(val => this.getRunningApplication());
-  // }
-
-  
-
 }

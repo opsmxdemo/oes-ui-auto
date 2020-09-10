@@ -14,10 +14,9 @@
           </mat-form-field>
         </form>
     
-      
           <div class="appName"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
           </div>
      
         <div class="app-status">
