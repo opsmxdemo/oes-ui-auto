@@ -52,6 +52,7 @@ export class CreateApplicationComponent implements OnInit {
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
   currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
   userGroupPermissions:Object[] = [];                             // It is use to store value of checkbox need to display in group section.
+  editApplicationCounter:number = 0;                              // It is use to restrict reexecuting of edit application method.
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -79,27 +80,33 @@ export class CreateApplicationComponent implements OnInit {
         this.parentPage = responseData.parentPage;
         
         //checking is editMode enabled
-        if (responseData.editMode) {
+        if (responseData.editMode && this.editApplicationCounter === 0) {
+          
           this.appData = responseData.applicationData;
           this.editMode = responseData.editMode;
           this.defineAllForms();
 
           if (responseData.applicationData !== null) {
+            this.editApplicationCounter++;
+            // Reseting metric and log Templates data
+            this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
             if(this.userType === 'AP'){
               // AP mode
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.emailId),
-                description: new FormControl(this.appData.description)
+                emailId: new FormControl(this.appData.emailId, [Validators.required,Validators.email]),
+                description: new FormControl(this.appData.description),
+                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
               });
             }else{
               // user belongs to OES mode also.
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.emailId),
+                emailId: new FormControl(this.appData.emailId, [Validators.required,Validators.email]),
                 description: new FormControl(this.appData.description),
-                imageSource: new FormControl({ value: this.appData.imageSource, disabled: true })
+                imageSource: new FormControl(this.appData.imageSource, Validators.required),
+                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
               });
               //populating dockerImagenamedropdown.
               if(responseData.callDockerImageDataAPI){
@@ -108,7 +115,7 @@ export class CreateApplicationComponent implements OnInit {
             }
             
 
-            //populating serviceForm############################################################################
+            //populating serviceForm ############################################################################
             if (this.appData.services.length !== 0) {
               this.servicesForm = new FormGroup({
                 services: new FormArray([])
@@ -121,7 +128,7 @@ export class CreateApplicationComponent implements OnInit {
                     if(this.userType === 'OES-AP'){
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
-                          serviceName: new FormControl(serviceArr.serviceName),
+                          serviceName: new FormControl(serviceArr.serviceName,[Validators.required,this.cannotContainSpace.bind(this)]),
                           id: new FormControl(serviceArr.id),
                           logTemp: new FormControl(serviceArr.logTemp),
                           metricTemp: new FormControl(serviceArr.metricTemp),
@@ -131,7 +138,7 @@ export class CreateApplicationComponent implements OnInit {
                     }else{
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
-                          serviceName: new FormControl(serviceArr.serviceName),
+                          serviceName: new FormControl(serviceArr.serviceName,[Validators.required,this.cannotContainSpace.bind(this)]),
                           id: new FormControl(serviceArr.id),
                           pipelines: new FormArray([])
                         })
@@ -144,11 +151,11 @@ export class CreateApplicationComponent implements OnInit {
                       const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
                       pipelineArray.push(
                         new FormGroup({
-                          pipelinetemplate: new FormControl({ value: pipelineArr.pipelinetemplate, disabled: true }),
+                          pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
                           //cloudAccount: new FormControl({ value: '', disabled: true }),
                           dockerImageName: new FormGroup({
-                            accountName: new FormControl({ value: pipelineArr.dockerImageName.accountName, disabled: true }),
-                            imageName: new FormControl({ value: pipelineArr.dockerImageName.imageName, disabled: true })
+                            accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
+                            imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
                           }),
                           pipelineParameters: new FormArray([])
                         })
@@ -173,7 +180,7 @@ export class CreateApplicationComponent implements OnInit {
                   this.appData.services.forEach(serviceArr => {
                     (<FormArray>this.servicesForm.get('services')).push(
                       new FormGroup({
-                        serviceName: new FormControl(serviceArr.serviceName),
+                        serviceName: new FormControl(serviceArr.serviceName,[Validators.required,this.cannotContainSpace.bind(this)]),
                         id: new FormControl(serviceArr.id),
                         logTemp: new FormControl(serviceArr.logTemp),
                         metricTemp: new FormControl(serviceArr.metricTemp)
@@ -182,12 +189,10 @@ export class CreateApplicationComponent implements OnInit {
                   });
                   break;
               }
-              
-              this.editServiceForm = this.servicesForm.getRawValue();
             }
 
-            //populate environment Form#################################################################################
-            if (this.appData.environments.length !== 0) {
+            //populate environment Form if usertype include OES in it#################################################################################
+            if (this.appData.environments.length !== 0 && this.userType !== 'AP') {
               // clearing form first
               this.environmentForm = new FormGroup({
                 environments: new FormArray([])
@@ -197,6 +202,7 @@ export class CreateApplicationComponent implements OnInit {
                   new FormGroup({
                     key: new FormControl(environmentdata.key, Validators.required),
                     value: new FormControl(environmentdata.value),
+                    id: new FormControl(environmentdata.id)
                   })
                 );
               })
@@ -208,15 +214,32 @@ export class CreateApplicationComponent implements OnInit {
               this.groupPermissionForm = new FormGroup({
                 userGroups: new FormArray([])
               });
-              this.appData.userGroups.forEach(groupData => {
-                (<FormArray>this.groupPermissionForm.get('userGroups')).push(
+              //populating the form
+              const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
+              this.appData.userGroups.forEach((groupData,index) => {
+                // pushing controls in usergroup form.
+                userGroupControl.push(
                   new FormGroup({
-                    userGroupId: new FormControl(groupData.userGroupId, Validators.required),
-                    permissionIds: new FormControl(groupData.permissionIds, Validators.required),
+                    userGroupId: new FormControl(groupData.userGroupId,[Validators.required,this.usergroupExist.bind(this)]),
+                    permissionIds: new FormArray([])
                   })
                 );
+
+                // pushing controls in permissionIDs
+                const permissionIdGroupControl = userGroupControl.at(index).get('permissionIds') as FormArray;
+                this.populatePermissions(permissionIdGroupControl,groupData.permissionIds);
               })
-              this.populateUserGroupsDropdown();
+            }
+
+            //populating log and metric template data ######################################################################
+            if(this.userType === 'AP' || this.userType === 'OES-AP'){
+              // Storing Log and Metric template data in state getting from appData
+              this.appData.logTemplate.forEach(logTemp => {
+                this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:logTemp}))
+              });
+              this.appData.metricTemplate.forEach(metricTemp => {
+                this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:metricTemp}));
+              });
             }
           }else{
             this.defineAllForms();
@@ -240,22 +263,28 @@ export class CreateApplicationComponent implements OnInit {
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
         }
-        if (response.dockerImageData !== null) {
+        if (response.dockerImageData !== null && response.dockerImageData !== undefined) {
           this.dockerImageData = response.dockerImageData;
           this.populateDockerImagenDropdown();
         }
         if (response.userGropsData !== null && response.userGroupsPermissions !== null) {
           this.userGroupData = response.userGropsData;
           this.userGroupPermissions = response.userGroupsPermissions;
+          // populating user group dropdown data
+          this.populateUserGroupsDropdown();
         }
         if (response.logtemplate.length > 0){
           this.logTemplateData = response.logtemplate;
-          this.logModel.nativeElement.click();
+          if(this.logModel !== undefined){
+            this.logModel.nativeElement.click();
+          }
           this.populateSelectedTemplateName(this.currentLogTemplateIndex,'logTemp')
         }
         if (response.metrictemplate.length > 0){
           this.metricTemplateData = response.metrictemplate;
-          this.metricModel.nativeElement.click();
+          if(this.metricModel !== undefined){
+            this.metricModel.nativeElement.click();
+          }
           this.populateSelectedTemplateName(this.currentMetricTemplateIndex,'metricTemp')
         }
       }
@@ -314,6 +343,34 @@ export class CreateApplicationComponent implements OnInit {
     return promise;
   }
 
+  // Below function is use to populate permission in usergroup in edit mode
+  populatePermissions(formControl,assignedpermission){
+    setTimeout(()=>{
+      if(this.userGroupPermissions.length > 0){
+        this.userGroupPermissions.forEach(permissionId => {
+          if(assignedpermission.indexOf(permissionId['permissionId']) > -1){
+            formControl.push(
+              new FormGroup({
+                value: new FormControl(true),
+                name: new FormControl(permissionId['permissionId'])
+              })
+            )
+          }else{
+            formControl.push(
+              new FormGroup({
+                value: new FormControl(false),
+                name: new FormControl(permissionId['permissionId'])
+              })
+            )
+          }
+          
+        })
+      }else {
+        this.populatePermissions(formControl,assignedpermission);
+      }
+    },500)
+  }
+
   // Below function is use to return relavent service form on basics of userType. i.e,AP , OESOnly or both.
   setServiceForm(){
     let serviceForm = null;
@@ -366,32 +423,36 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
   cannotContainSpace(control: FormControl): {[s: string]: boolean} {
+  if(control.value !== null){
     let startingValue = control.value.split('');
-  if(startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0){
-    return {containSpace: true}
-  }
-  if( +startingValue[0] > -1 && startingValue.length > 0){
-    return {startingFromNumber: true}
-  }
-  if ( !/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
-    return {symbols: true};
+    if(startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0){
+      return {containSpace: true}
+    }
+    if( +startingValue[0] > -1 && startingValue.length > 0){
+      return {startingFromNumber: true}
+    }
+    if ( !/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
+      return {symbols: true};
+    }
   }
   return null;
   }
 
   // Below function is custom valiadator which is use to validate userGroup name is already selected or not. If already exist then it will return error
   usergroupExist(control: FormControl): {[s: string]: boolean} {
-    let startingValue = control.value.split('');
-    let counter = 0;
-    if(startingValue.length > 0){
-      this.groupPermissionForm.value.userGroups.forEach(groupName => {
-        if(this.groupProperties(true,groupName.userGroupId) === control.value){
-          counter++;
-        }
-      })
-    }
-    if(counter > 0){
-      return {groupNameExist: true}
+    if(control.value !== null){
+      let startingValue = control.value.split('');
+      let counter = 0;
+      if(startingValue.length > 0){
+        this.groupPermissionForm.value.userGroups.forEach(groupName => {
+          if(this.groupProperties(true,groupName.userGroupId) === control.value){
+            counter++;
+          }
+        })
+      }
+      if(counter > 0){
+        return {groupNameExist: true}
+      }
     }
     return null;
   }
@@ -401,15 +462,24 @@ export class CreateApplicationComponent implements OnInit {
     const arrayControl = this.servicesForm.get('services') as FormArray;
     const innerarrayControl = arrayControl.at(0).get('pipelines') as FormArray;
     const mainData = innerarrayControl.at(0).get('dockerImageName');
-
     this.dockerImageDropdownData = [];
-    this.dockerAccountName = this.dockerImageData[0].imageSource;
-    mainData.patchValue({
-        'accountName': this.dockerImageData[0].imageSource
-    });
-    this.servicesForm.value.services.forEach(() => {
-      this.dockerImageDropdownData.push(this.dockerImageData[0].images);
-    })
+    if(this.editMode){
+      this.servicesForm.value.services.forEach((service,SerIndex) => {
+        this.dockerImageData.forEach((docker,imgIndex) => {
+          if(service.pipelines[0].dockerImageName.accountName === docker.imageSource){
+            this.dockerImageDropdownData[SerIndex] = this.dockerImageData[imgIndex].images;
+          }
+        });
+      })
+    }else{
+      this.dockerAccountName = this.dockerImageData[0].imageSource;
+      mainData.patchValue({
+          'accountName': this.dockerImageData[0].imageSource
+      });
+      this.servicesForm.value.services.forEach(() => {
+        this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+      })
+    }
   }
 
    //Below function is use to populate UserGroup dropdown exist in user group section. 
@@ -440,13 +510,15 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to populate newley created template into appropriate service field
   populateSelectedTemplateName(index,type){
-    const arrayControl = this.servicesForm.get('services') as FormArray;
-    const innerarrayControl = arrayControl.at(index).get(type) 
-    if(this.userType.includes('AP')){
-      if(type === 'logTemp'){
-        innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length-1].templateName);
-      }else{
-        innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length-1].templateName);
+    if(index > -1){
+      const arrayControl = this.servicesForm.get('services') as FormArray;
+      const innerarrayControl = arrayControl.at(index).get(type) 
+      if(this.userType.includes('AP')){
+        if(type === 'logTemp'){
+          innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length-1].templateName);
+        }else{
+          innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length-1].templateName);
+        }
       }
     }
   }
@@ -572,7 +644,6 @@ export class CreateApplicationComponent implements OnInit {
       const arrayControl = this.servicesForm.get('services') as FormArray;
       const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
       const mainData = innerarrayControl.at(0).get('dockerImageName');
-      this.dockerAccountName = this.dockerImageData[0].imageSource;
       mainData.patchValue({
           'accountName': this.dockerImageData[0].imageSource
       });
@@ -643,131 +714,6 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-    // Execute when user editing application data 
-
-    //########### EDIT APPLICATION MODE ############
-    //##############################################
-
-    if (this.editMode) {
-      // const existServiceLength = this.editServiceForm['services'].length;
-      // let serviceFormValidation = null;
-      // // Below logic check whether newely added service is valid or not
-      // this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
-      //   let new_ServiceCounter = 0;
-      //   if (serviceArr.status === 'NEW') {
-      //     const arrayControl = this.servicesForm.get('services') as FormArray;
-      //     const innerarrayControl = arrayControl.at(serviceIndex)
-      //     innerarrayControl.markAllAsTouched();
-      //     serviceFormValidation = innerarrayControl.valid;
-      //     new_ServiceCounter++;
-      //   }else if (serviceArr.status === 'ACTIVE' || serviceArr.status === 'UPDATE'){
-      //     if(new_ServiceCounter === 0){
-      //       serviceFormValidation = true;
-      //     }
-      //   }
-      // })
-      
-      // if (serviceFormValidation && this.environmentForm.valid && this.groupPermissionForm.valid) {
-      //   // Saving all 4 forms data into one
-      //   //#############CreateApplicationForm###############
-      //   this.mainForm = this.createApplicationForm.getRawValue();
-
-      //   // Below configuration related to service form
-      //   this.servicesForm.value.services.forEach((serviceArr, serviceIndex) => {
-      //     if (serviceArr.status === 'NEW') {
-      //       let counter = 0;
-      //       this.editServiceForm['services'].forEach((el,index) => {
-      //         if(el.serviceName === serviceArr.serviceName){
-      //           counter++;
-      //         }
-      //       })
-      //       if(counter === 0){
-      //         this.editServiceForm['services'].push(this.servicesForm.value.services[serviceIndex]);
-      //       }
-      //     }else if (serviceArr.status === 'UPDATE') {
-      //       this.editServiceForm['services'].forEach((el,index) => {
-      //         if(el.serviceName === serviceArr.serviceName){
-      //           this.editServiceForm['services'][index] = this.servicesForm.value.services[serviceIndex];
-      //         }
-      //       })
-      //     }
-      //   })
-      //   let delete_counter = 0;
-      //   this.editServiceForm['services'].forEach((ServiceArr, i) => {
-      //     if(ServiceArr.status === 'DELETE'){
-      //       delete_counter++;
-      //       // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
-      //       if(this.userType.includes('OES')){
-      //         ServiceArr.pipelines.forEach((PipelineArr, j) => {
-      //           // if (typeof (PipelineArr.cloudAccount) === 'string') {
-      //           //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i,j, PipelineArr.cloudAccount);
-      //           // }
-      //         })
-      //       }
-      //     }else{
-      //       // below condition is use to check whether user belonga to OES group or not. if yes then go for pipeline otherwise not.
-      //       if(this.userType.includes('OES')){
-      //         ServiceArr.pipelines.forEach((PipelineArr, j) => {
-      //           // if (typeof (PipelineArr.cloudAccount) === 'string') {
-      //           //   PipelineArr.cloudAccount = this.CloudAccountConfigure((delete_counter > 0?i-1:i), j, PipelineArr.cloudAccount);
-      //           // }
-                
-      //           PipelineArr.pipelineParameters.forEach((DataArr, k) => {
-      //               if (DataArr.value === '') {
-      //                 DataArr.value = this.getProperValue((delete_counter > 0?i-1:i), j, k)
-      //               }
-      //           })
-      //         })
-      //       }
-      //     }
-      //   })
-      //   //#############ServiceFormSection###################
-      //   this.mainForm.services = this.editServiceForm['services'];
-      //   //#############EnvironmentFormSection###############
-      //   if(this.userType.includes('OES')){
-      //     // when environment is updated make all service status as UPDATE
-      //     if(this.environmentUpdated){
-      //       this.mainForm.services.forEach(el => {
-      //         if(el.status === 'ACTIVE') {
-      //           el.status = 'UPDATE';
-      //         }
-      //       })
-      //     }
-      //     this.mainForm.environments = this.environmentForm.value.environments;
-      //   }
-      //   //#############GroupPermissionSection###############
-      //   this.mainForm.userGroups = this.groupPermissionForm.value.userGroups;
-
-      //   //Below function is checking user updated the form or not
-      //   let formUpdated = false;
-      //   this.mainForm.services.forEach(el => {
-      //     if(el.status !== "ACTIVE"){
-      //       formUpdated = true;
-      //     }
-      //   })
-
-      //   //Below action is use to save updated application form in database
-      //   if(formUpdated){
-      //     this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
-      //   }else{
-      //     Swal.fire({
-      //       icon: 'error',
-      //       title: 'Oops...',
-      //       html:
-      //           '<h5>None of the application parameter is edited !!</h5>' +
-      //           '<p style="font-size: small;">Please edit the application parameters to proceed further.</p>',
-      //     })
-      //   }
-        
-      // } else {
-      //   this.environmentForm.markAllAsTouched();
-      //   this.groupPermissionForm.markAllAsTouched();
-      // }
-    }
-    // Execute when user creating application data. 
-    //############# CREATE APPLICATION MODE ###############
-    //#####################################################
-    else {
       if (this.createApplicationForm.valid && this.servicesForm.valid && this.groupPermissionForm.valid) {
 
         // Saving all 4 forms data into one
@@ -776,10 +722,6 @@ export class CreateApplicationComponent implements OnInit {
         if(this.userType.includes('OES')){
           this.servicesForm.value.services.forEach((ServiceArr, i) => {
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
-              // if (typeof (PipelineArr.cloudAccount) === 'string') {
-              //   PipelineArr.cloudAccount = this.CloudAccountConfigure(i, j, PipelineArr.cloudAccount);
-              // }
-              
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
                 if (DataArr.value === '') {
                   DataArr.value = this.getProperValue(i, j, k)
@@ -814,10 +756,14 @@ export class CreateApplicationComponent implements OnInit {
         
         //Below action is use to save created form in database
         console.log("post data create application",JSON.stringify(this.mainForm));
-        this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
+        if(this.editMode){
+          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm,applicationId:this.appData.id}));
+        }else{
+          this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
+        }
+        
       } else {
         this.validForms();
       }
-    }
   }
 }

@@ -130,7 +130,7 @@
                   </div>
                   <div class="form-group">
                     <label>Email Id</label>
-                    <input type="text" class="form-control" formControlName="emailId" [readonly]="editMode" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
+                    <input type="text" class="form-control" formControlName="emailId" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('emailId').errors['required']">Email is required</span>
                       <span *ngIf="createApplicationForm.get('emailId').errors['email']">Please enter valid Email Id</span>
@@ -150,7 +150,7 @@
                   </div>
                   <div class="form-group">
                     <label>Application Description</label>
-                    <textarea class="form-control" rows="3" formControlName="description" [readonly]="editMode"></textarea>
+                    <textarea class="form-control" rows="3" formControlName="description"></textarea>
                   </div>
                 </form>
               </div>
