@@ -26,3 +26,6 @@ export const fetchcancelRunningCanaryStatus = createAction('[DeploymentVerificat
 
 export const manualTriggerData = createAction('[DeploymentVerification] ManualTriggerData', props<{data: any}>())
 export const fetchManualTriggerResults = createAction('[DeploymentVerification] FetchManualTriggerResults', props<{ manualTriggerResponse: any }>());
+
+export const fetchReclassificationHistoryData = createAction('[LogAnalysis] FetchReclassificationHistoryData', props<{logTemplateName: any;}>());
+export const loadReclassificationHistoryData = createAction('[LogAnalysis] loadReclassificationHistoryData', props<{reclassificationHistoryResults:any}>());

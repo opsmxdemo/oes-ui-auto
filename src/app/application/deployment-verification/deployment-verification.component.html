@@ -14,10 +14,9 @@
           </mat-form-field>
         </form>
     
-      
           <div class="appName"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
           </div>
      
         <div class="app-status">
@@ -265,12 +264,44 @@
         </div>
       </div>
     </div>
+    <div class="modal bd-example-modal-lg fade " id="reclassificationHistory" tabindex="-1" role="dialog" aria-labelledby="reclassificationHistory" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-width" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Logs Reclassification History</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div style="min-height: 400px;" class="modal-body">
+            <div *ngIf="reclassificationHistory != null">
+            <div *ngFor='let feedbackHistory of reclassificationHistory.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
+              <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>
+              <div style="padding-top:10px ; padding: 3px;" >ReClassified From <span [ngClass]="{'text-danger':feedbackHistory.existingTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.existingTopic == 'ERROR','text-warning':feedbackHistory.existingTopic == 'WARN','text-muted':feedbackHistory.existingTopic=='IGNORE'}">{{feedbackHistory.existingTopic}}</span> To <span [ngClass]="{'text-danger':feedbackHistory.newTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.newTopic == 'ERROR','text-warning':feedbackHistory.newTopic == 'WARN','text-muted':feedbackHistory.newTopic=='IGNORE'}">{{feedbackHistory.newTopic}}</span></div>
+              <div style="padding-top:10px ; padding: 3px;"><span>{{feedbackHistory.timestamp | changeTImestamptotime}}</span> Comments : {{feedbackHistory.feedbackComment}}</div>
+            </div>
+            </div>
+            <div *ngIf="reclassificationHistory == null">
+                No Data Present
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">OK</button>
+          </div>
+          
+          <!-- /.modal-footer -->
+        </div>
+      </div>
+    </div>
 
     <div class="page-content flex-grow-1">
       <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
         <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} » {{control.value}} » {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</h3>
         <div class="page_access d-flex ml-auto">
           <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false">Manual Trigger</button>
+        </div>
+        <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+          <button (click)="getReclassifiactionHistory()" class="btn btn-default" data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false">Reclassification History</button>
         </div>
         <!-- /.page_access ml-auto -->
       </div>
@@ -454,7 +485,7 @@
                   </div>
                   <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20">
                     <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}"></div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">{{serviceNameInfo['metricScore']}}</div>
                       <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']<0 || serviceNameInfo['metricScore']==null"> - </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name" >Metrics</div>

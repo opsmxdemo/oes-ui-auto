@@ -80,6 +80,25 @@ export class DeploymentVerificationEffect {
           )
       )
 
+      //for getting reclassification history
+
+        fetchReclassificationHistory = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DeploymentActions.fetchReclassificationHistoryData),
+            switchMap((action) => {                    // return this.http.get('/assets/data/logsData.json').pipe(                    
+                return this.http.get(this.environment.config.endPointUrl +'autopilot/logs/feedbackHistory?logTemplateName=' + action.logTemplateName ).pipe(                  
+                    map(resdata => {
+                    return DeploymentActions.loadReclassificationHistoryData({reclassificationHistoryResults:resdata});
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+        )
+
        // Below effect is use for fetch applications
        fetchServiceListData = createEffect(() =>
        this.actions$.pipe(
