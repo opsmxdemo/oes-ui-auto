@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
@@ -333,6 +333,10 @@ export class CreateApplicationComponent implements OnInit {
           } else {
             resolve(null);
           }
+        },
+        // below contain remove when name check api is implemented
+        (error)=>{
+          resolve(null);
         }
       )
     });
@@ -435,11 +439,10 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is custom valiadator which is use to validate userGroup name is already selected or not. If already exist then it will return error
   usergroupExist(control: FormControl): {[s: string]: boolean} {
     if(control.value !== null){
-      let startingValue = control.value.split('');
       let counter = 0;
-      if(startingValue.length > 0){
+      if(+control.value > 0 && typeof(control.value) !== 'number'){
         this.groupPermissionForm.value.userGroups.forEach(groupName => {
-          if(this.groupProperties(true,groupName.userGroupId) === control.value){
+          if(+groupName.userGroupId === +control.value){
             counter++;
           }
         })
@@ -740,7 +743,7 @@ export class CreateApplicationComponent implements OnInit {
         //Below action is use to save created form in database
         console.log("post data create application",JSON.stringify(this.mainForm));
         if(this.editMode){
-          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm,applicationId:this.appData.id}));
+          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
         }else{
           this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
         }
