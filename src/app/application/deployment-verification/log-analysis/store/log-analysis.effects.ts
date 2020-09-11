@@ -50,7 +50,6 @@ fetchLogAnalysisResults = createEffect(() =>
     this.actions$.pipe(
         ofType(LogAnalysisActions.loadLogResults,LogAnalysisActions.reloadAfterRerun),
         switchMap((action) => {                 
-            // return this.http.get('/assets/data/logsData.json').pipe(                    
             return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
                 map(resdata => {
                    return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
@@ -144,6 +143,23 @@ fetchReclassificationHistory = createEffect(() =>
         })
     )
 )
+    // Below effect is use for fetch logtopics table data.
+    fetchLogTopics = createEffect(() =>
+        this.actions$.pipe(
+            ofType(LogAnalysisActions.loadLogTopics),
+            switchMap(() => {
+                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/getClusterTags').pipe(
+                    map(resdata => {
+                        return LogAnalysisActions.fetchLogTopics({ logslist: resdata });
+                    }),
+                    catchError(errorRes => {
+                        // this.toastr.showError('Server Error !!', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
 
 //The effect is used to fetch complete log line
 fetchClusterLogsData = createEffect(() =>

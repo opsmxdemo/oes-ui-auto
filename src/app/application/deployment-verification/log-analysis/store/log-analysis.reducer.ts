@@ -1,3 +1,4 @@
+import { loadLogTopics } from './../../../../application-onboarding/application/store/application.actions';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as LogAnalysisActions from './log-analysis.actions';
 import { Observable } from 'rxjs';
@@ -12,6 +13,7 @@ export interface State {
     timeStampData:any;
     rerunResponse:any;
     reclassificationHistoryResults:any;
+    fetchLogTopics: any;    
 }
 
 export const initialState: State = {
@@ -23,6 +25,7 @@ export const initialState: State = {
     timeStampData:null,
     rerunResponse:null,
     reclassificationHistoryResults:null,
+    fetchLogTopics: null,
 }
 
 export function LogAnalysisReducer(
@@ -90,8 +93,20 @@ export function LogAnalysisReducer(
                 clusterLogs: action.clusterLogs,
                 deployementLoading: false
             })
-        )
-        ,
+        ),
+         on(LogAnalysisActions.loadLogTopics,
+            state => ({
+                ...state,
+                logListLoading: true
+            })
+        ),
+        on(LogAnalysisActions.fetchLogTopics,
+            (state, action) => ({
+                ...state,
+                logTopicsList: action.logslist,
+                logListLoading: false
+            })
+        ),
         on(LogAnalysisActions.loadTimeAnalysisGraphData,
             (state, action) => ({
                 ...state,
