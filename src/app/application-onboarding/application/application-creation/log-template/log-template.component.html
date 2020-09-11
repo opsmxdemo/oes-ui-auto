@@ -211,7 +211,7 @@
                      </div>
                   </div>
                   <div>
-                    <button type="button" mat-button matStepperNext class="btn btn-primary sw-btn-next" (click)="getLogTopics()">Next</button>
+                    <button type="button" mat-button matStepperNext class="btn btn-primary sw-btn-next pull-right" (click)="getLogTopics()">Next</button>
                   </div>
                 </form>
               </mat-step>
@@ -240,7 +240,7 @@
                                  </tr>
                                </thead>
                                <tbody>
-                                 <tr *ngFor="let logTopics of logTopicsForm.get('topicsList')['controls'];let i=index;">
+                                 <tr *ngFor="let logTopics of logTopicsForm.get('topicsList')['controls'];let i=index;last as isLast">
                                   <ng-container [formGroupName]="i">
                                    <td>
                                      <input type="text"  class="form-control" value="{{logTopics.string}}" formControlName="string" required>
@@ -255,7 +255,7 @@
                                      <span *ngIf="logTopicsForm.get('string').errors['symbols']">No Special characters are allowed.</span>
                                    </span> -->
                                    </td>
-                                   <td>
+                                   <td width="200">
                                      <select class="form-control" formControlName="topic">
                                       <option value="" [disabled]="true">Select</option>
                                       
@@ -264,8 +264,8 @@
                                       
                                     </select>
                                    </td>
-                                   <td>
-                                    <input type="text" class="form-control" value="{{logTopics.type}}" formControlName="type" required>
+                                   <td width="100">
+                                    <input [readonly]="true" type="text" class="form-control" value="{{logTopics.type}}" formControlName="type" required>
                                     <!-- <span *ngIf="logTopicsForm.get('type').invalid && logTopicsForm.get('type').touched"
                                        [ngClass]="logTopicsForm.get('type').invalid && logTopicsForm.get('type').touched ? 'is-invalid':''"
                                     class="invalid-feedback">
@@ -276,8 +276,11 @@
                                     <span *ngIf="logTopicsForm.get('type').errors['symbols']">No Special characters are allowed.</span>
                                   </span> -->
                                    </td>
-                                   <td>
+                                   <td width="36">
                                      <a (click)="deleteLogTopic(logTopics,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                   </td>
+                                   <td *ngIf="isLast" width="36" class="text-right">
+                                    <a (click)="addNewLogTopics()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Topic"><i class="fas fa-plus"></i></a>
                                    </td>
                                    </ng-container>
                                  </tr>
