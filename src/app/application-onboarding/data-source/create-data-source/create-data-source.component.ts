@@ -92,7 +92,6 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
 
   // Below function is use to execute on create dataSource
   onSaveForm(event) {
-    debugger
     let postData = { ...this.selectedProviderObj };
     postData['name']=event.form.value.name;
     postData['configurationFields'] = event.form.value.configFields;
