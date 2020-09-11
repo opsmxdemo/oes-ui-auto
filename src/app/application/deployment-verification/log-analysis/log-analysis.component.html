@@ -26,12 +26,15 @@
             Perceived Risk
         </span>
       </div>
-      <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity"
+      <div class="d-flex ml20">
+        <label class="d-flex justify-content-center align-items-center"><h6>Sensitivity: </h6> </label>
+        <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity"
         class="form-control sensitivitySelect">
         <option *ngFor='let sensitivity of sensitivityLevels' [value]="sensitivity">
           {{sensitivity}}
         </option>
       </select>
+    </div>
     </div>
     <!-- /.ml-auto -->
   </div>
