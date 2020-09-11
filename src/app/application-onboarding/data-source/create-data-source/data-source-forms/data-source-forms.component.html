@@ -9,7 +9,7 @@
                     <div class="form-group">
                         <label>Account Name</label>
                         <input type="text" name="name" class="form-control" #input="ngModel"
-                            [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="true"  ngModel>
+                            [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="true" [ngModel]="isEditMode ? formValue.name : ''"  ngModel>
                         <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
                             Account Name is required
                         </span>
@@ -20,14 +20,14 @@
                         <div class="form-group" *ngFor = "let formField of formData; let i=index;">
                             <ng-container *ngIf="formField.dataType === 'string' ? true  : false ">
                                 <label>{{formField.displayName}}</label>
-                                <input type="text" name="{{formField.name}}" class="form-control" #input="ngModel"
-                                [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="formField.required"  ngModel>
+                                <input type="{{formField.name === 'password'?'password':'text'}}" name="{{formField.name}}" class="form-control" #input="ngModel" 
+                                [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="formField.required" [ngModel]="isEditMode ? formValue.configurationFields[formField.name] : ''"  ngModel>
                                 <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
                                     {{formField.displayName}} is required
                                 </span>
                             </ng-container>
                             <ng-container *ngIf="formField.dataType === 'boolean' ? true  : false ">
-                                <input type="checkbox" style="margin-right: 4px;" name="{{formField.name}}" [required]="formField.required" #input="ngModel"  ngModel>
+                                <input type="checkbox" style="margin-right: 4px;" name="{{formField.name}}" [required]="formField.required" [ngModel]="isEditMode ? formValue.configurationFields[formField.name] : ''" #input="ngModel"  ngModel>
                                 <label for="{{formField.name}}" class="form-check-label">{{formField.displayName}}</label>
                                 <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
                                     {{formField.displayName}} is required

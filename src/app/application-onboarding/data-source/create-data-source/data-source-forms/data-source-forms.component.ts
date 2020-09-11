@@ -12,6 +12,8 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
 
   @ViewChild('datasourceForm') dynamicForm: NgForm;
   @Input() formData: any[];
+  @Input() formValue: any;
+  @Input() isEditMode: boolean;
   @Output() saveFormEvent = new EventEmitter<NgForm>();
 
   notSelectedList: boolean;                                        // It is use to display warning while no provider is selected from list.
@@ -19,9 +21,12 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
   loading: boolean = false;                                        // It is use to show or hide loading wheel at saving time.
 
   constructor(public store: Store<fromFeature.State>) { }
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges){
     if(this.formData === null){
       this.notSelectedList = true;
+    }else if(this.isEditMode){
+      this.notSelectedList = false;
+      this.fromDataEmpty = false;
     }else{
       this.notSelectedList = false;
       if(this.formData.length > 0){
