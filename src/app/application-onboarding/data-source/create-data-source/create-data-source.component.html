@@ -1,7 +1,7 @@
 <div *ngIf="supportedDataSources !== null">
     <div class="form-group text-muted">
         <label>Select Monitoring Provider </label>
-        <div class="box-icon-group" *ngIf="supportedDataSources !== null ? true : false">
+        <div class="box-icon-group {{isEditMode ? 'restrictSelect':''}}" *ngIf="supportedDataSources !== null ? true : false">
             <!-- for Autopilot -->
             <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
                 <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
@@ -39,7 +39,7 @@
         </div>
     </div>
     <hr />
-    <app-data-source-forms [formData]="currentFormData" (saveFormEvent)="onSaveForm($event)"></app-data-source-forms>
+    <app-data-source-forms [formData]="currentFormData" [isEditMode]="isEditMode" [formValue]="accountData" (saveFormEvent)="onSaveForm($event)"></app-data-source-forms>
 </div>
 <div *ngIf="supportedDataSources === null">
     <app-component-error-listing [errorString]="'DataSource provider not available to select.'"></app-component-error-listing>

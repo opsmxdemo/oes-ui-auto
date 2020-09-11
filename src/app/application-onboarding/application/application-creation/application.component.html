@@ -130,7 +130,7 @@
                   </div>
                   <div class="form-group">
                     <label>Email Id</label>
-                    <input type="text" class="form-control" formControlName="emailId" [readonly]="editMode" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
+                    <input type="text" class="form-control" formControlName="emailId" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('emailId').errors['required']">Email is required</span>
                       <span *ngIf="createApplicationForm.get('emailId').errors['email']">Please enter valid Email Id</span>
@@ -150,7 +150,7 @@
                   </div>
                   <div class="form-group">
                     <label>Application Description</label>
-                    <textarea class="form-control" rows="3" formControlName="description" [readonly]="editMode"></textarea>
+                    <textarea class="form-control" rows="3" formControlName="description"></textarea>
                   </div>
                 </form>
               </div>
@@ -233,17 +233,6 @@
                                   <span *ngIf="!pipelineArr.get('pipelinetemplate').valid && pipelineArr.get('pipelinetemplate').touched"
                                   class="help-block">Pipeline is required</span>
                                 </div>
-                                <!-- <div class="form-group mb-3 pl-5 text-muted">
-                                  <label>Cloud Account</label>
-                                  <div class="d-flex  mr-5 align-items-center">
-                                    <select class="form-control" formControlName="cloudAccount"
-                                    [ngClass]="!pipelineArr.get('cloudAccount').valid && pipelineArr.get('cloudAccount').touched ? 'is-invalid':''">
-                                      <option *ngFor="let cloudData of cloudAccountExist" value="{{cloudData.name}}">{{cloudData.name}}</option>
-                                    </select>
-                                  </div>
-                                  <span *ngIf="!pipelineArr.get('cloudAccount').valid && pipelineArr.get('cloudAccount').touched"
-                                  class="help-block">Cloud Account is required</span>
-                                </div> -->
                                 <div class="form-group mb-3 pl-5 text-muted" formGroupName="dockerImageName">
                                   <label>Docker Account & Image Name</label>
                                   <div class="d-flex  mr-5 align-items-center">

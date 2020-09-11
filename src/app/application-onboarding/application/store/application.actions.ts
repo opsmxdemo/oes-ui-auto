@@ -20,7 +20,7 @@ export const fetchUserGropsPermissions = createAction('[Application] FetchUserGr
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());
-export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication}>());
+export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication,applicationId:number}>());
 export const disabledEditMode = createAction('[Application] DisabledEditMode');
 
 // Below action is related to application list

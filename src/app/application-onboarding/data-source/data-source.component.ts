@@ -33,13 +33,16 @@ export class DataSourceComponent implements OnInit {
   tableIsEmpty: boolean = false;                                                       // It is use to show or hide the empty table page.
   accountBelongsTo: string = null;                                                     // It is use to store value of account belongs to i.e, AP or OES.
   supportedDatasources = null;                                                         // It is use to store all supported datasource available datasource.
-  loading = false;
+  loading = false;                                                                     // It is use to show loaging screen if api is called.
+  editMode = false;                                                                    // It is use to suggest whwther user is edit or create mode.
+  accountData = null;                                                                  // It is use to store value of datasource need to be edited.
 
 
   constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
     public sharedAccountData: SharedService) { }
 
   ngOnInit(){
+    this.editMode = false
    
     // fetching data from state
     this.store.select(fromFeature.selectDataSource).subscribe(
@@ -65,6 +68,11 @@ export class DataSourceComponent implements OnInit {
   // Below function is used if user want to refresh list data
   refreshList() {
     this.store.dispatch(DataSourceActions.loadDatasourceList());
+  }
+
+  // Below function is execute on click of create datasource btn
+  createDatasource(){
+    this.editMode = false;
   }
 
   //Below function is execute on search
@@ -151,6 +159,7 @@ export class DataSourceComponent implements OnInit {
   // Below function is use to rectify type of datasource belong to onselect of datasource from list
   onselectDatasource(operationPerform,accountData,index){
     this.accountBelongsTo = '';
+    this.editMode = false
     this.supportedDatasources['oesDataSources'].forEach(oeslist => {
       if(oeslist.datasourceType === accountData.datasourceType){
         this.accountBelongsTo = 'OES'
@@ -167,6 +176,9 @@ export class DataSourceComponent implements OnInit {
     // below logic is use to perform specific operation
     if(operationPerform === 'Delete'){
       this.deleteAccount(accountData,index);
+    }else if(operationPerform === 'Edit'){
+      this.accountData = accountData;
+      this.editMode = true;
     }
    
   }

@@ -42,7 +42,7 @@ export function DataSourceReducer(
                 supportedDatasource:action.SupportedDataSource 
             })
         ),
-        on(DataSourceAction.postAPDatasources,
+        on(DataSourceAction.createAPDatasources,
             (state,action) => ({
                 ...state,
                 loadingDatasource:true,
@@ -50,7 +50,7 @@ export function DataSourceReducer(
                 datasaved:false 
             })
         ),
-        on(DataSourceAction.postOESDatasources,
+        on(DataSourceAction.createOESDatasources,
             (state,action) => ({
                 ...state,
                 loadingDatasource:true,
@@ -66,6 +66,33 @@ export function DataSourceReducer(
                 datasaved:true
             })
         ),
+
+        // Datasource Edit code start
+        on(DataSourceAction.updateOESDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.updateAPDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.updatesuccessResponse,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:false,
+                erroeMessage:null,
+                datasaved:true
+            })
+        ),
+        // Datasource Edit code ends
 
         // Datasource list code start
         on(DataSourceAction.loadDatasourceList,

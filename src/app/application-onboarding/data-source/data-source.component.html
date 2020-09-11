@@ -6,7 +6,7 @@
             <div class="tab-content h-100 p-3 flex-grow-1">
                 <div *ngIf="tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access text-right p-3">
-                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()">New Data Source</button>
                   </div>
                   <!-- /.page_access ml-auto -->
                   <div class="gray-strip"></div>
@@ -31,7 +31,7 @@
                             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                           </div>
                         </div>
-                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()">New Data Source</button>
                       </div>
                   <!-- /.page_access ml-auto -->
                   <div class="table-content">
@@ -49,7 +49,7 @@
                             <td>{{datasourceData.name}}</td>
                             <td>{{datasourceData.datasourceType}}</td>
                              <td>
-                              <!-- <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>   -->
+                              <a  class="text-muted ml-2"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="onselectDatasource('Edit',datasourceData,i)"><i class="fas fa-pencil-alt"></i></a>  
                               <a (click)="onselectDatasource('Delete',datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>
@@ -69,7 +69,7 @@
                           {{page.endPoint < datasourceListLength-1?page.endPoint:datasourceListLength}} of {{datasourceListLength}}</span>
                        
                         <ul class="pagination ml-auto mb-0">
-                          <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                          <li class="page-item" (click)="pagePrev()" class = "{{page.startingPoint === 0?'disabledbtn':''}}"><a class="page-link">Previous</a></li>
                           <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
                             (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
                           <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
@@ -83,7 +83,7 @@
                                        ((page.currentPage+2)*page.pageSize< datasourceListLength? true : ((page.currentPage+2)*page.pageSize)-datasourceListLength < page.pageSize? true : false) ? true : false"
                             (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a>
                           </li>
-                          <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
+                          <li class="page-item" (click)="pageNext()" class = "{{page.endPoint === datasourceListLength-1?'disabledbtn':''}}"><a class="page-link">Next</a></li>
                         </ul>
                       </div>
                       <!-- /.per_page -->
@@ -107,13 +107,13 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">New Data Source</h5>
+          <h5 class="modal-title">{{editMode ? 'Update Data Source':'New Data Source'}}</h5>
           <button type="button" class="close" data-dismiss="modal" #closeAddExpenseModal aria-label="Close">
             <i class="fa fa-times"></i>
           </button>
         </div>
         <div class="modal-body">
-          <app-create-data-source (closemodel)="getClose($event)"></app-create-data-source>
+          <app-create-data-source [accountData]="accountData" [isEditMode]="editMode" [accountBelongsTo]="accountBelongsTo" (closemodel)="getClose($event)"></app-create-data-source>
         </div>
       </div>
     </div>
