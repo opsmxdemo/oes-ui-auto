@@ -12,6 +12,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import Swal from 'sweetalert2';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { CreateDataSource } from 'src/app/models/applicationOnboarding/dataSourceModel/createDataSourceModel';
+import { EditDataSource } from 'src/app/models/applicationOnboarding/dataSourceModel/editDataSourceModel';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any, type:string) => {
@@ -89,10 +90,10 @@ export class DataSourceEffect {
         )
     )
 
-    // Below effect is use for delete datasource Account .
+    // Below effect is use for create APDataSource Account .
     createAPDatasource = createEffect(() =>
         this.actions$.pipe(
-            ofType(DataSourceAction.postAPDatasources),
+            ofType(DataSourceAction.createAPDatasources),
             switchMap(action => {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials', action.CreatedDataSource).pipe(
                     map(resdata => {
@@ -109,10 +110,10 @@ export class DataSourceEffect {
         )
     )
 
-    // Below effect is use for delete datasource Account .
+    // Below effect is use for create OESDataSource Account .
     createOESDatasource = createEffect(() =>
         this.actions$.pipe(
-            ofType(DataSourceAction.postOESDatasources),
+            ofType(DataSourceAction.createOESDatasources),
             switchMap(action => {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/saveAccount', action.CreatedDataSource).pipe(
                     map(resdata => {
@@ -122,6 +123,46 @@ export class DataSourceEffect {
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Datasource "'+action.CreatedDataSource.name+'" is not created due to: '+errorRes.error.message, 'ERROR')
+                        return handleError(errorRes,'create');
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for update APDataSource Account .
+    updateAPDatasource = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DataSourceAction.updateAPDatasources),
+            switchMap(action => {
+                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials/'+action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
+                    map(resdata => {
+                        this.toastr.showSuccess('Datasource "'+action.UpdatedDataSource.name+'" is updated successfully','Success');
+                        this.store.dispatch(DataSourceAction.loadDatasourceList());
+                        return DataSourceAction.updatesuccessResponse();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Datasource "'+action.UpdatedDataSource.name+'" is not updated due to: '+errorRes.error.message, 'ERROR')
+                        return handleError(errorRes,'create');
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for update OESDataSource Account .
+    updateOESDatasource = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DataSourceAction.updateOESDatasources),
+            switchMap(action => {
+                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/updateAccount', action.UpdatedDataSource).pipe(
+                    map(resdata => {
+                        this.toastr.showSuccess(resdata['message'],'Success');
+                        this.store.dispatch(DataSourceAction.loadDatasourceList());
+                        return DataSourceAction.updatesuccessResponse();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Datasource "'+action.UpdatedDataSource.name+'" is not updated due to: '+errorRes.error.message, 'ERROR')
                         return handleError(errorRes,'create');
                     })
                 );
