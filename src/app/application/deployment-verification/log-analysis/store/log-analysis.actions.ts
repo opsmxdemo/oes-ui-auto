@@ -19,6 +19,9 @@ export const loadClusterLogData = createAction('[LogAnalysis] LoadClusterLogData
 export const fetchTimeAnalysisGraphData = createAction('[LogAnalysis] FetchTimeAnalysisGraphData', props<{canaryId:any,serviceId: any,clusterId: any;version:any;}>());
 export const loadTimeAnalysisGraphData = createAction('[LogAnalysis] LoadTimeAnalysisGraphData', props<{logTimeAnalysisResults:any}>());
 
+export const loadLogTopics = createAction('[LogAnalysis] LoadLogTopics');
+export const fetchLogTopics = createAction('[LogAnalysis] FetchLogTopics', props<{ logslist: [] }>());
+
 export const reloadAfterRerun = createAction('[LogAnalysis] ReloadAfterRerun', props<{canaryId: any,serviceId: any}>())
 
 export const fetchReclassificationHistoryData = createAction('[LogAnalysis] FetchReclassificationHistoryData', props<{logTemplateName: any;}>());

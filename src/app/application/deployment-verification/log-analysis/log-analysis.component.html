@@ -126,7 +126,7 @@
       [style.width]="logClusterWidth">
       <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0">
 
-        <div  class="card mb-2 data_list" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity">
+        <div  class="card mb-2 data_list removeOverflow" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity; let indexOfelement=index;">
           <div class="card-header d-flex align-items-center justify-content-between" id="heading01">
             <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
             <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}
@@ -138,7 +138,7 @@
                 alt="graph" /></div> -->
 
             <div class="dropdown error_dropdown">
-              <select (change)="changeCriticality($event,log)" data-toggle="dropdown" [(ngModel)]="log.color"
+              <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color"
                 class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select"
                 [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}">
                 <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor"
@@ -168,15 +168,15 @@
                 </div>
               </div>
             </div>
-            <div class="dropdown error_dropdown">
-              <select (change)="changeClusterTag($event,log)" data-toggle="dropdown"
+            <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase">
+              <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag" 
+                data-toggle="dropdown"
                 class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
                 <!-- [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
-                <option *ngFor='let tag of clusterTagList' [value]="tag.value" class="{{tag.textclass}}">
-                  {{tag.displayValue}}
-                </option>
+                <option *ngFor='let tag of clusterTagList' [value]="tag" class="{{tag.textclass}}">
+                  {{tag}}
+                </option> 
               </select>
-
               <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment"
                 data-toggle="dropdown"></i>
               <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
@@ -189,11 +189,11 @@
 
                 <div>
                   <div class="form-group mb-2">
-                    <textarea class="form-control" rows="5"></textarea>
+                    <textarea class="form-control" rows="5" [(ngModel)]="clusterCommentsList[indexOfelement]"></textarea>   
                   </div>
                   <div class="text-right">
                     <button type="submit" class="btn btn-default">Close</button>
-                    <button type="submit" class="btn  btn-primary">Submit</button>
+                    <button type="submit" class="btn  btn-primary"(click)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])">Submit</button> 
                   </div>
                 </div>
               </div>
@@ -216,7 +216,7 @@
             (initialized)="initialized($event)"
           ></fusioncharts>
           </div>
-          <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
+          <div id="{{assignId(log.id)}}" class="collapse clusterHeight" aria-labelledby="heading01" data-parent="#accordionExample">
             <div *ngIf="log.more">
               <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
                   class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>

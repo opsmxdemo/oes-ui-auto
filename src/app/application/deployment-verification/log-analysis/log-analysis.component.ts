@@ -1,3 +1,4 @@
+// import { clusters } from './../../application-dashboard/data';
 import { Component, Input, OnChanges, SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
@@ -40,6 +41,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   clusterId: string;
   logAnalysisClusters: [];
   logAnalysisData: any;
+  fetchLogTopics: any;
   sensitivityLevels: any = ["high", "medium", "low"];
   logSensitivityScores: any = [{ "high": {} }, { "low": {} }, { "medium": {} }];
   selectedSensitivity: string = "";
@@ -51,6 +53,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   eventTabLabeledBy: any;
   logClusterWidth = "0px";
   chartSize: string;                                                   // It is use to store graph width on change of layout widyh.
+  clusterCommentsList = [] ;                                   // it is used to send cluster data
+  clusterComments: string;
   bubbleChartProperty = {
     "showLegend": true,
     "showLabels": true,
@@ -89,33 +93,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       "textclass": "text-muted"
     }
   ];
-  clusterTagList = [
-    {
-      "value": "BUILD ERROR",
-      "displayValue": "Build Error",
-      "textclass": "text-danger"
-    },
-    {
-      "value": "INFRA ERROR",
-      "displayValue": "Infra Error",
-      "textclass": "text-error"
-    },
-    {
-      "value": "BUILD WARNING",
-      "displayValue": "Build Warning",
-      "textclass": "text-warning"
-    },
-    {
-      "value": "INFRA WARNING",
-      "displayValue": "Infra Warning",
-      "textclass": "text-warning"
-    },
-    {
-      "value": "UNCLASSIFIED",
-      "displayValue": "UnClassified",
-      "textclass": "text-muted"
-    }
-  ];
+  clusterTagList = [];
   classifiedLogsList = [];
   logTemplate = "";
   selectedClusterInfo: any;
@@ -288,9 +266,37 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.clusterId = null;
     this.eventTab = 'unexpected';
     this.eventTabLabeledBy = 'unexpected-tab';
+    this.clusterCommentsList = [];
     this.store.dispatch(LogAnalysisAction.loadLogResults({ canaryId: this.canaryId, serviceId: this.serviceId }));
     this.store.select(fromFeature.selectLogAnalysisState).subscribe(
       (resData) => {
+        if(this.fetchLogTopics != null){
+        this.fetchLogTopics = resData.fetchLogTopics;        
+        }
+        //Below is the sample data of how the fetchlogTopics and Cluster Tags will come from backend
+        // else{
+        //   this.fetchLogTopics = {
+        //     clusterTopics: [
+        //       {
+        //         "string": "sent postmaster request for messageid variablexml",
+        //         "tag": "INFRA ERROR"
+        //       },
+        //       {
+        //         "string": "opened connection variablelist to tst mongo",
+        //         "tag": "BUILD ERROR"
+        //       }
+        //     ],
+        //     clusterTags: [
+        //       "BUILD ERROR",
+        //       "INFRA ERROR",
+        //       "UNCLASSIFIED"
+        //     ]
+        //   }
+        // }
+        if (this.fetchLogTopics != null) {
+          this.clusterTagList = this.fetchLogTopics.clusterTags;
+        }
+        
         if (resData.logsResults !== null) {
           this.logAnalysisResults = resData.logsResults;
           this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
@@ -384,6 +390,11 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
               }
             ];
           }
+
+          // fetching comments for each logs
+          this.logAnalysisData.clusters.forEach( (item) => {
+            this.clusterCommentsList.push(item.clusterTagInfo.comments);
+          });     
 
           if (this.logAnalysisResults.scores) {
             this.logSensitivityScores = [];
@@ -480,27 +491,39 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.comments=""
   };
 
-
+//function to  update cluster Comments
+  saveClusterTagComments() {
+    var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.logId && x.type === "topic");
+    this.classifiedLogsList[idValue].comment = this.clusterComments;
+    this.clusterComments = ""
+  };
 
   //function calling when cluster tag value changes
-  changeClusterTag(e, log) {
-    console.log(log);
+  changeClusterTag(e, log, value, clusterTag) {
+    // console.log(e, log, value);
     //this.selectedClusterInfo = log;
+
+if(clusterTag == undefined || clusterTag == null){
+  clusterTag = "";
+}
     // log.isClassified = true;
     var clusterTagChangeObj: any = {};
     clusterTagChangeObj = {
       "type": "tag",
-      "tag": log.clusterTagInfo.tag,
+      "tag": value,
+      // "tag": clusterTagData,
       "cluster": log.clusterTemplate,
       "logId": log.id,
-      "comment": (log.clusterTagInfo.comments == "" || log.clusterTagInfo.comments == undefined) == true ? "" : log.clusterTagInfo.comments,
+      // "comment": (log.clusterTagInfo.comments == "" || log.clusterTagInfo.comments == null) == true ? "" : log.clusterTagInfo.comments,
+      "comment": clusterTag,
       "version": log.version,
-      "existingTag": log.originalClusterTagInfo.tag,
+      "existingTag": log.clusterTagInfo.tag,
       "clusterIdHash": log.clusterTagInfo.clusterIdHash
     }
 
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === clusterTagChangeObj.logId);
     if (idValue != -1) {
+      this.classifiedLogsList[idValue].comment = clusterTag;
       if (this.classifiedLogsList[idValue].type == "tag") {
         this.classifiedLogsList.splice(idValue, 1);
       }
@@ -632,6 +655,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       "feedbackErrorTopics": this.classifiedLogsList,
       "sensitivity": this.selectedSensitivity
     };
+    console.log("Post Data to Rerun: ", postDataToRerun);
+    
     this.rerunResponse = {};
     this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
   }
