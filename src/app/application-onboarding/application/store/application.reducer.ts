@@ -21,6 +21,8 @@ export interface State {
     callDockerImageDataAPI: boolean;
     userGropsData: string[];
     userGroupsPermissions: [];
+    initalDataLoaded: [];
+
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -62,6 +64,7 @@ export const initialState: State = {
     callDockerImageDataAPI: true,
     userGropsData: null,
     userGroupsPermissions: null,
+    initalDataLoaded: [],
     logtemplate: [],
     logAccountsData: null,
     callGetLogAccountsAPI: true,
@@ -71,7 +74,6 @@ export const initialState: State = {
     logClusterTags: null,
     logDataSources: null,
     logDataSourcesLoading: false,
-
     metrictemplate:[],
     customDSAccounts : null,
     datasource : null,
@@ -90,7 +92,7 @@ export function ApplicationReducer(
             (state, action) => ({
                 ...state,
                 editMode:false,
-                parentPage: action.page
+                parentPage: action.page,
             })
         ),
         on(ApplicationAction.fetchPipeline,
@@ -224,10 +226,7 @@ export function ApplicationReducer(
                 logtemplate: state.logtemplate.concat({ ...action.logTemplateData })
             })
         ),
-
-
-         // ### log Template creation logic starts
-         on(ApplicationAction.loadMonitoringAccountName,
+        on(ApplicationAction.loadMonitoringAccountName,
             (state,action) => ({
                 ...state,
                 callGetLogAccountsAPI: false

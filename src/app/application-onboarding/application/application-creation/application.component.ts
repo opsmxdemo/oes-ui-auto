@@ -152,7 +152,6 @@ export class CreateApplicationComponent implements OnInit {
                       pipelineArray.push(
                         new FormGroup({
                           pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
-                          //cloudAccount: new FormControl({ value: '', disabled: true }),
                           dockerImageName: new FormGroup({
                             accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
                             imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
@@ -257,9 +256,6 @@ export class CreateApplicationComponent implements OnInit {
         if (response.pipelineData !== null) {
           this.pipelineExists = response.pipelineData;
         }
-        // if (response.cloudAccountExist !== null) {
-        //   this.cloudAccountExist = response.cloudAccountExist;
-        // }
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
         }
@@ -381,7 +377,6 @@ export class CreateApplicationComponent implements OnInit {
               pipelines: new FormArray([
                 new FormGroup({
                   pipelinetemplate: new FormControl('', Validators.required),
-                  //cloudAccount: new FormControl(''),
                   dockerImageName: new FormGroup({
                     accountName: new FormControl('', Validators.required),
                     imageName: new FormControl('', Validators.required)
@@ -407,7 +402,6 @@ export class CreateApplicationComponent implements OnInit {
               pipelines: new FormArray([
                 new FormGroup({
                   pipelinetemplate: new FormControl('', Validators.required),
-                  //cloudAccount: new FormControl(''),
                   dockerImageName: new FormGroup({
                     accountName: new FormControl('', Validators.required),
                     imageName: new FormControl('', Validators.required)
@@ -657,17 +651,6 @@ export class CreateApplicationComponent implements OnInit {
      // Update dockerImageDropdownData array
      this.dockerImageDropdownData.splice(index, 1);
   }
-
-  //Below function is execute on change of cloudAccount array .
-  // CloudAccountConfigure(service_index: number, pipeline_parameter_index: number, selectedCloudAccount: string) {
-  //   let CloudData = null;
-  //   for (const cloudAccountArr in this.cloudAccountExist) {
-  //     if (this.cloudAccountExist[cloudAccountArr].name === selectedCloudAccount) {
-  //       CloudData = this.cloudAccountExist[cloudAccountArr];
-  //     }
-  //   }
-  //   return CloudData;
-  // }
   
   //valid all form data if something is left
   validForms() {

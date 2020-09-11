@@ -225,7 +225,7 @@ export class ApplicationEffect {
             ofType(ApplicationAction.loadAppList),
             withLatestFrom(this.appStore.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'platformservice/v1/applications').pipe(
+                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'platformservice/v1/users/'+authState.user+'/applications?permissionId=read').pipe(
                     map(resdata => {
                         return ApplicationAction.fetchAppList({ Applist: resdata });
                     }),
