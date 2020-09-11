@@ -44,7 +44,7 @@
                              <label>APM Monitoring Provider</label>
                              <select class="form-control" (change)="onChangeDatasource($event.target.value,'apm')">
                               <option value="" [disabled]="true">Select</option>
-                              <ng-container *ngFor="let datasource of autoDatasources">
+                              <ng-container *ngFor="let datasource of autoDatasources; let i=index">
                               <option *ngIf="datasource.metricTypes[0] == 'apm' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
                                 {{datasource.displayName}}</option>
                               </ng-container>
@@ -60,18 +60,22 @@
                            <div class="form-group">
                             <label>Select {{selectedAPMDataSource}} Accounts</label>
                             <select class="form-control" (change)="onChangeDSAccount($event.target.value,'apm')">
-                              <option value="" [disabled]="true">Select</option>                            
-                              <option *ngFor="let dsaccount of APMDSAccounts" value="{{dsaccount.name}}"  >
-                                {{dsaccount.name}}</option>                           
+                              <option value="" [disabled]="true">Select</option>                               
+                                <option *ngFor="let dsaccount of APMDSAccounts; let i=index" value="{{dsaccount.name}}" >
+                                  {{dsaccount.name}}</option>                                      
                             </select>                          
                           </div>
                            <!-- /.form-group -->
 
                            <div class="form-group">
-                             <label>Select Newrelic Application</label>
-                             <select class="form-control">
-                               <option>canary-autopilot</option>
-                             </select>
+                             <label>Select {{selectedAPMDataSource}} Application</label> 
+                             <select class="form-control" (change)="onChangeAccountForDS($event.target.value,'apm')">
+                              <option value="" [disabled]="true">Select</option> 
+                              <ng-container *ngFor="let dsapplication of APMApplicationForAccounts">
+                                <option value="{{dsapplication}}" >
+                                  {{dsapplication}}</option>
+                              </ng-container>      
+                            </select>
                            </div>
                            <!-- /.form-group -->
                          </div>
@@ -84,9 +88,10 @@
 
                        <div class="row">
                          <div class="col-10">
+                           <form [formGroup]="apmcookbookForm">
                            <div class="form-group">
                              <label>API Selection</label>
-                             <table class="table table-outline">
+                             <table class="table table-outline" formArrayName="cookbooklist">
                                <thead>
                                  <tr>
                                    <th>
@@ -97,19 +102,19 @@
                                    </th>
                                  </tr>
                                </thead>
-                               <tbody>
-                                
-                                 <tr>
-                                   <td>
-                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" checked id="selectItem7">
-                                       <label class="custom-control-label" for="selectItem7">/SpringController/logs/updateFeedbackLogTemplate (POST)</label>
-                                     </div>
-                                   </td>
-                                 </tr>
+                               <tbody>                                
+                                <tr *ngFor="let apmgroup of apmcookbookForm.value.cookbooklist ; let i=index;" >
+                                  <td [formGroupName]=i>
+                                    <div class="custom-control custom-checkbox">
+                                      <input type="checkbox" class="custom-control-input" [checked]="apmgroup.isSelectedToSave" id={{apmgroup.group}} >
+                                      <label class="custom-control-label" for={{apmgroup.group}}>{{apmgroup.group}}</label>
+                                    </div>
+                                  </td>
+                                </tr>
                                </tbody>
                              </table>
                            </div>
+                          </form>
                            <!-- /.form-group -->
                          </div>
                          <!-- /.col-6 -->
@@ -127,25 +132,36 @@
                   <div class="multisteps-form__content">
                      <div class="px-4 py-3">
                        <div class="text-divider pt-0">
-                         <h4>APM Metrics</h4>
+                         <h4>INFRA Metrics</h4>
                        </div>
 
                        <div class="row">
                          <div class="col-6">
                            <div class="form-group">
-                             <label>APM Monitoring Provider <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="images/help_icon.png" alt="icon" /></span></label>
-                             <select name="webmenu" id="platform3">
+                             <label>INFRA Monitoring Provider <span data-toggle="tooltip" data-placement="right" title="Select Infrastructure monitoring provider"><img src="assets/images/help_icon.png" alt="icon" /></span></label>                            
+                             <select class="form-control" (change)="onChangeDatasource($event.target.value,'infra')">
+                              <option value="" [disabled]="true">Select</option>
+                              <ng-container *ngFor="let datasource of autoDatasources">
+                              <option *ngIf="datasource.metricTypes[0] == 'infra' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
+                                {{datasource.displayName}}</option>
+                              </ng-container>
+                            </select>
+                             <!-- <select name="webmenu" id="platform3">
                                <option value="" title="images/promethics.png">New Relic</option>
                                <option value="" title="images/kubarnates.png">Kubernates</option>
                                <option value="" title="images/gcp-icon.png">GCP</option>
-                             </select>
+                             </select> -->
                            </div>
                            <!-- /.form-group -->
                            <div class="form-group">
-                             <label>Infrastructure Account <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="images/help_icon.png" alt="icon" /></span></label>
-                             <select class="form-control">
-                               <option>Newrelic-DS-Demo</option>
-                             </select>
+                             <label>Infrastructure Account <span data-toggle="tooltip" data-placement="right" title="Infrastructure accounts"><img src="assets/images/help_icon.png" alt="icon" /></span></label>                             
+                            <select class="form-control" (change)="onChangeDSAccount($event.target.value,'infra')" formControlName="applicationName">
+                              <option value="" [disabled]="true">Select</option> 
+                              <ng-container *ngFor="let dsaccount of InfraDSAccounts">
+                                <option value="{{dsaccount.name}}" >
+                                  {{dsaccount.name}}</option>
+                              </ng-container>      
+                            </select>                             
                            </div>
                            <!-- /.form-group -->
                          </div>
@@ -157,9 +173,10 @@
 
                        <div class="row">
                          <div class="col-6">
+                           <form [formGroup]="infracookbookForm">
                            <div class="form-group">
                              <label>Infrastructure metric Groups</label>
-                             <table class="table table-outline">
+                             <table class="table table-outline" formArrayName="cookbooklist">
                                <thead>
                                  <tr>
                                    <th>
@@ -171,41 +188,19 @@
                                  </tr>
                                </thead>
                                <tbody>
-                                 <tr>
-                                   <td>
+                                 <tr *ngFor="let group of infracookbookForm.value.cookbooklist; let i=index">
+                                   <td [formGroupName]=i>
                                      <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" checked id="in_selectItem1">
-                                       <label class="custom-control-label" for="in_selectItem1">MEMORY GROUP</label>
+                                       <input type="checkbox" class="custom-control-input" [checked]="group.isSelectedToSave" id={{group.group}} >
+                                       <label class="custom-control-label" for={{group.group}}>{{group.group}}</label>
                                      </div>
                                    </td>
                                  </tr>
-                                 <tr>
-                                   <td>
-                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" id="in_selectItem2">
-                                       <label class="custom-control-label" for="in_selectItem2">IO KPI</label>
-                                     </div>
-                                   </td>
-                                 </tr>
-                                 <tr>
-                                   <td>
-                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" id="in_selectItem3">
-                                       <label class="custom-control-label" for="in_selectItem3">COMPUTE KPI</label>
-                                     </div>
-                                   </td>
-                                 </tr>
-                                 <tr>
-                                   <td>
-                                     <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" id="selectItem4">
-                                       <label class="custom-control-label" for="selectItem4">NETWORK GROUP</label>
-                                     </div>
-                                   </td>
-                                 </tr>
+                                 
                                </tbody>
                              </table>
                            </div>
+                          </form>
                            <!-- /.form-group -->
                          </div>
                          <!-- /.col-6 -->
@@ -271,165 +266,134 @@
                      <div class="row">
                        <div class="col-12">
                          <div class="form-group">
-                           <label>APM</label>
-                           
+                           <!-- <label>APM</label> -->
                            <div class="custom-collapse">
-                             <a class="btn btn-default" data-toggle="collapse" href="#apmCollapse" role="button" aria-expanded="false" aria-controls="apmCollapse">
-                               <i class="fas fa-caret-right"></i> APM
-                             </a>
-                             <div class="collapse" id="apmCollapse">
-                               <div class="collapse-child">
-                                 <table class="table mb-0">
-                                   <tbody>
-                                     <tr>
+                            <a class="btn btn-default" data-toggle="collapse" href="#apmCollapse" role="button" aria-expanded="false" aria-controls="apmCollapse">
+                              <i class="fas fa-caret-right"></i> APM
+                            </a>
+                             <form [formGroup]="apmcookbookForm">
+                            <div class="collapse" id="apmCollapse">
+                              <div class="collapse-child">
+                                <table class="table mb-0" formArrayName="cookbooklist">
+                                  <tbody>
+                                   <ng-container *ngFor="let cookbook of apmcookbookForm.value.cookbooklist; let i=index"> 
+                                     <tr [formGroupName]="i">
                                        <td>
-                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
-                                       </td>
-                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
-                                     </tr>
-                                     <tr>
-                                       <td>
-                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
-                                       </td>
-                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
-                                     </tr>
-                                     <tr>
-                                       <td>
-                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
-                                       </td>
-                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
-                                     </tr>
-                                     <tr>
-                                       <td>
-                                         <i class="fas fa-caret-right"></i> /SpringController/canaries/getActiveCanaries (GET)
-                                       </td>
-                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
-                                     </tr>
-                                     <tr>
-                                       <td>
-                                         <i class="fas fa-caret-down"></i> /SpringController/canaries/getActiveCanaries (GET)
-                                       </td>
-                                       <td><input type="text" class="btn btn-default" value="0" autofocus="true"></td>
-                                     </tr>
-                                     <tr>
-                                       <td colspan="2">
-                                         <table class="table-sm">
-                                           <tr>
-                                             <td><input type="text" value="requests_per_minute"></td>
-                                             <td>
-                                               <select>
-                                                 <option>Avg</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <select>
-                                                 <option>rpm</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <input type="text" value="Label" style="width: 90px;" />
-                                             </td>
-                                             <td>
-                                               <div class="btn-group">
-                                                 <input type="text" class="btn btn-input" value="0" />
-                                                 <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
-                                                 <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
-                                               </div>
-                                             </td>
-                                             <td>
-                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                             </td>
-                                           </tr>
-                                           <tr>
-                                             <td><input type="text" value="requests_per_minute"></td>
-                                             <td>
-                                               <select>
-                                                 <option>Avg</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <select>
-                                                 <option>rpm</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <input type="text" value="Label" style="width: 90px;" />
-                                             </td>
-                                             <td>
-                                               <div class="btn-group">
-                                                 <input type="text" class="btn btn-input" value="0" />
-                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
-                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
-                                               </div>
-                                             </td>
-                                             <td>
-                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                             </td>
-                                           </tr>
-                                           <tr>
-                                             <td><input type="text" value="requests_per_minute"></td>
-                                             <td>
-                                               <select>
-                                                 <option>Avg</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <select>
-                                                 <option>throughput</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <input type="text" value="Label" style="width: 90px;" />
-                                             </td>
-                                             <td>
-                                               <div class="btn-group">
-                                                 <input type="text" class="btn btn-input" value="0" />
-                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
-                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
-                                               </div>
-                                             </td>
-                                             <td>
-                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                             </td>
-                                           </tr>
-                                           <tr>
-                                             <td><input type="text" value="requests_per_minute"></td>
-                                             <td>
-                                               <select>
-                                                 <option>Avg</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <select>
-                                                 <option>rpm</option>
-                                               </select>
-                                             </td>
-                                             <td>
-                                               <input type="text" value="Label" style="width: 90px;" />
-                                             </td>
-                                             <td>
-                                               <div class="btn-group">
-                                                 <input type="text" class="btn btn-input" value="0" />
-                                                 <button type="button" class="btn btn-toggle btn-C text-danger">C</button>
-                                                 <button type="button" class="btn btn-toggle btn-W text-warning">W</button>
-                                               </div>
-                                             </td>
-                                             <td>
-                                               <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                             </td>
-                                           </tr>
+                                         <i class="fas fa-caret-down"></i> <input type="text" formControlName="group" value="{{cookbook.group}}">
+                                         <!-- <input type="text" class="btn btn-default" value="0" autofocus="true" formControlName="averageWeight"> -->
+                                         <table class="table-sm" formArrayName="metrics" >
+                                           <tbody>
+                                             <ng-container *ngFor="let metric of cookbook.metrics; let j=index">
+                                             <tr [formGroupName]="j" >
+                                               <td>
+                                                 <input type="text" value="{{metric.name}}" formControlName="name">
+                                               </td>
+                                               <td>
+                                                 <select formControlName="aggregator">
+                                                   <option>{{metric.aggregator}}</option>
+                                                 </select>
+                                               </td>
+                                               <td>
+                                                 <select formControlName="displayUnit">
+                                                   <option>{{metric.displayUnit}}</option>
+                                                 </select>
+                                               </td>
+                                               <td>
+                                                 <input type="text" value="{{metric.label}}" style="width: 90px;" formControlName="label"/>
+                                               </td>
+                                               <td>
+                                                 <div class="btn-group">
+                                                   <!-- <input type="text" class="btn btn-input" value="0" /> -->
+                                                   <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
+                                                   <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
+                                                 </div>
+                                               </td>
+                                               <td>
+                                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a> -->
+                                               </td>
+                                             </tr>
+                                           </ng-container>
+                                           </tbody>
                                          </table>
                                        </td>
                                      </tr>
+
+                                    
+                                   </ng-container>                                 
+                                    
+                                  </tbody>
+                                </table>
+                                
+                              </div>
+                             
+                            </div>
+                           </form>
+                          </div>
+                           
+                           <div class="custom-collapse">
+                             <a class="btn btn-default" data-toggle="collapse" href="#infraCollapse" role="button" aria-expanded="false" aria-controls="infraCollapse">
+                               <i class="fas fa-caret-right"></i> INFRA
+                             </a>
+                              <form [formGroup]="infracookbookForm">
+                             <div class="collapse" id="infraCollapse">
+                               <div class="collapse-child">
+                                 <table class="table mb-0" formArrayName="cookbooklist">
+                                   <tbody>
+                                    <ng-container *ngFor="let cookbook of infracookbookForm.value.cookbooklist; let i=index"> 
+                                      <tr [formGroupName]="i">
+                                        <td>
+                                          <i class="fas fa-caret-down"></i> <input type="text" formControlName="group" value="{{cookbook.group}}">
+                                          <!-- <input type="text" class="btn btn-default" value="0" autofocus="true" formControlName="averageWeight"> -->
+                                          <table class="table-sm" formArrayName="metrics" >
+                                            <tbody>
+                                              <ng-container *ngFor="let metric of cookbook.metrics; let j=index">
+                                              <tr [formGroupName]="j" >
+                                                <td>
+                                                  <input type="text" value="{{metric.name}}" formControlName="name">
+                                                </td>
+                                                <td>
+                                                  <select formControlName="aggregator">
+                                                    <option>{{metric.aggregator}}</option>
+                                                  </select>
+                                                </td>
+                                                <td>
+                                                  <select formControlName="displayUnit">
+                                                    <option>{{metric.displayUnit}}</option>
+                                                  </select>
+                                                </td>
+                                                <td>
+                                                  <input type="text" value="{{metric.label}}" style="width: 90px;" formControlName="label"/>
+                                                </td>
+                                                <td>
+                                                  <div class="btn-group">
+                                                    <!-- <input type="text" class="btn btn-input" value="0" /> -->
+                                                    <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
+                                                    <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
+                                                  </div>
+                                                </td>
+                                                <td>
+                                                  <!-- <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a> -->
+                                                </td>
+                                              </tr>
+                                            </ng-container>
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
+ 
+                                     
+                                    </ng-container>                                 
+                                     
                                    </tbody>
                                  </table>
-                                 <!-- /.table -->
+                                 
                                </div>
-                               <!-- /.collapse-child -->
+                              
                              </div>
+                            </form>
                            </div>
                            <!-- /.custom-collapse -->
-                           <div class="custom-collapse">
+                           <!-- <div class="custom-collapse">
                              <a class="btn btn-default" data-toggle="collapse" href="#loadCollapse" role="button" aria-expanded="false" aria-controls="loadCollapse">
                                <i class="fas fa-caret-right"></i> LOAD
                              </a>
@@ -579,11 +543,11 @@
                                      </tr>
                                    </tbody>
                                  </table>
-                                 <!-- /.table -->
+                                 
                                </div>
-                               <!-- /.collapse-child -->
+                              
                              </div>
-                           </div>
+                           </div> -->
                            <!-- /.custom-collapse -->
                          </div>
                          <!-- /.form-group -->

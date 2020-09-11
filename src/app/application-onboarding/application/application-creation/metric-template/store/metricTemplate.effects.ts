@@ -107,7 +107,7 @@ export class MetricTemplateEffect {
     this.actions$.pipe(
         ofType(ApplicationAction.fetchApplicationForAPMAccounts),
         switchMap((action) => {              
-            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getApplicationsOrServices?accountName='+ action.account+ '&sourceType='+action.sourceType).pipe(
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getApplicationsOrServices?datasourceType='+action.sourceType+'&name='+action.account).pipe(
                 map(resdata => {
                     return ApplicationAction.loadApplicationForAPMAccounts({ APMApplicationForAccounts: resdata });
                 }),
@@ -117,9 +117,45 @@ export class MetricTemplateEffect {
                 })
             );
         })
-    )
+        )
     )
 
- //autopilot/canaries/getApplicationsOrServices?accountName=TestMeera-Newrelic&sourceType=newrelic
+     
+    //Below effect is use for fetch generate cookbook
+    fetchInfraGenerateCookbook = createEffect(() =>        
+    this.actions$.pipe(
+        ofType(ApplicationAction.fetchInfraGenerateCookbook),
+        switchMap((action) => {              
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/generatecookbook?accountName='+ 
+                action.account+ '&applicationName='+action.applicationName+ '&metricType='+action.metricType+ '&sourceType='+action.sourceType+ '&templateName='+action.templateName).pipe(
+                map(resdata => {
+                    return ApplicationAction.loadInfraGenerateCookbook({ INFRACookbook: resdata });
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Server Error !!', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+        )
+    )
 
+     //Below effect is use for fetch generate cookbook
+     fetchAPMGenerateCookbook = createEffect(() =>        
+     this.actions$.pipe(
+         ofType(ApplicationAction.fetchAPMGenerateCookbook),
+         switchMap((action) => {              
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/generatecookbook?accountName='+ 
+                 action.account+ '&applicationName='+action.applicationName+ '&metricType='+action.metricType+ '&sourceType='+action.sourceType+ '&templateName='+action.templateName).pipe(
+                 map(resdata => {
+                     return ApplicationAction.loadAPMGenerateCookbook({ APMCookbook: resdata });
+                 }),
+                 catchError(errorRes => {
+                     //this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+         )
+     )
 }
