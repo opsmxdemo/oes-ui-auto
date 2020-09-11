@@ -22,6 +22,7 @@ export interface State {
     userGropsData: string[];
     userGroupsPermissions: [];
     initalDataLoaded: [];
+    applicationId:string;
 
 
     // Application List variables
@@ -65,6 +66,7 @@ export const initialState: State = {
     userGropsData: null,
     userGroupsPermissions: null,
     initalDataLoaded: [],
+    applicationId:null,
     logtemplate: [],
     logAccountsData: null,
     callGetLogAccountsAPI: true,
@@ -126,7 +128,8 @@ export function ApplicationReducer(
                 ...state,
                 editMode:action.editMode,
                 parentPage: action.page,
-                applicationLoading: true
+                applicationLoading: true,
+                applicationId:null
             })    
         ),
         
@@ -134,7 +137,8 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 applicationData:action.appData,
-                applicationLoading: false
+                applicationLoading: false,
+                applicationId:action.applicationId
             })
         ),
         on(ApplicationAction.disabledEditMode,

@@ -8,7 +8,7 @@ import { ApplicationList } from 'src/app/models/applicationOnboarding/applicatio
 export const loadApp = createAction('[Application] LoadApp' , props<{page:string}>());
 export const fetchPipeline = createAction('[Application] FetchPipeline', props<{ pipelineData: Pipeline }>());
 export const errorOccured = createAction('[Application] ErrorOccured', props<{errorMessage:string}>());
-export const fetchAppData = createAction('[Application] FetchAppData', props<{appData:CreateApplication}>())
+export const fetchAppData = createAction('[Application] FetchAppData', props<{appData:CreateApplication,applicationId:string}>())
 export const createApplication = createAction('[Application] CreateApplication', props<{appData:CreateApplication}>())
 export const dataSaved = createAction('[Application] DataSaved', props<{applicationName:string,dataType:string}>());
 export const fetchCloudAccount = createAction('[Application] FetchCloudAccount', props<{cloudAccount:CloudAccount}>());
@@ -19,8 +19,8 @@ export const fetchUserGrops = createAction('[Application] FetchUserGrops', props
 export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
 
 // Below action is related to edit application 
-export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());
-export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication,applicationId:number}>());
+export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string,applicationId:string}>());
+export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication}>());
 export const disabledEditMode = createAction('[Application] DisabledEditMode');
 
 // Below action is related to application list
