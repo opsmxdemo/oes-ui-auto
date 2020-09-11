@@ -37,72 +37,7 @@ export class DeploymentVerificationComponent implements OnInit {
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
   public editorOptions: JsonEditorOptions;
   // public data: any = null;
-  data = {
-  "application": "applicationdemo1",
-  "isJsonResponse": true,
-  "canaryConfig": {
-    "canaryAnalysisConfig": {
-      "beginCanaryAnalysisAfterMins": "0",
-      "canaryAnalysisIntervalMins": "6",
-      "notificationHours": []
-    },
-    "canaryHealthCheckHandler": {
-      "minimumCanaryResultScore": "60",
-      "minimumMetricsResultScore": "95"
-    },
-    "canarySuccessCriteria": {
-      "canaryResultScore": "80",
-      "successMetricsResultScore": "80"
-    },
-    "combinedCanaryResultStrategy": "AGGREGATE",
-    "lifetimeHours": "0.1",
-    "name": "user2"
-  },
-  "canaryDeployments": [
-    {
-      "baseline": {
-         
-        "log": {
-          "CasService": {
-					"container_name": "baseapp_rest_1"
-				},
-				"PetService": {
-					 "container_name": "baseapp_rest_1"
-				}
-        },
-			"metric": {
-				"CasService": {
-					"variable1": "service:baseapp"
-				},
-				"PetService": {
-					"variable1": "service:baseapp"
-				}
-			}
-      },
-      "baselineStartTimeMs": 1595516400000,
-      "canaryStartTimeMs": 1595516400000,
-      "canary": {
-        
-        "log": {
-          "CasService": {
-					 "container_name": "canaryapp_rest_1"
-				},
-				"PetService": {
-					 "container_name": "canaryapp_rest_1"
-				}
-        },
-			"metric": {
-				"CasService": {
-					"variable1": "service:canaryapp"
-				},
-				"PetService": {
-					"variable1": "service:canaryapp"
-				}
-			}
-      }
-    }
-  ]
-}
+  data = {}
 
   size = 5343454545;
   applicationForm: FormGroup;
