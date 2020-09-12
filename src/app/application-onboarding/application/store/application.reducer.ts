@@ -230,6 +230,12 @@ export function ApplicationReducer(
                 logtemplate: state.logtemplate.concat({ ...action.logTemplateData })
             })
         ),
+        on(ApplicationAction.updatedLogTemplate,
+            (state,action) => ({
+                ...state,
+                logtemplate: state.logtemplate.map((logtemplate, index) => index === action.index ? action.logTemplateData : logtemplate)
+            })
+        ),
         on(ApplicationAction.loadMonitoringAccountName,
             (state,action) => ({
                 ...state,
@@ -290,6 +296,12 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 metrictemplate: state.metrictemplate.concat({ ...action.metricTemplateData })
+            })
+        ),
+        on(ApplicationAction.updatedMetricTemplate,
+            (state,action) => ({
+                ...state,
+                metrictemplate: state.metrictemplate.map((metrictemplate, index) => index === action.index ? action.metricTemplateData : metrictemplate)
             })
         ),
         on(ApplicationAction.fetchAccountForCustomDataSource,
