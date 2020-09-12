@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { Store } from '@ngrx/store';
 import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
@@ -7,6 +7,7 @@ import { CreateLogTemplate } from 'src/app/models/applicationOnboarding/createAp
 import * as fromFeature from '../../../store/feature.reducer';
 import * as ApplicationActions from '../../store/application.actions';
 import * as DataSourceActions from '../../../data-source/store/data-source.actions';
+import { Input } from '@angular/core';
 
 
 @Component({
@@ -14,10 +15,14 @@ import * as DataSourceActions from '../../../data-source/store/data-source.actio
   templateUrl: './log-template.component.html',
   styleUrls: ['./log-template.component.less']
 })
-export class LogTemplateComponent implements OnInit {
+export class LogTemplateComponent implements OnInit, OnChanges {
+
   @ViewChild('scrollLogTopics', { read: ElementRef }) public scrollLogTopics: ElementRef;
   @ViewChild('scrollLogTags', { read: ElementRef }) public scrollLogTags: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
+  @Input() templateData: any;
+  @Input() templateIndex: number;
+  @Input() isEditMode: boolean;
 
 
   public editorOptions: JsonEditorOptions;
@@ -28,7 +33,7 @@ export class LogTemplateComponent implements OnInit {
   createLogForm: FormGroup;                      // log template create form
   logTopicsForm: FormGroup;                      // log topics create form
   logForm: CreateLogTemplate = null;             // It contain data of all 2 forms which send to backend after successful submission.
-  dataSourceData: any;                        // It is use to store dataSource dropdown data.
+  dataSourceData: any;                           // It is use to store dataSource dropdown data.
   logAccountsList: string[];
     selectedDataSource: any;
     regFilterStatus: any;
@@ -43,6 +48,16 @@ export class LogTemplateComponent implements OnInit {
 
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
+
+  ngOnChanges(changes: SimpleChanges){
+    if(this.isEditMode && this.templateData !== null){
+      this.data = this.templateData;
+      this.selectedTab = 'logtemplate-editor';
+    }else{
+      this.selectedTab = 'logtemplate-form';
+      this.data = null;
+    }
+  }
 
   ngOnInit(): void {
 
@@ -75,7 +90,11 @@ export class LogTemplateComponent implements OnInit {
 
   // Below function is use to save log template data on click of save btn
   Submitlogdata(){
-    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
+    if(this.isEditMode){
+      this.store.dispatch(ApplicationActions.updatedLogTemplate({logTemplateData:this.logTemplateData,index:this.templateIndex}));
+    }else{
+      this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}));
+    }
     this.data = {};
   }
 
@@ -240,7 +259,8 @@ SubmitForm(){
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
    // Action to create the log template
-    
+   
+   
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
 
 }
