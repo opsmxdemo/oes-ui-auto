@@ -293,9 +293,6 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         //     ]
         //   }
         // }
-        if (this.fetchLogTopics != null) {
-          this.clusterTagList = this.fetchLogTopics.clusterTags;
-        }
         
         if (resData.logsResults !== null) {
           this.logAnalysisResults = resData.logsResults;
@@ -391,10 +388,14 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             ];
           }
 
-          // fetching comments for each logs
-          this.logAnalysisData.clusters.forEach( (item) => {
-            this.clusterCommentsList.push(item.clusterTagInfo.comments);
-          });     
+          if (this.fetchLogTopics != null) {
+            this.clusterTagList = this.fetchLogTopics.clusterTags;
+            // fetching comments for each logs
+            this.logAnalysisData.clusters.forEach((item) => {
+              this.clusterCommentsList.push(item.clusterTagInfo.comments);
+            });
+          }
+          
 
           if (this.logAnalysisResults.scores) {
             this.logSensitivityScores = [];
