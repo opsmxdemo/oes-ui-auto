@@ -202,7 +202,16 @@
                                   <option value="" [disabled]="true">Select</option>
                                   <option *ngFor="let logTemplate of logTemplateData" value="{{logTemplate.templateName}}">{{logTemplate.templateName}}</option>
                                 </select>
-                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Template" (click)="onAddTemplate(i,'log')"><a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link"><i class="fas fa-plus"></i></a></span>
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditTemplate(i,'log')">
+                                  <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                    <i class="fas fa-pencil-alt"></i>
+                                  </a>
+                                </span>
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Template" (click)="onAddTemplate(i,'log')">
+                                  <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                    <i class="fas fa-plus"></i>
+                                  </a>
+                                </span>
                               </div>
                             </div>
                             <div class="form-group mb-3 pl-5 text-muted">
@@ -212,7 +221,16 @@
                                   <option value="" [disabled]="true">Select</option>
                                   <option *ngFor="let metricTemplate of metricTemplateData" value="{{metricTemplate.templateName}}">{{metricTemplate.templateName}}</option>
                                 </select>
-                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="onAddTemplate(i,'metric')"><a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link"><i class="fas fa-plus"></i></a></span>
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditTemplate(i,'metric')">
+                                  <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                    <i class="fas fa-pencil-alt"></i>
+                                  </a>
+                                </span>
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="onAddTemplate(i,'metric')">
+                                  <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                    <i class="fas fa-plus"></i>
+                                  </a>
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -468,7 +486,7 @@
         </button>
       </div>
       <div class="modal-body p-0">
-        <app-log-template></app-log-template>
+        <app-log-template [isEditMode]="templateEditMode" [templateData]="editTemplateData" [templateIndex]="editTemplateIndex"></app-log-template>
       </div>
     </div>
   </div>
@@ -485,7 +503,7 @@
         </button>
       </div>
       <div class="modal-body p-0">
-        <app-metric-template></app-metric-template>
+        <app-metric-template [isEditMode]="templateEditMode" [templateData]="editTemplateData" [templateIndex]="editTemplateIndex"></app-metric-template>
       </div>
     </div>
   </div>
