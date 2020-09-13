@@ -85,26 +85,7 @@ export class ApplicationEffect {
             })
         )
     )
-
-    // Below effect is use for fetch cloudAccount dropdown data.
-    // fetchCloudAccount = createEffect(() =>
-    //     this.actions$.pipe(
-    //         ofType(OnboardingAction.loadApp, OnboardingAction.enableEditMode),
-    //         switchMap(() => {
-
-    //             return this.http.get<CloudAccount>(this.environment.config.endPointUrl + 'oes/appOnboarding/cloudAccounts').pipe(
-    //                 map(resdata => {
-    //                     return OnboardingAction.fetchCloudAccount({ cloudAccount: resdata['data'] })
-    //                 }),
-    //                 catchError(errorRes => {
-    //                     this.toastr.showError('Server Error !!', 'ERROR')
-    //                     return handleError(errorRes);
-    //                 })
-    //             );
-    //         })
-    //     )
-    // )
-
+   
     // Below effect is use for fetch userGroup dropdown data.
     fetchUserData = createEffect(() =>
         this.actions$.pipe(
@@ -168,10 +149,10 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>('../../../../assets/data/editApplication.json').pipe(
+                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/'+action.applicationId).pipe(
                     map(resdata => {
 
-                        return ApplicationAction.fetchAppData({ appData: resdata })
+                        return ApplicationAction.fetchAppData({ appData: resdata,applicationId: action.applicationId})
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Application Data: '+errorRes.error.error, 'ERROR')
@@ -204,8 +185,9 @@ export class ApplicationEffect {
     onUpdateExistApplicationData = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.updateApplication),
-            switchMap(action => {
-                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/'+action.applicationId, action.appData).pipe(
+            withLatestFrom(this.store.select(fromFeature.selectApplication)),
+            switchMap(([action,applicationState]) => {
+                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/'+applicationState.applicationId, action.appData).pipe(
                     map(resdata => {
                         return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'updateApplication'});
                     }),

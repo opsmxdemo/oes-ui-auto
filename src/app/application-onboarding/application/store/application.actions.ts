@@ -8,7 +8,7 @@ import { ApplicationList } from 'src/app/models/applicationOnboarding/applicatio
 export const loadApp = createAction('[Application] LoadApp' , props<{page:string}>());
 export const fetchPipeline = createAction('[Application] FetchPipeline', props<{ pipelineData: Pipeline }>());
 export const errorOccured = createAction('[Application] ErrorOccured', props<{errorMessage:string}>());
-export const fetchAppData = createAction('[Application] FetchAppData', props<{appData:CreateApplication}>())
+export const fetchAppData = createAction('[Application] FetchAppData', props<{appData:CreateApplication,applicationId:string}>())
 export const createApplication = createAction('[Application] CreateApplication', props<{appData:CreateApplication}>())
 export const dataSaved = createAction('[Application] DataSaved', props<{applicationName:string,dataType:string}>());
 export const fetchCloudAccount = createAction('[Application] FetchCloudAccount', props<{cloudAccount:CloudAccount}>());
@@ -19,8 +19,8 @@ export const fetchUserGrops = createAction('[Application] FetchUserGrops', props
 export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
 
 // Below action is related to edit application 
-export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string}>());
-export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication,applicationId:number}>());
+export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string,applicationId:string}>());
+export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication}>());
 export const disabledEditMode = createAction('[Application] DisabledEditMode');
 
 // Below action is related to application list
@@ -29,8 +29,9 @@ export const fetchAppList = createAction('[Application] FetchAppList', props<{Ap
 export const appDelete = createAction('[Application] AppDelete', props<{applicationName:string,index:number,id:number}>());
 export const appDeletedSuccessfully = createAction('[Application] AppDeletedSuccessfully', props<{index:number}>());
 
-// Below action is related to create log template 
+// Below action is related to create and edit log template 
 export const createdLogTemplate = createAction('[Application] CreatedLogTemplate', props<{logTemplateData:any}>());
+export const updatedLogTemplate = createAction('[Application] UpdatedLogTemplate', props<{logTemplateData:any,index:number}>());
 
 // Below action is related to log template creation
 export const loadSupportingDatasources = createAction('[Application] LoadSupportingDatasources');
@@ -45,6 +46,7 @@ export const fetchClusterTags = createAction('[Application] FetchClusterTags', p
 
 // Below action is related to create Metric template 
 export const createdMetricTemplate = createAction('[Application] CreatedMetricTemplate', props<{metricTemplateData:any}>());
+export const updatedMetricTemplate = createAction('[Application] UpdatedMetricTemplate', props<{metricTemplateData:any,index:number}>());
 export const fetchAccountForCustomDataSource = createAction('[Application] FetchAccountCustomForDataSource', props<{datasource:any}>());
 export const loadAccountForCustomDataSource = createAction('[Application] LoadAccountCustomForDataSource', props<{customDSAccounts:any}>());
 export const fetchAccountForAPMDataSource = createAction('[Application] FetchAccountAPMForDataSource', props<{datasource:any}>());

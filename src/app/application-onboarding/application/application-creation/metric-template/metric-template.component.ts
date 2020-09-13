@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import * as fromFeature from '../../../store/feature.reducer';
 import * as ApplicationActions from '../../store/application.actions';
@@ -11,9 +11,12 @@ import * as DataSourceActions from '../../../data-source/store/data-source.actio
   templateUrl: './metric-template.component.html',
   styleUrls: ['./metric-template.component.less']
 })
-export class MetricTemplateComponent implements OnInit {
+export class MetricTemplateComponent implements OnInit, OnChanges{
 
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
+  @Input() templateData: any;
+  @Input() templateIndex: number;
+  @Input() isEditMode: boolean;
 
   public editorOptions: JsonEditorOptions;
   public data: any = null;
@@ -46,6 +49,16 @@ export class MetricTemplateComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder,
     public store: Store<fromFeature.State>) { }
+
+  ngOnChanges(changes: SimpleChanges){
+    if(this.isEditMode && this.templateData !== null){
+      this.data = this.templateData;
+      this.selectedTab = 'metric-editor';
+    }else{
+      this.selectedTab = 'metric-apminfra';
+      this.data = null;
+    }
+  }
 
   ngOnInit(): void {
     this.editorOptions = new JsonEditorOptions()
@@ -183,7 +196,11 @@ export class MetricTemplateComponent implements OnInit {
 
   // Below function is use to save log template data on click of save btn
   Submitmetricdata(){
-    this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateData}));
+    if(this.isEditMode){
+      this.store.dispatch(ApplicationActions.updatedMetricTemplate({metricTemplateData:this.metricTemplateData,index:this.templateIndex}));
+    }else{
+      this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateData}));
+    }
     this.data = {};
   }
 

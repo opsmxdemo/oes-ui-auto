@@ -158,6 +158,7 @@ export class DataSourceComponent implements OnInit {
 
   // Below function is use to rectify type of datasource belong to onselect of datasource from list
   onselectDatasource(operationPerform,accountData,index){
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.accountBelongsTo = '';
     this.editMode = false
     this.supportedDatasources['oesDataSources'].forEach(oeslist => {
@@ -185,7 +186,6 @@ export class DataSourceComponent implements OnInit {
 
   // Below function is use to delete existiong account
   deleteAccount(account: any, index) {
-    $("[data-toggle='tooltip']").tooltip('hide');
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",

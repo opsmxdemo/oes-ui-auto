@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
@@ -53,6 +53,9 @@ export class CreateApplicationComponent implements OnInit {
   currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
   userGroupPermissions:Object[] = [];                             // It is use to store value of checkbox need to display in group section.
   editApplicationCounter:number = 0;                              // It is use to restrict reexecuting of edit application method.
+  editTemplateIndex = -1;                                         // It is use to store index value of template which user want to edit.
+  templateEditMode = false;                                       // It is use to store true while user want to edit template parameter.
+  editTemplateData = null;                                        // It is use to store data of template which user want to update.
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -333,6 +336,10 @@ export class CreateApplicationComponent implements OnInit {
           } else {
             resolve(null);
           }
+        },
+        // below contain remove when name check api is implemented
+        (error)=>{
+          resolve(null);
         }
       )
     });
@@ -435,11 +442,10 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is custom valiadator which is use to validate userGroup name is already selected or not. If already exist then it will return error
   usergroupExist(control: FormControl): {[s: string]: boolean} {
     if(control.value !== null){
-      let startingValue = control.value.split('');
       let counter = 0;
-      if(startingValue.length > 0){
+      if(+control.value > 0 && typeof(control.value) !== 'number'){
         this.groupPermissionForm.value.userGroups.forEach(groupName => {
-          if(this.groupProperties(true,groupName.userGroupId) === control.value){
+          if(+groupName.userGroupId === +control.value){
             counter++;
           }
         })
@@ -509,9 +515,17 @@ export class CreateApplicationComponent implements OnInit {
       const innerarrayControl = arrayControl.at(index).get(type) 
       if(this.userType.includes('AP')){
         if(type === 'logTemp'){
-          innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length-1].templateName);
+          if(this.templateEditMode){
+            innerarrayControl.patchValue(this.logTemplateData[this.editTemplateIndex].templateName);
+          }else{
+            innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length-1].templateName);
+          }
         }else{
-          innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length-1].templateName);
+          if(this.templateEditMode){
+            innerarrayControl.patchValue(this.metricTemplateData[this.editTemplateIndex].templateName);
+          }else{
+            innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length-1].templateName);
+          }
         }
       }
     }
@@ -664,10 +678,39 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is execute after click on add template btn.
   onAddTemplate(index,type){
     $("[data-toggle='tooltip']").tooltip('hide');
+    this.templateEditMode = false;
     if(type === "log"){
       this.currentLogTemplateIndex = index;
     }else{
       this.currentMetricTemplateIndex = index;
+    }
+  }
+
+  // Below function is execute after click on edit template btn.
+  onEditTemplate(index,type){
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.editTemplateIndex = -1;
+    this.templateEditMode = true;
+    this.currentLogTemplateIndex = -1;
+    this.currentMetricTemplateIndex = -1;
+    const serviceArrayControl = this.servicesForm.get('services') as FormArray;
+    const templatControl = serviceArrayControl.at(index);
+    if(type === "log"){
+      this.currentLogTemplateIndex = index;
+      this.logTemplateData.forEach((logdata,index)=>{
+        if(templatControl.value.logTemp === logdata.templateName){
+          this.editTemplateIndex = index;
+          this.editTemplateData = {...logdata};
+        }
+      })
+    }else{
+      this.currentMetricTemplateIndex = index;
+      this.metricTemplateData.forEach((metricData,index)=>{
+        if(templatControl.value.metricTemp === metricData.templateName){
+          this.editTemplateIndex = index;
+          this.editTemplateData = {...metricData};
+        }
+      })
     }
   }
 
@@ -738,9 +781,8 @@ export class CreateApplicationComponent implements OnInit {
         }
         
         //Below action is use to save created form in database
-        console.log("post data create application",JSON.stringify(this.mainForm));
         if(this.editMode){
-          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm,applicationId:this.appData.id}));
+          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
         }else{
           this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
         }
