@@ -103,6 +103,7 @@ export class DeploymentVerificationComponent implements OnInit {
     wizardView: boolean = true;
     manualTriggerData: any;
     selectedManualTriggerTab: string;
+    checkCanaryId: boolean = true;
 
   // App form end
 
@@ -136,10 +137,6 @@ export class DeploymentVerificationComponent implements OnInit {
         data: this.manualTriggerData,
       })
     );
-    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
-        (resData) => {
-          console.log("submitManualTriggerData", resData.manualTriggerResponse);
-        });
     // this.data = {};
   }
 
@@ -382,6 +379,11 @@ export class DeploymentVerificationComponent implements OnInit {
       this.store.dispatch(DeploymentAction.loadLatestRun());
       this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
+          if (resData.manualTriggerResponse !== null && this.checkCanaryId) {
+            this.latestCanaryCounter = 1;
+            this.counter = 1;
+            this.checkCanaryId =false;
+          }
           if (resData.canaryId !== null) {
             this.deployementLoading = resData.deployementLoading;
             if(this.latestCanaryCounter === 1){

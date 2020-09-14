@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as AuthAction from '../../auth/store/auth.actions';
 import { Router } from '@angular/router';
+import * as versionDetails from '../../../assets/data/versionDetails.json';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,8 @@ export class HeaderComponent implements OnInit {
   imgcolor: string = '#00796b';
   firstAlphabet: any;
   username: string;
+  versionDetails:any=versionDetails
+ 
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }
