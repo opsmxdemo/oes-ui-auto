@@ -180,7 +180,7 @@
                           <div class="form-group mb-3 pl-4 text-muted">
                             <label>Service Name</label>
                             <div class="d-flex  mr-4 align-items-center">
-                              <input type="text" class="form-control input_len" formControlName="serviceName" 
+                              <input type="text" class="form-control input_len" [readonly]="editMode" formControlName="serviceName" 
                               [ngClass]="servicesForm.get('services')['controls'][i].get('serviceName').invalid && servicesForm.get('services')['controls'][i].get('serviceName').touched ? 'is-invalid':''">
                               <a class="text-muted ml-3 formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete Service" 
                               (click)="deleteService(i)" *ngIf ="servicesForm.get('services')['controls'].length > 1 ? true : false">
