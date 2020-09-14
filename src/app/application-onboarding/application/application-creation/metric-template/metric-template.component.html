@@ -1,5 +1,5 @@
   <div class="pt-1">
-    <ul class="nav tab-lined nav-tabs {{isEditMode ? 'disabledTab':''}}" id="myTab" role="tablist" (click)="onClickTab($event)">
+    <ul class="nav tab-lined nav-tabs {{isEditMode ? 'disabledTab':''}}" id="myTab" role="tablist" (click)="onClickTab($event.target.id)">
       <li class="nav-item" >
         <a class="nav-link {{isEditMode ? '':'active'}}" id="metric-apminfra-tab" data-toggle="tab" role="tab" aria-controls="metric-apminfra" aria-selected="true">APM & INFRA</a>
       </li>
