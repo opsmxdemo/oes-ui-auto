@@ -137,7 +137,9 @@ export function DeploymentdReducer(
             })
         ), on(DeploymentActions.fetchManualTriggerResults,
             (state, action) => ({
-                ...state, manualTriggerResponse: action.manualTriggerResponse,
+                ...state, 
+                manualTriggerResponse: action.manualTriggerResponse,
+                canaryId: action.manualTriggerResponse.canaryId,
             })
         ),
         on(DeploymentActions.fetchcancelRunningCanaryStatus,
