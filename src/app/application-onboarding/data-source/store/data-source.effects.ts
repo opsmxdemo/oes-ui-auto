@@ -155,7 +155,7 @@ export class DataSourceEffect {
         this.actions$.pipe(
             ofType(DataSourceAction.updateOESDatasources),
             switchMap(action => {
-                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/updateAccount', action.UpdatedDataSource).pipe(
+                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/updateAccount/'+ action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(resdata['message'],'Success');
                         this.store.dispatch(DataSourceAction.loadDatasourceList());
