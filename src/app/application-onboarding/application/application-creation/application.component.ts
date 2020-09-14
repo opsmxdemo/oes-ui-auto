@@ -56,6 +56,7 @@ export class CreateApplicationComponent implements OnInit {
   editTemplateIndex = -1;                                         // It is use to store index value of template which user want to edit.
   templateEditMode = false;                                       // It is use to store true while user want to edit template parameter.
   editTemplateData = null;                                        // It is use to store data of template which user want to update.
+  apiLoadingError = false;                                        // It is use to show or hide component error message.
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -72,6 +73,10 @@ export class CreateApplicationComponent implements OnInit {
       (layoutRes) => {
         if(layoutRes.installationMode !== ''){
           this.userType = layoutRes.installationMode;
+          if(this.userType.includes('OES')){
+            //Dispatching action to load initial oes data to populate dropdown
+            this.store.dispatch(ApplicationActions.loadOESData());
+          }
         }
       }
     )
@@ -81,6 +86,25 @@ export class CreateApplicationComponent implements OnInit {
       (responseData) => {
         this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
+
+        if(responseData.initalOESDatacall === true && this.userType.includes('OES')){
+          let counter = 0;
+          if(responseData.initalOESDataLoaded.indexOf('calling') > -1){
+            this.apploading = true;
+          }else{
+            this.apploading = false;
+          }
+          responseData.initalOESDataLoaded.forEach(data=>{
+            if(data === 'error'){
+              counter++;
+            }
+          })
+          if(counter > 0){
+            this.apiLoadingError = true;
+          }else{
+            this.apiLoadingError = false;
+          }
+        }
         
         //checking is editMode enabled
         if (responseData.editMode && this.editApplicationCounter === 0) {

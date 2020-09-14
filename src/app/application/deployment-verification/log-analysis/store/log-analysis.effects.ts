@@ -55,7 +55,6 @@ fetchLogAnalysisResults = createEffect(() =>
                    return LogAnalysisActions.fetchLogsResults({logsResults:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!', 'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -72,7 +71,6 @@ fetchtimeAnalysisData = createEffect(() =>
                    return LogAnalysisActions.loadTimeAnalysisGraphData({logTimeAnalysisResults:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!', 'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -90,7 +88,6 @@ fetchEventLogsResults = createEffect(() =>
                    return LogAnalysisActions.fetchEventLogsResults({logsEventResults:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!', 'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -136,7 +133,6 @@ fetchReclassificationHistory = createEffect(() =>
                    return LogAnalysisActions.loadReclassificationHistoryData({reclassificationHistoryResults:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('Server Error !!', 'ERROR')
                     return handleError(errorRes);
                 })
             );

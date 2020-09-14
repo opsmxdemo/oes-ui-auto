@@ -37,6 +37,16 @@ const handleError = (errorRes: any) => {
     return of(ApplicationAction.errorOccured({ errorMessage }));
 }
 
+//below function is use to fetch error and return appropriate comments
+const handleOESError = (errorRes: any,index:number) => {
+    let errorMessage = 'An unknown error occurred';
+    if (!errorRes.error) {
+        return of(ApplicationAction.initialOESCallFail({ errorMessage: errorRes.error.message,index }));
+    }
+    return of(ApplicationAction.initialOESCallFail({ errorMessage: errorRes.error.message,index }));
+}
+
+
 @Injectable()
 export class ApplicationEffect {
     user: any;
@@ -52,15 +62,14 @@ export class ApplicationEffect {
     // Below effect is use for fetch pipline dropdown data.
     fetchPipeline = createEffect(() =>
         this.actions$.pipe(
-            ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
+            ofType(ApplicationAction.loadOESData),
             switchMap(() => {
                 return this.http.get<Pipeline>(this.environment.config.endPointUrl + 'oes/appOnboarding/pipelineTemplates').pipe(
                     map(resdata => {
                         return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('PipelineTemplate Data: '+errorRes.error.error, 'ERROR')
-                        return handleError(errorRes);
+                        return handleOESError(errorRes,1);
                     })
                 );
             })
@@ -78,7 +87,6 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchDockerImageName({dockerImageData:resdata['results']});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('DockerImageName Data: '+errorRes.error.error, 'ERROR');
                         return handleError(errorRes);
                     })
                 );
@@ -97,7 +105,6 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchUserGrops({userGroupData:resdata})
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('UserGroups Data: '+errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -116,7 +123,6 @@ export class ApplicationEffect {
                      return ApplicationAction.fetchUserGropsPermissions({userGroupPermissionsData:resdata})
                  }),
                  catchError(errorRes => {
-                     this.toastr.showError('UserGroups Data: '+errorRes.error.error, 'ERROR')
                      return handleError(errorRes);
                  })
              );
@@ -127,7 +133,7 @@ export class ApplicationEffect {
      // Below effect is use for fetch imageSource dropdown data.
      fetchImageSource = createEffect(() =>
      this.actions$.pipe(
-         ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
+         ofType(ApplicationAction.loadOESData),
          switchMap(() => {
 
              return this.http.get(this.environment.config.endPointUrl + 'oes/accountsConfig/getDockerAccounts').pipe(
@@ -136,7 +142,7 @@ export class ApplicationEffect {
                  }),
                  catchError(errorRes => {
                      this.toastr.showError('ImageSource Data: '+errorRes.error.error, 'ERROR')
-                     return handleError(errorRes);
+                     return handleOESError(errorRes,0);
                  })
              );
          })

@@ -21,7 +21,8 @@ export interface State {
     callDockerImageDataAPI: boolean;
     userGropsData: string[];
     userGroupsPermissions: [];
-    initalDataLoaded: [];
+    initalOESDatacall: boolean;
+    initalOESDataLoaded: string[];
     applicationId:string;
 
 
@@ -72,7 +73,8 @@ export const initialState: State = {
     callDockerImageDataAPI: true,
     userGropsData: null,
     userGroupsPermissions: null,
-    initalDataLoaded: [],
+    initalOESDatacall: false,
+    initalOESDataLoaded: ['dummy','dummy'],
     applicationId:null,
     logtemplate: [],
     logAccountsData: null,
@@ -112,10 +114,30 @@ export function ApplicationReducer(
                 parentPage: action.page,
             })
         ),
+        on(ApplicationAction.loadOESData,
+            (state, action) => ({
+                ...state,
+                initalOESDatacall: true,
+                initalOESDataLoaded: ['calling','calling'],
+            })
+        ),
         on(ApplicationAction.fetchPipeline,
             (state, action) => ({
                 ...state,
-                pipelineData: action.pipelineData
+                pipelineData: action.pipelineData,
+                initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> {
+                    if(index == 1){
+                        let status = 'success';
+                        if(action.pipelineData.name !== undefined){
+                            status = 'success';
+                        }else{
+                            status =  'error';
+                        }
+                        return status;
+                    }else{
+                        return data;
+                    }
+                })
             })
         ),
         on(ApplicationAction.fetchUserGrops,
@@ -136,6 +158,13 @@ export function ApplicationReducer(
                 erroeMessage:action.errorMessage,
                 appListLoading: false,
                 applicationLoading: false
+            })
+        ),
+        on(ApplicationAction.initialOESCallFail,
+            (state,action) => ({
+                ...state,
+                erroeMessage:action.errorMessage,
+                initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> index===action.index?'error':data)
             })
         ),
         on(ApplicationAction.enableEditMode,
@@ -189,7 +218,20 @@ export function ApplicationReducer(
         on(ApplicationAction.fetchImageSource,
             (state,action) => ({
                 ...state,
-                imageSource:action.imageSource
+                imageSource:action.imageSource,
+                initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> {
+                    if(index == 0){
+                        let status;
+                        if(action.imageSource.length > 0){
+                            status = 'success';
+                        }else{
+                            status =  'error';
+                        }
+                        return status;
+                    }else{
+                        return data;
+                    }
+                })
             })
         ),
         on(ApplicationAction.loadDockerImageName,
