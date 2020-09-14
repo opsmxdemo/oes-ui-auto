@@ -206,11 +206,11 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
    // Below function is execute on click of Form or Editor tab.
    onClickTab(event){
-    if(event.target.id === 'metric-form-tab'){
+    if(event === 'metric-form-tab'){
       this.selectedTab = 'metric-form';
-    } else if(event.target.id === 'metric-editor-tab') {
+    } else if(event === 'metric-editor-tab') {
       this.selectedTab = 'metric-editor';
-    }else if(event.target.id === 'metric-apminfra-tab') {
+    }else if(event === 'metric-apminfra-tab') {
       this.selectedTab = 'metric-apminfra';
     }
   }
@@ -233,22 +233,17 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     if(type == 'apm'){
       this.selectedAPMDSAccount = dsAccount;
       this.store.dispatch(ApplicationActions.fetchApplicationForAPMAccounts({sourceType: this.selectedAPMDataSource, account: dsAccount}));
-      console.log("apmappli");
-      console.log(this.APMApplicationForAccounts);
     }else if(type== 'infra'){
-      console.log("infraAccount");
-      console.log(dsAccount); 
+     
       //this.infracookbookForm.reset();
       this.store.dispatch(ApplicationActions.fetchInfraGenerateCookbook({account:dsAccount,applicationName:dsAccount,metricType:'INFRA',sourceType:this.selectedINFRADataSource,templateName:this.apmFormGroup.value.templateName}));     
       this.store.select(fromFeature.selectApplication).subscribe(
         (responseData) => {         
           if(responseData.INFRACookbook != null){
             this.INFRACookbook = responseData.INFRACookbook;
-            console.log("InfraCookbook");
-            console.log(this.INFRACookbook);            
+                      
             if(this.INFRACookbook.data.groups.length > 0){
               this.INFRACooknookGroups = this.INFRACookbook.data.groups;
-              console.log(this.INFRACooknookGroups);
               //code to remove all items from the Form before pushing
               const control = <FormArray>this.infracookbookForm.controls['cookbooklist'];
                   for(let i = control.length-1; i >= 0; i--) {
@@ -284,9 +279,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
                });
             }
-            console.log("infracookbookform");
-            console.log(this.infracookbookForm);
-            
+                     
           }
           
         }
@@ -304,11 +297,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
         (responseData) => {         
           if(responseData.APMCookbook != null){
             this.APMCookbook = responseData.APMCookbook;
-            console.log("APMCookbook");
-            console.log(this.APMCookbook);            
+                    
             if(this.APMCookbook.data.groups.length > 0){
               this.APMCookbookGroups = this.APMCookbook.data.groups;
-              console.log(this.APMCookbookGroups);
               //code to remove all items from the Form before pushing
               const control = <FormArray>this.apmcookbookForm.controls['cookbooklist'];
                   for(let i = control.length-1; i >= 0; i--) {
@@ -340,15 +331,12 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                 })                               
                });
             }
-            console.log("apmcookbookForm");
-            console.log(this.apmcookbookForm);
-            
+         
           }
           
         }
       );
     }
-    console.log(dsApplication);
   }
 
   savemetrictemplate(){    
@@ -383,7 +371,6 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       this.metricTemplateFormData.data.groups.push(groupObj);
     });
     //this.metricTemplateFormData.data.groups=groupObj;
-    console.log(this.metricTemplateFormData);
     this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateFormData}));
   }
 
@@ -408,15 +395,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   }
 
   saveapminfra(){
-    console.log("apm form");
-    console.log(this.apmFormGroup);
-    console.log("infra form");
-    console.log(this.infraFormGroup);
-    console.log("infracookbook");
-    console.log(this.infracookbookForm);
-    console.log("apmcookbook");
-    console.log(this.apmcookbookForm);
-      
+          
     this.apminfraTemplate = {
       "templateName" : this.apmFormGroup.value.templateName,
       "applicationName": this.apmFormGroup.value.applicationName,
@@ -428,7 +407,6 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     var cookbookArray = [];
     cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist)
     this.apminfraTemplate.data.groups =cookbookArray;
-    console.log(this.apminfraTemplate);
     this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
     
   }
