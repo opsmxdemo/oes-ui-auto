@@ -78,12 +78,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
           //Dispatch action to fetch Supported Data Source data from API  
           this.store.dispatch(DataSourceActions.loadDatasource());
 
-          //Dispatching action to fetch audit initial data
-          this.store.dispatch(AuditActions.loadAudit());
-
-          //Dispatching action for policy management initial data
-         this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
-
+          // Below function is use to dispatch action based on installation mode
+          this.initialData(this.installationMode);
         }
       }
     );
@@ -124,6 +120,25 @@ export class AppComponent implements OnInit, AfterViewChecked {
         this.addclass = true;
       }
     },1000)
+  }
+
+  // Dispatch actions to fetch initial data of component based on installation mode.
+  initialData(mode){
+    if(mode !== undefined && mode !== ''){
+      if(mode.includes('OES')){
+        //Dispatching action to fetch audit initial data
+        this.store.dispatch(AuditActions.loadAudit());
+
+        //Dispatching action for policy management initial data
+        this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
+      }
+    }else{
+      setTimeout(()=>{
+        this.initialData(this.installationMode);
+      },500)
+    }
+    
+
   }
 
   loginRedirect(callback): void {

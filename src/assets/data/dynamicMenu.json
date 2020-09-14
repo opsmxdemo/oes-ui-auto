@@ -1,0 +1,75 @@
+{
+    "menu":[
+       {
+          "name":"CD Dashboard",
+          "id":1.0,
+          "link":"cddashboard",
+          "subMenu":[
+             
+          ],
+          "disabled":false
+       },
+       {
+          "name":"Applications",
+          "id":2.0,
+          "link":"application",
+          "subMenu":[
+             {
+                "name":"Dev Verification",
+                "id":21.0,
+                "link":"DevV",
+                "disabled":true
+             },
+             {
+                "name":"Production Monitoring",
+                "id":24.0,
+                "link":"Monitoring",
+                "disabled":true
+             },
+             {
+                "name":"Deployment Verification",
+                "id":23.0,
+                "link":"/application/deploymentverification",
+                "disabled":false
+             }
+          ],
+          "disabled":false
+       },
+       {
+          "name":"Policy Management",
+          "id":3.0,
+          "link":"policymanagement",
+          "subMenu":[
+             
+          ],
+          "disabled":false
+       },
+       {
+          "name":"Security/Audit",
+          "id":4.0,
+          "link":"audit",
+          "subMenu":[
+             
+          ],
+          "disabled":false
+       },
+       {
+          "name":"System Setup",
+          "id":5.0,
+          "link":"setup",
+          "subMenu":[
+             
+          ],
+          "disabled":false
+       },
+       {
+          "name":"User Setting",
+          "id":6.0,
+          "link":"setting",
+          "subMenu":[
+             
+          ],
+          "disabled":true
+       }
+    ]
+ }

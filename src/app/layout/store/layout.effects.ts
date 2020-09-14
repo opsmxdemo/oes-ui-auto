@@ -54,7 +54,7 @@ export class LayoutEffect {
     authLogin = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
-            return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
+            return this.http.get<Menu>('../../../assets/data/dynamicMenu.json').pipe(
                 map(resData => {
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),

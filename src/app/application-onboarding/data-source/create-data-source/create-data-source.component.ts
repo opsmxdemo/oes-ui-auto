@@ -57,7 +57,7 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
     }else{
       this.selectedDataProvider = '';
       this.currentFormData = null;
-      this.providerBelongsTo = null;
+      this.providerBelongsTo = '';
     }
   }
 
@@ -114,6 +114,7 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
         if (response.datasaved) {
           this.closemodel.emit(true);
           this.selectedDataProvider = '';
+          this.currentFormData = null;
         }
       }
     )

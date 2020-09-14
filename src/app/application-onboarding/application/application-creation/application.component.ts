@@ -194,21 +194,24 @@ export class CreateApplicationComponent implements OnInit {
             }
 
             //populate environment Form if usertype include OES in it#################################################################################
-            if (this.appData.environments.length !== 0 && this.userType !== 'AP') {
-              // clearing form first
-              this.environmentForm = new FormGroup({
-                environments: new FormArray([])
-              });
-              this.appData.environments.forEach(environmentdata => {
-                (<FormArray>this.environmentForm.get('environments')).push(
-                  new FormGroup({
-                    key: new FormControl(environmentdata.key, Validators.required),
-                    value: new FormControl(environmentdata.value),
-                    id: new FormControl(environmentdata.id)
-                  })
-                );
-              })
+            if(this.appData.environments !==null){
+              if (this.appData.environments.length !== 0 && this.userType !== 'AP') {
+                // clearing form first
+                this.environmentForm = new FormGroup({
+                  environments: new FormArray([])
+                });
+                this.appData.environments.forEach(environmentdata => {
+                  (<FormArray>this.environmentForm.get('environments')).push(
+                    new FormGroup({
+                      key: new FormControl(environmentdata.key, Validators.required),
+                      value: new FormControl(environmentdata.value),
+                      id: new FormControl(environmentdata.id)
+                    })
+                  );
+                })
+              }
             }
+            
 
             //populate groupPermission Form #############################################################################
             if (this.appData.userGroups.length !== 0) {
@@ -690,12 +693,12 @@ export class CreateApplicationComponent implements OnInit {
   onEditTemplate(index,type){
     $("[data-toggle='tooltip']").tooltip('hide');
     this.editTemplateIndex = -1;
-    this.templateEditMode = true;
     this.currentLogTemplateIndex = -1;
     this.currentMetricTemplateIndex = -1;
     const serviceArrayControl = this.servicesForm.get('services') as FormArray;
     const templatControl = serviceArrayControl.at(index);
-    if(type === "log"){
+    if(type === "log" && templatControl.value.logTemp !== ""){
+      this.templateEditMode = true;
       this.currentLogTemplateIndex = index;
       this.logTemplateData.forEach((logdata,index)=>{
         if(templatControl.value.logTemp === logdata.templateName){
@@ -703,7 +706,8 @@ export class CreateApplicationComponent implements OnInit {
           this.editTemplateData = {...logdata};
         }
       })
-    }else{
+    }else if(type === "metric" && templatControl.value.metricTemp !== ""){
+      this.templateEditMode = true;
       this.currentMetricTemplateIndex = index;
       this.metricTemplateData.forEach((metricData,index)=>{
         if(templatControl.value.metricTemp === metricData.templateName){

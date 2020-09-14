@@ -73,6 +73,8 @@ export class DataSourceComponent implements OnInit {
   // Below function is execute on click of create datasource btn
   createDatasource(){
     this.editMode = false;
+    this.accountData  = null;
+    this.accountBelongsTo = '';
   }
 
   //Below function is execute on search
