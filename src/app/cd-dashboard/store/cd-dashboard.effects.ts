@@ -65,7 +65,6 @@ export class CdDashboardEffect {
                         return CdDashboardAction.fetchSubChartRawData({widgetRawData:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -83,7 +82,6 @@ export class CdDashboardEffect {
                         return CdDashboardAction.fetchSubChartData({subChartData:resdata,index:action.index})
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );

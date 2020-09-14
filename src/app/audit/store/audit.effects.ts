@@ -67,7 +67,6 @@ export class AuditEffect {
                         return AuditAction.fetchPipelineCount({ pipelineCount: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -88,7 +87,6 @@ export class AuditEffect {
                         return AuditAction.fetchRuningPipeline({ allRunningPipelineData: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -108,7 +106,6 @@ export class AuditEffect {
                         return AuditAction.fetchAllPipeline({ pipelineExist: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -126,7 +123,6 @@ export class AuditEffect {
                         return AuditAction.fetchedPolicyAudit({policyAuditData:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -144,7 +140,6 @@ export class AuditEffect {
                         return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -165,7 +160,6 @@ export class AuditEffect {
                         return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -184,7 +178,6 @@ export class AuditEffect {
                         return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -224,7 +217,6 @@ export class AuditEffect {
                         return fetchedTabData(resdata,action.relatedApi);
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -242,7 +234,6 @@ export class AuditEffect {
                         return AuditAction.fetchedTreeViewData({treeViewData:resdata});
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );

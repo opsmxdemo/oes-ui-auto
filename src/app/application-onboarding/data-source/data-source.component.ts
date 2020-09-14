@@ -163,17 +163,22 @@ export class DataSourceComponent implements OnInit {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.accountBelongsTo = '';
     this.editMode = false
-    this.supportedDatasources['oesDataSources'].forEach(oeslist => {
-      if(oeslist.datasourceType === accountData.datasourceType){
-        this.accountBelongsTo = 'OES'
-      }
-    });
-    if(this.accountBelongsTo === ''){
-      this.supportedDatasources['autopilotDataSources'].forEach(oeslist => {
+    if(this.supportedDatasources['oesDataSources'] !== null){
+      this.supportedDatasources['oesDataSources'].forEach(oeslist => {
         if(oeslist.datasourceType === accountData.datasourceType){
-          this.accountBelongsTo = 'AP'
+          this.accountBelongsTo = 'OES'
         }
       });
+    }
+    
+    if(this.accountBelongsTo === ''){
+      if(this.supportedDatasources['autopilotDataSources']){
+        this.supportedDatasources['autopilotDataSources'].forEach(oeslist => {
+          if(oeslist.datasourceType === accountData.datasourceType){
+            this.accountBelongsTo = 'AP'
+          }
+        });
+      }
     }
 
     // below logic is use to perform specific operation

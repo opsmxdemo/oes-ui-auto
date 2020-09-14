@@ -56,8 +56,6 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
       }
     }else{
       this.selectedDataProvider = '';
-      this.currentFormData = null;
-      this.providerBelongsTo = '';
     }
   }
 

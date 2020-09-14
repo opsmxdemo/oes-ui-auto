@@ -58,7 +58,6 @@ export class MetricTemplateEffect {
                         return ApplicationAction.loadAccountForCustomDataSource({ customDSAccounts: resdata });
                     }),
                     catchError(errorRes => {
-                        //this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -76,7 +75,6 @@ export class MetricTemplateEffect {
                         return ApplicationAction.loadAccountForAPMDataSource({ APMDSAccounts: resdata });
                     }),
                     catchError(errorRes => {
-                        //this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -94,7 +92,6 @@ export class MetricTemplateEffect {
                      return ApplicationAction.loadAccountForInfraDataSource({ InfraDSAccounts: resdata });
                  }),
                  catchError(errorRes => {
-                     //this.toastr.showError('Server Error !!', 'ERROR')
                      return handleError(errorRes);
                  })
              );
@@ -112,7 +109,6 @@ export class MetricTemplateEffect {
                     return ApplicationAction.loadApplicationForAPMAccounts({ APMApplicationForAccounts: resdata });
                 }),
                 catchError(errorRes => {
-                    //this.toastr.showError('Server Error !!', 'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -132,7 +128,6 @@ export class MetricTemplateEffect {
                     return ApplicationAction.loadInfraGenerateCookbook({ INFRACookbook: resdata });
                 }),
                 catchError(errorRes => {
-                    //this.toastr.showError('Server Error !!', 'ERROR')
                     return handleError(errorRes);
                 })
             );
@@ -151,7 +146,6 @@ export class MetricTemplateEffect {
                      return ApplicationAction.loadAPMGenerateCookbook({ APMCookbook: resdata });
                  }),
                  catchError(errorRes => {
-                     //this.toastr.showError('Server Error !!', 'ERROR')
                      return handleError(errorRes);
                  })
              );

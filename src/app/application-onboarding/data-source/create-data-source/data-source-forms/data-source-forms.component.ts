@@ -46,9 +46,6 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
         this.loading = stateData.loadingDatasource;
       }
     )
-    if(this.formData === null){
-      this.notSelectedList = true;
-    }
   }
 
   // Below function is execute after submit the form

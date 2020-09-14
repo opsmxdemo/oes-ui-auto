@@ -6,6 +6,8 @@ import { ApplicationList } from 'src/app/models/applicationOnboarding/applicatio
 
 // Below action related to create application
 export const loadApp = createAction('[Application] LoadApp' , props<{page:string}>());
+export const loadOESData = createAction('[Application] LoadOESData');
+export const initialOESCallFail = createAction('[Application] InitialOESCallFail', props<{errorMessage:string,index:number}>());
 export const fetchPipeline = createAction('[Application] FetchPipeline', props<{ pipelineData: Pipeline }>());
 export const errorOccured = createAction('[Application] ErrorOccured', props<{errorMessage:string}>());
 export const fetchAppData = createAction('[Application] FetchAppData', props<{appData:CreateApplication,applicationId:string}>())
