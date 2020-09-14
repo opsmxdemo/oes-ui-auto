@@ -199,7 +199,7 @@ export class DataSourceComponent implements OnInit {
         if(this.accountBelongsTo === 'OES'){
           this.store.dispatch(DataSourceActions.deleteOESDatasourceAccount({ accountName: account.name, index: index }));
         }else{
-          this.store.dispatch(DataSourceActions.deleteAPDatasourceAccount({ accountName: account.name, id:account.opsmxId, index: index  }))
+          this.store.dispatch(DataSourceActions.deleteAPDatasourceAccount({ accountName: account.name, id:account.id, index: index  }))
         }
       } 
     })
