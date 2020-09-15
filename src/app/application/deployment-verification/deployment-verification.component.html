@@ -445,8 +445,7 @@
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Reclassification Duration:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['reclarificationDuration']: 'N/A'}}</td>
-                      </tr>
-                      
+                      </tr>                      
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Interval Minutes:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['intervalMinutes']: 'N/A'}}</td>
