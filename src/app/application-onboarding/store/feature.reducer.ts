@@ -3,12 +3,14 @@ import * as fromApp from '../../store/app.reducer';
 import * as fromApplication from '../application/store/application.reducer';
 import * as fromAccounts from '../accounts/store/accounts.reducer';
 import * as fromDataSource from '../data-source/store/data-source.reducer';
+import * as fromMetricTemplate from '../application/application-creation/metric-template/store/metricTemplate.reducer';
 
 
 export interface ApplicationOnboardingState {
     application: fromApplication.State;
     accounts: fromAccounts.State;
     dataSource: fromDataSource.State;
+    metricTemplate: fromMetricTemplate.State
 }
 
 export interface State extends fromApp.AppState {
@@ -18,10 +20,12 @@ export interface State extends fromApp.AppState {
 export const applicationOnboardingReducers: ActionReducerMap<ApplicationOnboardingState> = {
     application: fromApplication.ApplicationReducer,
     accounts: fromAccounts.AccountsReducer,
-    dataSource: fromDataSource.DataSourceReducer
+    dataSource: fromDataSource.DataSourceReducer,
+    metricTemplate: fromMetricTemplate.MetricTemplateReducer
 };
 
 export const selectFeatureState = createFeatureSelector<ApplicationOnboardingState>('applicationOnboarding');
 export const selectApplication = createSelector(selectFeatureState,(state) => state.application);
 export const selectAccounts = createSelector(selectFeatureState,(state) => state.accounts);
 export const selectDataSource = createSelector(selectFeatureState,(state) => state.dataSource);
+export const selectMetricTemplate = createSelector(selectFeatureState,(state)=> state.metricTemplate)
