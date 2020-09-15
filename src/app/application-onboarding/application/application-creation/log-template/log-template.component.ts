@@ -188,7 +188,9 @@ getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
  this.store.dispatch(ApplicationActions.loadClusterTags());
-
+ this.logTopicsForm = new FormGroup({
+  topicsList: new FormArray([])
+});
  //fetching data from state
  this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
@@ -227,6 +229,9 @@ onCheckboxChange(status){
 // }
 
 onClusterChange(status){
+  this.logTopicsForm = new FormGroup({
+    clusterList: new FormArray([])
+  });
   this.clusterTagFlag = status.target.checked;
   this.store.select(fromFeature.selectLogTemplate).subscribe(
     (response) => {
