@@ -443,6 +443,11 @@
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['duration']: 'N/A'}}</td>
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Reclassification Duration:</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['reclarificationDuration']: 'N/A'}}</td>
+                      </tr>
+                      
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Interval Minutes:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['intervalMinutes']: 'N/A'}}</td>
                       </tr>
@@ -452,7 +457,10 @@
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Algorithm:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['algorithm']: 'N/A'}}</td>
+                        <ng-container *ngIf="deploymentServiceInformation">
+                          <td *ngIf="deploymentServiceInformation['algorithm']==='spell'">{{deploymentServiceInformation['algorithm']==='spell' ? 'LCS' : 'N/A'}}</td>
+                          <td *ngIf="deploymentServiceInformation['algorithm']==='perl'">{{deploymentServiceInformation['algorithm']==='perl' ? 'Threshold' : 'N/A'}}</td>
+                        </ng-container>
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline logs:</td>
