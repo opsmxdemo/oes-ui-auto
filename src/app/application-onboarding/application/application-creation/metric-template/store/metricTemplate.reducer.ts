@@ -7,7 +7,6 @@ import * as ApplicationAction from '../../../store/application.actions';
 export interface State {
 
      // Metric Template variables 
-     metrictemplate: any[];
      customDSAccounts:any;
      datasource : any;
      InfraDSAccounts : any;
@@ -24,7 +23,6 @@ export interface State {
 }
 
 export const initialState: State = {
-    metrictemplate:[],
     customDSAccounts : null,
     datasource : null,
     InfraDSAccounts:null,
@@ -40,8 +38,8 @@ export const initialState: State = {
 }
 
 export function MetricTemplateReducer(
-    applicationState: State | undefined,
-    applicationAction: Action) {
+    metricTemplateState: State | undefined,
+    metricTemplateAction: Action) {
     return createReducer(
         initialState,
         // ###  MeticTemplate screen logic start ### //         
@@ -130,5 +128,5 @@ export function MetricTemplateReducer(
 
         // ###  MeticTemplate screen logic start ### // 
 
-    )(applicationState,applicationAction);
+    )(metricTemplateState,metricTemplateAction);
 }

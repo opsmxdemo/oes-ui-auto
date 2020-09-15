@@ -8,6 +8,7 @@ import * as fromFeature from '../../../store/feature.reducer';
 import * as ApplicationActions from '../../store/application.actions';
 import * as DataSourceActions from '../../../data-source/store/data-source.actions';
 import { Input } from '@angular/core';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
 
   @ViewChild('scrollLogTopics', { read: ElementRef }) public scrollLogTopics: ElementRef;
   @ViewChild('scrollLogTags', { read: ElementRef }) public scrollLogTags: ElementRef;
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
   @Input() templateData: any;
   @Input() templateIndex: number;
@@ -129,7 +131,6 @@ export class LogTemplateComponent implements OnInit, OnChanges {
 // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
 
 onDataSourceSelect(dataSourceValue){
-
   if(dataSourceValue === 'elasticsearch'){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
@@ -171,7 +172,7 @@ onDataSourceSelect(dataSourceValue){
 
     this.selectedDataSource = dataSourceValue;
    this.store.dispatch(ApplicationActions.loadMonitoringAccountName({monitoringSourceName:dataSourceValue}));
-   this.store.select(fromFeature.selectApplication).subscribe(
+   this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
      if(response.logAccountsData != null) {
          this.logAccountsList = response.logAccountsData;
@@ -189,7 +190,7 @@ getLogTopics(){
  this.store.dispatch(ApplicationActions.loadClusterTags());
 
  //fetching data from state
- this.store.select(fromFeature.selectApplication).subscribe(
+ this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
        if(response.logTopicsList !== null) {
          this.loading = response.logListLoading;
@@ -227,7 +228,7 @@ onCheckboxChange(status){
 
 onClusterChange(status){
   this.clusterTagFlag = status.target.checked;
-  this.store.select(fromFeature.selectApplication).subscribe(
+  this.store.select(fromFeature.selectLogTemplate).subscribe(
     (response) => {
   if(response.logClusterTags !== null){
     this.loading = response.logClusterLoading;
@@ -262,7 +263,11 @@ SubmitForm(){
    
    
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
-
+   if(this.stepper !== undefined){
+     this.stepper.reset();
+   }
+   this.createLogForm.reset();
+   this.logTopicsForm.reset();
 }
 
 // Below function to add new log topics

@@ -31,18 +31,10 @@ export interface State {
     appListLoading: boolean;
 
     // Log Template variables 
-      logtemplate: any[];
-      logListLoading: boolean;
-      logTopicsList: [];
-      logClusterLoading: boolean;
-      logClusterTags: [];
-      logAccountsData: any,
-      callGetLogAccountsAPI: boolean;
-      logDataSourcesLoading: boolean;
-      logDataSources: [];
+    logtemplate: any[];
 
-     // Metric Template variables 
-     metrictemplate: any[];
+    // Metric Template variables 
+    metrictemplate: any[];
      
 
 }
@@ -66,17 +58,7 @@ export const initialState: State = {
     initalOESDataLoaded: ['dummy','dummy'],
     applicationId:null,
     logtemplate: [],
-    logAccountsData: null,
-    callGetLogAccountsAPI: true,
-    logListLoading: false,
-    logTopicsList: null,
-    logClusterLoading: false,
-    logClusterTags: null,
-    logDataSources: null,
-    logDataSourcesLoading: false,
-    
     metrictemplate:[]
-    
 }
 
 export function ApplicationReducer(
@@ -272,58 +254,6 @@ export function ApplicationReducer(
                 logtemplate: state.logtemplate.map((logtemplate, index) => index === action.index ? action.logTemplateData : logtemplate)
             })
         ),
-        on(ApplicationAction.loadMonitoringAccountName,
-            (state,action) => ({
-                ...state,
-                callGetLogAccountsAPI: false
-            })
-        ),
-        on(ApplicationAction.fetchMonitoringAccounts,
-            (state,action) => ({
-                ...state,
-                logAccountsData: action.logAccounts
-            })
-        ),
-        on(ApplicationAction.loadLogTopics,
-            state => ({
-                ...state,
-                logListLoading:true
-            })
-        ),
-        on(ApplicationAction.fetchLogTopics,
-            (state,action) => ({
-                ...state,
-                logTopicsList: action.logslist,
-                logListLoading:false
-            })
-        ),
-        on(ApplicationAction.loadClusterTags,
-            state => ({
-                ...state,
-                logClusterLoading:true
-            })
-        ),
-        on(ApplicationAction.fetchClusterTags,
-            (state,action) => ({
-                ...state,
-                logClusterTags: action.clusterTags,
-                logClusterLoading:false
-            })
-        ),
-        on(ApplicationAction.loadSupportingDatasources,
-            state => ({
-                ...state,
-                logDataSourcesLoading:true
-            })
-        ),
-        on(ApplicationAction.fetchDatasources,
-            (state,action) => ({
-                ...state,
-                logDataSources: action.datasources,
-                logDataSourcesLoading:false
-            })
-        ),
-
         // ###  LogTemplate screen logic start ### // 
 
         // ###  MeticTemplate screen logic start ### // 
