@@ -280,7 +280,9 @@ export class CreateApplicationComponent implements OnInit {
           }
         } else if (this.appData === null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
-          this.defineAllForms();
+          if(this.createApplicationForm === undefined && this.servicesForm === undefined){
+            this.defineAllForms();
+          }
         }
       }
     )
