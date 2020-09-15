@@ -77,7 +77,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       }
     );
 
-    this.store.select(fromFeature.selectApplication).subscribe(
+    this.store.select(fromFeature.selectMetricTemplate).subscribe(
       (responseData) => {
         if(responseData.customDSAccounts != null){
           this.customDataSourceAccounts = responseData.customDSAccounts;
@@ -237,7 +237,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
      
       //this.infracookbookForm.reset();
       this.store.dispatch(ApplicationActions.fetchInfraGenerateCookbook({account:dsAccount,applicationName:dsAccount,metricType:'INFRA',sourceType:this.selectedINFRADataSource,templateName:this.apmFormGroup.value.templateName}));     
-      this.store.select(fromFeature.selectApplication).subscribe(
+      this.store.select(fromFeature.selectMetricTemplate).subscribe(
         (responseData) => {         
           if(responseData.INFRACookbook != null){
             this.INFRACookbook = responseData.INFRACookbook;
@@ -293,7 +293,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     if(type == 'apm'){
       //this.apmcookbookForm.reset();
       this.store.dispatch(ApplicationActions.fetchAPMGenerateCookbook({account:this.selectedAPMDSAccount,applicationName:dsApplication,metricType:'APM',sourceType:this.selectedAPMDataSource,templateName:this.apmFormGroup.value.templateName}));     
-      this.store.select(fromFeature.selectApplication).subscribe(
+      this.store.select(fromFeature.selectMetricTemplate).subscribe(
         (responseData) => {         
           if(responseData.APMCookbook != null){
             this.APMCookbook = responseData.APMCookbook;
