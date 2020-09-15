@@ -137,8 +137,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.finalSelectedTabNumber = index;
     this.previouSelectedApp = app;
     this.showAppDataType = appType;
-    if(app.applicationId === undefined){
-    }else{
+    if(app && app.applicationId){
       this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
         this.serviceData = serviceDataList;
         this.oesServiceData = serviceDataList['oesService'];
@@ -156,12 +155,18 @@ export class ApplicationDashboardComponent implements OnInit {
         this.serviceErrorMessage = error;
       }
       );
+        }else{
+      
     }
   
     if(this.showAppDataType === 'Services'){
     this.spinnerService = true;
     this.selectedIndex = index;
-    this.selectedApplicationName = app.applicationName;
+    if(app && app.applicationName){
+      this.selectedApplicationName = app.applicationName;
+    }else{
+
+    }
     this.showReleaseTable = false;
     this.serviceErrorMessage = '';
     this.oesServiceData = this.serviceData['oesService'];
@@ -170,7 +175,11 @@ export class ApplicationDashboardComponent implements OnInit {
       this.spinnerService = true;
     this.showAppDataType = 'Deployment Verification';
     this.selectedIndex = index;
-    this.selectedApplicationName = app.applicationName;
+    if(app && app.applicationName){
+      this.selectedApplicationName = app.applicationName;
+    }else{
+
+    }
     this.showReleaseTable = false;
     this.serviceErrorMessage = '';
     this.autoPilotServiceData = this.serviceData['autopilotService'];
