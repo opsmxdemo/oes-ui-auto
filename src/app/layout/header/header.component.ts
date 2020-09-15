@@ -38,9 +38,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout(){
-    localStorage.removeItem('userData');
-    this.isAuthenticate = false;
-    this.store.dispatch(new AuthAction.Logout())
+     this.store.dispatch(new AuthAction.Logout())
   }
 
   //Below function is use to get random color for user image
