@@ -72,7 +72,6 @@ export class AppliactionListComponent implements OnInit {
 
   // Below function is use to redirect to create application page
   createApplication() {
-    debugger
     this.store.dispatch(ApplicationActions.loadApp({page:'/setup/applications'}));
   }
 

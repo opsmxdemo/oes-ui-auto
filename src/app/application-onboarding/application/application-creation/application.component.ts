@@ -143,7 +143,7 @@ export class CreateApplicationComponent implements OnInit {
             
 
             //populating serviceForm ############################################################################
-            if (this.appData.services.length !== 0) {
+            if (this.appData.services !== null && this.appData.services.length !== 0) {
               this.servicesForm = new FormGroup({
                 services: new FormArray([])
               });
@@ -155,7 +155,7 @@ export class CreateApplicationComponent implements OnInit {
                     if(this.userType === 'OES-AP'){
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
-                          serviceName: new FormControl(serviceArr.serviceName,[Validators.required,this.cannotContainSpace.bind(this)]),
+                          serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
                           id: new FormControl(serviceArr.id),
                           logTemp: new FormControl(serviceArr.logTemp),
                           metricTemp: new FormControl(serviceArr.metricTemp),
@@ -165,7 +165,7 @@ export class CreateApplicationComponent implements OnInit {
                     }else{
                       (<FormArray>this.servicesForm.get('services')).push(
                         new FormGroup({
-                          serviceName: new FormControl(serviceArr.serviceName,[Validators.required,this.cannotContainSpace.bind(this)]),
+                          serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
                           id: new FormControl(serviceArr.id),
                           pipelines: new FormArray([])
                         })
@@ -186,18 +186,19 @@ export class CreateApplicationComponent implements OnInit {
                           pipelineParameters: new FormArray([])
                         })
                       )
-
-                      //populating pipelieParameter array
-                      pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
-                        const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
-                        pipelineParameter.push(
-                          new FormGroup({
-                            value: new FormControl(pipelineParameterArr.value),
-                            name: new FormControl(pipelineParameterArr.name),
-                            type: new FormControl(pipelineParameterArr.type)
-                          })
-                        );
-                      })
+                      if(pipelineArr.pipelineParameters !== null && pipelineArr.pipelineParameters !== undefined){
+                        //populating pipelieParameter array
+                        pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
+                          const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
+                          pipelineParameter.push(
+                            new FormGroup({
+                              value: new FormControl(pipelineParameterArr.value),
+                              name: new FormControl(pipelineParameterArr.name),
+                              type: new FormControl(pipelineParameterArr.type)
+                            })
+                          );
+                        })
+                      }
                     })
                   })
                   break;
@@ -206,7 +207,7 @@ export class CreateApplicationComponent implements OnInit {
                   this.appData.services.forEach(serviceArr => {
                     (<FormArray>this.servicesForm.get('services')).push(
                       new FormGroup({
-                        serviceName: new FormControl(serviceArr.serviceName,[Validators.required,this.cannotContainSpace.bind(this)]),
+                        serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
                         id: new FormControl(serviceArr.id),
                         logTemp: new FormControl(serviceArr.logTemp),
                         metricTemp: new FormControl(serviceArr.metricTemp)
@@ -238,7 +239,7 @@ export class CreateApplicationComponent implements OnInit {
             
 
             //populate groupPermission Form #############################################################################
-            if (this.appData.userGroups.length !== 0) {
+            if (this.appData.userGroups !==null && this.appData.userGroups.length !== 0) {
               // clearing form first
               this.groupPermissionForm = new FormGroup({
                 userGroups: new FormArray([])
@@ -263,19 +264,25 @@ export class CreateApplicationComponent implements OnInit {
             //populating log and metric template data ######################################################################
             if(this.userType === 'AP' || this.userType === 'OES-AP'){
               // Storing Log and Metric template data in state getting from appData
-              this.appData.logTemplate.forEach(logTemp => {
-                this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:logTemp}))
-              });
-              this.appData.metricTemplate.forEach(metricTemp => {
-                this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:metricTemp}));
-              });
+              if(this.appData.logTemplate !== null){
+                this.appData.logTemplate.forEach(logTemp => {
+                  this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:logTemp}))
+                });
+              }
+              if(this.appData.metricTemplate !== null){
+                this.appData.metricTemplate.forEach(metricTemp => {
+                  this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:metricTemp}));
+                });
+              }
             }
           }else{
             this.defineAllForms();
           }
         } else if (this.appData === null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
-          this.defineAllForms();
+          if(this.createApplicationForm === undefined && this.servicesForm === undefined){
+            this.defineAllForms();
+          }
         }
       }
     )
@@ -774,7 +781,7 @@ export class CreateApplicationComponent implements OnInit {
         this.mainForm = this.createApplicationForm.value;
         // Below is configuration related to service section when userType contain OES.
         if(this.userType.includes('OES')){
-          this.servicesForm.value.services.forEach((ServiceArr, i) => {
+          this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
                 if (DataArr.value === '') {
@@ -785,7 +792,7 @@ export class CreateApplicationComponent implements OnInit {
           })
         }
         
-        this.mainForm.services = this.servicesForm.value.services;
+        this.mainForm.services = this.servicesForm.getRawValue().services;
         // usergroups section
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups.map(usergroupData => {
           let usergroupObj:GroupPermission = {
