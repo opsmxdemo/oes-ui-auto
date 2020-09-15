@@ -173,7 +173,8 @@ export function ApplicationReducer(
                 editMode:action.editMode,
                 parentPage: action.page,
                 applicationLoading: true,
-                applicationId:null
+                applicationId:null,
+                applicationData: null
             })    
         ),
         
