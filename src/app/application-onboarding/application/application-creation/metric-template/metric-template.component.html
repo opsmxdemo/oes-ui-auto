@@ -15,7 +15,7 @@
     <div class="tab-content" id="myTabContent">
       <div id="metric-apminfra" role="tabpanel" aria-labelledby="metric-apminfra-tab">          
         <div class="col-12 maindiv" *ngIf = "selectedTab === 'metric-apminfra'"> 
-          <mat-horizontal-stepper [labelPosition]="'bottom'" #stepper>
+          <mat-horizontal-stepper [labelPosition]="'bottom'" linear #stepper>
             <mat-step [stepControl]="apmFormGroup">
               <form [formGroup]="apmFormGroup">
                 <ng-template matStepLabel>APM Metrics</ng-template>
@@ -26,7 +26,8 @@
                          <div class="col-6">
                            <div class="form-group">
                              <label>Metric Template Name</label>
-                             <input type="text" class="form-control" autofocus="true" formControlName="templateName"/>
+                             <input type="text" class="form-control" autofocus="true" formControlName="templateName" [ngClass]="apmFormGroup.get('templateName').invalid && apmFormGroup.get('templateName').touched ? 'is-invalid':''"/>
+                             <span *ngIf="apmFormGroup.get('templateName').invalid && apmFormGroup.get('templateName').touched" class="invalid-feedback"></span>
                            </div>
                            <!-- /.form-group -->
                          </div>
@@ -214,43 +215,6 @@
                        </div>
                        <!-- /.row -->   
 
-                       <hr class="ml-0 mt-3 mb-3" />
-
-                       <div class="row">
-                         <div class="col-6">
-                           <div class="form-group">
-                             <label>Apply load based normalization</label>
-                             <div class="d-flex mt-3 text-muted align-items-center">
-                               <span>No</span>
-                               <div class="custom-control custom-switch ml-2 mr-1">
-                                 <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                                 <label class="custom-control-label" for="customSwitch1"></label>
-                               </div>
-                               <span>Yes</span>
-                             </div>
-                             <!-- /.d-flex -->
-                           </div>
-                           <!-- /.form-group -->
-                         </div>
-                         <!-- /.col-6 -->
-                         <div class="col-6">
-                           <div class="form-group">
-                             <label>Threshold for Metric failure</label>
-                             <div class="d-flex mt-3 text-muted align-items-center">
-                               <span>Hard</span>
-                               <div class="custom-control custom-switch ml-2 mr-1">
-                                 <input type="checkbox" class="custom-control-input" checked id="customSwitch2">
-                                 <label class="custom-control-label" for="customSwitch2"></label>
-                               </div>
-                               <span>Easy</span>
-                             </div>
-                             <!-- /.d-flex -->
-                           </div>
-                           <!-- /.form-group -->
-                         </div>
-                         <!-- /.col-6 -->
-                       </div>
-                       <!-- /.row -->
 
                      </div>
                    </div>
@@ -265,8 +229,45 @@
             <mat-step>
               <ng-template matStepLabel>Metric Config</ng-template>
               <div id="step-4" class="">
-                <div class="multisteps-form__content">                          
+                <div class="multisteps-form__content"> 
                    <div class="px-4 py-3">
+                    <form [formGroup]="metricConfigForm">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>Apply load based normalization</label>
+                          <div class="d-flex mt-3 text-muted align-items-center">
+                            <span>No</span>
+                            <div class="custom-control custom-switch ml-2 mr-1">
+                              <input type="checkbox" class="custom-control-input" id="normalization" formControlName="isNormalize">
+                              <label class="custom-control-label" for="normalization"></label>
+                            </div>
+                            <span>Yes</span>
+                          </div>
+                          <!-- /.d-flex -->
+                        </div>
+                        <!-- /.form-group -->
+                      </div>
+                      <!-- /.col-6 -->
+                      <div class="col-6">
+                        <div class="form-group">
+                          <label>Threshold for Metric failure</label>
+                          <div class="d-flex mt-3 text-muted align-items-center">
+                            <span>Hard</span>
+                            <div class="custom-control custom-switch ml-2 mr-1">
+                              <input type="checkbox" class="custom-control-input" checked id="threshold" formControlName="threshold">
+                              <label class="custom-control-label" for="threshold"></label>
+                            </div>
+                            <span>Easy</span>
+                          </div>
+                          <!-- /.d-flex -->
+                        </div>
+                        <!-- /.form-group -->
+                      </div>
+                      <!-- /.col-6 -->
+                    </div>
+                  </form>
+                    <hr class="ml-0 mt-3 mb-3" />
                      <div class="text-divider pt-0">
                        <h4>Specify critical/watchlist/weights for metrics</h4>
                      </div>
