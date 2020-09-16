@@ -1,10 +1,10 @@
   <div class="pt-1">
     <ul class="nav tab-lined nav-tabs {{isEditMode ? 'disabledTab':''}}" id="myTab" role="tablist" (click)="onClickTab($event.target.id)">
       <li class="nav-item" >
-        <a class="nav-link {{isEditMode ? '':'active'}}" id="metric-apminfra-tab" data-toggle="tab" role="tab" aria-controls="metric-apminfra" aria-selected="true">APM & INFRA</a>
+        <a class="nav-link {{selectedTab === 'metric-apminfra' ? 'active': ''}}" id="metric-apminfra-tab" data-toggle="tab" role="tab" aria-controls="metric-apminfra" aria-selected="true">APM & INFRA</a>
       </li>
       <li class="nav-item" >
-        <a class="nav-link" id="metric-form-tab" data-toggle="tab" role="tab" aria-controls="metric-form" aria-selected="true">CUSTOM</a>
+        <a class="nav-link {{selectedTab === 'metric-form' ? 'active': ''}}" id="metric-form-tab" data-toggle="tab" role="tab" aria-controls="metric-form" aria-selected="true">CUSTOM</a>
       </li>
       <li  class="nav-item {{isEditMode ? 'active':''}}">
         <a class="nav-link"  id="metric-editor-tab" data-toggle="tab" role="tab" aria-controls="metric-editor" aria-selected="true">Editor</a>
@@ -42,7 +42,7 @@
                          <div class="col-6">
                            <div class="form-group">
                              <label>APM Monitoring Provider</label>
-                             <select class="form-control" (change)="onChangeDatasource($event.target.value,'apm')">
+                             <select class="form-control" (change)="onChangeDatasource($event.target.value,'apm')" formControlName="apmProvider">
                               <option value="" [disabled]="true">Select</option>
                               <ng-container *ngFor="let datasource of autoDatasources; let i=index">
                               <option *ngIf="datasource.metricTypes[0] == 'apm' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
@@ -59,7 +59,7 @@
 
                            <div class="form-group">
                             <label>Select {{selectedAPMDataSource}} Accounts</label>
-                            <select class="form-control" (change)="onChangeDSAccount($event.target.value,'apm')">
+                            <select class="form-control" (change)="onChangeDSAccount($event.target.value,'apm')" formControlName="apmProviderAccount">
                               <option value="" [disabled]="true">Select</option>                               
                                 <option *ngFor="let dsaccount of APMDSAccounts; let i=index" value="{{dsaccount.name}}" >
                                   {{dsaccount.name}}</option>                                      
@@ -69,7 +69,7 @@
 
                            <div class="form-group">
                              <label>Select {{selectedAPMDataSource}} Application</label> 
-                             <select class="form-control" (change)="onChangeAccountForDS($event.target.value,'apm')">
+                             <select class="form-control" (change)="onChangeAccountForDS($event.target.value,'apm')" formControlName="apmApplication">
                               <option value="" [disabled]="true">Select</option> 
                               <ng-container *ngFor="let dsapplication of APMApplicationForAccounts">
                                 <option value="{{dsapplication}}" >
@@ -146,7 +146,7 @@
                          <div class="col-6">
                            <div class="form-group">
                              <label>INFRA Monitoring Provider <span data-toggle="tooltip" data-placement="right" title="Select Infrastructure monitoring provider"><img src="assets/images/help_icon.png" alt="icon" /></span></label>                            
-                             <select class="form-control" (change)="onChangeDatasource($event.target.value,'infra')">
+                             <select class="form-control" (change)="onChangeDatasource($event.target.value,'infra')" formControlName="infraProvider">
                               <option value="" [disabled]="true">Select</option>
                               <ng-container *ngFor="let datasource of autoDatasources">
                               <option *ngIf="datasource.metricTypes[0] == 'infra' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
@@ -606,7 +606,7 @@
                        <div class="col-6">
                         <div class="form-group">
                           <label>Select Datasource</label>
-                          <select class="form-control" (change)="onChangeDatasource($event.target.value,'custom')">
+                          <select class="form-control" (change)="onChangeDatasource($event.target.value,'custom')" formControlName="dataSource"> 
                             <option value="" [disabled]="true">Select</option>
                             <ng-container *ngFor="let datasource of autoDatasources">
                             <option *ngIf="datasource.metricTypes[0] == 'custom' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >

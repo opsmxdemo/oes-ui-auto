@@ -1,10 +1,11 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild,AfterViewInit } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import * as fromFeature from '../../../store/feature.reducer';
 import * as ApplicationActions from '../../store/application.actions';
 import { Store } from '@ngrx/store';
 import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import * as DataSourceActions from '../../../data-source/store/data-source.actions';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-metric-template',
@@ -17,6 +18,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   @Input() templateData: any;
   @Input() templateIndex: number;
   @Input() isEditMode: boolean;
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
+
+  @Input() metricTemplate:boolean;
 
   public editorOptions: JsonEditorOptions;
   public data: any = null;
@@ -58,7 +62,13 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       this.selectedTab = 'metric-apminfra';
       this.data = null;
     }
+    if(this.metricTemplate != undefined){
+      this.intializeForms();
+      this.selectedTab = 'metric-apminfra';
+      this.clearFormData();
+    }
   }
+
 
   ngOnInit(): void {
     this.editorOptions = new JsonEditorOptions()
@@ -100,11 +110,19 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       }
     );
     
-    //Form for custom metric
-    this.createMetricForm = new FormGroup({
+    this.intializeForms();
+
+    this.onClickTab(this.selectedTab);
+    
+  }
+
+  intializeForms(){
+     //Form for custom metric
+     this.createMetricForm = new FormGroup({
       templateName: new FormControl('',Validators.required),
       applicationName: new FormControl(),
       accountName : new FormControl(),
+      dataSource : new FormControl(),
       data: new FormGroup({
         groups : new FormArray([])
       })
@@ -129,7 +147,10 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
     this.apmFormGroup = new FormGroup({
       templateName: new FormControl(),
+      apmProvider :new FormControl(),
+      apmProviderAccount: new FormControl(),
       applicationName: new FormControl(),
+      apmApplication: new FormControl(),
       data: new FormGroup({
         groups : new FormArray([])
       })
@@ -138,6 +159,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
     this.infraFormGroup = new FormGroup({
       templateName: new FormControl(),
+      infraProvider :new FormControl(),
       applicationName: new FormControl(),
       data: new FormGroup({
         groups : new FormArray([])
@@ -182,13 +204,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
         })
       ])
     });
-
-    
-
-    this.onClickTab(this.selectedTab);
-    
   }
-
   // Below function is use to fetched json from json editor
   showJson(event = null){
     this.metricTemplateData = this.editor.get();
@@ -273,10 +289,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                       metricType : new FormControl(metricObj.metricType)
                     })
                   )
-
-                 
                 })
-
                });
             }
                      
@@ -372,6 +385,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     });
     //this.metricTemplateFormData.data.groups=groupObj;
     this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateFormData}));
+    this.clearFormData();
+    
   }
 
   addNewQuery(){
@@ -408,7 +423,71 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist)
     this.apminfraTemplate.data.groups =cookbookArray;
     this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
-    
+    this.clearFormData();
+  }
+
+  clearFormData(){
+    this.createMetricForm.reset();
+    this.queryForm = new FormGroup({
+      queryList: new FormArray([])
+    });
+    (<FormArray>this.queryForm.get('queryList')).push(
+      new FormGroup({
+        group : new FormControl(),
+        name: new FormControl(),
+        riskDirection: new FormControl('HigherOrLower'),
+        customThresholdHigher : new FormControl(),
+        customThresholdLower : new FormControl(),
+        critical: new FormControl(false),
+        watchlist : new FormControl(false),
+        metricWeight: new FormControl('1')
+      })
+    );
+    this.apmFormGroup.reset();
+    this.infraFormGroup.reset();
+
+    this.infracookbookForm = new FormGroup({
+      cookbooklist: new FormArray([
+        new FormGroup({
+          group : new FormControl(),
+          isSelectedToSave : new FormControl(true),
+          metrics: new FormArray([
+            new FormGroup({
+              name: new FormControl(),                      
+              accountName : new FormControl(),
+              aggregator : new FormControl(),
+              displayUnit : new FormControl(),
+              label : new FormControl(),
+              metricType : new FormControl()
+            })
+          ])
+        })
+      ])
+    });
+
+
+    this.apmcookbookForm = new FormGroup({
+      cookbooklist: new FormArray([
+        new FormGroup({
+          group : new FormControl(),
+          isSelectedToSave : new FormControl(true),
+          metrics: new FormArray([
+            new FormGroup({
+              name: new FormControl(),                      
+              accountName : new FormControl(),
+              aggregator : new FormControl(),
+              displayUnit : new FormControl(),
+              label : new FormControl(),
+              metricType : new FormControl()
+            })
+          ])
+        })
+      ])
+    });
+
+    if(this.stepper !== undefined){
+      this.stepper.reset();
+    }   
   }
 
 
