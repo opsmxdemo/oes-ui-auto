@@ -165,8 +165,14 @@
                 <td href="" (click)="getServiceCanaryReport(service.canaryId)" class="showElementHover">
                  <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId]" >{{service.serviceName}} </a></td>
                 <td>{{service.finalScore}} </td>
-                <td>{{service.metricsScore}} </td>
-                <td>{{service.logsScore}}</td>
+                <td> 
+                  <span *ngIf="service.metricsScore == -1 || service.metricsScore === null">-</span>
+                  <span *ngIf="service.metricsScore != -1 && service.metricsScore != null"> {{service.metricsScore}} </span>
+                </td>
+                <td>
+                  <span *ngIf="service.logsScore == -1 || service.logsScore === null">- </span>
+                 <span *ngIf="service.logsScore != null">{{service.logsScore}} </span>
+                  </td>
                 <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
               </tr>
             </tbody>

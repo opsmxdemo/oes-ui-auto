@@ -203,7 +203,7 @@
                                   <option *ngFor="let logTemplate of logTemplateData" value="{{logTemplate.templateName}}">{{logTemplate.templateName}}</option>
                                 </select>
                                 <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditTemplate(i,'log')">
-                                  <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                  <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link" >
                                     <i class="fas fa-pencil-alt"></i>
                                   </a>
                                 </span>
@@ -226,8 +226,8 @@
                                     <i class="fas fa-pencil-alt"></i>
                                   </a>
                                 </span>
-                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="onAddTemplate(i,'metric')">
-                                  <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="onAddTemplate(i,'metric')" >
+                                  <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link" >
                                     <i class="fas fa-plus"></i>
                                   </a>
                                 </span>
@@ -506,7 +506,7 @@
         </button>
       </div>
       <div class="modal-body p-0">
-        <app-metric-template [isEditMode]="templateEditMode" [templateData]="editTemplateData" [templateIndex]="editTemplateIndex"></app-metric-template>
+        <app-metric-template [isEditMode]="templateEditMode" [templateData]="editTemplateData" [templateIndex]="editTemplateIndex" [metricTemplate]="isMetricTemplateClicked"></app-metric-template>
       </div>
     </div>
   </div>
