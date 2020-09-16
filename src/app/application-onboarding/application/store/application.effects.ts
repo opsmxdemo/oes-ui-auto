@@ -38,12 +38,12 @@ const handleError = (errorRes: any) => {
 }
 
 //below function is use to fetch error and return appropriate comments
-const handleOESError = (errorRes: any,index:number) => {
+const handleOESError = (errorRes: any, index: number) => {
     let errorMessage = 'An unknown error occurred';
     if (!errorRes.error) {
-        return of(ApplicationAction.initialOESCallFail({ errorMessage: errorRes.error.message,index }));
+        return of(ApplicationAction.initialOESCallFail({ errorMessage: errorRes.error.message, index }));
     }
-    return of(ApplicationAction.initialOESCallFail({ errorMessage: errorRes.error.message,index }));
+    return of(ApplicationAction.initialOESCallFail({ errorMessage: errorRes.error.message, index }));
 }
 
 
@@ -59,6 +59,25 @@ export class ApplicationEffect {
         private environment: AppConfigService
     ) { }
 
+    // Below effect is use for fetch imageSource dropdown data.
+    fetchImageSource = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.loadOESData),
+            switchMap(() => {
+
+                return this.http.get(this.environment.config.endPointUrl + 'oes/accountsConfig/getDockerAccounts').pipe(
+                    map(resdata => {
+                        return ApplicationAction.fetchImageSource({ imageSource: resdata['data'] });
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('ImageSource Data: ' + errorRes.error.error, 'ERROR')
+                        return handleOESError(errorRes, 0);
+                    })
+                );
+            })
+        )
+    )
+
     // Below effect is use for fetch pipline dropdown data.
     fetchPipeline = createEffect(() =>
         this.actions$.pipe(
@@ -69,7 +88,7 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchPipeline({ pipelineData: resdata['data'] });
                     }),
                     catchError(errorRes => {
-                        return handleOESError(errorRes,1);
+                        return handleOESError(errorRes, 1);
                     })
                 );
             })
@@ -82,9 +101,9 @@ export class ApplicationEffect {
             ofType(ApplicationAction.loadDockerImageName),
             switchMap((action) => {
 
-                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/images?imageSource='+action.imageSourceName).pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/images?imageSource=' + action.imageSourceName).pipe(
                     map(resdata => {
-                        return ApplicationAction.fetchDockerImageName({dockerImageData:resdata['results']});
+                        return ApplicationAction.fetchDockerImageName({ dockerImageData: resdata['results'] });
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);
@@ -93,7 +112,7 @@ export class ApplicationEffect {
             })
         )
     )
-   
+
     // Below effect is use for fetch userGroup dropdown data.
     fetchUserData = createEffect(() =>
         this.actions$.pipe(
@@ -102,7 +121,7 @@ export class ApplicationEffect {
 
                 return this.http.get<string[]>(this.environment.config.endPointUrl + 'platformservice/v1/usergroups').pipe(
                     map(resdata => {
-                        return ApplicationAction.fetchUserGrops({userGroupData:resdata})
+                        return ApplicationAction.fetchUserGrops({ userGroupData: resdata })
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);
@@ -112,56 +131,36 @@ export class ApplicationEffect {
         )
     )
 
-     // Below effect is use for fetch userGroup dropdown data.
-     fetchUserPermissionData = createEffect(() =>
-     this.actions$.pipe(
-         ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
-         switchMap(() => {
+    // Below effect is use for fetch userGroup dropdown data.
+    fetchUserPermissionData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
+            switchMap(() => {
 
-             return this.http.get<any>(this.environment.config.endPointUrl + 'platformservice/v1/permissions').pipe(
-                 map(resdata => {
-                     return ApplicationAction.fetchUserGropsPermissions({userGroupPermissionsData:resdata})
-                 }),
-                 catchError(errorRes => {
-                     return handleError(errorRes);
-                 })
-             );
-         })
-     )
- )
-
-     // Below effect is use for fetch imageSource dropdown data.
-     fetchImageSource = createEffect(() =>
-     this.actions$.pipe(
-         ofType(ApplicationAction.loadOESData),
-         switchMap(() => {
-
-             return this.http.get(this.environment.config.endPointUrl + 'oes/accountsConfig/getDockerAccounts').pipe(
-                 map(resdata => {
-                     return ApplicationAction.fetchImageSource({imageSource:resdata['data']});
-                 }),
-                 catchError(errorRes => {
-                     this.toastr.showError('ImageSource Data: '+errorRes.error.error, 'ERROR')
-                     return handleOESError(errorRes,0);
-                 })
-             );
-         })
-     )
- )
-
+                return this.http.get<any>(this.environment.config.endPointUrl + 'platformservice/v1/permissions').pipe(
+                    map(resdata => {
+                        return ApplicationAction.fetchUserGropsPermissions({ userGroupPermissionsData: resdata })
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
 
     // Below effect is use for fetch Application data on edit mode.
     onEditApplication = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/'+action.applicationId).pipe(
+                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.applicationId).pipe(
                     map(resdata => {
 
-                        return ApplicationAction.fetchAppData({ appData: resdata,applicationId: action.applicationId})
+                        return ApplicationAction.fetchAppData({ appData: resdata, applicationId: action.applicationId })
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Application Data: '+errorRes.error.error, 'ERROR')
+                        this.toastr.showError('Application Data: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -176,10 +175,10 @@ export class ApplicationEffect {
             switchMap(action => {
                 return this.http.post<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application', action.appData).pipe(
                     map(resdata => {
-                        return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'createApplication'});
+                        return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'createApplication' });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Application is not created due to: '+errorRes.error.error, 'ERROR')
+                        this.toastr.showError('Application is not created due to: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -192,13 +191,13 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.updateApplication),
             withLatestFrom(this.store.select(fromFeature.selectApplication)),
-            switchMap(([action,applicationState]) => {
-                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/'+applicationState.applicationId, action.appData).pipe(
+            switchMap(([action, applicationState]) => {
+                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + applicationState.applicationId, action.appData).pipe(
                     map(resdata => {
-                        return ApplicationAction.dataSaved({applicationName:action.appData.name,dataType:'updateApplication'});
+                        return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Application is not updated due to: '+errorRes.error.error, 'ERROR')
+                        this.toastr.showError('Application is not updated due to: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -212,13 +211,13 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.loadAppList),
             withLatestFrom(this.appStore.select('auth')),
-            switchMap(([action,authState]) => {
-                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'platformservice/v1/users/'+authState.user+'/applications?permissionId=read').pipe(
+            switchMap(([action, authState]) => {
+                return this.http.get<ApplicationList>(this.environment.config.endPointUrl + 'platformservice/v1/users/' + authState.user + '/applications?permissionId=read').pipe(
                     map(resdata => {
                         return ApplicationAction.fetchAppList({ Applist: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('ApplicationList Data: '+errorRes.error.error, 'ERROR')
+                        this.toastr.showError('ApplicationList Data: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -242,12 +241,12 @@ export class ApplicationEffect {
             ofType(ApplicationAction.dataSaved),
             withLatestFrom(this.store.select(fromFeature.selectApplication)),
             tap(([actiondata, appOnboardingState]) => {
-                if(actiondata.dataType === 'createApplication'){
-                    this.toastr.showSuccess("Application '"+actiondata.applicationName+"' created successfully !!", 'SUCCESS')
-                }else{
-                    this.toastr.showSuccess("Application '"+actiondata.applicationName+"' updated successfully !!", 'SUCCESS')
+                if (actiondata.dataType === 'createApplication') {
+                    this.toastr.showSuccess("Application '" + actiondata.applicationName + "' created successfully !!", 'SUCCESS')
+                } else {
+                    this.toastr.showSuccess("Application '" + actiondata.applicationName + "' updated successfully !!", 'SUCCESS')
                 }
-                
+
                 this.router.navigate([appOnboardingState.parentPage]);
                 this.store.dispatch(ApplicationAction.loadAppList());
                 this.appStore.dispatch(AppDashboardAction.loadAppDashboard());
@@ -276,7 +275,7 @@ export class ApplicationEffect {
                         return ApplicationAction.appDeletedSuccessfully({ index: action.index });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Application is not deleted due to: '+errorRes.error.error, 'ERROR')
+                        this.toastr.showError('Application is not deleted due to: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
