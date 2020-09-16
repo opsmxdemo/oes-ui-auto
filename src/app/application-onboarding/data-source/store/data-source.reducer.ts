@@ -102,6 +102,20 @@ export function DataSourceReducer(
                 datasourceList:[]
             })
         ),
+        on(DataSourceAction.loadAPDatasourceList,
+            (state,action) => ({
+                ...state,
+                listLoading: true,
+                datasourceList:[]
+            })
+        ),
+        on(DataSourceAction.loadOESDatasourceList,
+            (state,action) => ({
+                ...state,
+                listLoading: true,
+                datasourceList:[]
+            })
+        ),
         on(DataSourceAction.listErrorOccured,
             (state,action) => ({
                 ...state,

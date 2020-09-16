@@ -163,7 +163,7 @@ export class DataSourceComponent implements OnInit {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.accountBelongsTo = '';
     this.editMode = false
-    if(this.supportedDatasources['oesDataSources'] !== null){
+    if(this.supportedDatasources['oesDataSources'] !== null && this.supportedDatasources['oesDataSources'].length > 0){
       this.supportedDatasources['oesDataSources'].forEach(oeslist => {
         if(oeslist.datasourceType === accountData.datasourceType){
           this.accountBelongsTo = 'OES'
@@ -172,7 +172,7 @@ export class DataSourceComponent implements OnInit {
     }
     
     if(this.accountBelongsTo === ''){
-      if(this.supportedDatasources['autopilotDataSources']){
+      if(this.supportedDatasources['autopilotDataSources'] !== null && this.supportedDatasources['autopilotDataSources'].length > 0){
         this.supportedDatasources['autopilotDataSources'].forEach(oeslist => {
           if(oeslist.datasourceType === accountData.datasourceType){
             this.accountBelongsTo = 'AP'

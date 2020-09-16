@@ -88,7 +88,7 @@ export function ApplicationReducer(
                 initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> {
                     if(index == 1){
                         let status = 'success';
-                        if(action.pipelineData.name !== undefined){
+                        if(action.pipelineData['length'] > 0){
                             status = 'success';
                         }else{
                             status =  'error';

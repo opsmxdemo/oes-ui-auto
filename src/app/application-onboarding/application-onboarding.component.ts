@@ -12,21 +12,33 @@ import * as fromApp from '../store/app.reducer';
 })
 export class ApplicationOnboardingComponent implements OnInit {
 
-  userType = 'OES-AP';                                            // It contain type of user i.e, AP, OES or both.
+  userType = '';                                            // It contain type of user i.e, AP, OES or both.
 
 
   constructor(public store: Store<fromFeature.State>,
               public appStore: Store<fromApp.AppState>) { }
 
   ngOnInit(){
-    // dispatching action relatted to datasource list
-    this.store.dispatch(DataSourceActions.loadDatasourceList());
 
     // Below function is use to fetch data from AppState to update usertype
     this.appStore.select('layout').subscribe(
       (layoutRes) => {
         if(layoutRes.installationMode !== ''){
           this.userType = layoutRes.installationMode;
+          if(this.userType !== ''){
+            // dispatching action relatted to datasource list
+            switch(this.userType){
+              case 'AP':
+                this.store.dispatch(DataSourceActions.loadAPDatasourceList());
+                break;
+              case 'OES':
+                this.store.dispatch(DataSourceActions.loadOESDatasourceList());
+                break;
+              case 'OES-AP':
+                this.store.dispatch(DataSourceActions.loadDatasourceList());
+                break;
+            }
+          }
         }
       }
     )

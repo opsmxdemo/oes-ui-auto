@@ -17,6 +17,8 @@ export const updatesuccessResponse = createAction('[Data-Source] UpdateSuccessRe
 
 // Below action is related to datasource list
 export const loadDatasourceList = createAction('[Data-Source] LoadDatasourceList');
+export const loadOESDatasourceList = createAction('[Data-Source] LoadOESDatasourceList');
+export const loadAPDatasourceList = createAction('[Data-Source] LoadAPDatasourceList');
 export const fetchDatasourceList  = createAction('[Data-Source] FetchDatasourceList', props<{DatasourceList:any}>());
 export const DatasourceaccountDeleted = createAction('[Data-Source] DatasourceAccountDeleted', props<{index:number}>());
 export const listErrorOccured = createAction('[Data-Source] ListErrorOccured', props<{errorMessage:string}>());
