@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild,AfterViewInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import * as fromFeature from '../../../store/feature.reducer';
 import * as ApplicationActions from '../../store/application.actions';
@@ -50,12 +50,13 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   infracookbookForm : FormGroup;
   selectedAPMDSAccount :any;
   apminfraTemplate = null;
+  metricConfigForm : FormGroup;
 
   constructor(private _formBuilder: FormBuilder,
     public store: Store<fromFeature.State>) { }
 
   ngOnChanges(changes: SimpleChanges){
-    if(this.isEditMode && this.templateData !== null){
+    if(this.isEditMode && this.templateData != null){
       this.data = this.templateData;
       this.selectedTab = 'metric-editor';
     }else{
@@ -146,7 +147,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     );
 
     this.apmFormGroup = new FormGroup({
-      templateName: new FormControl(),
+      templateName: new FormControl('',Validators.required),
       apmProvider :new FormControl(),
       apmProviderAccount: new FormControl(),
       applicationName: new FormControl(),
@@ -203,6 +204,11 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
           ])
         })
       ])
+    });
+
+    this.metricConfigForm = new FormGroup({
+      isNormalize : new FormControl(true),
+      threshold : new FormControl(false)
     });
   }
   // Below function is use to fetched json from json editor
@@ -415,7 +421,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       "templateName" : this.apmFormGroup.value.templateName,
       "applicationName": this.apmFormGroup.value.applicationName,
       "data": {
-        "groups" : []
+        "groups" : [],
+        "isNormalize": this.metricConfigForm.value.isNormalize,
+        "percent_diff_threshold" : (this.metricConfigForm.value.threshold ? "easy" :"hard")
       }
     };  
     
@@ -485,7 +493,12 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       ])
     });
 
-    if(this.stepper !== undefined){
+    this.metricConfigForm = new FormGroup({
+      isNormalize : new FormControl(true),
+      threshold : new FormControl(false)
+    });
+
+    if(this.stepper != undefined){
       this.stepper.reset();
     }   
   }
