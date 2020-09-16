@@ -46,7 +46,7 @@ export class DataSourceEffect {
     // Below effect is use for fetch OES data related to Accounts List page
     fetchOESDatasourcesListData = createEffect(() =>
         this.actions$.pipe(
-            ofType(DataSourceAction.loadDatasourceList),
+            ofType(DataSourceAction.loadDatasourceList,DataSourceAction.loadOESDatasourceList),
             switchMap(() => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/getAccounts').pipe(
                     map(resdata => {
@@ -60,7 +60,7 @@ export class DataSourceEffect {
     // Below effect is use for fetch AP data related to Accounts List page
     fetchAPDatasourcesListData = createEffect(() =>
         this.actions$.pipe(
-            ofType(DataSourceAction.loadDatasourceList),
+            ofType(DataSourceAction.loadDatasourceList,DataSourceAction.loadAPDatasourceList),
             switchMap(() => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials').pipe(
                     map(resdata => {
@@ -82,7 +82,6 @@ export class DataSourceEffect {
                         return DataSourceAction.fetchSupportedDatasources({ SupportedDataSource: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('DataSources Data:' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes,'create');
                     })
                 );

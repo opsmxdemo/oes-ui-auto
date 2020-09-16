@@ -42,17 +42,21 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
         configurationFields: {},
       };
       if(this.accountBelongsTo === 'AP'){
-        this.supportedDataSources['autopilotDataSources'].forEach(datasourceObj => {
-          if(datasourceObj.datasourceType === this.accountData.datasourceType){
-            this.currentFormData = datasourceObj.configurationFields;
-          }
-        });
+        if(this.supportedDataSources['autopilotDataSources'] !== null && this.supportedDataSources['autopilotDataSources'].length > 0){
+          this.supportedDataSources['autopilotDataSources'].forEach(datasourceObj => {
+            if(datasourceObj.datasourceType === this.accountData.datasourceType){
+              this.currentFormData = datasourceObj.configurationFields;
+            }
+          });
+        }
       }else{
-        this.supportedDataSources['oesDataSources'].forEach(datasourceObj => {
-          if(datasourceObj.datasourceType === this.accountData.datasourceType){
-            this.currentFormData = datasourceObj.configurationFields;
-          }
-        });
+        if(this.supportedDataSources['oesDataSources'] !== null && this.supportedDataSources['oesDataSources'].length > 0){
+          this.supportedDataSources['oesDataSources'].forEach(datasourceObj => {
+            if(datasourceObj.datasourceType === this.accountData.datasourceType){
+              this.currentFormData = datasourceObj.configurationFields;
+            }
+          });
+        }
       }
     }else{
       this.selectedDataProvider = '';
