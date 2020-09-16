@@ -21,6 +21,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   @ViewChild('scrollLogTopics', { read: ElementRef }) public scrollLogTopics: ElementRef;
   @ViewChild('scrollLogTags', { read: ElementRef }) public scrollLogTags: ElementRef;
   @ViewChild('stepper') stepper: MatHorizontalStepper;
+  @ViewChild('clusterTagAdd', { read: ElementRef }) public clusterTagAdd: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
   @Input() templateData: any;
   @Input() templateIndex: number;
@@ -52,7 +53,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
   ngOnChanges(changes: SimpleChanges){
-    if(this.isEditMode && this.templateData !== null){
+    if(this.isEditMode && this.templateData != null){
       this.data = this.templateData;
       this.selectedTab = 'logtemplate-editor';
     }else{
@@ -115,14 +116,15 @@ export class LogTemplateComponent implements OnInit, OnChanges {
      regExResponseKey: new FormControl(''),
      regularExpression: new FormControl(''),
      sensitivity:  new FormControl('',Validators.required),
-   //  clusterTagId: new FormControl(false)
 
 
    });
    this.logTopicsForm = new FormGroup({
-     topicsList: new FormArray([]),
-     clusterList: new FormArray([]),
-   });
+    topicsList: new FormArray([]),
+    clusterList: new FormArray([]),
+    clusterTagId: new FormControl(false),
+  });
+
  this.logSensitivityTypes = ["high","low","medium"];
 
 }
@@ -138,12 +140,11 @@ onDataSourceSelect(dataSourceValue){
       accountName:  new FormControl('',Validators.required),
       index: new FormControl('',[Validators.required]),
       kibanaIndex: new FormControl('',[Validators.required]),
-      regExFilter: new FormControl(false),
+      regExFilter: new FormControl(this.createLogForm.value.regExFilter),
       regExResponseKey: new FormControl(''),
       regularExpression: new FormControl(''),
-      autoBaseline: new FormControl(false),
+      autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
-     // clusterTagId: new FormControl(false)
     });
   } else if (dataSourceValue === 'kubernetes'){
     
@@ -151,9 +152,8 @@ onDataSourceSelect(dataSourceValue){
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
       namespace: new FormControl('',[Validators.required]),
-      autoBaseline: new FormControl(false),
+      autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
-     // clusterTagId: new FormControl(false)
 
     });
     
@@ -162,13 +162,11 @@ onDataSourceSelect(dataSourceValue){
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
       accountName:  new FormControl('',Validators.required),
-      autoBaseline: new FormControl(false),
+      autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
-   //   clusterTagId: new FormControl(false)
 
     });
   }
-  //this.createLogForm.controls.logSensitivityTypes.patchValue(this.logSensitivityTypes[0]);
 
     this.selectedDataSource = dataSourceValue;
    this.store.dispatch(ApplicationActions.loadMonitoringAccountName({monitoringSourceName:dataSourceValue}));
@@ -188,16 +186,20 @@ getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
  this.store.dispatch(ApplicationActions.loadClusterTags());
- this.logTopicsForm = new FormGroup({
-  topicsList: new FormArray([])
-});
+
  //fetching data from state
  this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
-       if(response.logTopicsList !== null) {
+       if(response.logTopicsList != null) {
+        this.logTopicsForm = new FormGroup({
+          topicsList: new FormArray([]),
+          clusterList: new FormArray([]),
+          clusterTagId: new FormControl(false),
+        });
          this.loading = response.logListLoading;
          this.logTopicsData = response.logTopicsList['logTopics'];
          this.logCharacterization = response.logTopicsList['topics'];
+        
           // Populating logtopics 
      this.logTopicsData.forEach((logTopicsData, logIndex) => {
          (<FormArray>this.logTopicsForm.get('topicsList')).push(
@@ -209,7 +211,7 @@ getLogTopics(){
          );
  });
      }
-     if(response.logDataSources !== null) {
+     if(response.logDataSources != null) {
          this.loading = response.logDataSourcesLoading;
          this.dataSourceData = response.logDataSources;
      }
@@ -228,28 +230,32 @@ onCheckboxChange(status){
 //   //this.autoBaselineStatus = status.target.checked;
 // }
 
-onClusterChange(status){
-  this.logTopicsForm = new FormGroup({
-    clusterList: new FormArray([])
+onClusterChange(status: boolean){
+
+  this.clusterTagFlag = status;
+  if(status === true){
+    this.store.select(fromFeature.selectLogTemplate).subscribe(
+      (response) => {
+    if(response.logClusterTags != null){
+      
+      this.loading = response.logClusterLoading;
+      this.logClusterData = response.logClusterTags['clusterTopics'];
+      this.clusterTagConfig = response.logClusterTags['clusterTags'];
+             
+      // Populating Cluster 
+           
+    this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+     (<FormArray>this.logTopicsForm.get('clusterList')).push(
+      new FormGroup({
+         string: new FormControl(logClusterData.string),
+         tag: new FormControl(logClusterData.tag)
+       })
+     );
   });
-  this.clusterTagFlag = status.target.checked;
-  this.store.select(fromFeature.selectLogTemplate).subscribe(
-    (response) => {
-  if(response.logClusterTags !== null){
-    this.loading = response.logClusterLoading;
-    this.logClusterData = response.logClusterTags['clusterTopics'];
-    this.clusterTagConfig = response.logClusterTags['clusterTags'];
-           // Populating Cluster 
-  this.logClusterData.forEach((logClusterData, logClusterIndex) => {
-   (<FormArray>this.logTopicsForm.get('clusterList')).push(
-     new FormGroup({
-       string: new FormControl(logClusterData.string),
-       tag: new FormControl(logClusterData.tag)
-     })
-   );
-});
+    }
+  })   
   }
-})   
+  
 
 }
 
@@ -264,21 +270,22 @@ SubmitForm(){
    }
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
-   // Action to create the log template
-   
-   
+
+   // Action to create the log template   
    this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
-   if(this.stepper !== undefined){
+   if(this.stepper != undefined){
      this.stepper.reset();
    }
-   this.createLogForm.reset();
-   this.logTopicsForm.reset();
+   this.logTopicsForm.value['clusterTagId'] = false;
+   this.createLogForm.value['autoBaseline'] = false;
+   this.createLogForm.value['regExFilter'] = false;
+    this.createLogForm.reset();
+    this.logTopicsForm.reset();
 }
 
 // Below function to add new log topics
 
 addNewLogTopics(){
-  //this.scroll.nativeElement. = this.scroll.nativeElement.
   this.scrollLogTopics.nativeElement.scrollTop = this.scrollLogTopics.nativeElement.scrollHeight;
   (<FormArray>this.logTopicsForm.get('topicsList')).push(
     new FormGroup({

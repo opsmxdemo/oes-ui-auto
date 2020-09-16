@@ -14,6 +14,7 @@ export class CreateLogTemplate {
     regExFilter: boolean;
     regExResponseKey: string;
     regularExpression: string;
+    clusterTagId: boolean;
     errorTopics:LogErrorTopics[];
     tags: LogClusterTags[];
     
@@ -30,6 +31,7 @@ export class CreateLogTemplate {
         this.regExFilter = data.regExFilter;
         this.regExResponseKey = data.regExResponseKey;
         this.regularExpression = data.regularExpression;
+        this.clusterTagId = data.clusterTagId;
         this.errorTopics=[];
         data.errorTopics.forEach(element => {
             this.errorTopics.push(new LogErrorTopics(element));
