@@ -65,7 +65,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.finalSelectedTabNumber = 0;
     this.store.select('appDashboard').subscribe(
       (resdata) => {
-        if(resdata.appData !== null){
+        if(resdata.appData != null){
           this.dashboardLoading = resdata.dashboardLoading;
           this.applicationData = resdata.appData;
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
@@ -110,7 +110,7 @@ export class ApplicationDashboardComponent implements OnInit {
             this.selectedApplication(this.finalSelectedTabNumber, this.previouSelectedApp,this.showAppDataType);
      
         }
-        if(resdata.topologyChartData !== null){
+        if(resdata.topologyChartData != null){
           this.dashboardLoading = resdata.dashboardLoading;
           this.networkChartData = resdata.topologyChartData;
           // this.nodes = [...resdata.topologyChartData.nodes];

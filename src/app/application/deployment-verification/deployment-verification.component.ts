@@ -176,7 +176,7 @@ export class DeploymentVerificationComponent implements OnInit {
             
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
       this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: Math.max.apply(null, selectedCan)}));
-      if(this.selectedServiceId !== undefined){
+      if(this.selectedServiceId != undefined){
         this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: Math.max.apply(null, selectedCan), serviceId: this.selectedServiceId !== undefined?this.selectedServiceId:null }));
       }
     }
@@ -186,7 +186,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.control.setValue(canary);
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
-    if(this.selectedServiceId !== undefined){
+    if(this.selectedServiceId != undefined){
       this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
     }
   }
@@ -284,7 +284,7 @@ export class DeploymentVerificationComponent implements OnInit {
       this.incredementDisable = false;
     }
 
-    if (index !== -1) {
+    if (index != -1) {
       if (index  === length - 1) {
         this.incredementDisable = true;
     
@@ -299,7 +299,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
         this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index + 1]}));
         this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index + 1]}));
-        if(this.selectedServiceId !== undefined){
+        if(this.selectedServiceId != undefined){
           this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index + 1], serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
         }
       } 
@@ -319,7 +319,7 @@ export class DeploymentVerificationComponent implements OnInit {
       this.incredementDisable = false;
     }
 
-    if (index !== -1 && index !== 0) {
+    if (index != -1 && index != 0) {
       if(this.route.params['_value'].canaryId != null){
         this.control.setValue(this.canaryList[index - 1]);
     }else{
@@ -332,7 +332,7 @@ export class DeploymentVerificationComponent implements OnInit {
      
        this.store.dispatch(DeploymentAction.loadServices({canaryId: this.canaryList[index - 1]}));
        this.store.dispatch(DeploymentAction.loadApplicationHelath({canaryId: this.canaryList[index - 1]}));
-       if(this.selectedServiceId !== undefined){
+       if(this.selectedServiceId != undefined){
         this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: this.canaryList[index - 1], serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
        }
     } else if (index === 0) {
@@ -379,12 +379,12 @@ export class DeploymentVerificationComponent implements OnInit {
       this.store.dispatch(DeploymentAction.loadLatestRun());
       this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
-          if (resData.manualTriggerResponse !== null && this.checkCanaryId) {
+          if (resData.manualTriggerResponse != null && this.checkCanaryId) {
             this.latestCanaryCounter = 1;
             this.counter = 1;
             this.checkCanaryId =false;
           }
-          if (resData.canaryId !== null) {
+          if (resData.canaryId != null) {
             this.deployementLoading = resData.deployementLoading;
             if(this.latestCanaryCounter === 1){
               this.deployementRun = resData.canaryId;
@@ -410,7 +410,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.buildApplicationForm();
     this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
       (resData) => {
-        if (resData.applicationList !== null) {
+        if (resData.applicationList != null) {
           this.deployementLoading = resData.applicationListLoading;
           this.deployementApplications = resData.applicationList;
           this.applicationList = resData.applicationList;
@@ -427,7 +427,7 @@ export class DeploymentVerificationComponent implements OnInit {
   } 
     //Below function is execute on search
   onSearch(){
-    if(this.searchData !== ''){
+    if(this.searchData != ''){
       this.currentPage = [];
       for (let i = 0; i < this.serviceListLength; i++) {
         this.currentPage.push(this.serviceListData[i]);
@@ -480,7 +480,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   //Below function is execute on click of page prev btn
   pagePrev() {
-    if (this.page.startingPoint !== 0) {
+    if (this.page.startingPoint != 0) {
       this.page.pageNo -= 1;
       this.page.currentPage = this.page.pageNo;
       if ((this.page.startingPoint - this.page.pageSize) > 0) {
@@ -511,7 +511,7 @@ export class DeploymentVerificationComponent implements OnInit {
     getAllServices(){
       this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
-          if(resData.serviceList !== null){
+          if(resData.serviceList != null){
                   this.deployementLoading = resData.serviceListLoading;
                   this.deploymentServices = resData.serviceList;
                   this.serviceListData = this.deploymentServices.services;
@@ -520,7 +520,7 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.tableIsEmpty = false;
                   this.selectedServiceId = this.deploymentServices.services[0].serviceId;
                   this.serviceNameInfo = this.deploymentServices.services[0];   
-                  if (this.serviceConter === 1 && this.selectedServiceId !== undefined) {
+                  if (this.serviceConter === 1 && this.selectedServiceId != undefined) {
                     this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: this.deployementRun, serviceId: this.selectedServiceId}));
                     this.serviceConter++;
                   }
@@ -542,7 +542,7 @@ export class DeploymentVerificationComponent implements OnInit {
     getApplicationHealth(){
       this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
-          if(resData.applicationHealthDetails !== null){
+          if(resData.applicationHealthDetails != null){
                   this.deployementLoading = resData.applicationHealthDetailsLoading;
                   this.deploymentApplicationHealth = resData.applicationHealthDetails;
                   this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
@@ -581,7 +581,7 @@ export class DeploymentVerificationComponent implements OnInit {
     getServiceInformation(){
       this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
-          if(resData.serviceInformation !== null){
+          if(resData.serviceInformation != null){
                   this.deployementLoading = resData.serviceInformationLoading;
                   this.deploymentServiceInformation = resData.serviceInformation;
                   this.baseLineFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v1FileSize,true);
@@ -628,7 +628,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // Below function is use to hide sidenav if click happen in Analysis section.
   onClickAnalysisSection(event){
-    if(event.target.id !== 'expColBtn'){
+    if(event.target.id != 'expColBtn'){
       this.Sidenav.close();
       this.isShow = false;
     }
@@ -639,7 +639,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.store.dispatch(DeploymentAction.loadcancelRunningCanary({ canaryId: id}));
     this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
       (resData) => {
-        if(resData.cancelRunningCanaryStatus !== null){
+        if(resData.cancelRunningCanaryStatus != null){
                 this.deployementLoading = resData.deployementLoading;
                 this.cancelRunningCanaryData = resData.cancelRunningCanaryStatus;
                 this.notifications.showSuccess('', resData.cancelRunningCanaryStatus['message']);
@@ -685,7 +685,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'] }));
     this.store.select(fromFeature.selectLogAnalysisState).subscribe(
       (resData) => {
-        if (resData.reclassificationHistoryResults !== null) {
+        if (resData.reclassificationHistoryResults != null) {
           this.reclassificationHistory=resData.reclassificationHistoryResults
         }
             
