@@ -57,6 +57,7 @@ export class CreateApplicationComponent implements OnInit {
   templateEditMode = false;                                       // It is use to store true while user want to edit template parameter.
   editTemplateData = null;                                        // It is use to store data of template which user want to update.
   apiLoadingError = false;                                        // It is use to show or hide component error message.
+  isMetricTemplateClicked = true;
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -717,6 +718,7 @@ export class CreateApplicationComponent implements OnInit {
       this.currentLogTemplateIndex = index;
     }else{
       this.currentMetricTemplateIndex = index;
+      this.isMetricTemplateClicked = !this.isMetricTemplateClicked;
     }
   }
 
