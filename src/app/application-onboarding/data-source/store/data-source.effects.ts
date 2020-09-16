@@ -2,9 +2,10 @@ import { ofType, createEffect } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromFeature from '../../store/feature.reducer';
+import * as fromApp from '../../../store/app.reducer';
 import * as DataSourceAction from './data-source.actions';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -38,6 +39,7 @@ export class DataSourceEffect {
     constructor(public actions$: Actions,
         public http: HttpClient,
         public store: Store<fromFeature.State>,
+        public appStore: Store<fromApp.AppState>,
         public router: Router,
         public toastr: NotificationService,
         private environment: AppConfigService
@@ -52,6 +54,9 @@ export class DataSourceEffect {
                     map(resdata => {
                         return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
                     }),
+                    catchError(errorRes => {
+                        return handleError(errorRes,'list');
+                    })
                 );
             })
         )
@@ -66,6 +71,9 @@ export class DataSourceEffect {
                     map(resdata => {
                         return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
                     }),
+                    catchError(errorRes => {
+                        return handleError(errorRes,'list');
+                    })
                 );
             })
         )
@@ -93,11 +101,22 @@ export class DataSourceEffect {
     createAPDatasource = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.createAPDatasources),
-            switchMap(action => {
+            withLatestFrom(this.appStore.select('layout')),
+            switchMap(([action,layoutState]) => {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials', action.CreatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Datasource "'+action.CreatedDataSource.name+'" is created successfully','Success');
-                        this.store.dispatch(DataSourceAction.loadDatasourceList());
+                        switch(layoutState.installationMode){
+                            case 'AP':
+                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                              break;
+                            case 'OES':
+                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
+                              break;
+                            case 'OES-AP':
+                              this.store.dispatch(DataSourceAction.loadDatasourceList());
+                              break;
+                        }
                         return DataSourceAction.successResponse();
                     }),
                     catchError(errorRes => {
@@ -113,11 +132,22 @@ export class DataSourceEffect {
     createOESDatasource = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.createOESDatasources),
-            switchMap(action => {
+            withLatestFrom(this.appStore.select('layout')),
+            switchMap(([action,layoutState]) => {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/saveAccount', action.CreatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(resdata['message'],'Success');
-                        this.store.dispatch(DataSourceAction.loadDatasourceList());
+                        switch(layoutState.installationMode){
+                            case 'AP':
+                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                              break;
+                            case 'OES':
+                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
+                              break;
+                            case 'OES-AP':
+                              this.store.dispatch(DataSourceAction.loadDatasourceList());
+                              break;
+                        }
                         return DataSourceAction.successResponse();
                     }),
                     catchError(errorRes => {
@@ -133,11 +163,22 @@ export class DataSourceEffect {
     updateAPDatasource = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.updateAPDatasources),
-            switchMap(action => {
+            withLatestFrom(this.appStore.select('layout')),
+            switchMap(([action,layoutState]) => {
                 return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials/'+action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Datasource "'+action.UpdatedDataSource.name+'" is updated successfully','Success');
-                        this.store.dispatch(DataSourceAction.loadDatasourceList());
+                        switch(layoutState.installationMode){
+                            case 'AP':
+                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                              break;
+                            case 'OES':
+                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
+                              break;
+                            case 'OES-AP':
+                              this.store.dispatch(DataSourceAction.loadDatasourceList());
+                              break;
+                        }
                         return DataSourceAction.updatesuccessResponse();
                     }),
                     catchError(errorRes => {
@@ -153,11 +194,22 @@ export class DataSourceEffect {
     updateOESDatasource = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.updateOESDatasources),
-            switchMap(action => {
+            withLatestFrom(this.appStore.select('layout')),
+            switchMap(([action,layoutState]) => {
                 return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/updateAccount/'+ action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(resdata['message'],'Success');
-                        this.store.dispatch(DataSourceAction.loadDatasourceList());
+                        switch(layoutState.installationMode){
+                            case 'AP':
+                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                              break;
+                            case 'OES':
+                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
+                              break;
+                            case 'OES-AP':
+                              this.store.dispatch(DataSourceAction.loadDatasourceList());
+                              break;
+                        }
                         return DataSourceAction.updatesuccessResponse();
                     }),
                     catchError(errorRes => {
