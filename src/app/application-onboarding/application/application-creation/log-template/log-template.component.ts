@@ -38,7 +38,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   logForm: CreateLogTemplate = null;             // It contain data of all 2 forms which send to backend after successful submission.
   dataSourceData: any;                           // It is use to store dataSource dropdown data.
   logAccountsList: string[];
-    selectedDataSource: any;
+    selectedDataSource: string;
     regFilterStatus: any;
     logSensitivityTypes: string[];
     loading = false; 
@@ -132,7 +132,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
 
 // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
 
-onDataSourceSelect(dataSourceValue){
+onDataSourceSelect(dataSourceValue: string){
   if(dataSourceValue === 'elasticsearch'){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
@@ -226,9 +226,6 @@ onCheckboxChange(status){
    this.regFilterStatus = status.target.checked;
 }
 
-// onCheckboonBaselineChangexChange(status){
-//   //this.autoBaselineStatus = status.target.checked;
-// }
 
 onClusterChange(status: boolean){
 
@@ -281,6 +278,7 @@ SubmitForm(){
    this.createLogForm.value['regExFilter'] = false;
     this.createLogForm.reset();
     this.logTopicsForm.reset();
+    this.selectedDataSource =  null;
 }
 
 // Below function to add new log topics
