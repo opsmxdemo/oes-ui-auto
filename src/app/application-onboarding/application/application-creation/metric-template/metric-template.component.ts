@@ -102,12 +102,12 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
         if(responseData.APMApplicationForAccounts != null){
           this.APMApplicationForAccounts = responseData.APMApplicationForAccounts;
         }
-        // if(responseData.INFRACookbook != null){
-        //   this.INFRACookbook = responseData.INFRACookbook;
-        // }
-        // if(responseData.APMCookbook != null){
-        //   this.APMCookbook = responseData.APMCookbook;
-        // }
+        if(responseData.INFRACookbook != null){
+          this.INFRACookbook = responseData.INFRACookbook;
+        }
+        if(responseData.APMCookbook != null){
+          this.APMCookbook = responseData.APMCookbook;
+        }
       }
     );
     
@@ -171,27 +171,33 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       cookbooklist: new FormArray([
         new FormGroup({
           group : new FormControl(),
-          isSelectedToSave : new FormControl(true),
+          isSelectedToSave : new FormControl(),
           metrics: new FormArray([
             new FormGroup({
               name: new FormControl(),                      
               accountName : new FormControl(),
               aggregator : new FormControl(),
               displayUnit : new FormControl(),
-              label : new FormControl(),
-              metricType : new FormControl()
+              metricType : new FormControl(),
+              aggregatorTimeInterval: new FormControl(),
+              aggregatorTimeIntervalUnit : new FormControl(),
+              duration: new FormControl(),
+              riskDirection : new FormControl(),
+              critical : new FormControl(),
+              watchlist : new FormControl()
             })
           ])
         })
       ])
     });
+    
 
 
     this.apmcookbookForm = new FormGroup({
       cookbooklist: new FormArray([
         new FormGroup({
           group : new FormControl(),
-          isSelectedToSave : new FormControl(true),
+          isSelectedToSave : new FormControl(),
           metrics: new FormArray([
             new FormGroup({
               name: new FormControl(),                      
@@ -199,12 +205,22 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
               aggregator : new FormControl(),
               displayUnit : new FormControl(),
               label : new FormControl(),
-              metricType : new FormControl()
+              metricType : new FormControl(),
+              aggregatorTimeIntervalUnit: new FormControl(),
+              riskDirection : new FormControl(),
+              critical : new FormControl(),
+              watchlist : new FormControl()
             })
           ])
         })
       ])
     });
+
+    //code to remove all items from the Form before pushing
+    const control = <FormArray>this.apmcookbookForm.controls['cookbooklist'];
+    for(let i = control.length-1; i >= 0; i--) {
+            control.removeAt(i)
+    }
 
     this.metricConfigForm = new FormGroup({
       isNormalize : new FormControl(true),
@@ -240,12 +256,15 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   onChangeDatasource(datasource,type){
     this.APMDSAccounts = "";
     if(type == 'apm'){
+      this.APMDSAccounts = [];
       this.selectedAPMDataSource = datasource; 
       this.store.dispatch(ApplicationActions.fetchAccountForAPMDataSource({datasource: datasource})); 
     }else if(type == 'custom'){
+      this.customDataSourceAccounts =[];
       this.selectedCustomDataSource = datasource;    
       this.store.dispatch(ApplicationActions.fetchAccountForCustomDataSource({datasource: this.selectedCustomDataSource}));   
     }else if(type== 'infra'){
+      this.InfraDSAccounts = [];
       this.selectedINFRADataSource = datasource; 
       this.store.dispatch(ApplicationActions.fetchAccountForInfraDataSource({datasource: datasource})); 
     }
@@ -254,16 +273,13 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   onChangeDSAccount(dsAccount,type){ 
     if(type == 'apm'){
       this.selectedAPMDSAccount = dsAccount;
+      this.APMApplicationForAccounts = [];
       this.store.dispatch(ApplicationActions.fetchApplicationForAPMAccounts({sourceType: this.selectedAPMDataSource, account: dsAccount}));
     }else if(type== 'infra'){
-     
-      //this.infracookbookForm.reset();
+      this.INFRACookbook = {};
       this.store.dispatch(ApplicationActions.fetchInfraGenerateCookbook({account:dsAccount,applicationName:dsAccount,metricType:'INFRA',sourceType:this.selectedINFRADataSource,templateName:this.apmFormGroup.value.templateName}));     
-      this.store.select(fromFeature.selectMetricTemplate).subscribe(
-        (responseData) => {         
-          if(responseData.INFRACookbook != null){
-            this.INFRACookbook = responseData.INFRACookbook;
-                      
+        if(this.INFRACookbook != null){  
+          if(this.INFRACookbook.data != undefined){                               
             if(this.INFRACookbook.data.groups.length > 0){
               this.INFRACooknookGroups = this.INFRACookbook.data.groups;
               //code to remove all items from the Form before pushing
@@ -291,18 +307,20 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                       accountName : new FormControl(metricObj.accountName),
                       aggregator : new FormControl(metricObj.aggregator),
                       displayUnit : new FormControl(metricObj.displayUnit),
-                      label : new FormControl (metricObj.label),
-                      metricType : new FormControl(metricObj.metricType)
+                      metricType : new FormControl(metricObj.metricType),
+                      aggregatorTimeInterval: new FormControl(metricObj.aggregatorTimeInterval),
+                      aggregatorTimeIntervalUnit : new FormControl(metricObj.aggregatorTimeIntervalUnit),
+                      duration: new FormControl(metricObj.duration),
+                      riskDirection : new FormControl(metricObj.riskDirection),
+                      critical : new FormControl(),
+                      watchlist : new FormControl()                    
                     })
                   )
                 })
                });
             }
-                     
+           }         
           }
-          
-        }
-      );
       
     }
      
@@ -310,13 +328,10 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
   onChangeAccountForDS(dsApplication, type){
     if(type == 'apm'){
-      //this.apmcookbookForm.reset();
+      this.APMCookbook = {};
       this.store.dispatch(ApplicationActions.fetchAPMGenerateCookbook({account:this.selectedAPMDSAccount,applicationName:dsApplication,metricType:'APM',sourceType:this.selectedAPMDataSource,templateName:this.apmFormGroup.value.templateName}));     
-      this.store.select(fromFeature.selectMetricTemplate).subscribe(
-        (responseData) => {         
-          if(responseData.APMCookbook != null){
-            this.APMCookbook = responseData.APMCookbook;
-                    
+      if(this.APMCookbook != null){    
+        if(this.APMCookbook.data != undefined){               
             if(this.APMCookbook.data.groups.length > 0){
               this.APMCookbookGroups = this.APMCookbook.data.groups;
               //code to remove all items from the Form before pushing
@@ -344,17 +359,19 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                       aggregator : new FormControl(metricObj.aggregator),
                       displayUnit : new FormControl(metricObj.displayUnit),
                       label : new FormControl (metricObj.label),
-                      metricType : new FormControl(metricObj.metricType)
+                      metricType : new FormControl(metricObj.metricType),
+                      aggregatorTimeIntervalUnit: new FormControl(metricObj.aggregatorTimeIntervalUnit),
+                      riskDirection : new FormControl(metricObj.riskDirection),
+                      critical : new FormControl(),
+                      watchlist : new FormControl()
                     })
                   )
                 })                               
                });
+              }
             }
-         
           }
-          
-        }
-      );
+         
     }
   }
 
@@ -419,7 +436,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
           
     this.apminfraTemplate = {
       "templateName" : this.apmFormGroup.value.templateName,
-      "applicationName": this.apmFormGroup.value.applicationName,
+      "applicationName": this.apmFormGroup.value.apmApplication != null ? this.apmFormGroup.value.apmApplication : this.infraFormGroup.value.applicationName,
       "data": {
         "groups" : [],
         "isNormalize": this.metricConfigForm.value.isNormalize,
@@ -456,40 +473,49 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
     this.infracookbookForm = new FormGroup({
       cookbooklist: new FormArray([
-        new FormGroup({
-          group : new FormControl(),
-          isSelectedToSave : new FormControl(true),
-          metrics: new FormArray([
-            new FormGroup({
-              name: new FormControl(),                      
-              accountName : new FormControl(),
-              aggregator : new FormControl(),
-              displayUnit : new FormControl(),
-              label : new FormControl(),
-              metricType : new FormControl()
-            })
-          ])
-        })
+        // new FormGroup({
+        //   group : new FormControl(),
+        //   isSelectedToSave : new FormControl(),
+        //   metrics: new FormArray([
+        //     new FormGroup({
+        //       name: new FormControl(),                      
+        //       accountName : new FormControl(),
+        //       aggregator : new FormControl(),
+        //       displayUnit : new FormControl(),
+        //       metricType : new FormControl(),
+        //       aggregatorTimeInterval: new FormControl(),
+        //       aggregatorTimeIntervalUnit : new FormControl(),
+        //       duration: new FormControl(),
+        //       riskDirection : new FormControl(),
+        //       critical : new FormControl(),
+        //       watchlist : new FormControl()
+        //     })
+        //   ])
+        //})
       ])
     });
 
 
     this.apmcookbookForm = new FormGroup({
       cookbooklist: new FormArray([
-        new FormGroup({
-          group : new FormControl(),
-          isSelectedToSave : new FormControl(true),
-          metrics: new FormArray([
-            new FormGroup({
-              name: new FormControl(),                      
-              accountName : new FormControl(),
-              aggregator : new FormControl(),
-              displayUnit : new FormControl(),
-              label : new FormControl(),
-              metricType : new FormControl()
-            })
-          ])
-        })
+        // new FormGroup({
+        //   group : new FormControl(),
+        //   isSelectedToSave : new FormControl(),
+        //   metrics: new FormArray([
+        //     new FormGroup({
+        //       name: new FormControl(),                      
+        //       accountName : new FormControl(),
+        //       aggregator : new FormControl(),
+        //       displayUnit : new FormControl(),
+        //       label : new FormControl(),
+        //       metricType : new FormControl(),
+        //       aggregatorTimeIntervalUnit: new FormControl(),
+        //       riskDirection : new FormControl(),
+        //       critical : new FormControl(),
+        //       watchlist : new FormControl()
+        //     })
+        //   ])
+        // })
       ])
     });
 

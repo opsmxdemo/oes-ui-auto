@@ -1,4 +1,4 @@
 {
-    "endPointUrl":"http://40.64.81.121:8084/",
+    "endPointUrl":"http://autopilot-gate.engineering.opsmx.net/",
     "setApplicationInterval": 16000
 }
