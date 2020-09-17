@@ -171,7 +171,7 @@
                 </td>
                 <td>
                   <span *ngIf="service.logsScore == -1 || service.logsScore === null">- </span>
-                 <span *ngIf="service.logsScore != null">{{service.logsScore}} </span>
+                 <span *ngIf="service.logsScore != -1 && service.logsScore != null">{{service.logsScore}} </span>
                   </td>
                 <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
               </tr>
