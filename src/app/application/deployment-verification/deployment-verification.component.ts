@@ -123,107 +123,7 @@ export class DeploymentVerificationComponent implements OnInit {
       }
     }
 
-    //code while submitting the manual trigger form
-    
-  // Below function is use to fetched json from json editor
-  showManualTriggerJson(event = null){
-    this.manualTriggerData = this.editor.get();
-  }
-  // Below function is use to save manualTrigger data on click of triggerBtn
-  submitManualTriggerData(){
-    this.store.dispatch(
-      DeploymentAction.manualTriggerData({ 
-        data: this.manualTriggerData,
-      })
-    );
-    // this.data = {};
-  }
-
-   // Below function is execute on click of Form or Editor tab.
-   onManualTriggerClickTab(event){
-    if(event.target.id === 'manualTrigger-form-tab'){
-      this.selectedManualTriggerTab = "manualTrigger-form-tab";
-    } else if(event.target.id === 'manualTrigger-editor-tab') {
-      this.selectedManualTriggerTab = "manualTrigger-editor-tab";
-    }
-  }
-
-// code for application dropdown display starts here
-
-  onSelectionChangeApplication(event) {
-    
-    this.canaries = [];
-    this.selectedApplicationName = event;
-    const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-    if (d['canaryIdList'].length === 0) {
-      this.canaries = [];
-      this.control.setValue('');
-      this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
-    } else {
-      this.canaries = d['canaryIdList'].toString().split(",");
-      this.canaries.sort();
-      this.canaries = [...new Set(this.canaries)];
-      this.filteredCanaries = this.control.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filterCanaries(value))
-      );
-      let selectedCan = this.canaries.map(parseFloat).sort();
-      if(this.control.value != Math.max.apply(null, selectedCan)) {
-        this.control.setValue(Math.max.apply(null, selectedCan));
-       // this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
-      }
-            
-      this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
-      this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: Math.max.apply(null, selectedCan)}));
-      if(this.selectedServiceId != undefined){
-        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: Math.max.apply(null, selectedCan), serviceId: this.selectedServiceId !== undefined?this.selectedServiceId:null }));
-      }
-    }
-  }
-  //code for change the canary
-  onSelectionChangeCanaryRun(canary) {
-    this.control.setValue(canary);
-    this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
-    this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
-    if(this.selectedServiceId != undefined){
-      this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
-    }
-  }
-
-    buildApplicationForm() {
-      this.applicationForm = this.fb.group({
-        application: [''],
-      });
-      
-    }
-  
-    filterApplications(applicationName: string): any[] {
-      return this.applicationList.filter(option => option.applicationName.toLowerCase().indexOf(applicationName.toLowerCase()) === 0);
-    }
-    
-  
-    initFilterApplication() {
-      this.applicationListOptions = this.applicationForm
-        .get('application')
-        .valueChanges.pipe(
-        startWith<string | any>(''),
-        map(val => (typeof val === 'string' ? val : val.applicationName)),
-        map(applicationName => (applicationName ? this.filterApplications(applicationName) : this.applicationList.slice()))
-        );  
-    }
-
-  // code for application dropdown display ends here
-
-
-  // filter for canaries
-  private _filterCanaries(value: string): string[] {
-    const filterValue = this._normalizeValue(value);
-    return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
-  }
-
-  private _normalizeValue(value: string): string {
-    return value;
-  }
+ 
     
   ngOnInit(): void {
   
@@ -270,6 +170,113 @@ export class DeploymentVerificationComponent implements OnInit {
     }
   }
 
+
+     //code while submitting the manual trigger form
+    
+  // Below function is use to fetched json from json editor
+  showManualTriggerJson(event = null){
+    this.manualTriggerData = this.editor.get();
+  }
+  // Below function is use to save manualTrigger data on click of triggerBtn
+  submitManualTriggerData(){
+    this.store.dispatch(
+      DeploymentAction.manualTriggerData({ 
+        data: this.manualTriggerData,
+      })
+    );
+  }
+
+   // Below function is execute on click of Form or Editor tab.
+   onManualTriggerClickTab(event){
+    if(event.target.id === 'manualTrigger-form-tab'){
+      this.selectedManualTriggerTab = "manualTrigger-form-tab";
+    } else if(event.target.id === 'manualTrigger-editor-tab') {
+      this.selectedManualTriggerTab = "manualTrigger-editor-tab";
+    }
+  }
+
+// code for application dropdown display starts here
+
+  onSelectionChangeApplication(event) {
+    this.canaries = [];
+    this.selectedApplicationName = event;
+    const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+    if (d['canaryIdList'].length === 0) {
+      this.canaries = [];
+      this.control.setValue('');
+      this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
+    } else {
+      this.canaries = d['canaryIdList'].toString().split(",");
+      this.canaries.sort();
+      this.canaries = [...new Set(this.canaries)];
+      this.filteredCanaries = this.control.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filterCanaries(value))
+      );
+      let selectedCan = this.canaries.map(parseFloat).sort();
+      if(this.control.value != Math.max.apply(null, selectedCan)) {
+        this.control.setValue(Math.max.apply(null, selectedCan));
+       // this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
+      }
+            
+      this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
+      this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: Math.max.apply(null, selectedCan)}));
+      if(this.selectedServiceId != undefined){
+        this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: Math.max.apply(null, selectedCan), serviceId: this.selectedServiceId !== undefined?this.selectedServiceId:null }));
+      }
+    }
+  }
+
+  //code for change the canary
+  onSelectionChangeCanaryRun(canary) {
+    this.control.setValue(canary);
+    this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
+    this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
+    if(this.selectedServiceId != undefined){
+      this.store.dispatch(DeploymentAction.loadServiceInformation({canaryId: canary, serviceId: this.selectedServiceId !== undefined ? this.selectedServiceId : null }));
+    }
+  }
+
+  // build application form
+
+    buildApplicationForm() {
+      this.applicationForm = this.fb.group({
+        application: [''],
+      });
+      
+    }
+  
+    // function to filter applications
+    filterApplications(applicationName: string): any[] {
+      return this.applicationList.filter(option => option.applicationName.toLowerCase().indexOf(applicationName.toLowerCase()) === 0);
+    }
+    
+  // initialization application filter
+
+    initFilterApplication() {
+      this.applicationListOptions = this.applicationForm
+        .get('application')
+        .valueChanges.pipe(
+        startWith<string | any>(''),
+        map(val => (typeof val === 'string' ? val : val.applicationName)),
+        map(applicationName => (applicationName ? this.filterApplications(applicationName) : this.applicationList.slice()))
+        );  
+    }
+
+  // code for application dropdown display ends here
+
+  // filter for canaries
+  private _filterCanaries(value: string): string[] {
+    const filterValue = this._normalizeValue(value);
+    return this.canaries.filter(canaryId => this._normalizeValue(canaryId).includes(filterValue));
+  }
+
+  private _normalizeValue(value: string): string {
+    return value;
+  }
+
+  // function to increment canary runs
+
   incrementCanaryRun(max: any) {
     this.canaries.sort();
     this.canaryList = this.canaries;
@@ -304,6 +311,9 @@ export class DeploymentVerificationComponent implements OnInit {
       } 
     }
   }
+
+  // function to decrement canary runs
+
   decrementCanaryRun(min: any) {
     this.incredementDisable = false;
     this.canaries.sort();
@@ -339,13 +349,11 @@ export class DeploymentVerificationComponent implements OnInit {
     }
   }
 
-
   //on click of service
   getService(item: any) {
     this.selectedServiceId = item.serviceId;
     this.serviceNameInfo = item;
   }
-
 
   //code for application list display starts here
   displayFn(user: User): string {
@@ -374,7 +382,6 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // get latest canary run
   getLatestRun() {
-    //if(this.latestCounter === 1){
       this.store.dispatch(DeploymentAction.loadLatestRun());
       this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
         (resData) => {
@@ -404,6 +411,7 @@ export class DeploymentVerificationComponent implements OnInit {
     }
   
   // get application details
+
   getAllApplications() {
     this.store.dispatch(DeploymentAction.loadApplications());
     this.buildApplicationForm();
@@ -419,11 +427,11 @@ export class DeploymentVerificationComponent implements OnInit {
     );
   }
 
-    //code for pagination of services list
   // Below function is used if user want to refresh list data
   refreshList() {
      this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.control.value}));
   } 
+
     //Below function is execute on search
   onSearch(){
     if(this.searchData != ''){
@@ -660,9 +668,6 @@ export class DeploymentVerificationComponent implements OnInit {
          
       }
     })
-
-   
-
   }
 
 
