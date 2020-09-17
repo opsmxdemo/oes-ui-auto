@@ -16,8 +16,7 @@ import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { MatSidenav } from '@angular/material/sidenav';
-
-
+import Swal from 'sweetalert2';
 
 export interface User {
   applicationName: string;
@@ -636,16 +635,33 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // Below fuction is use to cancel the running canary
   cancelRunningCanary(id){
-    this.store.dispatch(DeploymentAction.loadcancelRunningCanary({ canaryId: id}));
-    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
-      (resData) => {
-        if(resData.cancelRunningCanaryStatus != null){
-                this.deployementLoading = resData.deployementLoading;
-                this.cancelRunningCanaryData = resData.cancelRunningCanaryStatus;
-                this.notifications.showSuccess('', resData.cancelRunningCanaryStatus['message']);
-           }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, stop the analysis!',
+    }).then((result) => {
+      if (result.value) {
+        $("[data-toggle='tooltip']").tooltip('hide');
+      
+        this.autopilotService.cancelCanaryRun(id).subscribe((res: any) => {
+          this.cancelRunningCanaryData = res;
+          this.notifications.showSuccess('', res['message']);
+        },
+        (error) => {           
+          this.notifications.showError('',error);      
+        })
+
+      }else{
+         
       }
-    );
+    })
+
+   
 
   }
 
