@@ -21,12 +21,8 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 
 export class ApplicationDashboardComponent implements OnInit {
 
-  nodes= [];                      // getting nodes data for network chart
-  clusters: null;                    // getting cluster data for network chart
-  links= [];                      // getting edges data for network chart
-  networkChartData = null;              // It is use to store network chart data fetched from api.
-
-  subscription: Subscription;
+  
+  subscription: Subscription;               
   applicationFinalData: any[] = [];
   finalLabelArray = [];
   public applicationData: any[] = [];
@@ -48,8 +44,13 @@ export class ApplicationDashboardComponent implements OnInit {
   statusMessage: string;
   finalSelectedTabNumber: number = -1;
   previouSelectedApp: any;
-  
   finalApplicationId: any;
+
+  nodes= [];                      // getting nodes data for network chart
+  clusters: null;                    // getting cluster data for network chart
+  links= [];                      // getting edges data for network chart
+  networkChartData = null;              // It is use to store network chart data fetched from api.
+
 
 
 
@@ -143,10 +144,10 @@ export class ApplicationDashboardComponent implements OnInit {
         this.oesServiceData = serviceDataList['oesService'];
         this.autoPilotServiceData = serviceDataList['autopilotService'];
         this.spinnerService = false;
-        if (this.oesServiceData.length === 0) {
+        if (this.oesServiceData === null || this.oesServiceData.length === 0) {
           this.serviceErrorMessage = 'No services found in this application'; 
         }
-        if (this.autoPilotServiceData.length === 0) {
+        if (this.autoPilotServiceData === null || this.autoPilotServiceData.length === 0 ) {
           this.serviceErrorMessage = 'No services found in this application'; 
         }
       },
