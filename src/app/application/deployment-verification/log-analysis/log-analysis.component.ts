@@ -4,7 +4,6 @@ import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
 import * as logTopicsList from '../../../../assets/data/logsTopicsList.json';
-import Swal from 'sweetalert2';
 
 
 @Component({
@@ -100,6 +99,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   completeCluster: any;
   showFullLogLine: any = {};
   rerunResponse : any;
+  errorMessage = 'No data found to display';                           // It is use when expected data not found in component.
+  islogAnalysisAvailable = true;
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -300,77 +301,82 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
           this.logAnalysisResults.templateName ? this.logTemplate = this.logAnalysisResults.templateName.split(":").pop() : this.logTemplate = "";
           this.logAnalysisResults.data ? this.logAnalysisData = this.logAnalysisResults.data : this.logAnalysisData = [];
           if (this.logAnalysisData.clusters) {
-            this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
-              return el.color == 'dark red';
-            });
-            let criticalClusters = this.criticalArray.map(obj => {
-              let rObj = {
-                "x": obj.id,
-                "y": obj.v2Len + obj.v1Len,
-                "z": obj.combineClust.substring(0, 500),
-                "name": obj.id,
+            if(this.logAnalysisData.clusters.length > 0){
+              this.islogAnalysisAvailable = true;
+              this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
+                return el.color == 'dark red';
+              });
+              let criticalClusters = this.criticalArray.map(obj => {
+                let rObj = {
+                  "x": obj.id,
+                  "y": obj.v2Len + obj.v1Len,
+                  "z": obj.combineClust.substring(0, 500),
+                  "name": obj.id,
+                };
+                return rObj
+              })
+              this.errorArray = this.logAnalysisData.clusters.filter(function (el) {
+                return el.color == 'red';
+              });
+              let errorClusters = this.errorArray.map(obj => {
+                let rObj = {
+                  "x": obj.id,
+                  "y": obj.v2Len + obj.v1Len,
+                  "z": obj.combineClust.substring(0, 500),
+                  "name": obj.id,
+                };
+                return rObj
+              })
+              this.warningArray = this.logAnalysisData.clusters.filter(function (el) {
+                return el.color == 'yellow';
+              });
+              let warningClusters = this.warningArray.map(obj => {
+                let rObj = {
+                  "x": obj.id,
+                  "y": obj.v2Len + obj.v1Len,
+                  "z": obj.combineClust.substring(0, 500),
+                  "name": obj.id,
+                };
+                return rObj
+              })
+              this.dataSource["dataset"] = [];
+              let newobjcriticalClusters = {
+                "color": "#a32133",
+                "seriesName": "Critical",
+                "data": criticalClusters
               };
-              return rObj
-            })
-            this.errorArray = this.logAnalysisData.clusters.filter(function (el) {
-              return el.color == 'red';
-            });
-            let errorClusters = this.errorArray.map(obj => {
-              let rObj = {
-                "x": obj.id,
-                "y": obj.v2Len + obj.v1Len,
-                "z": obj.combineClust.substring(0, 500),
-                "name": obj.id,
+              this.dataSource["dataset"].push(newobjcriticalClusters);
+  
+              let newobjerrorClusters = {
+                "color": "#e0392e",
+                "seriesName": "Errors",
+                "data": errorClusters
               };
-              return rObj
-            })
-            this.warningArray = this.logAnalysisData.clusters.filter(function (el) {
-              return el.color == 'yellow';
-            });
-            let warningClusters = this.warningArray.map(obj => {
-              let rObj = {
-                "x": obj.id,
-                "y": obj.v2Len + obj.v1Len,
-                "z": obj.combineClust.substring(0, 500),
-                "name": obj.id,
+              this.dataSource["dataset"].push(newobjerrorClusters);
+  
+              let newobjwarningClusters = {
+                "color": "#f3af70",
+                "seriesName": "Warning",
+                "data": warningClusters
               };
-              return rObj
-            })
-            this.dataSource["dataset"] = [];
-            let newobjcriticalClusters = {
-              "color": "#a32133",
-              "seriesName": "Critical",
-              "data": criticalClusters
-            };
-            this.dataSource["dataset"].push(newobjcriticalClusters);
-
-            let newobjerrorClusters = {
-              "color": "#e0392e",
-              "seriesName": "Errors",
-              "data": errorClusters
-            };
-            this.dataSource["dataset"].push(newobjerrorClusters);
-
-            let newobjwarningClusters = {
-              "color": "#f3af70",
-              "seriesName": "Warning",
-              "data": warningClusters
-            };
-            this.dataSource["dataset"].push(newobjwarningClusters);
-            this.bubbleChartData = [
-              {
-                "name": "Critical",
-                "series": criticalClusters
-              },
-              {
-                "name": "Error",
-                "series": errorClusters
-              },
-              {
-                "name": "Warning",
-                "series": warningClusters
-              }
-            ];
+              this.dataSource["dataset"].push(newobjwarningClusters);
+              this.bubbleChartData = [
+                {
+                  "name": "Critical",
+                  "series": criticalClusters
+                },
+                {
+                  "name": "Error",
+                  "series": errorClusters
+                },
+                {
+                  "name": "Warning",
+                  "series": warningClusters
+                }
+              ];
+            }
+            
+            
           } else {
             this.bubbleChartData = [
               {
@@ -386,6 +392,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                 "series": []
               }
             ];
+            this.islogAnalysisAvailable = false;
           }
 
           if (this.fetchLogTopics != null) {
@@ -438,6 +445,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             }
           })
 
+        }else{
+          this.islogAnalysisAvailable = false;
         }
       }
     );

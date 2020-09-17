@@ -106,7 +106,7 @@
                                <tbody>                                
                                 <tr *ngFor="let apmgroup of apmcookbookForm.value.cookbooklist ; let i=index;" >
                                   <td [formGroupName]=i>
-                                    <div class="custom-control custom-checkbox">
+                                    <div class="custom-control custom-checkbox">                                      
                                       <input type="checkbox" class="custom-control-input" [checked]="apmgroup.isSelectedToSave" id={{apmgroup.group}} >
                                       <label class="custom-control-label" for={{apmgroup.group}}>{{apmgroup.group}}</label>
                                     </div>
@@ -370,9 +370,9 @@
                                                     <option>{{metric.displayUnit}}</option>
                                                   </select>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                   <input type="text" value="{{metric.label}}" style="width: 90px;" formControlName="label"/>
-                                                </td>
+                                                </td> -->
                                                 <td>
                                                   <div class="btn-group">
                                                     <!-- <input type="text" class="btn btn-input" value="0" /> -->
