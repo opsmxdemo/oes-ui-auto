@@ -103,6 +103,8 @@ export class DeploymentVerificationComponent implements OnInit {
     manualTriggerData: any;
     selectedManualTriggerTab: string;
     checkCanaryId: boolean = true;
+    
+  serviceIdAfterRerun :any;     //variable used to set service Id from child component log analysis after rerun
 
   // App form end
 
@@ -138,7 +140,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.getAllApplications();
     this.getApplicationHealth();
     if(this.route.params['_value'].canaryId != null){
-     
+      this.canaryId = this.route.params['_value'].canaryId;
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.route.params['_value'].canaryId }));
       this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: this.route.params['_value'].canaryId}));
      // this.onSelectionChangeApplication(this.route.params['_value'].applicationName);
@@ -168,6 +170,13 @@ export class DeploymentVerificationComponent implements OnInit {
         map(value => this._filterCanaries(value))
       );
     }
+
+    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
+      (resData) => {
+        if (resData.reclassificationHistoryResults != null) {
+          this.reclassificationHistory=resData.reclassificationHistoryResults
+        }
+      });
   }
 
 
@@ -218,7 +227,7 @@ export class DeploymentVerificationComponent implements OnInit {
         this.control.setValue(Math.max.apply(null, selectedCan));
        // this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: Math.max.apply(null, selectedCan)}));
       }
-            
+      this.canaryId =  Math.max.apply(null, selectedCan);  
       this.store.dispatch(DeploymentAction.loadServices({ canaryId: Math.max.apply(null, selectedCan) }));
       this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: Math.max.apply(null, selectedCan)}));
       if(this.selectedServiceId != undefined){
@@ -230,6 +239,7 @@ export class DeploymentVerificationComponent implements OnInit {
   //code for change the canary
   onSelectionChangeCanaryRun(canary) {
     this.control.setValue(canary);
+    this.canaryId = canary;
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: canary}));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId:canary}));
     if(this.selectedServiceId != undefined){
@@ -391,6 +401,7 @@ export class DeploymentVerificationComponent implements OnInit {
             this.checkCanaryId =false;
           }
           if (resData.canaryId != null) {
+            this.canaryId = resData.canaryId;
             this.deployementLoading = resData.deployementLoading;
             if(this.latestCanaryCounter === 1){
               this.deployementRun = resData.canaryId;
@@ -525,7 +536,12 @@ export class DeploymentVerificationComponent implements OnInit {
                   this.serviceListLength = this.deploymentServices.services.length;  
                   this.renderPage();
                   this.tableIsEmpty = false;
-                  this.selectedServiceId = this.deploymentServices.services[0].serviceId;
+                  //code to check if the service id available which set after rerun from log analysis componenet
+                  if(this.serviceIdAfterRerun != undefined){
+                    this.selectedServiceId = this.serviceIdAfterRerun;
+                  }else{
+                    this.selectedServiceId = this.deploymentServices.services[0].serviceId;
+                  }                  
                   this.serviceNameInfo = this.deploymentServices.services[0];   
                   if (this.serviceConter === 1 && this.selectedServiceId != undefined) {
                     this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: this.deployementRun, serviceId: this.selectedServiceId}));
@@ -703,15 +719,12 @@ export class DeploymentVerificationComponent implements OnInit {
 
    // for getting reclassification history data
    getReclassifiactionHistory(){
-    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'] }));
-    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
-      (resData) => {
-        if (resData.reclassificationHistoryResults != null) {
-          this.reclassificationHistory=resData.reclassificationHistoryResults
-        }
-            
+    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'],canaryId: this.canaryId, serviceId:this.selectedServiceId }));    
+  }
 
-      });
+  
+  getlogAnalysisData(event){
+    this.serviceIdAfterRerun = event;
   }
   
 }

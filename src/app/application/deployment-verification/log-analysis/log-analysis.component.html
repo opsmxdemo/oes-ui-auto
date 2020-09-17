@@ -274,10 +274,8 @@
   </div>
 
   <div class="bottom_btns mt-auto bg-white position-sticky text-right">
-    <button class="btn mr-2 btn-default" data-toggle="tooltip"
-      title="Clear the reclassification done by the user" (click)="reset()">Reset</button>
-    <button class="btn mr-2 btn-default" (click)="rerunLogs()" data-toggle="tooltip"
-      title="Update and Rerun the canary with the updated classification from the user">Re-run</button>
+    <button class="btn mr-2" [ngClass]="{'btn-primary': classifiedLogsList.length > 0, 'btn-default':classifiedLogsList.length <= 0 }" data-toggle="tooltip" title="Clear the reclassification done by the user" (click)="reset()" [disabled]="classifiedLogsList.length <= 0">Reset</button>
+    <button class="btn mr-2" [ngClass]="{'btn-primary': classifiedLogsList.length > 0, 'btn-default':classifiedLogsList.length <= 0}" (click)="rerunLogs()" data-toggle="tooltip" title="Update and Rerun the canary with the updated classification from the user" [disabled]="classifiedLogsList.length <= 0">Re-run</button>
   </div>
 </div>
 <div class="table-responsive" *ngIf="!islogAnalysisAvailable">
@@ -285,29 +283,7 @@
     <app-component-error-listing [errorString] = "errorMessage"></app-component-error-listing>
   </div>
 </div>
-<!-- <div class="modal bd-example-modal-lg fade show " id="reclassificationHistory" tabindex="-1" role="dialog" aria-labelledby="reclassificationHistorLabel" aria-hidden="true" aria-modal="true"    >
-  <div class="modal-dialog modal-dialog-centered mw-100 w60 ml20" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Logs Reclassification History</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <i class="fa fa-times"></i>
-        </button>
-      </div>
-      <div style="min-height: 400px;" class="modal-body">
-        <div *ngFor='let feedbackHistory of reclassificationHistory.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
-          <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>
-          <div style="padding-top:10px ; padding: 3px;" >ReClassified From <span [ngClass]="{'text-danger':feedbackHistory.existingTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.existingTopic == 'ERROR','text-warning':feedbackHistory.existingTopic == 'WARN','text-muted':feedbackHistory.existingTopic=='IGNORE'}">{{feedbackHistory.existingTopic}}</span> To {{feedbackHistory.newTopic}}</div>
-          <div style="padding-top:10px ; padding: 3px;"><span>{{feedbackHistory.timestamp | changeTImestamptotime}}</span> Comments : {{feedbackHistory.feedbackComment}}</div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">OK</button>
-      </div>
-      
-    </div>
-  </div>
-</div> -->
+
 <!-- /.col-sm-4 -->
 
 <!-- /.tab-default -->

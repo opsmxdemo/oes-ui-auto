@@ -1,5 +1,5 @@
 // import { clusters } from './../../application-dashboard/data';
-import { Component, Input, OnChanges, SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input,Output, OnChanges, SimpleChanges, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef,EventEmitter } from '@angular/core';
 import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
@@ -19,6 +19,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   @Input() canaryId: any[];
   @Input() serviceId: any[];
+
+  @Output() selectedServiceId = new EventEmitter<any>();
 
   showChart = true;                                                   // It is use to hide or show the bubble chart.
   switchToState = 'Collapse All';                                     // It is use to store value of Template State which user want to switch.
@@ -132,7 +134,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       this.warningTopicStrings=this.sortByLength(this.warningTopicStrings)
       this.ignoreTopicStrings=this.sortByLength(this.ignoreTopicStrings)
       this.criticalTopicStrings=this.sortByLength(this.criticalTopicStrings)
-
+      
 
 
   }
@@ -203,8 +205,6 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         }
       ],
       dataset: [],
-
-
     };
     this.dataSourceColumnChart = {
       chart: {
@@ -272,29 +272,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.store.select(fromFeature.selectLogAnalysisState).subscribe(
       (resData) => {
         if(this.fetchLogTopics != null){
-        this.fetchLogTopics = resData.fetchLogTopics;        
+          this.fetchLogTopics = resData.fetchLogTopics;        
         }
-        //Below is the sample data of how the fetchlogTopics and Cluster Tags will come from backend
-        // else{
-        //   this.fetchLogTopics = {
-        //     clusterTopics: [
-        //       {
-        //         "string": "sent postmaster request for messageid variablexml",
-        //         "tag": "INFRA ERROR"
-        //       },
-        //       {
-        //         "string": "opened connection variablelist to tst mongo",
-        //         "tag": "BUILD ERROR"
-        //       }
-        //     ],
-        //     clusterTags: [
-        //       "BUILD ERROR",
-        //       "INFRA ERROR",
-        //       "UNCLASSIFIED"
-        //     ]
-        //   }
-        // }
-        
         if (resData.logsResults != null) {
           this.logAnalysisResults = resData.logsResults;
           this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
@@ -375,8 +354,6 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                 }
               ];
             }
-            
-            
           } else {
             this.bubbleChartData = [
               {
@@ -454,8 +431,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   }
 
   changeSensitivity(e) {
-    console.log(e.target.value);
-    console.log(this.selectedSensitivity);
+    //console.log(e.target.value);
+    //console.log(this.selectedSensitivity);
   }
 
   changeCriticality(e, log) {
@@ -490,8 +467,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         this.classifiedLogsList.splice(idValue, 1);
       }
     }      
-      this.classifiedLogsList.push(feedbackErrorTopicsList);
-      console.log(this.classifiedLogsList);
+    this.classifiedLogsList.push(feedbackErrorTopicsList);
   }
   
 
@@ -512,19 +488,16 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   changeClusterTag(e, log, value, clusterTag) {
     // console.log(e, log, value);
     //this.selectedClusterInfo = log;
-
-if(clusterTag == undefined || clusterTag == null){
-  clusterTag = "";
-}
+    if(clusterTag == undefined || clusterTag == null){
+      clusterTag = "";
+    }
     // log.isClassified = true;
     var clusterTagChangeObj: any = {};
     clusterTagChangeObj = {
       "type": "tag",
       "tag": value,
-      // "tag": clusterTagData,
       "cluster": log.clusterTemplate,
       "logId": log.id,
-      // "comment": (log.clusterTagInfo.comments == "" || log.clusterTagInfo.comments == null) == true ? "" : log.clusterTagInfo.comments,
       "comment": clusterTag,
       "version": log.version,
       "existingTag": log.clusterTagInfo.tag,
@@ -541,16 +514,6 @@ if(clusterTag == undefined || clusterTag == null){
     this.classifiedLogsList.push(clusterTagChangeObj);
 
   };
-
-  saveClusterTag = function () {
-    // var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
-    // this.classifiedLogsList[idValue].feedbackComment = this.selectedClusterInfo.comment;    	
-    // var idValue = this.classifiedLogsList.findIndex(x => x.logId === $scope.selectedCluster.id);
-    // if($classifiedLogsList[idValue].type == "tag"){
-    //   $scope.classifiedLogsList[idValue].comment = $scope.selectedCluster.clusterTagInfo.comments; 
-    // }
-  };
-
 
   onClickLogEventTab(eventTab) {
     this.clusterId = null;
@@ -665,10 +628,10 @@ if(clusterTag == undefined || clusterTag == null){
       "feedbackErrorTopics": this.classifiedLogsList,
       "sensitivity": this.selectedSensitivity
     };
-    console.log("Post Data to Rerun: ", postDataToRerun);
-    
-    this.rerunResponse = {};
+    this.rerunResponse = {};    
     this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
+    this.selectedServiceId.emit(this.serviceId);
+    this.classifiedLogsList = [];
   }
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
