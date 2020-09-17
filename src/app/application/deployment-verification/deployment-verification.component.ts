@@ -636,16 +636,13 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // Below fuction is use to cancel the running canary
   cancelRunningCanary(id){
-    this.store.dispatch(DeploymentAction.loadcancelRunningCanary({ canaryId: id}));
-    this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
-      (resData) => {
-        if(resData.cancelRunningCanaryStatus != null){
-                this.deployementLoading = resData.deployementLoading;
-                this.cancelRunningCanaryData = resData.cancelRunningCanaryStatus;
-                this.notifications.showSuccess('', resData.cancelRunningCanaryStatus['message']);
-           }
-      }
-    );
+    this.autopilotService.cancelCanaryRun(id).subscribe((res: any) => {
+      this.cancelRunningCanaryData = res;
+      this.notifications.showSuccess('', res['message']);
+    },
+    (error) => {           
+      this.notifications.showError('',error);      
+    })
 
   }
 
