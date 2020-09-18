@@ -572,7 +572,7 @@
                     <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
                     [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
                         <ng-container *ngIf = "selectedTab === 'log-analysis'">
-                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-log-analysis>
+                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" (selectedServiceId)="getlogAnalysisData($event)"></app-log-analysis>
                         </ng-container>
                       </div>
                       <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"
