@@ -175,23 +175,6 @@ fetchClusterLogsData = createEffect(() =>
     )
 )
 
-//The effect is used to fetch complete log line
-fetchClusterLogsData = createEffect(() =>
-    this.actions$.pipe(
-        ofType(LogAnalysisActions.fetchClusterLogData),
-        switchMap((action) => {  
-            return this.http.get(this.environment.config.autoPilotEndPointUrl +'canaries/clusterLogData?canaryId=' + action.canaryId + '&serviceId=' + action.serviceId + '&clusterId=' + action.clusterId + '&version=' + action.version).pipe(                  
-                map(resdata => {
-                   return LogAnalysisActions.loadClusterLogData({clusterLogs:resdata});
-                }),
-                catchError(errorRes => {
-                    this.toastr.showError('Server Error !!', 'ERROR')
-                    return handleError(errorRes);
-                })
-            );
-        })
-    )
-)
 
 
 }
