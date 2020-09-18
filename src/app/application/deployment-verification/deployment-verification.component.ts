@@ -11,6 +11,7 @@ import {Observable} from 'rxjs';
 import {map, startWith, tap} from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
+import * as fromApp from '../../store/app.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
 import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.actions';
 import { Store } from '@ngrx/store';
@@ -109,7 +110,7 @@ export class DeploymentVerificationComponent implements OnInit {
   // App form end
 
    constructor(private route: ActivatedRoute ,public sharedService: SharedService, public store: Store<fromFeature.State>,
-    public autopilotService: AutopiloService, public notifications: NotificationService,
+    public autopilotService: AutopiloService, public notifications: NotificationService,public appStore: Store<fromApp.AppState>,
     private fb: FormBuilder) { 
     }
 
@@ -158,7 +159,13 @@ export class DeploymentVerificationComponent implements OnInit {
      }
     
     }else{
-      this.getLatestRun();
+      this.appStore.select('auth').subscribe(
+        (response)=>{
+          if(response.authenticated){
+            this.getLatestRun();
+          }
+        }
+      )
     }
     
     this.getAllServices();

@@ -288,6 +288,7 @@ export class ApplicationDashboardComponent implements OnInit {
       this.selectedApplication(this.finalSelectedTabNumber, app, this.showAppDataType);
     //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
+      this.subscription.unsubscribe();
       this.getReleases(labelType, app, subIndex, event);
 
      // this.selectedApplication(index, app);
