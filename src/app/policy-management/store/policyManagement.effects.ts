@@ -74,7 +74,6 @@ export class PolicyEffect {
                         return PolicyAction.fetchEndpointType({ endpointType: resdata });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );

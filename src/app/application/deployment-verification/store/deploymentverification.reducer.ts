@@ -17,6 +17,9 @@ export interface State {
     applicationHealthDetailsLoading: boolean;
     serviceInformation: any;
     serviceInformationLoading: boolean;
+    cancelRunningCanaryStatus: any;
+    manualTriggerResponse: any;
+    reclassificationHistoryResults:any;
 }
 
 export const initialState: State = {
@@ -32,6 +35,9 @@ export const initialState: State = {
     applicationHealthDetailsLoading: false,
     serviceInformation: null,
     serviceInformationLoading: false,
+    cancelRunningCanaryStatus: null,
+    manualTriggerResponse: null,
+    reclassificationHistoryResults:null
 }
 
 export function DeploymentdReducer(
@@ -48,7 +54,7 @@ export function DeploymentdReducer(
         on(DeploymentActions.fetchLatestRun,
             (state, action) => ({
                 ...state,
-                canaryRun: action.canaryRun,
+                canaryId: action.canaryId,
                 deployementLoading: false
             })
         ),
@@ -116,8 +122,39 @@ export function DeploymentdReducer(
         on(DeploymentActions.updateCanaryRun,
             (state, action) => ({
                 ...state,
-                canaryRun: action.canaryId,
+                canaryId: action.canaryId,
             })
         ),
+        on(DeploymentActions.loadcancelRunningCanary,
+            (state,action) => ({
+                ...state,
+                deployementLoading: true,
+                canaryId: action.canaryId
+            })
+        ), on(DeploymentActions.manualTriggerData,
+            (state, action) => ({
+                ...state, data: action.data,
+            })
+        ), on(DeploymentActions.fetchManualTriggerResults,
+            (state, action) => ({
+                ...state, 
+                manualTriggerResponse: action.manualTriggerResponse,
+                canaryId: action.manualTriggerResponse.canaryId,
+            })
+        ),
+        on(DeploymentActions.fetchcancelRunningCanaryStatus,
+            (state, action) => ({
+                ...state,
+                cancelRunningCanaryStatus: action.cancelRunningCanaryData,
+                deployementLoading: false
+            })
+        ),
+        on(DeploymentActions.loadReclassificationHistoryData,
+            (state, action) => ({
+                ...state,
+                reclassificationHistoryResults:action.reclassificationHistoryResults,
+                deployementLoading: false
+            })
+        )
     )(deploymentVerificationState,deploymentVerificationdActions);
 }

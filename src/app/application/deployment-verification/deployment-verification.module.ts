@@ -16,10 +16,18 @@ import { MetricAnalysisEffect } from './metric-analysis/store/metric-analysis.ef
 import { LogAnalysisEffect } from './log-analysis/store/log-analysis.effects';
 import { ReplaceLineBreaks } from '../../pipes/keys.pipe';
 import { ChildTableComponent } from './metric-analysis/child-table/child-table.component';
+import { SharedModule } from 'src/app/subModules/shared.module';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import * as FusionCharts from "fusioncharts";
 import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+import { NgpSortModule } from "ngp-sort-pipe";
+import { EllipsisPipe } from '../../pipes/keys.pipe';
+import { ChangetextcolorPipe } from '../../pipes/keys.pipe';
+import { ChangeTImestamptotimePipe } from '../../pipes/keys.pipe';
+import { ClipboardModule } from 'ngx-clipboard';
+import { NgJsonEditorModule } from "ang-jsoneditor";
+
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
 @NgModule({
@@ -29,16 +37,24 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         LogAnalysisComponent,
         ReplaceLineBreaks,
         ChildTableComponent,
+        EllipsisPipe,
+        ChangetextcolorPipe,
+        ChangeTImestamptotimePipe,
     ],
     imports: [
      CommonModule,
      FusionChartsModule,
      ReactiveFormsModule,
      FormsModule,
+     ClipboardModule,
      HttpClientModule,
+     NgpSortModule,
      AppMaterialModule,
      ChartsModule,
+     FusionChartsModule,
      Ng2SearchPipeModule,
+     NgJsonEditorModule,
+     SharedModule,
      StoreModule.forFeature('deploymentVerification',fromdeploymentVarification.deploymentVerificationReducers),
      EffectsModule.forFeature([
         DeploymentVerificationEffect,

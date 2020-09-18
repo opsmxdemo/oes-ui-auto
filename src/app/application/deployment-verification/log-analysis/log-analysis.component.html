@@ -1,34 +1,49 @@
-<div class="graph_area">
-  <div class="d-flex px-3 align-items-center mb-2">
-    <div class="toggleGraph" (click)="toggleGraph($event)"><i class="fas fa-chevron-down carret" style="transition: transform 200ms ease-in-out;"></i> Graph View <i class="fa fa-bar-chart" aria-hidden="true"></i></div>
-    <div class="ml-auto d-flex">
-      <div class="risk d-flex align-items-center">
-        <span class="diamond">
-          <i *ngIf="logAnalysisResults?.sensitivity == 'high'" class="fa {{logSensitivityScores[0]?.high?.iconclass}}" aria-hidden="true"></i>
-          <i *ngIf="logAnalysisResults?.sensitivity == 'medium'" class="fa {{logSensitivityScores[0]?.medium?.iconclass}}" aria-hidden="true"></i>
-          <i *ngIf="logAnalysisResults?.sensitivity == 'low'" class="fa {{logSensitivityScores[0]?.low?.iconclass}}" aria-hidden="true"></i>
-        </span>      
-        <span>
-            <b *ngIf="logAnalysisResults?.sensitivity == 'high'" class="d-block {{logSensitivityScores[0]?.high?.textclass}}" >{{logSensitivityScores[0]?.high?.risk}}</b>            
-            <b *ngIf="logAnalysisResults?.sensitivity == 'medium'" class="d-block {{logSensitivityScores[0]?.medium?.textclass}}" >{{logSensitivityScores[0]?.medium?.risk}}</b>            
-            <b *ngIf="logAnalysisResults?.sensitivity == 'low'" class="d-block {{logSensitivityScores[0]?.low?.textclass}}" >{{logSensitivityScores[0]?.low?.risk}}</b>            
-            Precieved Risk
+<div *ngIf="islogAnalysisAvailable">
+  <div class="graph_area">
+    <div class="d-flex px-3 align-items-center mb-2">
+      <div class="toggleGraph" (click)="toggleGraph($event)"><i class="fas fa-chevron-down carret"
+          style="transition: transform 200ms ease-in-out;"></i> Graph View <i class="fa fa-bar-chart"
+          aria-hidden="true"></i></div>
+          <!-- <span class="ml-auto"  data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="getReclassifiactionHistory()" >
+            <a data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false" class="btn-link" data-backdrop="false">Reclassification History</a></span>
+          -->
+      <div class="ml-auto d-flex">
+        <div class="risk d-flex align-items-center">
+          <span class="diamond">
+            <i *ngIf="logAnalysisResults?.sensitivity == 'high'" class="fa {{logSensitivityScores[0]?.high?.iconclass}}"
+              aria-hidden="true"></i>
+            <i *ngIf="logAnalysisResults?.sensitivity == 'medium'"
+              class="fa {{logSensitivityScores[0]?.medium?.iconclass}}" aria-hidden="true"></i>
+            <i *ngIf="logAnalysisResults?.sensitivity == 'low'" class="fa {{logSensitivityScores[0]?.low?.iconclass}}"
+              aria-hidden="true"></i>
           </span>
-      </div>      
-      <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity" class="form-control sensitivitySelect"> 
-        <option *ngFor='let sensitivity of sensitivityLevels' [value]="sensitivity">
-          {{sensitivity}}
-        </option>
-      </select>      
+          <span>
+            <b *ngIf="logAnalysisResults?.sensitivity == 'high'"
+              class="d-block {{logSensitivityScores[0]?.high?.textclass}}">{{logSensitivityScores[0]?.high?.risk}}</b>
+            <b *ngIf="logAnalysisResults?.sensitivity == 'medium'"
+              class="d-block {{logSensitivityScores[0]?.medium?.textclass}}">{{logSensitivityScores[0]?.medium?.risk}}</b>
+            <b *ngIf="logAnalysisResults?.sensitivity == 'low'"
+              class="d-block {{logSensitivityScores[0]?.low?.textclass}}">{{logSensitivityScores[0]?.low?.risk}}</b>
+              Perceived Risk
+          </span>
+        </div>
+        <div class="d-flex ml20">
+          <label class="d-flex justify-content-center align-items-center"><h6>Sensitivity: </h6> </label>
+          <select (change)="changeSensitivity($event)" [(ngModel)]="selectedSensitivity"
+          class="form-control sensitivitySelect">
+          <option *ngFor='let sensitivity of sensitivityLevels' [value]="sensitivity">
+            {{sensitivity}}
+          </option>
+        </select>
+      </div>
+      </div>
+      <!-- /.ml-auto -->
     </div>
-    <!-- /.ml-auto -->
-  </div>
-  <div class="tab-content" id="myTabContent" *ngIf="showChart">
-    <div class="tab-pane fade show active" id="graph01" role="tabpanel" aria-labelledby="graph01-tab">
-      <div class="dot_container p-3 chart-bg-color">
-        <div class="graph" #ChartSize>
-          
-            
+    <div class="tab-content" id="myTabContent" *ngIf="showChart">
+      <div class="tab-pane fade show active" id="graph01" role="tabpanel" aria-labelledby="graph01-tab">
+        <div class="dot_container p-3 chart-bg-color" >
+          <div class="graph mb-3" #ChartSize>
+
             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
               <li class="dropdown-item">
                 <div class="custom-control custom-checkbox">
@@ -59,154 +74,214 @@
                 </div>
               </li>
             </ul>
-          
-          <fusioncharts
-  width="100%"
-  height="350"
-  type="bubble"
-  dataFormat="JSON"
-  [dataSource]="dataSource"
-></fusioncharts>
-
-
+            <fusioncharts width="{{chartSize}}" height="350" type="bubble" dataFormat="JSON" [dataSource]="dataSource "
+              (dataplotClick)="plotRollOver($event)">
+            </fusioncharts>
+          </div>
         </div>
+        <!-- /.dot_container -->
       </div>
-      <!-- /.dot_container -->
-    </div>
-    <div class="tab-pane fade" id="graph02" role="tabpanel" aria-labelledby="graph02-tab">
-      <img src="../../../assets/images/dot-chart.jpg" class="img-fluid" alt="dot chart" />
-    </div>
-  </div>
-</div>
-<!-- /.graph_area -->
-
-<div class="tab-default pt-3">
-  <div class="row">
-    <div class="col-10" style="padding-right: 0px;">
-      <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
-        <li class="nav-item" (click)="getLogAnalysis()" data-toggle="tooltip" title="Errors and warnings appearing only in Release version and the common Errors/Warnings that occur more often in Release version as compared to Baseline.">
-          <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab" aria-controls="unexpected" aria-selected="true">Unexpected</a>
-        </li>
-        <li class="nav-item" (click)="onClickLogEventTab('expected')" data-toggle="tooltip" title="The Info/Debug events common to both Baseline & Release and the Errors/Warnings that occur less often in Release version as compared to Baseline.">
-          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab" aria-controls="expected" aria-selected="false">Expected</a>
-        </li>
-        <li class="nav-item" (click)="onClickLogEventTab('baseline')" data-toggle="tooltip" title="The Info/Debug events that are unique to Baseline.">
-          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab" aria-controls="baseline" aria-selected="false">Baseline</a>
-        </li>
-        <li class="nav-item" (click)="onClickLogEventTab('ignored')" data-toggle="tooltip" title="The Info/Debug events of Release version.">
-          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab" aria-controls="ignored" aria-selected="false">Ignored</a>
-        </li>
-        <li class="nav-item" (click)="onClickLogEventTab('all')" data-toggle="tooltip" title="All events of Baseline and Release versions.">
-          <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
-        </li>
-      </ul>
-    </div>
-    <div class="col-2 expColDiv">
-    <div (click)="onChangeTemplateState()">{{switchToState}}  <i *ngIf="switchToState === 'Collapse All'?true:false" class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand All'?true:false" class="fa fa-expand" aria-hidden="true"></i></div>
+      <div class="tab-pane fade" id="graph02" role="tabpanel" aria-labelledby="graph02-tab">
+        <img src="../../../assets/images/dot-chart.jpg" class="img-fluid" alt="dot chart" />
+      </div>
     </div>
   </div>
-  <div class="tab-content" id="myTabDefaultContent" #LogClusterWidth>
-    <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby="" [style.width]="logClusterWidth">
-      <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0"> 
+  <!-- /.graph_area -->
 
-        <div class="card mb-2" *ngFor="let log of logAnalysisData?.clusters">
-          <div class="card-header d-flex align-items-center justify-content-between" id="heading01">
-            <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
-            <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}</div>
-            <div class="score" *ngIf="selectedSensitivity=='low'">Impact On Score {{log.scoreReduction?.low}}</div>
-            <div class="times"><b>{{log.v1Len}}</b>Baseline</div>
-            <div class="times"><b>{{log.v2Len}}</b>New Release</div>
-            <!-- <div class="error_graph"><img src="../../../assets/images/graph_lines_01.png" class="img-fluid"
-                alt="graph" /></div> -->
+  <div class="tab-default pt-3">
+    <div class="row">
+      <div class="col-10" style="padding-right: 0px;">
+        <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
+          <li class="nav-item" (click)="getLogAnalysis()" data-toggle="tooltip"
+            title="Errors and warnings appearing only in Release version and the common Errors/Warnings that occur more often in Release version as compared to Baseline.">
+            <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab"
+              aria-controls="unexpected" aria-selected="true">Unexpected</a>
+          </li>
+          <li class="nav-item" (click)="onClickLogEventTab('expected')" data-toggle="tooltip"
+            title="The Info/Debug events common to both Baseline & Release and the Errors/Warnings that occur less often in Release version as compared to Baseline.">
+            <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab"
+              aria-controls="expected" aria-selected="false">Expected</a>
+          </li>
+          <li class="nav-item" (click)="onClickLogEventTab('baseline')" data-toggle="tooltip"
+            title="The Info/Debug events that are unique to Baseline.">
+            <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab"
+              aria-controls="baseline" aria-selected="false">Baseline</a>
+          </li>
+          <li class="nav-item" (click)="onClickLogEventTab('ignored')" data-toggle="tooltip"
+            title="The Info/Debug events of Release version.">
+            <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab"
+              aria-controls="ignored" aria-selected="false">Ignored</a>
+          </li>
+          <li class="nav-item" (click)="onClickLogEventTab('all')" data-toggle="tooltip"
+            title="All events of Baseline and Release versions.">
+            <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all"
+              aria-selected="false">All</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-2 expColDiv">
+        <div (click)="onChangeTemplateState()">{{switchToState}} <i *ngIf="switchToState === 'Collapse All'?true:false"
+            class="fa fa-compress" aria-hidden="true"></i><i *ngIf="switchToState === 'Expand All'?true:false"
+            class="fa fa-expand" aria-hidden="true"></i></div>
+      </div>
+    </div>
+    <div class="tab-content" id="myTabDefaultContent" #LogClusterWidth>
+      <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby=""
+        [style.width]="logClusterWidth">
+        <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0">
 
-            <div class="dropdown error_dropdown" >
-              <select (change)="changeCriticality($event,log)" data-toggle="dropdown" [(ngModel)]="log.color" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}"> 
-                <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor" class="{{criticality.textclass}}">
-                  {{criticality.displayValue}}
-                </option>
-              </select>
-              
-              <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="criticalityComment" data-toggle="dropdown"></i>
-              <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
-                aria-labelledby="criticalityComment">
-                <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
-                  <span>Reason for Reclassification</span>
-                  <i class="fa text-muted fa-times"></i>
-                </div>
-                <!-- /.dropdown_header -->
+          <div  class="card mb-2 data_list removeOverflow" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity; let indexOfelement=index;">
+            <div class="card-header d-flex align-items-center justify-content-between" id="heading01">
+              <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
+              <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}
+              </div>
+              <div class="score" *ngIf="selectedSensitivity=='low'">Impact On Score {{log.scoreReduction?.low}}</div>
+              <div class="times"><b>{{log.v1Len}}</b>Baseline</div>
+              <div class="times"><b>{{log.v2Len}}</b>New Release</div>
+              <!-- <div class="error_graph"><img src="../../../assets/images/graph_lines_01.png" class="img-fluid"
+                  alt="graph" /></div> -->
 
-                <div>
-                  <div class="form-group mb-2">
-                    <textarea class="form-control" rows="5"></textarea>
+              <div class="dropdown error_dropdown">
+                <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color"
+                  class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select"
+                  [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}">
+                  <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor"
+                    class="{{criticality.textclass}}">
+                    {{criticality.displayValue}}
+                  </option>
+                </select>
+
+                <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="criticalityComment"
+                  data-toggle="dropdown"></i>
+                <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
+                  aria-labelledby="criticalityComment">
+                  <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
+                    <span>Reason for Reclassification</span>
+                    <i class="fa text-muted fa-times"></i>
                   </div>
-                  <div class="text-right">
-                    <button type="submit" class="btn btn-default">Close</button>
-                    <button type="submit" class="btn  btn-primary" (click)="saveCriticalityComments()">Submit</button>
+                  <!-- /.dropdown_header -->
+
+                  <div>
+                    <div class="form-group mb-2">
+                      <textarea class="form-control" rows="5" [(ngModel)]="comments"></textarea>
+                    </div>
+                    <div class="text-right">
+                      <button type="submit" class="btn btn-default">Close</button>
+                      <button type="submit" class="btn  btn-primary" (click)="saveCriticalityComments()">Submit</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="dropdown error_dropdown">
-               <select (change)="changeClusterTag($event,log)" data-toggle="dropdown" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" > 
-               <!--  [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
-                <option *ngFor='let tag of clusterTagList' [value]="tag.value" class="{{tag.textclass}}">
-                  {{tag.displayValue}}
-                </option>
-               </select>
-              
-              <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
-              <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
-                aria-labelledby="clustertagComment">
-                <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
-                  <span>Logs cluster tag</span>
-                  <i class="fa text-muted fa-times"></i>
-                </div>
-                <!-- /.dropdown_header -->
-
-                <div>
-                  <div class="form-group mb-2">
-                    <textarea class="form-control" rows="5"></textarea>
+              <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase">
+                <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag" 
+                  data-toggle="dropdown"
+                  class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
+                  <!-- [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
+                  <option *ngFor='let tag of clusterTagList' [value]="tag" class="{{tag.textclass}}">
+                    {{tag}}
+                  </option> 
+                </select>
+                <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment"
+                  data-toggle="dropdown"></i>
+                <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right"
+                  aria-labelledby="clustertagComment">
+                  <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
+                    <span>Logs cluster tag</span>
+                    <i class="fa text-muted fa-times"></i>
                   </div>
-                  <div class="text-right">
-                    <button type="submit" class="btn btn-default">Close</button>
-                    <button type="submit" class="btn  btn-primary">Submit</button>
+                  <!-- /.dropdown_header -->
+
+                  <div>
+                    <div class="form-group mb-2">
+                      <textarea class="form-control" rows="5" [(ngModel)]="clusterCommentsList[indexOfelement]"></textarea>   
+                    </div>
+                    <div class="text-right">
+                      <button type="submit" class="btn btn-default">Close</button>
+                      <button type="submit" class="btn  btn-primary"(click)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])">Submit</button> 
+                    </div>
                   </div>
                 </div>
               </div>
+              <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true" (click)="timeAnalysisGraph(log)"></i></div>
+              <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
+              <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
+                aria-expanded="true" aria-controls="collapse">
+                <i class="fa fa-sort-down"></i>
+              </button>
             </div>
-            <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true"></i></div>
-            <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
-            <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
-              aria-expanded="true" aria-controls="collapse">
-              <i class="fa fa-sort-down"></i>
-            </button>
-          </div>
-          <div id="{{assignId(log.id)}}" class="collapse" aria-labelledby="heading01" data-parent="#accordionExample">
-          <div *ngIf="log.more">           
-            <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
-            <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>            
-          </div>
-            <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
-              <span [outerHTML]="log.combineClust | replaceLineBreaks" ></span>              
+            <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow"   >
+              <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+              <fusioncharts
+              width="100%"
+              height="350"
+              type="column2d"
+              dataFormat="JSON"
+              [dataSource]="dataSourceColumnChart"
+              (initialized)="initialized($event)"
+            ></fusioncharts>
             </div>
-            <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">             
-              <span [outerHTML]="completeCluster?.clusterData | replaceLineBreaks" ></span>            
-            </div>
-            <div *ngIf="log.more"> 
-              <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
-              <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>                       
+            <div id="{{assignId(log.id)}}" class="collapse clusterHeight" aria-labelledby="heading01" data-parent="#accordionExample">
+              <div *ngIf="log.more">
+                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
+                    class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span
+                    class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
+              </div>
+              <div *ngIf="log.color == 'dark red'">
+                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                  <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:criticalTopicStrings"></span>
+                </div>
+                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                  <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:criticalTopicStrings"></span>
+                </div>
+              </div>
+              <div *ngIf="log.color=='red'">
+                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                  <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:errorTopicStrings"></span>
+                </div>
+                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                  <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:errorTopicStrings"></span>
+                </div>
+              </div>
+              <div *ngIf="log.color=='yellow'">
+                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                  <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:warningTopicStrings"></span>
+                </div>
+                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                  <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:warningTopicStrings"></span>
+                </div>
+              </div>
+              <div *ngIf="log.color=='green'">
+                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                  <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:ignoreTopicStrings"></span>
+                </div>
+                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                  <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:ignoreTopicStrings"></span>
+                </div>
+              </div>
+              <div *ngIf="log.more">
+                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
+                    class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span
+                    class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
+              </div>
             </div>
           </div>
         </div>
+        <h3 *ngIf="logAnalysisData?.clusters?.length == 0">No Content</h3>
       </div>
-      <h3 *ngIf="logAnalysisData?.clusters?.length == 0">No Content</h3>
-    </div>    
+    </div>
+  </div>
+
+  <div class="bottom_btns mt-auto bg-white position-sticky text-right">
+    <button class="btn mr-2" [ngClass]="{'btn-primary': classifiedLogsList.length > 0, 'btn-default':classifiedLogsList.length <= 0 }" data-toggle="tooltip" title="Clear the reclassification done by the user" (click)="reset()" [disabled]="classifiedLogsList.length <= 0">Reset</button>
+    <button class="btn mr-2" [ngClass]="{'btn-primary': classifiedLogsList.length > 0, 'btn-default':classifiedLogsList.length <= 0}" (click)="rerunLogs()" data-toggle="tooltip" title="Update and Rerun the canary with the updated classification from the user" [disabled]="classifiedLogsList.length <= 0">Re-run</button>
   </div>
 </div>
-
-<div class="bottom_btns mt-auto bg-white position-sticky text-right">
-  <button class="btn mr-2 btn-default">Reset</button>
-  <button class="btn mr-2 btn-default" (click)="rerunLogs()">Re-run</button>
+<div class="table-responsive" *ngIf="!islogAnalysisAvailable">
+  <div class="noDataDiv">
+    <app-component-error-listing [errorString] = "errorMessage"></app-component-error-listing>
+  </div>
 </div>
 
 <!-- /.col-sm-4 -->

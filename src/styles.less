@@ -1,6 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import '~saturn-datepicker/bundle.css';
+// below inport for json editor
+@import '~jsoneditor/dist/jsoneditor.min.css';
+.ace_editor.ace-jsoneditor {
+	min-height: 600px;
+  }
+.jsoneditor-frame , .jsoneditor-poweredBy{display: none !important;}
     
 @font-face {
 font-family: 'Avenir';
@@ -142,9 +148,11 @@ span{
 }
 .content_section{
 	margin-left: 260px;
+	transition: margin-left linear 0.5s;
 }
 .view_in .content_section{
 	margin-left: 60px;
+	transition: margin-left linear 0.5s;
 }
 .main-topBar{
 	z-index: 1000;
@@ -462,6 +470,7 @@ span{
 	z-index: 1001;
 	position: fixed;
 	background: #2f4151;
+	transition: width linear 0.5s;
 }
 .view_in .sidebar{
 	width: 60px;

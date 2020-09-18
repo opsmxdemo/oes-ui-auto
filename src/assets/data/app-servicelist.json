@@ -1,0 +1,38 @@
+[
+    {
+      "canaryId": 123,
+      "serviceId": 292,
+      "serviceName": "multiservice_2",
+      "finalScore": 85,
+      "logsScore":90,
+      "metricsScore": 85,
+      "status": "PASS"
+    },
+    {
+      "canaryId": 123,
+      "serviceId": 293,
+      "serviceName": "multiservice_3",
+      "finalScore": 85,
+      "logsScore":90,
+      "metricsScore": 85,
+      "status": "FAIL"
+    },
+    {
+      "canaryId": 198,
+      "serviceId": 294,
+      "serviceName": "multiservice_4",
+      "finalScore": 85,
+      "logsScore":90,
+      "metricsScore": 85,
+      "status": "PASS"
+    },
+    {
+      "canaryId": 188,
+      "serviceId": 291,
+      "serviceName": "multiservice_1",
+      "finalScore": 85,
+      "logsScore":90,
+      "metricsScore": 85,
+      "status": "PASS"
+    }
+  ]

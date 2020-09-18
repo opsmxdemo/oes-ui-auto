@@ -1,0 +1,127 @@
+[
+    {
+      "topic"	: "IGNORE",
+      "string": "OnOutOfMemoryError",
+      "type"	: "default"
+    },
+    {
+      "topic"	: "CRITICAL",
+      "string": "OutOfMemoryError",
+      "type"	: "default"
+    },
+    {
+      "topic" : "CRITICAL",
+      "string": "StackOverflowError",
+      "type"	: "default"
+    },
+    {
+      "topic" : "CRITICAL",
+      "string": "ClassNotFoundException",
+      "type"	: "default"
+    },
+    {
+      "topic" : "CRITICAL",
+      "string": "FileNotFoundException",
+      "type"	: "default"
+    },
+    {
+      "topic" : "CRITICAL",
+      "string": "ArrayIndexOutOfBounds",
+      "type"	: "default"
+    },
+    {
+      "topic" : "CRITICAL",
+      "string": "NullPointerException",
+      "type"	: "default"
+    },
+    {
+      "topic" : "CRITICAL",
+      "string": "StringIndexOutOfBoundsException",
+      "type"	: "default"
+    },
+    {
+      "string": "FATAL",
+      "topic"	: "CRITICAL",
+      "type"	: "default"
+    },
+    {
+      "string": "SEVERE",
+      "topic" : "CRITICAL",
+      "type"	: "default"
+    },
+    {
+      "string": "NoClassDefFoundError",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "NoSuchMethodFoundError",
+      "topic"	: "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "NumberFormatException",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "IllegalArgumentException",
+      "topic"	: "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "ParseException",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "SQLException",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "IllegalStateException",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "ArithmeticException",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "status=404",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "status=500",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "EXCEPTION",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "ERROR",
+      "topic" : "ERROR",
+      "type"	: "default"
+    },
+    {
+      "string": "WARN",
+      "topic" : "WARN",
+      "type"	: "default"
+    },
+    {
+      "string": "WARNING",
+      "topic" : "WARN",
+      "type"	: "default"
+    },
+    {
+      "string": "INFO",
+      "topic" : "IGNORE",
+      "type"	: "default"
+    }
+  ]

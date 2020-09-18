@@ -2,7 +2,7 @@ import { Effect, ofType } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as LayoutAction from './layout.actions';
@@ -12,23 +12,13 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 import { AppConfigService } from 'src/app/services/app-config.service';
 
 //below function is use to fetch error and return appropriate comments
-const handleError = (errorRes: any) => {
-    let errorMessage = 'An unknown error occurred';
-    if (!errorRes.error) {
-        return of(new LayoutAction.ErrorResponse(errorMessage));
+const handleError = (errorRes: any,index:number) => {
+    let errorData = {
+        errorMessage:errorRes.error.error,
+        index:index
     }
-    switch (errorRes.error.message) {
-        case 'Authentication Error':
-            errorMessage = 'Invalid login credentials';
-            break;
-        case 'Email Exist':
-            errorMessage = 'This email exist already';
-            break;
-        default:
-            errorMessage = 'Error Occurred';
-            break;
-    }
-    return of(new LayoutAction.ErrorResponse(errorMessage));
+    
+    return of(new LayoutAction.ServerError(errorData));
 }
 
 @Injectable()
@@ -41,17 +31,52 @@ export class LayoutEffect {
         private environment: AppConfigService
     ) { }
 
+      // Below effect is use to refresh the usergroups in gate
+      @Effect()
+      refreshUserGroups = this.actions$.pipe(
+          ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
+          withLatestFrom(this.store.select('auth')),
+          switchMap(([action,authState]) => {
+              return this.http.put<string>(this.environment.config.endPointUrl+'platformservice/v1/users/'+ authState.user +'/usergroups/refresh',{}).pipe(
+                  map(resData => {
+                      this.store.dispatch(new LayoutAction.ApiSuccess(1));
+                      return new LayoutAction.usergroupRefresh(resData);
+                  }),
+                  catchError(errorRes => {
+                      return handleError(errorRes,1);
+                  })
+              );
+          })
+      );
+
     // Below effect is use for fetch sidebar data. 
     @Effect()
     authLogin = this.actions$.pipe(
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         switchMap(() => {
-            return this.http.get<Menu>(this.environment.config.endPointUrl+'oes/dashboard/dynamicMenu').pipe(
+            return this.http.get<Menu>('../../../assets/data/dynamicMenu.json').pipe(
                 map(resData => {
                     return new LayoutAction.SideBarFetch(resData['menu']);
                 }),
                 catchError(errorRes => {
-                    return handleError(errorRes);
+                    return handleError(errorRes,1);
+                })
+            );
+        })
+    );
+
+    // Below effect is use for fetch installation mode data. 
+    @Effect()
+    fetchInstallationMode = this.actions$.pipe(
+        ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
+        switchMap(() => {
+            return this.http.get<string>(this.environment.config.endPointUrl+'dashboardservice/v1/installation/installationmode').pipe(
+                map(resData => {
+                    this.store.dispatch(new LayoutAction.ApiSuccess(1));
+                    return new LayoutAction.InstallationMode(resData['mode']);
+                }),
+                catchError(errorRes => {
+                    return handleError(errorRes,1);
                 })
             );
         })

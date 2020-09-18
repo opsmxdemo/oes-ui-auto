@@ -4,7 +4,7 @@
       <!-- ############################### Metric Table Section Starts ############################################# -->
       <div class="col-sm-7 col-md-7 col-lg-7 h-100 " #stickyMenu>
         <div class="metric_analysis"  [style.width]="!sticky?menuWidth:''" style="transition: width 0.5s;">
-          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;"  *ngIf="metricType !== ''">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -163,15 +163,14 @@
           <!-- ######### Data Not Found div starts ########### -->
           <div class="table-responsive" *ngIf="metricType === ''">
             <div class="noDataDiv">
-              <img src="../../assets/images/no-found.png" alt="" width="90px">
-              <p>No data found</p>
+              <app-component-error-listing [errorString] = "errorMessage"></app-component-error-listing>
             </div>
           </div>
           <!-- ######### Data Not Found div ends  ########### -->
         </div>
         <!-- ############################## Below is sticky table starts ################################### -->
         <div *ngIf="sticky" class="sticky_metric_analysis" [class.sticky] = "sticky" [style.width]="sticky?menuWidth:''" style="transition: width 0.5s;">
-          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;">
+          <div class="py-3 px-4 d-flex align-items-center position-sticky bg-white" style="border-bottom: 1px solid #dee2e6;top: 0;z-index: 10;"  *ngIf="metricType !== ''">
             <div class="input-group input-group_search">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -330,8 +329,7 @@
           <!-- ######### Data Not Found div starts ########### -->
           <div class="table-responsive" *ngIf="metricType === ''">
             <div class="noDataDiv">
-              <img src="../../assets/images/no-found.png" alt="" width="90px">
-              <p>No data found</p>
+              <app-component-error-listing [errorString] = "errorMessage"></app-component-error-listing>
             </div>
           </div>
           <!-- ######### Data Not Found div ends  ########### -->
@@ -421,8 +419,7 @@
                 <div class="graph mb-3" #subChartSize>
                   <div class="table-responsive">
                     <div class="noDataDiv">
-                      <img src="../../assets/images/no-found.png" alt="" width="90px">
-                      <p>No data found</p>
+                      <app-component-error-listing [errorString] = "errorMessage"></app-component-error-listing>
                     </div>
                   </div>
                 </div>

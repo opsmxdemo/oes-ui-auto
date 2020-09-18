@@ -6,12 +6,20 @@ export interface State {
     menu: Menu;
     appliactionData: number;
     sidebarVisible: string;
+    installationMode: string;
+    usergroupRefresh: any;
+    apiErrorCollection: boolean[];
+    errorMessage: string;
 }
 
 export const initialState: State = {
     menu: null,
     appliactionData: 0,
-    sidebarVisible: ''
+    sidebarVisible: '',
+    installationMode:'',
+    usergroupRefresh: null,
+    apiErrorCollection:[false,false],
+    errorMessage: ''
 }
 
 export function layoutReducer(
@@ -37,6 +45,27 @@ export function layoutReducer(
             return {
                 ...state,
                 sidebarVisible: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.INSTALLATIONMODE:
+            return {
+                ...state,
+                installationMode: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.USERGROUPREFRESH:
+            return {
+                    ...state,
+                    usergroupRefresh: action.payload
+            }
+        case LayoutAction.LayoutActionTypes.SERVERERROR:
+            return {
+                ...state,
+                apiErrorCollection: state.apiErrorCollection.map((el,index) => index === action.payload.index ? true : el),
+                errorMessage: action.payload.errorMessage
+            }
+        case LayoutAction.LayoutActionTypes.APISUCCESS:
+            return {
+                ...state,
+                apiErrorCollection: state.apiErrorCollection.map((el,index) => index === action.payload ? false : el)
             }
         default:
             return state;

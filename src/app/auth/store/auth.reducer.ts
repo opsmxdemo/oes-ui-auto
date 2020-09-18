@@ -17,6 +17,7 @@ export function authReducer(
     state: State = initialState,
     action: AuthAction.AuthActions
 ) {
+    
     switch (action.type) {
 
         case AuthAction.AuthActionTypes.LOGINRESPONSE:
@@ -40,4 +41,5 @@ export function authReducer(
         default:
             return state;
     }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy, ViewEncapsulation, HostListener, AfterViewInit } from '@angular/core';
 import * as LayoutAction from '../layout/store/layout.actions';
 import * as CdDashboardAction from './store/cd-dashboard.actions';
 import * as fromApp from '../store/app.reducer';
@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./cd-dashboard.component.less'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
 
   @ViewChild('areaGraph') areaGraph: ElementRef;
   @ViewChildren('subGraph') subGraph: QueryList<ElementRef>;
@@ -32,6 +32,14 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor( public store: Store<fromApp.AppState>,
                public cdr: ChangeDetectorRef) { }
+
+
+  ngAfterViewInit(){
+    setTimeout(() =>{
+      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 260];
+      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+    },500)
+  }
 
 
   ngOnInit() {
@@ -58,24 +66,17 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     
   }
 
-  ngAfterViewInit() {
-    this.store.select('layout').subscribe(
-      (layoutData) => {
-        this.sidebarVisible = layoutData.sidebarVisible;
-
-        if (this.widgetRawData !== null) {
-          this.setWidth(this.sidebarVisible);
-          this.cdr.detectChanges();
-        } else {
-          this.changeEventSubscription = this.subGraph.changes.subscribe(() => {
-            this.setWidth(this.sidebarVisible)
-            // below method is use to Try using ChangeDetectorRef to tell angular that there are new changes to the data sets after been checked.
-            this.cdr.detectChanges();
-          })
-        }
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:click', ['$event'])
+    handleClick(){
+      if(this.areaGraph !== undefined && this.subGraph !== undefined){
+        setTimeout(() =>{
+          // Below we are setting initial width of graph
+          this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 260];
+          this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+        },500)
       }
-    )
-  }
+    }
 
   ngOnDestroy() {
     if (this.changeEventSubscription !== null) {
@@ -106,22 +107,19 @@ export class CdDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Below function is use to set width of graphs exist in dashboard
-  setWidth(sidebarVisible) {
-    if (sidebarVisible === 'false') {
-      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth + 200, 260];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth + (200 / 3), 260]
-    } else if (sidebarVisible === 'true') {
-      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth - 200, 260];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth - (200 / 3), 260]
-    } else {
-      // Below we are setting initial width of graph
-      this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 260];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+  // Below function is use to reture true if subgraph data exist
+  subGraphDataExist(data,returnSame){
+    let returnVal:boolean;
+    if(data.length > 0){
+      returnVal = true;
+    }else{
+      returnVal = false;
     }
+
+    if(!returnSame){
+      returnVal = !returnVal;
+    }
+    return returnVal;
   }
-
-
-
 
 }

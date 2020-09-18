@@ -3,10 +3,12 @@ import * as MetricAnalysisActions from './metric-analysis.actions'
 
 export interface State {
     canaryOutputData: any;
+    errorMessage: string;
 }
 
 export const initialState: State = {
-    canaryOutputData: null
+    canaryOutputData: null,
+    errorMessage: null
 }
 
 export function MetricAnalysisReducer(
@@ -17,7 +19,14 @@ export function MetricAnalysisReducer(
         on(MetricAnalysisActions.fetchCanaryOutput,
             (state, action) => ({
                 ...state,
-                canaryOutputData:action.cararyData
+                canaryOutputData:action.cararyData,
+                errorMessage: null
+            })
+        ),
+        on(MetricAnalysisActions.errorOccured,
+            (state, action) => ({
+                ...state,
+                errorMessage:action.errorMessage
             })
         )
     )(metricAnalysisState,metricAnalysisActions);

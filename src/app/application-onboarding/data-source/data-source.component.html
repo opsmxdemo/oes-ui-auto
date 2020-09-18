@@ -4,9 +4,9 @@
         <div class="col-sm-12 d-flex flex-column">
           <div class="h-100 d-flex flex-column">
             <div class="tab-content h-100 p-3 flex-grow-1">
-                <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                <div *ngIf="tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access text-right p-3">
-                    <button class="btn btn-default" (click)="addDataSourceAccount('new')" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()">New Data Source</button>
                   </div>
                   <!-- /.page_access ml-auto -->
                   <div class="gray-strip"></div>
@@ -20,7 +20,7 @@
                     <!-- /.no_content -->
                   </div>
                 </div>
-                <div *ngIf="!tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                <div *ngIf="!tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access d-flex text-right p-3">
                       <div class="mr-auto">
                           <div class="input-group input-group_search">
@@ -31,7 +31,7 @@
                             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                           </div>
                         </div>
-                        <button class="btn btn-default" (click)="addDataSourceAccount('new')"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">New Data Source</button>
+                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()">New Data Source</button>
                       </div>
                   <!-- /.page_access ml-auto -->
                   <div class="table-content">
@@ -39,9 +39,7 @@
                       <thead>
                         <tr>
                           <th class="font-weight-bold">Account Name</th>
-                          <th class="font-weight-bold">End Point</th>
                           <th class="font-weight-bold">Account Type</th>
-                          <th class="font-weight-bold">User name</th>
                           <th class="font-weight-bold">Action</th>
                           <!-- <th class="font-weight-bold">ACTION</th> -->
                         </tr>
@@ -49,12 +47,14 @@
                       <tbody>
                           <tr *ngFor="let datasourceData of currentPage | filter:searchData; let i=index">
                             <td>{{datasourceData.name}}</td>
-                            <td>{{datasourceData.endPoint}}</td>
-                            <td>{{datasourceData.accountType}}</td>
-                            <td>{{datasourceData.username}}</td>
+                            <td>{{datasourceData.datasourceType}}</td>
                              <td>
-                              <a  class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit" (click)="editAccount(datasourceData,i,'edit')" data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i></a>  
-                              <a (click)="deleteAccount(datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                              <span data-toggle="tooltip" data-placement="top" data-original-title="Edit" (click)="onselectDatasource('Edit',datasourceData,i)">
+                                <a  class="text-muted ml-2"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false">
+                                  <i class="fas fa-pencil-alt"></i>
+                                </a>
+                              </span>
+                              <a (click)="onselectDatasource('Delete',datasourceData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
                             </td> 
                           </tr>
                       </tbody>
@@ -71,11 +71,9 @@
                         </select>
                         <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
                           {{page.endPoint < datasourceListLength-1?page.endPoint:datasourceListLength}} of {{datasourceListLength}}</span>
-                        <!-- <input type="text" class="form-control mr-2" />
-                        <button class="btn btn-primary">Go</button> -->
-    
+                       
                         <ul class="pagination ml-auto mb-0">
-                          <li class="page-item" (click)="pagePrev()"><a class="page-link">Previous</a></li>
+                          <li class="page-item" (click)="pagePrev()" class = "{{page.startingPoint === 0?'disabledbtn':''}}"><a class="page-link">Previous</a></li>
                           <li class="page-item {{page.currentPage === page.pageNo ? 'active' : ''}}"
                             (click)=showPage(page.currentPage)><a class="page-link">{{page.currentPage}}</a></li>
                           <li class="page-item {{page.currentPage+1 === page.pageNo ? 'active' : ''}}"
@@ -89,7 +87,7 @@
                                        ((page.currentPage+2)*page.pageSize< datasourceListLength? true : ((page.currentPage+2)*page.pageSize)-datasourceListLength < page.pageSize? true : false) ? true : false"
                             (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a>
                           </li>
-                          <li class="page-item" (click)="pageNext()"><a class="page-link">Next</a></li>
+                          <li class="page-item" (click)="pageNext()" class = "{{page.endPoint === datasourceListLength-1?'disabledbtn':''}}"><a class="page-link">Next</a></li>
                         </ul>
                       </div>
                       <!-- /.per_page -->
@@ -98,64 +96,29 @@
                   </div>
                   <!-- /.table-content -->
                 </div>
+                <div *ngIf="loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                  <app-loading-screen></app-loading-screen>
+                 </div>
               </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Modal -->
+
+  <!-- ########### Create DataSource model ########### -->
   <div class="modal bd-example-modal-lg fade" id="dataSource" tabindex="-1" role="dialog" aria-labelledby="dataSourceLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 *ngIf="typeOfForm === 'new'" class="modal-title">New Data Source</h5>
-          <h5 *ngIf="typeOfForm === 'edit'" class="modal-title">{{selectedDataProvider}}</h5>
+          <h5 class="modal-title">{{editMode ? 'Update Data Source':'New Data Source'}}</h5>
           <button type="button" class="close" data-dismiss="modal" #closeAddExpenseModal aria-label="Close">
             <i class="fa fa-times"></i>
           </button>
         </div>
         <div class="modal-body">
-          <!-- <form> -->
-            <div class="form-group text-muted">
-              <label>Select Monitoring Provider </label>
-              <div class="box-icon-group">
-                <div  class="box-icon" *ngFor="let d of dataSourceList;let i=index;" (click)="getDataProvider(d.id)" [ngClass]="{'disabledMenu':d.id !== 'DOCKERHUB' && d.id !==  'GITHUB'}">
-                  <input id="{{d.id}}" type="radio" name="apm-provider" [checked]="d.id === selectedDataProvider" />
-                  <label for="{{d.id}}">
-                    <span class="bi-lbl">
-                      <img src="{{d.path}}" alt="icon" />
-                    </span>
-                    <span class="bi-text">
-                     {{d.name}}
-                    </span>
-                  </label>
-                </div>
-                <!-- /.box-icon -->
-              
-              </div>
-              <!-- /.box-icon-group -->
-            </div>
-            <!-- /.form-group -->
-            <hr />
-           <!-- code for form load   -->
-           <div *ngIf="selectedDataProvider === 'GITHUB' && typeOfForm === 'edit'"><app-github-form></app-github-form></div>
-           <div *ngIf="selectedDataProvider === 'GITHUB' && typeOfForm === 'new'"><app-github-form></app-github-form></div>
-           <div *ngIf="selectedDataProvider === 'New Relic'"><app-newrelic-form></app-newrelic-form></div>
-           <div *ngIf="selectedDataProvider === 'Dynatrace'"><app-dynatrace-form></app-dynatrace-form></div>
-           <div *ngIf="selectedDataProvider === 'GCP Stackdriver'"><app-gcp-stackdriver-form></app-gcp-stackdriver-form></div>
-           <div *ngIf="selectedDataProvider === 'Prometheus'"><app-prometheus-form></app-prometheus-form></div>
-           <div *ngIf="selectedDataProvider === 'Elastic Search'"><app-elasticsearch-form></app-elasticsearch-form></div>
-           <div *ngIf="selectedDataProvider === 'AWS Cloudwatch'"><app-aws-cloudwatch-form></app-aws-cloudwatch-form></div>
-           <div *ngIf="selectedDataProvider === 'App Dynamics'"><app-app-dynamics-form></app-app-dynamics-form></div> 
-           <div *ngIf="selectedDataProvider === 'Datadog'"><app-datadog-form></app-datadog-form></div>
-           <div *ngIf="selectedDataProvider === 'DOCKERHUB' && typeOfForm === 'edit'"><app-docker-form></app-docker-form></div>
-           <div *ngIf="selectedDataProvider === 'DOCKERHUB' && typeOfForm === 'new'"><app-docker-form></app-docker-form></div>
-
-           <!-- </form> -->
+          <app-create-data-source [accountData]="accountData" [isEditMode]="editMode" [accountBelongsTo]="accountBelongsTo" (closemodel)="getClose($event)"></app-create-data-source>
         </div>
-       
-        <!-- /.modal-footer -->
       </div>
     </div>
   </div>

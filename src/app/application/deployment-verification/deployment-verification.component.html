@@ -1,10 +1,10 @@
 <div *ngIf="!deployementLoading" class="main_content p-0 bg-white">
   <div class="d-flex">
     <div class="leftBox bg-white mw-250">
-      <div class="leftBox_header text-muted text-center">
+      <div class="leftBox_body text-muted text-center">
         <form [formGroup]="applicationForm" novalidate class="example-form">
           <mat-form-field>
-            <input type="text" matInput placeholder="Application Name" formControlName="application" [matAutocomplete]="autoApplication" 
+            <input type="text" matInput placeholder="Select Application" floatLabel="always" formControlName="application" [matAutocomplete]="autoApplication" 
             />
             <mat-autocomplete (optionSelected)="onSelectionChangeApplication($event.option.value)" autoActiveFirstOption #autoApplication="matAutocomplete" >
               <mat-option *ngFor="let applications of applicationListOptions | async" [value]="applications.applicationName">
@@ -14,12 +14,15 @@
           </mat-form-field>
         </form>
     
-        <span>{{selectedApplicationName}}  
-          <button type="button" class="btn p-0" >
-            <a href="#" class="ml-2" [ngClass]= "{'ci_check':deploymentApplicationHealth['applicationHealthStatus']==='PASS','ci_close':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','ci_minus': deploymentApplicationHealth['applicationHealthStatus'] === undefined}">
-            <i class="far" [ngClass]= "{'fa-check-circle':deploymentApplicationHealth['applicationHealthStatus']==='PASS','fa-times-circle':deploymentApplicationHealth['applicationHealthStatus']==='FAIL','fa-minus-circle': deploymentApplicationHealth['applicationHealthStatus'] === undefined}"></i></a>
-          </button>
-        </span>
+          <div class="appName"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
+          </div>
+     
+        <div class="app-status">
+          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus'] === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus'] === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus'] === 'Review','text-muted':deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'}">{{deploymentApplicationHealth['applicationHealthStatus']}}</div>
+          <div class="pull-right">{{calculateDiff(deploymentApplicationHealth['runStartTime'])}} </div>
+        </div>
  
         <div class="input-group">
           <div class="input-group-prepend">
@@ -68,7 +71,7 @@
         <!-- /.table -->
   
     <div class="page_access d-flex text-right p-3">
-      <div class="mr-auto">
+      <div class="mr-auto" *ngIf="serviceListLength >= 10">
           <div class="input-group input-group_search">
             <div class="input-group-prepend">
               <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
@@ -78,13 +81,19 @@
           </div>
         </div>
   </div>
-      <table class="table table-sm table-avenir table-no-bordered table-no-dots">
+      <table class="table table-sm table-avenir table-no-bordered table-no-dots table-responsive">
         <tbody>
+          <tr *ngIf="serviceListLength > 0">
+            <th >Service</th>
+            <th>Score</th>
+            <th>Status</th>
+          </tr>
           <ng-container *ngFor="let service of currentPage | filter:searchData; let i=index">
+          
           <tr [ngClass]="{'active-service': service.serviceId === selectedServiceId}">
-            <td class="service-selection" (click)="getService(service)">{{service.serviceName}}</td>
-            <td width="30" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore >= 0 ? (service.finalScore | number: '1.0-0') : 'N/A'}}</td>
-            <td width="30"  [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.status}}</td>
+            <td class="service-selection " style="padding-left: 2px !important;" (click)="getService(service)">{{service.serviceName}}</td>
+            <td width="50" style="text-align: center;" [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.finalScore >= 0 ? (service.finalScore | number: '1.0-0') : 'N/A'}}</td>
+            <td width="50" style="text-align: center;"  [ngClass]= "{'text-danger':service.status === 'Fail','text-success':service.status === 'Success','text-warning':service.status === 'Review','text-muted':service.status === 'InProgress'}">{{service.status}}</td>
           </tr> 
         </ng-container>               
         </tbody>
@@ -122,10 +131,6 @@
       <!-- /.table-footer px-3 py-2 -->
     </div>
   </div>
-    <!-- /.leftBox w-250 -->
-
-
-    <!-- Modal -->
     <div class="modal bd-example-modal-lg fade" id="manualTrigger" tabindex="-1" role="dialog" aria-labelledby="manualTriggerLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -136,102 +141,154 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group text-muted">
-                <label>Application <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                <select class="form-control col-sm-6">
-                  <option value=""></option>
-                  <option>Choose</option>
-                </select>
-              </div>
-              <div class="form-group text-muted">
-                <label>User Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" autofocus="true" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Canary Lifetime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <div class="d-flex align-items-center">
-                  <input type="text" class="form-control mr-2 col-sm-6" />
-                  <span>hours</span>
-                </div>
-              </div>
-              <div class="form-group text-muted">
-                <label>Combined Canary Result Strategy <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <select class="form-control col-sm-6">
-                  <option value="">Select Strategy</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                </select>
-              </div>
-              <div class="form-group text-muted position-relative">
-                <label>Successful Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control is-invalid col-sm-6" />
-                <div class="invalid-feedback">
-                  Error message goes here.
-                </div>
-              </div>
-              <div class="form-group text-muted">
-                <label>Unhealthy Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
+            <!-- Enable the below code for Form / Editor options -->
 
-              <div class="text-divider">
-                <h4>Analysis Config</h4>
-              </div>
+            <!-- <ul class="nav tab-lined nav-tabs mb-2" id="myTab" role="tablist" (click)="onManualTriggerClickTab($event)">
+              <li class="nav-item" >
+                <a class="nav-link active" id="manualTrigger-form-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-form-tab" aria-selected="true">Form</a>
+              </li>
+              <li  class="nav-item">
+                <a class="nav-link active"  id="manualTrigger-editor-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-editor-tab" aria-selected="true">Editor</a>
+              </li>            
+            </ul> -->
+            <div class="tab-content" id="myTabContent">
+              <div id="metric-form" role="tabpanel" aria-labelledby="manualTrigger-form-tab">         
+                  <div *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" class="col-12 maindiv">
+                    <form #manualTriggerData="ngForm" >
+                      <div class="form-group text-muted">
+                        <label>Application <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <select class="form-control col-sm-6">
+                          <option value=""></option>
+                          <option>Choose</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>User Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" autofocus="true" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Lifetime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <div class="d-flex align-items-center">
+                          <input type="text" class="form-control mr-2 col-sm-6" />
+                          <span>hours</span>
+                        </div>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Combined Canary Result Strategy <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <select class="form-control col-sm-6">
+                          <option value="">Select Strategy</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted position-relative">
+                        <label>Successful Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control is-invalid col-sm-6" />
+                        <div class="invalid-feedback">
+                          Error message goes here.
+                        </div>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Unhealthy Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
 
-              <div class="form-group text-muted">
-                <label>Metric Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <select class="form-control col-sm-6">
-                  <option value="">Select Metric Template</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                </select>
-              </div>
-              <div class="form-group text-muted">
-                <label>Log Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <select class="form-control col-sm-6">
-                  <option value="">Select Log Template</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                  <option>Option</option>
-                </select>
-              </div>
-              <div class="form-group text-muted">
-                <label>Begin Canary Analysis After Mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Canary Analysis interval mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
+                      <div class="text-divider">
+                        <h4>Analysis Config</h4>
+                      </div>
 
-              <div class="text-divider">
-                <h4>Matric Scope</h4>
+                      <div class="form-group text-muted">
+                        <label>Metric Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <select class="form-control col-sm-6">
+                          <option value="">Select Metric Template</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Log Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <select class="form-control col-sm-6">
+                          <option value="">Select Log Template</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Begin Canary Analysis After Mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Analysis interval mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+
+                      <div class="text-divider">
+                        <h4>Matric Scope</h4>
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Baseline Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Baseline StartTtime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Canary Start Time <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <input type="text" class="form-control col-sm-6" />
+                      </div>
+                    </form>
+                  </div>
               </div>
-              <div class="form-group text-muted">
-                <label>Baseline Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
+              
+              <div id="manualTrigger-editor-tab" role="tabpanel" aria-labelledby="manualTrigger-editor-tab">          
+                <div class="col-12 maindiv" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'">
+                  <json-editor [options]="editorOptions" [data]="data" (change)="showManualTriggerJson($event)"></json-editor>
+                </div>            
               </div>
-              <div class="form-group text-muted">
-                <label>Canary Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Baseline StartTtime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-              <div class="form-group text-muted">
-                <label>Canary Start Time <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                <input type="text" class="form-control col-sm-6" />
-              </div>
-            </form>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
-            <button type="submit" class="btn  btn-primary">Trigger</button>
+            <button type="submit" class="btn  btn-primary"*ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
+            <button type="submit" class="btn  btn-primary"*ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
           </div>
+          <!-- /.modal-footer -->
+        </div>
+      </div>
+    </div>
+    <div class="modal bd-example-modal-lg fade " id="reclassificationHistory" tabindex="-1" role="dialog" aria-labelledby="reclassificationHistory" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-width" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Logs Reclassification History</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div style="min-height: 400px;" class="modal-body">
+            <div *ngIf="reclassificationHistory != null">
+            <div *ngFor='let feedbackHistory of reclassificationHistory.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
+              <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>
+              <div style="padding-top:10px ; padding: 3px;" >ReClassified From <span [ngClass]="{'text-danger':feedbackHistory.existingTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.existingTopic == 'ERROR','text-warning':feedbackHistory.existingTopic == 'WARN','text-muted':feedbackHistory.existingTopic=='IGNORE'}">{{feedbackHistory.existingTopic}}</span> To <span [ngClass]="{'text-danger':feedbackHistory.newTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.newTopic == 'ERROR','text-warning':feedbackHistory.newTopic == 'WARN','text-muted':feedbackHistory.newTopic=='IGNORE'}">{{feedbackHistory.newTopic}}</span></div>
+              <div style="padding-top:10px ; padding: 3px;"><span>{{feedbackHistory.timestamp | changeTImestamptotime}}</span> Comments : {{feedbackHistory.feedbackComment}}</div>
+            </div>
+            </div>
+            <div *ngIf="reclassificationHistory == null">
+                No Data Present
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">OK</button>
+          </div>
+          
           <!-- /.modal-footer -->
         </div>
       </div>
@@ -243,14 +300,17 @@
         <div class="page_access d-flex ml-auto">
           <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false">Manual Trigger</button>
         </div>
+        <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+          <button (click)="getReclassifiactionHistory()" class="btn btn-default" data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false">Reclassification History</button>
+        </div>
         <!-- /.page_access ml-auto -->
       </div>
       <!-- /.page_title d-flex -->
 
       <div class="row no-gutters">
-        <mat-drawer-container class="col-md-12">
-          <mat-drawer #sideNav mode="side" opened="true" [position]="nav_position" class="col-md-4">
-            
+        <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+          <mat-drawer-container class="example-container" autosize>
+            <mat-drawer #sideNav class="example-sidenav" [position]="'end'" mode="side" opened="true">
               <div class="rightBox m-0 position-sticky">
                 <div class="rightBox_header bg-white d-flex align-items-center">
                   <div class="btns_icon d-flex ml-auto">
@@ -258,117 +318,46 @@
                     <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Add"><img src="../../../assets/images/plus_icon.png" alt="plus" /></button>
                     <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><img src="../../../assets/images/edit_icon.png" alt="edit" /></button>
                   </div>
-                  <!-- /.btns_icon -->
                 </div>
-                <!-- /.rightBox_header -->
                 <div class="rightBox_body pt-0">
-                  <div class="chart_ratio mb-3 text-center d-flex">
-                    <!--  -->
-                    <div class="chart_value flex-grow-1"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Success','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
-                      <div class="cv_heighlight"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
-                      <div class="cv_name">Status  
-                      </div>
-
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value low -->
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight" 
-                      [ngClass]= "{'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-danger':serviceNameInfo['metricScore'] < deploymentApplicationHealth['minimumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['minimumCanaryScore'] && serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-muted': serviceNameInfo['metricScore'] === 'N/A'}">{{ serviceNameInfo['metricScore'] >=0 ? (serviceNameInfo['metricScore'] | number: '1.0-0') : 'N/A'}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Metrics</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    
-                    <!-- /.chart_value alert -->
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight"   [ngClass]= "{'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-danger':serviceNameInfo['logsScore'] < deploymentApplicationHealth['minimumCanaryScore'],'text-warning':(serviceNameInfo['logsScore'] < deploymentApplicationHealth['minimumCanaryScore']) && (serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore']),'text-muted': serviceNameInfo['logsScore'] === 'N/A'}">{{serviceNameInfo['logsScore'] >= 0 ? (serviceNameInfo['logsScore'] | number: '1.0-0') : 'N/A'}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Logs</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value alert -->
-                  </div>
-                  <!-- /.chart_ratio -->
-                  <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-3 text-center d-flex">
-                    <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['total']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Metrics</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value low -->
-                    <!-- /.chart_value alert -->
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['fail']:''}} </div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Failed</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['critical']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Critical</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['watchlist']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Watchlist</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value alert -->
-                  </div>
-                  <!-- /.chart_ratio -->
-
-                  <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio text-center d-flex">
-                    <div class="chart_value cv_low flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['critical']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Critical</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value low -->
-                    <div class="chart_value flex-grow-1">
-                      <div class="cv_heighlight text-danger">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['error']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Error</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value alert -->
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight text-warning">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['warning']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Warning</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value alert -->
-                    <div class="chart_value cv_alert flex-grow-1">
-                      <div class="cv_heighlight">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['total']:''}}</div>
-                      <!-- /.cv_heighlight -->
-                      <div class="cv_name">Cluster</div>
-                      <!-- /.cv_name -->
-                    </div>
-                    <!-- /.chart_value alert -->
-                  </div>
-                  <!-- /.chart_ratio -->
-
+                  
+                  
+                  
+      
                   <div class="table-responsive">
                     <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
-                      <tbody>
-                        <tr>
-                          <td width="110">Template:</td>
-                          <td>{{deploymentApplicationHealth['logTemplateName']}}::{{deploymentApplicationHealth['metricTemplateName']}}</td>
+                        <!-- <tr>
+                          <td>
+                            <p [innerHTML]=" sent | changetextcolor:arr"></p>
+                          </td>
+                        </tr> -->
+                        <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                          <td width="110">Log Template:</td>
+                          <td data-toggle="tooltip" data-placement="top" title="{{deploymentApplicationHealth['logTemplateName']}}">{{deploymentApplicationHealth['logTemplateName'] | ellipsis:22}} 
+                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentApplicationHealth['logTemplateName']"></i>  
+                          </td>
                         </tr>
-                      
-                      </tbody>
+                        <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                          <td width="110">Metric Template:</td>
+                          <td data-toggle="tooltip" data-placement="top" title="{{deploymentApplicationHealth['metricTemplateName']}}">{{deploymentApplicationHealth['metricTemplateName'] | ellipsis:22}} 
+                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentApplicationHealth['metricTemplateName']"></i>  
+                          </td>
+                        </tr>
                     </table>
                     <hr />
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
-                      <tr class="font-weight-bold">
-                        <td width="110">Baseline:</td>
-                        <td>{{serviceNameInfo['version1name'] !== undefined ? serviceNameInfo['version1name']: ''}}</td>
+                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110">Log Baseline: </td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['version1name']}}">{{deploymentServiceInformation['version1name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version1name']"></i>  
+                        </td>
+                      </tr>
+                      <tr class="font-weight-bold" *ngIf=" deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110">Metric Baseline: </td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['metricVersion1Name']}}">{{deploymentServiceInformation['metricVersion1Name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricVersion1Name']"></i>  
+                        </td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -383,9 +372,17 @@
                   <hr />
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
-                      <tr class="font-weight-bold">
-                        <td width="110">New Release:</td>
-                        <td>{{serviceNameInfo['version2name'] !== undefined ? serviceNameInfo['version2name']: ''}}</td>
+                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110"> Log New Release:</td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['version2name']}}">{{deploymentServiceInformation['version2name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version2name']"></i>  
+                        </td>
+                      </tr>
+                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="110"> Metric New Release:</td>
+                        <td data-toggle="tooltip" data-placement="top" title="{{deploymentServiceInformation['metricVersion2Name']}}">{{deploymentServiceInformation['metricVersion2Name'] | ellipsis:22}} 
+                          <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricVersion2Name']"></i>  
+                        </td>
                       </tr>
                       <tr>
                         <td width="110">Start time:</td>
@@ -400,42 +397,76 @@
                   <hr />
                 
                   
-                  <table *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="table table-sm table-sm-text text-left table-no-bordered mb-0">
+                  <table  class="table table-sm table-sm-text text-left table-no-bordered mb-0">
                     <tbody>
                       <tr>
-                        <td width="180">Log Score:</td>
-                        <td>{{serviceNameInfo['logsScore']}}</td>
+                        <td width="180">Analysis type:</td>
+                        <td>{{deploymentApplicationHealth['analysisType']}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Log Status:</td>
+                        <td>{{deploymentServiceInformation['logStatus']}}</td>
+                      </tr>
+                      
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Metric Status:</td>
+                        <td>{{deploymentServiceInformation['metricStatus']}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Log Score:</td>
+                        <td><span *ngIf="deploymentServiceInformation['logScore']>-1">{{deploymentServiceInformation['logScore']}}</span>
+                        <span *ngIf="deploymentServiceInformation['logScore']<0 || deploymentServiceInformation['logScore']==null"> - </span></td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Metric Score:</td>
+                        <td><span *ngIf="deploymentServiceInformation['metricScore']>-1">{{deploymentServiceInformation['metricScore']}}</span>
+                        <span *ngIf="deploymentServiceInformation['metricScore']<0 || deploymentServiceInformation['metricScore']==null"> - </span></td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline log file size:</td>
                         <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v1FileSize']:null,true)}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">New Release log file size:</td>
                         <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v2FileSize']:null,true)}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline log file lines:</td>
                         <td>{{deploymentServiceInformation['fileStat'] ? (deploymentServiceInformation['fileStat']['v1LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v1LogLen']:null): 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">New Release log file lines:</td>
                         <td>{{deploymentServiceInformation['fileStat'] ? (deploymentServiceInformation['fileStat']['v2LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v2LogLen']:null): 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Canary Analysis Duration:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['duration']: 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Reclassification Duration:</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['reclarificationDuration']: 'N/A'}}</td>
+                      </tr>                      
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Interval Minutes:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['intervalMinutes']: 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Regular Expression:</td>
+                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['regularExpression']: 'N/A'}}</td>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                        <td width="180">Algorithm:</td>
+                        <ng-container *ngIf="deploymentServiceInformation">
+                          <td *ngIf="deploymentServiceInformation['algorithm']==='spell'">{{deploymentServiceInformation['algorithm']==='spell' ? 'LCS' : 'N/A'}}</td>
+                          <td *ngIf="deploymentServiceInformation['algorithm']==='perl'">{{deploymentServiceInformation['algorithm']==='perl' ? 'Threshold' : 'N/A'}}</td>
+                        </ng-container>
+                      </tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">Baseline logs:</td>
                         <td *ngIf="deploymentServiceInformation['baselineKibanaUrl'] != null"><a href="{{deploymentServiceInformation['baselineKibanaUrl']}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
                         <td *ngIf="deploymentServiceInformation['baselineKibanaUrl'] === null">N/A</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="180">New Release logs: </td>
                         <td *ngIf="deploymentServiceInformation['canaryKibanaUrl'] != null"><a href="{{deploymentServiceInformation['canaryKibanaUrl']}}" target="_blank" class="text-dark font-weight-bold underline">View Logs</a></td>
                         <td *ngIf="deploymentServiceInformation['canaryKibanaUrl'] === null">N/A</td>
@@ -444,59 +475,121 @@
                     </tbody>
                   </table>
                   </div>
-                  <!-- /.table-responsive -->
-                </div>
-                <!-- /.rightBox_body -->
-              </div>
-              <!-- /.rightBox -->
-           
-          </mat-drawer>
-          <mat-drawer-content >
-            <!-- <button (click)="sideNav.toggle()" mat-button>Toggle SideNav</button> -->
-            <!-- <button (click)="onTogglePosition(nav_position)" mat-button>Toggle Position {{ nav_position }}</button> -->
-            <div class="d-flex flex-column">
-              <div class="pull-right">
-                <button class="pull-right" data-toggle="tooltip" data-placement="left" title="Overall canary run inforamtion for the selected application"  mat-button>
-                  <div *ngIf="isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-right"></i></div>
-                  <div *ngIf="!isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-left"></i></div>
-                </button>
-               </div>
-              <div class="pt-1">
-                <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist" (click)="onClickTab($event)">
-                  <li class="nav-item" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
-                    <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}"  id="log-analysis-tab" data-toggle="tab" role="tab" aria-controls="log-analysis" aria-selected="true">Log Analysis</a>
-                  </li>
-                  <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
-                    <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}" id="metric-analysis-tab" data-toggle="tab" role="tab" aria-controls="metric-analysis" aria-selected="true">Metric Analysis</a>
-                  </li>
-                 
-                </ul>
-                
-                <div class="tab-content" id="myTabContent" (click)="onClickAnalysisSection($event)">
-                  <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
-                  [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
-                      <ng-container *ngIf = "selectedTab === 'log-analysis'">
-                        <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-log-analysis>
-                      </ng-container>
-                    </div>
-                    <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"
-                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}">
-                      <ng-container *ngIf = "selectedTab === 'metric-analysis'">
-                        <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
-                      </ng-container>
-                    </div>
                 </div>
               </div>
-              <!-- /.tab-lined -->
+            </mat-drawer>
+          
+            <div class="example-sidenav-content">
+              <div class="d-flex flex-column analysisMainDiv">
+                <div class="summaryToggleBtn d-flex ml20">
+                  <div class="chart_ratio mb-2 text-center d-flex   ">
+                    <div class="chart_value flex-grow-1 padding10LeftRight"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Success','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
+                      <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']>-1">{{serviceNameInfo['finalScore']}}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore']>-1"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
+                      <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']<0"> - </div>
+                      
+                    </div>
+                    
+                  </div>
+                  <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20">
+                    <div class="chart_value flex-grow-1" [ngClass]= "{'cv_high':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">{{serviceNameInfo['metricScore']}}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']<0 || serviceNameInfo['metricScore']==null"> - </div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name" >Metrics</div>
+                      <!-- /.cv_name -->
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight lightRed">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['fail']:''}} </div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Failed</div>
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['critical']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name ">Critical</div>
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['watchlist']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Watchlist</div>
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight">{{serviceNameInfo['metricsCount'] ? serviceNameInfo['metricsCount']['total']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Count</div>
+                    </div>
+                  </div>
+                  <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20" >
+                    <div class="chart_value padding5LeftRight  flex-grow-1" [ngClass]= "{'cv_high':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}">
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}" >{{serviceNameInfo['logsScore'] }}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']<0 || serviceNameInfo['logsScore']==null"> - </div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Logs</div>
+                    </div>
+                    <div class="chart_value flex-grow-1">
+                      <div class="cv_heighlight lightRed">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['critical']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Critical</div>
+                    </div>
+                    <div class="chart_value flex-grow-1">
+                      <div class="cv_heighlight text-danger">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['error']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Error</div>
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight text-warning">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['warning']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Warning</div>
+                    </div>
+                    <div class="chart_value cv_alert flex-grow-1">
+                      <div class="cv_heighlight">{{serviceNameInfo['clusterCount'] ? serviceNameInfo['clusterCount']['total']:''}}</div>
+                      <!-- /.cv_heighlight -->
+                      <div class="cv_name">Cluster</div>
+                    </div>
+                  </div>
+
+                  
+                </div>
+                <div class="pt-1 ">
+                  <ul class="nav tab-lined nav-tabs logAndMetricTabs" id="myTab" role="tablist" (click)="onClickTab($event)">
+                     <li class="nav-item" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                      <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}"  id="log-analysis-tab" data-toggle="tab" role="tab" aria-controls="log-analysis" aria-selected="true">Log Analysis</a>
+                    </li>
+                    <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
+                      <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}" id="metric-analysis-tab" data-toggle="tab" role="tab" aria-controls="metric-analysis" aria-selected="true">Metric Analysis</a>
+                    </li>
+                    <li class="nav-item ml-auto">
+                      <button class="pull-right" data-toggle="tooltip" data-placement="left" title="Overall canary run inforamtion for the selected application"  mat-button>
+                        <div *ngIf="isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-right"></i><i  class="fa fa-chevron-right"></i></div>
+                        <div *ngIf="!isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-left"></i><i  class="fa fa-chevron-left"></i></div>
+                      </button>
+                    </li>
+                   
+                  </ul>
+                  
+                  <div class="tab-content" id="myTabContent" (click)="onClickAnalysisSection($event)">
+                    <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
+                    [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
+                        <ng-container *ngIf = "selectedTab === 'log-analysis'">
+                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" (selectedServiceId)="getlogAnalysisData($event)"></app-log-analysis>
+                        </ng-container>
+                      </div>
+                      <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"
+                      [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}">
+                        <ng-container *ngIf = "selectedTab === 'metric-analysis'">
+                          <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
+                        </ng-container>
+                      </div>
+                  </div>
+                </div>
+                <!-- /.tab-lined -->
+              </div>
             </div>
-          </mat-drawer-content>
-        </mat-drawer-container>
-        
-        
-        
-    <!-- /.col-sm-4 -->
-      <!-- /.col-sm-4 -->
-  </div>
+          
+          </mat-drawer-container>
+        </div>
+      </div>
   <!-- /.row -->
     </div>
     <!-- /.page-content -->

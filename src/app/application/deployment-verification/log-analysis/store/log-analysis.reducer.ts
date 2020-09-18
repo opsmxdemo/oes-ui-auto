@@ -1,3 +1,4 @@
+import { loadLogTopics } from './../../../../application-onboarding/application/store/application.actions';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as LogAnalysisActions from './log-analysis.actions';
 import { Observable } from 'rxjs';
@@ -9,6 +10,10 @@ export interface State {
     deployementLoading: boolean;
     logsEventResults: any;
     clusterLogs:any;
+    timeStampData:any;
+    rerunResponse:any;
+    reclassificationHistoryResults:any;
+    fetchLogTopics: any;    
 }
 
 export const initialState: State = {
@@ -16,7 +21,11 @@ export const initialState: State = {
     errorMessage: null,
     deployementLoading: false,
     logsEventResults : null,
-    clusterLogs : null
+    clusterLogs: null,
+    timeStampData:null,
+    rerunResponse:null,
+    reclassificationHistoryResults:null,
+    fetchLogTopics: null,
 }
 
 export function LogAnalysisReducer(
@@ -60,7 +69,6 @@ export function LogAnalysisReducer(
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
                 logTemplate : action.logTemplate
-                //userName :action.userName
             })
         ),
         on(LogAnalysisActions.fetchRerunLogsResults,
@@ -83,6 +91,26 @@ export function LogAnalysisReducer(
             (state, action) => ({
                 ...state,
                 clusterLogs: action.clusterLogs,
+                deployementLoading: false
+            })
+        ),
+         on(LogAnalysisActions.loadLogTopics,
+            state => ({
+                ...state,
+                logListLoading: true
+            })
+        ),
+        on(LogAnalysisActions.fetchLogTopics,
+            (state, action) => ({
+                ...state,
+                logTopicsList: action.logslist,
+                logListLoading: false
+            })
+        ),
+        on(LogAnalysisActions.loadTimeAnalysisGraphData,
+            (state, action) => ({
+                ...state,
+                timeStampData:action.logTimeAnalysisResults,
                 deployementLoading: false
             })
         )
