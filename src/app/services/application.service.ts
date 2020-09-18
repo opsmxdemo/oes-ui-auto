@@ -14,16 +14,22 @@ export class ApplicationService {
     constructor(public environment: AppConfigService, private httpClient: HttpClient, public notifications: NotificationService) {
         this.endpointUrl = environment.config.endPointUrl;
      }
-    getApplicationList() {
-        return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications').pipe(
+    // getApplicationList() {
+    //     return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications').pipe(
+    //         catchError(this.handleError)
+    //     );
+    // }
+    getServiceList(applicationId) {
+        return this.httpClient.get(this.endpointUrl + 'dashboardservice/v1/applications/' + applicationId).pipe(
             catchError(this.handleError)
         );
     }
-    getServiceList(applicationName) {
-        return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/services').pipe(
+    getServiceListDemo(applicationId) {
+        return this.httpClient.get(this.endpointUrl +'oes/dashboard/applications/'+ applicationId +'/services').pipe(
             catchError(this.handleError)
         );
     }
+    
     getReleaseList(applicationName) {
         return this.httpClient.get(this.endpointUrl + 'oes/dashboard/applications/' + applicationName + '/releases').pipe(
             catchError(this.handleError)

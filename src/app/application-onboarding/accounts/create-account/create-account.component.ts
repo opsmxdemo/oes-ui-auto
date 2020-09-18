@@ -3,7 +3,7 @@ import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { SharedService } from 'src/app/services/shared.service';
 import { Store } from '@ngrx/store';
 import * as fromFeature from '../../store/feature.reducer';
-import { CreateAccount } from 'src/app/models/applicationOnboarding/createAccountModel/createAccount.model';
+import { CreateAccount } from '../../../models/applicationOnboarding/createAccountModel/createAccount.model';
 import * as AccountActions from '../store/accounts.actions';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';

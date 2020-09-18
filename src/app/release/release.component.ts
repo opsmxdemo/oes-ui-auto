@@ -65,7 +65,7 @@ export class ReleaseComponent implements OnInit {
     // if (this.releaseDataFromParent.appName === undefined){
     //   this.application = this.selectedAppName;
     // }
-    this.applicationService.doNewRelease(this.application).subscribe(
+    this.applicationService.doNewRelease(this.releaseDataFromParent.applicationId).subscribe(
       (response: any) => {
         response.services.forEach(item => {
         item.isChecked = false;
@@ -116,11 +116,11 @@ export class ReleaseComponent implements OnInit {
       this.releaseEnvironmentObj.val = item.val;
       this.promoteData.env.push(this.releaseEnvironmentObj);
     });
-    this.applicationService.promoteRelease(this.promoteData, this.application).subscribe((response: any) => {
+    this.applicationService.promoteRelease(this.promoteData, this.releaseDataFromParent.applicationId).subscribe((response: any) => {
       if (response.status === 'IN_PROGRESS'){
           this.notification.showSuccess('Success','Release process is IN_PROGRESS');
           this.showRelease = false;
-          this.applicationService.getReleaseList(this.application).subscribe((relResponse: any) => {
+          this.applicationService.getReleaseList(this.releaseDataFromParent.applicationId).subscribe((relResponse: any) => {
           this.releaseDataFromParent = relResponse;
           this.releaseDataFromParent.appName = this.application;
           this.promoteData.releaseName = '';
@@ -128,7 +128,10 @@ export class ReleaseComponent implements OnInit {
           this.promoteStatus = false;
         //  this.application = this.releaseDataFromParent.appName;
         });
-      } else {
+      } else if(response.status == '500'){
+        this.notification.showError('Error',response.message);
+      }
+       else {
         this.notification.showError('Error','Error in processing the Release');
         this.promoteStatus = false;
       }

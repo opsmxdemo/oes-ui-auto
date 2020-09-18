@@ -114,7 +114,6 @@ export class AccountsEffect {
                      return AccountsAction.fetchAccountList({Accountlist:resdata['accounts']});
                  }),
                  catchError(errorRes => {
-                     this.toastr.showError('Server Error !!','ERROR')
                      return handleError(errorRes);
                  })
              );
@@ -139,7 +138,6 @@ export class AccountsEffect {
                         return AccountsAction.accountDeleted({ index: action.index })
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Server Error !!', 'ERROR')
                         return handleError(errorRes);
                     })
                 );

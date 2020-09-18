@@ -1,11 +1,14 @@
 
 export class GroupPermission {
-    userGroup: string;
-    permission: string;
+    userGroupId: string;
+    permissionIds: any[];
 
     constructor(data: any) {
         data = data || {};
-        this.userGroup = data.userGroup;
-        this.permission = data.permission;
+        this.userGroupId = data.userGroupId;
+        this.permissionIds=[];
+        data.pipelines.forEach(element => {
+            this.permissionIds.push(element);
+        });
     }
 }

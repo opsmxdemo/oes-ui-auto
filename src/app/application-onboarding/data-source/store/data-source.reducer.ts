@@ -4,15 +4,23 @@ import * as DataSourceAction from './data-source.actions';
 
 
 export interface State {
-
-    datasourceList: any;
+   
     errorMessage: string;
-    
+    supportedDatasource: any;
+    loadingDatasource: boolean;
+    datasaved: boolean;
+    // Below is datasource list properties
+    datasourceList: any[];
+    listLoading: boolean;
 }
 
 export const initialState: State = {
     errorMessage: null,
-    datasourceList: null
+    supportedDatasource: null,
+    loadingDatasource: false,
+    datasaved: false,
+    datasourceList: [],
+    listLoading: false
 }
 
 export function DataSourceReducer(
@@ -20,23 +28,124 @@ export function DataSourceReducer(
     dataSourceAction: Action) {
     return createReducer(
         initialState,
+        on(DataSourceAction.errorOccured,
+            (state,action) => ({
+                ...state,
+                erroeMessage:action.errorMessage,
+                datasaved: false,
+                loadingDatasource:false,
+            })
+        ),
+        on(DataSourceAction.fetchSupportedDatasources,
+            (state,action) => ({
+                ...state,
+                supportedDatasource:action.SupportedDataSource 
+            })
+        ),
+        on(DataSourceAction.createAPDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.createOESDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.successResponse,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:false,
+                erroeMessage:null,
+                datasaved:true
+            })
+        ),
 
+        // Datasource Edit code start
+        on(DataSourceAction.updateOESDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.updateAPDatasources,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:true,
+                erroeMessage:null,
+                datasaved:false 
+            })
+        ),
+        on(DataSourceAction.updatesuccessResponse,
+            (state,action) => ({
+                ...state,
+                loadingDatasource:false,
+                erroeMessage:null,
+                datasaved:true
+            })
+        ),
+        // Datasource Edit code ends
+
+        // Datasource list code start
+        on(DataSourceAction.loadDatasourceList,
+            (state,action) => ({
+                ...state,
+                listLoading: true,
+                datasourceList:[]
+            })
+        ),
+        on(DataSourceAction.loadAPDatasourceList,
+            (state,action) => ({
+                ...state,
+                listLoading: true,
+                datasourceList:[]
+            })
+        ),
+        on(DataSourceAction.loadOESDatasourceList,
+            (state,action) => ({
+                ...state,
+                listLoading: true,
+                datasourceList:[]
+            })
+        ),
+        on(DataSourceAction.listErrorOccured,
+            (state,action) => ({
+                ...state,
+                listLoading: false
+            })
+        ),
         on(DataSourceAction.fetchDatasourceList,
             (state,action) => ({
                 ...state,
-                datasourceList: action.DatasourceList,
+                datasourceList: state.datasourceList.concat( ...action.DatasourceList ),
+                listLoading: false,
+            })
+        ),
+        on(DataSourceAction.deleteOESDatasourceAccount,
+            (state,action) => ({
+                ...state,
+                listLoading: true
+            })
+        ),
+        on(DataSourceAction.deleteAPDatasourceAccount,
+            (state,action) => ({
+                ...state,
+                listLoading: true
             })
         ),
         on(DataSourceAction.DatasourceaccountDeleted,
             (state,action) => ({
                 ...state,
+                listLoading: false,
                 datasourceList: state.datasourceList.filter((datasourceList,index) => index !== action.index)
-            })
-        ),
-        on(DataSourceAction.errorOccured,
-            (state,action) => ({
-                ...state,
-                erroeMessage:action.errorMessage
             })
         ),
 

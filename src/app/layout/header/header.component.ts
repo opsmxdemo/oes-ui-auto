@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import * as AuthAction from '../../auth/store/auth.actions';
 import { Router } from '@angular/router';
+import * as versionDetails from '../../../assets/data/versionDetails.json';
 
 @Component({
   selector: 'app-header',
@@ -11,9 +12,12 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isAuthenticate: Boolean;
-  username: string;
+  userDetails: any;
   imgcolor: string = '#00796b';
   firstAlphabet: any;
+  username: string;
+  versionDetails:any=versionDetails
+ 
 
   constructor(public store: Store<fromApp.AppState>,
               public router: Router) { }
@@ -26,14 +30,15 @@ export class HeaderComponent implements OnInit {
         if(response.authenticated){
           this.isAuthenticate = response.authenticated;
           this.username = response.user;
-          this.firstAlphabet = response.user.split('');
+          this.firstAlphabet = this.username.split('');
         }
       }
     );
+    
   }
 
   onLogout(){
-    this.store.dispatch(new AuthAction.Logout())
+     this.store.dispatch(new AuthAction.Logout())
   }
 
   //Below function is use to get random color for user image

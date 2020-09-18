@@ -20,10 +20,23 @@ export interface State {
     dockerImageData:any;
     callDockerImageDataAPI: boolean;
     userGropsData: string[];
+    userGroupsPermissions: [];
+    initalOESDatacall: boolean;
+    initalOESDataLoaded: string[];
+    applicationId:string;
+
 
     // Application List variables
     applicationList: ApplicationList[];
     appListLoading: boolean;
+
+    // Log Template variables 
+    logtemplate: any[];
+
+    // Metric Template variables 
+    metrictemplate: any[];
+     
+
 }
 
 export const initialState: State = {
@@ -33,13 +46,19 @@ export const initialState: State = {
     parentPage: '/setup/applications',
     applicationData: null,
     cloudAccountExist: null,
-    applicationList: null,
+    applicationList: [],
     appListLoading: false,
     applicationLoading: false,
     imageSource: null,
     dockerImageData: null,
     callDockerImageDataAPI: true,
-    userGropsData: null
+    userGropsData: null,
+    userGroupsPermissions: null,
+    initalOESDatacall: false,
+    initalOESDataLoaded: ['dummy','dummy'],
+    applicationId:null,
+    logtemplate: [],
+    metrictemplate:[]
 }
 
 export function ApplicationReducer(
@@ -52,19 +71,45 @@ export function ApplicationReducer(
             (state, action) => ({
                 ...state,
                 editMode:false,
-                parentPage: action.page
+                parentPage: action.page,
+            })
+        ),
+        on(ApplicationAction.loadOESData,
+            (state, action) => ({
+                ...state,
+                initalOESDatacall: true,
+                initalOESDataLoaded: ['calling','calling'],
             })
         ),
         on(ApplicationAction.fetchPipeline,
             (state, action) => ({
                 ...state,
-                pipelineData: action.pipelineData
+                pipelineData: action.pipelineData,
+                initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> {
+                    if(index == 1){
+                        let status = 'success';
+                        if(action.pipelineData['length'] > 0){
+                            status = 'success';
+                        }else{
+                            status =  'error';
+                        }
+                        return status;
+                    }else{
+                        return data;
+                    }
+                })
             })
         ),
         on(ApplicationAction.fetchUserGrops,
             (state, action) => ({
                 ...state,
                 userGropsData: action.userGroupData
+            })
+        ),
+        on(ApplicationAction.fetchUserGropsPermissions,
+            (state, action) => ({
+                ...state,
+                userGroupsPermissions: action.userGroupPermissionsData
             })
         ),
         on(ApplicationAction.errorOccured,
@@ -75,12 +120,21 @@ export function ApplicationReducer(
                 applicationLoading: false
             })
         ),
+        on(ApplicationAction.initialOESCallFail,
+            (state,action) => ({
+                ...state,
+                erroeMessage:action.errorMessage,
+                initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> index===action.index?'error':data)
+            })
+        ),
         on(ApplicationAction.enableEditMode,
             (state,action) => ({
                 ...state,
                 editMode:action.editMode,
                 parentPage: action.page,
-                applicationLoading: true
+                applicationLoading: true,
+                applicationId:null,
+                applicationData: null
             })    
         ),
         
@@ -88,7 +142,8 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 applicationData:action.appData,
-                applicationLoading: false
+                applicationLoading: false,
+                applicationId:action.applicationId
             })
         ),
         on(ApplicationAction.disabledEditMode,
@@ -124,7 +179,20 @@ export function ApplicationReducer(
         on(ApplicationAction.fetchImageSource,
             (state,action) => ({
                 ...state,
-                imageSource:action.imageSource
+                imageSource:action.imageSource,
+                initalOESDataLoaded: state.initalOESDataLoaded.map((data,index)=> {
+                    if(index == 0){
+                        let status;
+                        if(action.imageSource.length > 0){
+                            status = 'success';
+                        }else{
+                            status =  'error';
+                        }
+                        return status;
+                    }else{
+                        return data;
+                    }
+                })
             })
         ),
         on(ApplicationAction.loadDockerImageName,
@@ -137,10 +205,11 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 dockerImageData: action.dockerImageData
-            })
+            }),
+        
         ),
         
-        // #### CreateApplication screen logic start ####//
+        // #### CreateApplication screen logic ends ####//
 
         // ###  Applist screen logic start ### // 
         on(ApplicationAction.loadAppList,
@@ -170,5 +239,50 @@ export function ApplicationReducer(
             })
         ),
         // ###  Applist screen logic End ### // 
+
+        // ###  LogTemplate screen logic start ### // 
+
+        on(ApplicationAction.createdLogTemplate,
+            (state,action) => ({
+                ...state,
+                logtemplate: state.logtemplate.concat({ ...action.logTemplateData })
+            })
+        ),
+        on(ApplicationAction.updatedLogTemplate,
+            (state,action) => ({
+                ...state,
+                logtemplate: state.logtemplate.map((logtemplate, index) => index === action.index ? action.logTemplateData : logtemplate)
+            })
+        ),
+        // ###  LogTemplate screen logic start ### // 
+
+        // ###  MeticTemplate screen logic start ### // 
+
+        on(ApplicationAction.createdMetricTemplate,
+            (state,action) => ({
+                ...state,
+                metrictemplate: state.metrictemplate.concat({ ...action.metricTemplateData })
+            })
+        ),
+        on(ApplicationAction.updatedMetricTemplate,
+            (state,action) => ({
+                ...state,
+                metrictemplate: state.metrictemplate.map((metrictemplate, index) => index === action.index ? action.metricTemplateData : metrictemplate)
+            })
+        ),        
+
+        // ###  MeticTemplate screen logic start ### // 
+
+        // ###  Reseting template data for both metric and log ### // 
+
+        on(ApplicationAction.resetTemplateData,
+            (state,action) => ({
+                ...state,
+                metrictemplate: [],
+                logtemplate: []
+            })
+        ),
+
+        // ###  Reseting template data for both metric and log ### // 
     )(applicationState,applicationAction);
 }

@@ -1,0 +1,238 @@
+[
+  {
+    "date": 1594801968141,
+    "appMenu": [
+      "Delete"
+    ],
+    "appInfo": [
+      {
+        "applicationInfolabel": "Services",
+        "applicationInfoValue": 1
+      },
+      {
+        "applicationInfolabel": "Dev Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Test Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Deployment Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Production Monitoring",
+        "applicationInfoValue": 0
+      }
+    ],
+    "recentCanaries": [
+      {
+        "canaryId": 185,
+        "finalScore": 100,
+        "maximumCanaryScore": "80",
+        "minimumCanaryScore": "60",
+        "status": "COMPLETED"
+      },
+      {
+        "canaryId": 189,
+        "finalScore": 0,
+        "maximumCanaryScore": "80",
+        "minimumCanaryScore": "60",
+        "status": "COMPLETED"
+      },
+      {
+        "canaryId": 195,
+        "finalScore": 0,
+        "maximumCanaryScore": "80",
+        "minimumCanaryScore": "60",
+        "status": "Fail"
+      },
+      {
+        "canaryId": 186,
+        "finalScore": 0,
+        "maximumCanaryScore": "80",
+        "applicationName": "QATestUpmUe",
+        "minimumCanaryScore": "60",
+        "status": "COMPLETED"
+      }
+    ],
+    "applicationId": 129,
+    "applicationName": "QATesthMcTs",
+    "applicationStatus": "Fail"
+  },
+  {
+    "date": 1596720892571,
+    "appMenu": [
+      "Delete"
+    ],
+    "appInfo": [
+      {
+        "applicationInfolabel": "Services",
+        "applicationInfoValue": 1
+      },
+      {
+        "applicationInfolabel": "Dev Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Test Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Deployment Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Production Monitoring",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Releases",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Policies",
+        "applicationInfoValue": 0
+      }
+    ],
+    "recentCanaries": [
+      {
+        "canaryId": 160,
+        "finalScore": 0,
+        "maximumCanaryScore": "80",
+        "minimumCanaryScore": "60",
+        "status": "COMPLETED"
+      },
+      {
+        "canaryId": 155,
+        "finalScore": 100,
+        "maximumCanaryScore": "80",
+        "minimumCanaryScore": "60",
+        "status": "COMPLETED"
+      },
+      {
+        "canaryId": 154,
+        "finalScore": 0,
+        "maximumCanaryScore": "80",
+        "minimumCanaryScore": "60",
+        "status": "Fail"
+      }
+    ],
+    "applicationId": "100",
+    "applicationName": "UXDemo_APP3",
+    "applicationStatus": "Fail"
+  },
+  {
+    "date": 1596720892571,
+    "appMenu": [
+      "Delete"
+    ],
+    "appInfo": [
+      {
+        "applicationInfolabel": "Services",
+        "applicationInfoValue": 1
+      },
+      {
+        "applicationInfolabel": "Releases",
+        "applicationInfoValue": 1
+      },
+      {
+        "applicationInfolabel": "Policies",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Dev Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Test Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Deployment Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Production Monitoring",
+        "applicationInfoValue": 0
+      }
+    ],
+    "recentCanaries": [],
+    "applicationId": "105",
+    "applicationName": "demo2",
+    "applicationStatus": "Pass"
+  },
+  {
+    "date": 1596720892571,
+    "appMenu": [
+      "Delete"
+    ],
+    "appInfo": [
+      {
+        "applicationInfolabel": "Services",
+        "applicationInfoValue": 2
+      },
+      {
+        "applicationInfolabel": "Releases",
+        "applicationInfoValue": 4
+      },
+      {
+        "applicationInfolabel": "Policies",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Dev Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Test Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Deployment Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Production Monitoring",
+        "applicationInfoValue": 0
+      }
+    ],
+    "recentCanaries": [],
+    "applicationId": "106",
+    "applicationName": "oestestrestapp",
+    "applicationStatus": "Pass"
+  },
+  {
+    "date": 1596720892571,
+    "appMenu": [
+      "Delete"
+    ],
+    "appInfo": [
+      {
+        "applicationInfolabel": "Services",
+        "applicationInfoValue": 1
+      },
+      {
+        "applicationInfolabel": "Dev Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Test Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Deployment Verification",
+        "applicationInfoValue": 0
+      },
+      {
+        "applicationInfolabel": "Production Monitoring",
+        "applicationInfoValue": 0
+      }
+    ],
+    "recentCanaries": [],
+    "applicationId": "107",
+    "applicationName": "QATestdIIWD",
+    "applicationStatus": "Pass"
+  }
+]

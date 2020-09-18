@@ -11,6 +11,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatStepperModule} from '@angular/material/stepper';
 
 @NgModule({
     exports: [
@@ -27,6 +28,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
       MatTableModule,
       MatAutocompleteModule,
       MatSidenavModule,
+      MatStepperModule
     ]
   })
 export class AppMaterialModule { }

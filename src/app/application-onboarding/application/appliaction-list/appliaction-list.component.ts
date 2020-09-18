@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import * as fromFeature from '../../store/feature.reducer';
 import * as ApplicationActions from '../store/application.actions';
 import * as AppDashboardAction from '../../../application/application-dashboard/store/dashboard.actions';
-import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import { ApplicationList } from '../../../models/applicationOnboarding/applicationList/applicationList.model';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import Swal from 'sweetalert2'
@@ -39,8 +39,8 @@ export class AppliactionListComponent implements OnInit {
     //fetching data from state
     this.store.select(fromFeature.selectApplication).subscribe(
       (response) => {
-        if (response.applicationList !== null) {
-          this.loading = response.appListLoading;
+        this.loading = response.appListLoading;
+        if (response.applicationList.length > 0) {
           this.appListData = response.applicationList;
           this.appListLength = this.appListData.length;
           this.renderPage();
@@ -148,7 +148,7 @@ export class AppliactionListComponent implements OnInit {
   }
 
   //Below function is use to delete application fron existing list
-  appDelete(name,index){
+  appDelete(name,index,AppId){
     $("[data-toggle='tooltip']").tooltip('hide');
     Swal.fire({
       title: 'Are you sure?',
@@ -160,16 +160,16 @@ export class AppliactionListComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value) {
-        this.store.dispatch(ApplicationActions.appDelete({applicationName:name,index:index}));
+        this.store.dispatch(ApplicationActions.appDelete({applicationName:name,index:index,id:AppId}));
       }
     })
     
   }
 
   // Below function is use for edit application
-  editApplication(index){
+  editApplication(appData){
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: this.appListData[index].name,page:'/setup/applications'}));
+    this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: appData.name,page:'/setup/applications',applicationId:appData.applicationId}));
   }
 
 }

@@ -7,7 +7,11 @@ export enum LayoutActionTypes {
     SIDEBAR_FETCH = '[Layout] SideBar Fetch',
     ERROR_RESPONSE = '[Layout] Error Response',
     APPLICATIONDATA = '[Layout] Appliaction Data',
-    SIDEBARTOGGLE = '[Layout] Sidebar Toggle'
+    SIDEBARTOGGLE = '[Layout] Sidebar Toggle',
+    INSTALLATIONMODE = '[Layout] Installation Mode',
+    USERGROUPREFRESH = '[Layout] Usergroup Refresh',
+    SERVERERROR = '[Layout] Server Error',
+    APISUCCESS = '[Layout] Api Success',
 }
 
 export class LoadPage implements Action {
@@ -34,8 +38,35 @@ export class SideBarToggle implements Action {
     constructor(public payload:string){}
 }
 
+export class InstallationMode implements Action {
+    readonly type = LayoutActionTypes.INSTALLATIONMODE;
+    constructor(public payload:string){}
+}
+
+export class usergroupRefresh implements Action {
+    readonly type = LayoutActionTypes.USERGROUPREFRESH;
+    constructor(public payload:any){}
+}
+
+export class ServerError implements Action {
+    readonly type = LayoutActionTypes.SERVERERROR;
+    constructor(public payload:{
+        errorMessage:string,
+        index:number
+    }) {}
+}
+
+export class ApiSuccess implements Action {
+    readonly type = LayoutActionTypes.APISUCCESS;
+    constructor(public payload:number){}
+}
+
 export type LayoutActions = LoadPage   
                         |   SideBarFetch
                         |   ErrorResponse
                         |   ApplicationData
-                        |   SideBarToggle;
+                        |   SideBarToggle
+                        |   InstallationMode
+                        |   usergroupRefresh
+                        |   ServerError
+                        |   ApiSuccess;
