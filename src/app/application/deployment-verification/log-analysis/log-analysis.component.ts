@@ -103,6 +103,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   rerunResponse : any;
   errorMessage = 'No data found to display';                           // It is use when expected data not found in component.
   islogAnalysisAvailable = true;
+  commentNotificationMessage = "";
+  sensitivityChanged = false;
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -432,10 +434,16 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   changeSensitivity(e) {
     //console.log(e.target.value);
-    //console.log(this.selectedSensitivity);
+    console.log(this.selectedSensitivity);
+    console.log(this.logAnalysisResults.sensitivity);
+    this.sensitivityChanged = true;
   }
 
   changeCriticality(e, log) {
+    this.commentNotificationMessage = "Click to add your comment here";
+    setTimeout(function () {
+      this.commentNotificationMessage = "";
+    }.bind(this), 5000);
     this.selectedClusterInfo = log;
     let changedTopic = "";
     //code to get topic which is selected on change of criticality drop down
@@ -632,6 +640,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
     this.selectedServiceId.emit(this.serviceId);
     this.classifiedLogsList = [];
+    this.sensitivityChanged = false;
   }
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
