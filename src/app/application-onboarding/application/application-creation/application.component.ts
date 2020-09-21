@@ -58,6 +58,7 @@ export class CreateApplicationComponent implements OnInit {
   editTemplateData = null;                                        // It is use to store data of template which user want to update.
   apiLoadingError = false;                                        // It is use to show or hide component error message.
   isMetricTemplateClicked = true;
+  errorMessage = `<div><b>Application creation requires image source(s) and pipeline template(s).</b></div><ul><li>Please create an image source via  "Data sources" -> "New Data Source" -> Select Monitoring Provider To Create DataSource.</li><li>Pipeline template needs to be create in Spinnaker.If you are sure that these are there, Please refresh the page after some time.</li></ul>`
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
