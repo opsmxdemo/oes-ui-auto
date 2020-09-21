@@ -73,6 +73,7 @@ export class AuditComponent implements OnInit{
   timerHour = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];            // It is use to store timer value in hours used in customize date filter.
   timerMinute = [];                                                                    // It is use to store timer value in minute used in customize date filter.
   currentTabData: any = null;                                                          // It is use to store current tab data to populate dynamic table.
+  auditLoading = false;                                                                // It is use to show hide loading screen.
 
   // Below variable is use for filters
   disabledfilter = false;
@@ -121,6 +122,7 @@ export class AuditComponent implements OnInit{
     this.store.select('audit').subscribe(
       (auditData) => {
         this.cursorWaiting = auditData.cursorWait;
+        this.auditLoading = auditData.loadingAudit;
        
         if (auditData.allPipelineData !== null) {
           this.pipelineCountValue = auditData.allPipelineData['results'].length;

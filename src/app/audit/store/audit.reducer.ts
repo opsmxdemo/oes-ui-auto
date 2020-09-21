@@ -17,6 +17,7 @@ export interface State {
     treeViewMode: boolean;
     treeViewLoading: boolean;
     cursorWait: boolean;
+    loadingAudit: boolean;
 }
 
 export const initialState: State = {
@@ -30,7 +31,8 @@ export const initialState: State = {
     treeViewData: null,
     treeViewMode: false,
     treeViewLoading:false,
-    cursorWait: false
+    cursorWait: false,
+    loadingAudit: false
 }
 
 export function AuditReducer(
@@ -38,6 +40,12 @@ export function AuditReducer(
     auditAction: Action) {
     return createReducer(
         initialState,
+        on(AuditAction.loadAudit,
+            (state, action) => ({
+                ...state,
+                loadingAudit: true
+            })
+        ),
         on(AuditAction.fetchPipelineCount,
             (state, action) => ({
                 ...state,
@@ -51,7 +59,8 @@ export function AuditReducer(
                 erroeMessage:action.errorMessage,
                 treeViewMode:false,
                 treeViewLoading:false,
-                cursorWait:false
+                cursorWait:false,
+                loadingAudit:false
             })
         ),
         on(AuditAction.fetchRuningPipeline,
@@ -67,7 +76,8 @@ export function AuditReducer(
                 ...state,
                 allPipelineData: action.pipelineExist,
                 treeViewMode:false,
-                cursorWait:false
+                cursorWait:false,
+                loadingAudit:false
             })
         ),
         on(AuditAction.fetchlastSuccessfulDeployments,

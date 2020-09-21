@@ -474,7 +474,7 @@
     <app-loading-screen></app-loading-screen>
   </div>
   <div *ngIf = "!apploading && apiLoadingError" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-    <app-component-error-listing [errorString]="'We encountered an error and cannot fulfill the request.Try to refresh the page.'" class="apifailerror"></app-component-error-listing>
+    <app-component-error-listing [errorString]="errorMessage" class="apifailerror"></app-component-error-listing>
   </div>
 </div>
 

@@ -70,7 +70,6 @@ export class ApplicationEffect {
                         return ApplicationAction.fetchImageSource({ imageSource: resdata['data'] });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('ImageSource Data: ' + errorRes.error.error, 'ERROR')
                         return handleOESError(errorRes, 0);
                     })
                 );
@@ -178,7 +177,7 @@ export class ApplicationEffect {
                         return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'createApplication' });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Application is not created due to: ' + errorRes.error.error, 'ERROR')
+                        this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
@@ -197,7 +196,7 @@ export class ApplicationEffect {
                         return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
                     }),
                     catchError(errorRes => {
-                        this.toastr.showError('Application is not updated due to: ' + errorRes.error.error, 'ERROR')
+                        this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
                         return handleError(errorRes);
                     })
                 );
