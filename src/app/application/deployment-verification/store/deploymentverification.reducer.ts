@@ -29,7 +29,7 @@ export const initialState: State = {
     applicationList: null,
     applicationListLoading: false,
     serviceList: null,
-    serviceListLoading: false,
+    serviceListLoading: true,
     canaryId: null,
     applicationHealthDetails: null,
     applicationHealthDetailsLoading: false,
@@ -82,14 +82,20 @@ export function DeploymentdReducer(
             (state,action) => ({
                 ...state,
                 canaryId: action.canaryId,
-                serviceListLoading: true
+                serviceListLoading: false
             })
         ),
         on(DeploymentActions.fetchServices,
             (state,action) => ({
                 ...state,
                 serviceList: action.servicesList,
-                serviceListLoading:false
+                serviceListLoading:true
+            })
+        ),
+        on(DeploymentActions.restrictExecutionOfServices,
+            (state,action) => ({
+                ...state,
+                serviceListLoading: false
             })
         ),
         on(DeploymentActions.loadApplicationHelath,
