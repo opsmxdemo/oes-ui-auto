@@ -1,0 +1,41 @@
+<form  #selectedLogsForm="ngForm">
+    <div class="col pb-3">
+
+        <ng-container ngModelGroup="Critical">
+        <div class="text-divider">
+            <h4>Critical</h4>
+        </div>
+            <ng-container *ngFor="let group of data; let i=index">
+                <div class="custom-control custom-checkbox" *ngIf="group.topic == 'CRITICAL ERROR'">
+                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" ngModel>
+                    <label class="custom-control-label" for="customCheck{{i}}"> {{group.description}}</label>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <ng-container ngModelGroup="ERROR">
+            <div class="text-divider">
+                <h4>Error</h4>
+            </div>
+            <ng-container *ngFor="let group of data; let j=index">
+                <div class="custom-control custom-checkbox" *ngIf="group.topic == 'ERROR'">
+                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{j}}" name="{{group.clusterId}}" ngModel>
+                    <label class="custom-control-label" for="customCheck{{j}}"> {{group.description}}</label>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <ng-container ngModelGroup="Warn">
+            <div class="text-divider">
+                <h4>Warning</h4>
+            </div>
+            <ng-container *ngFor="let group of data; let k=index">
+                <div class="custom-control custom-checkbox" *ngIf="group.topic == 'WARN'">
+                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{k}}" name="{{group.clusterId}}" ngModel>
+                    <label class="custom-control-label" for="customCheck{{k}}"> {{group.description}}</label>
+                </div>
+            </ng-container>
+        </ng-container>
+
+    </div>
+</form>

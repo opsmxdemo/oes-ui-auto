@@ -27,6 +27,11 @@ import { ChangetextcolorPipe } from '../../pipes/keys.pipe';
 import { ChangeTImestamptotimePipe } from '../../pipes/keys.pipe';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgJsonEditorModule } from "ang-jsoneditor";
+import { CorrelationComponent } from './correlation/correlation.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { CorrelationformComponent } from './correlation/correlationform/correlationform.component';
+import { CorrelationformdetailsComponent } from './correlation/correlationform/correlationformdetails/correlationformdetails.component';
+
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 
@@ -40,6 +45,9 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         EllipsisPipe,
         ChangetextcolorPipe,
         ChangeTImestamptotimePipe,
+        CorrelationComponent,
+        CorrelationformComponent,
+        CorrelationformdetailsComponent,
     ],
     imports: [
      CommonModule,
@@ -54,6 +62,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
      FusionChartsModule,
      Ng2SearchPipeModule,
      NgJsonEditorModule,
+     ModalModule.forRoot(),
      SharedModule,
      StoreModule.forFeature('deploymentVerification',fromdeploymentVarification.deploymentVerificationReducers),
      EffectsModule.forFeature([
