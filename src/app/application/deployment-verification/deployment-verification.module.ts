@@ -24,7 +24,7 @@ import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 import { NgpSortModule } from "ngp-sort-pipe";
 import { EllipsisPipe } from '../../pipes/keys.pipe';
 import { ChangetextcolorPipe } from '../../pipes/keys.pipe';
-import { ChangeTImestamptotimePipe,CallbackPipe } from '../../pipes/keys.pipe';
+import { ChangeTImestamptotimePipe } from '../../pipes/keys.pipe';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgJsonEditorModule } from "ang-jsoneditor";
 import { CorrelationComponent } from './correlation/correlation.component';
@@ -45,7 +45,6 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         EllipsisPipe,
         ChangetextcolorPipe,
         ChangeTImestamptotimePipe,
-        CallbackPipe,
         CorrelationComponent,
         CorrelationformComponent,
         CorrelationformdetailsComponent,
