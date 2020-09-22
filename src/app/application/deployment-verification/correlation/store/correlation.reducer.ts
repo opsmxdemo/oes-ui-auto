@@ -19,20 +19,20 @@ export function CorrelationReducer(
     CorrelationActions: Action) {
     return createReducer(
         initialState,
-        on(CorrelationActions.loadUnxepectedClusters,
-            (state,action) => ({
-                ...state,
-                deployementLoading: true,
-                unexpectedClusters: action.unexpectedClusters,
+        // on(CorrelationActions.loadUnxepectedClusters,
+        //     (state,action) => ({
+        //         ...state,
+        //         deployementLoading: true,
+        //         unexpectedClusters: action.unexpectedClusters,
                 
-            })
-        ),
-        on(CorrelationActions.loadLogLines,
-            (state, action) => ({
-                ...state,
-                deployementLoading: true,
-                logLines: action.logLines,
-            })
-        )
+        //     })
+        // ),
+        // on(CorrelationActions.loadLogLines,
+        //     (state, action) => ({
+        //         ...state,
+        //         deployementLoading: true,
+        //         logLines: action.logLines,
+        //     })
+        // )
     )(CorrelationState,CorrelationActions);
 }
