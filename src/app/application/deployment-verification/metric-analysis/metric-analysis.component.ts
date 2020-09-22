@@ -440,6 +440,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
       })
     }
     this.currentChartData = updatedChartData;
+    console.log(this.currentChartData)
   }
 
 // Below function is use to see nested child row 

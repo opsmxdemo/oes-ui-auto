@@ -654,6 +654,10 @@ export class DeploymentVerificationComponent implements OnInit {
     } else if(event.target.id === 'metric-analysis-tab') {
       this.selectedTab = 'metric-analysis';
     }
+    else{
+      this.selectedTab = 'correlation';
+    }
+    
   }
 
   // Below function is use to hide sidenav if click happen in Analysis section.

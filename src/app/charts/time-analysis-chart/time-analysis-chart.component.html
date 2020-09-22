@@ -1,0 +1,12 @@
+<div *ngIf = "ChartShow">
+<button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+<fusioncharts
+            [width]="config.width"
+            [height]="config.height"
+            type="column2d"
+            dataFormat="JSON"
+            [dataSource]="finalDataSource"
+            (dataplotClick)="plotRollOver($event)"
+            (initialized)="initialized($event)">
+</fusioncharts>
+</div>

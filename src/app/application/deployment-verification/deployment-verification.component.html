@@ -559,6 +559,12 @@
                     <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
                       <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}" id="metric-analysis-tab" data-toggle="tab" role="tab" aria-controls="metric-analysis" aria-selected="true">Metric Analysis</a>
                     </li>
+                    <!-- <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
+                      <a class="nav-link"  id="correlation-tab" data-toggle="tab" role="tab" aria-controls="correlation" aria-selected="true">Correlation</a>
+                    </li> -->
+                    <li class="nav-item">
+                      <a class="nav-link"  id="correlation-tab" data-toggle="tab" role="tab" aria-controls="correlation" aria-selected="true">Correlation</a>
+                    </li>
                     <li class="nav-item ml-auto">
                       <button class="pull-right" data-toggle="tooltip" data-placement="left" title="Overall canary run inforamtion for the selected application"  mat-button>
                         <div *ngIf="isShow" (click)="[sideNav.toggle(),getOverallInfo()]"><i  class="fa fa-chevron-right"></i><i  class="fa fa-chevron-right"></i></div>
@@ -576,9 +582,15 @@
                         </ng-container>
                       </div>
                       <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"
-                      [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}">
+                      [ngClass]="{'active': selectedTab === 'metric-analysis'}">
                         <ng-container *ngIf = "selectedTab === 'metric-analysis'">
                           <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
+                        </ng-container>
+                      </div>
+                      <div class="tab-pane mp-4"  id="correlation" role="tabpanel" aria-labelledby="correlation-tab"
+                      [ngClass]="{'active': selectedTab === 'correlation'}">
+                        <ng-container *ngIf = "selectedTab === 'correlation'">
+                          <app-correlation [canaryId]="control.value" [serviceId]="selectedServiceId" [serviceList] = "deploymentServices.services" ></app-correlation>
                         </ng-container>
                       </div>
                   </div>

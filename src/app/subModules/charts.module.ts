@@ -9,8 +9,13 @@ import { StacketHorizontalBarChartComponent } from '../charts/stacket-horizontal
 import { LineChartComponent } from '../charts/line-chart/line-chart.component';
 import { BubbleChartComponent } from '../charts/bubble-chart/bubble-chart.component';
 import { NetworkChartComponent } from '../charts/network-chart/network-chart.component';
+import { TimeAnalysisChartComponent } from '../charts/time-analysis-chart/time-analysis-chart.component'
+import { FusionChartsModule } from 'angular-fusioncharts';
+import * as FusionCharts from "fusioncharts";
+import * as charts from "fusioncharts/fusioncharts.charts";
+import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
-
+FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 @NgModule({
     declarations: [
         AreaChartComponent,
@@ -19,12 +24,14 @@ import { NetworkChartComponent } from '../charts/network-chart/network-chart.com
         StacketHorizontalBarChartComponent,
         LineChartComponent,
         BubbleChartComponent,
+        TimeAnalysisChartComponent,
         NetworkChartComponent
     ],
     imports: [
         CommonModule,
         NgxChartsModule,
-        NgxGraphModule
+        NgxGraphModule,
+        FusionChartsModule
     ],
     exports: [ 
         AreaChartComponent, 
@@ -32,6 +39,7 @@ import { NetworkChartComponent } from '../charts/network-chart/network-chart.com
         PieChartComponent,
         StacketHorizontalBarChartComponent,
         LineChartComponent,
+        TimeAnalysisChartComponent,
         BubbleChartComponent,
         NetworkChartComponent
     ]
