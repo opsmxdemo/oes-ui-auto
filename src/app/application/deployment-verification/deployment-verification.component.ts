@@ -176,27 +176,12 @@ export class DeploymentVerificationComponent implements OnInit {
         if (resData.applicationHealthDetails != null) {
           this.deployementLoading = resData.applicationHealthDetailsLoading;
           this.deploymentApplicationHealth = resData.applicationHealthDetails;
-         // this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
+          this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
           if (this.deploymentApplicationHealth['error'] != null) {
             this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
           }
           this.applicationId = this.deploymentApplicationHealth['applicationId'];
-          if (this.initializeCanaryList) {
-            if(this.route.params['_value'].applicationName != null){
-              this.selectedApplicationName = this.route.params['_value'].applicationName
-            }else{
-              this.selectedApplicationName =  this.deploymentApplicationHealth['applicationName'];
-            }
-            const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-            this.canaries = d['canaryIdList'].toString().split(",");
-            this.canaries.sort();
-            this.canaries = [...new Set(this.canaries)];
-            this.filteredCanaries = this.control.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filterCanaries(value))
-            );
-      }
-
+         
         }
 
         if (resData.serviceInformation != null) {
@@ -207,6 +192,17 @@ export class DeploymentVerificationComponent implements OnInit {
           if (this.deploymentServiceInformation['error'] != null) {
             this.notifications.showError('Service information Error:', this.deploymentServiceInformation['error']);
           }
+          if (this.initializeCanaryList) {
+            //this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
+            const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+            this.canaries = d['canaryIdList'].toString().split(",");
+            this.canaries.sort();
+            this.canaries = [...new Set(this.canaries)];
+            this.filteredCanaries = this.control.valueChanges.pipe(
+              startWith(''),
+              map(value => this._filterCanaries(value))
+            );
+      }
         }
 
         if (resData.serviceList != null && resData.serviceListLoading) {
@@ -218,7 +214,7 @@ export class DeploymentVerificationComponent implements OnInit {
           this.renderPage();
           this.tableIsEmpty = false;
 
-          if(this.route.params['_value'].serviceId != null){
+          if(this.route.params['_value'].serviceId != null && this.initializeCanaryList){
             const index = this.deploymentServices.services.findIndex(services => services.serviceId == this.route.params['_value'].serviceId);
             this.selectedServiceId = this.deploymentServices.services[index].serviceId;
             this.serviceNameInfo = this.deploymentServices.services[index];
@@ -277,7 +273,6 @@ export class DeploymentVerificationComponent implements OnInit {
       this.canaries = d['canaryIdList'].toString().split(",");
       this.canaries.sort();
       this.canaries = [...new Set(this.canaries)];
-      console.log(this.canaries);
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
@@ -475,6 +470,7 @@ export class DeploymentVerificationComponent implements OnInit {
             this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: resData.canaryId }));
           }
           this.latestCanaryCounter++;
+          this.control.setValue(resData.canaryId);
 
         }
       }
@@ -494,7 +490,23 @@ export class DeploymentVerificationComponent implements OnInit {
           this.deployementApplications = resData.applicationList;
           this.applicationList = resData.applicationList;
           this.initFilterApplication();
-       
+          if (this.initializeCanaryList) {
+            if(this.route.params['_value'].applicationName != null){
+              this.selectedApplicationName = this.route.params['_value'].applicationName
+            }else{
+              
+              console.log(this.applicationForm)
+              //this.selectedApplicationName =  this.deploymentApplicationHealth['applicationName'];
+            }
+            const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+            this.canaries = d['canaryIdList'].toString().split(",");
+            this.canaries.sort();
+            this.canaries = [...new Set(this.canaries)];
+            this.filteredCanaries = this.control.valueChanges.pipe(
+              startWith(''),
+              map(value => this._filterCanaries(value))
+            );
+      }
         }
       }
     );
