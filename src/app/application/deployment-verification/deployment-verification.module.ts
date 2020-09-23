@@ -31,6 +31,7 @@ import { CorrelationComponent } from './correlation/correlation.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CorrelationformComponent } from './correlation/correlationform/correlationform.component';
 import { CorrelationformdetailsComponent } from './correlation/correlationform/correlationformdetails/correlationformdetails.component';
+import { CorrelationEffect } from './correlation/store/correlation.effects'
 
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
@@ -68,7 +69,8 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
      EffectsModule.forFeature([
         DeploymentVerificationEffect,
         MetricAnalysisEffect,
-        LogAnalysisEffect
+        LogAnalysisEffect,
+        CorrelationEffect
      ])
     ],
   })

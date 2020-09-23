@@ -10,7 +10,7 @@
         <!-- /.service_list -->
       </div>
       <!-- /.col -->
-      <app-correlationformdetails class="col pb-3" [data]="data" (addLogData)=getData($event) ></app-correlationformdetails>
+      <app-correlationformdetails class="col pb-3" [data]="data" [savedCheckedData]="selectedServiceClusterData" (addLogData)=getData($event) ></app-correlationformdetails>
       <!-- /.col -->
     </div>
     <!-- /.row -->

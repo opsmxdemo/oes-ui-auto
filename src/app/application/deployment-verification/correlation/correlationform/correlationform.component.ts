@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { CorrelationformdetailsComponent } from './correlationformdetails/correlationformdetails.component';
 
+
+
 @Component({
   selector: 'app-correlationform',
   templateUrl: './correlationform.component.html',
@@ -10,9 +12,11 @@ export class CorrelationformComponent implements OnInit {
 
   @Input() data:any;                                                  //right side data for popup sending directly to correlationformdetails
   @Input() serviceInfo:any;
-  @Output() onSubmitPostData = new EventEmitter<boolean>();                 // 
+  @Output() onSubmitPostData = new EventEmitter<boolean>();
+  @Output() onSelectedServiceChange = new EventEmitter<boolean>();                 // 
   @ViewChild(CorrelationformdetailsComponent, {static: false}) child1: CorrelationformdetailsComponent; //sending the event information to child component when new service is clicked
   serviceClusters:any=[] 
+  selectedServiceClusterData:any;
   submitjsondata:any;                                                 // for storing objects with data of checked item of every service
   selectedService:any                                                          // selected service at any time
   constructor() { }
@@ -40,7 +44,21 @@ export class CorrelationformComponent implements OnInit {
   // when another service is slected
   selectService(selectedServiceInfo){
     this.selectedService=selectedServiceInfo.serviceId;
-    this.child1.clearCheckBoxes();
+    this.onSelectedServiceChange.emit(this.selectedService);
+    let counter=0;
+    
+    for(let i=0;i<this.serviceClusters.length;i++)
+    {
+      if(this.serviceClusters[i].serviceId==this.selectedService && this.serviceClusters[i].data['Critical'] != undefined)
+      {
+        this.selectedServiceClusterData=this.serviceClusters[i].data
+        counter++;
+      }
+    }
+    if(counter==0){
+      this.selectedServiceClusterData=undefined
+    }
+    
   }
 
   // getting updated data on everycheckbox clicked
@@ -49,6 +67,7 @@ export class CorrelationformComponent implements OnInit {
     {
       this.updateJson(value);
     }
+    
   }
 
   //update serviceClusters array
@@ -60,7 +79,7 @@ export class CorrelationformComponent implements OnInit {
         this.serviceClusters[i].data = value
       }
     }
-    
+  
    // const result = this.serviceClusters.find( ({ serviceId }) => serviceId == this.selectedService );
       //console.log(result)
   }

@@ -7,7 +7,8 @@
         </div>
             <ng-container *ngFor="let group of data; let i=index">
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'CRITICAL ERROR'">
-                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" ngModel>
+                    <input  type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}"  ngModel>
+                    <!-- [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Critical'][group.clusterId]:false" -->
                     <label class="custom-control-label" for="customCheck{{i}}"> {{group.description}}</label>
                 </div>
             </ng-container>
@@ -19,7 +20,8 @@
             </div>
             <ng-container *ngFor="let group of data; let j=index">
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'ERROR'">
-                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{j}}" name="{{group.clusterId}}" ngModel>
+                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{j}}" name="{{group.clusterId}}"  ngModel>
+                    <!-- [ngModel]="savedCheckedData !== undefined ? savedCheckedData['ERROR'][group.clusterId]:false" -->
                     <label class="custom-control-label" for="customCheck{{j}}"> {{group.description}}</label>
                 </div>
             </ng-container>
@@ -31,7 +33,8 @@
             </div>
             <ng-container *ngFor="let group of data; let k=index">
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'WARN'">
-                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{k}}" name="{{group.clusterId}}" ngModel>
+                    <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{k}}" name="{{group.clusterId}}"  ngModel>
+                    <!-- [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Warn'][group.clusterId]:false" -->
                     <label class="custom-control-label" for="customCheck{{k}}"> {{group.description}}</label>
                 </div>
             </ng-container>

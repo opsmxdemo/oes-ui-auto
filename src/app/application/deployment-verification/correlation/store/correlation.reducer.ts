@@ -6,33 +6,84 @@ import { Observable } from 'rxjs';
 
 export interface State {
     unexpectedClusters: any;
+    timeSeriesData:any;
+    clusterData:any;
+    allMetricsData:any;
+    dataLoaded:boolean;
       
 }
 
 export const initialState: State = {
     unexpectedClusters: null,
+    timeSeriesData:null,
+    clusterData:null,
+    allMetricsData:null,
+    dataLoaded:false,
 
 }
 
 export function CorrelationReducer(
     CorrelationState: State | undefined,
-    CorrelationActions: Action) {
+    CorrelationAction: Action) {
     return createReducer(
         initialState,
-        // on(CorrelationActions.loadUnxepectedClusters,
-        //     (state,action) => ({
-        //         ...state,
-        //         deployementLoading: true,
-        //         unexpectedClusters: action.unexpectedClusters,
+        on(CorrelationActions.loadUnxepectedClusters,
+            (state,action) => ({
+                ...state,
+                deployementLoading: true,
+                unexpectedClusters: action.unexpectedClusters,
                 
-        //     })
-        // ),
-        // on(CorrelationActions.loadLogLines,
-        //     (state, action) => ({
-        //         ...state,
-        //         deployementLoading: true,
-        //         logLines: action.logLines,
-        //     })
-        // )
-    )(CorrelationState,CorrelationActions);
+            })
+        ),
+        on(CorrelationActions.loadLogLines,
+            (state, action) => ({
+                ...state,
+                deployementLoading: true,
+                logLines: action.logLines,
+            })
+        ),
+        on(CorrelationActions.loadTimeseriesData,
+            (state, action) => ({
+                ...state,
+                deployementLoading: true,
+                timeSeriesData: action.timeSeriesData,
+            })
+        ),
+        on(CorrelationActions.clusterData,
+            (state, action) => ({
+                ...state,
+                dataLoaded: false,
+                canaryId: action.canaryId,
+                serviceId: action.serviceId,
+                clusterId: action.clusterId,
+            })
+        ),
+        on(CorrelationActions.loadCluterData,
+            (state, action) => ({
+                ...state,
+                dataLoaded: true,
+                clusterData: action.clusterData,
+            })
+        ),
+        on(CorrelationActions.clusterDataLoaded,
+            (state,action) => ({
+                ...state,
+                dataLoaded: false
+            })
+        ),
+        on(CorrelationActions.loadallMetrics,
+            (state, action) => ({
+                ...state,
+                deployementLoading: true,
+                allMetricsData: action.allMetricsData,
+            })
+        ),
+        on(CorrelationActions.metricloadTimeseriesData,
+            (state, action) => ({
+                ...state,
+                deployementLoading: true,
+                metrictimeSeriesData: action.metrictimeSeriesData,
+            })
+        )
+    )(CorrelationState,CorrelationAction);
 }
