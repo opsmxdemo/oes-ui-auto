@@ -14,7 +14,8 @@ const routes: Routes = [
   {path:'application', component: ApplicationComponent, children:[
     {path:'', component: ApplicationDashboardComponent},
     {path:'deploymentverification', component: DeploymentVerificationComponent},
-    {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent}
+    {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent},
+    {path:'deploymentverification/:applicationName/:canaryId/:serviceId', component: DeploymentVerificationComponent}
 
   ]},
   {path:'cddashboard', component:CdDashboardComponent},

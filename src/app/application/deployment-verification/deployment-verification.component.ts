@@ -103,7 +103,7 @@ export class DeploymentVerificationComponent implements OnInit {
   selectedManualTriggerTab: string;
   checkCanaryId: boolean = true;
   defaultServiceId: boolean = false;
-
+  initializeCanaryList: boolean = true;
 
 
   serviceIdAfterRerun: any;     //variable used to set service Id from child component log analysis after rerun
@@ -145,6 +145,7 @@ export class DeploymentVerificationComponent implements OnInit {
       this.canaryId = this.route.params['_value'].canaryId;
       this.canaryId = Number(this.route.params['_value'].canaryId);
       this.selectedApplicationName = this.route.params['_value'].applicationName;
+     
       this.getApplicationHelathAndServiceDetails(this.canaryId);
     } else {
       this.appStore.select('auth').subscribe(
@@ -175,11 +176,26 @@ export class DeploymentVerificationComponent implements OnInit {
         if (resData.applicationHealthDetails != null) {
           this.deployementLoading = resData.applicationHealthDetailsLoading;
           this.deploymentApplicationHealth = resData.applicationHealthDetails;
-          this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
+         // this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
           if (this.deploymentApplicationHealth['error'] != null) {
             this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
           }
           this.applicationId = this.deploymentApplicationHealth['applicationId'];
+          if (this.initializeCanaryList) {
+            if(this.route.params['_value'].applicationName != null){
+              this.selectedApplicationName = this.route.params['_value'].applicationName
+            }else{
+              this.selectedApplicationName =  this.deploymentApplicationHealth['applicationName'];
+            }
+            const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+            this.canaries = d['canaryIdList'].toString().split(",");
+            this.canaries.sort();
+            this.canaries = [...new Set(this.canaries)];
+            this.filteredCanaries = this.control.valueChanges.pipe(
+              startWith(''),
+              map(value => this._filterCanaries(value))
+            );
+      }
 
         }
 
@@ -201,22 +217,18 @@ export class DeploymentVerificationComponent implements OnInit {
           this.serviceListLength = this.deploymentServices.services.length;
           this.renderPage();
           this.tableIsEmpty = false;
-          // if(!this.defaultServiceId){
-          this.selectedServiceId = this.deploymentServices.services[0].serviceId;
-          this.serviceNameInfo = this.deploymentServices.services[0];
-          this.onClickService(this.deploymentServices.services[0]);
-          //}
-          //code to check if the service id available which set after rerun from log analysis componenet
-          if (this.serviceIdAfterRerun != undefined) {
-            //  this.selectedServiceId = this.serviceIdAfterRerun;
-            // this.onClickService(this.selectedServiceId);
-          } else {
-            // this.selectedServiceId = this.deploymentServices.services[0].serviceId;
-            //this.onClickService(this.selectedServiceId);
+
+          if(this.route.params['_value'].serviceId != null){
+            const index = this.deploymentServices.services.findIndex(services => services.serviceId == this.route.params['_value'].serviceId);
+            this.selectedServiceId = this.deploymentServices.services[index].serviceId;
+            this.serviceNameInfo = this.deploymentServices.services[index];
+            const serviceObj = this.serviceListData.find(c => c.serviceId == this.route.params['_value'].serviceId);
+            this.onClickService(serviceObj);
+          }else{
+            this.selectedServiceId = this.deploymentServices.services[0].serviceId;
+            this.serviceNameInfo = this.deploymentServices.services[0];
+            this.onClickService(this.deploymentServices.services[0]);
           }
-          // this.defaultService(this.deploymentServices.services[0].serviceId);
-
-
         } else {
           this.tableIsEmpty = true;
         }
@@ -253,6 +265,7 @@ export class DeploymentVerificationComponent implements OnInit {
   // code for application dropdown display starts here
 
   onSelectionChangeApplication(event) {
+    this.initializeCanaryList = false;
     this.canaries = [];
     this.selectedApplicationName = event;
     const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
@@ -264,6 +277,7 @@ export class DeploymentVerificationComponent implements OnInit {
       this.canaries = d['canaryIdList'].toString().split(",");
       this.canaries.sort();
       this.canaries = [...new Set(this.canaries)];
+      console.log(this.canaries);
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
@@ -480,16 +494,7 @@ export class DeploymentVerificationComponent implements OnInit {
           this.deployementApplications = resData.applicationList;
           this.applicationList = resData.applicationList;
           this.initFilterApplication();
-          if (this.route.params['_value'].applicationName != null) {
-            const d = this.applicationList.find(c => c.applicationName === this.route.params['_value'].applicationName);
-            this.canaries = d['canaryIdList'].toString().split(",");
-            this.canaries.sort();
-            this.canaries = [...new Set(this.canaries)];
-            this.filteredCanaries = this.control.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filterCanaries(value))
-            );
-          }
+       
         }
       }
     );
@@ -708,7 +713,6 @@ export class DeploymentVerificationComponent implements OnInit {
 
     const serviceObj = this.serviceListData.find(c => c.serviceId == event);
     this.onClickService(serviceObj);
-    //    this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: this.control.value, serviceId:event }));
 
   }
 }
