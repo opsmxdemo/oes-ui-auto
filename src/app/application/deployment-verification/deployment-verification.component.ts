@@ -402,10 +402,6 @@ export class DeploymentVerificationComponent implements OnInit {
   //on click of service
   onClickService(item: any) {
 
-
-    
-
-
     this.defaultServiceId = true;
     this.selectedServiceId = item.serviceId;
     this.serviceNameInfo = item;
@@ -477,6 +473,7 @@ export class DeploymentVerificationComponent implements OnInit {
             this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: resData.canaryId }));
           }
           this.latestCanaryCounter++;
+          this.control.setValue(resData.canaryId);
 
         }
       }
