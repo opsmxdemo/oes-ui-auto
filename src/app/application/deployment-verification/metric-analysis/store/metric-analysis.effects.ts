@@ -53,7 +53,7 @@ export class MetricAnalysisEffect {
                        return MetricAnalysisdActions.fetchCanaryOutput({cararyData:resdata});
                     }),
                     catchError(errorRes =>{
-                        this.toastr.showError(errorRes.error.message, 'Error')
+                      //  this.toastr.showError(errorRes.error.message, 'Error')
                         return handleError(errorRes);
                     })
                 );

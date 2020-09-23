@@ -52,6 +52,7 @@ export class DeploymentVerificationEffect {
             switchMap(([action,authState]) => {   
                 return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/users/'+authState.user+'/applications/latest-canary').pipe(
                     map(resdata => {
+                        this.store.dispatch(DeploymentActions.updateCanaryRun({canaryId: resdata['canaryId']}));
                         this.store.dispatch(DeploymentActions.loadApplicationHelath({ canaryId: resdata['canaryId'] }));
                         this.store.dispatch(DeploymentActions.loadServices({ canaryId: resdata['canaryId'] }));
                        return DeploymentActions.fetchLatestRun({canaryId:resdata['canaryId']});
