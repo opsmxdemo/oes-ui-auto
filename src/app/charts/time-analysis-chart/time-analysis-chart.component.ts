@@ -8,10 +8,15 @@ import { empty } from 'rxjs';
 })
 export class TimeAnalysisChartComponent implements OnInit {
   @Output() openpopUp = new EventEmitter<boolean>();
+  @Output() getClickedTimeStamp = new EventEmitter<boolean>();
+  @Output() getserviceId = new EventEmitter<boolean>();
   @Input() config:any;
+  @Input() clusterId:any;
   @Input() dataSource: any;
   @Input() startTime: any;
   @Input() endTime: any;
+  @Input() serviceId: any;
+  
 
   startTimeInHoursMins:any;                                               //storing only starting time hours and min 
   endTimeInHoursMins:any;                                                 //storing only end time hours and min
@@ -26,6 +31,7 @@ export class TimeAnalysisChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.serviceId)
     this.startTimeInHoursMins = this.changeTimeinHourMins(this.startTime)       
     this.endTimeInHoursMins = this.changeTimeinHourMins(this.endTime)
 
@@ -43,7 +49,7 @@ export class TimeAnalysisChartComponent implements OnInit {
     }));
 
     this.xaxisArray = this.generateTimeIntervalsForChartData(new Date(this.startTime).getHours(),new Date(this.startTime).getMinutes(),new Date(this.endTime).getHours(),new Date(this.endTime).getMinutes())
-    
+   
     // for creating final data for rendering in chart
     for(let i=0;i<this.xaxisArray.length;i++)
     {
@@ -51,6 +57,7 @@ export class TimeAnalysisChartComponent implements OnInit {
       {
         var count:any;
         var dateTime:any;
+        var epochtime:any;
         if(this.xaxisArray[i]==this.counts[j].key){
           count=this.counts[j].count
           dateTime = this.counts[j].tooltextTime
@@ -65,7 +72,9 @@ export class TimeAnalysisChartComponent implements OnInit {
       var myobj={
         label:this.xaxisArray[i],
         value:count,
-        tooltext:new Date(dateTime).toLocaleString()+'<br><br>'+"Repetition: &nbsp;"+count
+        tooltext:new Date(dateTime).toLocaleString()+'<br><br>'+"Repetition: &nbsp;"+count,
+        epochTime:dateTime
+        
       }
       this.chartData.push(myobj)
     }
@@ -109,7 +118,10 @@ export class TimeAnalysisChartComponent implements OnInit {
 
   
   plotRollOver($event) {
-    this.openpopUp.emit(true);
+    var ClickedTimeStamp = $event.eventObj.sender.args.dataSource.data[$event.eventObj.data.dataIndex].epochTime
+    this.openpopUp.emit(this.clusterId);
+    this.getClickedTimeStamp.emit(ClickedTimeStamp);
+    this.getserviceId.emit(this.serviceId);
   }
 
   closeTimeAnalysis(){

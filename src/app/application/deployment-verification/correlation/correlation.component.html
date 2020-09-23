@@ -1,48 +1,55 @@
 
 <!-- for displaying log lines when clicked on bar chart -->
-<div class="card card-popup fixedPopup" *ngIf="showPopUpForLogs">
-  <div class="card-header d-flex align-items-center justify-content-between">
-    <strong>Log Details: Rest Service 1</strong>
-    <button class="p-0 btn close" (click)="ClosePopUp()"><i class="fa fa-times"></i></button>
-  </div>
-  <!-- /.card-header -->
-  <div class="card-body text-wrap-normal py-3 px-0">
-    {{clusterLogs}}
-
+<ng-container *ngIf="showPopUpForLogs">
+  <div class="card card-popup fixedPopup" >
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <strong>Service Name: {{selectedServiceName}}</strong>
+      <button class="p-0 btn close" (click)="ClosePopUp()"><i class="fa fa-times"></i></button>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body text-wrap-normal py-3 px-0 maxheightPopup">
+      
+      <ng-container *ngFor="let logLine of splittedLogLines;let index = index;" >
+        <div class="padlt20">{{logLine}}</div>
+      </ng-container>
+  
+      
+    </div>
     <div class="text-right px-3 mt-2">
-      <button class="btn btn-default" (click)="ClosePopUp()">Close</button>
+      <button #closeButtonLogLines class="btn btn-default" (click)="ClosePopUp()">Close</button>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  </ng-container>
+  
+  
+  <!-- <button type="button" class="btn btn-primary" (click)="openModal(template)">Create template modal</button>
+   -->
+   <!-- button to add log bar graph -->
+   <div class="buttonDiv">
+  <button class="btn btn-default float-right" (click)="openModal(template)">Add Logs</button>
+  </div>
+  
+  <!-- loop for displaying log bar graph -->
+  <div #chartClickRef *ngFor="let log of dummydataForTimeAnalysisComponent; let i = index">
+      <!-- <fusioncharts width="100%" height="200" type="column2d" dataFormat="JSON" [dataSource]="log"
+      (dataplotClick)="plotRollOver($event)" ></fusioncharts> -->
+      <div *ngFor="let seriesArray of log.clusterData; let i = index">
+      <app-time-analysis-chart [config]="config" [serviceId]="log.serviceId" [clusterId] = "seriesArray.clusterId"  [dataSource]="seriesArray.timestamps" [startTime]="log.startTime" [endTime]="log.endTime" (getserviceId)=getserviceId($event) (openpopUp)="getOpen($event)" (getClickedTimeStamp)="getClickedTimeStamp($event)"></app-time-analysis-chart>
     </div>
   </div>
-  <!-- /.card-body -->
-</div>
-
-
-<!-- <button type="button" class="btn btn-primary" (click)="openModal(template)">Create template modal</button>
- -->
- <!-- button to add log bar graph -->
- <div class="buttonDiv">
-<button class="btn btn-default float-right" (click)="openModal(template)">Add Logs</button>
-</div>
-
-<!-- loop for displaying log bar graph -->
-<div *ngFor="let log of dummydataForTimeAnalysisComponent; let i = index">
-    <!-- <fusioncharts width="100%" height="200" type="column2d" dataFormat="JSON" [dataSource]="log"
-    (dataplotClick)="plotRollOver($event)" ></fusioncharts> -->
-    <div *ngFor="let seriesArray of log.clusterData; let i = index">
-    <app-time-analysis-chart [config]="config"  [dataSource]="seriesArray.timestamps" [startTime]="log.startTime" [endTime]="log.endTime" (openpopUp)="getOpen($event)"></app-time-analysis-chart>
-  </div>
-</div>
-<!-- popup when clicked on bar graph -->
-<!--modal for adding log bar graph-->
-<ng-template #template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Add Logs</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-    <app-correlationform [data]="dummydataForAddLogsPopUp" [serviceInfo]="serviceList" (onSubmitPostData)=onSubmitPostData($event)></app-correlationform>
-    
-    
-  </ng-template>
-
+  <!-- popup when clicked on bar graph -->
+  <!--modal for adding log bar graph-->
+  <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Add Logs</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      <app-correlationform [data]="unexpectedClusters" [serviceInfo]="serviceList" (onSubmitPostData)=onSubmitPostData($event) (onSelectedServiceChange)=onSelectedServiceChange($event)  ></app-correlationform>
+      
+      
+    </ng-template>
+  
+  

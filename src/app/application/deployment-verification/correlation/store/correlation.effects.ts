@@ -34,7 +34,7 @@ const handleError = (errorRes: any) => {
 }
 
 @Injectable()
-export class LogAnalysisEffect {
+export class CorrelationEffect {
     constructor(public actions$: Actions,
         public http: HttpClient,
         public store: Store<fromApp.AppState>,
@@ -49,7 +49,7 @@ export class LogAnalysisEffect {
     this.actions$.pipe(
         ofType(CorrelationActions.fetchUnxepectedClusters),
         switchMap((action) => {                                       
-            return this.http.get(this.environment.config.endPointUrl +'/autopilot/v1/correlation/log?riskAnalysisId=' + action.canaryId + '&serviceId=' + action.serviceId ).pipe(                  
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId ).pipe(                  
                 map(resdata => {
                    return CorrelationActions.loadUnxepectedClusters({unexpectedClusters:resdata});
                 }),
@@ -60,14 +60,13 @@ export class LogAnalysisEffect {
         })
     )
 )
-
-    fetchLogLines = createEffect(() =>
+allMetrics = createEffect(() =>
     this.actions$.pipe(
-        ofType(CorrelationActions.fetchLogLines),
+        ofType(CorrelationActions.allMetrics),
         switchMap((action) => {                                       
-            return this.http.get(this.environment.config.endPointUrl +'/autopilot/v1/correlation/log?riskAnalysisId=' + action.canaryId + '&serviceId=' + action.serviceId+ '&clusterId=' + action.clusterId ).pipe(                  
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/metric/' + action.canaryId + '/' + action.serviceId ).pipe(                  
                 map(resdata => {
-                   return CorrelationActions.loadLogLines({logLines:resdata});
+                   return CorrelationActions.loadallMetrics({allMetricsData:resdata});
                 }),
                 catchError(errorRes => {
                     return handleError(errorRes);
@@ -76,5 +75,63 @@ export class LogAnalysisEffect {
         })
     )
 )
+
+clusterData = createEffect(() =>
+this.actions$.pipe(
+    ofType(CorrelationActions.clusterData),
+    switchMap((action) => {                                       
+        return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId).pipe(                  
+            map(resdata => {
+               return CorrelationActions.loadCluterData({clusterData:resdata});
+            }),
+            catchError(errorRes => {
+                return handleError(errorRes);
+            })
+        );
+    })
+)
+)
+
+timeSeriesData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(CorrelationActions.timeSeriesData),
+        withLatestFrom(this.store.select('auth')),
+        switchMap(([action,authState]) => {             
+            // platform-service-ui change
+            return this.http.post(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/'  ,action.postData).pipe(                  
+                map(resdata => {  
+                   
+                   return CorrelationActions.loadTimeseriesData({timeSeriesData:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Reclassification Failed. PLease try again', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+metrictimeSeriesData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(CorrelationActions.metrictimeSeriesData),
+        withLatestFrom(this.store.select('auth')),
+        switchMap(([action,authState]) => {             
+            // platform-service-ui change
+            return this.http.post(this.environment.config.endPointUrl +'autopilot/v1/correlation/metric/'  ,action.postData).pipe(                  
+                map(resdata => {  
+                   
+                   return CorrelationActions.metricloadTimeseriesData({metrictimeSeriesData:resdata});
+                }),
+                catchError(errorRes => {
+                    this.toastr.showError('Reclassification Failed. PLease try again', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+    
 
 }
