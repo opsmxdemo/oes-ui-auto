@@ -31,7 +31,7 @@ export class TimeAnalysisChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.serviceId)
+    console.log(this.dataSource)
     this.startTimeInHoursMins = this.changeTimeinHourMins(this.startTime)       
     this.endTimeInHoursMins = this.changeTimeinHourMins(this.endTime)
 
@@ -89,13 +89,21 @@ export class TimeAnalysisChartComponent implements OnInit {
       },
       data:this.chartData
       }
-      
+      console.log(this.finalDataSource)
   }
 
   // function for changing time in hour min format
   changeTimeinHourMins(time:any){
+    if(new Date(time).getMinutes()>9)
+    {
     let timeInHourMins = new Date(time).getHours()+":"+new Date(time).getMinutes();
     return timeInHourMins;
+    }
+    else{
+      let timeInHourMins = new Date(time).getHours()+":0"+new Date(time).getMinutes();
+    return timeInHourMins;
+    }
+    
   }
 
   // function for getting all x axis value
