@@ -31,7 +31,7 @@ export class TimeAnalysisChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.dataSource)
+    
     this.startTimeInHoursMins = this.changeTimeinHourMins(this.startTime)       
     this.endTimeInHoursMins = this.changeTimeinHourMins(this.endTime)
 
@@ -89,7 +89,7 @@ export class TimeAnalysisChartComponent implements OnInit {
       },
       data:this.chartData
       }
-      console.log(this.finalDataSource)
+      
   }
 
   // function for changing time in hour min format
