@@ -163,7 +163,7 @@
             <tbody >
               <tr *ngFor="let service of autoPilotServiceData;let i=index;">
                 <td href="" (click)="getServiceCanaryReport(service.canaryId)" class="showElementHover">
-                 <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId]" >{{service.serviceName}} </a></td>
+                 <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId,service.serviceId]" >{{service.serviceName}} </a></td>
                 <td>{{service.finalScore}} </td>
                 <td> 
                   <span *ngIf="service.metricsScore == -1 || service.metricsScore === null">-</span>
