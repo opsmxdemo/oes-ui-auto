@@ -48,7 +48,7 @@ export class LogAnalysisEffect {
 // Below effect is use for fetch logs on unexpected events run
 fetchLogAnalysisResults = createEffect(() =>
     this.actions$.pipe(
-        ofType(LogAnalysisActions.loadLogResults,LogAnalysisActions.reloadAfterRerun),
+        ofType(LogAnalysisActions.loadLogResults),
         switchMap((action) => {                 
             return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/logsData?id=' + action.canaryId + '&serviceId=' + action.serviceId).pipe(                  
                 map(resdata => {

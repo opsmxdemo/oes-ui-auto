@@ -91,6 +91,11 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
               private elRef:ElementRef) { }
   
   ngOnInit(){
+
+    if(this.canaryId !== undefined && this.serviceId !== undefined){
+      this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.canaryId,serviceId:this.serviceId}));
+      }
+
     //fetching data from deployment verification state
     this.store.select(fromFeature.selectMetricAnalysisState).subscribe(
       (resdata)=>{

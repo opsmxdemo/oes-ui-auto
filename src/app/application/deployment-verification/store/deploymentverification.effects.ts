@@ -52,6 +52,8 @@ export class DeploymentVerificationEffect {
             switchMap(([action,authState]) => {   
                 return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/users/'+authState.user+'/applications/latest-canary').pipe(
                     map(resdata => {
+                        this.store.dispatch(DeploymentActions.loadApplicationHelath({ canaryId: resdata['canaryId'] }));
+                        this.store.dispatch(DeploymentActions.loadServices({ canaryId: resdata['canaryId'] }));
                        return DeploymentActions.fetchLatestRun({canaryId:resdata['canaryId']});
                     }),
                     catchError(errorRes => {
@@ -102,10 +104,11 @@ export class DeploymentVerificationEffect {
        // Below effect is use for fetch applications
        fetchServiceListData = createEffect(() =>
        this.actions$.pipe(
-           ofType(DeploymentActions.loadServices,LogAnalysisAction.reloadAfterRerun),
+           ofType(DeploymentActions.loadServices),
            switchMap((action) => {
                return this.http.get<any>(this.environment.config.endPointUrl +'autopilot/canaries/getServiceList?canaryId='+action.canaryId).pipe(
                    map(resdata => {
+                        // this.store.dispatch(DeploymentActions.loadServiceInformation({ canaryId: action.canaryId, serviceId: resdata.services[0].serviceId}));
                        return DeploymentActions.fetchServices({servicesList:resdata});
                    }),
                    catchError(errorRes => {
@@ -137,7 +140,7 @@ export class DeploymentVerificationEffect {
          // Below effect is use for fetch selected service information
          fetchServiceInformation = createEffect(() =>
          this.actions$.pipe(
-             ofType(DeploymentActions.loadServiceInformation,LogAnalysisAction.reloadAfterRerun),
+             ofType(DeploymentActions.loadServiceInformation),
              switchMap((action) => {
                  return this.http.get<any>(this.environment.config.endPointUrl +'autopilot/canaries/getServiceInformation?canaryId=' + action.canaryId + '&serviceId='+ action.serviceId).pipe(
                      map(resdata => {
