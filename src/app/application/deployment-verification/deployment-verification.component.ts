@@ -107,6 +107,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
 
   serviceIdAfterRerun: any;     //variable used to set service Id from child component log analysis after rerun
+  manualTriggerLatestRun: number;
 
   // App form end
 
@@ -171,6 +172,10 @@ export class DeploymentVerificationComponent implements OnInit {
       (resData) => {
         if (resData.reclassificationHistoryResults != null) {
           this.reclassificationHistory = resData.reclassificationHistoryResults
+        }
+        if (resData.manualTriggerResponse != null) {
+          this.manualTriggerLatestRun = resData['canaryId'];
+          this.control.setValue(resData['canaryId']);
         }
 
         if (resData.applicationHealthDetails != null) {
@@ -292,6 +297,8 @@ export class DeploymentVerificationComponent implements OnInit {
     this.control.setValue(canary);
     this.canaryId = canary;
     this.getApplicationHelathAndServiceDetails(canary);
+    this.onClickService(this.deploymentServices.services[0]);
+
   }
 
   // build application form
@@ -399,10 +406,16 @@ export class DeploymentVerificationComponent implements OnInit {
 
   //on click of service
   onClickService(item: any) {
+    
+    if(this.manualTriggerLatestRun != null){
+     // this.selectedApplicationName = 
+      this.getAllApplications();
+    }
+
+
     this.defaultServiceId = true;
     this.selectedServiceId = item.serviceId;
     this.serviceNameInfo = item;
-    //if(this.defaultServiceId){
     this.selectedServiceId = item.serviceId;
     
     // Below logic is use to fetch initiall selected tab
@@ -420,7 +433,7 @@ export class DeploymentVerificationComponent implements OnInit {
       }
     }
 
-    console.log(this.control.value);
+
     if (this.selectedServiceId != null || this.selectedServiceId != undefined) {
       this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: this.control.value, serviceId: item.serviceId }));
     }
@@ -456,11 +469,6 @@ export class DeploymentVerificationComponent implements OnInit {
     this.store.dispatch(DeploymentAction.loadLatestRun());
     this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
       (resData) => {
-        if (resData.manualTriggerResponse != null && this.checkCanaryId) {
-          this.latestCanaryCounter = 1;
-          this.counter = 1;
-          this.checkCanaryId = false;
-        }
         if (resData.canaryId != null) {
           this.canaryId = resData.canaryId;
           this.deployementLoading = resData.deployementLoading;
@@ -491,21 +499,18 @@ export class DeploymentVerificationComponent implements OnInit {
           this.applicationList = resData.applicationList;
           this.initFilterApplication();
           if (this.initializeCanaryList) {
-            if(this.route.params['_value'].applicationName != null){
-              this.selectedApplicationName = this.route.params['_value'].applicationName
-            }else{
-              
-              console.log(this.applicationForm)
-              //this.selectedApplicationName =  this.deploymentApplicationHealth['applicationName'];
+            if(this.route.params['_value'].applicationName != null && !this.manualTriggerLatestRun){
+              this.selectedApplicationName = this.route.params['_value'].applicationName;
+              const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
+              this.canaries = d['canaryIdList'].toString().split(",");
+              this.canaries.sort();
+              this.canaries = [...new Set(this.canaries)];
+              this.filteredCanaries = this.control.valueChanges.pipe(
+                startWith(''),
+                map(value => this._filterCanaries(value))
+              );
             }
-            const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-            this.canaries = d['canaryIdList'].toString().split(",");
-            this.canaries.sort();
-            this.canaries = [...new Set(this.canaries)];
-            this.filteredCanaries = this.control.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filterCanaries(value))
-            );
+        
       }
         }
       }

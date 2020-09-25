@@ -182,13 +182,9 @@ fetchManualTriggerResults = createEffect(() =>
             // platform-service-ui change
             return this.http.post(this.environment.config.endPointUrl + 'autopilot/registerCanary', action.data).pipe(
                 map(resdata => {
-                    
-                    // if (resdata['status']) {
-                    //     // this.store.dispatch(DeploymentActions.reloadAfterRerun({ canaryId: action.canaryId, serviceId: action.serviceId }));
-                    //     this.toastr.showSuccess(resdata['message'], 'SUCCESS')
-                    // } else if (!resdata['status']) {
-                    //     this.toastr.showError('Manual Trigger Canary Error!', 'ERROR')
-                    // }
+                    this.store.dispatch(DeploymentActions.updateCanaryRun({canaryId: resdata['canaryId']}));
+                    this.store.dispatch(DeploymentActions.loadApplicationHelath({ canaryId: resdata['canaryId'] }));
+                    this.store.dispatch(DeploymentActions.loadServices({ canaryId: resdata['canaryId'] }));
                     return DeploymentActions.fetchManualTriggerResults({ manualTriggerResponse: resdata });
                 }),
                 catchError(errorRes => {
