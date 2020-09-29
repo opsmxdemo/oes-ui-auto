@@ -1,5 +1,5 @@
 <div *ngIf = "ChartShow">
-<div class="col-sm-1" class="containerClose">
+<div class="col-sm-1" class="containerClose" *ngIf = "Correlationflag">
   <button class="close " mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
 </div>
 <ngx-charts-line-chart
