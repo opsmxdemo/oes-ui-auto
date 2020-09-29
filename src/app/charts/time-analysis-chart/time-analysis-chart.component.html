@@ -1,5 +1,10 @@
 <div *ngIf = "ChartShow">
-<button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+    <div class="row">
+<div class="col-sm-11 alignHeading"><span>{{serviceName}}: </span><span [ngClass]= "{'text-danger':topic == 'CRITICAL ERROR', 'text-error':topic=='ERROR','text-warning':topic=='WARN'}">{{topic}}</span>: {{description}}</div>
+<div class="col-sm-1">
+<button class="close " mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+</div>
+</div>
 <fusioncharts
             [width]="config.width"
             [height]="config.height"

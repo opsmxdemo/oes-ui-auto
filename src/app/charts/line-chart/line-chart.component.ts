@@ -10,7 +10,10 @@ export class LineChartComponent implements OnInit {
   @Input() dataSource: any[];
   @Input() view: any[];
   @Input() chartProperty:ChartOptions;
+  @Input() Correlationflag:boolean;
+  @Input() dataSourceCorreleation:any;
 
+  finalDataJson:any=[]
   //options
   showLegend: boolean;
   animations: boolean;
@@ -25,6 +28,7 @@ export class LineChartComponent implements OnInit {
   timeline: boolean;
   autoScale: boolean;
   colorScheme;
+  ChartShow:any=true;
 
   constructor() {}
 
@@ -42,8 +46,29 @@ export class LineChartComponent implements OnInit {
     this.autoScale = this.chartProperty.autoScale !== undefined ? this.chartProperty.autoScale : true;
     this.timeline = this.chartProperty.timeline !== undefined ? this.chartProperty.timeline : false;
     this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798','#fed856']};
-  }
 
+    // for correlation related metric graph
+    
+    if(this.Correlationflag)
+    var obj = {
+      name:this.dataSourceCorreleation.metricName,
+      series:[]
+  }
+    this.finalDataJson.push(obj)
+    for(let i=0;i<this.dataSourceCorreleation.data.length;i++)
+    {
+      let obj1={
+        value:this.dataSourceCorreleation.data[i].y,
+        name:new Date(this.dataSourceCorreleation.data[i].x)
+      }
+      this.finalDataJson[0].series.push(obj1)
+    }
+    this.dataSource = this.finalDataJson
+  
+  }
+  closeTimeAnalysis(){
+    this.ChartShow=false;
+  }
   
   onSelect(data): void {}
 

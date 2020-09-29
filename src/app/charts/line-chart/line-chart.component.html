@@ -1,3 +1,7 @@
+<div *ngIf = "ChartShow">
+<div class="col-sm-1" class="containerClose" *ngIf = "Correlationflag">
+  <button class="close " mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+</div>
 <ngx-charts-line-chart
   [view]="view"
   [scheme]="colorScheme"
@@ -19,3 +23,4 @@
   (deactivate)="onDeactivate($event)"
   style="fill: #999999;">
 </ngx-charts-line-chart>
+</div>
