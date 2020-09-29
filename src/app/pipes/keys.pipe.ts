@@ -27,12 +27,13 @@ export class EllipsisPipe {
     if (args === undefined) {
       return val;
     }
-
-    if (val.length > args) {
-      return val.substring(0, args) + '...';
-    } else {
-      return val;
-    }
+    if(val != undefined){
+      if (val.length > args) {
+        return val.substring(0, args) + '...';
+      } else {
+        return val;
+      }
+    }    
   }
 }
 
@@ -40,16 +41,16 @@ export class EllipsisPipe {
   name: 'changetextcolor'
 }) 
 export class ChangetextcolorPipe {
-  transform(val, args) {
+  transform(value, args) {
     if (args === undefined) {
-      return val;
+      return value;
     }
     for(var i=0;i<args.length;i++)
     {
     var regex = new RegExp(args[i], 'g');
-    val = val.replace(regex, '<span class="high"> '+args[i]+'</span>');
+    value = value.replace(regex, '<span class="high"> '+args[i]+'</span>');
     }
-    return val
+    return value
   }
 }
 

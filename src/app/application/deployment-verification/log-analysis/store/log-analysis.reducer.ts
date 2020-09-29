@@ -13,7 +13,9 @@ export interface State {
     timeStampData:any;
     rerunResponse:any;
     reclassificationHistoryResults:any;
-    fetchLogTopics: any;    
+    fetchLogTopics: any;  
+    isLogsResultsLoaded : boolean;  
+    isLogsEventsLoaded : boolean;
 }
 
 export const initialState: State = {
@@ -26,6 +28,8 @@ export const initialState: State = {
     rerunResponse:null,
     reclassificationHistoryResults:null,
     fetchLogTopics: null,
+    isLogsResultsLoaded : false,
+    isLogsEventsLoaded: false
 }
 
 export function LogAnalysisReducer(
@@ -36,7 +40,7 @@ export function LogAnalysisReducer(
         on(LogAnalysisActions.loadLogResults,
             (state,action) => ({
                 ...state,
-                deployementLoading: true,
+                isLogsResultsLoaded: false,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId
             })
@@ -45,24 +49,38 @@ export function LogAnalysisReducer(
             (state, action) => ({
                 ...state,
                 logsResults: action.logsResults,
-                deployementLoading: false
+                isLogsResultsLoaded: true
             })
-        ),on(LogAnalysisActions.loadEventLogResults,
+        ),
+        on(LogAnalysisActions.loadedLogResults,
             (state,action) => ({
                 ...state,
-                deployementLoading: true,
+                isLogsResultsLoaded: false
+            })
+        ),
+        on(LogAnalysisActions.loadEventLogResults,
+            (state,action) => ({
+                ...state,
+                isLogsEventsLoaded : false,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
                 event : action.event
             })
-        ),
+        ),                
         on(LogAnalysisActions.fetchEventLogsResults,
             (state, action) => ({
                 ...state,
                 logsEventResults: action.logsEventResults,
-                deployementLoading: false
+                isLogsEventsLoaded: true
             })
-        ),on(LogAnalysisActions.rerunLogs,
+        ),        
+        on(LogAnalysisActions.loadedEventsLogs,
+            (state,action) => ({
+                ...state,
+                isLogsEventsLoaded: false
+            })
+        ),
+        on(LogAnalysisActions.rerunLogs,
             (state,action) => ({
                 ...state,
                 deployementLoading: true,
