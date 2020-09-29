@@ -20,7 +20,7 @@
                         <div class="form-group" *ngFor = "let formField of formData; let i=index;">
                             <ng-container *ngIf="formField.dataType === 'string' ? true  : false ">
                                 <label>{{formField.displayName}}</label>
-                                <input type="{{formField.name === 'password'?'password':'text'}}" name="{{formField.name}}" class="form-control" #input="ngModel" 
+                                <input type="{{formField.name === ('password' || 'kibanaPassword')?'password':'text'}}" name="{{formField.name}}" class="form-control" #input="ngModel" 
                                 [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="formField.required" [ngModel]="isEditMode ? formValue.configurationFields[formField.name] : ''"  ngModel>
                                 <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
                                     {{formField.displayName}} is required
