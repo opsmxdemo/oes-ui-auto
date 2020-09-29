@@ -10,6 +10,7 @@ export interface State {
     clusterData:any;
     allMetricsData:any;
     dataLoaded:boolean;
+    metrictimeSeriesData:any;
       
 }
 
@@ -18,7 +19,9 @@ export const initialState: State = {
     timeSeriesData:null,
     clusterData:null,
     allMetricsData:null,
+    metrictimeSeriesData:null,
     dataLoaded:false,
+    
 
 }
 

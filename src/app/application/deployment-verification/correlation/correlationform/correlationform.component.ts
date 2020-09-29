@@ -12,8 +12,12 @@ export class CorrelationformComponent implements OnInit {
 
   @Input() data:any;                                                  //right side data for popup sending directly to correlationformdetails
   @Input() serviceInfo:any;
+  @Input() addLogsJson:any;
+  @Input() flag:any;
   @Output() onSubmitPostData = new EventEmitter<boolean>();
-  @Output() onSelectedServiceChange = new EventEmitter<boolean>();                 // 
+  @Output() onSubmitsaveData = new EventEmitter<boolean>();
+  @Output() onSelectedServiceChange = new EventEmitter<boolean>();
+  @Output() onCancelClicked = new EventEmitter<boolean>();                    // 
   @ViewChild(CorrelationformdetailsComponent, {static: false}) child1: CorrelationformdetailsComponent; //sending the event information to child component when new service is clicked
   serviceClusters:any=[] 
   selectedServiceClusterData:any;
@@ -22,23 +26,47 @@ export class CorrelationformComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-
-    //creating json structure for final json to be submitted
-    this.submitjsondata={
-      riskAnalysisId:"",
-      serviceClusters:[]
+    if(this.addLogsJson!=undefined )
+    {
+      this.serviceClusters=this.addLogsJson
     }
-    //console.log(this.serviceInfo)
-     for(let i=0;i<this.serviceInfo.length;i++)
+    
+    //creating json structure for final json to be submitted
+    if(this.flag=='log')
+    {
+      this.submitjsondata={
+        riskAnalysisId:"",
+        serviceClusters:[]
+      }
+    }else if(this.flag=='metric')
+    {
+      this.submitjsondata={
+        riskAnalysisId:"",
+        serviceMetrics:[]
+      }
+    }
+    
+     //console.log(this.serviceInfo)
+     if(this.serviceClusters.length ==0)
      {
-       let myobj={
-        serviceId:this.serviceInfo[i].serviceId,
-        data:[]
+       for(let i=0;i<this.serviceInfo.length;i++)
+       {
+         let myobj={
+          serviceId:this.serviceInfo[i].serviceId,
+          data:[]
+         }
+         this.serviceClusters.push(myobj)
        }
-       this.serviceClusters.push(myobj)
+       this.selectedServiceClusterData=undefined
      }
-     //console.log(this.serviceClusters)
+     else{
+       this.selectedServiceClusterData=this.serviceClusters[0].data
+     }
+    
+     
+    
      this.selectedService = this.serviceInfo[0].serviceId
+     
   }
 
   // when another service is slected
@@ -49,15 +77,16 @@ export class CorrelationformComponent implements OnInit {
     
     for(let i=0;i<this.serviceClusters.length;i++)
     {
-      if(this.serviceClusters[i].serviceId==this.selectedService && this.serviceClusters[i].data['Critical'] != undefined)
+      if(this.serviceClusters[i].serviceId==this.selectedService )
       {
         this.selectedServiceClusterData=this.serviceClusters[i].data
         counter++;
       }
+      
     }
-    if(counter==0){
-      this.selectedServiceClusterData=undefined
-    }
+    // if(counter==0){
+    //   this.selectedServiceClusterData=undefined
+    // }
     
   }
 
@@ -88,7 +117,7 @@ export class CorrelationformComponent implements OnInit {
     var activeKeys=[]
     for(let i=0;i<this.serviceClusters.length;i++)
     {
-      if(Object.keys(this.serviceClusters[i].data).length > 0 )
+      if(Object.keys(this.serviceClusters[i].data).length > 0 && this.flag=="log")
       {
        var CriticalActivekeys = Object.keys(this.serviceClusters[i].data.Critical).filter(k => this.serviceClusters[i].data.Critical[k])
        var ERRORActivekeys = Object.keys(this.serviceClusters[i].data.ERROR).filter(k => this.serviceClusters[i].data.ERROR[k])
@@ -100,11 +129,26 @@ export class CorrelationformComponent implements OnInit {
         }
         this.submitjsondata.serviceClusters.push(myobj)
       }
+
+      if(Object.keys(this.serviceClusters[i].data).length > 0 && this.flag=="metric")
+      {
+       var metricActivekeys = Object.keys(this.serviceClusters[i].data.metric).filter(k => this.serviceClusters[i].data.metric[k])
+       activeKeys = metricActivekeys
+        let myobj = {
+          serviceId:this.serviceClusters[i].serviceId,
+          metricIds:activeKeys
+        }
+        this.submitjsondata.serviceMetrics.push(myobj)
+      }
       
     }
     this.onSubmitPostData.emit(this.submitjsondata);
+    this.onSubmitsaveData.emit(this.serviceClusters);
   }
   
+  onCancel(){
+    this.onCancelClicked.emit(true);
+  }
 
   
 

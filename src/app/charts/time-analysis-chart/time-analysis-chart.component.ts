@@ -16,7 +16,11 @@ export class TimeAnalysisChartComponent implements OnInit {
   @Input() startTime: any;
   @Input() endTime: any;
   @Input() serviceId: any;
-  
+  @Input() allUnexpectedEventSummary:any;
+  @Input() serviceName:any;
+  @Input() topic:any;
+  @Input() description:any;
+
 
   startTimeInHoursMins:any;                                               //storing only starting time hours and min 
   endTimeInHoursMins:any;                                                 //storing only end time hours and min
@@ -27,11 +31,26 @@ export class TimeAnalysisChartComponent implements OnInit {
   finalDataSource                                                       //storing all the x axis value
   ChartShow:any=true;
   chart:any;
+  selectedClusterHeading:any;
+  selectedClustertopic:any;
 
   constructor() { }
 
   ngOnInit(): void {
+    // for extracting heading of graph
+   for(let i=0;i<this.allUnexpectedEventSummary.length;i++)
+   { 
+      if(this.allUnexpectedEventSummary[i].clusterId==this.clusterId)
+      {
+        this.selectedClusterHeading=this.allUnexpectedEventSummary[i].description;
+        this.selectedClustertopic=this.allUnexpectedEventSummary[i].topic;
+      }
+      
+    }
+   
     
+    
+    //
     this.startTimeInHoursMins = this.changeTimeinHourMins(this.startTime)       
     this.endTimeInHoursMins = this.changeTimeinHourMins(this.endTime)
 

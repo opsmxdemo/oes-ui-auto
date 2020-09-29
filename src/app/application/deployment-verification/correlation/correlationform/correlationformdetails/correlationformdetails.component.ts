@@ -13,19 +13,23 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   @Output() addLogData = new EventEmitter<boolean>();
   @Input() data:any;
   @Input() savedCheckedData:any;
+  @Input() flag:any;
+  expression:any=true;
 
   constructor() { }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.savedCheckedData)
   }
 
   ngOnInit(): void {
-    
+    console.log(this.data)
+      console.log(this.savedCheckedData)
   }
   onCheckBoxClicked(){
     this.addLogData.emit(this.dynamicForm.value);
+    console.log(this.dynamicForm.value)
     
   }
+  
   
 
 }
