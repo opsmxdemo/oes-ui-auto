@@ -41,13 +41,13 @@
         </ng-container>
 
     </div>
-    <div class="col pb-3" *ngIf="flag=='metric'">
+    <div class="col pb-3 padding10" *ngIf="flag=='metric'" >
         <ng-container ngModelGroup="metric">
            <ng-container *ngFor="let group of data; let i=index">
                 <div class="custom-control custom-checkbox" >
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.id}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['metric'][group.id]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{i}}"> {{group.name}}</label>
+                    <label class="custom-control-label" for="customCheck{{i}}"> {{group.name | ellipsis:50}}</label>
                 </div>
             </ng-container>
         </ng-container>
