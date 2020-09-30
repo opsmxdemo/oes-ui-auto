@@ -121,7 +121,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
 
   ngOnInit(): void {
 
-  console.log(this.serviceId)
+  
     
     for(let i=0;i<this.serviceList.length;i++)
     {
@@ -361,7 +361,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     else if(this.addFlag=="metric"){
       this.addMetricJson=submitdataToSave
     }
-    console.log(this.addLogsJson)
+  
     
     
   }
@@ -375,7 +375,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     for(let i=0;i<this.addLogsJson.length;i++){
       
         if(deletedchartData.serviceId==this.addLogsJson[i].serviceId){
-          console.log(deletedchartData)
+          
           if(deletedchartData.topics=="CRITICAL ERROR"){
             this.addLogsJson[i]['data']['Critical'][deletedClusterId]=false
           }
@@ -395,8 +395,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   }
 
   deleteMetricChart(deletedchartData){
-    console.log(deletedchartData)
-    console.log(this.addMetricJson)
+    
     var deletedClusterId = deletedchartData.clusterId
     for(let i=0;i<this.addMetricJson.length;i++){
       if(deletedchartData.serviceId==this.addMetricJson[i].serviceId){
