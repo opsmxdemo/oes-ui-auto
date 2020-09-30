@@ -21,12 +21,11 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   }
 
   ngOnInit(): void {
-    console.log(this.data)
-      console.log(this.savedCheckedData)
+    
   }
   onCheckBoxClicked(){
     this.addLogData.emit(this.dynamicForm.value);
-    console.log(this.dynamicForm.value)
+   
     
   }
   
