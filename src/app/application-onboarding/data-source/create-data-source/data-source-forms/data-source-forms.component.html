@@ -20,7 +20,7 @@
                         <div class="form-group" *ngFor = "let formField of formData; let i=index;">
                             <ng-container *ngIf="formField.dataType === 'string' ? true  : false ">
                                 <label>{{formField.displayName}}</label>
-                                <input type="{{formField.name.includes('assword') ?'password':'text'}}" name="{{formField.name}}" class="form-control" #input="ngModel" 
+                                <input type="{{(formField.name === 'password' || formField.name == 'kibanaPassword')?'password':'text'}}" name="{{formField.name}}" class="form-control" #input="ngModel" 
                                 [ngClass]="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)?'is-invalid':''" [required]="formField.required" [ngModel]="isEditMode ? formValue.configurationFields[formField.name] : ''"  ngModel>
                                 <span *ngIf="(input.invalid && input.touched) || (input.invalid && datasourceForm.submitted)" class="invalid-feedback">
                                     {{formField.displayName}} is required
@@ -40,7 +40,7 @@
                 <div class="col-md-2"></div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-default" type="reset" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="submit" (click)="cancelDatasourceForm()" class="btn btn-default" type="reset" data-dismiss="modal" aria-label="Close">Cancel</button>
                 <button type="submit" class="btn btn-primary">
                     <span *ngIf="loading" class="spinner-border spinner-border-sm"></span><span *ngIf="!loading">Save</span>
                 </button>

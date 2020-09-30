@@ -45,10 +45,10 @@
                       'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
                       'ci_minus': canaries.finalScore === 'N/A' || canaries.finalScore === '',
                       'ci_run ico24 popover-hover': canaries.status === 'RUNNING'}">
-                      <i class="far" [ngClass]= "{'fa-check-circle':canaries.finalScore && canaries.finalScore >= canaries.maximumCanaryScore,
-                        'fa-times-circle':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
+                      <i class="far fa" [ngClass]= "{'fa-check-circle':canaries.finalScore && canaries.finalScore >= canaries.maximumCanaryScore,
+                        'fa-minus-circle':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
                         'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
-                        'fa-minus-circle': canaries.finalScore === 'N/A' || canaries.finalScore === '',
+                        'fa-circle': canaries.finalScore === 'N/A' || canaries.finalScore === '',
                         'fas fa-circle-notch fa-spin': canaries.status === 'RUNNING'}"></i></a>
                     </button>
 
@@ -80,13 +80,7 @@
                   </li>
                 </ul>
               </div>
-              <!-- /.data_list_values -->
-              <!-- <div class="data_list_score">
-                                          <div class="graph mt-2 text-center">
-                                            <img src="../../../assets/graph_lines.png" class="img-fluid" alt="graph lines" />
-                                          </div> -->
-              <!-- /.graph -->
-              <!-- </div> -->
+         
               <!-- /.data_list_score -->
             </div>
             <!-- /.data_list_body -->
@@ -164,7 +158,10 @@
               <tr *ngFor="let service of autoPilotServiceData;let i=index;">
                 <td href="" class="{{service.canaryId == -1 ? 'disabledLink': ''}}" (click)="getServiceCanaryReport(service.canaryId)" class="showElementHover">
                  <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId,service.serviceId]" >{{service.serviceName}} </a></td>
-                <td>{{service.finalScore}} </td>
+                <td>
+                  <span *ngIf="service.finalScore == -1 || service.finalScore == null">-</span>
+                  <span *ngIf="service.finalScore != -1 && service.finalScore != null">{{service.finalScore}}</span>
+                 </td>
                 <td> 
                   <span *ngIf="service.metricsScore == -1 || service.metricsScore === null">-</span>
                   <span *ngIf="service.metricsScore != -1 && service.metricsScore != null"> {{service.metricsScore}} </span>

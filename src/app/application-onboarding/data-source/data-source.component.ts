@@ -219,5 +219,8 @@ export class DataSourceComponent implements OnInit {
     }
   }
 
+  closeForm(){
+    this.accountData = 'dummy';
+  }
   
 }
