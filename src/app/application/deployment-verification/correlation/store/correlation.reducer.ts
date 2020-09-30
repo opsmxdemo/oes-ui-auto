@@ -87,6 +87,17 @@ export function CorrelationReducer(
                 deployementLoading: true,
                 metrictimeSeriesData: action.metrictimeSeriesData,
             })
+        ),
+        on(CorrelationActions.fetchUnxepectedClusters,
+            (state, action) => ({
+                ...state,
+                deployementLoading: true,
+                unexpectedClusters: null,
+                timeSeriesData:null,
+                clusterData:null,
+                allMetricsData:null,
+                metrictimeSeriesData:null,
+            })
         )
     )(CorrelationState,CorrelationAction);
 }

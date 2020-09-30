@@ -8,8 +8,9 @@ import { empty } from 'rxjs';
 })
 export class TimeAnalysisChartComponent implements OnInit {
   @Output() openpopUp = new EventEmitter<boolean>();
-  @Output() getClickedTimeStamp = new EventEmitter<boolean>();
+  @Output() getClickedTimeStamp = new EventEmitter<boolean>(); 
   @Output() getserviceId = new EventEmitter<boolean>();
+  @Output() getClusterId = new EventEmitter();
   @Input() config:any;
   @Input() clusterId:any;
   @Input() dataSource: any;
@@ -104,7 +105,8 @@ export class TimeAnalysisChartComponent implements OnInit {
         "numDivlines": "2",
         xaxisname: "Time",
         yaxisname: "Repetition",
-        theme: "fusion"
+        theme: "fusion",
+        labelFontSize:"9"
       },
       data:this.chartData
       }
@@ -152,6 +154,7 @@ export class TimeAnalysisChartComponent implements OnInit {
   }
 
   closeTimeAnalysis(){
+    this.getClusterId.emit({"clusterId":this.clusterId,"serviceId":this.serviceId,"topics":this.topic});
     this.ChartShow=false;
   }
   initialized($event) {

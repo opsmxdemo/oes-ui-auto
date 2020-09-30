@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';           // for ngx bootstrap
 import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import * as CorrelationAction from './store/correlation.actions';
@@ -17,6 +17,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   @Input() serviceList: any[];
   @ViewChild ("closeButtonLogLines") closebtn:ElementRef;
   @ViewChild ("chartClickRef") chartbtn:ElementRef;
+  @ViewChild('subChartSize') subChartSize: ElementRef;
   config:any={
     width:"100%",
     height:150
@@ -58,7 +59,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     timeline: true,
     
   }
-  linechartSize: any[]=[1000,300];
+  linechartSize: any[]
   CorrelationflagForLineChart:boolean=true;
   lineChartData:any
   dataForMetricComponentChart:any;
@@ -81,6 +82,9 @@ export class CorrelationComponent implements OnInit,OnChanges {
   
   
   ngOnChanges(changes: SimpleChanges): void {
+
+    
+   
     this.dataSource=[]
   
 
@@ -116,6 +120,9 @@ export class CorrelationComponent implements OnInit,OnChanges {
 }
 
   ngOnInit(): void {
+
+  
+    
     for(let i=0;i<this.serviceList.length;i++)
     {
       let myobj={
@@ -173,14 +180,15 @@ export class CorrelationComponent implements OnInit,OnChanges {
               } 
               
           }
-          this.counter++
+          
           // this.addLogsJson = myobj;
           // console.log(this.addLogsJson)
           this.initaladdLogData.serviceClusters[0].clusterIds=clusters;
-          if(this.initaladdLogData.serviceClusters[0].clusterIds.length > 0 && resData.timeSeriesData == null)
+          if(this.initaladdLogData.serviceClusters[0].clusterIds.length > 0 && this.counter==0)
           {
             this.store.dispatch(CorrelationAction.timeSeriesData({ postData:this.initaladdLogData}));
           }
+          this.counter++
         }
         if(resData.allMetricsData != null)
         {
@@ -265,6 +273,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     this.store.dispatch(CorrelationAction.clusterData({ canaryId: this.canaryId, serviceId: this.serviceId, clusterId:clickedClusterId}));
     
   }
+  // for giving the time of particular bar which is clicked. 
   getClickedTimeStamp(ClickedTimeStamp){
     this.ClickedTimeStamp=ClickedTimeStamp
     
@@ -352,6 +361,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     else if(this.addFlag=="metric"){
       this.addMetricJson=submitdataToSave
     }
+  
     
     
   }
@@ -359,6 +369,49 @@ export class CorrelationComponent implements OnInit,OnChanges {
   hideAddLog(event){
     this.modalRef.hide()
   }
+
+  deleteLogChart(deletedchartData){
+    var deletedClusterId = deletedchartData.clusterId
+    for(let i=0;i<this.addLogsJson.length;i++){
+      
+        if(deletedchartData.serviceId==this.addLogsJson[i].serviceId){
+          
+          if(deletedchartData.topics=="CRITICAL ERROR"){
+            this.addLogsJson[i]['data']['Critical'][deletedClusterId]=false
+          }
+          else if(deletedchartData.topics=="ERROR"){
+            
+            this.addLogsJson[i]['data']['ERROR'][deletedClusterId]=false
+          }
+          else if(deletedchartData.topics=="WARN"){
+            
+            this.addLogsJson[i]['data']['Warn'][deletedClusterId]=false
+
+          }
+        
+      }
+      
+    }
+  }
+
+  deleteMetricChart(deletedchartData){
+    
+    var deletedClusterId = deletedchartData.clusterId
+    for(let i=0;i<this.addMetricJson.length;i++){
+      if(deletedchartData.serviceId==this.addMetricJson[i].serviceId){
+        this.addMetricJson[i]['data']['metric'][deletedClusterId]=false
+      }
+    }
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:click', ['$event'])
+    handleScroll(){
+      setTimeout(() =>{
+        this.linechartSize = [this.subChartSize.nativeElement.offsetWidth,300]
+      },500)
+    }
+  
   
   
 }

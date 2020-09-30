@@ -14,6 +14,7 @@ export class CorrelationformComponent implements OnInit {
   @Input() serviceInfo:any;
   @Input() addLogsJson:any;
   @Input() flag:any;
+  @Input() selectedServiceInitially:any;
   @Output() onSubmitPostData = new EventEmitter<boolean>();
   @Output() onSubmitsaveData = new EventEmitter<boolean>();
   @Output() onSelectedServiceChange = new EventEmitter<boolean>();
