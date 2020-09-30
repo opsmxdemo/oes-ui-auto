@@ -115,13 +115,17 @@ export class CorrelationComponent implements OnInit,OnChanges {
       }
     }
     }
+    this.ngOnInit()
    
 
 }
 
   ngOnInit(): void {
 
-  
+    this.addLogsJson=[]
+    this.addMetricJson=[]
+    this.counter=0;
+    this.metricCounter=0;
     
     for(let i=0;i<this.serviceList.length;i++)
     {
@@ -187,8 +191,9 @@ export class CorrelationComponent implements OnInit,OnChanges {
           if(this.initaladdLogData.serviceClusters[0].clusterIds.length > 0 && this.counter==0)
           {
             this.store.dispatch(CorrelationAction.timeSeriesData({ postData:this.initaladdLogData}));
+            this.counter++
           }
-          this.counter++
+          
         }
         if(resData.allMetricsData != null)
         {
@@ -209,12 +214,13 @@ export class CorrelationComponent implements OnInit,OnChanges {
               this.addMetricJson[0]['data']['metric'][this.allMetricsData[i].id]=true
             }
           }
-          this.metricCounter++;
+          
           this.initialaddMetricData.serviceMetrics[0].metricIds=clusters;
 
-          if(this.initialaddMetricData.serviceMetrics[0].metricIds.length > 0 && resData.timeSeriesData == null)
+          if(this.initialaddMetricData.serviceMetrics[0].metricIds.length > 0 && this.metricCounter == 0)
           {
             this.store.dispatch(CorrelationAction.metrictimeSeriesData({ postData:this.initialaddMetricData}));
+            this.metricCounter++;
           }
         }
 
