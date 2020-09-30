@@ -590,7 +590,7 @@
                           <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
                         </ng-container>
                       </div>
-                      <div class="tab-pane mp-4"  id="correlation" role="tabpanel" aria-labelledby="correlation-tab"
+                      <div class="tab-pane mp-4 mtneg"  id="correlation" role="tabpanel" aria-labelledby="correlation-tab"
                       [ngClass]="{'active': selectedTab === 'correlation'}">
                         <ng-container *ngIf = "selectedTab === 'correlation'">
                           <app-correlation [canaryId]="control.value" [serviceId]="selectedServiceId" [serviceList] = "deploymentServices.services" ></app-correlation>
