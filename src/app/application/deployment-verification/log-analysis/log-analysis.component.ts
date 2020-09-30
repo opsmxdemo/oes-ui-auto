@@ -4,6 +4,8 @@ import * as LogAnalysisAction from './store/log-analysis.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
 import * as logTopicsList from '../../../../assets/data/logsTopicsList.json';
+import { DomSanitizer } from '@angular/platform-browser';
+
 
 
 @Component({
@@ -108,7 +110,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
-    private elRef: ElementRef) {
+    private elRef: ElementRef,
+    private sanitizer: DomSanitizer) {
       for(var i=0;i<this.logTopicsList1.default.length;i++)
       {
         if(this.logTopicsList1.default[i].topic=="ERROR")
@@ -146,9 +149,11 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     //setting initial width of graph
     setTimeout(() => {
       if (this.showChart) {
-        this.chartSize = this.ChartSize.nativeElement.offsetWidth;
+        if(this.ChartSize != undefined){
+          this.chartSize = this.ChartSize.nativeElement.offsetWidth;
+        }        
       }
-      if (this.LogClusterWidth) {
+      if (this.LogClusterWidth !=undefined) {
         this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
       }
       this.cdr.detectChanges();
@@ -223,6 +228,232 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       this.getLogAnalysis()
     }
   }
+  
+  
+  ngOnInit(){
+    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
+      (resData) => {
+        if (resData.logsResults != null && resData.isLogsResultsLoaded){
+          this.store.dispatch(LogAnalysisAction.loadedLogResults()); 
+          this.logAnalysisResults = resData.logsResults;
+          if (this.logAnalysisResults != null) {      
+            this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
+            this.logAnalysisResults.templateName ? this.logTemplate = this.logAnalysisResults.templateName.split(":").pop() : this.logTemplate = "";
+            this.logAnalysisResults.data ? this.logAnalysisData = this.logAnalysisResults.data : this.logAnalysisData = [];
+            if (this.logAnalysisData.clusters) {
+              if(this.logAnalysisData.clusters.length > 0){
+                this.islogAnalysisAvailable = true;
+                this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
+                  return el.color == 'dark red';
+                });
+                let criticalClusters = this.criticalArray.map(obj => {
+                  let rObj = {
+                    "x": obj.id,
+                    "y": obj.v2Len + obj.v1Len,
+                    "z": obj.combineClust.substring(0, 500),
+                    "name": obj.id,
+                  };
+                  return rObj
+                })
+                this.errorArray = this.logAnalysisData.clusters.filter(function (el) {
+                  return el.color == 'red';
+                });
+                let errorClusters = this.errorArray.map(obj => {
+                  let rObj = {
+                    "x": obj.id,
+                    "y": obj.v2Len + obj.v1Len,
+                    "z": obj.combineClust.substring(0, 500),
+                    "name": obj.id,
+                  };
+                  return rObj
+                })
+                this.warningArray = this.logAnalysisData.clusters.filter(function (el) {
+                  return el.color == 'yellow';
+                });
+                let warningClusters = this.warningArray.map(obj => {
+                  let rObj = {
+                    "x": obj.id,
+                    "y": obj.v2Len + obj.v1Len,
+                    "z": obj.combineClust.substring(0, 500),
+                    "name": obj.id,
+                  };
+                  return rObj
+                })
+                this.dataSource["dataset"] = [];
+                let newobjcriticalClusters = {
+                  "color": "#a32133",
+                  "seriesName": "Critical",
+                  "data": criticalClusters
+                };
+                this.dataSource["dataset"].push(newobjcriticalClusters);
+      
+                let newobjerrorClusters = {
+                  "color": "#e0392e",
+                  "seriesName": "Errors",
+                  "data": errorClusters
+                };
+                this.dataSource["dataset"].push(newobjerrorClusters);
+      
+                let newobjwarningClusters = {
+                  "color": "#f3af70",
+                  "seriesName": "Warning",
+                  "data": warningClusters
+                };
+                this.dataSource["dataset"].push(newobjwarningClusters);
+                this.bubbleChartData = [
+                  {
+                    "name": "Critical",
+                    "series": criticalClusters
+                  },
+                  {
+                    "name": "Error",
+                    "series": errorClusters
+                  },
+                  {
+                    "name": "Warning",
+                    "series": warningClusters
+                  }
+                ];
+              }
+            } else {
+              this.bubbleChartData = [
+                {
+                  "name": "Critical",
+                  "series": []
+                },
+                {
+                  "name": "Error",
+                  "series": []
+                },
+                {
+                  "name": "Warning",
+                  "series": []
+                }
+              ];
+              this.islogAnalysisAvailable = false;
+            }
+      
+            if (this.fetchLogTopics != null) {
+              this.clusterTagList = this.fetchLogTopics.clusterTags;
+              // fetching comments for each logs
+              this.logAnalysisData.clusters.forEach((item) => {
+                this.clusterCommentsList.push(item.clusterTagInfo.comments);
+              });
+            }
+            
+      
+            if (this.logAnalysisResults.scores) {
+              this.logSensitivityScores = [];
+              if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.high) {
+                let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
+                this.logSensitivityScores.push(obj);
+              } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
+                let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
+                this.logSensitivityScores.push(obj);
+              } else {
+                let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
+                this.logSensitivityScores.push(obj);
+              }
+              if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.medium) {
+                let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
+                this.logSensitivityScores.push(obj);
+              } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.medium) {
+                let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "High", "iconclass": " text-danger", "textclass": "text-danger" } };
+                this.logSensitivityScores.push(obj);
+              } else {
+                let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
+                this.logSensitivityScores.push(obj);
+              }
+              if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.low) {
+                let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
+                this.logSensitivityScores.push(obj);
+              } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
+                let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
+                this.logSensitivityScores.push(obj);
+              } else {
+                let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "text-class": "text-warning" } };
+                this.logSensitivityScores.push(obj);
+              }
+            }
+      
+            // below logic is use to expand the template initially.
+            // setTimeout(() => {
+            //   if (this.expColBtn != undefined) {
+            //     if(this.expColBtn != undefined){
+            //       this.expColBtn.nativeElement.click();
+            //     }               
+            //   }
+            // })
+      
+          }else{
+            this.islogAnalysisAvailable = false;
+          }
+        }
+        if(resData.fetchLogTopics != null){
+          this.fetchLogTopics = resData.fetchLogTopics;        
+        }
+        if (resData.logsEventResults != null && resData.isLogsEventsLoaded ) {
+          this.store.dispatch(LogAnalysisAction.loadedEventsLogs());
+          this.logAnalysisData = resData.logsEventResults;
+          this.dataSource["dataset"] = [];
+          if (this.eventTab == "expected") {
+
+            let expectedcluster = resData.logsEventResults.clusters.map(obj => {
+              let rObj = {
+                "x": obj.id,
+                "y": obj.v2Len + obj.v1Len,
+                "z": obj.combineClust.substring(0, 500),
+                "name": obj.id,
+              };
+              return rObj
+            })
+            let newobjexpectedClusters = {
+              "color": "#74ddc6",
+              "seriesName": "Expected",
+              "data": expectedcluster
+            };
+            this.dataSource["dataset"].push(newobjexpectedClusters);
+          }
+          if (this.eventTab == "baseline") {
+
+            let baselinecluster = resData.logsEventResults.clusters.map(obj => {
+              let rObj = {
+                "x": obj.id,
+                "y": obj.v2Len + obj.v1Len,
+                "z": obj.combineClust.substring(0, 500),
+                "name": obj.id,
+              };
+              return rObj
+            })
+            let newobjbaselineClusters = {
+              "color": "#343a40",
+              "seriesName": "Baseline",
+              "data": baselinecluster
+            };
+            this.dataSource["dataset"].push(newobjbaselineClusters);
+          }
+          if (this.eventTab == "ignored") {
+
+            let ignoredcluster = resData.logsEventResults.clusters.map(obj => {
+              let rObj = {
+                "x": obj.id,
+                "y": obj.v2Len + obj.v1Len,
+                "z": obj.combineClust.substring(0, 500),
+                "name": obj.id,
+              };
+              return rObj
+            })
+            let newobjignoredClusters = {
+              "color": "#6c757d",
+              "seriesName": "Ignored",
+              "data": ignoredcluster
+            };
+            this.dataSource["dataset"].push(newobjignoredClusters);
+          }
+        }
+      }
+    );
+  }
 
   // below function is use to make page responsive
   @HostListener('window:click', ['$event.target'])
@@ -235,13 +466,17 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       if (this.showChart) {
         this.chartSize = "1px";
         setTimeout(() => {
-          this.chartSize = this.ChartSize.nativeElement.offsetWidth
+          if(this.ChartSize != undefined){
+            this.chartSize =this.ChartSize.nativeElement.offsetWidth;
+          }
         }, 500)
       }
       if (this.LogClusterWidth) {
         this.logClusterWidth = "1px"
         setTimeout(() => {
-          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+          if(this.LogClusterWidth != undefined){
+            this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+          }          
         }, 500)
       }
     }
@@ -249,20 +484,26 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   // below function is use to make page responsive list-unstyled m-0
   @HostListener('window:mousemove', ['$event.target'])
   handleMouseMove(target) {
-    if (target.offsetParent.className === 'sidebar_nav') {
-      if (this.showChart) {
-        this.chartSize = "1px";
-        setTimeout(() => {
-          this.chartSize = this.ChartSize.nativeElement.offsetWidth
-        }, 500)
+    if(target.offsetParent != undefined){
+      if (target.offsetParent.className === 'sidebar_nav') {
+        if (this.showChart) {
+          this.chartSize = "1px";
+          setTimeout(() => {
+            if(this.ChartSize != undefined){
+              this.chartSize = this.ChartSize.nativeElement.offsetWidth
+            }            
+          }, 500)
+        }
+        if (this.LogClusterWidth) {
+          this.logClusterWidth = "1px"
+          setTimeout(() => {
+            if(this.LogClusterWidth != undefined){
+              this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+            }            
+          }, 500)
+        }
       }
-      if (this.LogClusterWidth) {
-        this.logClusterWidth = "1px"
-        setTimeout(() => {
-          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
-        }, 500)
-      }
-    }
+    }   
   }
 
   getLogAnalysis() {
@@ -270,177 +511,15 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.eventTab = 'unexpected';
     this.eventTabLabeledBy = 'unexpected-tab';
     this.clusterCommentsList = [];
-    this.store.dispatch(LogAnalysisAction.loadLogResults({ canaryId: this.canaryId, serviceId: this.serviceId }));
-    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
-      (resData) => {
-        if(this.fetchLogTopics != null){
-          this.fetchLogTopics = resData.fetchLogTopics;        
-        }
-        if (resData.logsResults != null) {
-          this.logAnalysisResults = resData.logsResults;
-          this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
-          this.logAnalysisResults.templateName ? this.logTemplate = this.logAnalysisResults.templateName.split(":").pop() : this.logTemplate = "";
-          this.logAnalysisResults.data ? this.logAnalysisData = this.logAnalysisResults.data : this.logAnalysisData = [];
-          if (this.logAnalysisData.clusters) {
-            if(this.logAnalysisData.clusters.length > 0){
-              this.islogAnalysisAvailable = true;
-              this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
-                return el.color == 'dark red';
-              });
-              let criticalClusters = this.criticalArray.map(obj => {
-                let rObj = {
-                  "x": obj.id,
-                  "y": obj.v2Len + obj.v1Len,
-                  "z": obj.combineClust.substring(0, 500),
-                  "name": obj.id,
-                };
-                return rObj
-              })
-              this.errorArray = this.logAnalysisData.clusters.filter(function (el) {
-                return el.color == 'red';
-              });
-              let errorClusters = this.errorArray.map(obj => {
-                let rObj = {
-                  "x": obj.id,
-                  "y": obj.v2Len + obj.v1Len,
-                  "z": obj.combineClust.substring(0, 500),
-                  "name": obj.id,
-                };
-                return rObj
-              })
-              this.warningArray = this.logAnalysisData.clusters.filter(function (el) {
-                return el.color == 'yellow';
-              });
-              let warningClusters = this.warningArray.map(obj => {
-                let rObj = {
-                  "x": obj.id,
-                  "y": obj.v2Len + obj.v1Len,
-                  "z": obj.combineClust.substring(0, 500),
-                  "name": obj.id,
-                };
-                return rObj
-              })
-              this.dataSource["dataset"] = [];
-              let newobjcriticalClusters = {
-                "color": "#a32133",
-                "seriesName": "Critical",
-                "data": criticalClusters
-              };
-              this.dataSource["dataset"].push(newobjcriticalClusters);
-  
-              let newobjerrorClusters = {
-                "color": "#e0392e",
-                "seriesName": "Errors",
-                "data": errorClusters
-              };
-              this.dataSource["dataset"].push(newobjerrorClusters);
-  
-              let newobjwarningClusters = {
-                "color": "#f3af70",
-                "seriesName": "Warning",
-                "data": warningClusters
-              };
-              this.dataSource["dataset"].push(newobjwarningClusters);
-              this.bubbleChartData = [
-                {
-                  "name": "Critical",
-                  "series": criticalClusters
-                },
-                {
-                  "name": "Error",
-                  "series": errorClusters
-                },
-                {
-                  "name": "Warning",
-                  "series": warningClusters
-                }
-              ];
-            }
-          } else {
-            this.bubbleChartData = [
-              {
-                "name": "Critical",
-                "series": []
-              },
-              {
-                "name": "Error",
-                "series": []
-              },
-              {
-                "name": "Warning",
-                "series": []
-              }
-            ];
-            this.islogAnalysisAvailable = false;
-          }
-
-          if (this.fetchLogTopics != null) {
-            this.clusterTagList = this.fetchLogTopics.clusterTags;
-            // fetching comments for each logs
-            this.logAnalysisData.clusters.forEach((item) => {
-              this.clusterCommentsList.push(item.clusterTagInfo.comments);
-            });
-          }
-          
-
-          if (this.logAnalysisResults.scores) {
-            this.logSensitivityScores = [];
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.high) {
-              let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
-              this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
-              let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
-              this.logSensitivityScores.push(obj);
-            } else {
-              let obj = { "high": { "score": this.logAnalysisResults.scores.high, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
-              this.logSensitivityScores.push(obj);
-            }
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.medium) {
-              let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
-              this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.medium) {
-              let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "High", "iconclass": " text-danger", "textclass": "text-danger" } };
-              this.logSensitivityScores.push(obj);
-            } else {
-              let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
-              this.logSensitivityScores.push(obj);
-            }
-            if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.low) {
-              let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
-              this.logSensitivityScores.push(obj);
-            } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
-              let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
-              this.logSensitivityScores.push(obj);
-            } else {
-              let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "text-class": "text-warning" } };
-              this.logSensitivityScores.push(obj);
-            }
-          }
-
-          // below logic is use to expand the template initially.
-          setTimeout(() => {
-            if (this.expColBtn != undefined) {
-              this.expColBtn.nativeElement.click();
-            }
-          })
-
-        }else{
-          this.islogAnalysisAvailable = false;
-        }
-      }
-    );
-
+    this.store.dispatch(LogAnalysisAction.loadLogResults({ canaryId: this.canaryId, serviceId: this.serviceId }));    
   }
 
   changeSensitivity(e) {
-    //console.log(e.target.value);
-    console.log(this.selectedSensitivity);
-    console.log(this.logAnalysisResults.sensitivity);
     this.sensitivityChanged = true;
   }
 
   changeCriticality(e, log) {
-    this.commentNotificationMessage = "Click to add your comment here";
+    this.commentNotificationMessage = "Reclassification comments";
     setTimeout(function () {
       this.commentNotificationMessage = "";
     }.bind(this), 5000);
@@ -524,74 +603,28 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   };
 
   onClickLogEventTab(eventTab) {
+    this.logAnalysisData = undefined;
     this.clusterId = null;
     this.eventTab = eventTab;
     this.eventTabLabeledBy = eventTab + '-tab';
     this.store.dispatch(LogAnalysisAction.loadEventLogResults({ canaryId: this.canaryId, serviceId: this.serviceId, event: eventTab }));
-    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
-      (resData) => {
-        if (resData.logsEventResults != null) {
-          this.logAnalysisData = resData.logsEventResults;
-          this.dataSource["dataset"] = [];
-          if (this.eventTab == "expected") {
-
-            let expectedcluster = resData.logsEventResults.clusters.map(obj => {
-              let rObj = {
-                "x": obj.id,
-                "y": obj.v2Len + obj.v1Len,
-                "z": obj.combineClust.substring(0, 500),
-                "name": obj.id,
-              };
-              return rObj
-            })
-            let newobjexpectedClusters = {
-              "color": "#74ddc6",
-              "seriesName": "Expected",
-              "data": expectedcluster
-            };
-            this.dataSource["dataset"].push(newobjexpectedClusters);
-          }
-          if (this.eventTab == "baseline") {
-
-            let baselinecluster = resData.logsEventResults.clusters.map(obj => {
-              let rObj = {
-                "x": obj.id,
-                "y": obj.v2Len + obj.v1Len,
-                "z": obj.combineClust.substring(0, 500),
-                "name": obj.id,
-              };
-              return rObj
-            })
-            let newobjbaselineClusters = {
-              "color": "#343a40",
-              "seriesName": "Baseline",
-              "data": baselinecluster
-            };
-            this.dataSource["dataset"].push(newobjbaselineClusters);
-          }
-          if (this.eventTab == "ignored") {
-
-            let ignoredcluster = resData.logsEventResults.clusters.map(obj => {
-              let rObj = {
-                "x": obj.id,
-                "y": obj.v2Len + obj.v1Len,
-                "z": obj.combineClust.substring(0, 500),
-                "name": obj.id,
-              };
-              return rObj
-            })
-            let newobjignoredClusters = {
-              "color": "#6c757d",
-              "seriesName": "Ignored",
-              "data": ignoredcluster
-            };
-            this.dataSource["dataset"].push(newobjignoredClusters);
-          }
+    if (this.showChart) {
+      this.chartSize = "1px";
+      setTimeout(() => {
+        if(this.ChartSize != undefined){
+          this.chartSize =this.ChartSize.nativeElement.offsetWidth;
         }
-
-      }
-
-    );
+      }, 500)
+    }
+    if (this.LogClusterWidth) {
+      this.logClusterWidth = "1px"
+      setTimeout(() => {
+        if(this.LogClusterWidth != undefined){
+          this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+        }          
+      }, 500)
+    }
+    
   }
 
   // Below function is use to show or hide the bubble chart
@@ -611,15 +644,26 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     } else {
       this.switchToState = "Collapse All";
     }
-    setTimeout(() => {
-      this.expColBtn.nativeElement.click();
+    //setTimeout(() => {
+      // if(this.expColBtn != undefined){
+      //   this.expColBtn.nativeElement.click();
+      // }
       // below condtion is use to collapse all template.
-      if (this.switchToState === "Expand All") {
-        setTimeout(() => {
-          this.elRef.nativeElement.querySelector(this.expColBtn.nativeElement.dataset.target).classList.remove('show');
-        }, 400)
-      }
-    })
+      // if (this.switchToState === "Expand All") {
+      //   setTimeout(() => {
+      //     if(this.elRef != undefined && this.expColBtn != undefined ){
+      //       this.elRef.nativeElement.querySelector(this.expColBtn.nativeElement.dataset.target).classList.remove('show');
+      //     }          
+      //   }, 400)
+      // }
+      // if (this.switchToState === "Collapse All") {
+      //   setTimeout(() => {
+      //     if(this.elRef != undefined && this.expColBtn != undefined ){
+      //       this.elRef.nativeElement.querySelector(this.expColBtn.nativeElement.dataset.target).classList.add('show');
+      //     }          
+      //   }, 400)
+      // }
+    //})
   }
 
   // Below function is use to assign dynamic id
@@ -659,7 +703,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.store.select(fromFeature.selectLogAnalysisState).subscribe(
       (resData) => {
         if (resData.clusterLogs != null) {
-          this.completeCluster = resData.clusterLogs;
+          this.completeCluster = this.sanitizer.bypassSecurityTrustHtml(resData.clusterLogs);
           Object.keys(this.showFullLogLine).forEach(h => {
             this.showFullLogLine[h] = false;
           });

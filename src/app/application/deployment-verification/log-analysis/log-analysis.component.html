@@ -95,27 +95,27 @@
           <li class="nav-item" (click)="getLogAnalysis()" data-toggle="tooltip"
             title="Errors and warnings appearing only in Release version and the common Errors/Warnings that occur more often in Release version as compared to Baseline.">
             <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab"
-              aria-controls="unexpected" aria-selected="true">Unexpected</a>
+              aria-controls="unexpected" aria-selected="true">Unexpected <i *ngIf="logAnalysisData== undefined && eventTab == 'unexpected'" class="far fas fa-circle-notch fa-spin"></i></a>
           </li>
           <li class="nav-item" (click)="onClickLogEventTab('expected')" data-toggle="tooltip"
             title="The Info/Debug events common to both Baseline & Release and the Errors/Warnings that occur less often in Release version as compared to Baseline.">
             <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#expected" role="tab"
-              aria-controls="expected" aria-selected="false">Expected</a>
+              aria-controls="expected" aria-selected="false">Expected <i *ngIf="logAnalysisData== undefined && eventTab == 'expected'" class="far fas fa-circle-notch fa-spin"></i></a>
           </li>
           <li class="nav-item" (click)="onClickLogEventTab('baseline')" data-toggle="tooltip"
             title="The Info/Debug events that are unique to Baseline.">
             <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#baseline" role="tab"
-              aria-controls="baseline" aria-selected="false">Baseline</a>
+              aria-controls="baseline" aria-selected="false">Baseline <i *ngIf="logAnalysisData== undefined && eventTab == 'baseline'" class="far fas fa-circle-notch fa-spin"></i></a>
           </li>
           <li class="nav-item" (click)="onClickLogEventTab('ignored')" data-toggle="tooltip"
             title="The Info/Debug events of Release version.">
             <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#ignored" role="tab"
-              aria-controls="ignored" aria-selected="false">Ignored</a>
+              aria-controls="ignored" aria-selected="false">Ignored <i *ngIf="logAnalysisData== undefined && eventTab == 'ignored'" class="far fas fa-circle-notch fa-spin"></i></a>
           </li>
           <li class="nav-item" (click)="onClickLogEventTab('all')" data-toggle="tooltip"
             title="All events of Baseline and Release versions.">
             <a class="nav-link" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#all" role="tab" aria-controls="all"
-              aria-selected="false">All</a>
+              aria-selected="false">All <i *ngIf="logAnalysisData== undefined && eventTab == 'all'" class="far fas fa-circle-notch fa-spin"></i></a>
           </li>
         </ul>
       </div>
@@ -126,12 +126,12 @@
       </div>
     </div>
     <div class="tab-content" id="myTabDefaultContent" #LogClusterWidth>
-      <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby=""
+      <div class="tab-pane py-4 fade show active" id="{{eventTab}}" role="tabpanel" aria-labelledby=""Collapse All
         [style.width]="logClusterWidth">
         <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0">
 
           <div  class="card mb-2 data_list removeOverflow" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity; let indexOfelement=index;">
-            <div class="card-header d-flex align-items-center justify-content-between" id="heading01">
+            <div class="card-header d-flex align-items-ccard-body text-wrap-normal ng-star-insertedenter justify-content-between" id="heading{{log.id}}">
               <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
               <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}
               </div>
@@ -202,12 +202,15 @@
               </div>
               <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true" (click)="timeAnalysisGraph(log)"></i></div>
               <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
-              <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn
-                aria-expanded="true" aria-controls="collapse">
+              <!-- <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn aria-expanded="true" aria-controls="collapse"> -->
+                <!-- <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" href="'#log'+log.id" #expColBtn>
+                <i class="fa fa-sort-down"></i>
+              </button> -->
+              <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="'#log' + log.id" aria-expanded="true" [attr.aria-controls]="'log'+log.id" #expColBtn>
                 <i class="fa fa-sort-down"></i>
               </button>
             </div>
-            <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow"   >
+            <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow">
               <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
               <fusioncharts
               width="100%"
@@ -218,7 +221,7 @@
               (initialized)="initialized($event)"
             ></fusioncharts>
             </div>
-            <div id="{{assignId(log.id)}}" class="collapse clusterHeight" aria-labelledby="heading01" data-parent="#accordionExample">
+            <div id="log{{log.id}}" class="collapse clusterHeight" [ngClass]="{'show' : switchToState == 'Collapse All'}" [attr.aria-labelledby]="'heading' + log.id" data-parent="#accordionExample">
               <div *ngIf="log.more">
                 <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
                     class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
@@ -226,34 +229,34 @@
                     class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
               </div>
               <div *ngIf="log.color == 'dark red'">
-                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
                   <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:criticalTopicStrings"></span>
                 </div>
-                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <div class=" text-wrap-normal" *ngIf="showFullLogLine[log.id]">
                   <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:criticalTopicStrings"></span>
                 </div>
               </div>
               <div *ngIf="log.color=='red'">
-                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
                   <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:errorTopicStrings"></span>
                 </div>
-                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="showFullLogLine[log.id]">
                   <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:errorTopicStrings"></span>
                 </div>
               </div>
               <div *ngIf="log.color=='yellow'">
-                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
                   <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:warningTopicStrings"></span>
                 </div>
-                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="showFullLogLine[log.id]">
                   <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:warningTopicStrings"></span>
                 </div>
               </div>
               <div *ngIf="log.color=='green'">
-                <div class="card-body text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
                   <span [innerHTML]="log.combineClust | replaceLineBreaks | changetextcolor:ignoreTopicStrings"></span>
                 </div>
-                <div class="card-body text-wrap-normal" *ngIf="showFullLogLine[log.id]">
+                <div class="text-wrap-normal" *ngIf="showFullLogLine[log.id]">
                   <span [innerHTML]="completeCluster?.clusterData | replaceLineBreaks | changetextcolor:ignoreTopicStrings"></span>
                 </div>
               </div>
