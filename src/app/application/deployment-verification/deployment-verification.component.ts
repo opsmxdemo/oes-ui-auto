@@ -5,10 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
 import { NotificationService } from '../../services/notification.service';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith, tap} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
 import * as fromApp from '../../store/app.reducer';
@@ -42,7 +42,7 @@ export class DeploymentVerificationComponent implements OnInit {
   size = 5343454545;
   applicationForm: FormGroup;
   deployementRun: any;
-  reclassificationHistory:any;
+  reclassificationHistory: any;
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
   control = new FormControl(this.deployementRun);
@@ -56,7 +56,7 @@ export class DeploymentVerificationComponent implements OnInit {
   serviceConter = 1;
   canaryCheckCounter = 1;
   selectedTab = '';                                 // this variable is use to store value of selected tab.
-  
+
   ///code for showing select application shows here
   myControl = new FormControl();
   options: User[] = [];
@@ -67,7 +67,7 @@ export class DeploymentVerificationComponent implements OnInit {
   deploymentApplicationHealth = {};
   deploymentServiceInformation = {};
 
- // App form initia
+  // App form initia
 
   applicationList = [];
 
@@ -111,34 +111,34 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // App form end
 
-   constructor(private route: ActivatedRoute ,public sharedService: SharedService, public store: Store<fromFeature.State>,
-    public autopilotService: AutopiloService, public notifications: NotificationService,public appStore: Store<fromApp.AppState>,
-    private fb: FormBuilder) { 
-    }
+  constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromFeature.State>,
+    public autopilotService: AutopiloService, public notifications: NotificationService, public appStore: Store<fromApp.AppState>,
+    private fb: FormBuilder) {
+  }
 
-   // Below function is use to capture events occur in matric analysis component and make responsive to table.
-   @HostListener('window:click', ['$event'])
-     handleClick(target){
-       const targetnode = target.target;
-      if(targetnode.textContent === 'Log Analysis' ||
-        targetnode.textContent === 'Metric Analysis' || 
-        targetnode.classList['value'] === 'service-selection'){
-          this.Sidenav.close();
-          this.isShow = false;
-      }
+  // Below function is use to capture events occur in matric analysis component and make responsive to table.
+  @HostListener('window:click', ['$event'])
+  handleClick(target) {
+    const targetnode = target.target;
+    if (targetnode.textContent === 'Log Analysis' ||
+      targetnode.textContent === 'Metric Analysis' ||
+      targetnode.classList['value'] === 'service-selection') {
+      this.Sidenav.close();
+      this.isShow = false;
     }
+  }
 
- 
-    
+
+
   ngOnInit(): void {
-  
+
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
     this.selectedManualTriggerTab = 'manualTrigger-editor-tab'; //setting default tab selected as form
 
-     // hide tooltip 
-     $("[data-toggle='tooltip']").tooltip('hide');
+    // hide tooltip 
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.selectedTab = '';
     this.getAllApplications();
 
@@ -175,13 +175,7 @@ export class DeploymentVerificationComponent implements OnInit {
         }
         if (resData.manualTriggerResponse != null) {
           this.manualTriggerLatestRun = resData['canaryId'];
-          
           this.control.setValue(resData['canaryId']);
-          //  this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: resData.canaryId }));
-          // this.latestCanaryCounter = 1;
-          // this.counter = 1;
-          // this.checkCanaryId = false;
-
         }
 
         if (resData.applicationHealthDetails != null) {
@@ -213,9 +207,7 @@ export class DeploymentVerificationComponent implements OnInit {
               startWith(''),
               map(value => this._filterCanaries(value))
             );
-          }
-
-       
+      }
         }
 
         if (resData.serviceList != null && resData.serviceListLoading) {
@@ -247,32 +239,31 @@ export class DeploymentVerificationComponent implements OnInit {
   }
 
 
-     //code while submitting the manual trigger form
-    
+  //code while submitting the manual trigger form
+
   // Below function is use to fetched json from json editor
-  showManualTriggerJson(event = null){
+  showManualTriggerJson(event = null) {
     this.manualTriggerData = this.editor.get();
   }
   // Below function is use to save manualTrigger data on click of triggerBtn
-  submitManualTriggerData(){
+  submitManualTriggerData() {
     this.store.dispatch(
-      DeploymentAction.manualTriggerData({ 
+      DeploymentAction.manualTriggerData({
         data: this.manualTriggerData,
       })
     );
-    
   }
 
-   // Below function is execute on click of Form or Editor tab.
-   onManualTriggerClickTab(event){
-    if(event.target.id === 'manualTrigger-form-tab'){
+  // Below function is execute on click of Form or Editor tab.
+  onManualTriggerClickTab(event) {
+    if (event.target.id === 'manualTrigger-form-tab') {
       this.selectedManualTriggerTab = "manualTrigger-form-tab";
-    } else if(event.target.id === 'manualTrigger-editor-tab') {
+    } else if (event.target.id === 'manualTrigger-editor-tab') {
       this.selectedManualTriggerTab = "manualTrigger-editor-tab";
     }
   }
 
-// code for application dropdown display starts here
+  // code for application dropdown display starts here
 
   onSelectionChangeApplication(event) {
     this.initializeCanaryList = false;
@@ -312,29 +303,29 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // build application form
 
-    buildApplicationForm() {
-      this.applicationForm = this.fb.group({
-        application: [''],
-      });
-      
-    }
-  
-    // function to filter applications
-    filterApplications(applicationName: string): any[] {
-      return this.applicationList.filter(option => option.applicationName.toLowerCase().indexOf(applicationName.toLowerCase()) === 0);
-    }
-    
+  buildApplicationForm() {
+    this.applicationForm = this.fb.group({
+      application: [''],
+    });
+
+  }
+
+  // function to filter applications
+  filterApplications(applicationName: string): any[] {
+    return this.applicationList.filter(option => option.applicationName.toLowerCase().indexOf(applicationName.toLowerCase()) === 0);
+  }
+
   // initialization application filter
 
-    initFilterApplication() {
-      this.applicationListOptions = this.applicationForm
-        .get('application')
-        .valueChanges.pipe(
+  initFilterApplication() {
+    this.applicationListOptions = this.applicationForm
+      .get('application')
+      .valueChanges.pipe(
         startWith<string | any>(''),
         map(val => (typeof val === 'string' ? val : val.applicationName)),
         map(applicationName => (applicationName ? this.filterApplications(applicationName) : this.applicationList.slice()))
-        );  
-    }
+      );
+  }
 
   // code for application dropdown display ends here
 
@@ -356,7 +347,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.canaryList = this.canaries;
     var length = this.canaryList.length;
     var index = this.canaryList.findIndex(cid => cid == max);
-    if (index  === length - 1) {
+    if (index === length - 1) {
       this.decrementDisable = false;
       this.incredementDisable = true;
     } else {
@@ -365,15 +356,15 @@ export class DeploymentVerificationComponent implements OnInit {
     }
 
     if (index != -1) {
-      if (index  === length - 1) {
+      if (index === length - 1) {
         this.incredementDisable = true;
-    
+
       } else {
-        if(this.route.params['_value'].canaryId != null){
-            this.control.setValue(this.canaryList[index + 1]);
-            
-        }else{
-          this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index + 1]}));
+        if (this.route.params['_value'].canaryId != null) {
+          this.control.setValue(this.canaryList[index + 1]);
+
+        } else {
+          this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: this.canaryList[index + 1] }));
           this.control.setValue(this.canaryList[index + 1]);
         }
         this.getApplicationHelathAndServiceDetails(Number(this.canaryList[index + 1]));
@@ -399,12 +390,12 @@ export class DeploymentVerificationComponent implements OnInit {
     }
 
     if (index != -1 && index != 0) {
-      if(this.route.params['_value'].canaryId != null){
+      if (this.route.params['_value'].canaryId != null) {
         this.control.setValue(this.canaryList[index - 1]);
-    }else{
-      this.store.dispatch(DeploymentAction.updateCanaryRun({canaryId: this.canaryList[index - 1]}));
-      this.control.setValue(this.canaryList[index - 1]);
-    }
+      } else {
+        this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: this.canaryList[index - 1] }));
+        this.control.setValue(this.canaryList[index - 1]);
+      }
 
       this.getApplicationHelathAndServiceDetails(Number(this.canaryList[index - 1]));
 
@@ -428,20 +419,21 @@ export class DeploymentVerificationComponent implements OnInit {
     this.selectedServiceId = item.serviceId;
     
     // Below logic is use to fetch initiall selected tab
+
     if(this.selectedTab == ''){
-		if (item['analysisType'] != undefined) {
-		  if (item['analysisType'].includes('Logs and Metrics')) {
-			this.selectedTab = 'log-analysis';
-			this.onClickTab('log-analysis-tab');
-		  } else if (item['analysisType'].includes('Logs')) {
-			this.selectedTab = 'log-analysis';
-			this.onClickTab('log-analysis-tab');
-		  } else {
-			this.selectedTab = 'metric-analysis';
-			this.onClickTab('metric-analysis-tab');
-		  }
-		}
-	}
+      if (item['analysisType'] != undefined) {
+        if (item['analysisType'].includes('Logs and Metrics')) {
+          this.selectedTab = 'log-analysis';
+          this.onClickTab('log-analysis-tab');
+        } else if (item['analysisType'].includes('Logs')) {
+          this.selectedTab = 'log-analysis';
+          this.onClickTab('log-analysis-tab');
+        } else {
+          this.selectedTab = 'metric-analysis';
+          this.onClickTab('metric-analysis-tab');
+        }
+      }
+    }
 
 
     if (this.selectedServiceId != null || this.selectedServiceId != undefined) {
@@ -465,7 +457,7 @@ export class DeploymentVerificationComponent implements OnInit {
   }
 
   // Below function is use to hide sidenav
-  hideSidenav(){
+  hideSidenav() {
     this.Sidenav.close();
   }
 
@@ -494,8 +486,8 @@ export class DeploymentVerificationComponent implements OnInit {
       }
     );
 
-    }
-  
+  }
+
   // get application details
 
   getAllApplications() {
@@ -529,17 +521,17 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // Below function is used if user want to refresh list data
   refreshList() {
-     this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.control.value}));
-  } 
+    this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.control.value }));
+  }
 
-    //Below function is execute on search
-  onSearch(){
-    if(this.searchData != ''){
+  //Below function is execute on search
+  onSearch() {
+    if (this.searchData != '') {
       this.currentPage = [];
       for (let i = 0; i < this.serviceListLength; i++) {
         this.currentPage.push(this.serviceListData[i]);
       }
-    }else{
+    } else {
       this.renderPage();
     }
   }
@@ -547,11 +539,11 @@ export class DeploymentVerificationComponent implements OnInit {
   //Below function is used to implement pagination
   renderPage() {
     this.currentPage = [];
-    if(this.page.endPoint < this.serviceListLength-1){
+    if (this.page.endPoint < this.serviceListLength - 1) {
       for (let i = this.page.startingPoint; i < this.page.endPoint; i++) {
         this.currentPage.push(this.serviceListData[i]);
       }
-    }else{
+    } else {
       for (let i = this.page.startingPoint; i < this.serviceListLength; i++) {
         this.currentPage.push(this.serviceListData[i]);
       }
@@ -571,7 +563,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   //Below function is execute on click of page next btn
   pageNext() {
-    if (this.page.endPoint < this.serviceListLength-1) {
+    if (this.page.endPoint < this.serviceListLength - 1) {
       this.page.pageNo += 1;
       this.page.currentPage = this.page.pageNo;
       if ((this.page.endPoint + this.page.pageSize) < this.serviceListLength) {
@@ -579,7 +571,7 @@ export class DeploymentVerificationComponent implements OnInit {
         this.page.endPoint += this.page.pageSize;
       } else if (this.page.endPoint < this.serviceListLength) {
         this.page.startingPoint = this.page.endPoint;
-        this.page.endPoint = this.serviceListLength-1;
+        this.page.endPoint = this.serviceListLength - 1;
       }
       this.renderPage();
     }
@@ -608,7 +600,7 @@ export class DeploymentVerificationComponent implements OnInit {
     if (currentPage * this.page.pageSize < this.serviceListLength) {
       this.page.endPoint = currentPage * this.page.pageSize;
     } else {
-      this.page.endPoint = this.serviceListLength-1;
+      this.page.endPoint = this.serviceListLength - 1;
     }
     this.renderPage();
   }
@@ -649,14 +641,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   }
 
-  // Below function is use to hide sidenav if click happen in Analysis section.
-  onClickAnalysisSection(event) {
-    if (event.target.id != 'expColBtn') {
-      this.Sidenav.close();
-      this.isShow = false;
-    }
-  }
-
+ 
   // below code use to call get services list and application health info
 
   getApplicationHelathAndServiceDetails(runId: number) {
@@ -669,8 +654,8 @@ export class DeploymentVerificationComponent implements OnInit {
 
 
   // Below fuction is use to cancel the running canary
-  cancelRunningCanary(id){
 
+  cancelRunningCanary(id) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -682,25 +667,25 @@ export class DeploymentVerificationComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         $("[data-toggle='tooltip']").tooltip('hide');
-      
+
         this.autopilotService.cancelCanaryRun(id).subscribe((res: any) => {
           this.cancelRunningCanaryData = res;
           this.notifications.showSuccess('', res['message']);
         },
-        (error) => {           
-          this.notifications.showError('',error);      
-        })
+          (error) => {
+            this.notifications.showError('', error);
+          })
 
-      }else{
-         
+      } else {
+
       }
     })
   }
 
 
- // code for calculating difference in time
+  // code for calculating difference in time
   calculateDiff(dateFuture) {
-      var date2:any = new Date();
+    var date2: any = new Date();
 
     let diffInMilliSeconds = Math.abs(dateFuture - date2) / 1000;
 
@@ -723,24 +708,28 @@ export class DeploymentVerificationComponent implements OnInit {
 
     difference += (hours === 0 || hours === 1) ? `${hours}h ` : `${hours}h `;
 
-    difference += (minutes === 0 || hours === 1) ? `${minutes}m ago` : `${minutes}m ago`; 
+    difference += (minutes === 0 || hours === 1) ? `${minutes}m ago` : `${minutes}m ago`;
 
     return difference;
   }
 
-   // for getting reclassification history data
-   getReclassifiactionHistory(){
-    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'],canaryId: this.canaryId, serviceId:this.selectedServiceId }));    
+  // for getting reclassification history data
+  getReclassifiactionHistory() {
+    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId }));
   }
 
 
   getlogAnalysisData(event) {
     this.serviceIdAfterRerun = event;
     this.selectedServiceId = event;
-
     const serviceObj = this.serviceListData.find(c => c.serviceId == event);
     this.onClickService(serviceObj);
-
   }
-  
+
+  getEventsFromLogAnalysis(event){
+    if(event){
+      this.Sidenav.close();
+      this.isShow = false;
+    }   
+  }
 }
