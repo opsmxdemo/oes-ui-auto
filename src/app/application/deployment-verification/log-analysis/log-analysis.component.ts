@@ -231,6 +231,17 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       this.getLogAnalysis()
     }
     this.enterdToLogLines.emit(false);
+    setTimeout(() => {
+      if (this.showChart) {
+        if(this.ChartSize != undefined){
+          this.chartSize = this.ChartSize.nativeElement.offsetWidth;
+        }        
+      }
+      if (this.LogClusterWidth !=undefined) {
+        this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+      }
+      this.cdr.detectChanges();
+    }, 1000)
   }
   
   
