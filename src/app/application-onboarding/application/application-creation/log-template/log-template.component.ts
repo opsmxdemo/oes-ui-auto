@@ -355,5 +355,13 @@ cannotContainSpace(control: FormControl): {
     }
   }
 
+  // Below function is to reset the form
+  cancelLogForm(){
+    this.createLogForm.reset();
+    this.logTopicsForm.reset(); 
+    this.stepper.reset();
+   
+  }
+
 
 }
