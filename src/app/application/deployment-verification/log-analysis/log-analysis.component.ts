@@ -107,6 +107,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   islogAnalysisAvailable = true;
   commentNotificationMessage = "";
   sensitivityChanged = false;
+  tagCommentNotificationMessage = "";
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -454,7 +455,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       }
     );
   }
-
+  
+  // target.classList['value'].includes('criticality-select')
   // below function is use to make page responsive
   @HostListener('window:click', ['$event.target'])
   handleClick(target) {
@@ -573,8 +575,11 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   //function calling when cluster tag value changes
   changeClusterTag(e, log, value, clusterTag) {
-    // console.log(e, log, value);
-    //this.selectedClusterInfo = log;
+    this.tagCommentNotificationMessage = "Logs cluster tag Comments";
+    setTimeout(function () {
+      this.tagCommentNotificationMessage = "";
+    }.bind(this), 5000);        
+    this.selectedClusterInfo = log;
     if(clusterTag == undefined || clusterTag == null){
       clusterTag = "";
     }

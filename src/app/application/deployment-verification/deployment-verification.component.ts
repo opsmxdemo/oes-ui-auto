@@ -428,19 +428,20 @@ export class DeploymentVerificationComponent implements OnInit {
     this.selectedServiceId = item.serviceId;
     
     // Below logic is use to fetch initiall selected tab
-
-    if (item['analysisType'] != undefined) {
-      if (item['analysisType'].includes('Logs and Metrics')) {
-        this.selectedTab = 'log-analysis';
-        this.onClickTab('log-analysis-tab');
-      } else if (item['analysisType'].includes('Logs')) {
-        this.selectedTab = 'log-analysis';
-        this.onClickTab('log-analysis-tab');
-      } else {
-        this.selectedTab = 'metric-analysis';
-        this.onClickTab('metric-analysis-tab');
-      }
-    }
+    if(this.selectedTab == ''){
+		if (item['analysisType'] != undefined) {
+		  if (item['analysisType'].includes('Logs and Metrics')) {
+			this.selectedTab = 'log-analysis';
+			this.onClickTab('log-analysis-tab');
+		  } else if (item['analysisType'].includes('Logs')) {
+			this.selectedTab = 'log-analysis';
+			this.onClickTab('log-analysis-tab');
+		  } else {
+			this.selectedTab = 'metric-analysis';
+			this.onClickTab('metric-analysis-tab');
+		  }
+		}
+	}
 
 
     if (this.selectedServiceId != null || this.selectedServiceId != undefined) {
