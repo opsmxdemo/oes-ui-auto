@@ -41,13 +41,13 @@
                     <button type="button" class="btn p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Score: {{canaries.finalScore}}, RunID: {{canaries.canaryId}}">
                       <a  [routerLink]="['/application/deploymentverification/',application.applicationName,canaries.canaryId]" class="ml-2" 
                       [ngClass]= "{'ci_check':canaries.finalScore >= canaries.maximumCanaryScore,
-                      'ci_close':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
-                      'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
+                      'ci_close':canaries.finalScore <= canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
+                      'text-warning':canaries.finalScore > canaries.minimumCanaryScore && canaries.finalScore <= canaries.maximumCanaryScore,
                       'ci_minus': canaries.finalScore === 'N/A' || canaries.finalScore === '',
                       'ci_run ico24 popover-hover': canaries.status === 'RUNNING'}">
                       <i class="far fa" [ngClass]= "{'fa-check-circle':canaries.finalScore && canaries.finalScore >= canaries.maximumCanaryScore,
-                        'fa-minus-circle':canaries.finalScore < canaries.minimumCanaryScore && canaries.status === 'COMPLETED',
-                        'text-warning':canaries.finalScore < canaries.minimumCanaryScore && canaries.finalScore >= canaries.maximumCanaryScore,
+                        'fa-minus-circle':(canaries.finalScore <= canaries.minimumCanaryScore && canaries.status === 'COMPLETED') || (canaries.finalScore > canaries.minimumCanaryScore && canaries.finalScore <= canaries.maximumCanaryScore),
+                        
                         'fa-circle': canaries.finalScore === 'N/A' || canaries.finalScore === '',
                         'fas fa-circle-notch fa-spin': canaries.status === 'RUNNING'}"></i></a>
                     </button>
@@ -170,7 +170,7 @@
                   <span *ngIf="service.logsScore == -1 || service.logsScore === null">- </span>
                  <span *ngIf="service.logsScore != -1 && service.logsScore != null">{{service.logsScore}} </span>
                   </td>
-                <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED'}">{{service.status}}</td>
+                <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED', 'text-warning': service.status == 'Review'}">{{service.status}}</td>
               </tr>
             </tbody>
           </table>
