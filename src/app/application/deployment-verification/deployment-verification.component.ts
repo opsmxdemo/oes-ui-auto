@@ -641,14 +641,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   }
 
-  // Below function is use to hide sidenav if click happen in Analysis section.
-  onClickAnalysisSection(event) {
-    if (event.target.id != 'expColBtn') {
-      this.Sidenav.close();
-      this.isShow = false;
-    }
-  }
-
+ 
   // below code use to call get services list and application health info
 
   getApplicationHelathAndServiceDetails(runId: number) {
@@ -729,9 +722,14 @@ export class DeploymentVerificationComponent implements OnInit {
   getlogAnalysisData(event) {
     this.serviceIdAfterRerun = event;
     this.selectedServiceId = event;
-
     const serviceObj = this.serviceListData.find(c => c.serviceId == event);
     this.onClickService(serviceObj);
+  }
 
+  getEventsFromLogAnalysis(event){
+    if(event){
+      this.Sidenav.close();
+      this.isShow = false;
+    }   
   }
 }
