@@ -23,6 +23,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   @Input() serviceId: any[];
 
   @Output() selectedServiceId = new EventEmitter<any>();
+  @Output() enterdToLogLines = new EventEmitter<boolean>();
 
   showChart = true;                                                   // It is use to hide or show the bubble chart.
   switchToState = 'Collapse All';                                     // It is use to store value of Template State which user want to switch.
@@ -108,6 +109,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   commentNotificationMessage = "";
   sensitivityChanged = false;
   tagCommentNotificationMessage = "";
+  
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -228,6 +230,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     if (this.canaryId != undefined && this.serviceId != undefined) {
       this.getLogAnalysis()
     }
+    this.enterdToLogLines.emit(false);
   }
   
   
@@ -487,7 +490,10 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   @HostListener('window:mousemove', ['$event.target'])
   handleMouseMove(target) {
     if(target.offsetParent != undefined){
-      if (target.offsetParent.className === 'sidebar_nav') {
+      if (target.offsetParent.className === 'sidebar_nav' || target.id === 'logeventsTab') {
+        if(target.id === 'logeventsTab'){
+          this.enterdToLogLines.emit(true);
+        }        
         if (this.showChart) {
           this.chartSize = "1px";
           setTimeout(() => {
@@ -613,6 +619,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.eventTab = eventTab;
     this.eventTabLabeledBy = eventTab + '-tab';
     this.store.dispatch(LogAnalysisAction.loadEventLogResults({ canaryId: this.canaryId, serviceId: this.serviceId, event: eventTab }));
+    this.enterdToLogLines.emit(true);
     if (this.showChart) {
       this.chartSize = "1px";
       setTimeout(() => {
