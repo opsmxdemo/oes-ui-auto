@@ -69,7 +69,7 @@ export class TimeAnalysisChartComponent implements OnInit {
     }));
 
     this.xaxisArray = this.generateTimeIntervalsForChartData(new Date(this.startTime).getHours(),new Date(this.startTime).getMinutes(),new Date(this.endTime).getHours(),new Date(this.endTime).getMinutes())
-   
+    
     // for creating final data for rendering in chart
     for(let i=0;i<this.xaxisArray.length;i++)
     {
@@ -84,7 +84,7 @@ export class TimeAnalysisChartComponent implements OnInit {
           break;
         }
         else{
-          count=0
+          count=null
           dateTime=""
        }
         
@@ -98,7 +98,7 @@ export class TimeAnalysisChartComponent implements OnInit {
       }
       this.chartData.push(myobj)
     }
-
+    
     // creating chart
     this.finalDataSource = {
       chart: {
@@ -134,11 +134,18 @@ export class TimeAnalysisChartComponent implements OnInit {
     var startTime = startTimeHour*60+startTimemin; // start time
     var endTime = endTImeHour*60+endTImeMin; // start time
     var count=0
-
+    
+    // if(startTime>endTime)
+    // {
+    //   endTime = endTime+1440;
+    // }
     for (var i=startTime;i<endTime+1; i++) {
       var hh = Math.floor(i/60); // getting hours of day in 0-24 format
       var mm = (i%60); // getting minutes of the hour in 0-55 format
-      
+      if(hh>23)
+      {
+        hh=hh-24;
+      }
       times[count] = ("0" + (hh)).slice(-2) + ':' + ("0" + mm).slice(-2) ; 
       count++;
     }

@@ -46,6 +46,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   addnewlogdummyJson:any
   addFlag:any;
   dummydataForTimeAnalysisComponent:any
+  selectedServiceIndex:any;
   dummydataForPopup:any
   lineChartProperty = {                                               // It is use to stote all line chart related properties.
     showLegend: true,
@@ -69,7 +70,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   openModal(template: TemplateRef<any>,selectedAddButton) {
     if(this.addFlag=='log')
     {
-      this.store.dispatch(CorrelationAction.fetchUnxepectedClusters({ canaryId: this.canaryId, serviceId: this.serviceList[0].serviceId }));
+      this.store.dispatch(CorrelationAction.fetchUnxepectedClusters({ canaryId: this.canaryId, serviceId: this.serviceList[this.selectedServiceIndex].serviceId }));
     }
     else if(this.addFlag=='metric')
     {
@@ -127,6 +128,8 @@ export class CorrelationComponent implements OnInit,OnChanges {
     this.counter=0;
     this.metricCounter=0;
     
+    
+    
     for(let i=0;i<this.serviceList.length;i++)
     {
       let myobj={
@@ -140,8 +143,14 @@ export class CorrelationComponent implements OnInit,OnChanges {
       }
       this.addLogsJson.push(myobj)
       this.addMetricJson.push(myobjMetric)
+      if(this.serviceList[i].serviceId==this.serviceId)
+      {
+        this.selectedServiceIndex=i;
+      }
     }
+    
    
+  
     
     
     this.store.dispatch(CorrelationAction.fetchUnxepectedClusters({ canaryId: this.canaryId, serviceId: this.serviceId }));
@@ -152,7 +161,9 @@ export class CorrelationComponent implements OnInit,OnChanges {
         {
           
           this.unexpectedClusters=resData.unexpectedClusters;
+          // saving the clusteId whose chart we want to display 
           var clusters=[]
+
           this.initaladdLogData={
             "riskAnalysisId": this.canaryId,
             "serviceClusters": [{
@@ -170,23 +181,22 @@ export class CorrelationComponent implements OnInit,OnChanges {
               {
                 if(this.unexpectedClusters[i].topic=="CRITICAL ERROR")
                 {
-                  this.addLogsJson[0]['data']['Critical'][this.unexpectedClusters[i].clusterId]=true
+                  this.addLogsJson[this.selectedServiceIndex]['data']['Critical'][this.unexpectedClusters[i].clusterId]=true
                 }
                 if(this.unexpectedClusters[i].topic=="ERROR")
                 {
-                  this.addLogsJson[0]['data']['ERROR'][this.unexpectedClusters[i].clusterId]=true
+                  this.addLogsJson[this.selectedServiceIndex]['data']['ERROR'][this.unexpectedClusters[i].clusterId]=true
                 }
                 if(this.unexpectedClusters[i].topic=="WARN")
                 {
-                  this.addLogsJson[0]['data']['Warn'][this.unexpectedClusters[i].clusterId]=false;
+                  this.addLogsJson[this.selectedServiceIndex]['data']['Warn'][this.unexpectedClusters[i].clusterId]=false;
                 }
                 
               } 
               
           }
           
-          // this.addLogsJson = myobj;
-          // console.log(this.addLogsJson)
+         // console.log(this.initaladdLogData)
           this.initaladdLogData.serviceClusters[0].clusterIds=clusters;
           if(this.initaladdLogData.serviceClusters[0].clusterIds.length > 0 && this.counter==0)
           {
@@ -211,13 +221,13 @@ export class CorrelationComponent implements OnInit,OnChanges {
             clusters.push(this.allMetricsData[i].id)
             if(this.metricCounter==0)
             {
-              this.addMetricJson[0]['data']['metric'][this.allMetricsData[i].id]=true
+              this.addMetricJson[this.selectedServiceIndex]['data']['metric'][this.allMetricsData[i].id]=true
             }
           }
           
-          this.initialaddMetricData.serviceMetrics[0].metricIds=clusters;
+          this.initialaddMetricData.serviceMetrics[this.selectedServiceIndex].metricIds=clusters;
 
-          if(this.initialaddMetricData.serviceMetrics[0].metricIds.length > 0 && this.metricCounter == 0)
+          if(this.initialaddMetricData.serviceMetrics[this.selectedServiceIndex].metricIds.length > 0 && this.metricCounter == 0)
           {
             this.store.dispatch(CorrelationAction.metrictimeSeriesData({ postData:this.initialaddMetricData}));
             this.metricCounter++;
@@ -308,8 +318,26 @@ export class CorrelationComponent implements OnInit,OnChanges {
   onSubmitPostData(addlogdata){
     this.modalService.hide()
     addlogdata.riskAnalysisId=this.canaryId
+    
     if(this.addFlag=="log"){
-      this.store.dispatch(CorrelationAction.timeSeriesData({ postData:addlogdata}));
+      var addedDataDup1 = {
+        "riskAnalysisId":addlogdata.riskAnalysisId,
+        "serviceClusters":[]
+      }
+      for(let i=0;i<addlogdata.serviceClusters.length;i++)
+      {
+        if(addlogdata.serviceClusters[i].clusterIds.length>0)
+        {
+          let obj={
+            "serviceId":addlogdata.serviceClusters[i].serviceId,
+            "clusterIds":addlogdata.serviceClusters[i].clusterIds
+          }
+          addedDataDup1.serviceClusters.push(obj)
+        }
+        
+      }
+      
+      this.store.dispatch(CorrelationAction.timeSeriesData({ postData:addedDataDup1}));
     }
     else if(this.addFlag=="metric"){
       var addedDataDup = {
@@ -335,15 +363,17 @@ export class CorrelationComponent implements OnInit,OnChanges {
     
   }
   splitlogLinesFunc(){
+    var res = [];
+     res = this.clusterLogs.split("DOCUMENT ");
     
-    var res = this.clusterLogs.split("DOCUMENT ");
     var ClickedTimeStampTrimed = this.ClickedTimeStamp.substring(0,16)
     if(this.closebtn!==undefined){
       this.closebtn.nativeElement.click();
     }
     
     this.splittedLogLines=[];
-    setTimeout(()=>{
+    
+      
       for(let i=0;i<res.length;i++)
     {
       var resTrimed=res[i].substring(0,16)
@@ -356,7 +386,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     
     this.showPopUpForLogs=true;
     this.chartbtn.nativeElement.click();
-    },1)
+    
     
   }
 
