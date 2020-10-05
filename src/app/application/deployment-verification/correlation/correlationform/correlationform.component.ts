@@ -15,6 +15,7 @@ export class CorrelationformComponent implements OnInit {
   @Input() addLogsJson:any;
   @Input() flag:any;
   @Input() selectedServiceInitially:any;
+  @Input() selectedServiceIndex:any;
   @Output() onSubmitPostData = new EventEmitter<boolean>();
   @Output() onSubmitsaveData = new EventEmitter<boolean>();
   @Output() onSelectedServiceChange = new EventEmitter<boolean>();
@@ -27,6 +28,7 @@ export class CorrelationformComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+   // console.log(this.selectedServiceInitially)
     if(this.addLogsJson!=undefined )
     {
       this.serviceClusters=this.addLogsJson
@@ -61,12 +63,13 @@ export class CorrelationformComponent implements OnInit {
        this.selectedServiceClusterData=undefined
      }
      else{
-       this.selectedServiceClusterData=this.serviceClusters[0].data
+      
+       this.selectedServiceClusterData=this.serviceClusters[this.selectedServiceIndex].data
      }
     
      
     
-     this.selectedService = this.serviceInfo[0].serviceId
+     this.selectedService = this.serviceInfo[this.selectedServiceIndex].serviceId
      
   }
 
