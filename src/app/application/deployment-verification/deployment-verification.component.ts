@@ -108,6 +108,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   serviceIdAfterRerun: any;     //variable used to set service Id from child component log analysis after rerun
   manualTriggerLatestRun: number;
+  isRerunLogs : boolean = false;
 
   // App form end
 
@@ -433,6 +434,12 @@ export class DeploymentVerificationComponent implements OnInit {
           this.onClickTab('metric-analysis-tab');
         }
       }
+    }else{
+      if(this.selectedTab == 'log-analysis'){
+        this.onClickTab('log-analysis-tab');
+      }else if(this.selectedTab == 'metric-analysis'){
+        this.onClickTab('metric-analysis-tab');
+      }
     }
 
 
@@ -632,6 +639,12 @@ export class DeploymentVerificationComponent implements OnInit {
   onClickTab(event) {
     if (event === 'log-analysis-tab') {
       this.selectedTab = 'log-analysis';
+      setTimeout(() => {
+        if(this.isRerunLogs != undefined){
+          this.isRerunLogs = false;
+        }
+      }, 5000)
+      
     } else if (event === 'metric-analysis-tab') {
       this.selectedTab = 'metric-analysis';
     }
@@ -723,6 +736,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.serviceIdAfterRerun = event;
     this.selectedServiceId = event;
     const serviceObj = this.serviceListData.find(c => c.serviceId == event);
+    this.isRerunLogs = true;
     this.onClickService(serviceObj);
   }
 

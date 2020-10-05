@@ -21,6 +21,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   @Input() canaryId: any[];
   @Input() serviceId: any[];
+  @Input() isRerun : boolean;
 
   @Output() selectedServiceId = new EventEmitter<any>();
   @Output() enterdToLogLines = new EventEmitter<boolean>();
@@ -227,6 +228,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       },
       data: []
     };
+    console.log("this.isRerun");
+    console.log(this.isRerun);
     if (this.canaryId != undefined && this.serviceId != undefined) {
       this.getLogAnalysis()
     }
