@@ -9,7 +9,7 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'CRITICAL ERROR'">
                     <input  type="checkbox" ng-checked="expression"  (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Critical'][group.clusterId]:false"   ngModel>
                      
-                    <label class="custom-control-label" for="customCheck{{i}}" > {{group.description}}</label>
+                    <label class="custom-control-label" for="customCheck{{i}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
                 </div>
             </ng-container>
         </ng-container>
