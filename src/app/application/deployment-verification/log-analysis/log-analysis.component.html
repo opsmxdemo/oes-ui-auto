@@ -170,7 +170,7 @@
                   </div>
                 </div>
               </div>
-              <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase">
+              <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase && log.clusterTagInfo != null">
                 <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag" 
                   data-toggle="dropdown"
                   class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
