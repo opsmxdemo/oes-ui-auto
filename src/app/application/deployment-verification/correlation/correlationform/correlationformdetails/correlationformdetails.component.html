@@ -9,7 +9,7 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'CRITICAL ERROR'">
                     <input  type="checkbox" ng-checked="expression"  (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Critical'][group.clusterId]:false"   ngModel>
                      
-                    <label class="custom-control-label" for="customCheck{{i}}" > {{group.description}}</label>
+                    <label class="custom-control-label" for="customCheck{{i}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
                 </div>
             </ng-container>
         </ng-container>
@@ -22,7 +22,7 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'ERROR'">
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{j}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['ERROR'][group.clusterId]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{j}}" > {{group.description}}</label>
+                    <label class="custom-control-label" for="customCheck{{j}}"  data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
                 </div>
             </ng-container>
         </ng-container>
@@ -35,11 +35,11 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'WARN'">
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{k}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Warn'][group.clusterId]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{k}} " > {{group.description}}</label>
+                    <label class="custom-control-label" for="customCheck{{k}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
                 </div>
             </ng-container>
         </ng-container>
-        <!-- data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}" -->
+
     </div>
     <div class="col pb-3 padding10" *ngIf="flag=='metric'" >
         <ng-container ngModelGroup="metric">
