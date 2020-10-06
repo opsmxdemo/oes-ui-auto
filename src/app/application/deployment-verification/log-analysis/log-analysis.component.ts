@@ -110,6 +110,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   commentNotificationMessage = "";
   sensitivityChanged = false;
   tagCommentNotificationMessage = "";
+  logId :any = undefined;
   
 
   constructor(public store: Store<fromFeature.State>,
@@ -469,7 +470,19 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.dataSource["dataset"].push(newobjignoredClusters);
           }
         }
+        
+        if (resData.clusterLogs != null) {
+          //this.completeCluster = this.sanitizer.bypassSecurityTrustHtml(resData.clusterLogs);
+          this.completeCluster = resData.clusterLogs;
+          Object.keys(this.showFullLogLine).forEach(h => {
+            this.showFullLogLine[h] = false;
+          });
+          this.showFullLogLine[this.logId] = true;
+        }
+          
+
       }
+      
     );
   }
   
@@ -725,18 +738,9 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   showMoreCluster(log) {
     let clusterId = log.id;
     let version = log.version;
+    this.logId = log.id;
     this.store.dispatch(LogAnalysisAction.fetchClusterLogData({ canaryId: this.canaryId, serviceId: this.serviceId, clusterId: clusterId, version: version }));
-    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
-      (resData) => {
-        if (resData.clusterLogs != null) {
-          this.completeCluster = this.sanitizer.bypassSecurityTrustHtml(resData.clusterLogs);
-          Object.keys(this.showFullLogLine).forEach(h => {
-            this.showFullLogLine[h] = false;
-          });
-          this.showFullLogLine[log.id] = true;
-        }
-      }
-    );
+    
   }
 
   showLessCluster(log) {
