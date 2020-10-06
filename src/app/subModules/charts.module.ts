@@ -1,3 +1,4 @@
+import { StackedAreaChartComponent } from './../charts/stacked-area-chart/stacked-area-chart.component';
 import { NgModule } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
@@ -22,6 +23,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         HorizontalBarChartComponent,
         PieChartComponent,
         StacketHorizontalBarChartComponent,
+        StackedAreaChartComponent,
         LineChartComponent,
         BubbleChartComponent,
         TimeAnalysisChartComponent,
@@ -38,6 +40,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         HorizontalBarChartComponent, 
         PieChartComponent,
         StacketHorizontalBarChartComponent,
+        StackedAreaChartComponent,
         LineChartComponent,
         TimeAnalysisChartComponent,
         BubbleChartComponent,

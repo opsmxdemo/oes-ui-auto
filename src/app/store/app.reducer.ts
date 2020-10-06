@@ -5,6 +5,7 @@ import * as fromAudit from '../audit/store/audit.reducer';
 import * as fromPolicy from '../policy-management/store/policyManagenent.reducer';
 import * as fromCdDashboard from '../cd-dashboard/store/cd-dashboard.reducer';
 import * as fromAppDashboard from '../application/application-dashboard/store/dashboard.reducer';
+import * as fromTrendAnalysis from '../application/trend-analysis/store/trend-analysis.reducer';
 
 export interface AppState {
     auth: fromAuth.State;
@@ -13,6 +14,7 @@ export interface AppState {
     policy: fromPolicy.State;
     appDashboard: fromAppDashboard.State;
     cdDashboard: fromCdDashboard.State;
+    trendAnalysis: fromTrendAnalysis.State;
 }
 
 export const appReducers: ActionReducerMap<AppState> = {
@@ -22,4 +24,5 @@ export const appReducers: ActionReducerMap<AppState> = {
     policy: fromPolicy.PolicyReducer,
     appDashboard: fromAppDashboard.DashboardReducer,
     cdDashboard: fromCdDashboard.CdDashboardReducer,
+    trendAnalysis: fromTrendAnalysis.TrendAnalysisReducer,
 };
