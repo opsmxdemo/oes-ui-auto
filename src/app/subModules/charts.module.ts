@@ -15,6 +15,8 @@ import { FusionChartsModule } from 'angular-fusioncharts';
 import * as FusionCharts from "fusioncharts";
 import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+import { SharedModule } from './shared.module';
+
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
 @NgModule({
@@ -33,7 +35,10 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         CommonModule,
         NgxChartsModule,
         NgxGraphModule,
-        FusionChartsModule
+        FusionChartsModule,
+        SharedModule
+
+        
     ],
     exports: [ 
         AreaChartComponent, 

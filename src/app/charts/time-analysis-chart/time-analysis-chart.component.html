@@ -1,8 +1,11 @@
 <div *ngIf = "ChartShow">
     <div class="row">
-<div class="col-sm-11 alignHeading"><span>{{serviceName}}: </span><span [ngClass]= "{'text-danger':topic == 'CRITICAL ERROR', 'text-error':topic=='ERROR','text-warning':topic=='WARN'}">{{topic}}</span>: {{description}}</div>
+<div class="col-sm-11 alignHeading"><span>{{serviceName}}: </span><span [ngClass]= "{'text-danger':topic == 'CRITICAL ERROR', 'text-error':topic=='ERROR','text-warning':topic=='WARN'}">{{topic}}</span>: <span data-toggle="tooltip" data-placement="top" title="{{description}}">{{description | ellipsis:200}}</span></div>
 <div class="col-sm-1">
-<button class="close " mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+
+<button type="button" class="close pull-right" aria-label="Close" (click)="closeTimeAnalysis()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 </div>
 <fusioncharts

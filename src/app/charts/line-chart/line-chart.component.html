@@ -1,6 +1,9 @@
 <div *ngIf = "ChartShow">
 <div class="col-sm-1" class="containerClose" *ngIf = "Correlationflag">
-  <button class="close " mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+ 
+  <button type="button" class="close pull-right" aria-label="Close" (click)="closeTimeAnalysis()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <ngx-charts-line-chart
   [view]="view"

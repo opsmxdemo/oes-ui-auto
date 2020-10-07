@@ -7,7 +7,7 @@ import { empty } from 'rxjs';
   styleUrls: ['./time-analysis-chart.component.less']
 })
 export class TimeAnalysisChartComponent implements OnInit {
-  @Output() openpopUp = new EventEmitter<boolean>();
+  @Output() openpopUp = new EventEmitter();
   @Output() getClickedTimeStamp = new EventEmitter<boolean>(); 
   @Output() getserviceId = new EventEmitter<boolean>();
   @Output() getClusterId = new EventEmitter();
@@ -38,16 +38,7 @@ export class TimeAnalysisChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // for extracting heading of graph
-   for(let i=0;i<this.allUnexpectedEventSummary.length;i++)
-   { 
-      if(this.allUnexpectedEventSummary[i].clusterId==this.clusterId)
-      {
-        this.selectedClusterHeading=this.allUnexpectedEventSummary[i].description;
-        this.selectedClustertopic=this.allUnexpectedEventSummary[i].topic;
-      }
-      
-    }
+    
    
     
     
@@ -57,47 +48,45 @@ export class TimeAnalysisChartComponent implements OnInit {
 
     for(let i=0;i<this.dataSource.length;i++)
     {
-      this.dataSourceInHourMins.push({"hourminTime":this.changeTimeinHourMins(this.dataSource[i]),"dataSourceTime":this.dataSource[i]})
+      this.dataSourceInHourMins.push({"hourminTime":this.changeTimeinHourMinsFromString(this.dataSource[i].time),"dataSourceTime":this.dataSource[i].time,"count":this.dataSource[i].count})
     }
 
-    //for making object with time stamp and its repetition count
-    [...new Set(this.dataSourceInHourMins)].forEach(item => this.counts.push({
-      key: item.hourminTime,
-      tooltextTime:item.dataSourceTime,
-      // Get the count of items of the current type
-      count: this.dataSourceInHourMins.filter(i => i.hourminTime == item.hourminTime).length
-    }));
+    // //for making object with time stamp and its repetition count
+    // [...new Set(this.dataSourceInHourMins)].forEach(item => this.counts.push({
+    //   key: item.hourminTime,
+    //   tooltextTime:item.dataSourceTime,
+    //   // Get the count of items of the current type
+    //   count: this.dataSourceInHourMins.filter(i => i.hourminTime == item.hourminTime).length
+    // }));
 
-    this.xaxisArray = this.generateTimeIntervalsForChartData(new Date(this.startTime).getHours(),new Date(this.startTime).getMinutes(),new Date(this.endTime).getHours(),new Date(this.endTime).getMinutes())
+    // this.xaxisArray = this.generateTimeIntervalsForChartData(new Date(this.startTime).getHours(),new Date(this.startTime).getMinutes(),new Date(this.endTime).getHours(),new Date(this.endTime).getMinutes())
     
-    // for creating final data for rendering in chart
-    for(let i=0;i<this.xaxisArray.length;i++)
-    {
-      for(let j =0;j<this.counts.length;j++)
+    // // for creating final data for rendering in chart
+    
+      for(let i =0;i<this.dataSourceInHourMins.length;i++)
       {
-        var count:any;
-        var dateTime:any;
-        var epochtime:any;
-        if(this.xaxisArray[i]==this.counts[j].key){
-          count=this.counts[j].count
-          dateTime = this.counts[j].tooltextTime
-          break;
+        var countRep:any;
+        if(this.dataSourceInHourMins[i].count==0)
+        {
+          countRep=null;
         }
         else{
-          count=null
-          dateTime=""
-       }
+          countRep=this.dataSourceInHourMins[i].count
+        }
+
+        var myobj={
+          label:this.dataSourceInHourMins[i].hourminTime,
+          value:countRep,
+          tooltext:new Date(this.dataSourceInHourMins[i].dataSourceTime).toLocaleString()+'<br><br>'+"Repetition: &nbsp;"+countRep,
+          epochTime:this.dataSourceInHourMins[i].dataSourceTime
+          
+        }
+        this.chartData.push(myobj)
+       
         
       }
-      var myobj={
-        label:this.xaxisArray[i],
-        value:count,
-        tooltext:new Date(dateTime).toLocaleString()+'<br><br>'+"Repetition: &nbsp;"+count,
-        epochTime:dateTime
-        
-      }
-      this.chartData.push(myobj)
-    }
+      
+    
     
     // creating chart
     this.finalDataSource = {
@@ -115,9 +104,24 @@ export class TimeAnalysisChartComponent implements OnInit {
 
   // function for changing time in hour min format
   changeTimeinHourMins(time:any){
+    
     if(new Date(time).getMinutes()>9)
     {
-    let timeInHourMins = new Date(time).getHours()+":"+new Date(time).getMinutes();
+    let timeInHourMins = new Date(time).getHours()+":"+new Date(time).getMinutes();//8:00//8:00,8:01
+    return timeInHourMins;
+    }
+    else{
+      let timeInHourMins = new Date(time).getHours()+":0"+new Date(time).getMinutes();
+    return timeInHourMins;
+    }
+    
+  }
+
+  changeTimeinHourMinsFromString(time:any){
+    time=time+""+"Z"
+    if(new Date(time).getMinutes()>9)
+    {
+    let timeInHourMins = new Date(time).getHours()+":"+new Date(time).getMinutes();//8:00//8:00,8:01
     return timeInHourMins;
     }
     else{
@@ -135,10 +139,10 @@ export class TimeAnalysisChartComponent implements OnInit {
     var endTime = endTImeHour*60+endTImeMin; // start time
     var count=0
     
-    // if(startTime>endTime)
-    // {
-    //   endTime = endTime+1440;
-    // }
+    if(startTime>endTime)
+    {
+      endTime = endTime+1440;
+    }
     for (var i=startTime;i<endTime+1; i++) {
       var hh = Math.floor(i/60); // getting hours of day in 0-24 format
       var mm = (i%60); // getting minutes of the hour in 0-55 format
@@ -155,8 +159,8 @@ export class TimeAnalysisChartComponent implements OnInit {
   
   plotRollOver($event) {
     var ClickedTimeStamp = $event.eventObj.sender.args.dataSource.data[$event.eventObj.data.dataIndex].epochTime
-    this.openpopUp.emit(this.clusterId);
     this.getClickedTimeStamp.emit(ClickedTimeStamp);
+    this.openpopUp.emit({"clusterId":this.clusterId,"serviceId":this.serviceId,"ClickedTimeStamp":ClickedTimeStamp});
     this.getserviceId.emit(this.serviceId);
   }
 

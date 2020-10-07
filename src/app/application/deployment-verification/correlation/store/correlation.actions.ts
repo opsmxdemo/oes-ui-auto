@@ -15,7 +15,7 @@ export const loadLogLines = createAction('[Correlation] LoadLogLines', props<{lo
 export const timeSeriesData = createAction('[Correlation] TimeSeriesData', props<{postData:any}>())
 export const loadTimeseriesData = createAction('[LogAnalysis] LoadTimeseriesData', props<{timeSeriesData:any}>());
 
-export const clusterData = createAction('[Correlation] ClusterData', props<{canaryId: any,serviceId: any,clusterId:any}>());
+export const clusterData = createAction('[Correlation] ClusterData', props<{canaryId: any,serviceId: any,clusterId:any,ClickedTimeStamp:any;}>());
 export const loadCluterData = createAction('[Correlation] loadCluterData', props<{clusterData:any}>());
 export const clusterDataLoaded = createAction('[Correlation] ClusterDataLoaded');
 

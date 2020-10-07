@@ -1,53 +1,78 @@
 <form  #selectedLogsForm="ngForm" >
     <div class="col pb-3" *ngIf="flag=='log'">
 
-        <ng-container ngModelGroup="Critical" >
+        
         <div class="text-divider">
             <h4>Critical</h4>
         </div>
-            <ng-container *ngFor="let group of data; let i=index">
+        <div class="custom-control custom-checkbox" >
+            <input  type="checkbox" (change)="onselectAllCritical($event)"  class="custom-control-input" id="customCheckCritical" name="group" [(ngModel)]="modelCritical"    >
+            <label class="custom-control-label" for="customCheckCritical"  > Select All</label>
+                
+        </div>
+        <ng-container ngModelGroup="Critical" >
+                <ng-container *ngFor="let group of data; let i=index">
+                   
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'CRITICAL ERROR'">
-                    <input  type="checkbox" ng-checked="expression"  (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Critical'][group.clusterId]:false"   ngModel>
+                    <input  type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Critical'][group.clusterId]:false"   ngModel>
                      
-                    <label class="custom-control-label" for="customCheck{{i}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
+                    <label class="custom-control-label" for="customCheck{{i}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>
 
-        <ng-container ngModelGroup="ERROR">
+        
             <div class="text-divider">
                 <h4>Error</h4>
             </div>
+            <div class="custom-control custom-checkbox" >
+                <input  type="checkbox" (change)="onselectAllError($event)"  class="custom-control-input" id="customCheckError" name="group"   [(ngModel)]="modelError" >
+                <label class="custom-control-label" for="customCheckError"  > Select All</label>
+                    
+            </div>
+            <ng-container ngModelGroup="ERROR">
             <ng-container *ngFor="let group of data; let j=index">
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'ERROR'">
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{j}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['ERROR'][group.clusterId]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{j}}"  data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
+                    <label class="custom-control-label red-tooltip" for="customCheck{{j}}"   data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>
 
-        <ng-container ngModelGroup="Warn">
+        
             <div class="text-divider">
                 <h4>Warning</h4>
             </div>
+            <div class="custom-control custom-checkbox" >
+                <input  type="checkbox" (change)="onselectAllWarn($event)"  class="custom-control-input" id="customCheckWarn" name="group"  [(ngModel)]="modelWarn"  >
+                <label class="custom-control-label" for="customCheckWarn"  > Select All</label>
+                    
+            </div>
+            <ng-container ngModelGroup="Warn">
             <ng-container *ngFor="let group of data; let k=index">
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'WARN'">
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{k}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Warn'][group.clusterId]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{k}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.description}}</label>
+                    <label class="custom-control-label" for="customCheck{{k}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>
 
     </div>
     <div class="col pb-3 padding10" *ngIf="flag=='metric'" >
-        <ng-container ngModelGroup="metric">
+        
+            <div class="custom-control custom-checkbox" >
+                <input  type="checkbox" (change)="onselectAllMetric($event)"  class="custom-control-input" id="customCheckMetric" name="group"    >
+                <label class="custom-control-label" for="customCheckMetric"  > Select All</label>
+                    
+            </div>
+            <ng-container ngModelGroup="metric">
            <ng-container *ngFor="let group of data; let i=index">
                 <div class="custom-control custom-checkbox" >
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.id}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['metric'][group.id]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{i}}"> {{group.name | ellipsis:50}}</label>
+                    <label class="custom-control-label" for="customCheck{{i}}"> {{group.name | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>

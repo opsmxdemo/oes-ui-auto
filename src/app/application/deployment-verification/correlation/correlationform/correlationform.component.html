@@ -3,7 +3,7 @@
                 
 
     <div class="row no-gutters">
-      <div class="col" style="max-width: 30%;">
+      <div class="col" style="max-width: 20%;">
         <ul class="service_list list-unstyled">
           <li class="serviceHeading">Services</li>
           <li *ngFor="let serviceArray of serviceInfo; let i = index" (click)="selectService(serviceArray)" ><a [ngClass]="{'selected': serviceArray.serviceId== selectedService}">{{serviceArray.serviceName}}</a></li>

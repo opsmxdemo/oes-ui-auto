@@ -34,8 +34,9 @@
   <div #chartClickRef *ngFor="let log of dummydataForTimeAnalysisComponent; let i = index">
       <!-- <fusioncharts width="100%" height="200" type="column2d" dataFormat="JSON" [dataSource]="log"
       (dataplotClick)="plotRollOver($event)" ></fusioncharts> -->
-      <div class="divBorder" *ngFor="let seriesArray of log.clusterData; let i = index">
-      <app-time-analysis-chart [config]="config" [allUnexpectedEventSummary]="unexpectedClusters" [serviceName] ="log.serviceName"  [serviceId]="log.serviceId" [clusterId] = "seriesArray.clusterId"  [dataSource]="seriesArray.timestamps" [topic]="seriesArray.topic" [description]="seriesArray.description" [startTime]="log.startTime" [endTime]="log.endTime" (getserviceId)=getserviceId($event) (openpopUp)="getOpen($event)" (getClickedTimeStamp)="getClickedTimeStamp($event)" (getClusterId)="deleteLogChart($event)"></app-time-analysis-chart>
+      <div class="divBorder" *ngFor="let seriesArray of log.clusterData | sortBy: 'desc':'scoreReduction'; let i = index " >
+        <!-- <div>{{seriesArray.scoreReduction}}</div> -->
+      <app-time-analysis-chart [config]="config" [allUnexpectedEventSummary]="unexpectedClusters" [serviceName] ="log.serviceName"  [serviceId]="log.serviceId" [clusterId] = "seriesArray.clusterId"  [dataSource]="seriesArray.data" [topic]="seriesArray.topic" [description]="seriesArray.clusterDescription" [startTime]="log.startTime" [endTime]="log.endTime" (getserviceId)=getserviceId($event) (openpopUp)="getOpen($event)" (getClickedTimeStamp)="getClickedTimeStamp($event)" (getClusterId)="deleteLogChart($event)"></app-time-analysis-chart>
     </div>
   </div>
   <!-- popup when clicked on bar graph -->
