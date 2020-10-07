@@ -49,7 +49,6 @@ export class TrendAnalysisEffect {
                 return this.http.get(this.environment.config.endPointUrl + 'dashboardservice/v1/users/' + authState.user + '/applications/latest-canary').pipe(
                     map(resdata => {
 
-                        console.log("Get Latest Run from effects!", resdata);
                         return TrendAnalysis.fetchLatestRun({ canaryId: resdata['canaryId'] });
                     }),
                     catchError(errorRes => {

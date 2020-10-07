@@ -1,6 +1,6 @@
 import { element } from 'protractor';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
-import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation, ElementRef, Input } from '@angular/core';
 // platform-service-ui change
 import { ActivatedRoute } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
@@ -28,20 +28,58 @@ export interface User {
   encapsulation: ViewEncapsulation.None,
 })
 export class TrendAnalysisComponent implements OnInit {
-
+  // @Input('width') width: ElementRef;
+  //Width of the graph
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   @ViewChild('setChartSize') setChartSize: ElementRef;
   @ViewChild('subChartSize') subChartSize: ElementRef;
 
 
+  // Chart property for Risk Score
+
+  riskChartProperty = {                                               // It is use to stote all line chart related properties.
+    showLegend: true,
+    legendTitle: '',
+    animations: true,
+    showXAxis: true,
+    showYAxis: true,
+    showYAxisLabel: true,
+    showXAxisLabel: true,
+    xAxisLabel: 'Time',
+    yAxisLabel: 'Score',
+    timeline: true,
+    colorScheme: {
+      domain: ['#06a588', '#99cc33', '#ffc0cb', '#b69f7f', '#6600cc', '#98b1e4', '#e5bfab', '#7f03c0', '#97c4f5', '#841607', '#990066', '#91fdc3', '#66cc00', '#696969', '#bada55', '#7fe5f0', '#420420', '#133337', '#f73471', '#576675', '#c39797', '#800000', '#800080', '#ff7f50', '#468499', '#008000', '#dafff9', '#7df0e0', '#4b5f81', '#cc9933', '#a6127e', '#dae0ff', '#91eec1', '#77a45c', '#e3e129', '#cacbd3', '#cc6699']
+    }
+  }
+
+  issuesChartProperty = {                                               // It is use to stote all line chart related properties.
+    showLegend: true,
+    legendTitle: '',
+    animations: true,
+    showXAxis: true,
+    showYAxis: true,
+    showYAxisLabel: true,
+    showXAxisLabel: true,
+    xAxisLabel: 'Time',
+    yAxisLabel: 'Issues',
+    timeline: true,
+    colorScheme: {
+      domain: ['#a32133', '#e0392e', '#f3af70', '#7aa3e5', '#a8385d', '#aae3f5']
+    }
+    
+  }
+
   // Below options to show the Stacked Vertical Bar Chart
-  showXAxis: boolean = true;
-  showYAxis: boolean = true;
-  gradient: boolean = false;
-  showLegend: boolean = true;
+  // showXAxis: boolean = true;
+  // showYAxis: boolean = true;
+  // gradient: boolean = false;
+  // showLegend: boolean = true;
+  // legendTitle: string = '';
+  // legendPosition: "below";
   // line, area
-  autoScale:boolean = true;
-  trimXAxisTicks: boolean =false;
+  // autoScale:boolean = true;
+  // trimXAxisTicks: boolean =false;
   // showXAxisLabel: boolean = true;
   // xAxisLabel: string = 'Country';
   // showYAxisLabel: boolean = true;
@@ -107,7 +145,6 @@ export class TrendAnalysisComponent implements OnInit {
   // ngxGraphChartData: any[];
 
   
-  
   // Diemension for the chartsize in the trendAnalysis
   chartSize: any[];                                                   // It is use to store graph width on change of layout widyh.
   // chartSize: number;                                                   // It is use to store graph width on change of layout.
@@ -123,14 +160,10 @@ export class TrendAnalysisComponent implements OnInit {
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = true;
   riskxAxisLabel: string = 'Time';
-  yAxisLabel: string = 'Score';
+  riskyAxisLabel: string = 'Score';
   issuesxAxisLabel: string = 'Time';
+  issuesyAxisLabel: string = 'Issues'
   timeline: boolean = true;
-  // createIssuesLogChartData: any = [];
-  // storeIssuesSeries: any = [];
-  // issuesLogsChartCounter: number = 0;
-  // lineChartCounter: number = 0;
-
 
   // Creating variables for the Risk Score chart
   riskChartData: any = [];							          // used to store value from Risk score API
@@ -147,12 +180,6 @@ export class TrendAnalysisComponent implements OnInit {
   issuesLogsDisplay: boolean;                               	// used to check if the data is present in the risk score or not
 
   
-  colorScheme = {
-    domain: ['#a32133', '#e0392e', '#f3af70', '#7aa3e5', '#a8385d', '#aae3f5']
-  };
-  IssuesLogsScheme = {
-    domain: ['#06a588', '#99cc33', '#ffc0cb', '#cacbd3', '#e3e129', '#b69f7f', '#6600cc', '#98b1e4', '#e5bfab', '#7f03c0', '#97c4f5', '#841607', '#990066', '#91fdc3', '#66cc00', '#696969', '#bada55', '#7fe5f0', '#420420', '#133337', '#f73471', '#576675', '#c39797','#800000', '#800080', '#ff7f50', '#468499', '#008000', '#dafff9', '#7df0e0', '#4b5f81', '#cc9933', '#a6127e', '#dae0ff', '#91eec1', '#77a45c', '#cc6699']
-  }
   selectedApplicationId: number;
 
   constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromApp.AppState>,
@@ -175,6 +202,13 @@ export class TrendAnalysisComponent implements OnInit {
 
   ngOnInit(): void {
 
+    setTimeout(() => {
+      this.view = [this.setChartSize.nativeElement.offsetWidth-200, 300]
+      // this.chartSize = [this.subChartSize.nativeElement.offsetWidth - 300, 300]
+      // console.log("on it");
+      
+    }, 500)
+
     // hide tooltip 
     $("[data-toggle='tooltip']").tooltip('hide');
     this.getAllApplications();
@@ -189,7 +223,7 @@ export class TrendAnalysisComponent implements OnInit {
       this.store.select('auth').subscribe(
         (response) => {
           if (response.authenticated) {
-            console.log("authenticated");
+            // console.log("authenticated");
             this.getLatestRun();
           }
         }
@@ -227,7 +261,7 @@ export class TrendAnalysisComponent implements OnInit {
           this.trendAnalysisServices = resData.serviceList;
           // this.trendAnalysisServices.services = this.trendAnalysisServices.services != null ? this.trendAnalysisServices.services : [];
           if (this.trendAnalysisServices.services.length > 0){
-            console.log("Get Services: ", this.trendAnalysisServices.services);
+            // console.log("Get Services: ", this.trendAnalysisServices.services);
             this.serviceListData = this.trendAnalysisServices.services;
             this.serviceListLength = this.trendAnalysisServices.services.length;
             this.renderPage();
@@ -250,7 +284,7 @@ export class TrendAnalysisComponent implements OnInit {
             if (this.trendAnalysisServices.services.length > 0 ) {
               this.selectedServiceId = this.trendAnalysisServices.services[0].serviceId;
               this.serviceNameInfo = this.trendAnalysisServices.services[0];
-              console.log("Else Parameter: ", this.selectedServiceId);
+              // console.log("Selected Service ID: ", this.selectedServiceId);
               this.onClickService(this.trendAnalysisServices.services[0]);
             }
           }
@@ -259,9 +293,7 @@ export class TrendAnalysisComponent implements OnInit {
         if (resData.applicationAndServiceList != null) {
           this.riskChartData = resData.applicationAndServiceList;
           this.createRiskChartData = [];
-          this.riskChartsCounter = 0;
-
-          console.log("riskChartData1: ", this.riskChartData);
+          this.riskChartsCounter = 0; 
 
           this.riskChartData.forEach(eachItem => {
             this.storeRiskSeriesValue = [];
@@ -276,7 +308,8 @@ export class TrendAnalysisComponent implements OnInit {
               this.riskChartsCounter++;
             }
           })
-          console.log("riskChartData2: ", this.createRiskChartData);
+          this.createRiskChartData[0].name = this.createRiskChartData[0].name + " - Application"
+          // console.log("riskChartData2: ", this.createRiskChartData);
           // this.riskxAxisLabel = "Time: " + new Date(this.getStartTime) + " - " + new Date(this.getEndTime);
           this.riskScoreDisplay = this.createRiskChartData.length === 0 ? false : true;          
         }
@@ -286,7 +319,7 @@ export class TrendAnalysisComponent implements OnInit {
           this.createIssuesLogChartData = [];
           this.issuesLogsChartCounter = 0;
 
-          console.log("issuesLogChartData1: ", this.issuesLogChartData);
+          // console.log("issuesLogChartData1: ", this.issuesLogChartData);
 
           this.issuesLogChartData.forEach(eachItem => {
             this.storeIssuesSeries = [];
@@ -302,7 +335,7 @@ export class TrendAnalysisComponent implements OnInit {
             }
           })
 
-          console.log("issuesLogChartData2: ", this.createIssuesLogChartData);
+          // console.log("issuesLogChartData2: ", this.createIssuesLogChartData);
           // this.issuesxAxisLabel = "Time: " + new Date(this.getStartTime) + " - " + new Date(this.getEndTime);
           this.issuesLogsDisplay = this.createIssuesLogChartData.length === 0 ? false : true;
 
@@ -327,7 +360,7 @@ export class TrendAnalysisComponent implements OnInit {
             }
           });
 
-          console.log("latest application name: ", this.selectedApplicationName);
+          // console.log("latest application name: ", this.selectedApplicationName);
           if (this.executeOnce) {
             this.onSelectionChangeApplication(this.selectedApplicationName);
             this.executeOnce = false;
@@ -341,30 +374,36 @@ export class TrendAnalysisComponent implements OnInit {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
-  // @HostListener('window:click', ['$event'])
-  // handleScroll() {
-  // }
+  @HostListener('mouseover')
+  setWidth() {
+    // console.log("mouseEnter listener");
+    
+    // setTimeout(() => {
+      this.view = [this.setChartSize.nativeElement.offsetWidth-200, 300]
+      // this.chartSize = [this.subChartSize.nativeElement.offsetWidth - 300, 300]
+    // }, 500)
+  }
 
   onSelectionChangeApplication(event) {
     this.canaries = [];
     this.selectedApplicationName = event;
-    console.log("Selected Event: ", event);
+    // console.log("Selected Event: ", event);
     
     //Return the Object from the Application List and store in d
     const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-    console.log("selectedApplicationName ===================== ", d);
+    // console.log("selectedApplicationName ===================== ", d);
     
     if (d['canaryIdList'].length === 0) {
       this.canaries = [];
       this.control.setValue('');
       this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
-      console.log("error finding canary");
+      // console.log("error finding canary");
 
     } else {
       this.canaries = d['canaryIdList'].toString().split(",");
       this.canaries.sort();      
       this.canaries = [...new Set(this.canaries)];
-      console.log("Canaries: ", this.canaries);
+      // console.log("Canaries: ", this.canaries);
       this.filteredCanaries = this.control.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
@@ -386,9 +425,9 @@ export class TrendAnalysisComponent implements OnInit {
 
       //Calculating the current time and previous 90 days and dispatching to the backend to get the Application and Services list
       this.getEndTime = Math.round((new Date()).getTime());
-      console.log("get Current Time: ", this.getEndTime);
+      // console.log("get Current Time: ", this.getEndTime);
       this.getStartTime = this.getEndTime - 7889229000;       // Epoch time 30.44 days * 3 times = 3 months
-      console.log("get Past Time: ", this.getStartTime);
+      // console.log("get Past Time: ", this.getStartTime);
       
       // call the Application and Services List
       this.store.dispatch(TrendAnalysis.loadApplicationData({ applicationId: parseInt(d.applicationId), startTime: this.getStartTime, endTime: this.getEndTime }));
@@ -401,7 +440,7 @@ export class TrendAnalysisComponent implements OnInit {
   }
 
   getServiceTrendForLogs(appId, startTime, endTime, serviceId){
-    console.log("serviceList in getServiceTrendForLogs function:", this.trendAnalysisServices);
+    // console.log("serviceList in getServiceTrendForLogs function:", this.trendAnalysisServices);
     this.store.dispatch(TrendAnalysis.loadServiceTrendLogs({ applicationId: appId, startTime: startTime, endTime: endTime, serviceId: serviceId }));
   }
 
@@ -481,7 +520,7 @@ export class TrendAnalysisComponent implements OnInit {
 
   //on click of service
   onClickService(item: any) {
-    console.log("on Click Service: ", item);
+    // console.log("on Click Service: ", item);
 
     this.defaultServiceId = true;
     this.selectedServiceId = item.serviceId;
@@ -505,7 +544,7 @@ export class TrendAnalysisComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.view = [this.setChartSize.nativeElement.offsetWidth-300, 300]
+      this.view = [this.setChartSize.nativeElement.offsetWidth-200, 300]
       // this.chartSize = [this.subChartSize.nativeElement.offsetWidth - 300, 300]
     }, 500)
   }

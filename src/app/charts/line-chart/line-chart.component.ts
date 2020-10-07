@@ -7,18 +7,16 @@ import { ChartOptions } from 'src/app/models/charts/chartOptionalParameter.model
   styleUrls: ['./line-chart.component.less']
 })
 export class LineChartComponent implements OnInit {
-  @Output() getMetricId = new EventEmitter();
   @Input() dataSource: any[];
   @Input() view: any[];
   @Input() chartProperty:ChartOptions;
   @Input() Correlationflag:boolean;
   @Input() dataSourceCorreleation:any;
-  @Input() serviceId:any;
-  @Input() metricIndex:any;
 
   finalDataJson:any=[]
   //options
   showLegend: boolean;
+  legendTitle: string;
   animations: boolean;
   showXAxis: boolean;
   showYAxis: boolean;
@@ -35,8 +33,9 @@ export class LineChartComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : true;
+    this.legendTitle = this.chartProperty.legendTitle !== undefined ? this.chartProperty.legendTitle : '';
     this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
     this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
     this.showXAxis = this.chartProperty.showXAxis !== undefined ? this.chartProperty.showXAxis : true;
@@ -53,6 +52,7 @@ export class LineChartComponent implements OnInit {
     // for correlation related metric graph
     
     if(this.Correlationflag)
+    {
     var obj = {
       name:this.dataSourceCorreleation.metricName,
       series:[]
@@ -69,8 +69,8 @@ export class LineChartComponent implements OnInit {
     this.dataSource = this.finalDataJson
   
   }
+}
   closeTimeAnalysis(){
-    this.getMetricId.emit({"clusterId":this.metricIndex,"serviceId":this.serviceId});
     this.ChartShow=false;
   }
   
