@@ -22,7 +22,7 @@ import * as FusionCharts from "fusioncharts";
 import * as charts from "fusioncharts/fusioncharts.charts";
 import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 import { NgpSortModule } from "ngp-sort-pipe";
-import { EllipsisPipe } from '../../pipes/keys.pipe';
+
 import { ChangetextcolorPipe } from '../../pipes/keys.pipe';
 import { ChangeTImestamptotimePipe } from '../../pipes/keys.pipe';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -43,7 +43,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         LogAnalysisComponent,
         ReplaceLineBreaks,
         ChildTableComponent,
-        EllipsisPipe,
+        
         ChangetextcolorPipe,
         ChangeTImestamptotimePipe,
         CorrelationComponent,

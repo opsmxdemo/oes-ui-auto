@@ -285,8 +285,8 @@ export class CorrelationComponent implements OnInit,OnChanges {
   ClosePopUp(){
     this.showPopUpForLogs=false;
   }
-  getOpen(clickedClusterId){
-    this.store.dispatch(CorrelationAction.clusterData({ canaryId: this.canaryId, serviceId: this.serviceId, clusterId:clickedClusterId}));
+  getOpen(clickedClusterData){
+    this.store.dispatch(CorrelationAction.clusterData({ canaryId: this.canaryId, serviceId: clickedClusterData.serviceId, clusterId:clickedClusterData.clusterId,ClickedTimeStamp:clickedClusterData.ClickedTimeStamp}));
     
   }
   // for giving the time of particular bar which is clicked. 
@@ -443,6 +443,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   @HostListener('window:mousemove', ['$event'])
   @HostListener('window:click', ['$event'])
     handleScroll(){
+      
       setTimeout(() =>{
         this.linechartSize = [this.subChartSize.nativeElement.offsetWidth,300]
       },500)

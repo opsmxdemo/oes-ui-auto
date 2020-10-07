@@ -20,15 +20,7 @@ const handleError = (errorRes: any) => {
         return of(CorrelationActions.errorOccured({ errorMessage }));
     }
     switch (errorRes.error.message) {
-        case 'Authentication Error':
-            errorMessage = 'Invalid login credentials';
-            break;
-        case 'Email Exist':
-            errorMessage = 'This email exist already';
-            break;
-        default:
-            errorMessage = 'Error Occurred';
-            break;
+        
     }
     return of(CorrelationActions.errorOccured({ errorMessage }));
 }
@@ -80,7 +72,7 @@ clusterData = createEffect(() =>
 this.actions$.pipe(
     ofType(CorrelationActions.clusterData),
     switchMap((action) => {                                       
-        return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId).pipe(                  
+        return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId+"?time='"+action.ClickedTimeStamp+"'").pipe(                  
             map(resdata => {
                return CorrelationActions.loadCluterData({clusterData:resdata});
             }),

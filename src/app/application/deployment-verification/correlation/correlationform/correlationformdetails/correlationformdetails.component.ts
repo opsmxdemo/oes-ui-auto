@@ -21,14 +21,104 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   }
 
   ngOnInit(): void {
-    
+    console.log(this.savedCheckedData)
   }
   onCheckBoxClicked(){
     this.addLogData.emit(this.dynamicForm.value);
-   
+  
     
   }
-  
+  onselectAllCritical(event){
+    var CheckedValue = event.target.checked
+    var criticalKeys = Object.keys(this.savedCheckedData.Critical)
+    if(CheckedValue==true)
+    {
+      
+      
+      for(var i = 0;i<criticalKeys.length;i++)
+      {
+        this.savedCheckedData['Critical'][criticalKeys[i]]=true;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+      
+    }
+    else{
+      for(var i = 0;i<criticalKeys.length;i++)
+      {
+        this.savedCheckedData['Critical'][criticalKeys[i]]=false;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+    }
+  }
+
+  onselectAllError(event){
+    var CheckedValue = event.target.checked
+    var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
+    if(CheckedValue==true)
+    {
+      
+      
+      for(var i = 0;i<ErrorKeys.length;i++)
+      {
+        this.savedCheckedData['ERROR'][ErrorKeys[i]]=true;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+      
+    }
+    else{
+      for(var i = 0;i<ErrorKeys.length;i++)
+      {
+        this.savedCheckedData['ERROR'][ErrorKeys[i]]=false;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+    }
+  }
+
+  onselectAllWarn(event){
+    var CheckedValue = event.target.checked
+    var WarnKeys = Object.keys(this.savedCheckedData.Warn)
+    if(CheckedValue==true)
+    {
+      
+      
+      for(var i = 0;i<WarnKeys.length;i++)
+      {
+        this.savedCheckedData['Warn'][WarnKeys[i]]=true;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+      
+    }
+    else{
+      for(var i = 0;i<WarnKeys.length;i++)
+      {
+        this.savedCheckedData['Warn'][WarnKeys[i]]=false;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+    }
+  }
+
+  onselectAllMetric(event){
+    var CheckedValue = event.target.checked
+    var metricKeys = Object.keys(this.savedCheckedData.metric)
+    if(CheckedValue==true)
+    {
+      
+      
+      for(var i = 0;i<metricKeys.length;i++)
+      {
+        this.savedCheckedData['metric'][metricKeys[i]]=true;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+      
+    }
+    else{
+      for(var i = 0;i<metricKeys.length;i++)
+      {
+        this.savedCheckedData['metric'][metricKeys[i]]=false;
+      }
+      this.addLogData.emit(this.savedCheckedData);
+    }
+  }
   
 
 }
