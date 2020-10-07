@@ -72,7 +72,7 @@ clusterData = createEffect(() =>
 this.actions$.pipe(
     ofType(CorrelationActions.clusterData),
     switchMap((action) => {                                       
-        return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId+"?time='"+action.ClickedTimeStamp+"'").pipe(                  
+        return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId+"?time="+action.ClickedTimeStamp).pipe(                  
             map(resdata => {
                return CorrelationActions.loadCluterData({clusterData:resdata});
             }),

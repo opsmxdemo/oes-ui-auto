@@ -15,21 +15,31 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   @Input() savedCheckedData:any;
   @Input() flag:any;
   expression:any=true;
+  modelCritical:boolean=false;
+  modelError:boolean=false;
+  modelWarn:boolean=false;
 
   constructor() { }
   ngOnChanges(changes: SimpleChanges): void {
+    this.modelCritical=false;
+    this.modelError=false;
+    this.modelWarn=false;
   }
 
+
   ngOnInit(): void {
-    console.log(this.savedCheckedData)
+    
   }
   onCheckBoxClicked(){
     this.addLogData.emit(this.dynamicForm.value);
+    console.log(this.savedCheckedData)
+    console.log(this.dynamicForm.value)
   
     
   }
   onselectAllCritical(event){
     var CheckedValue = event.target.checked
+    this.savedCheckedData = this.dynamicForm.value;
     var criticalKeys = Object.keys(this.savedCheckedData.Critical)
     if(CheckedValue==true)
     {
@@ -53,6 +63,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
 
   onselectAllError(event){
     var CheckedValue = event.target.checked
+    this.savedCheckedData = this.dynamicForm.value;
     var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
     if(CheckedValue==true)
     {
@@ -76,6 +87,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
 
   onselectAllWarn(event){
     var CheckedValue = event.target.checked
+    this.savedCheckedData = this.dynamicForm.value;
     var WarnKeys = Object.keys(this.savedCheckedData.Warn)
     if(CheckedValue==true)
     {
@@ -99,6 +111,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
 
   onselectAllMetric(event){
     var CheckedValue = event.target.checked
+    this.savedCheckedData = this.dynamicForm.value;
     var metricKeys = Object.keys(this.savedCheckedData.metric)
     if(CheckedValue==true)
     {
