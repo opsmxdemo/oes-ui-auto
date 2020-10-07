@@ -106,8 +106,10 @@ export class DeploymentVerificationComponent implements OnInit {
   initializeCanaryList: boolean = true;
 
 
-  serviceIdAfterRerun: any;     //variable used to set service Id from child component log analysis after rerun
+  serviceIdAfterRerun: any = null;     //variable used to set service Id from child component log analysis after rerun
   manualTriggerLatestRun: number;
+  isRerunLogs : boolean = false;
+  serviceIdFromChild :any = null;
 
   // App form end
 
@@ -186,7 +188,7 @@ export class DeploymentVerificationComponent implements OnInit {
             this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
           }
           this.applicationId = this.deploymentApplicationHealth['applicationId'];
-         
+          
         }
 
         if (resData.serviceInformation != null) {
@@ -224,6 +226,12 @@ export class DeploymentVerificationComponent implements OnInit {
             this.selectedServiceId = this.deploymentServices.services[index].serviceId;
             this.serviceNameInfo = this.deploymentServices.services[index];
             const serviceObj = this.serviceListData.find(c => c.serviceId == this.route.params['_value'].serviceId);
+            this.onClickService(serviceObj);
+          }else if(this.serviceIdAfterRerun != undefined && this.serviceIdAfterRerun != null){
+            const index = this.deploymentServices.services.findIndex(services => services.serviceId == this.serviceIdAfterRerun);
+            this.selectedServiceId = this.deploymentServices.services[index].serviceId;
+            this.serviceNameInfo = this.deploymentServices.services[index];
+            const serviceObj = this.serviceListData.find(c => c.serviceId == this.serviceIdAfterRerun);
             this.onClickService(serviceObj);
           }else{
             this.selectedServiceId = this.deploymentServices.services[0].serviceId;
@@ -297,7 +305,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.control.setValue(canary);
     this.canaryId = canary;
     this.getApplicationHelathAndServiceDetails(canary);
-    this.onClickService(this.deploymentServices.services[0]);
+    //this.onClickService(this.deploymentServices.services[0]);
 
   }
 
@@ -418,6 +426,8 @@ export class DeploymentVerificationComponent implements OnInit {
     this.serviceNameInfo = item;
     this.selectedServiceId = item.serviceId;
     
+    //code to reset the serviceId after reclassification flow
+    this.serviceIdAfterRerun = null;
     // Below logic is use to fetch initiall selected tab
 
     if(this.selectedTab == ''){
@@ -432,6 +442,12 @@ export class DeploymentVerificationComponent implements OnInit {
           this.selectedTab = 'metric-analysis';
           this.onClickTab('metric-analysis-tab');
         }
+      }
+    }else{
+      if(this.selectedTab == 'log-analysis'){
+        this.onClickTab('log-analysis-tab');
+      }else if(this.selectedTab == 'metric-analysis'){
+        this.onClickTab('metric-analysis-tab');
       }
     }
 
@@ -632,6 +648,12 @@ export class DeploymentVerificationComponent implements OnInit {
   onClickTab(event) {
     if (event === 'log-analysis-tab') {
       this.selectedTab = 'log-analysis';
+      setTimeout(() => {
+        if(this.isRerunLogs != undefined){
+          this.isRerunLogs = false;
+        }
+      }, 5000)
+      
     } else if (event === 'metric-analysis-tab') {
       this.selectedTab = 'metric-analysis';
     }
@@ -718,12 +740,11 @@ export class DeploymentVerificationComponent implements OnInit {
     this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId }));
   }
 
-
-  getlogAnalysisData(event) {
-    this.serviceIdAfterRerun = event;
-    this.selectedServiceId = event;
-    const serviceObj = this.serviceListData.find(c => c.serviceId == event);
-    this.onClickService(serviceObj);
+  //function executes when a rerun happen from log-analysis component
+  getlogAnalysisData(serviceIdFromChild) {
+    this.serviceIdAfterRerun = serviceIdFromChild;
+    this.onSelectionChangeCanaryRun(this.canaryId);
+    this.isRerunLogs = true;
   }
 
   getEventsFromLogAnalysis(event){

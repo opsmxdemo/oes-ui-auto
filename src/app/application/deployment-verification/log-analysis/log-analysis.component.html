@@ -170,7 +170,7 @@
                   </div>
                 </div>
               </div>
-              <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase">
+              <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase && log.clusterTagInfo?.tag != null">
                 <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag" 
                   data-toggle="dropdown"
                   class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
@@ -222,10 +222,8 @@
             </div>
             <div id="log{{log.id}}" class="collapse clusterHeight" [ngClass]="{'show' : switchToState == 'Collapse All'}" [attr.aria-labelledby]="'heading' + log.id" data-parent="#accordionExample">
               <div *ngIf="log.more">
-                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
-                    class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
-                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span
-                    class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
+                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">( + )</span></div>
+                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">( - )</span></div>
               </div>
               <div *ngIf="log.color == 'dark red'">
                 <div class="text-wrap-normal" *ngIf="!showFullLogLine[log.id]">
@@ -260,10 +258,8 @@
                 </div>
               </div>
               <div *ngIf="log.more">
-                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
-                    class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
-                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span
-                    class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
+                <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show More <i class="fas fa-angle-down"></i></span></div>
+                <div (click)="showLessCluster(log)" *ngIf="showFullLogLine[log.id]" class="py-1"><span class="text-primary clickable">Show Less <i class="fas fa-angle-up"></i></span></div>
               </div>
             </div>
           </div>

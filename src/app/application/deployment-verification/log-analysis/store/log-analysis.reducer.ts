@@ -16,6 +16,8 @@ export interface State {
     fetchLogTopics: any;  
     isLogsResultsLoaded : boolean;  
     isLogsEventsLoaded : boolean;
+    isLoadedRerunResults : boolean;
+    isLoadedClusterLogData : boolean;
 }
 
 export const initialState: State = {
@@ -29,7 +31,9 @@ export const initialState: State = {
     reclassificationHistoryResults:null,
     fetchLogTopics: null,
     isLogsResultsLoaded : false,
-    isLogsEventsLoaded: false
+    isLogsEventsLoaded: false,
+    isLoadedRerunResults:false,
+    isLoadedClusterLogData :false
 }
 
 export function LogAnalysisReducer(
@@ -83,7 +87,7 @@ export function LogAnalysisReducer(
         on(LogAnalysisActions.rerunLogs,
             (state,action) => ({
                 ...state,
-                deployementLoading: true,
+                isLoadedRerunResults: false,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
                 logTemplate : action.logTemplate
@@ -93,12 +97,19 @@ export function LogAnalysisReducer(
             (state, action) => ({
                 ...state,
                 rerunResponse: action.rerunResponse,
-                deployementLoading: false
+                isLoadedRerunResults: true
             })
-        ),on(LogAnalysisActions.fetchClusterLogData,
+        ),
+        on(LogAnalysisActions.loadedRerunResults,
             (state,action) => ({
                 ...state,
-                deployementLoading: true,
+                isLoadedRerunResults: false
+            })
+        ),
+        on(LogAnalysisActions.fetchClusterLogData,
+            (state,action) => ({
+                ...state,
+                isLoadedClusterLogData: false,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
                 clusterId : action.clusterId,
@@ -109,7 +120,13 @@ export function LogAnalysisReducer(
             (state, action) => ({
                 ...state,
                 clusterLogs: action.clusterLogs,
-                deployementLoading: false
+                isLoadedClusterLogData: true
+            })
+        ),
+        on(LogAnalysisActions.loadedClusterLogData,
+            (state,action) => ({
+                ...state,
+                isLoadedClusterLogData: false
             })
         ),
          on(LogAnalysisActions.loadLogTopics,

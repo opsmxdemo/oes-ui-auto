@@ -558,15 +558,7 @@
                         </li>
                         <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
                           <a class="nav-link" [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Metrics Only'}" id="metric-analysis-tab" data-toggle="tab" role="tab" aria-controls="metric-analysis" aria-selected="true">Metric Analysis</a>
-                        </li>
-                        <!-- <li *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="nav-item">
-                          <a class="nav-link"  id="correlation-tab" data-toggle="tab" role="tab" aria-controls="correlation" aria-selected="true">Correlation</a>
-                        </li> -->
-                        <li class="nav-item">
-                          <a class="nav-link"  id="correlation-tab" data-toggle="tab" role="tab" aria-controls="correlation" aria-selected="true">Correlation</a>
-                        </li>
-                        
-                
+                        </li>                        
                       </ul>
                 </div>
                   <div class="nav-item ml-auto padding0 col-sm-1">
@@ -582,7 +574,7 @@
                     <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
                     [ngClass]="{'active': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
                         <ng-container *ngIf = "selectedTab === 'log-analysis'">
-                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" (selectedServiceId)="getlogAnalysisData($event)" (enterdToLogLines)="getEventsFromLogAnalysis($event)"></app-log-analysis>
+                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" [isRerun]="isRerunLogs" (selectedServiceIdFromChild)="getlogAnalysisData($event)" (enterdToLogLines)="getEventsFromLogAnalysis($event)"></app-log-analysis>
                         </ng-container>
                       </div>
                       <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"
@@ -590,13 +582,7 @@
                         <ng-container *ngIf = "selectedTab === 'metric-analysis'">
                           <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
                         </ng-container>
-                      </div>
-                      <div class="tab-pane mp-4 mtneg"  id="correlation" role="tabpanel" aria-labelledby="correlation-tab"
-                      [ngClass]="{'active': selectedTab === 'correlation'}">
-                        <ng-container *ngIf = "selectedTab === 'correlation'">
-                          <app-correlation [canaryId]="control.value" [serviceId]="selectedServiceId" [serviceList] = "deploymentServices.services" ></app-correlation>
-                        </ng-container>
-                      </div>
+                      </div>                      
                   </div>
                 </div>
                 <!-- /.tab-lined -->

@@ -21,8 +21,9 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   @Input() canaryId: any[];
   @Input() serviceId: any[];
+  @Input() isRerun : boolean;
 
-  @Output() selectedServiceId = new EventEmitter<any>();
+  @Output() selectedServiceIdFromChild = new EventEmitter<any>();
   @Output() enterdToLogLines = new EventEmitter<boolean>();
 
   showChart = true;                                                   // It is use to hide or show the bubble chart.
@@ -109,7 +110,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   commentNotificationMessage = "";
   sensitivityChanged = false;
   tagCommentNotificationMessage = "";
-  
+  logId : any = undefined;
 
   constructor(public store: Store<fromFeature.State>,
     public cdr: ChangeDetectorRef,
@@ -226,7 +227,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         theme: "fusion"
       },
       data: []
-    };
+    };    
     if (this.canaryId != undefined && this.serviceId != undefined) {
       this.getLogAnalysis()
     }
@@ -466,6 +467,22 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.dataSource["dataset"].push(newobjignoredClusters);
           }
         }
+        if(resData.rerunResponse != null && resData.isLoadedRerunResults){
+          this.store.dispatch(LogAnalysisAction.loadedRerunResults());
+          if(resData.rerunResponse['status']){
+            this.selectedServiceIdFromChild.emit(this.serviceId);
+            this.classifiedLogsList = [];
+            this.sensitivityChanged = false;
+          }
+        }
+        if (resData.clusterLogs != null && resData.isLoadedClusterLogData) {
+          this.store.dispatch(LogAnalysisAction.loadedClusterLogData());
+          this.completeCluster = resData.clusterLogs;
+          Object.keys(this.showFullLogLine).forEach(h => {
+            this.showFullLogLine[h] = false;
+          });
+          this.showFullLogLine[this.logId] = true;
+        }
       }
     );
   }
@@ -704,10 +721,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       "sensitivity": this.selectedSensitivity
     };
     this.rerunResponse = {};    
-    this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
-    this.selectedServiceId.emit(this.serviceId);
-    this.classifiedLogsList = [];
-    this.sensitivityChanged = false;
+    this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));    
   }
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
@@ -722,18 +736,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   showMoreCluster(log) {
     let clusterId = log.id;
     let version = log.version;
-    this.store.dispatch(LogAnalysisAction.fetchClusterLogData({ canaryId: this.canaryId, serviceId: this.serviceId, clusterId: clusterId, version: version }));
-    this.store.select(fromFeature.selectLogAnalysisState).subscribe(
-      (resData) => {
-        if (resData.clusterLogs != null) {
-          this.completeCluster = this.sanitizer.bypassSecurityTrustHtml(resData.clusterLogs);
-          Object.keys(this.showFullLogLine).forEach(h => {
-            this.showFullLogLine[h] = false;
-          });
-          this.showFullLogLine[log.id] = true;
-        }
-      }
-    );
+    this.logId = log.id;
+    this.store.dispatch(LogAnalysisAction.fetchClusterLogData({ canaryId: this.canaryId, serviceId: this.serviceId, clusterId: clusterId, version: version }));    
   }
 
   showLessCluster(log) {
@@ -837,7 +841,6 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         eachChartRow = [new Date(bucketsOfMinutes[i].bucketStartTime), bucketsOfMinutes[i].repeatedCount,new Date(bucketsOfMinutes[i].bucketStartTime).getHours()+":"+new Date(bucketsOfMinutes[i].bucketStartTime).getMinutes()];
          chartRows.push(eachChartRow)
          toolTip = new Date(bucketsOfMinutes[i].bucketStartTime).toLocaleString()
-         console.log(typeof(toolTip));
          if(bucketsOfMinutes[i].repeatedCount==0)
          {
           tempRepeat=""
