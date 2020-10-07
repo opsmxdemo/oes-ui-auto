@@ -31,6 +31,12 @@
                 "id":23.0,
                 "link":"/application/deploymentverification",
                 "disabled":false
+            },
+            {
+               "name": "Trend Analysis",
+               "id": 25.0,
+               "link": "/application/trendanalysis",
+               "disabled": false
              }
           ],
           "disabled":false

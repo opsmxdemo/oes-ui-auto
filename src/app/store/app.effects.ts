@@ -1,3 +1,4 @@
+import { TrendAnalysisEffect } from './../application/trend-analysis/store/trend-analysis.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { NgModule } from '@angular/core';
 import { AuthEffect } from '../auth/store/auth.effects';
@@ -18,7 +19,8 @@ import { CdDashboardEffect } from '../cd-dashboard/store/cd-dashboard.effects';
                           PolicyEffect,
                           AppDashboardEffect,
                           DeploymentVerificationEffect,
-                          CdDashboardEffect
+                          CdDashboardEffect,
+                          TrendAnalysisEffect
     ])
   ],
 })

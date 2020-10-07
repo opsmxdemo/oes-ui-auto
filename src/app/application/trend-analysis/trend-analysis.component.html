@@ -1,0 +1,107 @@
+<div class="main_content p-0 bg-white">
+    <div class="d-flex">
+        <div class="leftBox bg-white mw-250">
+            <div class="leftBox_body text-muted text-center">
+                <form [formGroup]="applicationForm" novalidate class="example-form">
+                    <mat-form-field>
+                        <input type="text" matInput placeholder="Select Application" floatLabel="always"
+                            formControlName="application" [matAutocomplete]="autoApplication" />
+                        <mat-autocomplete (optionSelected)="onSelectionChangeApplication($event.option.value)"
+                            autoActiveFirstOption #autoApplication="matAutocomplete">
+                            <mat-option *ngFor="let applications of applicationListOptions | async"
+                                [value]="applications.applicationName">
+                                {{ applications.applicationName }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </form>
+
+                <table class="table table-sm table-avenir table-no-bordered table-no-dots table-responsive mt-3">
+                    <tbody class="serviceTable">
+                        <tr><th>Application</th></tr>
+                        <tr >
+                            <td class=" " style="padding-left: 2px !important;" ><b>{{selectedApplicationName}}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-sm table-avenir table-no-bordered table-no-dots table-responsive mt-3">
+                    <tbody class="serviceTable">
+                        <tr *ngIf="serviceListLength > 0">
+                            <th>Services</th>
+                        </tr>
+                        <!-- | filter:searchData; let i=index -->
+                        <ng-container *ngFor="let service of currentPage ">
+                            <tr [ngClass]="{'active-service': service.serviceId == selectedServiceId}" *ngIf="service != null">
+                                <td class="service-selection " style="padding-left: 2px !important;"  (click)="onClickService(service)"  >
+                                    {{service.serviceName}}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.leftBox_header -->
+        </div>
+        <div class="page-content flex-grow-1 colored2">
+            <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
+                <!-- {{control.value}} » -->
+                <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} » {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</h3>
+                <!-- /.page_access ml-auto -->
+            </div>
+            <!-- /.page_title d-flex -->
+            <div class="row no-gutters">
+                <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+                    <mat-drawer-container class="example-container" autosize>
+                            <div class="d-flex flex-column">
+                                <!-- <div class="d-flex justify-content-end pr-5">
+                                    <div class="pt-2 dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">Select Duration
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">1 Day</a>
+                                            <a class="dropdown-item" href="#">1 Week</a>
+                                            <a class="dropdown-item" href="#">1 Month</a>
+                                            <a class="dropdown-item" href="#">3 Months</a>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="mb-2 text-center d-flex flex-column">
+                                    <div class="pl-3 pr-3 pt-4 d-flex flex-column" id="ngxLineChart" #setChartSize> 
+                                        <h5>Risk Score</h5>
+                                        <p> </p>
+                                        <ngx-charts-line-chart  [view]="view"  *ngIf="riskScoreDisplay"   [scheme]="IssuesLogsScheme" [legend]="legend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxis]="xAxis" [yAxis]="yAxis" [xAxisLabel]="riskxAxisLabel"  [yAxisLabel]="yAxisLabel" [timeline]="timeline" [results]="createRiskChartData" #chart>
+                                        </ngx-charts-line-chart> 
+                                        <div *ngIf="!riskScoreDisplay">
+                                            No data to display Risk Score!
+                                        </div>
+                                        <p> </p>
+                                    </div>
+
+                                    <div class="pl-3 pr-3 pt-4 d-flex flex-column">
+                                        <h5>Issues - Logs</h5>
+                                        <p> </p>
+                                        <ngx-charts-area-chart-stacked *ngIf="issuesLogsDisplay" [view]="view"  [scheme]="colorScheme" [results]="createIssuesLogChartData" [animations]="animations" [gradient]="gradient"
+                                            [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel"
+                                            [showYAxisLabel]="showYAxisLabel"  [timeline]="timeline" [xAxisLabel]="issuesxAxisLabel" [yAxisLabel]="yAxisLabel"  [trimXAxisTicks]="trimXAxisTicks"
+                                            style="fill: #999999;"> 
+                                        </ngx-charts-area-chart-stacked>
+                                        <div *ngIf="!issuesLogsDisplay">
+                                            No data to display Issues - Logs!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </mat-drawer-container>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.page-content -->
+    </div>
+</div>
+<!-- /.main_content -->
+<!-- <div class="main_content p-0 bg-white" *ngIf="deployementLoading">
+  <div class="tab-pane d-flex flex-column bg-white h-100 fade show">
+    <app-loading-screen></app-loading-screen>
+   </div>
+</div> -->

@@ -2,12 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ChartOptions } from 'src/app/models/charts/chartOptionalParameter.model';
 
 @Component({
-  selector: 'app-area-chart',
-  templateUrl: './area-chart.component.html',
-  styleUrls: ['./area-chart.component.less']
+  selector: 'app-stacked-area-chart',
+  templateUrl: './stacked-area-chart.component.html',
+  styleUrls: ['./stacked-area-chart.component.less']
 })
-export class AreaChartComponent implements OnInit {
-  
+export class StackedAreaChartComponent implements OnInit {
+
   @Input() dataSource: any[];
   @Input() view: any[];
   @Input() chartProperty: ChartOptions;
@@ -24,12 +24,11 @@ export class AreaChartComponent implements OnInit {
   timeline: boolean;
   legendPosition: string;
   gradient: boolean;
-  autoScale: boolean;
   trimXAxisTicks: boolean;
   colorScheme;
-  
 
-  constructor() {}
+
+  constructor() { }
 
   ngOnInit(): void {
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : true;
@@ -42,9 +41,9 @@ export class AreaChartComponent implements OnInit {
     this.yAxisLabel = this.chartProperty.yAxisLabel !== undefined ? this.chartProperty.yAxisLabel : "";
     this.timeline = this.chartProperty.timeline !== undefined ? this.chartProperty.timeline : false;
     this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
-    this.autoScale = this.chartProperty.autoScale !== undefined ? this.chartProperty.autoScale : true;
+    // this.autoScale = this.chartProperty.autoScale !== undefined ? this.chartProperty.autoScale : true;
     this.legendPosition = this.chartProperty.legendPosition !== undefined ? this.chartProperty.legendPosition : "below";
-    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798','#fed856','#c2c2c2']};
+    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : { domain: ['#33b3f1', '#f29798', '#fed856', '#c2c2c2'] };
   }
 
   onSelect(event) {

@@ -1,3 +1,4 @@
+import { TrendAnalysisComponent } from './../application/trend-analysis/trend-analysis.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ApplicationDashboardComponent } from '../application/application-dashboard/application-dashboard.component';
@@ -15,7 +16,8 @@ const routes: Routes = [
     {path:'', component: ApplicationDashboardComponent},
     {path:'deploymentverification', component: DeploymentVerificationComponent},
     {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent},
-    {path:'deploymentverification/:applicationName/:canaryId/:serviceId', component: DeploymentVerificationComponent}
+    { path: 'deploymentverification/:applicationName/:canaryId/:serviceId', component: DeploymentVerificationComponent },
+    { path: 'trendanalysis', component: TrendAnalysisComponent },
 
   ]},
   {path:'cddashboard', component:CdDashboardComponent},

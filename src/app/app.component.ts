@@ -153,7 +153,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   // Below function is use to nevigate to proper page while click on submenu link
   navigateMenu(event,menuName){
     event.stopPropagation();
-    if(menuName === 'Deployment Verification'){
+    if (menuName === 'Deployment Verification' || menuName === 'Trend Analysis') {
       setTimeout(()=>{
         this.addclass = true;
       },1000)
@@ -170,7 +170,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     let className = '';
     switch(this.installationMode){
       case 'AP':
-        if(linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification'){
+        if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis'){
           className = '';
         }else{
           className = 'disabled_menu';
