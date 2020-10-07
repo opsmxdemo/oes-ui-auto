@@ -7,11 +7,14 @@ import { ChartOptions } from 'src/app/models/charts/chartOptionalParameter.model
   styleUrls: ['./line-chart.component.less']
 })
 export class LineChartComponent implements OnInit {
+  @Output() getMetricId = new EventEmitter();
   @Input() dataSource: any[];
   @Input() view: any[];
   @Input() chartProperty:ChartOptions;
   @Input() Correlationflag:boolean;
-  @Input() dataSourceCorreleation:any;
+  @Input() dataSourceCorreleation: any;
+  @Input() serviceId: any;
+  @Input() metricIndex: any;
 
   finalDataJson:any=[]
   //options
@@ -70,7 +73,8 @@ export class LineChartComponent implements OnInit {
   
   }
 }
-  closeTimeAnalysis(){
+  closeTimeAnalysis() {
+    this.getMetricId.emit({ "clusterId": this.metricIndex, "serviceId": this.serviceId });
     this.ChartShow=false;
   }
   
