@@ -6,8 +6,8 @@
             <h4>Critical</h4>
         </div>
         <div class="custom-control custom-checkbox" >
-            <input  type="checkbox" (change)="onselectAllCritical($event)"  class="custom-control-input" id="customCheckCritical" name="group" [(ngModel)]="modelCritical"    >
-            <label class="custom-control-label" for="customCheckCritical"  > Select All</label>
+            <input  type="checkbox" (change)="onselectAllCritical($event)"  class="custom-control-input" id="customCheckCritical" name="groupCritical" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupCritical']:false"   ngModel    >
+            <label class="custom-control-label" for="customCheckCritical"  > <b>Select All</b></label>
                 
         </div>
         <ng-container ngModelGroup="Critical" >
@@ -26,8 +26,8 @@
                 <h4>Error</h4>
             </div>
             <div class="custom-control custom-checkbox" >
-                <input  type="checkbox" (change)="onselectAllError($event)"  class="custom-control-input" id="customCheckError" name="group"   [(ngModel)]="modelError" >
-                <label class="custom-control-label" for="customCheckError"  > Select All</label>
+                <input  type="checkbox" (change)="onselectAllError($event)"  class="custom-control-input" id="customCheckError" name="groupError"   [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupError']:false"  ngModel >
+                <label class="custom-control-label" for="customCheckError"  > <b>Select All</b></label>
                     
             </div>
             <ng-container ngModelGroup="ERROR">
@@ -45,8 +45,8 @@
                 <h4>Warning</h4>
             </div>
             <div class="custom-control custom-checkbox" >
-                <input  type="checkbox" (change)="onselectAllWarn($event)"  class="custom-control-input" id="customCheckWarn" name="group"  [(ngModel)]="modelWarn"  >
-                <label class="custom-control-label" for="customCheckWarn"  > Select All</label>
+                <input  type="checkbox" (change)="onselectAllWarn($event)"  class="custom-control-input" id="customCheckWarn" name="groupWarn"  [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupWarn']:false"  ngModel  >
+                <label class="custom-control-label" for="customCheckWarn"  > <b>Select All</b></label>
                     
             </div>
             <ng-container ngModelGroup="Warn">
