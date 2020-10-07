@@ -25,10 +25,13 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
     var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
     var WarningKeys = Object.keys(this.savedCheckedData.Warn)
     
-    
+    var counterCritical = 0
+    var counterError = 0
+    var counterWarn = 0
     for(var i=0;i< criticalKeys.length;i++)
     {
-      if(this.savedCheckedData['Critical'][criticalKeys[i]]==false)
+      counterCritical++
+      if(this.savedCheckedData['Critical'][criticalKeys[i]]==false || this.savedCheckedData['Critical'][criticalKeys[i]]==undefined )
       {
         this.savedCheckedData['groupCritical']=false
         break;
@@ -39,7 +42,8 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
     }
     for(var i=0;i< ErrorKeys.length;i++)
     {
-      if(this.savedCheckedData['ERROR'][ErrorKeys[i]]==false)
+      counterError++
+      if(this.savedCheckedData['ERROR'][ErrorKeys[i]]==false || this.savedCheckedData['ERROR'][ErrorKeys[i]]==undefined )
       {
         this.savedCheckedData['groupError']=false
         break;
@@ -50,7 +54,8 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
     }
     for(var i=0;i< WarningKeys.length;i++)
     {
-      if(this.savedCheckedData['Warn'][WarningKeys[i]]==false)
+      counterWarn++
+      if(this.savedCheckedData['Warn'][WarningKeys[i]]==false || this.savedCheckedData['Warn'][WarningKeys[i]]==undefined )
       {
         this.savedCheckedData['groupWarn']=false
         break;
@@ -58,6 +63,20 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
       else{
         this.savedCheckedData['groupWarn']=true
       }
+    }
+    
+
+    if(counterCritical==0)
+    {
+      this.savedCheckedData['groupCritical']=false
+    }
+    if(counterError==0)
+    {
+      this.savedCheckedData['groupError']=false
+    }
+    if(counterWarn==0)
+    {
+      this.savedCheckedData['groupWarn']=false
     }
     
     
