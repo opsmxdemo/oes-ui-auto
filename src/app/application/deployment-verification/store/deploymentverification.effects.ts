@@ -105,7 +105,7 @@ export class DeploymentVerificationEffect {
        // Below effect is use for fetch applications
        fetchServiceListData = createEffect(() =>
        this.actions$.pipe(
-           ofType(DeploymentActions.loadServices),
+           ofType(DeploymentActions.loadServices,LogAnalysisAction.reloadAfterRerun),
            switchMap((action) => {
                return this.http.get<any>(this.environment.config.endPointUrl +'autopilot/canaries/getServiceList?canaryId='+action.canaryId).pipe(
                    map(resdata => {

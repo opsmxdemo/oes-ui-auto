@@ -14,8 +14,10 @@ export class KeysPipe implements PipeTransform {
 @Pipe({name: 'replaceLineBreaks'})
 export class ReplaceLineBreaks implements PipeTransform {
   transform(value: string): string {
-    value = value.replace(/DOCUMENT|@n|@r|\\n/g, '<br/>');
-    return value.replace(/@t/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+    if(value != undefined){
+      value = value.replace(/DOCUMENT|@n|@r|\\n/g, '<br/>');
+      return value.replace(/@t/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+    }    
   }
 }
 
@@ -45,12 +47,14 @@ export class ChangetextcolorPipe {
     if (args === undefined) {
       return value;
     }
-    for(var i=0;i<args.length;i++)
-    {
-    var regex = new RegExp(args[i], 'g');
-    value = value.replace(regex, '<span class="high"> '+args[i]+'</span>');
-    }
-    return value
+    if(value != undefined){
+      for(var i=0;i<args.length;i++)
+      {
+      var regex = new RegExp(args[i], 'g');
+      value = value.replace(regex, '<span class="high"> '+args[i]+'</span>');
+      }
+      return value
+    }    
   }
 }
 
