@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angu
 import * as CorrelationAction from './store/correlation.actions';
 import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
+import * as $ from 'jquery';
 
 
 @Component({
@@ -68,6 +69,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
 
   // for opening the modal 
   openModal(template: TemplateRef<any>,selectedAddButton) {
+    $("[data-toggle='tooltip']").tooltip('hide');
     if(this.addFlag=='log')
     {
       this.store.dispatch(CorrelationAction.fetchUnxepectedClusters({ canaryId: this.canaryId, serviceId: this.serviceList[this.selectedServiceIndex].serviceId }));
@@ -391,6 +393,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   }
 
   onSubmitsaveData(submitdataToSave){
+    $("[data-toggle='tooltip']").tooltip('hide');
     if(this.addFlag=="log"){
       this.addLogsJson=submitdataToSave
     }
