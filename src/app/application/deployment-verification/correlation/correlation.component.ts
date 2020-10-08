@@ -16,6 +16,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   @Input() canaryId: any[];
   @Input() serviceId: any[];
   @Input() serviceList: any[];
+  @Input() analysisType:any;
   @ViewChild ("closeButtonLogLines") closebtn:ElementRef;
   @ViewChild ("chartClickRef") chartbtn:ElementRef;
   @ViewChild('subChartSize') subChartSize: ElementRef;
