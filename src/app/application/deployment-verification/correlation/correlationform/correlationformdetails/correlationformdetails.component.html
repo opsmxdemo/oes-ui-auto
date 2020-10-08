@@ -5,7 +5,7 @@
         <div class="text-divider">
             <h4>Critical</h4>
         </div>
-        <div class="custom-control custom-checkbox" >
+        <div class="custom-control custom-checkbox" *ngIf="criticalKeysLength!=0" >
             <input  type="checkbox" (change)="onselectAllCritical($event)"  class="custom-control-input" id="customCheckCritical" name="groupCritical" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupCritical']:false"   ngModel    >
             <label class="custom-control-label" for="customCheckCritical"  > <b>Select All</b></label>
                 
@@ -25,7 +25,7 @@
             <div class="text-divider">
                 <h4>Error</h4>
             </div>
-            <div class="custom-control custom-checkbox" >
+            <div class="custom-control custom-checkbox" *ngIf="errorKeysLength!=0" >
                 <input  type="checkbox" (change)="onselectAllError($event)"  class="custom-control-input" id="customCheckError" name="groupError"   [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupError']:false"  ngModel >
                 <label class="custom-control-label" for="customCheckError"  > <b>Select All</b></label>
                     
@@ -44,7 +44,7 @@
             <div class="text-divider">
                 <h4>Warning</h4>
             </div>
-            <div class="custom-control custom-checkbox" >
+            <div class="custom-control custom-checkbox" *ngIf="warnKeysLength!=0">
                 <input  type="checkbox" (change)="onselectAllWarn($event)"  class="custom-control-input" id="customCheckWarn" name="groupWarn"  [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupWarn']:false"  ngModel  >
                 <label class="custom-control-label" for="customCheckWarn"  > <b>Select All</b></label>
                     
@@ -62,10 +62,9 @@
     </div>
     <div class="col pb-3 padding10" *ngIf="flag=='metric'" >
         
-            <div class="custom-control custom-checkbox" >
-                <input  type="checkbox" (change)="onselectAllMetric($event)"  class="custom-control-input" id="customCheckMetric" name="group"    >
-                <label class="custom-control-label" for="customCheckMetric"  > Select All</label>
-                    
+            <div class="custom-control custom-checkbox" *ngIf="matricKeysLength!=0" >
+                <input  type="checkbox" (change)="onselectAllMetric($event)"  class="custom-control-input" id="customCheckMetric" name="groupMetric"  [ngModel]="savedCheckedData !== undefined ? savedCheckedData['groupMetric']:false"  ngModel  >
+                <label class="custom-control-label" for="customCheckMetric"  > <b>Select All</b></label>
             </div>
             <ng-container ngModelGroup="metric">
            <ng-container *ngFor="let group of data; let i=index">
