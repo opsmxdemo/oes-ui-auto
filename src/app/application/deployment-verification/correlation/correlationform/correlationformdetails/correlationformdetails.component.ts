@@ -110,7 +110,11 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
     {
       this.matricKeysLength=0
       var metricKeys = Object.keys(this.savedCheckedData.metric)
-      this.matricKeysLength=metricKeys.length
+      if(this.data.length>0)
+      {
+        this.matricKeysLength=1
+      }
+      
       
       var counterMetric = 0
       
