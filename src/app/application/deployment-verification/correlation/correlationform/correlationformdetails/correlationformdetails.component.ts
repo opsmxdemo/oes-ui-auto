@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, QueryList, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import * as $ from 'jquery';
 
 
 @Component({
@@ -35,10 +36,23 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
       var criticalKeys = Object.keys(this.savedCheckedData.Critical)
       var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
       var WarningKeys = Object.keys(this.savedCheckedData.Warn)
-
-      this.criticalKeysLength=criticalKeys.length
-      this.errorKeysLength=ErrorKeys.length
-      this.warnKeysLength=WarningKeys.length
+      
+    for(var i =0;i<this.data.length;i++)
+    {
+      if(this.data[i].topic == "CRITICAL ERROR")
+      {
+        this.criticalKeysLength=1;
+      }
+      if(this.data[i].topic == "ERROR")
+      {
+        this.errorKeysLength=1;
+      }
+      if(this.data[i].topic == "WARN")
+      {
+        this.warnKeysLength=1;
+      }
+    }
+      
 
       var counterCritical = 0
       var counterError = 0
@@ -132,6 +146,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
 
   }
   onCheckBoxClicked(){
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.addLogData.emit(this.dynamicForm.value);
     this.savedCheckedData=this.dynamicForm.value
     if(this.flag=="log")
@@ -200,6 +215,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
     
   }
   onselectAllCritical(event){
+    $("[data-toggle='tooltip']").tooltip('hide');
     var CheckedValue = event.target.checked
     this.savedCheckedData = this.dynamicForm.value;
     var criticalKeys = Object.keys(this.savedCheckedData.Critical)
@@ -224,6 +240,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   }
 
   onselectAllError(event){
+    $("[data-toggle='tooltip']").tooltip('hide');
     var CheckedValue = event.target.checked
     this.savedCheckedData = this.dynamicForm.value;
     var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
@@ -248,6 +265,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   }
 
   onselectAllWarn(event){
+    $("[data-toggle='tooltip']").tooltip('hide');
     var CheckedValue = event.target.checked
     this.savedCheckedData = this.dynamicForm.value;
     var WarnKeys = Object.keys(this.savedCheckedData.Warn)
@@ -272,6 +290,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   }
 
   onselectAllMetric(event){
+    $("[data-toggle='tooltip']").tooltip('hide');
     var CheckedValue = event.target.checked
     this.savedCheckedData = this.dynamicForm.value;
     var metricKeys = Object.keys(this.savedCheckedData.metric)
