@@ -23,7 +23,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   @Input() serviceId: any[];
   @Input() isRerun : boolean;
 
-  @Output() selectedServiceId = new EventEmitter<any>();
+  @Output() selectedServiceIdFromChild = new EventEmitter<any>();
   @Output() enterdToLogLines = new EventEmitter<boolean>();
 
   showChart = true;                                                   // It is use to hide or show the bubble chart.
@@ -470,17 +470,22 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.dataSource["dataset"].push(newobjignoredClusters);
           }
         }
-        
-        if (resData.clusterLogs != null) {
-          //this.completeCluster = this.sanitizer.bypassSecurityTrustHtml(resData.clusterLogs);
+        if(resData.rerunResponse != null && resData.isLoadedRerunResults){
+          this.store.dispatch(LogAnalysisAction.loadedRerunResults());
+          if(resData.rerunResponse['status']){
+            this.selectedServiceIdFromChild.emit(this.serviceId);
+            this.classifiedLogsList = [];
+            this.sensitivityChanged = false;
+          }
+        }
+        if (resData.clusterLogs != null && resData.isLoadedClusterLogData) {
+          this.store.dispatch(LogAnalysisAction.loadedClusterLogData());
           this.completeCluster = resData.clusterLogs;
           Object.keys(this.showFullLogLine).forEach(h => {
             this.showFullLogLine[h] = false;
           });
           this.showFullLogLine[this.logId] = true;
         }
-          
-
       }
       
     );
@@ -720,10 +725,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       "sensitivity": this.selectedSensitivity
     };
     this.rerunResponse = {};    
-    this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));
-    this.selectedServiceId.emit(this.serviceId);
-    this.classifiedLogsList = [];
-    this.sensitivityChanged = false;
+    this.store.dispatch(LogAnalysisAction.rerunLogs({ logTemplate: this.logTemplate, canaryId: this.canaryId, serviceId: this.serviceId, postData: postDataToRerun }));    
   }
   plotRollOver($event) {
     this.clusterId = $event.dataObj.x
