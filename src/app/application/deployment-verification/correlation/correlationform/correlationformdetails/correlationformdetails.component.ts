@@ -18,67 +18,111 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   modelCritical:boolean=false;
   modelError:boolean=false;
   modelWarn:boolean=false;
+  criticalKeysLength:any;
+  errorKeysLength:any;
+  warnKeysLength:any;
+  matricKeysLength:any;
+  
 
   constructor() { }
   ngOnChanges(changes: SimpleChanges): void {
-    var criticalKeys = Object.keys(this.savedCheckedData.Critical)
-    var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
-    var WarningKeys = Object.keys(this.savedCheckedData.Warn)
-    
-    var counterCritical = 0
-    var counterError = 0
-    var counterWarn = 0
-    for(var i=0;i< criticalKeys.length;i++)
+    if(this.flag=="log")
     {
-      counterCritical++
-      if(this.savedCheckedData['Critical'][criticalKeys[i]]==false || this.savedCheckedData['Critical'][criticalKeys[i]]==undefined )
+      this.criticalKeysLength=0
+      this.errorKeysLength=0
+      this.warnKeysLength=0
+      
+      var criticalKeys = Object.keys(this.savedCheckedData.Critical)
+      var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
+      var WarningKeys = Object.keys(this.savedCheckedData.Warn)
+
+      this.criticalKeysLength=criticalKeys.length
+      this.errorKeysLength=ErrorKeys.length
+      this.warnKeysLength=WarningKeys.length
+
+      var counterCritical = 0
+      var counterError = 0
+      var counterWarn = 0
+        for(var i=0;i< criticalKeys.length;i++)
+      {
+        counterCritical++
+        if(this.savedCheckedData['Critical'][criticalKeys[i]]==false || this.savedCheckedData['Critical'][criticalKeys[i]]==undefined )
+        {
+          this.savedCheckedData['groupCritical']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupCritical']=true
+        }
+      }
+      for(var i=0;i< ErrorKeys.length;i++)
+      {
+        counterError++
+        if(this.savedCheckedData['ERROR'][ErrorKeys[i]]==false || this.savedCheckedData['ERROR'][ErrorKeys[i]]==undefined )
+        {
+          this.savedCheckedData['groupError']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupError']=true
+        }
+      }
+      for(var i=0;i< WarningKeys.length;i++)
+      {
+        counterWarn++
+        if(this.savedCheckedData['Warn'][WarningKeys[i]]==false || this.savedCheckedData['Warn'][WarningKeys[i]]==undefined )
+        {
+          this.savedCheckedData['groupWarn']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupWarn']=true
+        }
+      }
+      if(counterCritical==0)
       {
         this.savedCheckedData['groupCritical']=false
-        break;
       }
-      else{
-        this.savedCheckedData['groupCritical']=true
-      }
-    }
-    for(var i=0;i< ErrorKeys.length;i++)
-    {
-      counterError++
-      if(this.savedCheckedData['ERROR'][ErrorKeys[i]]==false || this.savedCheckedData['ERROR'][ErrorKeys[i]]==undefined )
+      if(counterError==0)
       {
         this.savedCheckedData['groupError']=false
-        break;
       }
-      else{
-        this.savedCheckedData['groupError']=true
-      }
-    }
-    for(var i=0;i< WarningKeys.length;i++)
-    {
-      counterWarn++
-      if(this.savedCheckedData['Warn'][WarningKeys[i]]==false || this.savedCheckedData['Warn'][WarningKeys[i]]==undefined )
+      if(counterWarn==0)
       {
         this.savedCheckedData['groupWarn']=false
-        break;
-      }
-      else{
-        this.savedCheckedData['groupWarn']=true
       }
     }
+    else if(this.flag=="metric")
+    {
+      this.matricKeysLength=0
+      var metricKeys = Object.keys(this.savedCheckedData.metric)
+      this.matricKeysLength=metricKeys.length
+      
+      var counterMetric = 0
+      
+      for(var i=0;i< metricKeys.length;i++)
+      {
+        counterMetric++
+        if(this.savedCheckedData['metric'][metricKeys[i]]==false || this.savedCheckedData['metric'][metricKeys[i]]==undefined)
+        {
+          this.savedCheckedData['groupMetric']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupMetric']=true
+        }
+      }
     
 
-    if(counterCritical==0)
-    {
-      this.savedCheckedData['groupCritical']=false
-    }
-    if(counterError==0)
-    {
-      this.savedCheckedData['groupError']=false
-    }
-    if(counterWarn==0)
-    {
-      this.savedCheckedData['groupWarn']=false
-    }
     
+    
+      if(counterMetric==0)
+      {
+        this.savedCheckedData['groupMetric']=false
+      }
+    }
+      
+      
     
   }
 
@@ -90,45 +134,68 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
   onCheckBoxClicked(){
     this.addLogData.emit(this.dynamicForm.value);
     this.savedCheckedData=this.dynamicForm.value
-    var criticalKeys = Object.keys(this.savedCheckedData.Critical)
-    var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
-    var WarningKeys = Object.keys(this.savedCheckedData.Warn)
-    
-    
-    for(var i=0;i< criticalKeys.length;i++)
+    if(this.flag=="log")
     {
-      if(this.savedCheckedData['Critical'][criticalKeys[i]]==false || this.savedCheckedData['Critical'][criticalKeys[i]]==undefined)
+      var criticalKeys = Object.keys(this.savedCheckedData.Critical)
+      var ErrorKeys = Object.keys(this.savedCheckedData.ERROR)
+      var WarningKeys = Object.keys(this.savedCheckedData.Warn)
+      
+        for(var i=0;i< criticalKeys.length;i++)
       {
-        this.savedCheckedData['groupCritical']=false
-        break;
+        
+        if(this.savedCheckedData['Critical'][criticalKeys[i]]==false || this.savedCheckedData['Critical'][criticalKeys[i]]==undefined )
+        {
+          this.savedCheckedData['groupCritical']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupCritical']=true
+        }
       }
-      else{
-        this.savedCheckedData['groupCritical']=true
-      }
-    }
-    for(var i=0;i< ErrorKeys.length;i++)
-    {
-      if(this.savedCheckedData['ERROR'][ErrorKeys[i]]==false || this.savedCheckedData['ERROR'][ErrorKeys[i]]==undefined)
+      for(var i=0;i< ErrorKeys.length;i++)
       {
-        this.savedCheckedData['groupError']=false
-        break;
+        
+        if(this.savedCheckedData['ERROR'][ErrorKeys[i]]==false || this.savedCheckedData['ERROR'][ErrorKeys[i]]==undefined )
+        {
+          this.savedCheckedData['groupError']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupError']=true
+        }
       }
-      else{
-        this.savedCheckedData['groupError']=true
-      }
-    }
-    for(var i=0;i< WarningKeys.length;i++)
-    {
-      if(this.savedCheckedData['Warn'][WarningKeys[i]]==false || this.savedCheckedData['Warn'][WarningKeys[i]]==undefined)
+      for(var i=0;i< WarningKeys.length;i++)
       {
-        this.savedCheckedData['groupWarn']=false
-        break;
+        
+        if(this.savedCheckedData['Warn'][WarningKeys[i]]==false || this.savedCheckedData['Warn'][WarningKeys[i]]==undefined )
+        {
+          this.savedCheckedData['groupWarn']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupWarn']=true
+        }
       }
-      else{
-        this.savedCheckedData['groupWarn']=true
-      }
-    }
     
+    }
+    else if(this.flag=="metric")
+    {
+      var metricKeys = Object.keys(this.savedCheckedData.metric)
+      
+      for(var i=0;i< metricKeys.length;i++)
+      {
+       
+        if(this.savedCheckedData['metric'][metricKeys[i]]==false || this.savedCheckedData['metric'][metricKeys[i]]==undefined)
+        {
+          this.savedCheckedData['groupMetric']=false
+          break;
+        }
+        else{
+          this.savedCheckedData['groupMetric']=true
+        }
+      }
+    
+    }    
   
     
   }
@@ -228,9 +295,7 @@ export class CorrelationformdetailsComponent implements OnInit,OnChanges {
     }
   }
   
-  checkSelectAllState(recentCheckedData){
-    
-  }
+  
   
 
 }
