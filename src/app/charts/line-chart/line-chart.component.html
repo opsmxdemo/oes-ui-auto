@@ -21,9 +21,22 @@
   [legendPosition]="legendPosition"
   [animations]="animations"
   [autoScale]="autoScale"
+  [tooltipDisabled] = "false"
   (select)="onSelect($event)"
   (activate)="onActivate($event)"
   (deactivate)="onDeactivate($event)"
   style="fill: #999999; color: black;">
+
+  <ng-template #tooltipTemplate let-model="model">
+    This is vertical line tooltip template - NEW
+  </ng-template>
+
+  <ng-template #seriesTooltipTemplate let-model="model">
+    <!-- fields are series/name/value --> 
+    <div class="toolTip" *ngFor="let data of model" style="color: white">
+      <p>{{data.series}}|{{data.value}}</p>
+    </div>
+  </ng-template>
+
 </ngx-charts-line-chart>
 </div>
