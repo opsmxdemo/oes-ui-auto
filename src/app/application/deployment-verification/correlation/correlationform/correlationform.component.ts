@@ -24,11 +24,13 @@ export class CorrelationformComponent implements OnInit {
   serviceClusters:any=[] 
   selectedServiceClusterData:any;
   submitjsondata:any;                                                 // for storing objects with data of checked item of every service
-  selectedService:any                                                          // selected service at any time
+  selectedService:any   
+  updatedValue:any;                                                       // selected service at any time
   constructor() { }
 
   ngOnInit(): void {
    // console.log(this.selectedServiceInitially)
+  
     if(this.addLogsJson!=undefined )
     {
       this.serviceClusters=this.addLogsJson
@@ -98,7 +100,8 @@ export class CorrelationformComponent implements OnInit {
   getData(value){ 
     if(value)
     {
-      this.updateJson(value);
+      //this.updateJson(value);
+      this.updatedValue=value
     }
     
   }
@@ -119,6 +122,7 @@ export class CorrelationformComponent implements OnInit {
 
   onSubmit(){
     var activeKeys=[]
+    this.updateJson(this.updatedValue)
     for(let i=0;i<this.serviceClusters.length;i++)
     {
       if(Object.keys(this.serviceClusters[i].data).length > 0 && this.flag=="log")
