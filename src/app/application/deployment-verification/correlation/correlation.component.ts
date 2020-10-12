@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ElementRef, HostListener, Output, EventEmitter } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';           // for ngx bootstrap
 import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import * as CorrelationAction from './store/correlation.actions';
@@ -17,6 +17,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
   @Input() serviceId: any[];
   @Input() serviceList: any[];
   @Input() analysisType:any;
+  @Output() closeSideNav = new EventEmitter<boolean>();
   @ViewChild ("closeButtonLogLines") closebtn:ElementRef;
   @ViewChild ("chartClickRef") chartbtn:ElementRef;
   @ViewChild('subChartSize') subChartSize: ElementRef;
@@ -25,6 +26,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     height:150
   }
   modalRef: BsModalRef;                                                      // for modal
+  
   dataSource:any=[]
   dummydata:any;
   showPopUpForLogs:boolean=false;                                           // for showing popup when clicked on bar chart
@@ -54,11 +56,12 @@ export class CorrelationComponent implements OnInit,OnChanges {
     showLegend: true,
     animations: true,
     showXAxis: true,
+    legendTitle:undefined,
     showYAxis: true,
     showYAxisLabel: false,
     showXAxisLabel: true,
     xAxisLabel: 'Time',
-    yAxisLabel:'',
+    yAxisLabel:'Count',
     timeline: true,
     
   }
@@ -79,7 +82,8 @@ export class CorrelationComponent implements OnInit,OnChanges {
     {
       this.store.dispatch(CorrelationAction.allMetrics({ canaryId: this.canaryId, serviceId: this.serviceList[0].serviceId }));
     }
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template );
+    this.modalRef.setClass('modalWidthExtraWidth')
     this.addFlag = selectedAddButton
   }
 
@@ -199,7 +203,6 @@ export class CorrelationComponent implements OnInit,OnChanges {
               
           }
           
-         // console.log(this.initaladdLogData)
           this.initaladdLogData.serviceClusters[0].clusterIds=clusters;
           if(this.initaladdLogData.serviceClusters[0].clusterIds.length > 0 && this.counter==0)
           {
@@ -227,10 +230,10 @@ export class CorrelationComponent implements OnInit,OnChanges {
               this.addMetricJson[this.selectedServiceIndex]['data']['metric'][this.allMetricsData[i].id]=true
             }
           }
-          
-          this.initialaddMetricData.serviceMetrics[this.selectedServiceIndex].metricIds=clusters;
+         
+          this.initialaddMetricData.serviceMetrics[0].metricIds=clusters;
 
-          if(this.initialaddMetricData.serviceMetrics[this.selectedServiceIndex].metricIds.length > 0 && this.metricCounter == 0)
+          if(this.initialaddMetricData.serviceMetrics[0].metricIds.length > 0 && this.metricCounter == 0)
           {
             this.store.dispatch(CorrelationAction.metrictimeSeriesData({ postData:this.initialaddMetricData}));
             this.metricCounter++;
@@ -289,6 +292,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     this.showPopUpForLogs=false;
   }
   getOpen(clickedClusterData){
+    this.closeSideNav.emit(true)
     this.store.dispatch(CorrelationAction.clusterData({ canaryId: this.canaryId, serviceId: clickedClusterData.serviceId, clusterId:clickedClusterData.clusterId,ClickedTimeStamp:clickedClusterData.ClickedTimeStamp}));
     
   }
@@ -366,6 +370,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
     
   }
   splitlogLinesFunc(){
+    
     var res = [];
      res = this.clusterLogs.split("DOCUMENT ");
     
@@ -401,7 +406,6 @@ export class CorrelationComponent implements OnInit,OnChanges {
     else if(this.addFlag=="metric"){
       this.addMetricJson=submitdataToSave
     }
-  
     
     
   }
@@ -444,15 +448,26 @@ export class CorrelationComponent implements OnInit,OnChanges {
     }
   }
 
-  @HostListener('window:mousemove', ['$event'])
-  @HostListener('window:click', ['$event'])
-    handleScroll(){
-      
+  
+
+  
+  
+    @HostListener('window:click', ['$event.target'])
+    handleScroll(target){
+      if (target.classList['value'] === 'fa fa-chevron-right' || target.classList['value'] === 'fa fa-chevron-left' ||
+      target.classList['value'] === 'ng-star-inserted' ){
+        this.linechartSize = [5,300]
+        this.config.width=5
       setTimeout(() =>{
         this.linechartSize = [this.subChartSize.nativeElement.offsetWidth,300]
-      },500)
+        this.config.width=this.subChartSize.nativeElement.offsetWidth
+      },300)
     }
-  
-  
+    // else{
+    //   setTimeout(() =>{
+    //     this.linechartSize = [this.subChartSize.nativeElement.offsetWidth,300]
+    //   },100)
+    // }
+  }
   
 }

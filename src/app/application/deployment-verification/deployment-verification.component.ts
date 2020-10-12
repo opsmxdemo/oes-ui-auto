@@ -124,6 +124,7 @@ export class DeploymentVerificationComponent implements OnInit {
     const targetnode = target.target;
     if (targetnode.textContent === 'Log Analysis' ||
       targetnode.textContent === 'Metric Analysis' ||
+      targetnode.textContent === 'Correlation'||
       targetnode.classList['value'] === 'service-selection') {
       this.Sidenav.close();
       this.isShow = false;
