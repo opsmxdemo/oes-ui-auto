@@ -68,6 +68,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   lineChartProperty = {                                               // It is use to stote all line chart related properties.
     showLegend: true,
     animations: true,
+    legendTitle:"Legend",
     showXAxis: true,
     showYAxis: true,
     showYAxisLabel: false,

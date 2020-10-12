@@ -1,78 +1,81 @@
-<div>
-<!-- for displaying log lines when clicked on bar chart -->
-<ng-container *ngIf="showPopUpForLogs">
-  <div class="card card-popup fixedPopup" >
-    <div class="card-header d-flex align-items-center justify-content-between">
-      <strong>Service Name: {{selectedServiceName}}</strong>
-      <button class="p-0 btn close" (click)="ClosePopUp()"><i class="fa fa-times"></i></button>
-    </div>
-    <!-- /.card-header -->
-    <div class="card-body text-wrap-normal py-3 px-0 maxheightPopup">
-      
-      <ng-container *ngFor="let logLine of splittedLogLines;let index = index;" >
-        <div class="padlt20">{{logLine}}</div>
-      </ng-container>
-  
-      
-    </div>
-    <div class="text-right px-3 mt-2">
-      <button #closeButtonLogLines class="btn btn-default" (click)="ClosePopUp()">Close</button>
-    </div>
-    <!-- /.card-body -->
-  </div>
-  </ng-container>
-  
-  
-  <!-- <button type="button" class="btn btn-primary" (click)="openModal(template)">Create template modal</button>
-   -->
-   <!-- button to add log bar graph -->
-   <div #subChartSize class="buttonDiv width100" *ngIf = "analysisType=='Logs Only' || analysisType=='Logs and Metrics'">
-  <button class="btn btn-default float-right  addBtns" (click)="openModal(template,'log')">Add Logs</button>
-  </div>
-  
-  <!-- loop for displaying log bar graph -->
-  <div #chartClickRef *ngFor="let log of dummydataForTimeAnalysisComponent; let i = index">
-      <!-- <fusioncharts width="100%" height="200" type="column2d" dataFormat="JSON" [dataSource]="log"
-      (dataplotClick)="plotRollOver($event)" ></fusioncharts> -->
-      <div class="divBorder" *ngFor="let seriesArray of log.clusterData | sortBy: 'desc':'scoreReduction'; let i = index " >
-        <!-- <div>{{seriesArray.scoreReduction}}</div> -->
-      <app-time-analysis-chart [config]="config" [allUnexpectedEventSummary]="unexpectedClusters" [serviceName] ="log.serviceName"  [serviceId]="log.serviceId" [clusterId] = "seriesArray.clusterId"  [dataSource]="seriesArray.data" [topic]="seriesArray.topic" [description]="seriesArray.clusterDescription" [startTime]="log.startTime" [endTime]="log.endTime" (getserviceId)=getserviceId($event) (openpopUp)="getOpen($event)" (getClickedTimeStamp)="getClickedTimeStamp($event)" (getClusterId)="deleteLogChart($event)"></app-time-analysis-chart>
-    </div>
-  </div>
-  <!-- popup when clicked on bar graph -->
-  <!--modal for adding log bar graph-->
-  <ng-template #template class="modalWidth">
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Add Logs</h4>
-      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-      <app-correlationform [data]="unexpectedClusters" [selectedServiceIndex]="selectedServiceIndex" [selectedServiceInitially]="serviceId"  [addLogsJson]="addLogsJson" [serviceInfo]="serviceList" [flag]="addFlag"  (onSubmitsaveData)=onSubmitsaveData($event) (onSubmitPostData)=onSubmitPostData($event) (onSelectedServiceChange)=onSelectedServiceChange($event) (onCancelClicked)="hideAddLog($event)" ></app-correlationform>
-      
-      
-    </ng-template>
-    
-    <div class="buttonDiv" *ngIf = "analysisType=='Metrics Only' || analysisType=='Logs and Metrics'">
-      <button type="button" class="btn btn-default float-right addBtns " (click)="openModal(template1,'metric')">Add Metrics</button>
+<div class="fullwidth" #subChartSize>
+  <!-- for displaying log lines when clicked on bar chart -->
+  <ng-container *ngIf="showPopUpForLogs">
+    <div class="card card-popup fixedPopup" >
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <strong>Service Name: {{selectedServiceName}}</strong>
+        <button class="p-0 btn close" (click)="ClosePopUp()"><i class="fa fa-times"></i></button>
       </div>
-
-    <ng-template #template1>
+      <!-- /.card-header -->
+      <div class="card-body text-wrap-normal py-3 px-0 maxheightPopup">
+        
+        <ng-container *ngFor="let logLine of splittedLogLines;let index = index;" >
+          <div class="padlt20">{{logLine}}</div>
+        </ng-container>
+    
+        
+      </div>
+      <div class="text-right px-3 mt-2">
+        <button #closeButtonLogLines class="btn btn-default" (click)="ClosePopUp()">Close</button>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    </ng-container>
+    
+    
+    <!-- <button type="button" class="btn btn-primary" (click)="openModal(template)">Create template modal</button>
+     -->
+     <!-- button to add log bar graph -->
+     <div  class="buttonDiv " *ngIf = "analysisType=='Logs Only' || analysisType=='Logs and Metrics'">
+    <button class="btn btn-default float-right  addBtns" (click)="openModal(template,'log')">Add Logs</button>
+    </div>
+    
+    <!-- loop for displaying log bar graph -->
+    
+    <div #chartClickRef *ngFor="let log of dummydataForTimeAnalysisComponent; let i = index">
+        
+        <div class="divBorder" *ngFor="let seriesArray of log.clusterData | sortBy: 'desc':'scoreReduction'; let i = index " >
+                <app-time-analysis-chart [config]="config" [allUnexpectedEventSummary]="unexpectedClusters" [serviceName] ="log.serviceName"  [serviceId]="log.serviceId" [clusterId] = "seriesArray.clusterId"  [dataSource]="seriesArray.data" [topic]="seriesArray.topic" [description]="seriesArray.clusterDescription" [startTime]="log.startTime" [endTime]="log.endTime" (getserviceId)=getserviceId($event) (openpopUp)="getOpen($event)" (getClickedTimeStamp)="getClickedTimeStamp($event)" (getClusterId)="deleteLogChart($event)"></app-time-analysis-chart>
+      </div>
+    </div>
+  
+    <!-- popup when clicked on bar graph -->
+    <!--modal for adding log bar graph-->
+    <ng-template #template class="modalWidth">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Add Metrics</h4>
+        <h4 class="modal-title pull-left">Add Logs</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <app-correlationform [data]="allMetricsData" [selectedServiceIndex]="selectedServiceIndex" [selectedServiceInitially]="serviceId" [addLogsJson]="addMetricJson" [serviceInfo]="serviceList" [flag]="addFlag" (onSubmitsaveData)=onSubmitsaveData($event) (onSubmitPostData)=onSubmitPostData($event) (onSelectedServiceChange)=onSelectedServiceChange($event) (onCancelClicked)="hideAddLog($event)" ></app-correlationform>
+        <app-correlationform [data]="unexpectedClusters" [selectedServiceIndex]="selectedServiceIndex" [selectedServiceInitially]="serviceId"  [addLogsJson]="addLogsJson" [serviceInfo]="serviceList" [flag]="addFlag"  (onSubmitsaveData)=onSubmitsaveData($event) (onSubmitPostData)=onSubmitPostData($event) (onSelectedServiceChange)=onSelectedServiceChange($event) (onCancelClicked)="hideAddLog($event)" ></app-correlationform>
         
         
       </ng-template>
-    <div  *ngFor="let metric of dataForMetricComponentChart; let i = index">
-      <div *ngFor="let seriesArray of metric.metricsData; let j = index">
-        <app-line-chart [dataSourceCorreleation]="seriesArray" [chartProperty]="lineChartProperty" [view]="linechartSize" [Correlationflag]="CorrelationflagForLineChart" [serviceId]="metric.serviceId" [metricIndex]="seriesArray.metricId" (getMetricId)="deleteMetricChart($event)" ></app-line-chart>
+      
+      <div class="buttonDiv" *ngIf = "analysisType=='Metrics Only' || analysisType=='Logs and Metrics'">
+        <button type="button" class="btn btn-default float-right addBtns " (click)="openModal(template1,'metric')">Add Metrics</button>
+        </div>
+  
+      <ng-template #template1 class="modaltemplate">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Add Metrics</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+          <app-correlationform [data]="allMetricsData" [selectedServiceIndex]="selectedServiceIndex" [selectedServiceInitially]="serviceId" [addLogsJson]="addMetricJson" [serviceInfo]="serviceList" [flag]="addFlag" (onSubmitsaveData)=onSubmitsaveData($event) (onSubmitPostData)=onSubmitPostData($event) (onSelectedServiceChange)=onSelectedServiceChange($event) (onCancelClicked)="hideAddLog($event)" ></app-correlationform>
+          
+          
+        </ng-template>
+        <div  >
+      <div  *ngFor="let metric of dataForMetricComponentChart; let i = index">
+        <div *ngFor="let seriesArray of metric.metricsData; let j = index">
+          <app-line-chart [dataSourceCorreleation]="seriesArray" [chartProperty]="lineChartProperty" [view]="linechartSize" [Correlationflag]="CorrelationflagForLineChart" [serviceId]="metric.serviceId" [metricIndex]="seriesArray.metricId" (getMetricId)="deleteMetricChart($event)" ></app-line-chart>
+        </div>
       </div>
     </div>
-  </div>
-  
-  
+    
+    </div>
+    
+    
