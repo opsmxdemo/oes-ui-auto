@@ -141,7 +141,7 @@
               <!-- <div class="error_graph"><img src="../../../assets/images/graph_lines_01.png" class="img-fluid"
                   alt="graph" /></div> -->
 
-              <div class="dropdown error_dropdown">
+              <div class="dropdown error_dropdown dropdown-log">
                 <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select"
                   [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}">
                   <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor" class="{{criticality.textclass}}">
@@ -170,7 +170,7 @@
                   </div>
                 </div>
               </div>
-              <div class="dropdown error_dropdown" *ngIf="logAnalysisResults.build_usecase && log.clusterTagInfo?.tag != null ">
+              <div class="dropdown error_dropdown dropdown-log" *ngIf="logAnalysisResults.build_usecase && log.clusterTagInfo?.tag != null ">
                 <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag" 
                   data-toggle="dropdown"
                   class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
@@ -199,7 +199,7 @@
                   </div>
                 </div>
               </div>
-              <div data-toggle="tooltip" data-placement="top" title="Time Analysis"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true" (click)="timeAnalysisGraph(log)"></i></div>
+              <div data-toggle="tooltip" data-placement="top" title="Time Analysis" class="timeanalysis-header"><i class="fa fa-bar-chart icon-bar-chart text-primary clickable" aria-hidden="true" (click)="timeAnalysisGraph(log)"></i></div>
               <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download Cluster Info"><img src="../../../assets/images/download.png" alt="download" /></button>
               <!-- <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" [attr.data-target]="switchToState === 'Expand All'?'#log' + log.id:'#log'" #expColBtn aria-expanded="true" aria-controls="collapse"> -->
                 <!-- <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" href="'#log'+log.id" #expColBtn>
