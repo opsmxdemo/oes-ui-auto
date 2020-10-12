@@ -49,7 +49,7 @@ export class TrendAnalysisComponent implements OnInit {
     yAxisLabel: 'Score',
     timeline: true,
     colorScheme: {
-      domain: ['#06a588', '#99cc33', '#ffc0cb', '#b69f7f', '#6600cc', '#98b1e4', '#e5bfab', '#7f03c0', '#97c4f5', '#841607', '#990066', '#91fdc3', '#66cc00', '#696969', '#bada55', '#7fe5f0', '#420420', '#133337', '#f73471', '#576675', '#c39797', '#800000', '#800080', '#ff7f50', '#468499', '#008000', '#dafff9', '#7df0e0', '#4b5f81', '#cc9933', '#a6127e', '#dae0ff', '#91eec1', '#77a45c', '#e3e129', '#cacbd3', '#cc6699']
+      domain: ['#000000', '#99cc33', '#ffc0cb', '#b69f7f', '#6600cc', '#98b1e4', '#e5bfab', '#7f03c0', '#97c4f5', '#841607', '#990066', '#91fdc3', '#66cc00', '#696969', '#bada55', '#7fe5f0', '#420420', '#133337', '#f73471', '#576675', '#c39797', '#800000', '#800080', '#ff7f50', '#468499', '#008000', '#dafff9', '#7df0e0', '#4b5f81', '#cc9933', '#a6127e', '#dae0ff', '#91eec1', '#77a45c', '#e3e129', '#cacbd3', '#cc6699']
     }
   }
 
@@ -149,7 +149,8 @@ export class TrendAnalysisComponent implements OnInit {
   chartSize: any[];                                                   // It is use to store graph width on change of layout widyh.
   // chartSize: number;                                                   // It is use to store graph width on change of layout.
   view: any = [];
-  innerWidth: number;
+  innerPaddingRight: number = 200;
+  checkSeriesLength: boolean = false;             // Used to check if the services in the graph has array value or not
 
   // options
   legend: boolean = true;
@@ -165,6 +166,7 @@ export class TrendAnalysisComponent implements OnInit {
   issuesyAxisLabel: string = 'Issues'
   timeline: boolean = true;
 
+  TrendAnalysisFlag:boolean=true;
   // Creating variables for the Risk Score chart
   riskChartData: any = [];							          // used to store value from Risk score API
   createRiskChartData: any = [];					// used to create data structure for Risk score
@@ -203,7 +205,7 @@ export class TrendAnalysisComponent implements OnInit {
   ngOnInit(): void {
 
     setTimeout(() => {
-      this.view = [this.setChartSize.nativeElement.offsetWidth-200, 300]
+      this.view = [this.setChartSize.nativeElement.offsetWidth - this.innerPaddingRight, 300]
       // this.chartSize = [this.subChartSize.nativeElement.offsetWidth - 300, 300]
       // console.log("on it");
       
@@ -298,18 +300,26 @@ export class TrendAnalysisComponent implements OnInit {
           this.riskChartData.forEach(eachItem => {
             this.storeRiskSeriesValue = [];
             if (eachItem['series'].length > 0) {
+              this.checkSeriesLength = true;
               eachItem['series'].forEach(eachValue => {
-                this.storeRiskSeriesValue.push({ "name": new Date(eachValue.name), "value": eachValue.value });
+                this.storeRiskSeriesValue.push({
+                  "name": new Date(eachValue.name), "value": eachValue.value, "extra": { "canaryId": eachValue.riskAnalysisId }
+                  });
               });
               this.createRiskChartData[this.riskChartsCounter] = {
                 "name": eachItem.name,
                 "series": this.storeRiskSeriesValue
+                
               }
               this.riskChartsCounter++;
             }
           })
-          this.createRiskChartData[0].name = this.createRiskChartData[0].name + " - Application"
-          // console.log("riskChartData2: ", this.createRiskChartData);
+          // this.createRiskChartData[0].name = this.createRiskChartData[0].name + " - Application";
+          if (this.checkSeriesLength ){
+            this.createRiskChartData[0].name = this.createRiskChartData[0].name + " - Application";
+            this.checkSeriesLength = false;
+          }
+                    // console.log("riskChartData2: ", this.createRiskChartData);
           // this.riskxAxisLabel = "Time: " + new Date(this.getStartTime) + " - " + new Date(this.getEndTime);
           this.riskScoreDisplay = this.createRiskChartData.length === 0 ? false : true;          
         }
@@ -374,12 +384,12 @@ export class TrendAnalysisComponent implements OnInit {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
-  @HostListener('mouseover')
+  @HostListener('window:mousemove', ['$event'])
   setWidth() {
     // console.log("mouseEnter listener");
     
     // setTimeout(() => {
-      this.view = [this.setChartSize.nativeElement.offsetWidth-200, 300]
+    this.view = [this.setChartSize.nativeElement.offsetWidth - this.innerPaddingRight, 300]
       // this.chartSize = [this.subChartSize.nativeElement.offsetWidth - 300, 300]
     // }, 500)
   }
@@ -544,8 +554,7 @@ export class TrendAnalysisComponent implements OnInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.view = [this.setChartSize.nativeElement.offsetWidth-200, 300]
-      // this.chartSize = [this.subChartSize.nativeElement.offsetWidth - 300, 300]
+      this.view = [this.setChartSize.nativeElement.offsetWidth - this.innerPaddingRight, 300]
     }, 500)
   }
 
