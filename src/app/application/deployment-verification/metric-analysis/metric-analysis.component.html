@@ -185,15 +185,15 @@
               </select> -->
             </div>
             <div class="checkbox-indigators d-flex align-items-center">
-              <div class="cb_indigator cd_red">
+              <div class="cb_indigator cd_red" data-toggle="tooltip" data-placement="top" title="Fail">
                 <input type="checkbox" id="indigatorRed" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[0]">
                 <label for="indigatorRed"></label>
               </div>
-              <div class="cb_indigator cb_warning">
+              <div class="cb_indigator cb_warning" data-toggle="tooltip" data-placement="top" title="Warning">
                 <input type="checkbox" id="indigatorWarning" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[1]">
                 <label for="indigatorWarning"></label>
               </div>
-              <div class="cb_indigator cb_success">
+              <div class="cb_indigator cb_success" data-toggle="tooltip" data-placement="top" title="Pass">
                 <input type="checkbox" id="indigatorSuccess" (click)="onSelectCheckbox($event)" [checked]="statusSearchData[2]">
                 <label for="indigatorSuccess"></label>
               </div>
@@ -360,14 +360,16 @@
                   <b class="countDisabledbtn">{{metricType === 'Infrastructure'?'INFRA' : metricType==='ADVANCED' ? 'ADVANCED' : 'UNKNOWN'}} METRIC : </b> 
                   <b>{{this.parentMetricName | uppercase}}</b>
                 </p>
-                <p class="mb-1"><b class="countDisabledbtn">COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{selectedMetricName | uppercase}}</b></p>
+                <p class="mb-1"><b class="{{typeColor + 'btn'}}">{{selectedMetricName | uppercase}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">COMPARISON : </b> </p>
                 <div class="graph mb-3" *ngFor = "let chart of currentChartData ; let i = index;" #subChartSize>
                   <hr>
-                  <i class="fa fa-line-chart" aria-hidden="true"></i>
+                  <!-- <i class="fa fa-line-chart" aria-hidden="true"></i> -->
                   <app-line-chart [dataSource]="chart" [chartProperty]="lineChartProperty" [view]="chartSize"></app-line-chart>
                 </div>
-                <p class="mb-1"><b class="countDisabledbtn">QUARTILE COMPARISON : </b> <b class="{{typeColor + 'btn'}}">{{selectedMetricName | uppercase}}</b></p>
+                <p class="mb-1"><b class="countDisabledbtn">QUARTILE COMPARISON : </b></p>
                 <div class="graph mb-4">
+                  <hr>
                   <img src="../../../../assets/images/matric_graph02.jpg" class="img-fluid" alt="image" />
                 </div>
                 <div class="card mb-3">
