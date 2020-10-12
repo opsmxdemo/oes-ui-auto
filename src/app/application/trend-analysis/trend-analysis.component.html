@@ -68,14 +68,14 @@
                                 <div class="pl-3 pr-3 pt-4 d-flex flex-column" id="ngxLineChart" #setChartSize> 
                                     <h5 class="riskPadding chartPaddingRight">Risk Score</h5>
                                     <p> </p>
-                                    <app-line-chart class="risk" *ngIf="riskScoreDisplay" [view]="view" [chartProperty]="riskChartProperty" [dataSource]="createRiskChartData"   ></app-line-chart>
-                                    <div *ngIf="!riskScoreDisplay">
+                                    <app-line-chart class="risk" *ngIf="riskScoreDisplay" [view]="view" [chartProperty]="riskChartProperty" [dataSource]="createRiskChartData"  [TrendAnalysisFlag]="TrendAnalysisFlag"  ></app-line-chart>
+                                    <div class=" chartPaddingRight" *ngIf="!riskScoreDisplay">
                                         No data to display!
                                     </div>
-                                    <h5 class="issuesPadding chartPaddingRight">Issues - Logs - {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</h5>
+                                    <h5 class="issuesPadding chartPaddingRight">Issues - Logs - {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: 'No Services'}} </h5>
                                     <p> </p>
                                     <app-stacked-area-chart *ngIf="issuesLogsDisplay" [view]="view" [chartProperty]="issuesChartProperty" [dataSource]="createIssuesLogChartData" class="issuesChartPadding"  ></app-stacked-area-chart>
-                                    <div *ngIf="!issuesLogsDisplay">
+                                    <div class=" chartPaddingRight" *ngIf="!issuesLogsDisplay">
                                         No data to display!
                                     </div>
                                 </div>

@@ -166,6 +166,7 @@ export class TrendAnalysisComponent implements OnInit {
   issuesyAxisLabel: string = 'Issues'
   timeline: boolean = true;
 
+  TrendAnalysisFlag:boolean=true;
   // Creating variables for the Risk Score chart
   riskChartData: any = [];							          // used to store value from Risk score API
   createRiskChartData: any = [];					// used to create data structure for Risk score
@@ -301,11 +302,14 @@ export class TrendAnalysisComponent implements OnInit {
             if (eachItem['series'].length > 0) {
               this.checkSeriesLength = true;
               eachItem['series'].forEach(eachValue => {
-                this.storeRiskSeriesValue.push({ "name": new Date(eachValue.name), "value": eachValue.value });
+                this.storeRiskSeriesValue.push({
+                  "name": new Date(eachValue.name), "value": eachValue.value, "extra": { "canaryId": eachValue.riskAnalysisId }
+                  });
               });
               this.createRiskChartData[this.riskChartsCounter] = {
                 "name": eachItem.name,
                 "series": this.storeRiskSeriesValue
+                
               }
               this.riskChartsCounter++;
             }
@@ -380,7 +384,7 @@ export class TrendAnalysisComponent implements OnInit {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
-  @HostListener('mouseover')
+  @HostListener('window:mousemove', ['$event'])
   setWidth() {
     // console.log("mouseEnter listener");
     

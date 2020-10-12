@@ -12,6 +12,7 @@ export class LineChartComponent implements OnInit {
   @Input() view: any[];
   @Input() chartProperty:ChartOptions;
   @Input() Correlationflag:boolean = false;
+  @Input() TrendAnalysisFlag: boolean = false;
   @Input() dataSourceCorreleation: any;
   @Input() serviceId: any;
   @Input() metricIndex: any;

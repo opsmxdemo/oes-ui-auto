@@ -27,16 +27,24 @@
   (deactivate)="onDeactivate($event)"
   style="fill: #999999; color: black;">
 
+  <div *ngIf="TrendAnalysisFlag">
   <ng-template #tooltipTemplate let-model="model">
-    This is vertical line tooltip template - NEW
+    <div class="seriesToolTip">
+      <div class="font16"> {{model.series}} | {{model.value}}</div>
+      <div>{{model.name}}</div>
+    </div>
   </ng-template>
 
   <ng-template #seriesTooltipTemplate let-model="model">
     <!-- fields are series/name/value --> 
-    <div class="toolTip" *ngFor="let data of model" style="color: white">
-      <p>{{data.series}}|{{data.value}}</p>
+    <div class="toolTip">
+      <div class="eachtoolTip" *ngFor="let data of model" style="color: white">
+            <div *ngIf="data.extra.canaryId != undefined" class="canaryId"> Canary Id: {{data.extra.canaryId}} </div>
+            <div class="font12"> <i class="fa fa-square" aria-hidden="true" [style.color]="data.color"></i> &nbsp; {{data.series}} | {{data.value}}</div>
+      </div>
     </div>
   </ng-template>
+  </div>
 
 </ngx-charts-line-chart>
 </div>
