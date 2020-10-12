@@ -872,6 +872,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     }else{
       this.onClickLogEventTab(this.eventTab);
     }
+    this.classifiedLogsList = [];
   }
   sortByLength(arrayname:any){
     return arrayname.sort(function(a, b) {
