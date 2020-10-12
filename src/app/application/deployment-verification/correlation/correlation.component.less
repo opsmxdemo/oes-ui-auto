@@ -9,18 +9,16 @@
   max-height: 400px;
   overflow-y: auto;
 }
-.buttonDiv
-{
-  display: flow-root;
-}
+
 .padlt20
 {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-::ng-deep .modal-content{
-  width: 1400px;
+ .modalWidth{
+   max-width: 1400px;
+  width: 1000px;
   margin-left: -400px;
 }
 .subChartSize
@@ -34,4 +32,15 @@
 {
   width: 100%;
   display: inline-block;
+}
+.fullWidth
+{
+  width: 100%;
+  display: inline-flex;
+}
+.buttonDiv
+{
+  float: right;
+  display: block;
+  width: 100%;
 }

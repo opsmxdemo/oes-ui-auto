@@ -594,7 +594,7 @@
                       <div class="tab-pane mp-4 "  id="correlation" role="tabpanel" aria-labelledby="correlation-tab"
                       [ngClass]="{'active': selectedTab === 'correlation'}">
                         <ng-container *ngIf = "selectedTab === 'correlation'">
-                          <app-correlation [canaryId]="control.value" [serviceId]="selectedServiceId" [serviceList] = "deploymentServices.services" [analysisType]="deploymentApplicationHealth['analysisType']" ></app-correlation>
+                          <app-correlation [canaryId]="control.value" [serviceId]="selectedServiceId" [serviceList] = "deploymentServices.services" [analysisType]="deploymentApplicationHealth['analysisType']" (closeSideNav)="getEventsFromLogAnalysis($event)"></app-correlation>
                         </ng-container>
                       </div>
                   </div>
