@@ -11,7 +11,8 @@ export class LineChartComponent implements OnInit {
   @Input() dataSource: any[];
   @Input() view: any[];
   @Input() chartProperty:ChartOptions;
-  @Input() Correlationflag:boolean;
+  @Input() Correlationflag:boolean = false;
+  @Input() TrendAnalysisFlag: boolean = false;
   @Input() dataSourceCorreleation: any;
   @Input() serviceId: any;
   @Input() metricIndex: any;
@@ -32,6 +33,7 @@ export class LineChartComponent implements OnInit {
   timeline: boolean;
   autoScale: boolean;
   colorScheme;
+  tooltipDisabled = false;
   ChartShow:any=true;
 
   constructor() {}
