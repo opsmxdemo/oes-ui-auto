@@ -6,7 +6,7 @@
         <div class="menu_toggle" (click)="toggleNavbar()"><i class="fa fa-bars"></i></div>
       </div>
       <div class="sidebar_nav">
-        <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;" (mouseenter)="expandMenu()">
+        <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;" >
           <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" routerLink="{{SideMenu.link}}"><a><i class="icon {{SideMenu.link}}"></i> <span>{{SideMenu.name }} 
             <ng-template [ngIf]="SideMenu.name === 'Applications' ?true:false">
               <span class="badge badge-primary">{{applicationCount}}</span>

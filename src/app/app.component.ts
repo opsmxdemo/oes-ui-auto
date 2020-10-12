@@ -160,10 +160,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  // Below function is use to expand sideMenu if it is in collapsed on mouse enter
-  expandMenu(){
-    this.addclass = false;
-  }
+ 
 
   // Below function is use ro disabled link by checking installation mode 
   disabledLink(linkName){
