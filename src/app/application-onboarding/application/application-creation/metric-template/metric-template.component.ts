@@ -90,23 +90,113 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
     this.store.select(fromFeature.selectMetricTemplate).subscribe(
       (responseData) => {
-        if(responseData.customDSAccounts != null){
+        if(responseData.customDSAccounts != null && responseData.isLoadedAccountForCustomDataSource){
+          this.store.dispatch(ApplicationActions.loadedAccountForCustomDataSource());
           this.customDataSourceAccounts = responseData.customDSAccounts;
         }
-        if(responseData.APMDSAccounts != null){
+        if(responseData.APMDSAccounts != null && responseData.isLoadedAccountForAPMDataSource){
+          this.store.dispatch(ApplicationActions.loadedAccountForAPMDataSource());
           this.APMDSAccounts = responseData.APMDSAccounts;
         }
-        if(responseData.InfraDSAccounts != null){
+        if(responseData.InfraDSAccounts != null && responseData.isLoadedAccountForInfraDataScource){
+          this.store.dispatch(ApplicationActions.loadedAccountForInfraDataSource());
           this.InfraDSAccounts = responseData.InfraDSAccounts;
         }
-        if(responseData.APMApplicationForAccounts != null){
+        if(responseData.APMApplicationForAccounts != null && responseData.isLoadedApplicationForAPM){
+          this.store.dispatch(ApplicationActions.loadedApplicationForAPMAccounts());
           this.APMApplicationForAccounts = responseData.APMApplicationForAccounts;
         }
-        if(responseData.INFRACookbook != null){
+        if(responseData.INFRACookbook != null && responseData.isLoadedInfraCookbook){
+          this.store.dispatch(ApplicationActions.loadedInfraGenerateCookbook());
           this.INFRACookbook = responseData.INFRACookbook;
+          if(this.INFRACookbook != null){  
+            if(this.INFRACookbook.data != undefined){                               
+              if(this.INFRACookbook.data.groups.length > 0){
+                this.INFRACooknookGroups = this.INFRACookbook.data.groups;
+                //code to remove all items from the Form before pushing
+                const control = <FormArray>this.infracookbookForm.controls['cookbooklist'];
+                    for(let i = control.length-1; i >= 0; i--) {
+                        control.removeAt(i)
+                }
+                this.INFRACooknookGroups.forEach((cookbook,cookbookindex) => {
+                  (<FormArray>this.infracookbookForm.get('cookbooklist')).push(
+                    new FormGroup({
+                      group: new FormControl(cookbook.group),
+                      averageWeight : new FormControl(),
+                      isSelectedToSave :new FormControl(true),
+                      metrics: new FormArray([])
+                    })
+                  ); 
+                  
+                  //populating metrics array
+                  cookbook.metrics.forEach((metricObj, metricIndex) => {
+                    const cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
+                    const metricArray = cookbookArray.at(cookbookindex).get('metrics') as FormArray;
+                    metricArray.push(
+                      new FormGroup({
+                        name: new FormControl(metricObj.name),                       
+                        accountName : new FormControl(metricObj.accountName),
+                        aggregator : new FormControl(metricObj.aggregator),
+                        displayUnit : new FormControl(metricObj.displayUnit),
+                        metricType : new FormControl(metricObj.metricType),
+                        aggregatorTimeInterval: new FormControl(metricObj.aggregatorTimeInterval),
+                        aggregatorTimeIntervalUnit : new FormControl(metricObj.aggregatorTimeIntervalUnit),
+                        duration: new FormControl(metricObj.duration),
+                        riskDirection : new FormControl(metricObj.riskDirection),
+                        critical : new FormControl(),
+                        watchlist : new FormControl()                    
+                      })
+                    )
+                  })
+                 });
+              }
+             }         
+            }
         }
-        if(responseData.APMCookbook != null){
+        if(responseData.APMCookbook != null && responseData.isLoadedAPMCookbook){
+          this.store.dispatch(ApplicationActions.loadedAPMGenerateCookbook());
           this.APMCookbook = responseData.APMCookbook;
+          if(this.APMCookbook != null){    
+            if(this.APMCookbook.data != undefined){               
+                if(this.APMCookbook.data.groups.length > 0){
+                  this.APMCookbookGroups = this.APMCookbook.data.groups;
+                  //code to remove all items from the Form before pushing
+                  const control = <FormArray>this.apmcookbookForm.controls['cookbooklist'];
+                      for(let i = control.length-1; i >= 0; i--) {
+                          control.removeAt(i)
+                  }
+                  this.APMCookbookGroups.forEach((cookbook,cookbookindex) => {
+                    (<FormArray>this.apmcookbookForm.get('cookbooklist')).push(
+                      new FormGroup({
+                        group: new FormControl(cookbook.group),
+                        isSelectedToSave :new FormControl(true),
+                        metrics: new FormArray([])
+                      })
+                    ); 
+    
+                    //populating metrics array
+                    cookbook.metrics.forEach((metricObj, metricIndex) => {
+                      const cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
+                      const metricArray = cookbookArray.at(cookbookindex).get('metrics') as FormArray;
+                      metricArray.push(
+                        new FormGroup({
+                          name: new FormControl(metricObj.name),                      
+                          accountName : new FormControl(metricObj.accountName),
+                          aggregator : new FormControl(metricObj.aggregator),
+                          displayUnit : new FormControl(metricObj.displayUnit),
+                          label : new FormControl (metricObj.label),
+                          metricType : new FormControl(metricObj.metricType),
+                          aggregatorTimeIntervalUnit: new FormControl(metricObj.aggregatorTimeIntervalUnit),
+                          riskDirection : new FormControl(metricObj.riskDirection),
+                          critical : new FormControl(),
+                          watchlist : new FormControl()
+                        })
+                      )
+                    })                               
+                   });
+                  }
+                }
+              }
         }
       }
     );
@@ -223,7 +313,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     }
 
     this.metricConfigForm = new FormGroup({
-      isNormalize : new FormControl(true),
+      isNormalize : new FormControl(false),
       threshold : new FormControl(false)
     });
   }
@@ -254,7 +344,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   }
 
   onChangeDatasource(datasource,type){
-    this.APMDSAccounts = "";
+    //this.APMDSAccounts = "";
     if(type == 'apm'){
       this.APMDSAccounts = [];
       this.selectedAPMDataSource = datasource; 
@@ -277,51 +367,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       this.store.dispatch(ApplicationActions.fetchApplicationForAPMAccounts({sourceType: this.selectedAPMDataSource, account: dsAccount}));
     }else if(type== 'infra'){
       this.INFRACookbook = {};
-      this.store.dispatch(ApplicationActions.fetchInfraGenerateCookbook({account:dsAccount,applicationName:dsAccount,metricType:'INFRA',sourceType:this.selectedINFRADataSource,templateName:this.apmFormGroup.value.templateName}));     
-        if(this.INFRACookbook != null){  
-          if(this.INFRACookbook.data != undefined){                               
-            if(this.INFRACookbook.data.groups.length > 0){
-              this.INFRACooknookGroups = this.INFRACookbook.data.groups;
-              //code to remove all items from the Form before pushing
-              const control = <FormArray>this.infracookbookForm.controls['cookbooklist'];
-                  for(let i = control.length-1; i >= 0; i--) {
-                      control.removeAt(i)
-              }
-              this.INFRACooknookGroups.forEach((cookbook,cookbookindex) => {
-                (<FormArray>this.infracookbookForm.get('cookbooklist')).push(
-                  new FormGroup({
-                    group: new FormControl(cookbook.group),
-                    averageWeight : new FormControl(),
-                    isSelectedToSave :new FormControl(true),
-                    metrics: new FormArray([])
-                  })
-                ); 
-                
-                //populating metrics array
-                cookbook.metrics.forEach((metricObj, metricIndex) => {
-                  const cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
-                  const metricArray = cookbookArray.at(cookbookindex).get('metrics') as FormArray;
-                  metricArray.push(
-                    new FormGroup({
-                      name: new FormControl(metricObj.name),                       
-                      accountName : new FormControl(metricObj.accountName),
-                      aggregator : new FormControl(metricObj.aggregator),
-                      displayUnit : new FormControl(metricObj.displayUnit),
-                      metricType : new FormControl(metricObj.metricType),
-                      aggregatorTimeInterval: new FormControl(metricObj.aggregatorTimeInterval),
-                      aggregatorTimeIntervalUnit : new FormControl(metricObj.aggregatorTimeIntervalUnit),
-                      duration: new FormControl(metricObj.duration),
-                      riskDirection : new FormControl(metricObj.riskDirection),
-                      critical : new FormControl(),
-                      watchlist : new FormControl()                    
-                    })
-                  )
-                })
-               });
-            }
-           }         
-          }
-      
+      this.store.dispatch(ApplicationActions.fetchInfraGenerateCookbook({account:dsAccount,applicationName:dsAccount,metricType:'INFRA',sourceType:this.selectedINFRADataSource,templateName:this.apmFormGroup.value.templateName}));          
     }
      
   }
@@ -329,49 +375,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   onChangeAccountForDS(dsApplication, type){
     if(type == 'apm'){
       this.APMCookbook = {};
-      this.store.dispatch(ApplicationActions.fetchAPMGenerateCookbook({account:this.selectedAPMDSAccount,applicationName:dsApplication,metricType:'APM',sourceType:this.selectedAPMDataSource,templateName:this.apmFormGroup.value.templateName}));     
-      if(this.APMCookbook != null){    
-        if(this.APMCookbook.data != undefined){               
-            if(this.APMCookbook.data.groups.length > 0){
-              this.APMCookbookGroups = this.APMCookbook.data.groups;
-              //code to remove all items from the Form before pushing
-              const control = <FormArray>this.apmcookbookForm.controls['cookbooklist'];
-                  for(let i = control.length-1; i >= 0; i--) {
-                      control.removeAt(i)
-              }
-              this.APMCookbookGroups.forEach((cookbook,cookbookindex) => {
-                (<FormArray>this.apmcookbookForm.get('cookbooklist')).push(
-                  new FormGroup({
-                    group: new FormControl(cookbook.group),
-                    isSelectedToSave :new FormControl(true),
-                    metrics: new FormArray([])
-                  })
-                ); 
-
-                //populating metrics array
-                cookbook.metrics.forEach((metricObj, metricIndex) => {
-                  const cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
-                  const metricArray = cookbookArray.at(cookbookindex).get('metrics') as FormArray;
-                  metricArray.push(
-                    new FormGroup({
-                      name: new FormControl(metricObj.name),                      
-                      accountName : new FormControl(metricObj.accountName),
-                      aggregator : new FormControl(metricObj.aggregator),
-                      displayUnit : new FormControl(metricObj.displayUnit),
-                      label : new FormControl (metricObj.label),
-                      metricType : new FormControl(metricObj.metricType),
-                      aggregatorTimeIntervalUnit: new FormControl(metricObj.aggregatorTimeIntervalUnit),
-                      riskDirection : new FormControl(metricObj.riskDirection),
-                      critical : new FormControl(),
-                      watchlist : new FormControl()
-                    })
-                  )
-                })                               
-               });
-              }
-            }
-          }
-         
+      this.store.dispatch(ApplicationActions.fetchAPMGenerateCookbook({account:this.selectedAPMDSAccount,applicationName:dsApplication,metricType:'APM',sourceType:this.selectedAPMDataSource,templateName:this.apmFormGroup.value.templateName}));                    
     }
   }
 
@@ -520,7 +524,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     });
 
     this.metricConfigForm = new FormGroup({
-      isNormalize : new FormControl(true),
+      isNormalize : new FormControl(false),
       threshold : new FormControl(false)
     });
 
