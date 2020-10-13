@@ -61,6 +61,12 @@ export class ApplicationDashboardComponent implements OnInit {
               public applicationFeatureStore: Store<fromApplicationFeature.State>,
               private environment: AppConfigService) { }
 
+              scrollToActiveClass(): void{
+                var $container = $("html,body");
+                var $scrollTo = $('.active');
+                // $container.animate({scrollTop: $scrollTo.offset().top  - $container.offset().top + $container.scrollTop(), scrollLeft: 0},1000); 
+                $container.animate({scrollTop: $scrollTo.offset().top - 115, scrollLeft: 0}, 500);                 
+              }
   ngOnInit(): void {
     //fetching appData from dashboard state
     this.finalSelectedTabNumber = 0;
@@ -132,6 +138,7 @@ export class ApplicationDashboardComponent implements OnInit {
   public getApplications() {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.store.dispatch(AppDashboardAction.loadAppDashboard());
+    this.scrollToActiveClass();
   }
 
   public selectedApplication(index: number, app: any,appType: string) {
