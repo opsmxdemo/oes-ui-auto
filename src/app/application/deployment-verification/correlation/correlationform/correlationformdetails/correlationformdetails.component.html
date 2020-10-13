@@ -16,7 +16,7 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'CRITICAL ERROR'">
                     <input  type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{i}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Critical'][group.clusterId]:false"   ngModel>
                      
-                    <label class="custom-control-label" for="customCheck{{i}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
+                    <label class="custom-control-label" for="customCheck{{i}}"  data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>
@@ -35,7 +35,7 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'ERROR'">
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{j}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['ERROR'][group.clusterId]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label red-tooltip" for="customCheck{{j}}"   data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
+                    <label class="custom-control-label red-tooltip" for="customCheck{{j}}"    data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>
@@ -54,7 +54,7 @@
                 <div class="custom-control custom-checkbox" *ngIf="group.topic == 'WARN'">
                     <input #checkboxes type="checkbox" (change)="onCheckBoxClicked()" class="custom-control-input" id="customCheck{{k}}" name="{{group.clusterId}}" [ngModel]="savedCheckedData !== undefined ? savedCheckedData['Warn'][group.clusterId]:false"  ngModel>
                     <!--  -->
-                    <label class="custom-control-label" for="customCheck{{k}}" data-toggle="tooltip" data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
+                    <label class="custom-control-label" for="customCheck{{k}}"  data-placement="top" title="{{group.clusterDescription}}"> {{group.clusterDescription | ellipsis:200}}</label>
                 </div>
             </ng-container>
         </ng-container>
