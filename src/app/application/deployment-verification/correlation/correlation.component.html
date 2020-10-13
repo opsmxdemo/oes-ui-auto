@@ -71,7 +71,7 @@
         <div  >
       <div  *ngFor="let metric of dataForMetricComponentChart; let i = index">
         <div *ngFor="let seriesArray of metric.metricsData; let j = index">
-          <app-line-chart [dataSourceCorreleation]="seriesArray" [chartProperty]="lineChartProperty" [view]="linechartSize" [Correlationflag]="CorrelationflagForLineChart" [serviceId]="metric.serviceId" [metricIndex]="seriesArray.metricId" (getMetricId)="deleteMetricChart($event)" ></app-line-chart>
+          <app-line-chart [dataSourceCorreleation]="seriesArray" [chartProperty]="lineChartProperty" [serviceName] ="metric.serviceName" [view]="linechartSize" [Correlationflag]="CorrelationflagForLineChart" [serviceId]="metric.serviceId" [metricIndex]="seriesArray.metricId" (getMetricId)="deleteMetricChart($event)" ></app-line-chart>
         </div>
       </div>
     </div>

@@ -1,20 +1,20 @@
 <div *ngIf = "ChartShow">
-    <div class="row">
-<div class="col-sm-11 alignHeading"><span>{{serviceName}}: </span><span [ngClass]= "{'text-danger':topic == 'CRITICAL ERROR', 'text-error':topic=='ERROR','text-warning':topic=='WARN'}">{{topic}}</span>: <span data-toggle="tooltip" data-placement="top" title="{{description}}">{{description | ellipsis:200}}</span></div>
+  <div class="row">
+<div class="col-sm-11 alignHeading"><span>{{serviceName}}: </span><span [ngClass]= "{'text-danger':topic == 'CRITICAL ERROR', 'text-error':topic=='ERROR','text-warning':topic=='WARN'}">{{topic}}</span>: <span  data-placement="top" title="{{description}}">{{description | ellipsis:200}}</span></div>
 <div class="col-sm-1">
 
 <button type="button" class="close pull-right" aria-label="Close" (click)="closeTimeAnalysis()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <span aria-hidden="true">&times;</span>
+</button>
 </div>
 </div>
 <fusioncharts
-            [width]="config.width"
-            [height]="config.height"
-            type="column2d"
-            dataFormat="JSON"
-            [dataSource]="finalDataSource"
-            (dataplotClick)="plotRollOver($event)"
-            (initialized)="initialized($event)">
+          [width]="config.width"
+          [height]="config.height"
+          type="column2d"
+          dataFormat="JSON"
+          [dataSource]="finalDataSource"
+          (dataplotClick)="plotRollOver($event)"
+          (initialized)="initialized($event)">
 </fusioncharts>
 </div>

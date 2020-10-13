@@ -16,6 +16,7 @@ export class LineChartComponent implements OnInit {
   @Input() dataSourceCorreleation: any;
   @Input() serviceId: any;
   @Input() metricIndex: any;
+  @Input() serviceName:any
 
   finalDataJson:any=[]
   //options
@@ -59,7 +60,7 @@ export class LineChartComponent implements OnInit {
     if(this.Correlationflag)
     {
     var obj = {
-      name:this.dataSourceCorreleation.metricName,
+      name:this.serviceName+": "+this.dataSourceCorreleation.metricName,
       series:[]
   }
     this.finalDataJson.push(obj)
