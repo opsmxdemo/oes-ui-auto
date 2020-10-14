@@ -30,6 +30,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   applicationCount: number = 0;
   endpointUrl: string;
   installationMode = '';
+  hideTooltip: boolean = true;
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -147,6 +148,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   toggleNavbar() {
     this.addclass = !this.addclass;
+    this.hideTooltip = !this.addclass
     //this.store.dispatch(new LayoutAction.SideBarToggle(!this.addclass === false?'false':'true'));
   }
 
