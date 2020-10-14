@@ -276,6 +276,7 @@ export class DeploymentVerificationComponent implements OnInit {
   // code for application dropdown display starts here
 
   onSelectionChangeApplication(event) {
+    this.selectedTab = 'log-analysis'
     this.initializeCanaryList = false;
     this.canaries = [];
     this.selectedApplicationName = event;
