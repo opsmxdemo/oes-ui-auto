@@ -33,6 +33,7 @@ import { SharedModule } from './subModules/shared.module';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { TrendAnalysisComponent } from './application/trend-analysis/trend-analysis.component'; 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -67,6 +68,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ReactiveFormsModule,
     HttpClientModule,
     AppMaterialModule,
+    MatTooltipModule,
     Ng2SearchPipeModule,
     NgJsonEditorModule,
     EffectModule,
