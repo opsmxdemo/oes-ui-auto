@@ -130,7 +130,7 @@
         [style.width]="logClusterWidth">
         <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0">
 
-          <div  class="card mb-2 data_list removeOverflow" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity; let indexOfelement=index;">
+          <div  class="card mb-2 data_list removeOverflow card-spacing" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity; let indexOfelement=index;">
             <div class="card-header d-flex align-items-ccard-body text-wrap-normal ng-star-insertedenter justify-content-between" id="heading{{log.id}}">
               <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
               <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}
@@ -209,7 +209,7 @@
                 <i class="fa fa-sort-down"></i>
               </button>
             </div>
-            <div id="timeAnalysisGraph{{log.id}}" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow">
+            <div id="timeAnalysisGraph{{log.id}}" class="card-body" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow">
               <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
               <fusioncharts
               width="100%"
@@ -220,7 +220,7 @@
               (initialized)="initialized($event)"
             ></fusioncharts>
             </div>
-            <div id="log{{log.id}}" class="collapse clusterHeight" [ngClass]="{'show' : switchToState == 'Collapse All'}" [attr.aria-labelledby]="'heading' + log.id" data-parent="#accordionExample">
+            <div id="log{{log.id}}" class="collapse clusterHeight card-body" [ngClass]="{'show' : switchToState == 'Collapse All'}" [attr.aria-labelledby]="'heading' + log.id" data-parent="#accordionExample">
               <div *ngIf="log.more">
                 <div (click)="showMoreCluster(log)" *ngIf="!showFullLogLine[log.id]" class="py-1"><span
                     class="text-primary clickable">( + ) </span></div>

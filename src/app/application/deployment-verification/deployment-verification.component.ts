@@ -540,6 +540,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   // Below function is used if user want to refresh list data
   refreshList() {
+    $("[data-toggle='tooltip']").tooltip('hide');
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: this.control.value }));
   }
 
