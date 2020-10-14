@@ -76,7 +76,8 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
             </div>
-            <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
+            <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" style="padding-right: 20px;" />
+              <span *ngIf="searchData.length != 0"><i class="fa fa-times clearSearch"(click)="searchData=''"></i></span>
             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
           </div>
         </div>
@@ -446,7 +447,7 @@
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td ><span title="Reclassification Duration">Reclassification Dur.</span>:</td>
-                        <td>{{(deploymentServiceInformation != undefined && deploymentServiceInformation['reclarificationDuration'] != null) ? deploymentServiceInformation['reclarificationDuration']: 'N/A'}}</td>
+                        <td>{{(deploymentServiceInformation != undefined && deploymentServiceInformation['reclassificationDuration'] != null) ? deploymentServiceInformation['reclassificationDuration']: 'N/A'}}</td>
                       </tr>                      
                       <tr>
                         <td >Interval Minutes:</td>
