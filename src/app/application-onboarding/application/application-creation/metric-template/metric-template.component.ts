@@ -51,6 +51,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   selectedAPMDSAccount :any;
   apminfraTemplate = null;
   metricConfigForm : FormGroup;
+  selectAllAPM:boolean=true
 
   constructor(private _formBuilder: FormBuilder,
     public store: Store<fromFeature.State>) { }
@@ -533,5 +534,41 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     }   
   }
 
+  onselectAllAPM(event){
+    var CheckedValue = event.target.checked
+    if(CheckedValue==true)
+    {
+      for(let i=0;i<this.apmcookbookForm.value.cookbooklist.length;i++)
+      {
+        this.apmcookbookForm.value.cookbooklist[i].isSelectedToSave=true
+      
+      }
+    }
+    else if(CheckedValue==false){
+      for(let i=0;i<this.apmcookbookForm.value.cookbooklist.length;i++)
+      {
+        this.apmcookbookForm.value.cookbooklist[i].isSelectedToSave=false
+      }
+    }
+
+    console.log(this.apmcookbookForm.value.cookbooklist)
+
+    
+    
+  }
+
+  checkboxClicked(event){
+    for(let i=0;i<this.apmcookbookForm.value.cookbooklist.length;i++)
+      {
+        if(this.apmcookbookForm.value.cookbooklist[i].isSelectedToSave==false)
+        {
+          this.selectAllAPM=false;
+          break;
+        }
+        else{
+          this.selectAllAPM=true;
+        }
+      }
+  }
 
 }
