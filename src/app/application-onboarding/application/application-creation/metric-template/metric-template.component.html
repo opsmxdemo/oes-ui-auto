@@ -85,9 +85,9 @@
                        <!-- /.row -->
 
 
-                       <hr class="ml-0 mt-3 mb-3" />
+                       <hr *ngIf ="APMCookbook != null || APMCookbook != undefined" class="ml-0 mt-3 mb-3" />
 
-                       <div class="row">
+                       <div class="row" *ngIf ="APMCookbook != null || APMCookbook != undefined">
                          <div class="col-10">
                            <form [formGroup]="apmcookbookForm">
                            <div class="form-group">
@@ -97,8 +97,8 @@
                                  <tr>
                                    <th>
                                      <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" id="selectAll">
-                                       <label class="custom-control-label" for="selectAll">Select All</label>
+                                      <input type="checkbox" class="custom-control-input" id="selectAll" (change)="onselectAllAPM($event)" >
+                                      <label class="custom-control-label" for="selectAll">Select All</label>
                                      </div>
                                    </th>
                                  </tr>
@@ -107,7 +107,7 @@
                                 <tr *ngFor="let apmgroup of apmcookbookForm.value.cookbooklist ; let i=index;" >
                                   <td [formGroupName]=i>
                                     <div class="custom-control custom-checkbox">                                      
-                                      <input type="checkbox" class="custom-control-input" [checked]="apmgroup.isSelectedToSave" id={{apmgroup.group}} >
+                                      <input type="checkbox" (change)="checkboxClicked($event)" class="custom-control-input" formControlName="isSelectedToSave"   id={{apmgroup.group}} >
                                       <label class="custom-control-label" for={{apmgroup.group}}>{{apmgroup.group}}</label>
                                     </div>
                                   </td>
@@ -362,12 +362,12 @@
                                                 </td>
                                                 <td>
                                                   <select formControlName="aggregator">
-                                                    <option>{{metric.aggregator}}</option>
+                                                    <option value="{{metric.aggregator}}">{{metric.aggregator}}</option>
                                                   </select>
                                                 </td>
                                                 <td>
                                                   <select formControlName="displayUnit">
-                                                    <option>{{metric.displayUnit}}</option>
+                                                    <option value="{{metric.displayUnit}}">{{metric.displayUnit}}</option>
                                                   </select>
                                                 </td>
                                                 <!-- <td>
