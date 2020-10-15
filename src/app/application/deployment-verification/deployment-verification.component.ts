@@ -181,7 +181,8 @@ export class DeploymentVerificationComponent implements OnInit {
           this.control.setValue(resData['canaryId']);
         }
 
-        if (resData.applicationHealthDetails != null) {
+        if (resData.applicationHealthDetails != null && resData.isloadedApplicationHealth) {
+          this.store.dispatch(DeploymentAction.loadedApplicationHealth());
           this.deployementLoading = resData.applicationHealthDetailsLoading;
           this.deploymentApplicationHealth = resData.applicationHealthDetails;
           this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
@@ -189,7 +190,11 @@ export class DeploymentVerificationComponent implements OnInit {
             this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
           }
           this.applicationId = this.deploymentApplicationHealth['applicationId'];
-         
+          if(this.deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'){            
+            setTimeout(() => {
+              this.getApplicationHelathAndServiceDetails(this.canaryId);
+            }, 5000)
+          }
         }
 
         if (resData.serviceInformation != null) {

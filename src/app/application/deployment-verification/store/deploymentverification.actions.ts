@@ -18,6 +18,7 @@ export const restrictExecutionOfServices = createAction('[DeploymentVerification
 
 export const loadApplicationHelath = createAction('[DeploymentVerification] LoadApplicationHelath', props<{canaryId: any}>());
 export const fetchApplicationHelath = createAction('[DeploymentVerification] FetchApplicationHelath', props<{applicationHealthDetails:any}>());
+export const loadedApplicationHealth = createAction('[DeploymentVerification] LoadedApplicationHealth');
 
 export const loadServiceInformation = createAction('[DeploymentVerification] LoadServiceInformation', props<{canaryId: any,serviceId: number}>());
 export const fetchServiceInformation = createAction('[DeploymentVerification] FetchServiceInformation', props<{serviceSummary:any}>());
