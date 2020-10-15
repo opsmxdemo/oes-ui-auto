@@ -49,20 +49,30 @@ export const fetchClusterTags = createAction('[Application] FetchClusterTags', p
 // Below action is related to create Metric template 
 export const createdMetricTemplate = createAction('[Application] CreatedMetricTemplate', props<{metricTemplateData:any}>());
 export const updatedMetricTemplate = createAction('[Application] UpdatedMetricTemplate', props<{metricTemplateData:any,index:number}>());
+
 export const fetchAccountForCustomDataSource = createAction('[Application] FetchAccountCustomForDataSource', props<{datasource:any}>());
 export const loadAccountForCustomDataSource = createAction('[Application] LoadAccountCustomForDataSource', props<{customDSAccounts:any}>());
+export const loadedAccountForCustomDataSource = createAction('[Application] LoadedAccountForCustomDataSource');
+
 export const fetchAccountForAPMDataSource = createAction('[Application] FetchAccountAPMForDataSource', props<{datasource:any}>());
 export const loadAccountForAPMDataSource = createAction('[Application] LoadAccountAPMForDataSource', props<{APMDSAccounts:any}>());
+export const loadedAccountForAPMDataSource = createAction('[Application] LoadedAccountForAPMDataSource');
+
 export const fetchAccountForInfraDataSource = createAction('[Application] FetchAccountInfraForDataSource', props<{datasource:any}>());
 export const loadAccountForInfraDataSource = createAction('[Application] LoadAccountInfraForDataSource', props<{InfraDSAccounts:any}>());
+export const loadedAccountForInfraDataSource = createAction('[Application] LoadedAccountForInfraDataSource');
 
 export const fetchApplicationForAPMAccounts = createAction('[Application] FetchApplicationForAPMAccounts', props<{account:any,sourceType:any}>());
 export const loadApplicationForAPMAccounts = createAction('[Application] LoadApplicationForAPMAccounts', props<{APMApplicationForAccounts:any}>());
+export const loadedApplicationForAPMAccounts = createAction('[Application] LoadedApplicationForAPMAccounts');
 
 export const fetchInfraGenerateCookbook = createAction('[Application] FetchInfraGenerateCookbook', props<{account:any,applicationName:any,metricType:any,sourceType:any,templateName:any}>());
 export const loadInfraGenerateCookbook = createAction('[Application] LoadInfraGenerateCookbook', props<{INFRACookbook:any}>());
+export const loadedInfraGenerateCookbook = createAction('[Application] LoadedInfraGenerateCookbook');
+
 export const fetchAPMGenerateCookbook = createAction('[Application] FetchAPMGenerateCookbook', props<{account:any,applicationName:any,metricType:any,sourceType:any,templateName:any}>());
 export const loadAPMGenerateCookbook = createAction('[Application] LoadAPMGenerateCookbook', props<{APMCookbook:any}>());
+export const loadedAPMGenerateCookbook = createAction('[Application] LoadedAPMGenerateCookbook');
 
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');

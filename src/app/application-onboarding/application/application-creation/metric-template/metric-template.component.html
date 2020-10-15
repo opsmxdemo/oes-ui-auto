@@ -1,13 +1,13 @@
   <div class="pt-1">
     <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist" (click)="onClickTab($event.target.id)">
       <li class="nav-item" >
-        <a class="nav-link {{selectedTab === 'metric-apminfra' ? 'active': ''}}" id="metric-apminfra-tab" data-toggle="tab" role="tab" aria-controls="metric-apminfra" aria-selected="true">APM & INFRA</a>
+        <a class="nav-link {{selectedTab === 'metric-apminfra' ? 'active': ''}} clickable" id="metric-apminfra-tab" data-toggle="tab" role="tab" aria-controls="metric-apminfra" aria-selected="true">APM & INFRA</a>
       </li>
       <li class="nav-item" >
-        <a class="nav-link {{selectedTab === 'metric-form' ? 'active': ''}}" id="metric-form-tab" data-toggle="tab" role="tab" aria-controls="metric-form" aria-selected="true">CUSTOM</a>
+        <a class="nav-link {{selectedTab === 'metric-form' ? 'active': ''}} clickable" id="metric-form-tab" data-toggle="tab" role="tab" aria-controls="metric-form" aria-selected="true">CUSTOM</a>
       </li>
       <li  class="nav-item">
-        <a class="nav-link"  id="metric-editor-tab" data-toggle="tab" role="tab" aria-controls="metric-editor" aria-selected="true">Editor</a>
+        <a class="nav-link {{selectedTab === 'metric-editor' ? 'active': ''}} clickable"  id="metric-editor-tab" data-toggle="tab" role="tab" aria-controls="metric-editor" aria-selected="true">Editor</a>
       </li>
      
     </ul>
@@ -69,13 +69,13 @@
                            <!-- /.form-group -->
 
                            <div class="form-group">
-                             <label>Select {{selectedAPMDataSource}} Application</label> 
+                             <label>Select {{selectedAPMDataSource}} Application</label>
                              <select class="form-control" (change)="onChangeAccountForDS($event.target.value,'apm')" formControlName="apmApplication">
                               <option value="" [disabled]="true">Select</option> 
-                              <ng-container *ngFor="let dsapplication of APMApplicationForAccounts">
-                                <option value="{{dsapplication}}" >
+                              <!-- <ng-container *ngFor="let dsapplication of APMApplicationForAccounts"> -->
+                              <option *ngFor="let dsapplication of APMApplicationForAccounts" value="{{dsapplication}}" >
                                   {{dsapplication}}</option>
-                              </ng-container>      
+                              <!-- </ng-container>       -->
                             </select>
                            </div>
                            <!-- /.form-group -->
@@ -165,9 +165,9 @@
                              <label>Infrastructure Account <span data-toggle="tooltip" data-placement="right" title="Infrastructure accounts"><img src="assets/images/help_icon.png" alt="icon" /></span></label>                             
                             <select class="form-control" (change)="onChangeDSAccount($event.target.value,'infra')" formControlName="applicationName">
                               <option value="" [disabled]="true">Select</option> 
-                              <ng-container *ngFor="let dsaccount of InfraDSAccounts">
-                                <option value="{{dsaccount.name}}" >
-                                  {{dsaccount.name}}</option>
+                              <ng-container *ngFor="let dsaccountinfra of InfraDSAccounts">
+                                <option value="{{dsaccountinfra.name}}" >
+                                  {{dsaccountinfra.name}}</option>
                               </ng-container>      
                             </select>                             
                            </div>
@@ -288,7 +288,7 @@
                                    <ng-container *ngFor="let cookbook of apmcookbookForm.value.cookbooklist; let i=index"> 
                                      <tr [formGroupName]="i">
                                        <td>
-                                         <i class="fas fa-caret-down"></i> <input type="text" formControlName="group" value="{{cookbook.group}}">
+                                         <i class="fas fa-caret-down"></i> <input type="text" formControlName="group" value="{{cookbook.group}}" class="border0" readonly>
                                          <!-- <input type="text" class="btn btn-default" value="0" autofocus="true" formControlName="averageWeight"> -->
                                          <table class="table-sm" formArrayName="metrics" >
                                            <tbody>
@@ -299,12 +299,12 @@
                                                </td>
                                                <td>
                                                  <select formControlName="aggregator">
-                                                   <option>{{metric.aggregator}}</option>
+                                                   <option value="{{metric.aggregator}}">{{metric.aggregator}}</option>
                                                  </select>
                                                </td>
                                                <td>
                                                  <select formControlName="displayUnit">
-                                                   <option>{{metric.displayUnit}}</option>
+                                                   <option value="{{metric.displayUnit}}">{{metric.displayUnit}}</option>
                                                  </select>
                                                </td>
                                                <td>
