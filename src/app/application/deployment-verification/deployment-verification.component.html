@@ -1,7 +1,8 @@
 <div *ngIf="!deployementLoading" class="main_content p-0 bg-white">
   <div class="d-flex">
     <div class="leftBox bg-white mw-250">
-      <div class="leftBox_body text-muted text-center">
+    <div class=" text-muted text-center pt-3" *ngIf="!applicationExists">No Applications! </div>
+      <div class="leftBox_body text-muted text-center" *ngIf="applicationExists">
         <form [formGroup]="applicationForm" novalidate class="example-form">
           <mat-form-field>
             <input type="text" matInput placeholder="Select Application" floatLabel="always" formControlName="application" [matAutocomplete]="autoApplication" 
@@ -24,7 +25,7 @@
           <div class="pull-right">{{calculateDiff(deploymentApplicationHealth['runStartTime'])}} </div>
         </div>
  
-        <div class="input-group">
+        <div class="input-group" *ngIf="canaryIdExists">
           <div class="input-group-prepend">
             <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(control.value)" type="button" id="button-addon1"><i class="fa fa-angle-left"></i></button>
           </div>
@@ -46,7 +47,7 @@
       </div>
       <!-- /.leftBox_header -->
       <div class="leftBox_body">
-        <table class="table-sm table-avenir table-bordered serviceTable">
+        <table class="table-sm table-avenir table-bordered serviceTable" *ngIf="serviceIdExists">
           <tbody>
             
             <tr>
@@ -68,6 +69,16 @@
             </tr> 
           </tbody>
         </table>
+
+        <table class="table-sm table-avenir serviceTable" *ngIf="!serviceIdExists">
+          <tbody>
+            <tr>
+              <td>
+              No Services!
+            </td>
+          </tr>
+          </tbody>
+          </table>
         <!-- /.table -->
   
     <div class="page_access d-flex text-right p-3">
@@ -294,30 +305,30 @@
     </div>
 
     <div class="page-content flex-grow-1">
-      <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center"> 
-        <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} » {{control.value}} » {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}} </h3>
+      <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center" *ngIf="applicationExists"> 
+        <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} <span  *ngIf="canaryIdExists">» {{control.value}} » {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</span> </h3>
         <div class="page_access d-flex ml-auto">
           <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false">Manual Trigger</button>
         </div>
-        <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+        <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" >
           <button (click)="getReclassifiactionHistory()" class="btn btn-default" data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false">Reclassification History</button>
         </div>
         <!-- /.page_access ml-auto -->
       </div>
       <!-- /.page_title d-flex -->
 
-      <div class="row no-gutters">
+      <div class="row no-gutters" *ngIf="canaryIdExists">
         <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
           <mat-drawer-container class="example-container" autosize>
             <mat-drawer #sideNav class="example-sidenav" [position]="'end'" mode="side" opened="true">
               <div class="rightBox m-0 position-sticky">
-                <div class="rightBox_header bg-white d-flex align-items-center">
+                <!-- <div class="rightBox_header bg-white d-flex align-items-center">
                   <div class="btns_icon d-flex ml-auto">
                     <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download"><img src="../../../assets/images/download.png" alt="download" /></button>
                     <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Add"><img src="../../../assets/images/plus_icon.png" alt="plus" /></button>
                     <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><img src="../../../assets/images/edit_icon.png" alt="edit" /></button>
                   </div>
-                </div>
+                </div> -->
                 <div class="rightBox_body pt-0">
                   
                   
@@ -615,6 +626,28 @@
           </mat-drawer-container>
         </div>
       </div>
+
+    <div  class="col-md-12" *ngIf="!applicationExists">
+      <div>
+        <div class="d-flex w-100 h-100 pt-3 pb-5">
+          <div class="no_content m-auto pt-5">
+           <h3 class="no-applications">No Applications!</h3>
+            <p>Use Application Dashboard to create application</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="applicationExists && !canaryIdExists" class="col-md-12 pt-3">
+      <div >
+        <div class="d-flex w-100 h-100 pb-5">
+          <div class="no_content m-auto">
+           <h4 class="no-applications">No Canaries!</h4>
+            <!-- <p>Manual Trigger can be used to create canary runs.</p> -->
+          </div>
+        </div>
+      </div>
+    </div>
   <!-- /.row -->
     </div>
     <!-- /.page-content -->
