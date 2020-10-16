@@ -21,6 +21,7 @@ export interface State {
     manualTriggerResponse: any;
     reclassificationHistoryResults:any;
     isloadedApplicationHealth:boolean;
+    isloadedServiceInformation : boolean;
 }
 
 export const initialState: State = {
@@ -39,7 +40,8 @@ export const initialState: State = {
     cancelRunningCanaryStatus: null,
     manualTriggerResponse: null,
     reclassificationHistoryResults:null,
-    isloadedApplicationHealth:false
+    isloadedApplicationHealth:false,
+    isloadedServiceInformation : false
 }
 
 export function DeploymentdReducer(
@@ -126,14 +128,22 @@ export function DeploymentdReducer(
                 ...state,
                 canaryId: action.canaryId,
                 serviceId: action.serviceId,
+                isloadedServiceInformation : false
             })
         ),
         on(DeploymentActions.fetchServiceInformation,
             (state,action) => ({
                 ...state,
                 serviceInformation: action.serviceSummary,
-                serviceInformationLoading:false
+                serviceInformationLoading:false,
+                isloadedServiceInformation : true
             })
+        ),
+        on(DeploymentActions.loadedServiceInformation,
+            (state) => ({
+                ...state,
+                isloadedServiceInformation : false
+            })         
         ),
         on(DeploymentActions.updateCanaryRun,
             (state, action) => ({

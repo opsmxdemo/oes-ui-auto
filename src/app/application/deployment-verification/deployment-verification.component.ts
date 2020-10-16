@@ -183,6 +183,7 @@ export class DeploymentVerificationComponent implements OnInit {
         if (resData.manualTriggerResponse != null) {
           this.manualTriggerLatestRun = resData['canaryId'];
           this.control.setValue(resData['canaryId']);
+          this.canaryId = resData['canaryId'];
         }
 
         if (resData.applicationHealthDetails != null && resData.isloadedApplicationHealth) {
@@ -201,7 +202,8 @@ export class DeploymentVerificationComponent implements OnInit {
           }
         }
 
-        if (resData.serviceInformation != null) {
+        if (resData.serviceInformation != null && resData.isloadedServiceInformation) {
+          this.store.dispatch(DeploymentAction.loadedServiceInformation());
           this.deployementLoading = resData.serviceInformationLoading;
           this.deploymentServiceInformation = resData.serviceInformation;
           this.baseLineFileSize = this.humanFileSize(resData.serviceInformation.fileStat.v1FileSize, true);
@@ -448,14 +450,8 @@ checkIfCanaryExists(id){
   }
 
   //on click of service
-  onClickService(item: any) {
+  onClickService(item: any) {    
     
-    if(this.manualTriggerLatestRun != null){
-     // this.selectedApplicationName = 
-      this.getAllApplications();
-    }
-
-
     this.defaultServiceId = true;
     this.selectedServiceId = item.serviceId;
     this.serviceNameInfo = item;
