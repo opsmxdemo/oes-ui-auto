@@ -1,7 +1,7 @@
 import { JsonEditorComponent, JsonEditorOptions } from "ang-jsoneditor";
 import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation } from '@angular/core';
 // platform-service-ui change
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
 import { NotificationService } from '../../services/notification.service';
@@ -117,7 +117,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService, public appStore: Store<fromApp.AppState>,
-    private fb: FormBuilder) {
+    private fb: FormBuilder, private router: Router) {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
@@ -136,7 +136,14 @@ export class DeploymentVerificationComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+      // fix for the scroll position from App dashboard - it was loading somewhere from the middle
+        this.router.events.subscribe((evt) => {
+            if (!(evt instanceof NavigationEnd)) {
+                return;
+            }
+            window.scrollTo(0, 0)
+        });
+        
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
