@@ -48,7 +48,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
     clusterTagFlag: boolean = false;
   logClusterData: any;
   clusterTagConfig: any;
-
+  responseKeys : any;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
@@ -83,6 +83,15 @@ export class LogTemplateComponent implements OnInit, OnChanges {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
+
+    this.store.select(fromFeature.selectLogTemplate).subscribe(
+      (responseData) => {
+        if(responseData.responseKeys != null && responseData.isloadedResponseKey){ 
+            this.store.dispatch(ApplicationActions.loadedDataSourceResponseKey());         
+            this.responseKeys = responseData.responseKeys;          
+        }
+      }
+    );
 
   }
 
@@ -224,6 +233,10 @@ getLogTopics(){
 
 onCheckboxChange(status){
    this.regFilterStatus = status.target.checked;
+}
+
+onLogAccountSelect(accoutName){
+  this.store.dispatch(ApplicationActions.fetchDataSourceResponseKey({accountName : this.createLogForm.value.accountName}));
 }
 
 

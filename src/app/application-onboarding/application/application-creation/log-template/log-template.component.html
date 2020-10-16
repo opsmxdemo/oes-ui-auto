@@ -68,7 +68,7 @@
                              <div class="form-group" *ngIf="selectedDataSource != null && selectedDataSource != 'kubernetes'">
                               <label>Log Account</label>
                               <div *ngIf="logAccountsList.length === 0" class="text-danger">No accounts exists, Please try with other monitoring providers.</div>
-                              <select class="form-control" formControlName="accountName" *ngIf="logAccountsList.length > 0">
+                              <select class="form-control" formControlName="accountName" *ngIf="logAccountsList.length > 0" (change)="onLogAccountSelect($event.target.value)">
                                 <option value="" [disabled]="true">Select</option>
                                 <ng-container *ngFor="let account of logAccountsList">
                                 <option  value="{{account.name}}" >
@@ -142,26 +142,31 @@
                              </div>
                              <!-- /.form-group -->
             
-                             <div class="form-inline" *ngIf="regFilterStatus === true">
-                               <div class="form-group mr-2">
-                                 <label>Response Key</label>
-                                 <input type="text" class="form-control w-100" formControlName="regExResponseKey" [ngClass]="createLogForm.get('regExResponseKey').invalid && createLogForm.get('regExResponseKey').touched ? 'is-invalid':''">
-                                 <span *ngIf="createLogForm.get('regExResponseKey').invalid && createLogForm.get('regExResponseKey').touched"
-                                   class="invalid-feedback">
-                                   <!-- <span *ngIf="createLogForm.get('regExResponseKey').errors['required']">Response Key is
-                                     required</span>     -->
-                                 </span>
-                               </div>
+                             <div class="form-inline" *ngIf="regFilterStatus === true">                               
                                <!-- /.form-group -->
                                <div class="form-group mr-2">
                                  <label>Regular Expression</label>
                                  <input type="text" class="form-control w-100" formControlName="regularExpression" [ngClass]="createLogForm.get('regularExpression').invalid && createLogForm.get('regularExpression').touched ? 'is-invalid':''">
                                  <span *ngIf="createLogForm.get('regularExpression').invalid && createLogForm.get('regularExpression').touched"
                                    class="invalid-feedback">
-                                   Cookie: SESSION=OTk1NjM1NmYtNGRmMi00YzY1LWI5YTMtZDA1MGZmZDIxMTIw                        <!-- <span *ngIf="createLogForm.get('regularExpression').errors['required']">regularExpression is
+                                   <!-- <span *ngIf="createLogForm.get('regularExpression').errors['required']">regularExpression is
                                      required</span>     -->
                                  </span>
                                </div>
+                               <div class="form-group mr-2">
+                                <label>Response Key</label>
+                                <!-- <input type="text" class="form-control w-100" formControlName="regExResponseKey" [ngClass]="createLogForm.get('regExResponseKey').invalid && createLogForm.get('regExResponseKey').touched ? 'is-invalid':''"> -->
+                                <select class="form-control w-100" formControlName="regExResponseKey">
+                                  <option value="" [disabled]="true">Select</option>
+                                  <option *ngFor="let responsekey of responseKeys" value="{{responsekey}}" >
+                                      {{responsekey}}</option>
+                                </select>
+                                <span *ngIf="createLogForm.get('regExResponseKey').invalid && createLogForm.get('regExResponseKey').touched"
+                                  class="invalid-feedback">
+                                  <!-- <span *ngIf="createLogForm.get('regExResponseKey').errors['required']">Response Key is
+                                    required</span>     -->
+                                </span>
+                              </div>
                                <!-- /.form-group -->
                              </div>
                              <!-- /.form-inline -->
