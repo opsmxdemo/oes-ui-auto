@@ -45,6 +45,10 @@ export const fetchLogTopics = createAction('[Application] FetchLogTopics', props
 export const loadClusterTags = createAction('[Application] LoadClusterTags');
 export const fetchClusterTags = createAction('[Application] FetchClusterTags', props<{clusterTags:[]}>());
 
+export const loadDataSourceResponseKey = createAction('[Application] LoadDataSourceResponseKey', props<{responseKeys:[]}>());
+export const fetchDataSourceResponseKey = createAction('[Application] FetchDataSourceResponseKey', props<{accountName:any}>());
+export const loadedDataSourceResponseKey = createAction('[Application] LoadedDataSourceResponseKey');
+
 
 // Below action is related to create Metric template 
 export const createdMetricTemplate = createAction('[Application] CreatedMetricTemplate', props<{metricTemplateData:any}>());

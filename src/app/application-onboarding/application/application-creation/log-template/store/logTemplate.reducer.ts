@@ -1,6 +1,7 @@
 
 import { Action, createReducer, on } from '@ngrx/store';
 import * as ApplicationAction from '../../../store/application.actions';
+//import { Action } from 'rxjs/internal/scheduler/Action';
 
 
 
@@ -15,7 +16,9 @@ export interface State {
     callGetLogAccountsAPI: boolean;
     logDataSourcesLoading: boolean;
     logDataSources: [];
-
+    accountName: any;
+    isloadedResponseKey:boolean;
+    responseKeys:any;
 }
 
 export const initialState: State = {
@@ -27,6 +30,9 @@ export const initialState: State = {
     logClusterTags: null,
     logDataSources: null,
     logDataSourcesLoading: false,
+    accountName: null,
+    isloadedResponseKey:false,
+    responseKeys:null
 }
 
 export function LogTemplateReducer(
@@ -86,6 +92,26 @@ export function LogTemplateReducer(
                 ...state,
                 logDataSources: action.datasources,
                 logDataSourcesLoading:false
+            })
+        ),
+        on(ApplicationAction.loadDataSourceResponseKey,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:true,
+                responseKeys : action.responseKeys
+            })
+        ),
+        on(ApplicationAction.fetchDataSourceResponseKey,
+            (state,action) => ({
+                ...state,
+                accountName: action.accountName,
+                isloadedResponseKey:false
+            })
+        ),
+        on(ApplicationAction.loadedDataSourceResponseKey,
+            (state) => ({
+                ...state,                
+                isloadedResponseKey:false
             })
         ),
 
