@@ -97,4 +97,22 @@ export class LogTemplateEffect {
      )
  )
 
+ // Below effect is use for fetch cluster tags table data.
+ fetchDataSourceResponseKey = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.fetchDataSourceResponseKey),
+         switchMap((action) => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/logs/getDataSourceResponseKeys?accountName='+action.accountName).pipe(
+                 map(resdata => {
+                     return ApplicationAction.loadDataSourceResponseKey({responseKeys : resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
 }
