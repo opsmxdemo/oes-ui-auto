@@ -70,6 +70,9 @@ export class DeploymentVerificationComponent implements OnInit {
   // App form initia
 
   applicationList = [];
+  applicationExists: boolean;
+  canaryIdExists: boolean;
+  serviceIdExists: boolean;
 
   applicationListOptions: Observable<any[]>;
   applicationId: any;
@@ -101,7 +104,6 @@ export class DeploymentVerificationComponent implements OnInit {
   wizardView: boolean = true;
   manualTriggerData: any;
   selectedManualTriggerTab: string;
-  checkCanaryId: boolean = true;
   defaultServiceId: boolean = false;
   initializeCanaryList: boolean = true;
 
@@ -148,6 +150,8 @@ export class DeploymentVerificationComponent implements OnInit {
     if (this.route.params['_value'].applicationName != null && this.route.params['_value'].canaryId != null) {
       this.canaryId = this.route.params['_value'].canaryId;
       this.canaryId = Number(this.route.params['_value'].canaryId);
+      //to check if the canary exists or not
+      this.checkIfCanaryExists(this.canaryId)
       this.selectedApplicationName = this.route.params['_value'].applicationName;
      
       this.getApplicationHelathAndServiceDetails(this.canaryId);
@@ -241,9 +245,14 @@ export class DeploymentVerificationComponent implements OnInit {
             this.onClickService(serviceObj);
           }
           else{
+            if(this.deploymentServices.services != undefined && this.deploymentServices.services.length > 0){
+              this.serviceIdExists = true;
             this.selectedServiceId = this.deploymentServices.services[0].serviceId;
             this.serviceNameInfo = this.deploymentServices.services[0];
             this.onClickService(this.deploymentServices.services[0]);
+            }else{
+              this.serviceIdExists = false;
+            }
           }
         } else {
           this.tableIsEmpty = true;
@@ -253,7 +262,13 @@ export class DeploymentVerificationComponent implements OnInit {
 
   }
 
-
+checkIfCanaryExists(id){
+      if(id == undefined || id == -1 || id == 0){
+        this.canaryIdExists = false;
+      }else{
+        this.canaryIdExists = true;
+      }
+}
   //code while submitting the manual trigger form
 
   // Below function is use to fetched json from json editor
@@ -286,24 +301,26 @@ export class DeploymentVerificationComponent implements OnInit {
     this.canaries = [];
     this.selectedApplicationName = event;
     const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
-    if (d['canaryIdList'].length === 0) {
-      this.canaries = [];
-      this.control.setValue('');
-      this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
-    } else {
-      this.canaries = d['canaryIdList'].toString().split(",");
-      this.canaries.sort();
-      this.canaries = [...new Set(this.canaries)];
-      this.filteredCanaries = this.control.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filterCanaries(value))
-      );
-      let selectedCan = this.canaries.map(parseFloat).sort();
-      if (this.control.value != Math.max.apply(null, selectedCan)) {
-        this.control.setValue(Math.max.apply(null, selectedCan));
-      }
-      this.canaryId = Math.max.apply(null, selectedCan);
-      this.getApplicationHelathAndServiceDetails(Math.max.apply(null, selectedCan));
+    if(d['canaryIdList'] != undefined){
+        if (d['canaryIdList'].length === 0) {
+          this.canaries = [];
+          this.control.setValue('');
+          this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
+        } else {
+          this.canaries = d['canaryIdList'].toString().split(",");
+          this.canaries.sort();
+          this.canaries = [...new Set(this.canaries)];
+          this.filteredCanaries = this.control.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterCanaries(value))
+          );
+          let selectedCan = this.canaries.map(parseFloat).sort();
+          if (this.control.value != Math.max.apply(null, selectedCan)) {
+            this.control.setValue(Math.max.apply(null, selectedCan));
+          }
+          this.canaryId = Math.max.apply(null, selectedCan);
+          this.getApplicationHelathAndServiceDetails(Math.max.apply(null, selectedCan));
+        }
     }
   }
 
@@ -312,6 +329,7 @@ export class DeploymentVerificationComponent implements OnInit {
   onSelectionChangeCanaryRun(canary) {
     this.control.setValue(canary);
     this.canaryId = canary;
+    this.checkIfCanaryExists(this.canaryId);  // to check if canary exists or not
     this.getApplicationHelathAndServiceDetails(canary);
     //this.onClickService(this.deploymentServices.services[0]);
 
@@ -498,6 +516,7 @@ export class DeploymentVerificationComponent implements OnInit {
       (resData) => {
         if (resData.canaryId != null) {
           this.canaryId = resData.canaryId;
+          this.checkIfCanaryExists(this.canaryId); // to check if canary exists or not
           this.deployementLoading = resData.deployementLoading;
           if (this.latestCanaryCounter === 1) {
             this.deployementRun = resData.canaryId;
@@ -520,6 +539,11 @@ export class DeploymentVerificationComponent implements OnInit {
     this.buildApplicationForm();
     this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
       (resData) => {
+        if (resData.applicationList == null || resData.applicationList == undefined || resData.applicationList == []) {
+          this.applicationExists = false;
+        }else{
+          this.applicationExists = true;
+        }
         if (resData.applicationList != null) {
           this.deployementLoading = resData.applicationListLoading;
           this.deployementApplications = resData.applicationList;
