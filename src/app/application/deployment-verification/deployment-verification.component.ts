@@ -211,6 +211,7 @@ export class DeploymentVerificationComponent implements OnInit {
           }
           if (this.initializeCanaryList) {
             //this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
+            if(this.selectedApplicationName  != undefined){
             const d = this.applicationList.find(c => c.applicationName == this.selectedApplicationName);
             this.canaries = d['canaryIdList'].toString().split(",");
             this.canaries.sort();
@@ -219,7 +220,8 @@ export class DeploymentVerificationComponent implements OnInit {
               startWith(''),
               map(value => this._filterCanaries(value))
             );
-      }
+            }
+         }
         }
 
         if (resData.serviceList != null && resData.serviceListLoading) {
@@ -296,7 +298,14 @@ checkIfCanaryExists(id){
   // code for application dropdown display starts here
 
   onSelectionChangeApplication(event) {
-    this.selectedTab = 'log-analysis'
+    if (this.deploymentApplicationHealth['analysisType'] == "Logs and Metrics" || this.deploymentApplicationHealth['analysisType'] == "Logs Only") {
+          this.selectedTab = 'log-analysis';
+          this.onClickTab('log-analysis-tab');
+        } else if(this.deploymentApplicationHealth['analysisType'] == "Metrics Only") {
+          this.selectedTab = 'metric-analysis';
+          this.onClickTab('metric-analysis-tab');
+        }
+    // this.selectedTab = 'log-analysis'
     this.initializeCanaryList = false;
     this.canaries = [];
     this.selectedApplicationName = event;
@@ -471,9 +480,9 @@ checkIfCanaryExists(id){
         }
       }
     }else{
-      if(this.selectedTab == 'log-analysis'){
+      if(item['analysisType'] == 'Logs Only' || item['analysisType'] == 'Logs and Metrics'){
         this.onClickTab('log-analysis-tab');
-      }else if(this.selectedTab == 'metric-analysis'){
+      }else if(item['analysisType'] == 'Metrics Only'){
         this.onClickTab('metric-analysis-tab');
       }
     }
