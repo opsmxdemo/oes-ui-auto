@@ -310,13 +310,25 @@
                                                <td>
                                                  <input type="text" value="{{metric.label}}" style="width: 90px;" formControlName="label"/>
                                                </td>
-                                               <td>
+                                               <!-- <td>
                                                  <div class="btn-group">
-                                                   <!-- <input type="text" class="btn btn-input" value="0" /> -->
+                                                   <input type="text" class="btn btn-input" value="0" />
                                                    <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
                                                    <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
                                                  </div>
-                                               </td>
+                                               </td> -->
+                                               <td>
+                                                <div class="custom-control custom-checkbox">
+                                                  <input type="checkbox" class="custom-control-input" [checked]="metric.critical" id="ac-{{metric.name}}" formControlName="critical"> 
+                                                  <label class="custom-control-label" for="ac-{{metric.name}}">critical</label>
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <div class="custom-control custom-checkbox">
+                                                  <input type="checkbox" class="custom-control-input" [checked]="metric.watchlist" id="aw-{{metric.name}}" formControlName="watchlist"> 
+                                                  <label class="custom-control-label" for="aw-{{metric.name}}">watchlist</label>
+                                                </div>
+                                              </td>
                                                <td>
                                                  <!-- <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fas fa-trash-alt"></i></a> -->
                                                </td>
@@ -365,19 +377,31 @@
                                                     <option value="{{metric.aggregator}}">{{metric.aggregator}}</option>
                                                   </select>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                   <select formControlName="displayUnit">
                                                     <option value="{{metric.displayUnit}}">{{metric.displayUnit}}</option>
                                                   </select>
-                                                </td>
+                                                </td> -->
                                                 <!-- <td>
                                                   <input type="text" value="{{metric.label}}" style="width: 90px;" formControlName="label"/>
                                                 </td> -->
-                                                <td>
+                                                <!-- <td>
                                                   <div class="btn-group">
-                                                    <!-- <input type="text" class="btn btn-input" value="0" /> -->
-                                                    <button type="button" class="btn btn-toggle btn-C btn-danger">C</button>
-                                                    <button type="button" class="btn btn-toggle btn-W btn-warning">W</button>
+                                                    <input type="text" class="btn btn-input" value="0" />
+                                                    <button type="button" class="btn btn-toggle btn-C btn-danger">C {{metric.critical}}</button>
+                                                    <button type="button" class="btn btn-toggle btn-W btn-warning">W {{metric.watchlist}}</button>                                                    
+                                                  </div>
+                                                </td> -->
+                                                <td>
+                                                  <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" [checked]="metric.critical" id="ic-{{metric.name}}" formControlName="critical"> 
+                                                    <label class="custom-control-label" for="ic-{{metric.name}}">critical</label>
+                                                  </div>
+                                                </td>
+                                                <td>
+                                                  <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" [checked]="metric.watchlist" id="iw-{{metric.name}}" formControlName="watchlist"> 
+                                                    <label class="custom-control-label" for="iw-{{metric.name}}">watchlist</label>
                                                   </div>
                                                 </td>
                                                 <td>

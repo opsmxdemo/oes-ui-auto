@@ -144,8 +144,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                         aggregatorTimeIntervalUnit : new FormControl(metricObj.aggregatorTimeIntervalUnit),
                         duration: new FormControl(metricObj.duration),
                         riskDirection : new FormControl(metricObj.riskDirection),
-                        critical : new FormControl(),
-                        watchlist : new FormControl()                    
+                        critical : new FormControl(false),
+                        watchlist : new FormControl(false)                    
                       })
                     )
                   })
@@ -189,8 +189,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                           metricType : new FormControl(metricObj.metricType),
                           aggregatorTimeIntervalUnit: new FormControl(metricObj.aggregatorTimeIntervalUnit),
                           riskDirection : new FormControl(metricObj.riskDirection),
-                          critical : new FormControl(),
-                          watchlist : new FormControl()
+                          critical : new FormControl(false),
+                          watchlist : new FormControl(false)
                         })
                       )
                     })                               
@@ -274,8 +274,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
               aggregatorTimeIntervalUnit : new FormControl(),
               duration: new FormControl(),
               riskDirection : new FormControl(),
-              critical : new FormControl(),
-              watchlist : new FormControl()
+              critical : new FormControl(false),
+              watchlist : new FormControl(false)
             })
           ])
         })
@@ -299,8 +299,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
               metricType : new FormControl(),
               aggregatorTimeIntervalUnit: new FormControl(),
               riskDirection : new FormControl(),
-              critical : new FormControl(),
-              watchlist : new FormControl()
+              critical : new FormControl(false),
+              watchlist : new FormControl(false)
             })
           ])
         })
