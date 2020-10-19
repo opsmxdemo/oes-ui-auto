@@ -377,7 +377,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                 let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
                 this.logSensitivityScores.push(obj);
               } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.medium) {
-                let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "High", "iconclass": " text-danger", "textclass": "text-danger" } };
+                let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "High", "iconclass": " fa-arrow-up text-danger", "textclass": "text-danger" } };
                 this.logSensitivityScores.push(obj);
               } else {
                 let obj = { "medium": { "score": this.logAnalysisResults.scores.medium, "risk": "Medium", "iconclass": "fa-arrow-up text-warning", "textclass": "text-warning" } };
@@ -386,7 +386,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
               if (parseInt(this.logAnalysisResults.maximumCanaryScore) <= this.logAnalysisResults.scores.low) {
                 let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "Low", "iconclass": " fa-arrow-down text-success", "textclass": "text-success" } };
                 this.logSensitivityScores.push(obj);
-              } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.high) {
+              } else if (parseInt(this.logAnalysisResults.minimumCanaryScore) >= this.logAnalysisResults.scores.low) {
                 let obj = { "low": { "score": this.logAnalysisResults.scores.low, "risk": "High", "iconclass": "fa-arrow-up text-danger", "textclass": "text-danger" } };
                 this.logSensitivityScores.push(obj);
               } else {
