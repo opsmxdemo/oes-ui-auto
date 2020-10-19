@@ -450,8 +450,10 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     };  
     
     var cookbookArray = [];
-    cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist)
-    this.apminfraTemplate.data.groups =cookbookArray;
+    cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist);
+    var filteredCookbookArray = [];
+    filteredCookbookArray = cookbookArray.filter(obj => obj.isSelectedToSave == true);
+    this.apminfraTemplate.data.groups =filteredCookbookArray;
     this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
     this.clearFormData();
   }
