@@ -16,12 +16,12 @@
         </form>
     
           <div class="appName"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress' || deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
           </div>
      
         <div class="app-status">
-          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus'] === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus'] === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus'] === 'Review','text-muted':deploymentApplicationHealth['applicationHealthStatus'] === 'InProgress'}">{{deploymentApplicationHealth['applicationHealthStatus']}}</div>
+          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'REVIEW','text-muted':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS'}">{{deploymentApplicationHealth['applicationHealthStatus'].toUpperCase()}}</div>
           <div class="pull-right">{{calculateDiff(deploymentApplicationHealth['runStartTime'])}} </div>
         </div>
  
@@ -611,7 +611,7 @@
                     <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
                     [ngClass]="{'active': selectedTab == 'log-analysis','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
                         <ng-container *ngIf = "selectedTab === 'log-analysis'">
-                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" [isRerun]="isRerunLogs" (selectedServiceIdFromChild)="getlogAnalysisData($event)" (enterdToLogLines)="getEventsFromLogAnalysis($event)"></app-log-analysis>
+                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" [isRerun]="isRerunLogs" [serviceStatus]="statusOfSelectedService" (selectedServiceIdFromChild)="getlogAnalysisData($event)" (enterdToLogLines)="getEventsFromLogAnalysis($event)"></app-log-analysis>
                         </ng-container>
                       </div>
                       <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"

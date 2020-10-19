@@ -112,7 +112,7 @@ export class DeploymentVerificationComponent implements OnInit {
   manualTriggerLatestRun: number;
   isRerunLogs : boolean = false;
   serviceIdFromChild :any = null;
-
+  statusOfSelectedService : any;
   // App form end
 
   constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromFeature.State>,
@@ -203,7 +203,7 @@ export class DeploymentVerificationComponent implements OnInit {
             this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
           }
           this.applicationId = this.deploymentApplicationHealth['applicationId'];
-          if(this.deploymentApplicationHealth['applicationHealthStatus'] === 'IN PROGRESS'){            
+          if(this.deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'IN PROGRESS' || this.deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS'){            
             setTimeout(() => {
               this.getApplicationHelathAndServiceDetails(this.canaryId);
             }, 5000)
@@ -465,6 +465,7 @@ checkIfCanaryExists(id){
     this.selectedServiceId = item.serviceId;
     this.serviceNameInfo = item;
     this.selectedServiceId = item.serviceId;
+    this.statusOfSelectedService = item.status;
 
     //code to reset the serviceId after reclassification flow
     this.serviceIdAfterRerun = null;
