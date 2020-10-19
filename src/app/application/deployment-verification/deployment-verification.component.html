@@ -356,8 +356,8 @@
                     </table>
                     <hr />
                   <table class="table table-sm table-sm-text text-left table-no-bordered mb-0">
-                    <tbody>
-                      <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                    <tbody>                     
+                      <tr class="font-weight-bold" *ngIf="(deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics') && !deploymentServiceInformation['autoBaseline']" >
                         <td width="170">Log Baseline: </td>
                         <td  *ngIf="deploymentServiceInformation['version1name'] != '' && deploymentServiceInformation['version1name'] != null" title="{{deploymentServiceInformation['version1name']}}">{{deploymentServiceInformation['version1name'] | ellipsis:22}} 
                           <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version1name']"></i>  
@@ -365,6 +365,7 @@
                         <td  *ngIf="deploymentServiceInformation['version1name'] == '' || deploymentServiceInformation['version1name'] == null" >N/A                          
                         </td>
                       </tr>
+                  
                       <tr class="font-weight-bold" *ngIf=" deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td >Metric Baseline: </td>
                         <td *ngIf="deploymentServiceInformation['metricVersion1Name'] != '' && deploymentServiceInformation['metricVersion1Name'] != null" title="{{deploymentServiceInformation['metricVersion1Name']}}">{{deploymentServiceInformation['metricVersion1Name'] | ellipsis:22}} 
@@ -373,11 +374,11 @@
                         <td  *ngIf="deploymentServiceInformation['metricVersion1Name'] == '' || deploymentServiceInformation['metricVersion1Name'] == null" >N/A                          
                         </td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="!deploymentServiceInformation['autoBaseline']">
                         <td >Start time:</td>
                         <td>{{deploymentServiceInformation['v1StartTime'] | date:'medium'}}</td>
                       </tr>
-                      <tr>
+                      <tr *ngIf="!deploymentServiceInformation['autoBaseline']">
                         <td >End time:</td>
                         <td>{{deploymentServiceInformation['v1EndTime'] | date:'medium'}}</td>
                       </tr>
@@ -440,7 +441,7 @@
                         <td><span *ngIf="deploymentServiceInformation['metricScore']>-1">{{deploymentServiceInformation['metricScore']}}</span>
                         <span *ngIf="deploymentServiceInformation['metricScore']<0 || deploymentServiceInformation['metricScore']==null"> - </span></td>
                       </tr>
-                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                      <tr *ngIf="(deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics') && !deploymentServiceInformation['autoBaseline']">
                         <td >Baseline size:</td>
                         <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v1FileSize']:null,true)}}</td>
                       </tr>
@@ -448,7 +449,7 @@
                         <td >New Release size:</td>
                         <td>{{humanFileSize(deploymentServiceInformation['fileStat'] !== undefined ? deploymentServiceInformation['fileStat']['v2FileSize']:null,true)}}</td>
                       </tr>
-                      <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
+                      <tr *ngIf="(deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics') && !deploymentServiceInformation['autoBaseline']">
                         <td >Baseline lines:</td>
                         <td>{{deploymentServiceInformation['fileStat'] != undefined ? (deploymentServiceInformation['fileStat']['v1LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v1LogLen']:null) : 'N/A'}}</td>
                       </tr>
