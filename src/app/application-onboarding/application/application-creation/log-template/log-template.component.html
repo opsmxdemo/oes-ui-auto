@@ -42,14 +42,14 @@
                          <!-- /.row -->
             
                          <div class="text-divider">
-                           <h4>Log Metrics </h4>
+                           <h4>Logs Monitoring </h4>
                          </div>
                          
                          <div class="row">
                            <div class="col-6">
                             <!-- form group log monitoring provider -->
                             <div class="form-group">
-                              <label>Log Monitoring Provider</label>
+                              <label> Provider</label>
                               <select class="form-control" formControlName="monitoringProvider" (change)="onDataSourceSelect($event.target.value)">
                                 <option value="" [disabled]="true">Select</option>
                                 <ng-container *ngFor="let datasourceList of autoDatasources">

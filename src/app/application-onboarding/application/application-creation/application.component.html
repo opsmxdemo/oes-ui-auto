@@ -202,7 +202,7 @@
                                   <option value="" [disabled]="true">Select</option>
                                   <option *ngFor="let logTemplate of logTemplateData" value="{{logTemplate.templateName}}">{{logTemplate.templateName}}</option>
                                 </select>
-                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditTemplate(i,'log')">
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditTemplate(i,'log')" *ngIf="logTemplateData.length > 0">
                                   <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link" >
                                     <i class="fas fa-pencil-alt"></i>
                                   </a>
@@ -221,7 +221,7 @@
                                   <option value="" [disabled]="true">Select</option>
                                   <option *ngFor="let metricTemplate of metricTemplateData" value="{{metricTemplate.templateName}}">{{metricTemplate.templateName}}</option>
                                 </select>
-                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditTemplate(i,'metric')">
+                                <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditTemplate(i,'metric')" *ngIf="metricTemplateData.length > 0">
                                   <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
                                     <i class="fas fa-pencil-alt"></i>
                                   </a>
