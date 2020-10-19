@@ -145,9 +145,20 @@ export class ApplicationDashboardComponent implements OnInit {
     this.finalSelectedTabNumber = index;
     this.previouSelectedApp = app;
     this.showAppDataType = appType;
-   
+    var appPresent = true
+    for(let i=0; i<this.applicationFinalData.length;i++)
+    {
+      if(this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId)
+      {
+        appPresent=true
+        break;
+      }
+      else{
+        appPresent=false
+      }
+    }
        
-    if(app && app.applicationId){
+    if(app && app.applicationId && appPresent==true){
       this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
         this.serviceData = serviceDataList;
         this.oesServiceData = serviceDataList['oesService'];
