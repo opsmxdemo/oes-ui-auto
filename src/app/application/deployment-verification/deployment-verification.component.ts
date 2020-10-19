@@ -198,6 +198,7 @@ export class DeploymentVerificationComponent implements OnInit {
           this.deployementLoading = resData.applicationHealthDetailsLoading;
           this.deploymentApplicationHealth = resData.applicationHealthDetails;
           this.selectedApplicationName = this.deploymentApplicationHealth['applicationName'];
+          this.applicationForm.setValue({application: this.selectedApplicationName});
           if (this.deploymentApplicationHealth['error'] != null) {
             this.notifications.showError('Application health Error:', this.deploymentApplicationHealth['error']);
           }
@@ -293,6 +294,7 @@ checkIfCanaryExists(id){
         data: this.manualTriggerData,
       })
     );
+    this.data = {};
   }
 
   // Below function is execute on click of Form or Editor tab.
