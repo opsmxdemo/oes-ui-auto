@@ -93,6 +93,7 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
   
   ngOnInit(){
 
+    //Calling the Metric Analysis Data to make sure its called only on change of canary id or service selection
     if(this.canaryId !== undefined && this.serviceId !== undefined){
       this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.canaryId,serviceId:this.serviceId}));
       }
@@ -102,6 +103,11 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
       (resdata)=>{
         if(resdata.canaryOutputData !== null){
           this.metricData = resdata['canaryOutputData'];
+          if(this.metricData.canary_output.status  === "RUNNING"){
+            setTimeout(() => {
+              this.store.dispatch(MetricAnalysisActions.loadMetricAnalysis({canaryId:this.canaryId,serviceId:this.serviceId}));
+            },5000);
+          }
           this.thresholdScore = {
             maxScore: +this.metricData.canary_output.maximumCanaryScore,
             minScore: +this.metricData.canary_output.minimumCanaryScore
@@ -159,7 +165,11 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             this.childMetric['Infra'][0] = true;
             this.childView_rowanimation = 'expanded';
             setTimeout(() => {
-              this.elRef.nativeElement.querySelector('#Infra0').style.transform = 'rotate(90deg)';
+              let infraEle = this.elRef.nativeElement.querySelector('#Infra0');
+              if(infraEle != null){
+                infraEle.style.transform = 'rotate(90deg)';
+              }
+              // this.elRef.nativeElement.querySelector('#Infra0').style.transform = 'rotate(90deg)';
             },500);
             const initialData = {
               type:'Infrastructure',
@@ -172,7 +182,10 @@ export class MetricAnalysisComponent implements OnInit,OnChanges {
             this.childMetric['Advanced'][0] = true;
             this.childView_rowanimation = 'expanded';
             setTimeout(() => {
-              this.elRef.nativeElement.querySelector('#Advanced0').style.transform = 'rotate(90deg)';
+              const myElem = this.elRef.nativeElement.querySelector('#Advanced0');
+              if(myElem != null){
+                myElem.style.transform = 'rotate(90deg)';
+              }
             },500);
             const initialData = {
               type:'ADVANCED',
