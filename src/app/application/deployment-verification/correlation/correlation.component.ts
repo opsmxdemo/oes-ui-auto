@@ -412,6 +412,7 @@ export class CorrelationComponent implements OnInit,OnChanges {
 
   hideAddLog(event){
     this.modalRef.hide()
+    this.ngOnInit();
   }
 
   deleteLogChart(deletedchartData){
