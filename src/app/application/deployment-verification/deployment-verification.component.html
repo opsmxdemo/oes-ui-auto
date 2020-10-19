@@ -343,14 +343,14 @@
                         </tr> -->
                         <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                           <td width="170">Log Template:</td>
-                          <td  title="{{deploymentApplicationHealth['logTemplateName']}}">{{deploymentApplicationHealth['logTemplateName'] | ellipsis:22}} 
-                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentApplicationHealth['logTemplateName']"></i>  
+                          <td  title="{{deploymentServiceInformation['logTemplateName']}}">{{deploymentServiceInformation['logTemplateName'] | ellipsis:22}} 
+                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['logTemplateName']"></i>  
                           </td>
                         </tr>
                         <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                           <td>Metric Template:</td>
-                          <td  title="{{deploymentApplicationHealth['metricTemplateName']}}">{{deploymentApplicationHealth['metricTemplateName'] | ellipsis:22}} 
-                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentApplicationHealth['metricTemplateName']"></i>  
+                          <td  title="{{deploymentServiceInformation['metricTemplateName']}}">{{deploymentServiceInformation['metricTemplateName'] | ellipsis:22}} 
+                            <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricTemplateName']"></i>  
                           </td>
                         </tr>
                     </table>
@@ -359,23 +359,27 @@
                     <tbody>
                       <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="170">Log Baseline: </td>
-                        <td  title="{{deploymentServiceInformation['version1name']}}">{{deploymentServiceInformation['version1name'] | ellipsis:22}} 
+                        <td  *ngIf="deploymentServiceInformation['version1name'] != '' && deploymentServiceInformation['version1name'] != null" title="{{deploymentServiceInformation['version1name']}}">{{deploymentServiceInformation['version1name'] | ellipsis:22}} 
                           <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version1name']"></i>  
+                        </td>
+                        <td  *ngIf="deploymentServiceInformation['version1name'] == '' || deploymentServiceInformation['version1name'] == null" >N/A                          
                         </td>
                       </tr>
                       <tr class="font-weight-bold" *ngIf=" deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td >Metric Baseline: </td>
-                        <td  title="{{deploymentServiceInformation['metricVersion1Name']}}">{{deploymentServiceInformation['metricVersion1Name'] | ellipsis:22}} 
+                        <td *ngIf="deploymentServiceInformation['metricVersion1Name'] != '' && deploymentServiceInformation['metricVersion1Name'] != null" title="{{deploymentServiceInformation['metricVersion1Name']}}">{{deploymentServiceInformation['metricVersion1Name'] | ellipsis:22}} 
                           <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricVersion1Name']"></i>  
+                        </td>
+                        <td  *ngIf="deploymentServiceInformation['metricVersion1Name'] == '' || deploymentServiceInformation['metricVersion1Name'] == null" >N/A                          
                         </td>
                       </tr>
                       <tr>
                         <td >Start time:</td>
-                        <td>{{deploymentApplicationHealth['v1StartTime'] | date:'medium'}}</td>
+                        <td>{{deploymentServiceInformation['v1StartTime'] | date:'medium'}}</td>
                       </tr>
                       <tr>
                         <td >End time:</td>
-                        <td>{{deploymentApplicationHealth['v1EndTime'] | date:'medium'}}</td>
+                        <td>{{deploymentServiceInformation['v1EndTime'] | date:'medium'}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -384,23 +388,27 @@
                     <tbody>
                       <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td width="170"> Log New Release:</td>
-                        <td  title="{{deploymentServiceInformation['version2name']}}">{{deploymentServiceInformation['version2name'] | ellipsis:22}} 
+                        <td *ngIf="deploymentServiceInformation['version2name'] != '' && deploymentServiceInformation['version2name'] != null" title="{{deploymentServiceInformation['version2name']}}">{{deploymentServiceInformation['version2name'] | ellipsis:22}} 
                           <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['version2name']"></i>  
+                        </td>
+                        <td  *ngIf="deploymentServiceInformation['version2name'] == '' || deploymentServiceInformation['version2name'] == null" >N/A                          
                         </td>
                       </tr>
                       <tr class="font-weight-bold" *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
                         <td > Metric New Release:</td>
-                        <td  title="{{deploymentServiceInformation['metricVersion2Name']}}">{{deploymentServiceInformation['metricVersion2Name'] | ellipsis:22}} 
+                        <td *ngIf="deploymentServiceInformation['metricVersion2Name'] != '' && deploymentServiceInformation['metricVersion2Name'] != null" title="{{deploymentServiceInformation['metricVersion2Name']}}">{{deploymentServiceInformation['metricVersion2Name'] | ellipsis:22}} 
                           <i class="fa fa-clipboard" role="button" aria-hidden="true" ngxClipboard [cbContent]="deploymentServiceInformation['metricVersion2Name']"></i>  
+                        </td>
+                        <td  *ngIf="deploymentServiceInformation['metricVersion2Name'] == '' || deploymentServiceInformation['metricVersion2Name'] == null" >N/A                          
                         </td>
                       </tr>
                       <tr>
                         <td >Start time:</td>
-                        <td>{{deploymentApplicationHealth['v2StartTime'] | date:'medium'}}</td>
+                        <td>{{deploymentServiceInformation['v2StartTime'] | date:'medium'}}</td>
                       </tr>
                       <tr>
                         <td >End time:</td>
-                        <td>{{deploymentApplicationHealth['v2EndTime'] | date:'medium'}}</td>
+                        <td>{{deploymentServiceInformation['v2EndTime'] | date:'medium'}}</td>
                       </tr>
                     </tbody>
                   </table>
