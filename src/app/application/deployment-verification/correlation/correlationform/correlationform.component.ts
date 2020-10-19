@@ -100,8 +100,8 @@ export class CorrelationformComponent implements OnInit {
   getData(value){ 
     if(value)
     {
-      //this.updateJson(value);
-      this.updatedValue=value
+      this.updateJson(value);
+    
     }
     
   }
@@ -122,7 +122,7 @@ export class CorrelationformComponent implements OnInit {
 
   onSubmit(){
     var activeKeys=[]
-    this.updateJson(this.updatedValue)
+    
     for(let i=0;i<this.serviceClusters.length;i++)
     {
       if(Object.keys(this.serviceClusters[i].data).length > 0 && this.flag=="log")
