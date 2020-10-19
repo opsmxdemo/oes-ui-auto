@@ -63,10 +63,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     }else{
       this.selectedTab = 'metric-apminfra';
       this.data = null;
-    }
-    if(this.metricTemplate != undefined){
       this.intializeForms();
-      this.selectedTab = 'metric-apminfra';
       this.clearFormData();
     }
   }
