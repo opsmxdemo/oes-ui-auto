@@ -145,7 +145,20 @@ export class ApplicationDashboardComponent implements OnInit {
     this.finalSelectedTabNumber = index;
     this.previouSelectedApp = app;
     this.showAppDataType = appType;
-    if(app && app.applicationId){
+    var appPresent = true
+    for(let i=0; i<this.applicationFinalData.length;i++)
+    {
+      if(this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId)
+      {
+        appPresent=true
+        break;
+      }
+      else{
+        appPresent=false
+      }
+    }
+       
+    if(app && app.applicationId && appPresent==true){
       this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
         this.serviceData = serviceDataList;
         this.oesServiceData = serviceDataList['oesService'];
@@ -335,6 +348,7 @@ export class ApplicationDashboardComponent implements OnInit {
         $("[data-toggle='tooltip']").tooltip('hide');
       
         this.store.dispatch(AppDashboardAction.deleteApplication({applicationId: application.applicationId,index:index}));
+        this.selectedApplication(0,this.applicationFinalData[0],this.finalLabelArray[0])
       }else{
          
       }
