@@ -69,7 +69,7 @@ export class ApplicationDashboardComponent implements OnInit {
               }
   ngOnInit(): void {
     //fetching appData from dashboard state
-    alert("")
+   
     this.finalSelectedTabNumber = 0;
     this.store.select('appDashboard').subscribe(
       (resdata) => {
