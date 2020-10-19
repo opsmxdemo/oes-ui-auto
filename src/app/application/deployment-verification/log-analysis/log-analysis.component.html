@@ -13,17 +13,17 @@
             <i *ngIf="logAnalysisResults?.sensitivity == 'high'" class="fa {{logSensitivityScores[0]?.high?.iconclass}}"
               aria-hidden="true"></i>
             <i *ngIf="logAnalysisResults?.sensitivity == 'medium'"
-              class="fa {{logSensitivityScores[0]?.medium?.iconclass}}" aria-hidden="true"></i>
-            <i *ngIf="logAnalysisResults?.sensitivity == 'low'" class="fa {{logSensitivityScores[0]?.low?.iconclass}}"
+              class="fa {{logSensitivityScores[1]?.medium?.iconclass}}" aria-hidden="true"></i>
+            <i *ngIf="logAnalysisResults?.sensitivity == 'low'" class="fa {{logSensitivityScores[2]?.low?.iconclass}}"
               aria-hidden="true"></i>
           </span>
           <span>
             <b *ngIf="logAnalysisResults?.sensitivity == 'high'"
               class="d-block {{logSensitivityScores[0]?.high?.textclass}}">{{logSensitivityScores[0]?.high?.risk}}</b>
             <b *ngIf="logAnalysisResults?.sensitivity == 'medium'"
-              class="d-block {{logSensitivityScores[0]?.medium?.textclass}}">{{logSensitivityScores[0]?.medium?.risk}}</b>
+              class="d-block {{logSensitivityScores[1]?.medium?.textclass}}">{{logSensitivityScores[1]?.medium?.risk}}</b>
             <b *ngIf="logAnalysisResults?.sensitivity == 'low'"
-              class="d-block {{logSensitivityScores[0]?.low?.textclass}}">{{logSensitivityScores[0]?.low?.risk}}</b>
+              class="d-block {{logSensitivityScores[2]?.low?.textclass}}">{{logSensitivityScores[2]?.low?.risk}}</b>
               Perceived Risk
           </span>
         </div>
