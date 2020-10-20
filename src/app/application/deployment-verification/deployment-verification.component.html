@@ -16,12 +16,12 @@
         </form>
     
           <div class="appName"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
-            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
+            <a *ngIf="deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
           </div>
      
         <div class="app-status">
-          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'REVIEW','text-muted':deploymentApplicationHealth['applicationHealthStatus'].toUpperCase() === 'INPROGRESS'}">{{deploymentApplicationHealth['applicationHealthStatus'].toUpperCase()}}</div>
+          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'REVIEW','text-muted':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS'}">{{deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase()}}</div>
           <div class="pull-right">{{calculateDiff(deploymentApplicationHealth['runStartTime'])}} </div>
         </div>
  
@@ -457,7 +457,7 @@
                         <td >New Release lines:</td>
                         <td>{{deploymentServiceInformation['fileStat'] != undefined ? (deploymentServiceInformation['fileStat']['v2LogLen'] !== undefined?deploymentServiceInformation['fileStat']['v2LogLen']:null) : 'N/A'}}</td>
                       </tr>
-                      <tr>
+                      <tr data-toggle="tooltip" data-placement="left" title="Analysis Duration In Minutes">
                         <td >Analysis Duration:</td>
                         <td>{{deploymentServiceInformation ? deploymentServiceInformation['duration']: 'N/A'}}</td>
                       </tr>
@@ -617,7 +617,7 @@
                       <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"
                       [ngClass]="{'active': selectedTab === 'metric-analysis'}">
                         <ng-container *ngIf = "selectedTab === 'metric-analysis'">
-                          <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" ></app-metric-analysis>
+                          <app-metric-analysis [canaryId]="control.value" [serviceId]="selectedServiceId"></app-metric-analysis>
                         </ng-container>
                       </div>
                       <div class="tab-pane mp-4 "  id="correlation" role="tabpanel" aria-labelledby="correlation-tab"
