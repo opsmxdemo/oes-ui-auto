@@ -5,6 +5,7 @@ import * as fromFeature from '../store/feature.reducer';
 import { Store } from '@ngrx/store';
 import * as logTopicsList from '../../../../assets/data/logsTopicsList.json';
 import { DomSanitizer } from '@angular/platform-browser';
+import * as $ from 'jquery';
 
 
 
@@ -61,6 +62,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   chartSize: string;                                                   // It is use to store graph width on change of layout widyh.
   clusterCommentsList = [] ;                                   // it is used to send cluster data
   clusterComments: string;
+  graphShrink:boolean = false
   bubbleChartProperty = {
     "showLegend": true,
     "showLabels": true,
@@ -494,56 +496,93 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   // below function is use to make page responsive
   @HostListener('window:click', ['$event.target'])
   handleClick(target) {
+    
     if (target.classList['value'] === 'fa fa-chevron-right' || target.classList['value'] === 'fa fa-chevron-left' ||
       target.classList['value'] === 'ng-star-inserted' ||
       target.classList[1] === 'fa-bars' ||
-      target.textContent === 'Log Analysis' ||
-      target.classList['value'] === 'toggleGraph') {
-      if (this.showChart) {
-        this.chartSize = "1px";
-        setTimeout(() => {
-          if(this.ChartSize != undefined){
-            this.chartSize =this.ChartSize.nativeElement.offsetWidth;
+      target.textContent === 'Log Analysis' ) {
+
+      if(target.classList[1] === 'fa-bars')
+        {
+          if (this.showChart) {
+            this.graphShrink=true
+            $(".fadeIN").fadeOut(300)
+            this.chartSize = "1px";
+            
+            setTimeout(() => {
+              if(this.ChartSize != undefined){
+                this.chartSize =this.ChartSize.nativeElement.offsetWidth;
+                this.graphShrink=false;
+                $(".fadeIN").fadeIn(300)
+              }
+            }, 500)
           }
-        }, 500)
-      }
-      if (this.LogClusterWidth) {
-        this.logClusterWidth = "1px"
-        setTimeout(() => {
-          if(this.LogClusterWidth != undefined){
-            this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
-          }          
-        }, 500)
-      }
+          if (this.LogClusterWidth) {
+            this.logClusterWidth = "1px"
+            setTimeout(() => {
+              if(this.LogClusterWidth != undefined){
+                this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+                this.graphShrink=false;
+                $(".fadeIN").fadeIn(300)
+              }          
+            }, 500)
+          }
+        }
+        else{
+          if (this.showChart) {
+            this.graphShrink=true
+            $(".fadeIN").fadeOut(300)
+            this.chartSize = "1px";
+            
+            setTimeout(() => {
+              if(this.ChartSize != undefined){
+                this.chartSize =this.ChartSize.nativeElement.offsetWidth;
+                this.graphShrink=false;
+                $(".fadeIN").fadeIn(300)
+              }
+            }, 300)
+          }
+          if (this.LogClusterWidth) {
+            this.logClusterWidth = "1px"
+            setTimeout(() => {
+              if(this.LogClusterWidth != undefined){
+                this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+                this.graphShrink=false;
+                $(".fadeIN").fadeIn(300)
+              }          
+            }, 300)
+          }
+        }
+      
     }
   }
   // below function is use to make page responsive list-unstyled m-0
-  @HostListener('window:mousemove', ['$event.target'])
-  handleMouseMove(target) {
-    if(target.offsetParent != undefined){
-      if (target.offsetParent.className === 'sidebar_nav' || target.id === 'logeventsTab') {
-        if(target.id === 'logeventsTab'){
-          this.enterdToLogLines.emit(true);
-        }        
-        if (this.showChart) {
-          this.chartSize = "1px";
-          setTimeout(() => {
-            if(this.ChartSize != undefined){
-              this.chartSize = this.ChartSize.nativeElement.offsetWidth
-            }            
-          }, 500)
-        }
-        if (this.LogClusterWidth) {
-          this.logClusterWidth = "1px"
-          setTimeout(() => {
-            if(this.LogClusterWidth != undefined){
-              this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
-            }            
-          }, 500)
-        }
-      }
-    }   
-  }
+  // @HostListener('window:mousemove', ['$event.target'])
+  // handleMouseMove(target) {
+  //   if(target.offsetParent != undefined){
+  //     if (target.offsetParent.className === 'sidebar_nav' || target.id === 'logeventsTab') {
+  //       if(target.id === 'logeventsTab'){
+  //         this.enterdToLogLines.emit(true);
+  //       }        
+  //       if (this.showChart) {
+  //         this.chartSize = "1px";
+  //         setTimeout(() => {
+  //           if(this.ChartSize != undefined){
+  //             this.chartSize = this.ChartSize.nativeElement.offsetWidth
+  //           }            
+  //         }, 500)
+  //       }
+  //       if (this.LogClusterWidth) {
+  //         this.logClusterWidth = "1px"
+  //         setTimeout(() => {
+  //           if(this.LogClusterWidth != undefined){
+  //             this.logClusterWidth = this.LogClusterWidth.nativeElement.offsetWidth + "px";
+  //           }            
+  //         }, 500)
+  //       }
+  //     }
+  //   }   
+  // }
 
   getLogAnalysis() {
     this.clusterId = null;
@@ -888,5 +927,24 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             }
             
       });
+  }
+
+  expColCluster(logId){
+
+    if($("#log"+logId ).hasClass("show"))
+    {
+      $("#log"+logId).removeClass("show")
+      $("#upArrow"+logId).removeClass("show")
+      $("#upArrow"+logId).addClass("hide")
+      $("#downArrow"+logId).removeClass("hide")
+      $("#downArrow"+logId).addClass("show")
+    }else{
+      $("#log"+logId).addClass("show")
+      $("#upArrow"+logId).addClass("show")
+      $("#upArrow"+logId).removeClass("hide")
+      $("#downArrow"+logId).removeClass("show")
+      $("#downArrow"+logId).addClass("hide")
+    }
+    
   }
 }
