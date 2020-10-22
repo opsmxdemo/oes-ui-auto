@@ -16,6 +16,8 @@ import { CloudAccount } from 'src/app/models/applicationOnboarding/createApplica
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
+import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any) => {
@@ -185,6 +187,42 @@ export class ApplicationEffect {
         )
     )
 
+     // Below effect is use for saved data in save application phase
+     saveApplication = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.saveApplication),
+         switchMap(action => {
+             return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application', action.applicationData).pipe(
+                 map(resdata => {
+                     return ApplicationAction.dataSaved({ applicationName: action.applicationData.name, dataType: 'createApplication' });
+                 }),
+                 catchError(errorRes => {
+                     this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
+   // Below effect is use for saved data in save application phase
+   saveEnvironments = createEffect(() =>
+   this.actions$.pipe(
+       ofType(ApplicationAction.saveEnvironments),
+       switchMap(action => {
+           return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/environments', action.environmentsData).pipe(
+               map(resdata => {
+                   return ApplicationAction.dataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplication' });
+               }),
+               catchError(errorRes => {
+                   this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                   return handleError(errorRes);
+               })
+           );
+       })
+   )
+)
+
     // Below effect is use for saved data in create application phase
     onUpdateExistApplicationData = createEffect(() =>
         this.actions$.pipe(
@@ -281,4 +319,20 @@ export class ApplicationEffect {
             })
         )
     )
+     // Below effect is use for fetch supported features dropdown data.
+     fetchSupportedFeatures = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadApp),
+         switchMap(() => {
+             return this.http.get<Pipeline>(this.environment.config.endPointUrl + 'platformservice/v1/featureList').pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchSupportedFeatures({ supportedFeaturesData: resdata['supportedFeatures'] });
+                 }),
+                 catchError(errorRes => {
+                     return handleOESError(errorRes, 1);
+                 })
+             );
+         })
+     )
+ )
 }

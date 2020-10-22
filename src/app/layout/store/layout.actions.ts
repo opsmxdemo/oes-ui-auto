@@ -12,6 +12,7 @@ export enum LayoutActionTypes {
     USERGROUPREFRESH = '[Layout] Usergroup Refresh',
     SERVERERROR = '[Layout] Server Error',
     APISUCCESS = '[Layout] Api Success',
+    SUPPORTEDFEATURES = '[Layout] Supported Features',
 }
 
 export class LoadPage implements Action {
@@ -43,6 +44,11 @@ export class InstallationMode implements Action {
     constructor(public payload:string){}
 }
 
+export class SupportedFeatures implements Action {
+    readonly type = LayoutActionTypes.SUPPORTEDFEATURES;
+    constructor(public payload: []){}
+}
+
 export class usergroupRefresh implements Action {
     readonly type = LayoutActionTypes.USERGROUPREFRESH;
     constructor(public payload:any){}
@@ -67,6 +73,7 @@ export type LayoutActions = LoadPage
                         |   ApplicationData
                         |   SideBarToggle
                         |   InstallationMode
+                        |   SupportedFeatures
                         |   usergroupRefresh
                         |   ServerError
                         |   ApiSuccess;

@@ -4,6 +4,8 @@ import * as ApplicationAction from './application.actions';
 import { CreateApplication } from '../../../models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from '../../../models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { ApplicationList } from '../../../models/applicationOnboarding/applicationList/applicationList.model';
+import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
+import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
 
 
 export interface State {
@@ -14,6 +16,8 @@ export interface State {
     editMode: boolean;
     parentPage: string;
     applicationData: CreateApplication;
+    appSavedData: SaveApplication;
+    appEnvionmentsData: Environment;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
@@ -24,7 +28,7 @@ export interface State {
     initalOESDatacall: boolean;
     initalOESDataLoaded: string[];
     applicationId:string;
-
+    supportedFeaturesData: any;
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -45,6 +49,8 @@ export const initialState: State = {
     editMode: false,
     parentPage: '/setup/applications',
     applicationData: null,
+    appSavedData: null,
+    appEnvionmentsData: null,
     cloudAccountExist: null,
     applicationList: [],
     appListLoading: false,
@@ -58,7 +64,8 @@ export const initialState: State = {
     initalOESDataLoaded: ['dummy','dummy'],
     applicationId:null,
     logtemplate: [],
-    metrictemplate:[]
+    metrictemplate:[],
+    supportedFeaturesData: null,
 }
 
 export function ApplicationReducer(
@@ -134,7 +141,8 @@ export function ApplicationReducer(
                 parentPage: action.page,
                 applicationLoading: true,
                 applicationId:null,
-                applicationData: null
+                applicationData: null,
+                appSavedData: null,
             })    
         ),
         
@@ -142,6 +150,7 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 applicationData:action.appData,
+              //  appSavedData: action.
                 applicationLoading: false,
                 applicationId:action.applicationId
             })
@@ -153,6 +162,18 @@ export function ApplicationReducer(
             })
         ),
         on(ApplicationAction.createApplication,
+            state => ({
+                ...state,
+                applicationLoading:true
+            })
+        ),
+        on(ApplicationAction.saveApplication,
+            state => ({
+                ...state,
+                applicationLoading:true
+            })
+        ),
+        on(ApplicationAction.saveEnvironments,
             state => ({
                 ...state,
                 applicationLoading:true
@@ -208,7 +229,13 @@ export function ApplicationReducer(
             }),
         
         ),
+        on(ApplicationAction.fetchSupportedFeatures,
+            (state,action) => ({
+                ...state,
+                supportedFeaturesData: action.supportedFeaturesData
+            }),
         
+        ),
         // #### CreateApplication screen logic ends ####//
 
         // ###  Applist screen logic start ### // 

@@ -1,3 +1,4 @@
+import { VisibilityEffect } from './../visibility/store/visibility.effects';
 import { TrendAnalysisEffect } from './../application/trend-analysis/store/trend-analysis.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { NgModule } from '@angular/core';
@@ -20,7 +21,8 @@ import { CdDashboardEffect } from '../cd-dashboard/store/cd-dashboard.effects';
                           AppDashboardEffect,
                           DeploymentVerificationEffect,
                           CdDashboardEffect,
-                          TrendAnalysisEffect
+                          TrendAnalysisEffect,
+                          VisibilityEffect
     ])
   ],
 })

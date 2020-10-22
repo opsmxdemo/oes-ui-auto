@@ -9,6 +9,7 @@ import { DeploymentVerificationComponent } from '../application/deployment-verif
 import { ApplicationComponent } from '../application/application.component';
 import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
 import { AppErrorListingComponent } from '../error-handling/app-error-listing/app-error-listing.component';
+import { VisibilityComponent } from '../visibility/visibility.component';
 
 const routes: Routes = [
   
@@ -22,6 +23,7 @@ const routes: Routes = [
   ]},
   {path:'cddashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
+  {path:'visibility', component: VisibilityComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
   {path:'error', component:AppErrorListingComponent}
 ];

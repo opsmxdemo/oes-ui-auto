@@ -3,8 +3,13 @@ import { Pipeline } from '../../../models/applicationOnboarding/pipelineTemplate
 import { CreateApplication } from '../../../models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from '../../../models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import { fetchSupportedDatasources } from '../../data-source/store/data-source.actions';
+import { SaveApplication } from '../../../models/applicationOnboarding/createApplicationModel/saveApplicationModel';
+import { Environment } from '../../../models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
+
 
 // Below action related to create application
+export const fetchSupportedFeatures = createAction('[Application] FetchSupportedFeatures', props<{supportedFeaturesData: any}>());
 export const loadApp = createAction('[Application] LoadApp' , props<{page:string}>());
 export const loadOESData = createAction('[Application] LoadOESData');
 export const initialOESCallFail = createAction('[Application] InitialOESCallFail', props<{errorMessage:string,index:number}>());
@@ -19,6 +24,9 @@ export const loadDockerImageName = createAction('[Application] LoadDockerImageNa
 export const fetchDockerImageName = createAction('[Application] FetchDockerImageName', props<{dockerImageData:any}>());
 export const fetchUserGrops = createAction('[Application] FetchUserGrops', props<{userGroupData:string[]}>());
 export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
+// Below refactor actions goes here
+export const saveApplication = createAction('[Application] SaveApplication', props<{applicationData:SaveApplication}>());
+export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{environmentsData: Environment}>());
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string,applicationId:string}>());

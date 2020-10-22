@@ -1,0 +1,310 @@
+<div class="main_content p-0 bg-white">
+    <div class="d-flex">
+        <div class="leftBox bg-white mw-250">
+            <div class="leftBox_header text-muted text-center">
+                <form class="example-form">
+                  <mat-form-field class="example-full-width">
+                    <input type="text"
+                          placeholder="Select Application"
+                          aria-label="Number"
+                          matInput
+                          [formControl]="applicationFormControl"
+                          [matAutocomplete]="matAuto">
+                    <mat-autocomplete #matAuto="matAutocomplete">
+                      <mat-option *ngFor="let selectedApplication of applicationListOptions | async" [value]="selectedApplication" (click)="onSelectingApplication(selectedApplication)">
+                        {{selectedApplication}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </form>
+            </div>
+            <!-- /.leftBox_header -->
+
+            <div class="leftBox_body">
+             
+                <table class="table table-sm table-avenir table-no-bordered table-no-dots" *ngIf="serviceList != undefined">
+                <tbody>
+                  <tr *ngIf="serviceList.length > 0">
+                    <th >Service</th>
+                    <th>Status</th>
+                  </tr>
+                  <ng-container *ngFor="let service of serviceList; let i=index;">
+                  <tr [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
+                    <td class="service-selection " style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}</td>
+                    <td style="text-align: left;" width="50" style="text-align: center;"  [ngClass]= "{'text-danger':service.status === 'Pending','text-success':service.status === 'Approved','text-warning':service.status === 'Waiting'}">{{service.status}}</td>
+                  </tr> 
+                </ng-container>               
+                </tbody>
+              </table>
+            </div>
+
+
+            <!-- <div class="leftBox_body">
+                <table class="table table-sm table-avenir table-no-bordered table-no-dots">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr >
+                            <td class="alignServices active">CAS-service<span class="gateNames">Gate Name1</span></td>
+                            <td width="30" class="text-danger  active">Pending</td>
+                        </tr>
+                        <tr>
+                            <td class="alignServices">CAS-service2<span class="gateNames">Gate Name2</span></td>
+                            <td width="30" class="text-success">Approved</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div> -->
+            <!-- /.leftBox_body -->
+        </div>
+        <!-- /.leftBox w-250 -->
+
+
+      
+
+        <div class="page-content flex-grow-1" *ngIf="selectedService != undefined">
+            <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
+                <h3><img src="../../assets/images/application-icon.png" alt="" />{{selectedApplication}} <span *ngIf="selectedService != undefined">» {{selectedService.serviceName}}</span>
+                </h3>
+                <div class="page_access d-flex ml-auto">
+                </div>
+                <!-- /.page_access ml-auto -->
+            </div>
+            <!-- // <div class="content mt-5"> -->
+            <!--content inner-->
+            <div class="content__inner" >
+                <div  class="container overflow-hidden" >
+                    <!--multisteps-form-->
+                    <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+                {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+              </button> -->
+                    <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
+                        <mat-step [stepControl]="firstFormGroup">
+                            <!-- <form [formGroup]="firstFormGroup"> -->
+                            <form>
+                                <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template>
+                                <!-- <mat-form-field>
+                      <mat-label>Name</mat-label>
+                      <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+                    </mat-form-field> -->
+                                <!-- Grid row -->
+                                <div class="form-group row">
+                                    <!-- Default input -->
+                                    <!-- <label for="inputEmail3" class="col-sm-1 col-form-label">Owner :</label>
+                                    <div class="col-sm-10">
+                                        <label class="col-form-label" formControlName="owner">user2</label>
+                                    </div> -->
+                                </div>
+                                <!-- Grid row -->
+
+                                <!-- Grid row -->
+                                <div class="form-group row" >
+                                    <!-- Default input -->
+                                    <label class="col-sm-1 col-form-label">Comments:</label>
+                                    <div class="col-sm-8">
+                                        <!-- <textarea class="form-control" rows="3" formControlName="comments"></textarea> -->
+                                        <textarea class="form-control" rows="3"></textarea>
+
+                                    </div>
+
+                                    <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
+                                            class="btn btn-success align-bottom" style="color: #fff;">Approve</button></div>
+                                            
+                                    <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
+                                            class="btn btn-danger align-bottom">Reject</button></div>
+                                </div>
+                                <!-- Grid row -->
+
+
+                                <div class="pull-right">
+                                </div>
+                                
+                            </form>
+                         
+                        </mat-step>
+                     
+                        <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+                  <form [formGroup]="secondFormGroup">
+                    <mat-form-field>
+                      <mat-label>Address</mat-label>
+                      <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                             required>
+                    </mat-form-field>
+                    <div>
+                      <button mat-button matStepperPrevious>Back</button>
+                      <button mat-button matStepperNext>Next</button>
+                    </div>
+                  </form>
+                </mat-step> -->
+                        <!-- <mat-step>
+                  <ng-template matStepLabel>Done</ng-template>
+                  <p>You are now done.</p>
+                  <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Reset</button>
+                  </div>
+                </mat-step> -->
+                    </mat-horizontal-stepper>
+                </div>
+                <!-- <div class="pull-right" *ngIf="!showApprovalHistory">
+                    <a style="padding-right: 20px;" class="showElementHover" (click)="getApprovalHistory()">Approval History</a>
+                </div> -->
+            </div>
+           
+            <!-- </div> -->
+            <!-- /.page-content -->
+            <div  class="row no-gutters">
+                <div class="col-sm-12 d-flex flex-column">
+                    <div class="pt-1">
+                        <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="git-tab" data-toggle="tab" href="#git" role="tab"
+                                    aria-controls="git" aria-selected="true">Git</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="jira-tab" data-toggle="tab" href="#jira" role="tab"
+                                    aria-controls="jir" aria-selected="false">Jira</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="autopilot-tab" data-toggle="tab" href="#autopilot" role="tab"
+                                    aria-controls="autopilot" aria-selected="false">Autopilot</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="sonarqube-tab" data-toggle="tab" href="#sonar" role="tab"
+                                    aria-controls="sonar" aria-selected="false">Sonarqube</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="jenkins-tab" data-toggle="tab" href="#jenkins" role="tab"
+                                    aria-controls="jenkins" aria-selected="false">Jenkins</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane p-4 fade show active" id="git" role="tabpanel"
+                                aria-labelledby="git-tab">
+
+                                <h3>GIT INFO</h3>
+                            </div>
+                            <div class="tab-pane p-4 fade" id="jira" role="tabpanel" aria-labelledby="jira-tab">
+                                <h3>JIRA INFO</h3>
+                            </div>
+                            <div class="tab-pane p-4 fade" id="autopilot" role="tabpanel"
+                                aria-labelledby="autopilot-tab">
+                                <h3>AUTOPILOT INFO</h3>
+                            </div>
+                            <div class="tab-pane p-4 fade" id="sonar" role="tabpanel" aria-labelledby="sonarqube-tab">
+                                <h3>SONAEQUBE INFO</h3>
+                            </div>
+                            <div class="tab-pane p-4 fade" id="jenkins" role="tabpanel" aria-labelledby="jenkins-tab">
+                                <h3>JENK INFO</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.tab-lined -->
+                    <!-- /.bottom_btns -->
+                </div>
+                <!-- /.col-sm-8 -->
+            </div>
+
+            <!-- <div *ngIf="showApprovalHistory" class="tab-content h-100 p-3 flex-grow-1">
+                <div class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+                  <div class="page_access d-flex text-right p-3">
+                    <div class="mr-auto">
+                      <div class="input-group input-group_search">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" />
+                      </div>
+                    </div>
+
+                    <button class="btn btn-default" (click)="initiateApproval()">New Approval</button>
+                  </div>
+                  
+                  <div class="table-content">
+                    <table class="table table-sticky table-striped mb-0">
+                      <thead>
+                        <tr>
+                          <th class="font-weight-bold">ACTION</th>
+                          <th class="font-weight-bold">DATE</th>
+                          <th class="font-weight-bold">TOTAL TIME</th>
+                          <th class="font-weight-bold">APPROVED BY</th>
+                          <th class="font-weight-bold">COMMENTS</th>
+                          <th class="font-weight-bold">STATUS</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Reassign: &nbsp;
+                            <a style="padding-right: 20px;" class="showElementHover text-success" (click)="getApprovalHistory()">Approve</a>
+                            <a style="padding-right: 20px;" class="showElementHover text-danger" (click)="getApprovalHistory()">Reject</a></td>
+                          <td>9/6/2019 3:33:32 PM</td>
+                          <td>2h 30min</td>
+                          <td>Satya</td>
+                          <td>testing Approval</td>
+                          <td>
+                           Pending
+                          </td>
+                        </tr>
+                        <tr>
+                            <td>-</td>
+                            <td>9/6/2019 3:33:32 PM</td>
+                            <td>2h 30min</td>
+                            <td>Pranab</td>
+                            <td>testing Approval</td>
+                            <td>
+                             Approved
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>-</td>
+                            <td>9/6/2019 3:33:32 PM</td>
+                            <td>2h 30min</td>
+                            <td>Jay</td>
+                            <td>testing Approval</td>
+                            <td>
+                             Approved
+                            </td>
+                          </tr>
+                       
+                      </tbody>
+                    </table>
+                    <div class="table-footer gray-strip px-3 py-2">
+                      <div class="form-inline">
+                        <span class="mr-2">Per page</span>
+                        <select class="form-control">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">25</option>
+                        </select>
+                        <span class="ml-3 mr-2">Showing 1 to 20 of 187</span>
+                        <input type="text" class="form-control mr-2" />
+                        <button class="btn btn-primary">Go</button>
+
+                        <ul class="pagination ml-auto mb-0">
+                          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                          <li class="page-item"><a class="page-link" href="#">2</a></li>
+                          <li class="page-item"><a class="page-link" href="#">3</a></li>
+                          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+        </div>
+    </div>
+    <!-- /.main_content -->
+
+</div>
+<!-- /.content_section -->
+<!-- /#wrapper -->
