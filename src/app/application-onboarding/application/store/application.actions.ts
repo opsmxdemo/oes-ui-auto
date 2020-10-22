@@ -3,8 +3,10 @@ import { Pipeline } from '../../../models/applicationOnboarding/pipelineTemplate
 import { CreateApplication } from '../../../models/applicationOnboarding/createApplicationModel/createApplication.model';
 import { CloudAccount } from '../../../models/applicationOnboarding/createApplicationModel/servicesModel/cloudAccount.model';
 import { ApplicationList } from 'src/app/models/applicationOnboarding/applicationList/applicationList.model';
+import { fetchSupportedDatasources } from '../../data-source/store/data-source.actions';
 
 // Below action related to create application
+export const fetchSupportedFeatures = createAction('[Application] FetchSupportedFeatures', props<{supportedFeaturesData: any}>());
 export const loadApp = createAction('[Application] LoadApp' , props<{page:string}>());
 export const loadOESData = createAction('[Application] LoadOESData');
 export const initialOESCallFail = createAction('[Application] InitialOESCallFail', props<{errorMessage:string,index:number}>());

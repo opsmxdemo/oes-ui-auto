@@ -80,6 +80,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
           // Below function is use to dispatch action based on installation mode
           this.initialData(this.installationMode);
+
+       
         }
       }
     );

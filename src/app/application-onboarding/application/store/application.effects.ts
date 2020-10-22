@@ -281,4 +281,20 @@ export class ApplicationEffect {
             })
         )
     )
+     // Below effect is use for fetch supported features dropdown data.
+     fetchSupportedFeatures = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadApp),
+         switchMap(() => {
+             return this.http.get<Pipeline>(this.environment.config.endPointUrl + 'platformservice/v1/featureList').pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchSupportedFeatures({ supportedFeaturesData: resdata['supportedFeatures'] });
+                 }),
+                 catchError(errorRes => {
+                     return handleOESError(errorRes, 1);
+                 })
+             );
+         })
+     )
+ )
 }

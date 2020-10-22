@@ -24,7 +24,7 @@ export interface State {
     initalOESDatacall: boolean;
     initalOESDataLoaded: string[];
     applicationId:string;
-
+    supportedFeaturesData: any;
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -58,7 +58,8 @@ export const initialState: State = {
     initalOESDataLoaded: ['dummy','dummy'],
     applicationId:null,
     logtemplate: [],
-    metrictemplate:[]
+    metrictemplate:[],
+    supportedFeaturesData: null,
 }
 
 export function ApplicationReducer(
@@ -208,7 +209,13 @@ export function ApplicationReducer(
             }),
         
         ),
+        on(ApplicationAction.fetchSupportedFeatures,
+            (state,action) => ({
+                ...state,
+                supportedFeaturesData: action.supportedFeaturesData
+            }),
         
+        ),
         // #### CreateApplication screen logic ends ####//
 
         // ###  Applist screen logic start ### // 

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, Validators, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
 import { PipelineTemplate } from '../../../models/applicationOnboarding/pipelineTemplate/pipelineTemplate.model';
@@ -26,7 +26,7 @@ export class CreateApplicationComponent implements OnInit {
   @ViewChild('logModel') logModel: ElementRef;
   @ViewChild('metricModel') metricModel: ElementRef;
 
-  userType = 'OES-AP';                                            // It contain type of user i.e, AP, OES or both.
+  userType = '';                                            // It contain type of user i.e, AP, OES or both.
   createApplicationForm: FormGroup;                               // For Application Section
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
@@ -59,27 +59,73 @@ export class CreateApplicationComponent implements OnInit {
   apiLoadingError = false;                                        // It is use to show or hide component error message.
   isMetricTemplateClicked = true;
   errorMessage = `<div><b>Application creation requires image source(s) and pipeline template(s).</b></div><ul><li>Please create an image source via  "Data sources" -> "New Data Source" -> Select Monitoring Provider To Create DataSource.</li><li>Pipeline template needs to be create in Spinnaker.If you are sure that these are there, Please refresh the page after some time.</li></ul>`
+  featureList:any;
+  exerciseAp = {
+    data: [{ param: "logTemp" }, { param: "metricTemp" }]
+  };
+  showFeatures: boolean = false;
+  userIndex: any;
+  showDat: boolean;
+
+ 
+
+  todo = [
+    'Get to work',
+    'Pick up groceries',
+    'Go home',
+    'Fall asleep'
+  ];
+
+  done = [
+   
+  ];
+  selectedFeature: string;
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
               public appStore: Store<fromApp.AppState>,
-              public router: Router) { }
+              public router: Router,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-
+this.showDat = false;
     // Reseting metric and log Templates data
     this.store.dispatch(ApplicationActions.resetTemplateData());
 
     // Below function is use to fetch data from AppState to update usertype
     this.appStore.select('layout').subscribe(
       (layoutRes) => {
-        if(layoutRes.installationMode !== ''){
-          this.userType = layoutRes.installationMode;
-          if(this.userType.includes('OES')){
+        // if(layoutRes.installationMode !== ''){
+        //   this.userType = layoutRes.installationMode;
+        //   if(this.userType.includes('OES')){
+        //     //Dispatching action to load initial oes data to populate dropdown
+        //     this.store.dispatch(ApplicationActions.loadOESData());
+        //   }
+        // }
+        if(layoutRes.supportedFeatures != null){
+         // this.featureList = ['SAPOR','Deployment Verification','Visibility'];
+          this.featureList = layoutRes.supportedFeatures;
+        //   for (var i = 0; i < this.featureList.length; i++) {
+        //     this.featureList[i] = this.featureList[i].replace(/"/g, "");
+        // }
+          // this.featureList = fea;
+          //           console.log(JSON.parse(this.featureList));
+          //           this.featureList = JSON.parse(this.featureList);
+          console.log(this.featureList[0]);
+           const saporExist = this.featureList.some(item => item.includes("Sapor"));
+           
+           if(saporExist){
+             this.userType = this.featureList[0];
+           }
+           //this.saporExist = saporExist;
+          
+         // if(this.featureList.some(item => item.includes('Deployment Verification'))){
+          //  this.userType = 'Deployment Verification';
             //Dispatching action to load initial oes data to populate dropdown
-            this.store.dispatch(ApplicationActions.loadOESData());
-          }
+          //  this.store.dispatch(ApplicationActions.loadOESData());
+         // }
         }
+
       }
     )
 
@@ -89,7 +135,7 @@ export class CreateApplicationComponent implements OnInit {
         this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
 
-        if(responseData.initalOESDatacall === true && this.userType.includes('OES')){
+        if(responseData.initalOESDatacall === true && this.userType.includes('Sapor')){
           let counter = 0;
           if(responseData.initalOESDataLoaded.indexOf('calling') > -1){
             this.apploading = true;
@@ -120,7 +166,7 @@ export class CreateApplicationComponent implements OnInit {
             // Reseting metric and log Templates data
             this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
-            if(this.userType === 'AP'){
+            if(this.userType === 'Deployment Verification'){
               // AP mode
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
@@ -222,7 +268,7 @@ export class CreateApplicationComponent implements OnInit {
 
             //populate environment Form if usertype include OES in it#################################################################################
             if(this.appData.environments !==null){
-              if (this.appData.environments.length !== 0 && this.userType !== 'AP') {
+              if (this.appData.environments.length !== 0 && this.userType !== 'Deployment Verification') {
                 // clearing form first
                 this.environmentForm = new FormGroup({
                   environments: new FormArray([])
@@ -264,7 +310,7 @@ export class CreateApplicationComponent implements OnInit {
             }
 
             //populating log and metric template data ######################################################################
-            if(this.userType === 'AP' || this.userType === 'OES-AP'){
+            if(this.userType === 'Deployment Verification'){
               // Storing Log and Metric template data in state getting from appData
               if(this.appData.logTemplate !== null){
                 this.appData.logTemplate.forEach(logTemp => {
@@ -329,22 +375,23 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to define all forms exist in application On boarding component
   defineAllForms() {
     // defining reactive form approach for createApplicationForm
-    if(this.userType === 'AP'){
+    //if(this.userType === 'Deployment Verification'){
       // For AP mode
       this.createApplicationForm = new FormGroup({
         name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
         emailId: new FormControl('',[Validators.required,Validators.email]),
+        imageSource: new FormControl(''),
         description: new FormControl('')
       });
-    }else{
+   // }else{
       // For OES and both oes and autopilot mode.
-      this.createApplicationForm = new FormGroup({
-        name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
-        emailId: new FormControl('',[Validators.required,Validators.email]),
-        description: new FormControl(''),
-        imageSource: new FormControl('',Validators.required)
-      });
-    }
+      // this.createApplicationForm = new FormGroup({
+      //   name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+      //   emailId: new FormControl('',[Validators.required,Validators.email]),
+      //   description: new FormControl(''),
+      //   imageSource: new FormControl('',Validators.required)
+      // });
+  //  }
 
     // defining reactive form for Services Section
     this.servicesForm = new FormGroup({
@@ -413,49 +460,14 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to return relavent service form on basics of userType. i.e,AP , OESOnly or both.
   setServiceForm(){
     let serviceForm = null;
-    switch(this.userType){
-      case 'OES':
-        serviceForm =  new FormGroup({
-              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              pipelines: new FormArray([
-                new FormGroup({
-                  pipelinetemplate: new FormControl('', Validators.required),
-                  dockerImageName: new FormGroup({
-                    accountName: new FormControl('', Validators.required),
-                    imageName: new FormControl('', Validators.required)
-                  }),
-                  pipelineParameters: new FormArray([])
-                })
-              ])
-            })
-        break;
-      case 'AP':
-        serviceForm = new FormGroup({
-              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              logTemp: new FormControl(''),
-              metricTemp: new FormControl('')
-            })
-         
-        break;
-      case 'OES-AP':
-        serviceForm = new FormGroup({
-              serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-              logTemp: new FormControl(''),
-              metricTemp: new FormControl(''),
-              pipelines: new FormArray([
-                new FormGroup({
-                  pipelinetemplate: new FormControl('', Validators.required),
-                  dockerImageName: new FormGroup({
-                    accountName: new FormControl('', Validators.required),
-                    imageName: new FormControl('', Validators.required)
-                  }),
-                  pipelineParameters: new FormArray([])
-                })
-              ])
-            })
-        break;
-    }
-    return serviceForm;
+    serviceForm =  new FormGroup({
+      serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+      featureName: new FormControl(''),
+      configurations:  new FormGroup({})
+    })
+    
+   return serviceForm;
+
   }
 
   //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
@@ -549,7 +561,7 @@ export class CreateApplicationComponent implements OnInit {
     if(index > -1){
       const arrayControl = this.servicesForm.get('services') as FormArray;
       const innerarrayControl = arrayControl.at(index).get(type) 
-      if(this.userType.includes('AP')){
+      if(this.userType.includes('Deployment Verification')){
         if(type === 'logTemp'){
           if(this.templateEditMode){
             innerarrayControl.patchValue(this.logTemplateData[this.editTemplateIndex].templateName);
@@ -681,17 +693,19 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to add new service in existing Service Section
   addService() {
+   // (<FormGroup>this.servicesForm.get('services')).push(this.setServiceForm());
+
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
     // Update dockerImageDropdownData array
-    if(this.userType.includes('OES')){
-      this.dockerImageDropdownData.push(this.dockerImageData[0].images);
-      const arrayControl = this.servicesForm.get('services') as FormArray;
-      const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
-      const mainData = innerarrayControl.at(0).get('dockerImageName');
-      mainData.patchValue({
-          'accountName': this.dockerImageData[0].imageSource
-      });
-    }
+  //   //if(this.userType.includes('Sapor')){
+  //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+  //     const arrayControl = this.servicesForm.get('services') as FormArray;
+  //     const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
+  //     const mainData = innerarrayControl.at(0).get('dockerImageName');
+  //     mainData.patchValue({
+  //         'accountName': this.dockerImageData[0].imageSource
+  //     });
+  // //  }
   }
 
   //Below function is use to delete existing service fron Service Section
@@ -735,10 +749,10 @@ export class CreateApplicationComponent implements OnInit {
       this.templateEditMode = true;
       this.currentLogTemplateIndex = index;
       this.logTemplateData.forEach((logdata,index)=>{
-        if(templatControl.value.logTemp === logdata.templateName){
+       // if(templatControl.value.logTemp === logdata.templateName){
           this.editTemplateIndex = index;
           this.editTemplateData = {...logdata};
-        }
+       // }
       })
     }else if(type === "metric" && templatControl.value.metricTemp !== ""){
       this.templateEditMode = true;
@@ -776,6 +790,30 @@ export class CreateApplicationComponent implements OnInit {
     this.router.navigate([this.parentPage]);
   }
 
+  // Below function is use to submit applicatio form
+  SubmitApplicationForm(){
+    console.log(this.createApplicationForm.value);
+    if(this.createApplicationForm.value.name){
+      this.showFeatures = true;
+    }
+  }
+
+   // Below function is use to submit environments form
+   SubmitEnvironmentsForm(){
+    console.log(this.environmentForm.value);
+    if(this.createApplicationForm.value.name){
+      this.showFeatures = true;
+    }
+  }
+
+  // Below function is use to submit group permission form
+  SubmitGroupPermissionForm(){
+    console.log(this.groupPermissionForm.value);
+    if(this.createApplicationForm.value.name){
+      this.showFeatures = true;
+    }
+  }
+
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
       if (this.createApplicationForm.valid && this.servicesForm.valid && this.groupPermissionForm.valid) {
@@ -783,7 +821,7 @@ export class CreateApplicationComponent implements OnInit {
         // Saving all 4 forms data into one
         this.mainForm = this.createApplicationForm.value;
         // Below is configuration related to service section when userType contain OES.
-        if(this.userType.includes('OES')){
+        if(this.userType.includes('Sapor')){
           this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
@@ -810,10 +848,10 @@ export class CreateApplicationComponent implements OnInit {
           return usergroupObj;
         });
 
-        if(this.userType.includes('OES')){
+        if(this.userType.includes('Sapor')){
           this.mainForm.environments = this.environmentForm.value.environments;
         }
-        if(this.userType.includes('AP')){
+        if(this.userType.includes('Deployment Verification')){
           this.mainForm.logTemplate = this.logTemplateData;
           this.mainForm.metricTemplate = this.metricTemplateData;
         }
@@ -829,4 +867,74 @@ export class CreateApplicationComponent implements OnInit {
         this.validForms();
       }
   }
+
+  // Below function is use to get the feature type
+  selectFeature(item: string,index){
+    this.selectedFeature = item;
+    this.userIndex = index;
+    let autopilotParams = {
+      data: [{deploymentverification: true, name: "logTemp",type: 'form-control', validation: ['required'] }, { name: "metricTemp",type: 'form-control',validation: ['required']  }]
+    };
+    
+    let saporParams = {
+      data: [{sapor: true,name: "pipelines", type: 'form-array', validation: ['required']}]
+    }
+
+  
+
+    if(item === 'Deployment Verification'){
+      this.userType = item;
+      const arrayControl = this.servicesForm.get('services') as FormArray;
+      const innerarrayControl = arrayControl.at(index).get('configurations') as FormGroup;
+     autopilotParams.data.forEach(param => {
+        if(param.type == 'form-control'){
+          innerarrayControl.addControl( param.name, new FormControl(''));
+        }else{
+        }
+      });
+
+    }else if(item === 'Sapor'){
+      this.userType = item;
+      const arrayControl = this.servicesForm.get('services') as FormArray;
+      const innerarrayControl = arrayControl.at(index).get('configurations') as FormGroup;
+
+     saporParams.data.forEach(param => {
+        if(param.type == 'form-control'){
+          innerarrayControl.addControl( param.name, new FormControl(''));
+        }else{
+          innerarrayControl.addControl( param.name, new FormArray([]));
+        }
+        
+      });
+      const pipelineArray = innerarrayControl.get('pipelines') as FormArray;
+      pipelineArray.push(
+        new FormGroup({
+          pipelinetemplate: new FormControl('', Validators.required),
+          dockerImageName: new FormGroup({
+            accountName: new FormControl('', Validators.required),
+            imageName: new FormControl('', Validators.required)
+          }),
+          pipelineParameters: new FormArray([])
+        })
+      )
+    }
+  
+ 
+  }
+
+
+// refactor code functions goes here
+
+getApplicationDetails(){
+  
+}
+
+
+
+// selectFeature(item:string){
+//   this.selectedFeature = item;
+// }
+
+
+
 }
