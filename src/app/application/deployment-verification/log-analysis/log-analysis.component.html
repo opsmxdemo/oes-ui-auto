@@ -131,7 +131,7 @@
         <div class="accordion accordion-errors" id="accordionExample" *ngIf="logAnalysisData?.clusters?.length > 0">
 
           <div  class="card mb-2 data_list removeOverflow card-spacing" id={{log.id}} [ngClass]="{'active': log.id == clusterId }" *ngFor="let log of logAnalysisData?.clusters | sortBy: 'desc':'scoreReduction.'+selectedSensitivity; let indexOfelement=index;">
-            <div class="card-header d-flex align-items-ccard-body text-wrap-normal ng-star-insertedenter justify-content-between" id="heading{{log.id}}">
+            <div class="card-header d-flex align-items-ccard-body text-wrap-normal ng-star-insertedenter justify-content-between fadeIN" id="heading{{log.id}}">
               <div class="score" *ngIf="selectedSensitivity=='high'">Impact On Score {{log.scoreReduction?.high}}</div>
               <div class="score" *ngIf="selectedSensitivity=='medium'">Impact On Score {{log.scoreReduction?.medium}}
               </div>
@@ -205,14 +205,16 @@
                 <!-- <button class="btn btn-link pr-0" type="button" data-toggle="collapse" id="expColBtn" href="'#log'+log.id" #expColBtn>
                 <i class="fa fa-sort-down"></i>
               </button> -->
-              <button class="btn btn-link pr-0" type="button" data-toggle="collapse" [attr.data-target]="'#log' + log.id" aria-expanded="true" [attr.aria-controls]="'log'+log.id" #expColBtn>
-                <i class="fa fa-sort-down"></i>
+              <button class="btn btn-link pr-0" type="button" (click)="expColCluster(log.id)"  #expColBtn>
+                <i class="fa fa-sort-down " id="downArrow{{log.id}}" [ngClass]=" switchToState == 'Expand All'?'show':'hide'"></i>
+                <i class="fa fa-sort-up upArrow " id="upArrow{{log.id}}" [ngClass]="switchToState == 'Collapse All'?'show':'hide'"></i>
               </button>
             </div>
-            <div id="timeAnalysisGraph{{log.id}}" class="card-body" *ngIf="log.id==slectedTimeAnalysis" [hidden]="!isShow">
+            <div id="timeAnalysisGraph{{log.id}} fadeIN" class="card-body inlineDisplay fadeIN" *ngIf="log.id==slectedTimeAnalysis " [hidden]="!isShow">
               <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
+              
               <fusioncharts
-              width="100%"
+              width="{{chartSize}}"
               height="350"
               type="column2d"
               dataFormat="JSON"

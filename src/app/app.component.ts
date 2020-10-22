@@ -119,6 +119,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     setTimeout(()=>{
       if(this.router.url.includes('deploymentverification')){
         this.addclass = true;
+        this.hideTooltip=false;
       }
     },1000)
   }
