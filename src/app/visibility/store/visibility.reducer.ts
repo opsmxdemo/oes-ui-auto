@@ -12,6 +12,8 @@ export interface State {
     serviceList: [];
     serviceListLoading: boolean;
     applicationId: number;
+    toolConnectors: [],
+    visibilityData: any
 }
 
 export const initialState: State = {
@@ -21,6 +23,8 @@ export const initialState: State = {
     serviceList: null,
     serviceListLoading: true,
     applicationId: null,
+    toolConnectors: null,
+    visibilityData: null
 };
 
 export function VisibilityReducer(
@@ -59,6 +63,28 @@ export function VisibilityReducer(
                 ...state,
                 serviceList: action.servicesList,
                 serviceListLoading: true
+            })
+        ),
+        on(Visibility.loadToolConnectors,
+            (state, action) => ({
+                ...state,
+            })
+        ),
+        on(Visibility.fetchToolConnectors,
+            (state, action) => ({
+                ...state,
+                toolConnectors: action.toolConnectors
+            })
+        ),
+        on(Visibility.loadVisibilityData,
+            (state, action) => ({
+                ...state,
+            })
+        ),
+        on(Visibility.fetchVisbilityData,
+            (state, action) => ({
+                ...state,
+                visibilityData: action.visibilityData
             })
         )
     )(visibilityState, visibilityAction);

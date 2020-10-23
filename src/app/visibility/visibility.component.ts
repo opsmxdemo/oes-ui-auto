@@ -6,6 +6,7 @@ import * as fromApp from '../store/app.reducer';
 import {Observable} from 'rxjs';
 import * as Visibility from './store/visibility.actions';
 import {map, startWith} from 'rxjs/operators';
+import * as $ from 'jquery'; 
 
 export interface User {
   applicationName: string;
@@ -31,14 +32,22 @@ export class VisibilityComponent implements OnInit {
   selectedApplication: string;
   // applicationForm: FormGroup;
 
-  //Services releated Initializations
+  //Services related Initializations
   serviceList: any[];
   selectedServiceId: number;             // used for activating the service in left panel
   selectedService: any;
+  serviceListLoading: boolean;
+
+  //Tool Connector and Visibility related Initializations
+  toolConnectors: any[];
+  // connectorTypes: any[];
+  visibilityData: any[];
+  selectedTab: any;
+
   // showApprovalHistory: boolean= false;
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getAllApplications();
     this.store.select('visibility').subscribe(
       (resData) => { 
@@ -46,21 +55,34 @@ export class VisibilityComponent implements OnInit {
           this.applicationList = resData.applicationList;
           this.initFilterApplication();
         }
-        if(resData.serviceList !=null && resData.serviceList != undefined ){
+        console.log("service List Loading: ", this.serviceListLoading);
+        
+        if(resData.serviceList !=null && resData.serviceListLoading ){
           this.serviceList = resData.serviceList;
-          console.log("Here is the Service List: ", this.serviceList);
-          this.selectedService = this.serviceList[0];
-            this.selectedServiceId = this.serviceList[0].serviceId;
-            console.log("Selected Service ID: ", this.selectedServiceId);
+          this.serviceListLoading = resData.serviceListLoading
+          // console.log("Here is the Service List: ", this.serviceList);
         }
+
+        if(resData.toolConnectors != null && resData.toolConnectors != undefined){
+          this.toolConnectors = resData.toolConnectors;
+          this.selectedTab = this.toolConnectors[0]['connectorType'];
+          setTimeout(()=>{
+            $( '#'+ this.selectedTab).trigger('click');
+            console.log("load this; ", this.selectedTab);
+          },500);
+          
+        }
+        if(resData.visibilityData != null){
+          this.visibilityData = resData.visibilityData;
+          // console.log("Visibility Data: ", this.visibilityData);
+        } 
       });
   }
 
   // get application details
-   getAllApplications() {
+  getAllApplications() {
     this.store.dispatch(Visibility.loadApplications());
-
-   }
+  }
 
   //Filtering the application in input field
   initFilterApplication() {
@@ -68,7 +90,7 @@ export class VisibilityComponent implements OnInit {
     this.applicationList.forEach(val => {
       this.applicationsObject.push(val.name);
     });
-    console.log('Application List: ', this.applicationList); 
+    // console.log('Application List: ', this.applicationList); 
 
     
     this.applicationListOptions = this.applicationFormControl.valueChanges
@@ -76,7 +98,7 @@ export class VisibilityComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
-      console.log("Application List Options: ", this.applicationListOptions);   
+      // console.log("Application List Options: ", this.applicationListOptions);   
   }
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
@@ -87,14 +109,30 @@ export class VisibilityComponent implements OnInit {
   onSelectingApplication(selectedApplication){
     this.selectedApplication = selectedApplication;
     this.store.dispatch(Visibility.loadServices());
+
+    setTimeout(()=>{
+      this.selectedService = this.serviceList[0];
+      this.selectedServiceId = this.serviceList[0].serviceId;
+    },500);
+          
+    this.store.dispatch(Visibility.loadToolConnectors());
+    this.store.dispatch(Visibility.loadVisibilityData());
+
   }
 
   onClickService(service){
     this.selectedServiceId = service.serviceId;
     this.selectedService = service;
     console.log("selected Service: ", this.selectedService);
-    
+    this.store.dispatch(Visibility.loadToolConnectors());
+    this.store.dispatch(Visibility.loadVisibilityData());
+    console.log("Selected Service ID: ", this.selectedServiceId);
 
+  }
+  onSelectingTab(selectedTab){
+    this.selectedTab = selectedTab;
+    console.log("selected Tab: ", this.selectedTab);
+    
   }
 
   // code below to show the approval history

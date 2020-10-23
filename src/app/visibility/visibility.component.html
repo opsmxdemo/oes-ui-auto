@@ -21,7 +21,6 @@
             <!-- /.leftBox_header -->
 
             <div class="leftBox_body">
-             
                 <table class="table table-sm table-avenir table-no-bordered table-no-dots" *ngIf="serviceList != undefined">
                 <tbody>
                   <tr *ngIf="serviceList.length > 0">
@@ -31,7 +30,7 @@
                   <ng-container *ngFor="let service of serviceList; let i=index;">
                   <tr [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
                     <td class="service-selection " style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}</td>
-                    <td style="text-align: left;" width="50" style="text-align: center;"  [ngClass]= "{'text-danger':service.status === 'Pending','text-success':service.status === 'Approved','text-warning':service.status === 'Waiting'}">{{service.status}}</td>
+                    <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status === 'Pending','text-success':service.status === 'Approved','text-secondary':service.status === 'Waiting'}">{{service.status}}</td>
                   </tr> 
                 </ng-container>               
                 </tbody>
@@ -161,16 +160,16 @@
             <div  class="row no-gutters">
                 <div class="col-sm-12 d-flex flex-column">
                     <div class="pt-1">
+                      <!--  *ngFor="let connectors of connectorTypes"  -->
                         <ul class="nav tab-lined nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="git-tab" data-toggle="tab" href="#git" role="tab"
-                                    aria-controls="git" aria-selected="true">Git</a>
+                          <!-- <li>{{connectors}}</li>
+                        </ul>
+                        <ul> -->
+                            <li class="nav-item" *ngFor="let connectors of toolConnectors" >
+                                <a class="nav-link" id="{{connectors.connectorType}}" data-toggle="tab" href="#{{connectors.connectorType}}" role="tab"
+                                    aria-controls="" aria-selected="false" (click)="onSelectingTab(connectors.connectorType)">{{connectors.connectorType}}</a> 
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="jira-tab" data-toggle="tab" href="#jira" role="tab"
-                                    aria-controls="jir" aria-selected="false">Jira</a>
-                            </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a class="nav-link" id="autopilot-tab" data-toggle="tab" href="#autopilot" role="tab"
                                     aria-controls="autopilot" aria-selected="false">Autopilot</a>
                             </li>
@@ -181,26 +180,32 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="jenkins-tab" data-toggle="tab" href="#jenkins" role="tab"
                                     aria-controls="jenkins" aria-selected="false">Jenkins</a>
-                            </li>
+                            </li> -->
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane p-4 fade show active" id="git" role="tabpanel"
-                                aria-labelledby="git-tab">
-
-                                <h3>GIT INFO</h3>
-                            </div>
-                            <div class="tab-pane p-4 fade" id="jira" role="tabpanel" aria-labelledby="jira-tab">
-                                <h3>JIRA INFO</h3>
-                            </div>
-                            <div class="tab-pane p-4 fade" id="autopilot" role="tabpanel"
-                                aria-labelledby="autopilot-tab">
-                                <h3>AUTOPILOT INFO</h3>
-                            </div>
-                            <div class="tab-pane p-4 fade" id="sonar" role="tabpanel" aria-labelledby="sonarqube-tab">
-                                <h3>SONAEQUBE INFO</h3>
-                            </div>
-                            <div class="tab-pane p-4 fade" id="jenkins" role="tabpanel" aria-labelledby="jenkins-tab">
-                                <h3>JENK INFO</h3>
+                            <div class="tab-pane p-4 fade show active" id="{{selectedTab}}" role="tabpanel"
+                                aria-labelledby="">
+                                <div *ngIf="selectedTab == 'Jira'">
+                                  <table class="table">
+                                    <thead class="thead-light">
+                                      <tr>
+                                        <th scope="col">Ticket#</th>
+                                        <th scope="col">Task ID</th>
+                                        <th scope="col">Description</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let eachData of visibilityData"> 
+                                        <td>{{eachData.key}}</td>
+                                        <td>{{eachData.value}}</td>
+                                        <td>{{eachData.data}}</td> 
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div *ngIf="selectedTab == 'Git'">Git INFO2</div>
+                                <div *ngIf="selectedTab == 'Autopilot'">AUTOPILOT INFO3</div>
+                                <div *ngIf="selectedTab == 'Sonarqube'">SONAEQUBE INFO4</div>
                             </div>
                         </div>
                     </div>
