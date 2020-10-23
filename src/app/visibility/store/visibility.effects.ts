@@ -60,16 +60,55 @@ export class VisibilityEffect {
         )
     )
 
-
     // Below effect is use for fetch Services
     fetchServiceListData = createEffect(() =>
         this.actions$.pipe(
             ofType(Visibility.loadServices),
             switchMap((action) => {
                 // return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getServiceList?canaryId=' + action.canaryId).pipe(
-                return this.http.get<any>('/assets/data/visibility/approvalGateInstances.json').pipe(
+                return this.http.get('/assets/data/visibility/approvalGateInstances.json').pipe(
                     map(resdata => {
+                        console.log("Services List: ", resdata);
+                        
                         return Visibility.fetchServices({ servicesList: resdata });
+                    }),
+                    catchError(errorRes => {
+                        // this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch Services
+    fetchToolConnectors = createEffect(() =>
+        this.actions$.pipe(
+            ofType(Visibility.loadToolConnectors),
+            switchMap((action) => {
+                // return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getServiceList?canaryId=' + action.canaryId).pipe(
+                return this.http.get<any>('/assets/data/visibility/toolConnectors.json').pipe(
+                    map(resdata => {
+                        return Visibility.fetchToolConnectors({ toolConnectors: resdata });
+                    }),
+                    catchError(errorRes => {
+                        // this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch Services
+    fetchVisibilityData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(Visibility.loadVisibilityData),
+            switchMap((action) => {
+                // return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getServiceList?canaryId=' + action.canaryId).pipe(
+                return this.http.get<any>('/assets/data/visibility/visibilityData.json').pipe(
+                    map(resdata => {
+                        return Visibility.fetchVisbilityData({ visibilityData: resdata });
                     }),
                     catchError(errorRes => {
                         // this.toastr.showError('Server Error !!','ERROR')

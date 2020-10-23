@@ -8,5 +8,12 @@ export const fetchApplications = createAction('[Visibility] FetchApplications', 
 
 export const loadServices = createAction('[Visibility] LoadServices');
 export const fetchServices = createAction('[Visibility] FetchServices', props<{ servicesList: any }>());
+
+export const loadToolConnectors = createAction('[Visibility] LoadToolConnectors');
+export const fetchToolConnectors = createAction('[Visibility] FetchToolConnectors', props<{ toolConnectors: any }>());
+
+export const loadVisibilityData = createAction('[Visibility] LoadVisibilityData');
+export const fetchVisbilityData = createAction('[Visibility] FetchVisibilityData', props<{ visibilityData: any }>());
+
 // export const restrictExecutionOfServices = createAction('[Visibility] RestrictExecutionOfServices');
 
