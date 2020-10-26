@@ -167,13 +167,26 @@ export function ApplicationReducer(
                 applicationLoading:true
             })
         ),
+        // new onboarding code changes goes from here
         on(ApplicationAction.saveApplication,
             state => ({
                 ...state,
                 applicationLoading:true
             })
         ),
+        on(ApplicationAction.saveService,
+            state => ({
+                ...state,
+                applicationLoading:true
+            })
+        ),
         on(ApplicationAction.saveEnvironments,
+            state => ({
+                ...state,
+                applicationLoading:true
+            })
+        ),
+        on(ApplicationAction.saveGroupPermissions,
             state => ({
                 ...state,
                 applicationLoading:true

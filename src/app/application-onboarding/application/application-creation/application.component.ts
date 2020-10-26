@@ -17,7 +17,7 @@ import * as $ from 'jquery';
 import { GroupPermission } from 'src/app/models/applicationOnboarding/createApplicationModel/groupPermissionModel/groupPermission.model';
 import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
 import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
-
+import {Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
 @Component({
   selector: 'app-application',
   templateUrl: './application.component.html',
@@ -33,11 +33,15 @@ export class CreateApplicationComponent implements OnInit {
   groupPermissionForm: FormGroup;                                 // For Permission Section
   servicesForm: FormGroup;                                        // For Services Section
   environmentForm: FormGroup;                                     // For Environment Section
+  gateForm: FormGroup;                                            // For GateName Section
+  visibilityForm: FormGroup;                                      // For Visibility Section
   fetchedPipelineTemplateParameters: PipelineTemplate[];          // For fetched pipeline_parameter through api used in serviceForm
   pipelineExists: Pipeline;                                       // For populating the pipeline Type dropdown exist in services section.
   mainForm: CreateApplication = null;                             // It contain data of all 3 forms which send to backend after successful submission.
   appForm: SaveApplication = null;                                // It contain data of application form
+  servForm: SaveApplication = null;                                // It contain data of application form
   envForm: Environment = null;                                    // It contain data of environment form
+  visForm: Visibility = null;                              // It contain data of visibilty form
   groupForm: GroupPermission = null;
   cloudAccountExist: CloudAccount;                                // It contain data of all cloud Account exist.  
   editMode: boolean = false                                       // It use to define form is in edit phase
@@ -113,9 +117,9 @@ this.showDat = false;
         // }
         if(layoutRes.supportedFeatures != null){
        
-          this.featureList = ["Sapor","Deployment Verification","Visibility"];
+       this.featureList = ["Sapor","Deployment Verification","Visibility"];
 
-        // this.featureList = layoutRes.supportedFeatures;
+     //    this.featureList = layoutRes.supportedFeatures;
        
            const saporExist = this.featureList.some(item => item.includes("Sapor"));
            if(saporExist){
@@ -195,80 +199,80 @@ this.showDat = false;
             
 
             //populating serviceForm ############################################################################
-            if (this.appData.services !== null && this.appData.services.length !== 0) {
-              this.servicesForm = new FormGroup({
-                services: new FormArray([])
-              });
-              switch(this.userType){
-                case 'OES':
-                case 'OES-AP':
-                  //populating services array in OES mode
-                  this.appData.services.forEach((serviceArr, serviceindex) => {
-                    if(this.userType === 'OES-AP'){
-                      (<FormArray>this.servicesForm.get('services')).push(
-                        new FormGroup({
-                          serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
-                          id: new FormControl(serviceArr.id),
-                          logTemp: new FormControl(serviceArr.logTemp),
-                          metricTemp: new FormControl(serviceArr.metricTemp),
-                          pipelines: new FormArray([])
-                        })
-                      );
-                    }else{
-                      (<FormArray>this.servicesForm.get('services')).push(
-                        new FormGroup({
-                          serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
-                          id: new FormControl(serviceArr.id),
-                          pipelines: new FormArray([])
-                        })
-                      );
-                    }
+            // if (this.appData.services !== null && this.appData.services.length !== 0) {
+            //   this.servicesForm = new FormGroup({
+            //     services: new FormArray([])
+            //   });
+            //   switch(this.userType){
+            //     case 'OES':
+            //     case 'OES-AP':
+            //       //populating services array in OES mode
+            //       this.appData.services.forEach((serviceArr, serviceindex) => {
+            //         if(this.userType === 'OES-AP'){
+            //           (<FormArray>this.servicesForm.get('services')).push(
+            //             new FormGroup({
+            //               serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
+            //               id: new FormControl(serviceArr.id),
+            //               logTemp: new FormControl(serviceArr.logTemp),
+            //               metricTemp: new FormControl(serviceArr.metricTemp),
+            //               pipelines: new FormArray([])
+            //             })
+            //           );
+            //         }else{
+            //           (<FormArray>this.servicesForm.get('services')).push(
+            //             new FormGroup({
+            //               serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
+            //               id: new FormControl(serviceArr.id),
+            //               pipelines: new FormArray([])
+            //             })
+            //           );
+            //         }
                     
-                    //populating pipeline array
-                    serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
-                      const serviceArray = this.servicesForm.get('services') as FormArray;
-                      const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
-                      pipelineArray.push(
-                        new FormGroup({
-                          pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
-                          dockerImageName: new FormGroup({
-                            accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
-                            imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
-                          }),
-                          pipelineParameters: new FormArray([])
-                        })
-                      )
-                      if(pipelineArr.pipelineParameters !== null && pipelineArr.pipelineParameters !== undefined){
-                        //populating pipelieParameter array
-                        pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
-                          const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
-                          pipelineParameter.push(
-                            new FormGroup({
-                              value: new FormControl(pipelineParameterArr.value),
-                              name: new FormControl(pipelineParameterArr.name),
-                              type: new FormControl(pipelineParameterArr.type)
-                            })
-                          );
-                        })
-                      }
-                    })
-                  })
-                  break;
-                case 'AP':
-                  //populating services array in OES mode
-                  this.appData.services.forEach(serviceArr => {
-                    (<FormArray>this.servicesForm.get('services')).push(
-                      new FormGroup({
-                        serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
-                        id: new FormControl(serviceArr.id),
-                        logTemp: new FormControl(serviceArr.logTemp),
-                        metricTemp: new FormControl(serviceArr.metricTemp)
-                      })
-                    );
-                  });
-                  break;
-              }
-            }
+            //         //populating pipeline array
+            //         serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
+            //           const serviceArray = this.servicesForm.get('services') as FormArray;
+            //           const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
+            //           pipelineArray.push(
+            //             new FormGroup({
+            //               pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
+            //               dockerImageName: new FormGroup({
+            //                 accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
+            //                 imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
+            //               }),
+            //               pipelineParameters: new FormArray([])
+            //             })
+            //           )
+            //           if(pipelineArr.pipelineParameters !== null && pipelineArr.pipelineParameters !== undefined){
+            //             //populating pipelieParameter array
+            //             pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
+            //               const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
+            //               pipelineParameter.push(
+            //                 new FormGroup({
+            //                   value: new FormControl(pipelineParameterArr.value),
+            //                   name: new FormControl(pipelineParameterArr.name),
+            //                   type: new FormControl(pipelineParameterArr.type)
+            //                 })
+            //               );
+            //             })
+            //           }
+            //         })
+            //       })
+            //       break;
+            //     case 'AP':
+            //       //populating services array in OES mode
+            //       this.appData.services.forEach(serviceArr => {
+            //         (<FormArray>this.servicesForm.get('services')).push(
+            //           new FormGroup({
+            //             serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
+            //             id: new FormControl(serviceArr.id),
+            //             logTemp: new FormControl(serviceArr.logTemp),
+            //             metricTemp: new FormControl(serviceArr.metricTemp)
+            //           })
+            //         );
+            //       });
+            //       break;
+            //   }
+            // }
 
             //populate environment Form if usertype include OES in it#################################################################################
             if(this.appData.environments !==null){
@@ -411,6 +415,13 @@ this.showDat = false;
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
     });
+
+     // defining reactive form for Visibility Gate Section
+    this.gateForm = new FormGroup({
+        gateName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+       });
+
+  
   }
   
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
@@ -668,6 +679,23 @@ this.showDat = false;
     (<FormArray>this.environmentForm.get('environments')).removeAt(index);
   }
 
+  //Below function is use to add more permission group
+  addConnector() {
+    (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
+      new FormGroup({
+        connectorType: new FormControl('', Validators.required),
+        accountName: new FormControl(''),
+        templateName: new FormControl(''),
+      })
+    );
+  }
+
+  // Below function is use to remove exist environment 
+  removeConnector(index) {
+    $("[data-toggle='tooltip']").tooltip('hide');
+    (<FormArray>this.visibilityForm.get('visibilityConfig')).removeAt(index);
+  }
+
   // Below function is execute on select of pipeline type in Services Section
   onPipelineSelect(service_index: number, pipeline_parameter_index: number, selectedTemplate: string) {
 
@@ -810,6 +838,14 @@ this.showDat = false;
       }
   }
 
+  // Below function is use to save service form
+  saveServiceForm(index){
+    console.log(this.servicesForm.value.services[index].serviceName);
+    this.servForm = this.servicesForm.value.services[index];
+    this.store.dispatch(ApplicationActions.saveService({serviceSavedData:this.servForm}));
+
+  }
+
    // Below function is use to submit environments form
    SubmitEnvironmentsForm(){
     console.log(this.environmentForm.value);
@@ -833,6 +869,8 @@ this.showDat = false;
     this.groupForm = this.groupPermissionForm.value.userGroups;
     console.log(this.groupPermissionForm.value.userGroups);
    
+    this.store.dispatch(ApplicationActions.saveGroupPermissions({groupPermissionData:this.groupForm}));
+
 
   }
 
@@ -840,6 +878,21 @@ this.showDat = false;
   SubmitSaporForm(serviceIndex){
     
     console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
+  }
+
+  // Below function is use to save each connector
+  saveConnector(index){
+    console.log(this.visibilityForm.value.visibilityConfig[index]);
+  }
+
+  // Bewlow function is use to submit visibility form
+  SubmitVisibilityForm(){
+    console.log(this.visibilityForm.value);
+  }
+
+  // Below function is use to submit visibility gate data
+  saveGateForm(serviceIndex){
+    console.log(this.gateForm.value);
   }
 
   //Below function is use to submit whole form and send request to backend
@@ -941,6 +994,15 @@ this.showDat = false;
       innerarrayControl.addControl('saporConfiguration',  saporForm);
 
       
+    }else if(item === 'Visibility'){
+
+    // defining reactive form for Visibility connector template Section
+
+     this.visibilityForm = new FormGroup({
+      visibilityConfig: new FormArray([])
+    });
+
+
     }
   
  
