@@ -340,3 +340,23 @@ p {
 .list-group-item-action {
     color: #5c6873;
 }
+// [name="featureName"] {
+// 	display: none;  
+//   }
+  input[type="radio"]{
+    visibility:hidden !important;
+}
+.showElementHover{
+	cursor: pointer;
+	label{
+		pointer-events: none;
+	}
+	.custom-radio .custom-control-label::before, 
+	.custom-radio .custom-control-label::after{
+		display: none;
+	}
+	.custom-control {
+		padding-left: 0px;
+	}
+
+}

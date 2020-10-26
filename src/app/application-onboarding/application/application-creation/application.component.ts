@@ -38,9 +38,11 @@ export class CreateApplicationComponent implements OnInit {
   mainForm: CreateApplication = null;                             // It contain data of all 3 forms which send to backend after successful submission.
   appForm: SaveApplication = null;                                // It contain data of application form
   envForm: Environment = null;                                    // It contain data of environment form
+  groupForm: GroupPermission = null;
   cloudAccountExist: CloudAccount;                                // It contain data of all cloud Account exist.  
   editMode: boolean = false                                       // It use to define form is in edit phase
-  appData: CreateApplication = null;                              // It use to hold application fetch from api.                                         
+  appData: CreateApplication = null;                              // It use to hold application fetch from api.  
+  envData: Environment = null;                              // It use to hold application fetch from api.                                                                                
   editServiceForm: Service;                                       // It is use to save edit Service form data.
   parentPage: string = null;                                      // It is use to redirect the parent page after clicking cancel.
   apploading: boolean = false;                                    // It is use to show hide loading screen.
@@ -115,7 +117,6 @@ this.showDat = false;
 
         // this.featureList = layoutRes.supportedFeatures;
        
-          console.log(this.featureList[0]);
            const saporExist = this.featureList.some(item => item.includes("Sapor"));
            if(saporExist){
             this.store.dispatch(ApplicationActions.loadOESData());
@@ -345,7 +346,6 @@ this.showDat = false;
           this.pipelineExists = response.pipelineData;
         }
         if (response.imageSource !== null) {
-          console.log(response.imageSource);
           this.imageSourceData = response.imageSource;
         }
         if (response.dockerImageData !== null && response.dockerImageData !== undefined) {
@@ -813,30 +813,33 @@ this.showDat = false;
    // Below function is use to submit environments form
    SubmitEnvironmentsForm(){
     console.log(this.environmentForm.value);
+    this.envForm = this.environmentForm.value.environments;
     if(this.createApplicationForm.value.name){
       this.showFeatures = true;
+      //this.envForm = this.environmentForm.value.environments;
+
     }
-    if(this.environmentForm.valid){
+    if(this.editMode && this.environmentForm.valid){
       //if(this.userType.includes('Sapor')){
-        this.envForm = this.environmentForm.value.environments;
         this.store.dispatch(ApplicationActions.saveEnvironments({environmentsData:this.envForm}));
      // }
+    }else{
+      this.store.dispatch(ApplicationActions.saveEnvironments({environmentsData:this.envForm}));
     }
   }
 
   // Below function is use to submit group permission form
   SubmitGroupPermissionForm(){
-    console.log(this.groupPermissionForm.value);
-    if(this.createApplicationForm.value.name){
-      this.showFeatures = true;
-    }
+    this.groupForm = this.groupPermissionForm.value.userGroups;
+    console.log(this.groupPermissionForm.value.userGroups);
+   
 
   }
 
   // Below funcion is use to submit sapor data
   SubmitSaporForm(serviceIndex){
     
-    console.log(this.servicesForm.value.services[serviceIndex]);
+    console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
   }
 
   //Below function is use to submit whole form and send request to backend

@@ -210,6 +210,7 @@ export class ApplicationEffect {
    this.actions$.pipe(
        ofType(ApplicationAction.saveEnvironments),
        switchMap(action => {
+           debugger
            return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/environments', action.environmentsData).pipe(
                map(resdata => {
                    return ApplicationAction.dataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplication' });
@@ -221,6 +222,24 @@ export class ApplicationEffect {
            );
        })
    )
+)
+
+ // Below effect is use for saved data in save group permission 
+ saveGroupPermissions = createEffect(() =>
+ this.actions$.pipe(
+     ofType(ApplicationAction.saveGroupPermissions),
+     switchMap(action => {
+         return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/grouppermissions', action.groupPermissionData).pipe(
+             map(resdata => {
+                 return ApplicationAction.dataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplication' });
+             }),
+             catchError(errorRes => {
+                 this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                 return handleError(errorRes);
+             })
+         );
+     })
+ )
 )
 
     // Below effect is use for saved data in create application phase

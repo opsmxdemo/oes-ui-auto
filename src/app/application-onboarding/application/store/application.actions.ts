@@ -6,6 +6,7 @@ import { ApplicationList } from 'src/app/models/applicationOnboarding/applicatio
 import { fetchSupportedDatasources } from '../../data-source/store/data-source.actions';
 import { SaveApplication } from '../../../models/applicationOnboarding/createApplicationModel/saveApplicationModel';
 import { Environment } from '../../../models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
+import {GroupPermission } from '../../../models/applicationOnboarding/createApplicationModel/groupPermissionModel/groupPermission.model';
 
 
 // Below action related to create application
@@ -27,6 +28,9 @@ export const fetchUserGropsPermissions = createAction('[Application] FetchUserGr
 // Below refactor actions goes here
 export const saveApplication = createAction('[Application] SaveApplication', props<{applicationData:SaveApplication}>());
 export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{environmentsData: Environment}>());
+export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
+export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{groupPermissionData: GroupPermission}>());
+
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string,applicationId:string}>());

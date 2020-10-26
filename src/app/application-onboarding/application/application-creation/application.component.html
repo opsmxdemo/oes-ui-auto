@@ -1,5 +1,5 @@
 <div class="tab-content h-100 p-3 flex-grow-1">
-  <div *ngIf = "!apploading && !apiLoadingError" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+  <div *ngIf = "!apploading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
     <!-- <div class="page_access text-right py-2 px-3">
       <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
       <button class="btn btn-primary ml-2" (click)="SubmitForm()">Save & Finish</button>
@@ -236,9 +236,9 @@
                                 </thead>
                                 <tbody>
                                 <tr *ngFor="let featureName of featureList;let f=index;" [ngClass]="{'active-service': featureName == selectedFeature}">
-                                  <td  class="showElementHover" (click)="selectFeature(featureName,i)">
-                                 
-                                  <div class="custom-control custom-radio">
+                                  <td  class="" (click)="selectFeature(featureName,i)">
+                                  <!-- <textarea class="custom-control-input" name="featureName" formControlName="featureName">{{featureName}}</textarea> -->
+                                    <div class="custom-control custom-radio">
                                     <input id="featureName{{i}}" type="radio" class="custom-control-input" value="{{featureName}}" name="featureName" formControlName="featureName">
                                     <label class="custom-control-label" for="featureName{{i}}">{{featureName}}</label>
                                   </div>
@@ -705,7 +705,7 @@
     <app-loading-screen></app-loading-screen>
   </div>
   <div *ngIf = "!apploading && apiLoadingError" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-    <app-component-error-listing [errorString]="errorMessage" class="apifailerror"></app-component-error-listing>
+    <!-- <app-component-error-listing [errorString]="errorMessage" class="apifailerror"></app-component-error-listing> -->
   </div>
 </div>
 
