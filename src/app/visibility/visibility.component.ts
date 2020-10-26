@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FormControl} from '@angular/forms';
 import * as fromApp from '../store/app.reducer';
@@ -19,6 +19,8 @@ export interface User {
   styleUrls: ['./visibility.component.less']
 })
 export class VisibilityComponent implements OnInit {
+
+  @Input() approvalGateComment : string;
 
   isLinear = false;
   firstFormGroup: FormGroup;
@@ -43,6 +45,9 @@ export class VisibilityComponent implements OnInit {
   // connectorTypes: any[];
   visibilityData: any[];
   selectedTab: any;
+  // approvalGateComments: string;
+  approvalGateResponse: string;
+  approvalWaitingStatus: boolean;         //When status is waiting its true else Approve / Reject its false
 
   // showApprovalHistory: boolean= false;
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder) { }
@@ -113,6 +118,7 @@ export class VisibilityComponent implements OnInit {
     setTimeout(()=>{
       this.selectedService = this.serviceList[0];
       this.selectedServiceId = this.serviceList[0].serviceId;
+      this.approvalWaitingStatus= this.selectedService.status == 'Waiting' ? true : false;
     },500);
           
     this.store.dispatch(Visibility.loadToolConnectors());
@@ -121,8 +127,9 @@ export class VisibilityComponent implements OnInit {
   }
 
   onClickService(service){
-    this.selectedServiceId = service.serviceId;
     this.selectedService = service;
+    this.selectedServiceId = service.serviceId;
+    this.approvalWaitingStatus= this.selectedService.status == 'Waiting' ? true : false;
     console.log("selected Service: ", this.selectedService);
     this.store.dispatch(Visibility.loadToolConnectors());
     this.store.dispatch(Visibility.loadVisibilityData());
@@ -133,6 +140,17 @@ export class VisibilityComponent implements OnInit {
     this.selectedTab = selectedTab;
     console.log("selected Tab: ", this.selectedTab);
     
+  }
+  approvalGateReview(response, comments){
+    //Below we will be sending the Action either Approve or Reject to backend
+    ///approvalGateInstances/{id}/review
+    this.approvalGateResponse = response;
+    // Comments need to be posted to backend
+    this.approvalGateComment = comments.viewModel;
+    console.log("Comments:", this.approvalGateComment);
+    
+    this.approvalWaitingStatus = false;
+
   }
 
   // code below to show the approval history
