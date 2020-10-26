@@ -205,6 +205,24 @@ export class ApplicationEffect {
      )
  )
 
+  // Below effect is use for saved data in save service
+  saveService = createEffect(() =>
+  this.actions$.pipe(
+      ofType(ApplicationAction.saveService),
+      switchMap(action => {
+          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'platformservice/v1/applications/{applicationId}/service', action.serviceSavedData).pipe(
+              map(resdata => {
+                  return ApplicationAction.dataSaved({ applicationName: 'action.servicenData.name', dataType: 'createService' });
+              }),
+              catchError(errorRes => {
+              //    this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                  return handleError(errorRes);
+              })
+          );
+      })
+  )
+)
+
    // Below effect is use for saved data in save application phase
    saveEnvironments = createEffect(() =>
    this.actions$.pipe(
@@ -213,10 +231,10 @@ export class ApplicationEffect {
            debugger
            return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/environments', action.environmentsData).pipe(
                map(resdata => {
-                   return ApplicationAction.dataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplication' });
+                   return ApplicationAction.environmentDataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplicationEnvironments' });
                }),
                catchError(errorRes => {
-                   this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+              //     this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
                    return handleError(errorRes);
                })
            );
@@ -231,10 +249,10 @@ export class ApplicationEffect {
      switchMap(action => {
          return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/grouppermissions', action.groupPermissionData).pipe(
              map(resdata => {
-                 return ApplicationAction.dataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplication' });
+                 return ApplicationAction.groupPermissionDataSaved({ applicationName: 'applicationname comes here', dataType: 'createApplicationGroupPermissions' });
              }),
              catchError(errorRes => {
-                 this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+              //   this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
                  return handleError(errorRes);
              })
          );
