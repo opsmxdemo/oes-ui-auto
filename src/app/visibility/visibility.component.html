@@ -21,7 +21,7 @@
             <!-- /.leftBox_header -->
 
             <div class="leftBox_body">
-                <table class="table table-sm table-avenir table-no-bordered table-no-dots" *ngIf="serviceList != undefined">
+                <table class="table table-sm table-avenir table-no-bordered table-no-dots " *ngIf="serviceList != undefined">
                 <tbody>
                   <tr *ngIf="serviceList.length > 0">
                     <th >Service</th>
@@ -29,9 +29,20 @@
                   </tr>
                   <ng-container *ngFor="let service of serviceList; let i=index;">
                   <tr [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
-                    <td class="service-selection " style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}</td>
-                    <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status === 'Pending','text-success':service.status === 'Approved','text-secondary':service.status === 'Waiting'}">{{service.status}}</td>
-                  </tr> 
+                    <td class="service-selection" style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}
+                      </td>
+                  </tr>
+                  <tr class="gateNametr">
+                    <td  colspan="2">
+                      <table class="gateNameSelection">
+                        <tr>
+                          <td>{{service.approvalGateName}} </td>
+                            <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status === 'Rejected','text-success':service.status === 'Approved','text-secondary':service.status === 'Waiting'}">{{service.status}}
+                            </td>
+                          </tr>
+                      </table>
+                    </td>
+                  </tr>                   
                 </ng-container>               
                 </tbody>
               </table>
@@ -101,6 +112,13 @@
                                 </div>
                                 <!-- Grid row -->
 
+                                <div class="approvalStatus">
+                                    <div>Approval Status: </div>
+                                    <div *ngIf="selectedService.status === 'Approved'" style="color: #28a745">Approved</div>
+                                    <div *ngIf="selectedService.status === 'Rejected'" style="color: #dc3545;">Rejected</div>
+                                    <div *ngIf="selectedService.status === 'Waiting'" style="color: #000">Waiting</div>
+                                </div>
+
                                 <!-- Grid row -->
                                 <div class="form-group row" *ngIf="approvalWaitingStatus" >
                                     <!-- Default input -->
@@ -118,10 +136,10 @@
                                             class="btn btn-danger align-bottom" (click)="approvalGateReview('Reject', approvalGateComment)">Reject</button></div>
                                 </div>
 
+
                                 <div class="form-group row" *ngIf="!approvalWaitingStatus" >
-                                  <h4>
-                                    {{approvalGateComment}}; <br /> Approved and Pending Request of previous Transactions.
-                                  </h4>..
+                                  <h5> Comments:</h5>
+                                  <div style="display: block;">{{approvalGateComment}}</div>
                                   </div>
                                 <!-- Grid row -->
 
