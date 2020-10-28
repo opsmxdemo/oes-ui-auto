@@ -21,7 +21,7 @@
     "approvalGateId": 1,
     "approvalGateName": "Production Gate3",
     "approvalGateInstanceId": 1,
-    "status": "Pending"
+    "status": "Rejected"
   },
   {
     "serviceId": 4,

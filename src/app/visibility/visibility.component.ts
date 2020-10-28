@@ -25,6 +25,7 @@ export class VisibilityComponent implements OnInit {
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  control = new FormControl();
   // options: string[] = ['Pet Service Application', 'Only-metrics-app', 'logsApp'];
   // application related Initializations
   applicationList: any[]   //used to get the list from the API
@@ -47,7 +48,8 @@ export class VisibilityComponent implements OnInit {
   selectedTab: any;
   // approvalGateComments: string;
   approvalGateResponse: string;
-  approvalWaitingStatus: boolean;         //When status is waiting its true else Approve / Reject its false
+  approvalWaitingStatus: boolean = true;         //When status is waiting its true else Approve / Reject its false
+  firstTimeLoad: boolean = true;
 
   // showApprovalHistory: boolean= false;
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder) { }
@@ -59,8 +61,15 @@ export class VisibilityComponent implements OnInit {
         if (resData.applicationList != null) {
           this.applicationList = resData.applicationList;
           this.initFilterApplication();
+          // to set initial Application 
+          if(this.firstTimeLoad){
+            // console.log(this.applicationList);
+            this.applicationFormControl.setValue(this.applicationList[0].name);
+            this.onSelectingApplication(this.applicationList[0].name);
+            this.firstTimeLoad = false;
+          }
         }
-        console.log("service List Loading: ", this.serviceListLoading);
+        // console.log("service List Loading: ", this.serviceListLoading);
         
         if(resData.serviceList !=null && resData.serviceListLoading ){
           this.serviceList = resData.serviceList;
