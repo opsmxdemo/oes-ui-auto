@@ -39,8 +39,25 @@ export interface State {
 
     // Metric Template variables 
     metrictemplate: any[];
-     
 
+    //Visibility 
+    approvalGateSavedData : any;
+    approvalGateData : any;
+    isGateSaved : boolean;
+    approvalGatesList : any;
+    isApprovalGatesLoaded : boolean;
+    isApprovalGateEdited : boolean;
+    editApprovalGateMessage : any;
+    gateDataToEdit : any;
+    isApprovalGateDeleted : any;
+    deleteApprovalGateMessage : any;
+    isConfiguredToolConnectorLoaded : boolean;
+    configuredToolConnectorTypes : any;
+    connectorType : any;
+    isAccountForToolTypeLoaded: boolean;
+    accountsForToolType : any;
+    isTemplateForToolTypeLoaded: boolean;
+    templatesForToolType : any;
 }
 
 export const initialState: State = {
@@ -66,6 +83,23 @@ export const initialState: State = {
     logtemplate: [],
     metrictemplate:[],
     supportedFeaturesData: null,
+    approvalGateSavedData : null,
+    approvalGateData : null,
+    isGateSaved : false,
+    approvalGatesList : null,
+    isApprovalGatesLoaded : false,
+    isApprovalGateEdited : false,
+    editApprovalGateMessage : null,
+    gateDataToEdit : null,
+    isApprovalGateDeleted : false,
+    deleteApprovalGateMessage : null,
+    isConfiguredToolConnectorLoaded : false,
+    configuredToolConnectorTypes : null,
+    connectorType : null,
+    isAccountForToolTypeLoaded: false,
+    accountsForToolType : null,
+    isTemplateForToolTypeLoaded: false,
+    templatesForToolType : null
 }
 
 export function ApplicationReducer(
@@ -249,6 +283,154 @@ export function ApplicationReducer(
             }),
         
         ),
+        // Visibility Feature  Start here //
+        on(ApplicationAction.saveApprovalGate,
+            (state,action) => ({
+                ...state,
+                approvalGateData:action.approvalGateData,
+                isGateSaved: false
+            })
+        ),
+        on(ApplicationAction.postSaveApprovalGate,
+            (state,action) => ({
+                ...state,
+                approvalGateSavedData:action.approvalGateSavedData,
+                isGateSaved: true
+            })
+        ),
+        on(ApplicationAction.isApprovalGateSaved,
+            (state,action) => ({
+                ...state,
+                isGateSaved: false
+            })
+        ),
+
+        on(ApplicationAction.getApprovalGates,
+            (state,action) => ({
+                ...state,
+                isApprovalGatesLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadApprovalGates,
+            (state,action) => ({
+                ...state,
+                approvalGatesList:action.approvalGatesList,
+                isApprovalGatesLoaded: true
+            })
+        ),
+        on(ApplicationAction.isApprovalGatesLoaded,
+            (state,action) => ({
+                ...state,
+                isApprovalGatesLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.editApprovalGate,
+            (state,action) => ({
+                ...state,
+                isApprovalGateEdited: false,
+                gateId : action.gateId,
+                gateDataToEdit : action.gateDataToEdit
+            })
+        ),
+        on(ApplicationAction.postEditApprovalGate,
+            (state,action) => ({
+                ...state,
+                editApprovalGateMessage:action.message,
+                isApprovalGateEdited: true
+            })
+        ),
+        on(ApplicationAction.isApprovalGateEdited,
+            (state,action) => ({
+                ...state,
+                isApprovalGateEdited: false
+            })
+        ),
+
+        on(ApplicationAction.deleteApprovalGate,
+            (state,action) => ({
+                ...state,
+                isApprovalGateDeleted: false
+            })
+        ),
+        on(ApplicationAction.postDeleteApprovalGate,
+            (state,action) => ({
+                ...state,
+                deleteApprovalGateMessage:action.message,
+                isApprovalGateDeleted: true
+            })
+        ),
+        on(ApplicationAction.isApprovalGatesDeleted,
+            (state,action) => ({
+                ...state,
+                isApprovalGateDeleted: false
+            })
+        ),
+
+        on(ApplicationAction.getConfiguredToolConnectorTypes,
+            (state,action) => ({
+                ...state,
+                isConfiguredToolConnectorLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadConfiguredToolConnectorTypes,
+            (state,action) => ({
+                ...state,
+                configuredToolConnectorTypes:action.configuredToolConnectorTypes,
+                isConfiguredToolConnectorLoaded: true
+            })
+        ),
+        on(ApplicationAction.isApprovalGatesLoaded,
+            (state,action) => ({
+                ...state,
+                isConfiguredToolConnectorLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.getAccountToolType,
+            (state,action) => ({
+                ...state,
+                connectorType : action.connectorType,
+                isAccountForToolTypeLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadAccountToolType,
+            (state,action) => ({
+                ...state,
+                accountsForToolType:action.accountsForToolType,
+                isAccountForToolTypeLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedAccountToolType,
+            (state,action) => ({
+                ...state,
+                isAccountForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.getTemplatesToolType,
+            (state,action) => ({
+                ...state,
+                connectorType : action.connectorType,
+                isTemplateForToolTypeLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadTemplateToolType,
+            (state,action) => ({
+                ...state,
+                templatesForToolType:action.templatesForToolType,
+                isTemplateForToolTypeLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedTemplateToolType,
+            (state,action) => ({
+                ...state,
+                isTemplateForToolTypeLoaded: false
+            })
+        ),
+        // Visibility Feature  Ends here //
+
+
         // #### CreateApplication screen logic ends ####//
 
         // ###  Applist screen logic start ### // 

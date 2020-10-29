@@ -95,3 +95,35 @@ export const loadedAPMGenerateCookbook = createAction('[Application] LoadedAPMGe
 
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');
+
+
+//Actions to Visibility Feature
+export const saveApprovalGate = createAction('[Application] SaveApprovalGate', props<{approvalGateData:any}>());
+export const postSaveApprovalGate = createAction('[Application] PostSaveApprovalGate', props<{approvalGateSavedData:any}>());
+export const isApprovalGateSaved = createAction('[Application] IsApprovalGateSaved');
+
+export const getApprovalGates = createAction('[Application] GetApprovalGates');
+export const loadApprovalGates = createAction('[Application] LoadApprovalGates', props<{approvalGatesList:any}>());
+export const isApprovalGatesLoaded = createAction('[Application] IsApprovalGatesLoaded');
+
+export const editApprovalGate = createAction('[Application] EditApprovalGate',props<{gateId:any, gateDataToEdit : any}>());
+export const postEditApprovalGate = createAction('[Application] PostEditApprovalGate', props<{message:any}>());
+export const isApprovalGateEdited = createAction('[Application] IsApprovalGateEdited');
+
+export const deleteApprovalGate = createAction('[Application] DeleteApprovalGate', props<{gateId:any}>());
+export const postDeleteApprovalGate = createAction('[Application] PostDeleteApprovalGate', props<{message:any}>());
+export const isApprovalGatesDeleted = createAction('[Application] IsApprovalGatesDeleted');
+
+export const getConfiguredToolConnectorTypes = createAction('[Application] GetConfiguredToolConnectorTypes');
+export const loadConfiguredToolConnectorTypes = createAction('[Application] LoadConfiguredToolConnectorTypes', props<{configuredToolConnectorTypes:any}>());
+export const isloadedConfiguredToolConnectorTypes = createAction('[Application] IsloadedConfiguredToolConnectorTypes');
+
+export const getAccountToolType = createAction('[Application] GetAccountToolType', props<{connectorType : any}>());
+export const loadAccountToolType = createAction('[Application] LoadAccountToolType', props<{accountsForToolType:any}>());
+export const isLoadedAccountToolType = createAction('[Application] IsLoadedAccountToolType');
+
+export const getTemplatesToolType = createAction('[Application] GetTemplatesToolType', props<{connectorType : any}>());
+export const loadTemplateToolType = createAction('[Application] LoadTemplateToolType', props<{templatesForToolType:any}>());
+export const isLoadedTemplateToolType = createAction('[Application] IsLoadedTemplateToolType');
+
+//isTooltemplateSaved
