@@ -41,7 +41,7 @@
               <br>
             </ul>
             
-            <ul class="tree-inset list-unstyled {{serviceArr.serviceName !== '' ? 'tree-active' : ''}}" *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
+            <ul class="tree-inset list-unstyled {{serviceArr.serviceName !== '' ? 'tree-active' : ''}}" *ngFor="let serviceArr of appData.services; let i = index">
               <li class="ti-title">
                 <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
                 <span>Service {{i+1}}</span>
@@ -190,7 +190,7 @@
   
                     <div class="col-12" formArrayName="services">
                       <div class="row" *ngFor="let serviceArr of servicesForm.get('services')['controls']; let i=index">
-                        <div class="col-12 " [formGroupName]="i" *ngIf="this.servicesForm.value.services.length == i+1">
+                        <div class="col-12 " [formGroupName]="i" *ngIf="this.servicesForm.value.services.length == i+1 || editMode">
                           <div class="col-12 ">
                             <hr class="ml-0 mt-3 mb-3" />
                           </div>
@@ -235,16 +235,18 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr *ngFor="let featureName of featureList;let f=index;" [ngClass]="{'active-service': featureName == selectedFeature}">
-                                  <td  class="showElementHover" (click)="selectFeature(featureName,i)">
-                                  <!-- <textarea class="custom-control-input" name="featureName" formControlName="featureName">{{featureName}}</textarea> -->
-                                    <div class="custom-control custom-radio">
-                                    <input id="featureName{{i}}" type="radio" class="custom-control-input" value="{{featureName}}" name="featureName" formControlName="featureName">
-                                    <label class="custom-control-label" for="featureName{{i}}">{{featureName}}</label>
-                                  </div>
-                                  <td>-</td>
-      
-                                </tr>
+                                  <ng-container *ngFor="let featureName of featureList;let f=index;">
+                                    <tr  [ngClass]="{'active-service': featureName == selectedFeature[i] }">
+                                      <td  class="showElementHover" (click)="selectFeature(featureName,i)">
+                                      <!-- <textarea class="custom-control-input" name="featureName" formControlName="featureName">{{featureName}}</textarea> -->
+                                        <div class="custom-control custom-radio">
+                                        <input id="featureName{{i}}" type="radio" class="custom-control-input" value="{{featureName}}" name="featureName" formControlName="featureName">
+                                        <label class="custom-control-label" for="featureName{{i}}">{{featureName}}</label>
+                                      </div>
+                                      <td *ngIf = "editMode"><span *ngIf="!isFeaturePresent[i]['serviceFeatures'][f]">-</span><span><i *ngIf="isFeaturePresent[i]['serviceFeatures'][f]" class="fa fa-check" aria-hidden="true"></i></span></td>
+                                      <td *ngIf = "!editMode"><span >-</span></td>
+                                    </tr>
+                                  </ng-container>
                                 </tbody>
                                 </table>
                               </div>

@@ -2,6 +2,7 @@
 export class Service {
     name: string;
     id: string;
+  serviceName: any;
    
 
     constructor(data: any) {

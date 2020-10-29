@@ -86,6 +86,9 @@ export class CreateApplicationComponent implements OnInit {
   configuredToolTypes : any;
   templatesForToolType : any;
   accountsForTooltypes : any;
+  showserviceGroup:boolean;
+  configuredFeature  =[]
+  isFeaturePresent = []
   
   todo = [
     'Get to work',
@@ -106,7 +109,7 @@ export class CreateApplicationComponent implements OnInit {
               private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-
+    this.showserviceGroup=true;
     this.gateId = "";
 
     this.showDat = false;
@@ -204,6 +207,33 @@ export class CreateApplicationComponent implements OnInit {
               if(responseData.callDockerImageDataAPI){
                 this.onImageSourceSelect(this.appData.imageSource);
               }
+            }
+            if(this.editMode)
+            {
+              
+              this.showserviceGroup=false;
+              var totalServices = this.appData.services.length
+              this.servicesForm = new FormGroup({
+                services: new FormArray([])
+               });
+               for(let i =0;i<totalServices;i++)
+               {
+                (<FormArray>this.servicesForm.get('services')).push(
+                               new FormGroup({
+                                 serviceName: new FormControl({value: this.appData.services[i].serviceName, disabled: true}),
+                                })
+                )
+                this.configuredFeature.push({
+                  "configuredFeatures": [
+                      "deployment_verification",
+                      "sapor",
+                      "visibility"
+                  ]
+              }
+              )
+              this.selectFeature(this.featureList[0],i)
+               }
+                 this.configuredFeaturepresent(totalServices)
             }
             
 
@@ -1109,6 +1139,37 @@ onChangeAccountofTooltype(account){
 onChangeTemplateofTooltype(template){
   console.log(template);
 }
-
+autoFocus(focusedClass){
+  this.showserviceGroup=true;
+  
+}
+configuredFeaturepresent(totalServices){
+  
+  for(let i=0;i<totalServices;i++)
+  {
+    var myjson = {
+      servicename:this.appData.services[i].serviceName,
+      serviceFeatures:[]
+    }
+    this.isFeaturePresent.push(myjson)
+    for(let j=0;j<this.featureList.length;j++)
+    {
+      var value
+      debugger
+      for(let k =0;k<this.featureList.length; k++)
+      if(this.configuredFeature[i].configuredFeatures[k] == this.featureList[j].toLowerCase())
+      {
+        value=true;
+        break;
+      }
+      else{
+        value=false;
+      }
+      
+     this.isFeaturePresent[i].serviceFeatures.push(value)
+    }
+  }
+  
+}
 
 }
