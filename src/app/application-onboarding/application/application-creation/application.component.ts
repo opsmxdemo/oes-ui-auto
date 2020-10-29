@@ -18,6 +18,7 @@ import { GroupPermission } from 'src/app/models/applicationOnboarding/createAppl
 import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
 import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
 import {Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
+import { AppPage } from 'e2e/src/app.po';
 @Component({
   selector: 'app-application',
   templateUrl: './application.component.html',
@@ -77,8 +78,15 @@ export class CreateApplicationComponent implements OnInit {
   userIndex: any;
   showDat: boolean;
 
- 
-
+  //visibility
+  gateData : any;
+  gateId : any;
+  approvalGatesList : any;
+  isEditGateEnabled : boolean = false;
+  configuredToolTypes : any;
+  templatesForToolType : any;
+  accountsForTooltypes : any;
+  
   todo = [
     'Get to work',
     'Pick up groceries',
@@ -99,9 +107,9 @@ export class CreateApplicationComponent implements OnInit {
 
   ngOnInit() {
 
-    
+    this.gateId = "";
 
-this.showDat = false;
+    this.showDat = false;
     // Reseting metric and log Templates data
     this.store.dispatch(ApplicationActions.resetTemplateData());
 
@@ -117,11 +125,12 @@ this.showDat = false;
         // }
         if(layoutRes.supportedFeatures != null){
        
-       this.featureList = ["Sapor","Deployment Verification","Visibility"];
+       this.featureList = ["sapor","deployment_verification","visibility"];
+      
 
      //    this.featureList = layoutRes.supportedFeatures;
        
-           const saporExist = this.featureList.some(item => item.includes("Sapor"));
+           const saporExist = this.featureList.some(item => item.includes("sapor"));
            if(saporExist){
             this.store.dispatch(ApplicationActions.loadOESData());
              this.userType = this.featureList[0];
@@ -143,7 +152,7 @@ this.showDat = false;
         this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
 
-        if(responseData.initalOESDatacall === true && this.userType.includes('Sapor')){
+        if(responseData.initalOESDatacall === true && this.userType.includes('sapor')){
           let counter = 0;
           if(responseData.initalOESDataLoaded.indexOf('calling') > -1){
             this.apploading = true;
@@ -174,7 +183,7 @@ this.showDat = false;
             // Reseting metric and log Templates data
             this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
-            if(this.userType === 'Deployment Verification'){
+            if(this.userType === 'deployment_verification'){
               // AP mode
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
@@ -276,7 +285,7 @@ this.showDat = false;
 
             //populate environment Form if usertype include OES in it#################################################################################
             if(this.appData.environments !==null){
-              if (this.appData.environments.length !== 0 && this.userType !== 'Deployment Verification') {
+              if (this.appData.environments.length !== 0 && this.userType !== 'deployment_verification') {
                 // clearing form first
                 this.environmentForm = new FormGroup({
                   environments: new FormArray([])
@@ -318,7 +327,7 @@ this.showDat = false;
             }
 
             //populating log and metric template data ######################################################################
-            if(this.userType === 'Deployment Verification'){
+            if(this.userType === 'deployment_verification'){
               // Storing Log and Metric template data in state getting from appData
               if(this.appData.logTemplate !== null){
                 this.appData.logTemplate.forEach(logTemp => {
@@ -376,6 +385,37 @@ this.showDat = false;
           }
           this.populateSelectedTemplateName(this.currentMetricTemplateIndex,'metricTemp')
         }
+        if (response.approvalGateSavedData !== null && response.isGateSaved) {
+          this.store.dispatch(ApplicationActions.isApprovalGateSaved());
+          this.gateData = response.approvalGateSavedData;
+          this.gateId = 20;  
+          //this.store.dispatch(ApplicationActions.getApprovalGates());        
+        }
+        if(response.approvalGatesList != null && response.isApprovalGatesLoaded){
+          this.store.dispatch(ApplicationActions.isApprovalGatesLoaded());
+          this.approvalGatesList = response.approvalGatesList;
+          this.gateId = this.approvalGatesList[0].id;
+          console.log(this.approvalGatesList);
+          this.addConnector();
+          this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
+        }
+        if(response.isApprovalGateEdited){
+          this.isEditGateEnabled = false;
+          this.store.dispatch(ApplicationActions.isApprovalGateEdited());
+        }
+        if(response.configuredToolConnectorTypes && response.isConfiguredToolConnectorLoaded){
+          this.store.dispatch(ApplicationActions.isloadedConfiguredToolConnectorTypes());
+          this.configuredToolTypes = response.configuredToolConnectorTypes;
+        }
+        if(response.accountsForToolType && response.isAccountForToolTypeLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
+          this.accountsForTooltypes = response.accountsForToolType;
+        }
+        if(response.templatesForToolType && response.isTemplateForToolTypeLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
+          this.templatesForToolType = response.templatesForToolType;
+        }
+
       }
     )
   }
@@ -575,7 +615,7 @@ this.showDat = false;
     if(index > -1){
       const arrayControl = this.servicesForm.get('services') as FormArray;
       const innerarrayControl = arrayControl.at(index).get(type) 
-      if(this.userType.includes('Deployment Verification')){
+      if(this.userType.includes('deployment_verification')){
         if(type === 'logTemp'){
           if(this.templateEditMode){
             innerarrayControl.patchValue(this.logTemplateData[this.editTemplateIndex].templateName);
@@ -891,8 +931,20 @@ this.showDat = false;
   }
 
   // Below function is use to submit visibility gate data
-  saveGateForm(serviceIndex){
-    console.log(this.gateForm.value);
+  saveGateForm(){
+    console.log(this.gateForm.value.gateName);
+    //json to save approvalGate
+    // {
+    //   "id": 1,
+    //   "name": "OES Production Gate",
+    //   "serviceId": 1
+    // }
+    var gateData = {
+      "name" : this.gateForm.value.gateName,
+      "serviceId" : "" //this.serviceId;
+    }
+    this.store.dispatch( ApplicationActions.saveApprovalGate({approvalGateData : gateData}));
+    this.store.dispatch(ApplicationActions.getApprovalGates());  
   }
 
   //Below function is use to submit whole form and send request to backend
@@ -902,7 +954,7 @@ this.showDat = false;
         // Saving all 4 forms data into one
         this.mainForm = this.createApplicationForm.value;
         // Below is configuration related to service section when userType contain OES.
-        if(this.userType.includes('Sapor')){
+        if(this.userType.includes('sapor')){
           this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
             ServiceArr.pipelines.forEach((PipelineArr, j) => {
               PipelineArr.pipelineParameters.forEach((DataArr, k) => {
@@ -929,10 +981,10 @@ this.showDat = false;
           return usergroupObj;
         });
 
-        if(this.userType.includes('Sapor')){
+        if(this.userType.includes('sapor')){
           this.mainForm.environments = this.environmentForm.value.environments;
         }
-        if(this.userType.includes('Deployment Verification')){
+        if(this.userType.includes('deployment_verification')){
           this.mainForm.logTemplate = this.logTemplateData;
           this.mainForm.metricTemplate = this.metricTemplateData;
         }
@@ -964,7 +1016,7 @@ this.showDat = false;
 
   
 
-    if(item === 'Deployment Verification'){
+    if(item === 'deployment_verification'){
     //   this.userType = item;
     //   const arrayControl = this.servicesForm.get('services') as FormArray;
     //   const innerarrayControl = arrayControl.at(index).get('configurations') as FormGroup;
@@ -975,7 +1027,7 @@ this.showDat = false;
     //     }
     //   });
 
-    }else if(item === 'Sapor'){
+    }else if(item === 'sapor'){
       const saporForm =  new FormGroup({
         pipelines: new FormArray([
         new FormGroup({
@@ -994,7 +1046,7 @@ this.showDat = false;
       innerarrayControl.addControl('saporConfiguration',  saporForm);
 
       
-    }else if(item === 'Visibility'){
+    }else if(item === 'visibility'){
 
     // defining reactive form for Visibility connector template Section
 
@@ -1021,6 +1073,42 @@ getApplicationDetails(){
 //   this.selectedFeature = item;
 // }
 
+
+
+clearGateName(){
+  this.gateForm.reset();
+}
+
+onClickEditOfGateName(){
+  this.isEditGateEnabled = true;
+}
+
+onEditGateName(){
+  var approvalGateToEdit = {
+    "id": this.gateId,
+    "name": this.gateForm.value.gateName,
+    "serviceId": 1 //this.serviceId
+  }
+  this.store.dispatch(ApplicationActions.editApprovalGate({gateId : this.gateId,gateDataToEdit : approvalGateToEdit }));
+}
+
+onDeleteGateName(){
+  this.store.dispatch(ApplicationActions.deleteApprovalGate({gateId : this.gateId}));
+}
+
+onChangeTooltype(tooltype){
+  console.log(tooltype);
+  this.store.dispatch(ApplicationActions.getAccountToolType({connectorType : tooltype}));
+  this.store.dispatch(ApplicationActions.getTemplatesToolType({connectorType : tooltype}));
+}
+
+onChangeAccountofTooltype(account){
+  console.log(account);
+}
+
+onChangeTemplateofTooltype(template){
+  console.log(template);
+}
 
 
 }

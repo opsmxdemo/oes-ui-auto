@@ -1,4 +1,4 @@
-import { ofType, createEffect } from '@ngrx/effects';
+import { ofType, createEffect, act } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -192,7 +192,7 @@ export class ApplicationEffect {
      this.actions$.pipe(
          ofType(ApplicationAction.saveApplication),
          switchMap(action => {
-             return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application', action.applicationData).pipe(
+             return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application', action.applicationData).pipe(
                  map(resdata => {
                      return ApplicationAction.dataSaved({ applicationName: action.applicationData.name, dataType: 'createApplication' });
                  }),
@@ -372,4 +372,160 @@ export class ApplicationEffect {
          })
      )
  )
+    
+    // Effect to save approval gate for visibility feature
+    onSaveApprovalGate = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.saveApprovalGate),
+            switchMap((action) => {
+                return this.http.post<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/', action.approvalGateData).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postSaveApprovalGate({ approvalGateSavedData: resdata.approvalGateSavedData});
+                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Effect to get
+    getApprovalGates = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.getApprovalGates),
+            switchMap((action) => {
+                //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates').pipe(
+                return this.http.get('/assets/data/visibility/approvalGatesList.json').pipe(
+                    map(resdata => {
+                        return ApplicationAction.loadApprovalGates({ approvalGatesList: resdata});
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Effect to edit approval gate for visibility feature
+    onEditApprovalGate = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.editApprovalGate),
+            switchMap((action) => {
+                return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+ action.gateId, action.gateDataToEdit).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postEditApprovalGate({ message: resdata});
+                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Effect to delete approval gate for visibility feature
+    onDeleteApprovalGate = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.deleteApprovalGate),
+            switchMap((action) => {
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+action.gateId).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postDeleteApprovalGate({ message: resdata});
+                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    
+    // Effect to get all tool connectors configured for this installation
+    getConfiguredToolConnectorTypes = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getConfiguredToolConnectorTypes),
+        switchMap((action) => {            
+            //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/configuredConnectorTypes').pipe(
+            return this.http.get('/assets/data/visibility/configuredToolConnectors.json').pipe(
+                map(resdata => {
+                    return ApplicationAction.loadConfiguredToolConnectorTypes({ configuredToolConnectorTypes: resdata});
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+  )
+
+   // Effect to get all tool connector accounts for a particular connector type
+   getAccountsForToolType = createEffect(() =>
+   this.actions$.pipe(
+       ofType(ApplicationAction.getAccountToolType),
+       switchMap((action) => {                    
+           //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.connectorType).pipe(
+           return this.http.get('/assets/data/visibility/accountsForToolConnectors.json').pipe(
+               map(resdata => {
+                   return ApplicationAction.loadAccountToolType({ accountsForToolType: resdata});
+               }),
+               catchError(errorRes => {
+                   //this.toastr.showError('Error', 'ERROR')
+                   return handleError(errorRes);
+               })
+           );
+       })
+   )
+ )
+
+
+// Effect to get all tool connector accounts for a particular connector type
+getTemplatesForTooltype = createEffect(() =>
+this.actions$.pipe(
+      ofType(ApplicationAction.getTemplatesToolType),
+      switchMap((action) => {                    
+          //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.connectorType+'/templates').pipe(
+          return this.http.get('/assets/data/visibility/templateForTooltype.json').pipe(
+              map(resdata => {
+                  return ApplicationAction.loadTemplateToolType({ templatesForToolType: resdata});
+              }),
+              catchError(errorRes => {
+                  //this.toastr.showError('Error', 'ERROR')
+                  return handleError(errorRes);
+              })
+          );
+      })
+  )
+)
+
+// //POST /visibilityToolTemplates
+// //Add new tool template
+// onSaveTooltemplate = createEffect(() =>
+// this.actions$.pipe(
+//     ofType(ApplicationAction.saveApprovalGate),
+//     switchMap((action) => {
+//         return this.http.post<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/visibilityToolTemplates/', action.approvalGateData).pipe(
+//             map(resdata => {
+//                 return ApplicationAction.postSaveApprovalGate({ approvalGateSavedData: resdata.approvalGateSavedData});
+//                 this.store.dispatch(ApplicationAction.getApprovalGates());
+//             }),
+//             catchError(errorRes => {
+//                 //this.toastr.showError('Error', 'ERROR')
+//                 return handleError(errorRes);
+//             })
+//         );
+//     })
+// )
+// )
+
 }
