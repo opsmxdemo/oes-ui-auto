@@ -28,7 +28,9 @@ export const fetchUserGrops = createAction('[Application] FetchUserGrops', props
 export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
 // Below refactor actions goes here
 export const saveApplication = createAction('[Application] SaveApplication', props<{applicationData:SaveApplication}>());
-export const saveService = createAction('[Application] SaveService', props<{serviceSavedData:any}>());
+export const savedApplication = createAction('[Application] SavedApplication', props<{savedApplicationResponse: any,dataType:string}>());
+export const saveService = createAction('[Application] SaveService', props<{applicationId:any,serviceSaveData:any}>());
+export const savedService = createAction('[Application] SavedService', props<{savedServiceResponse: any,dataType:string}>());
 export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{environmentsData: Environment}>());
 export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
 export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{groupPermissionData: GroupPermission}>());
@@ -126,4 +128,14 @@ export const getTemplatesToolType = createAction('[Application] GetTemplatesTool
 export const loadTemplateToolType = createAction('[Application] LoadTemplateToolType', props<{templatesForToolType:any}>());
 export const isLoadedTemplateToolType = createAction('[Application] IsLoadedTemplateToolType');
 
-//isTooltemplateSaved
+export const saveTemplateForTooltype = createAction('[Application] SaveTemplateForTooltype', props<{templateForToolTypeData:any}>());
+export const postSaveTemplateForTooltype = createAction('[Application] PostSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());
+export const isTemplateForTooltypeSaved = createAction('[Application] IsTemplateForTooltypeSaved');
+
+export const saveToolConnectorWithTemplate = createAction('[Application] SaveToolConnectorWithTemplate', props<{gateId : any,connectorId : any, toolconnectorwithTemplateData:any}>());
+export const postSaveToolConnectorWithTemplate = createAction('[Application] PostSaveToolConnectorWithTemplate', props<{toolconnectorwithTemplateSavedData:any}>());
+export const isToolConnectorWithTemplateSaved = createAction('[Application] IsToolConnectorWithTemplateSaved');
+
+export const getApprovalGatesOfaService = createAction('[Application] GetApprovalGatesOfaService', props<{serviceId : any}>());
+export const loadApprovalGatesOfaService = createAction('[Application] LoadApprovalGatesOfaService', props<{approvalGatesListOfaService:any}>());
+export const isApprovalGatesOfaServiceLoaded = createAction('[Application] IsApprovalGatesOfaServiceLoaded');

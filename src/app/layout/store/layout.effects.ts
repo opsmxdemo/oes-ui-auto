@@ -90,7 +90,7 @@ export class LayoutEffect {
             return this.http.get<string>(this.environment.config.endPointUrl+'platformservice/v1/featureList').pipe(
                 map(resData => {
                     this.store.dispatch(new LayoutAction.ApiSuccess(1));
-                    return new LayoutAction.SupportedFeatures(resData['supportedFeatures']);
+                    return new LayoutAction.SupportedFeatures(resData['configuredFeatures']);
                 }),
                 catchError(errorRes => {
                     return handleError(errorRes,1);

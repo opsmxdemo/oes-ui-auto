@@ -1,4 +1,4 @@
 {
-    "endPointUrl":"http://autopilot-master-gate.engineering.opsmx.net/",
+    "endPointUrl":"http://oes-visibility-gate.engineering.opsmx.net/",
     "setApplicationInterval": 16000
 }

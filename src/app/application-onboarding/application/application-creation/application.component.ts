@@ -19,6 +19,8 @@ import { SaveApplication } from 'src/app/models/applicationOnboarding/createAppl
 import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
 import {Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
 import { AppPage } from 'e2e/src/app.po';
+import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
+
 @Component({
   selector: 'app-application',
   templateUrl: './application.component.html',
@@ -28,6 +30,9 @@ export class CreateApplicationComponent implements OnInit {
 
   @ViewChild('logModel') logModel: ElementRef;
   @ViewChild('metricModel') metricModel: ElementRef;
+  @ViewChild(JsonEditorComponent, { static: false }) tooltypeTemplateEditorJson: JsonEditorComponent;
+  @ViewChild('tooltypeTemplateModel') tooltypeTemplateModel: ElementRef;
+  
 
   userType = '';                                            // It contain type of user i.e, AP, OES or both.
   createApplicationForm: FormGroup;                               // For Application Section
@@ -78,6 +83,11 @@ export class CreateApplicationComponent implements OnInit {
   userIndex: any;
   showDat: boolean;
 
+  savedApplicationData: any;
+  applicationId : any;
+  savedServiceData :any;
+  serviceId :any;
+
   //visibility
   gateData : any;
   gateId : any;
@@ -86,6 +96,14 @@ export class CreateApplicationComponent implements OnInit {
   configuredToolTypes : any;
   templatesForToolType : any;
   accountsForTooltypes : any;
+  selectedTTTemplateTab ='tooltype-template-editor';
+  public tooltypeTemplateEditor: JsonEditorOptions;   
+  public tooltypeTemplateData: any = null;
+  templateId : any;
+  connectorId: any;
+  approvalGatesOfaServiceList : any;
+
+
   showserviceGroup:boolean;
   configuredFeature  =[]
   isFeaturePresent = []
@@ -126,18 +144,14 @@ export class CreateApplicationComponent implements OnInit {
         //     this.store.dispatch(ApplicationActions.loadOESData());
         //   }
         // }
-        if(layoutRes.supportedFeatures != null){
-       
-       this.featureList = ["sapor","deployment_verification","visibility"];
-      
-
-     //    this.featureList = layoutRes.supportedFeatures;
-       
-           const saporExist = this.featureList.some(item => item.includes("sapor"));
-           if(saporExist){
+        if(layoutRes.supportedFeatures != null){       
+          //this.featureList = ["sapor","deployment_verification","visibility"];
+          this.featureList = layoutRes.supportedFeatures;
+          const saporExist = this.featureList.some(item => item.includes("sapor"));
+          if(saporExist){
             this.store.dispatch(ApplicationActions.loadOESData());
-             this.userType = this.featureList[0];
-           }
+            this.userType = this.featureList[0];
+          }
            //this.saporExist = saporExist;
           
          // if(this.featureList.some(item => item.includes('Deployment Verification'))){
@@ -152,15 +166,15 @@ export class CreateApplicationComponent implements OnInit {
     // fetching data from store and check editMode mode is enable or disabled
     this.store.select(fromFeature.selectApplication).subscribe(
       (responseData) => {
-        this.apploading = responseData.applicationLoading;
+        //this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
 
         if(responseData.initalOESDatacall === true && this.userType.includes('sapor')){
           let counter = 0;
           if(responseData.initalOESDataLoaded.indexOf('calling') > -1){
-            this.apploading = true;
+            //this.apploading = true;
           }else{
-            this.apploading = false;
+            //this.apploading = false;
           }
           responseData.initalOESDataLoaded.forEach(data=>{
             if(data === 'error'){
@@ -384,12 +398,36 @@ export class CreateApplicationComponent implements OnInit {
 
     // Below function is use to fetching data from state related to pipelineData
     this.store.select(fromFeature.selectApplication).subscribe(
-      (response) => {
+      (response) => {        
         if (response.pipelineData !== null) {
           this.pipelineExists = response.pipelineData;
         }
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
+        }
+        if(response.savedApplicationData != null){
+          this.savedApplicationData = response.savedApplicationData;
+          this.applicationId = this.savedApplicationData.applicationId;
+          //Response Json sample format
+          // {
+          //   "applicationId": "50",
+          //   "lastUpdatedTimestamp": "Fri Oct 30 09:39:07 UTC 2020",
+          //   "name": "xdsad",
+          //   "email": "meera@opsmx.io",
+          //   "description": "",
+          //   "imageSource": "docker.io/opsmx11",
+          //   "services": []
+          // }
+        }
+        if(response.savedServiceData != null){
+          this.savedServiceData = response.savedServiceData;
+          this.serviceId = this.savedServiceData.id;
+          //Respose json sample format
+          // {
+          //   "id": 19,
+          //   "name": "paymentservice",
+          //   "applicationId": 53
+          // }
         }
         if (response.dockerImageData !== null && response.dockerImageData !== undefined) {
           this.dockerImageData = response.dockerImageData;
@@ -415,19 +453,30 @@ export class CreateApplicationComponent implements OnInit {
           }
           this.populateSelectedTemplateName(this.currentMetricTemplateIndex,'metricTemp')
         }
-        if (response.approvalGateSavedData !== null && response.isGateSaved) {
+        if (response.approvalGateSavedData != null && response.isGateSaved) {
           this.store.dispatch(ApplicationActions.isApprovalGateSaved());
           this.gateData = response.approvalGateSavedData;
-          this.gateId = 20;  
-          //this.store.dispatch(ApplicationActions.getApprovalGates());        
+          //this.gateId = 
+          //this.store.dispatch(ApplicationActions.getApprovalGates()); 
+          this.addConnector();
+          this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
+          //this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({serviceId : this.serviceId}));      
         }
         if(response.approvalGatesList != null && response.isApprovalGatesLoaded){
           this.store.dispatch(ApplicationActions.isApprovalGatesLoaded());
           this.approvalGatesList = response.approvalGatesList;
           this.gateId = this.approvalGatesList[0].id;
           console.log(this.approvalGatesList);
-          this.addConnector();
-          this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
+          //this.addConnector();
+          //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
+        }
+        if(response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded){
+          this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
+          this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
+          this.gateId = this.approvalGatesOfaServiceList[0].id;
+          console.log(this.approvalGatesOfaServiceList);
+          //this.addConnector();
+          //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
         }
         if(response.isApprovalGateEdited){
           this.isEditGateEnabled = false;
@@ -440,14 +489,27 @@ export class CreateApplicationComponent implements OnInit {
         if(response.accountsForToolType && response.isAccountForToolTypeLoaded){
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
           this.accountsForTooltypes = response.accountsForToolType;
+          //this.connectorId = this.accountsForTooltypes[0];
         }
         if(response.templatesForToolType && response.isTemplateForToolTypeLoaded){
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
           this.templatesForToolType = response.templatesForToolType;
         }
-
+        if(response.isTemplateForTooltypeSaved){
+          this.store.dispatch(ApplicationActions.isTemplateForTooltypeSaved());
+          if(this.tooltypeTemplateModel != undefined){
+            this.tooltypeTemplateModel.nativeElement.click();
+          }
+          //this.store.dispatch(ApplicationActions.getTemplatesToolType)
+        }
+        
       }
     )
+
+    //Visibility Tooltype template creation
+    this.tooltypeTemplateEditor = new JsonEditorOptions()
+    this.tooltypeTemplateEditor.mode = 'code';
+    this.tooltypeTemplateEditor.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
   }
 
   // Below function is use to define all forms exist in application On boarding component
@@ -591,9 +653,7 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to populate docker image name dropdown 
   populateDockerImagenDropdown(){
-    const arrayControl = this.servicesForm.get('services') as FormArray;
-    const innerarrayControl = arrayControl.at(0).get('pipelines') as FormArray;
-    const mainData = innerarrayControl.at(0).get('dockerImageName');
+    
     this.dockerImageDropdownData = [];
     if(this.editMode){
       this.servicesForm.value.services.forEach((service,SerIndex) => {
@@ -605,9 +665,18 @@ export class CreateApplicationComponent implements OnInit {
       })
     }else{
       this.dockerAccountName = this.dockerImageData[0].imageSource;
-      mainData.patchValue({
-          'accountName': this.dockerImageData[0].imageSource
-      });
+      const arrayControl = this.servicesForm.get('services') as FormArray;
+      if(arrayControl != undefined && arrayControl != null){
+        const innerarrayControl = arrayControl.at(0).get('pipelines') as FormArray;
+        if( innerarrayControl!= undefined && innerarrayControl != null){
+          const mainData = innerarrayControl.at(0).get('dockerImageName');
+          if(mainData != undefined && mainData != null){
+            mainData.patchValue({
+              'accountName': this.dockerImageData[0].imageSource
+            });
+          }         
+        }        
+      }     
       this.servicesForm.value.services.forEach(() => {
         this.dockerImageDropdownData.push(this.dockerImageData[0].images);
       })
@@ -912,8 +981,10 @@ export class CreateApplicationComponent implements OnInit {
   saveServiceForm(index){
     console.log(this.servicesForm.value.services[index].serviceName);
     this.servForm = this.servicesForm.value.services[index];
-    this.store.dispatch(ApplicationActions.saveService({serviceSavedData:this.servForm}));
-
+    var serviceDataToSave = {
+      "name" : this.servicesForm.value.services[index].serviceName
+    };
+    this.store.dispatch(ApplicationActions.saveService({applicationId : this.applicationId,serviceSaveData:serviceDataToSave}));
   }
 
    // Below function is use to submit environments form
@@ -937,10 +1008,8 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to submit group permission form
   SubmitGroupPermissionForm(){
     this.groupForm = this.groupPermissionForm.value.userGroups;
-    console.log(this.groupPermissionForm.value.userGroups);
-   
+    console.log(this.groupPermissionForm.value.userGroups);   
     this.store.dispatch(ApplicationActions.saveGroupPermissions({groupPermissionData:this.groupForm}));
-
 
   }
 
@@ -953,6 +1022,10 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to save each connector
   saveConnector(index){
     console.log(this.visibilityForm.value.visibilityConfig[index]);
+    var dataToSaveToolConnectorwithTemplate = {
+      templateId : this.templateId
+    };
+    this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({gateId: this.gateId, connectorId : this.connectorId, toolconnectorwithTemplateData : dataToSaveToolConnectorwithTemplate}));
   }
 
   // Bewlow function is use to submit visibility form
@@ -971,10 +1044,10 @@ export class CreateApplicationComponent implements OnInit {
     // }
     var gateData = {
       "name" : this.gateForm.value.gateName,
-      "serviceId" : "" //this.serviceId;
+      "serviceId" : this.serviceId
     }
     this.store.dispatch( ApplicationActions.saveApprovalGate({approvalGateData : gateData}));
-    this.store.dispatch(ApplicationActions.getApprovalGates());  
+    //this.store.dispatch(ApplicationActions.getApprovalGates());  
   }
 
   //Below function is use to submit whole form and send request to backend
@@ -1134,11 +1207,39 @@ onChangeTooltype(tooltype){
 
 onChangeAccountofTooltype(account){
   console.log(account);
+  this.connectorId = account;
+
 }
 
 onChangeTemplateofTooltype(template){
   console.log(template);
+  this.templateId = template;
+  console.log(this.visibilityForm.value);
+
 }
+
+saveTooltypeTemplate(){
+  console.log(this.tooltypeTemplateData);
+  this.store.dispatch(ApplicationActions.saveTemplateForTooltype({templateForToolTypeData : this.tooltypeTemplateData}));
+  if(this.tooltypeTemplateModel !== undefined){
+    this.tooltypeTemplateModel.nativeElement.click();
+  }
+}
+
+//Below function is use to fetched json from json editor
+getJsonFromTooltypeTemplateEditor(event = null){
+  this.tooltypeTemplateData = this.tooltypeTemplateEditorJson.get();
+}
+
+
+onClickTemplateTab(event){
+  if(event === 'tooltype-template-form-tab'){
+    this.selectedTTTemplateTab = 'tooltype-template-form';
+  } else if(event === 'tooltype-template-editor-tab') {
+    this.selectedTTTemplateTab = 'tooltype-template-editor';
+  }
+}
+
 autoFocus(focusedClass){
   this.showserviceGroup=true;
   

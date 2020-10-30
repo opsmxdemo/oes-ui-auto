@@ -30,6 +30,10 @@ export interface State {
     applicationId:string;
     supportedFeaturesData: any;
 
+    //new app onboarding flow
+    savedApplicationData : any;
+    savedServiceData : any;
+
     // Application List variables
     applicationList: ApplicationList[];
     appListLoading: boolean;
@@ -58,6 +62,14 @@ export interface State {
     accountsForToolType : any;
     isTemplateForToolTypeLoaded: boolean;
     templatesForToolType : any;
+    templateForToolTypeSavedData : any;
+    isTemplateForTooltypeSaved: boolean;
+    templateForToolTypeData : any;
+    toolconnectorwithTemplateSavedData: any;
+    isToolConnectorwithTemplateSaved: boolean;
+    toolconnectorwithTemplateData : any;
+    approvalGatesListOfaService: any;
+    isApprovalGatesOfaServiceLoaded: boolean;
 }
 
 export const initialState: State = {
@@ -80,6 +92,8 @@ export const initialState: State = {
     initalOESDatacall: false,
     initalOESDataLoaded: ['dummy','dummy'],
     applicationId:null,
+    savedApplicationData: null,
+    savedServiceData : null,
     logtemplate: [],
     metrictemplate:[],
     supportedFeaturesData: null,
@@ -99,7 +113,16 @@ export const initialState: State = {
     isAccountForToolTypeLoaded: false,
     accountsForToolType : null,
     isTemplateForToolTypeLoaded: false,
-    templatesForToolType : null
+    templatesForToolType : null,
+    templateForToolTypeSavedData : null,
+    isTemplateForTooltypeSaved: false,
+    templateForToolTypeData : null,
+    toolconnectorwithTemplateSavedData: null,
+    isToolConnectorwithTemplateSaved: false,
+    toolconnectorwithTemplateData : null,
+    approvalGatesListOfaService: null,
+    isApprovalGatesOfaServiceLoaded: false
+
 }
 
 export function ApplicationReducer(
@@ -208,10 +231,24 @@ export function ApplicationReducer(
                 applicationLoading:true
             })
         ),
+        on(ApplicationAction.savedApplication,
+            (state,action) => ({
+                ...state,
+                applicationLoading:true,
+                savedApplicationData : action.savedApplicationResponse
+            })
+        ),        
         on(ApplicationAction.saveService,
             state => ({
                 ...state,
                 applicationLoading:true
+            })
+        ),
+        on(ApplicationAction.savedService,
+            (state,action) => ({
+                ...state,
+                applicationLoading:true,
+                savedServiceData : action.savedServiceResponse
             })
         ),
         on(ApplicationAction.saveEnvironments,
@@ -367,6 +404,26 @@ export function ApplicationReducer(
             })
         ),
 
+        on(ApplicationAction.getApprovalGatesOfaService,
+            (state,action) => ({
+                ...state,
+                isApprovalGatesOfaServiceLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadApprovalGatesOfaService,
+            (state,action) => ({
+                ...state,
+                approvalGatesListOfaService:action.approvalGatesListOfaService,
+                isApprovalGatesOfaServiceLoaded: true
+            })
+        ),
+        on(ApplicationAction.isApprovalGatesOfaServiceLoaded,
+            (state,action) => ({
+                ...state,
+                isApprovalGatesOfaServiceLoaded: false
+            })
+        ),
+
         on(ApplicationAction.getConfiguredToolConnectorTypes,
             (state,action) => ({
                 ...state,
@@ -426,6 +483,48 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isTemplateForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.saveTemplateForTooltype,
+            (state,action) => ({
+                ...state,
+                templateForToolTypeData:action.templateForToolTypeData,
+                isTemplateForTooltypeSaved: false
+            })
+        ),
+        on(ApplicationAction.postSaveTemplateForTooltype,
+            (state,action) => ({
+                ...state,
+                templateForToolTypeSavedData:action.templateForToolTypeSavedData,
+                isTemplateForTooltypeSaved: true
+            })
+        ),
+        on(ApplicationAction.isTemplateForTooltypeSaved,
+            (state,action) => ({
+                ...state,
+                isTemplateForTooltypeSaved: false
+            })
+        ),
+
+        on(ApplicationAction.saveToolConnectorWithTemplate,
+            (state,action) => ({
+                ...state,
+                toolconnectorwithTemplateData:action.toolconnectorwithTemplateData,
+                isToolConnectorwithTemplateSaved: false
+            })
+        ),
+        on(ApplicationAction.postSaveToolConnectorWithTemplate,
+            (state,action) => ({
+                ...state,
+                toolconnectorwithTemplateSavedData:action.toolconnectorwithTemplateSavedData,
+                isToolConnectorwithTemplateSaved: true
+            })
+        ),
+        on(ApplicationAction.isToolConnectorWithTemplateSaved,
+            (state,action) => ({
+                ...state,
+                isToolConnectorwithTemplateSaved: false
             })
         ),
         // Visibility Feature  Ends here //
