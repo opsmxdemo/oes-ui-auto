@@ -194,11 +194,12 @@ export class ApplicationEffect {
          switchMap(action => {
              return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application', action.applicationData).pipe(
                  map(resdata => {
-                     return ApplicationAction.dataSaved({ applicationName: action.applicationData.name, dataType: 'createApplication' });
+                    this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                    return ApplicationAction.savedApplication({ savedApplicationResponse: resdata,dataType: 'createApplication' });                     
                  }),
                  catchError(errorRes => {
-                     this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
-                     return handleError(errorRes);
+                    this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                    return handleError(errorRes);
                  })
              );
          })
@@ -210,12 +211,13 @@ export class ApplicationEffect {
   this.actions$.pipe(
       ofType(ApplicationAction.saveService),
       switchMap(action => {
-          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'platformservice/v1/applications/{applicationId}/service', action.serviceSavedData).pipe(
+          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/service', action.serviceSaveData).pipe(
               map(resdata => {
-                  return ApplicationAction.dataSaved({ applicationName: 'action.servicenData.name', dataType: 'createService' });
+                  this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                  return ApplicationAction.savedService({ savedServiceResponse:resdata, dataType: 'createService' });
               }),
               catchError(errorRes => {
-              //    this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+              //  this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
                   return handleError(errorRes);
               })
           );
@@ -378,10 +380,10 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.saveApprovalGate),
             switchMap((action) => {
-                return this.http.post<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/', action.approvalGateData).pipe(
+                return this.http.post<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates', action.approvalGateData).pipe(
                     map(resdata => {
-                        return ApplicationAction.postSaveApprovalGate({ approvalGateSavedData: resdata.approvalGateSavedData});
-                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                        return ApplicationAction.postSaveApprovalGate({ approvalGateSavedData: resdata});
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
@@ -396,7 +398,7 @@ export class ApplicationEffect {
     getApprovalGates = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.getApprovalGates),
-            switchMap((action) => {
+            switchMap((action) => {                
                 //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates').pipe(
                 return this.http.get('/assets/data/visibility/approvalGatesList.json').pipe(
                     map(resdata => {
@@ -449,14 +451,32 @@ export class ApplicationEffect {
         )
     )
 
+    //visibilityservice/v1/approvalGates?serviceId=13
+    getApprovalGatesOfaService = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.getApprovalGatesOfaService),
+            switchMap((action) => {                
+                return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates?serviceId='+ action.serviceId).pipe(
+                //return this.http.get('/assets/data/visibility/approvalGatesList.json').pipe(
+                    map(resdata => {
+                        return ApplicationAction.loadApprovalGatesOfaService({ approvalGatesListOfaService: resdata});
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
     
     // Effect to get all tool connectors configured for this installation
     getConfiguredToolConnectorTypes = createEffect(() =>
     this.actions$.pipe(
         ofType(ApplicationAction.getConfiguredToolConnectorTypes),
         switchMap((action) => {            
-            //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/configuredConnectorTypes').pipe(
-            return this.http.get('/assets/data/visibility/configuredToolConnectors.json').pipe(
+            return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/configuredConnectorTypes').pipe(
+            //return this.http.get('/assets/data/visibility/configuredToolConnectors.json').pipe(
                 map(resdata => {
                     return ApplicationAction.loadConfiguredToolConnectorTypes({ configuredToolConnectorTypes: resdata});
                 }),
@@ -473,9 +493,9 @@ export class ApplicationEffect {
    getAccountsForToolType = createEffect(() =>
    this.actions$.pipe(
        ofType(ApplicationAction.getAccountToolType),
-       switchMap((action) => {                    
-           //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.connectorType).pipe(
-           return this.http.get('/assets/data/visibility/accountsForToolConnectors.json').pipe(
+       switchMap((action) => {                 
+           return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/connectorTypes/'+ action.connectorType).pipe(
+           //return this.http.get('/assets/data/visibility/accountsForToolConnectors.json').pipe(
                map(resdata => {
                    return ApplicationAction.loadAccountToolType({ accountsForToolType: resdata});
                }),
@@ -489,13 +509,13 @@ export class ApplicationEffect {
  )
 
 
-// Effect to get all tool connector accounts for a particular connector type
+//Effects to get all templates already created by the user for the selected conector type
 getTemplatesForTooltype = createEffect(() =>
 this.actions$.pipe(
       ofType(ApplicationAction.getTemplatesToolType),
       switchMap((action) => {                    
-          //return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.connectorType+'/templates').pipe(
-          return this.http.get('/assets/data/visibility/templateForTooltype.json').pipe(
+          return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.connectorType+'/templates').pipe(
+          //return this.http.get('/assets/data/visibility/templateForTooltype.json').pipe(
               map(resdata => {
                   return ApplicationAction.loadTemplateToolType({ templatesForToolType: resdata});
               }),
@@ -508,24 +528,41 @@ this.actions$.pipe(
   )
 )
 
-// //POST /visibilityToolTemplates
-// //Add new tool template
-// onSaveTooltemplate = createEffect(() =>
-// this.actions$.pipe(
-//     ofType(ApplicationAction.saveApprovalGate),
-//     switchMap((action) => {
-//         return this.http.post<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/visibilityToolTemplates/', action.approvalGateData).pipe(
-//             map(resdata => {
-//                 return ApplicationAction.postSaveApprovalGate({ approvalGateSavedData: resdata.approvalGateSavedData});
-//                 this.store.dispatch(ApplicationAction.getApprovalGates());
-//             }),
-//             catchError(errorRes => {
-//                 //this.toastr.showError('Error', 'ERROR')
-//                 return handleError(errorRes);
-//             })
-//         );
-//     })
-// )
-// )
+//Add new tool template 
+onSaveTooltemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveTemplateForTooltype),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/visibilityToolTemplates', action.templateForToolTypeData).pipe(
+                map(resdata => {
+                    return ApplicationAction.postSaveTemplateForTooltype({ templateForToolTypeSavedData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to save the selected template and tool connector for the approval gate
+//PUT /approvalGates/{id}/toolConnectors/{connectorId}/template
+onSaveToolconnectorwithTemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveToolConnectorWithTemplate),
+        switchMap((action) => {
+            return this.http.put<any>(this.environment.config.endPointUrl + 'approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
+                map(resdata => {
+                    return ApplicationAction.postSaveToolConnectorWithTemplate({ toolconnectorwithTemplateSavedData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
 
 }
