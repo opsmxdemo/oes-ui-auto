@@ -1017,6 +1017,21 @@ export class CreateApplicationComponent implements OnInit {
   SubmitSaporForm(serviceIndex){
     
     console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
+    const postSapor = {
+      applicationId : 'appl',
+      serviceId : this.serviceId,
+      "service": {
+        serviceName : this.servicesForm.value.services[serviceIndex].serviceName,
+        pipelines : this.servicesForm.value.services[serviceIndex].saporConfiguration['pipelines']
+        //pipthis.servicesForm.value.services[serviceIndex])
+      }
+
+    
+    }
+
+    console.log(JSON.stringify(postSapor));
+
+
   }
 
   // Below function is use to save each connector

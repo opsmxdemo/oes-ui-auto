@@ -5,7 +5,7 @@
             <!-- for Autopilot -->
             <ng-container *ngFor="let datasource of supportedDataSources['autopilotDataSources']; let i=index;">
                 <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
-                    (click)="getDataProvider(datasource.datasourceType,datasource,'AP')">
+                    (click)="getDataProvider(datasource.datasourceType,datasource,'deployment_verification')">
                     <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
                         [checked]="datasource.datasourceType === selectedDataProvider" />
                     <label for="{{datasource['datasourceType']}}">
@@ -23,12 +23,30 @@
             <!-- for OES -->
             <ng-container *ngFor="let datasource of supportedDataSources['oesDataSources']; let i=index;">
                 <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
-                    (click)="getDataProvider(datasource.datasourceType,datasource,'OES')">
+                    (click)="getDataProvider(datasource.datasourceType,datasource,'sapor')">
                     <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
                         [checked]="datasource.datasourceType === selectedDataProvider" />
                     <label for="{{datasource['datasourceType']}}">
                         <span class="bi-lbl">
                             <img src="{{imgPath}}{{datasource['datasourceType']}}.png" />
+                        </span>
+                        <span class="bi-text">
+                            {{datasource['displayName']}}
+                        </span>
+                    </label>
+                </div>
+            </ng-container>
+
+            <!-- for Visibility -->
+            <ng-container *ngFor="let datasource of supportedDataSources['visibilityDataSources']; let i=index;">
+                <div class="box-icon" *ngIf="datasource.configurationFields.length > 0 ? true : false"
+                    (click)="getDataProvider(datasource.datasourceType,datasource,'visibility')">
+                    <input id="{{datasource['datasourceType']}}" type="radio" name="{{datasource['datasourceType']}}"
+                        [checked]="datasource.datasourceType === selectedDataProvider" />
+                    <label for="{{datasource['datasourceType']}}">
+                        <span class="bi-lbl">
+                            <img src="{{imgPath}}{{datasource['datasourceType']}}.png"
+                                onError="this.src='../../../../assets/images/blankicon.png'" />
                         </span>
                         <span class="bi-text">
                             {{datasource['displayName']}}
