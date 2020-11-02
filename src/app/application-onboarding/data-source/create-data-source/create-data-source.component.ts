@@ -95,20 +95,28 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
 
   // Below function is use to execute on create dataSource
   onSaveForm(event) {
+    debugger
     let postData = { ...this.selectedProviderObj };
     postData['name']=event.form.value.name;
     postData['configurationFields'] = event.form.value.configFields;
-    if (this.providerBelongsTo === 'AP') {
+    
+    if (this.providerBelongsTo === 'deployment_verification') {
       if(this.isEditMode){
         this.store.dispatch(DataSourceActions.updateAPDatasources({ UpdatedDataSource: postData }));
       }else{
         this.store.dispatch(DataSourceActions.createAPDatasources({ CreatedDataSource: postData }));
       }
-    } else {
+    } else if (this.providerBelongsTo === 'sapor') {
       if(this.isEditMode){
         this.store.dispatch(DataSourceActions.updateOESDatasources({ UpdatedDataSource: postData }));
       }else{
         this.store.dispatch(DataSourceActions.createOESDatasources({ CreatedDataSource: postData }));
+      }
+    } else if (this.providerBelongsTo === 'visibility') {
+      if(this.isEditMode){
+        this.store.dispatch(DataSourceActions.updateVisibilityDatasources({ UpdatedDataSource: postData }));
+      }else{
+        this.store.dispatch(DataSourceActions.createVisibilityDatasources({ CreatedDataSource: postData }));
       }
     }
 
