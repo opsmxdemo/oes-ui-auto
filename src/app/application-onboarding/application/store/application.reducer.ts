@@ -44,6 +44,11 @@ export interface State {
     // Metric Template variables 
     metrictemplate: any[];
 
+    // Sapor config related variables
+    saporConfigData : any;
+    saporConfigSavedData : any;
+    isSaporConfigSaved: boolean;
+
     //Visibility 
     approvalGateSavedData : any;
     approvalGateData : any;
@@ -121,7 +126,12 @@ export const initialState: State = {
     isToolConnectorwithTemplateSaved: false,
     toolconnectorwithTemplateData : null,
     approvalGatesListOfaService: null,
-    isApprovalGatesOfaServiceLoaded: false
+    isApprovalGatesOfaServiceLoaded: false,
+
+    // Sapor config variables
+    saporConfigData : null,
+    saporConfigSavedData : null,
+    isSaporConfigSaved: false,
 
 }
 
@@ -604,6 +614,30 @@ export function ApplicationReducer(
             })
         ),
 
+        // Sapor config save code here
+    on(ApplicationAction.saveSaporConfig,
+        (state,action) => ({
+            ...state,
+            approvalGateData:action.saporConfigData,
+            isSaporConfigSaved: false
+        })
+    ),
+    on(ApplicationAction.postSaveSaporConfig,
+        (state,action) => ({
+            ...state,
+            approvalGateSavedData:action.saporConfigSavedData,
+            isSaporConfigSaved: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigSaved,
+        (state,action) => ({
+            ...state,
+            isSaporConfigSaved: false
+        })
+    ),
+
         // ###  Reseting template data for both metric and log ### // 
     )(applicationState,applicationAction);
+
+    
 }

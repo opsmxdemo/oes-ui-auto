@@ -13,6 +13,7 @@ export enum LayoutActionTypes {
     SERVERERROR = '[Layout] Server Error',
     APISUCCESS = '[Layout] Api Success',
     SUPPORTEDFEATURES = '[Layout] Supported Features',
+    VISIBILITY = '[Layout] ApprovalInstance Count'
 }
 
 export class LoadPage implements Action {
@@ -49,6 +50,11 @@ export class SupportedFeatures implements Action {
     constructor(public payload: []){}
 }
 
+export class ApprovalInstanceCount implements Action {
+    readonly type = LayoutActionTypes.VISIBILITY
+    constructor(public payload:string){}
+}
+
 export class usergroupRefresh implements Action {
     readonly type = LayoutActionTypes.USERGROUPREFRESH;
     constructor(public payload:any){}
@@ -71,6 +77,7 @@ export type LayoutActions = LoadPage
                         |   SideBarFetch
                         |   ErrorResponse
                         |   ApplicationData
+                        |   ApprovalInstanceCount
                         |   SideBarToggle
                         |   InstallationMode
                         |   SupportedFeatures
