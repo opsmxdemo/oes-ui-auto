@@ -31,9 +31,9 @@ export const saveApplication = createAction('[Application] SaveApplication', pro
 export const savedApplication = createAction('[Application] SavedApplication', props<{savedApplicationResponse: any,dataType:string}>());
 export const saveService = createAction('[Application] SaveService', props<{applicationId:any,serviceSaveData:any}>());
 export const savedService = createAction('[Application] SavedService', props<{savedServiceResponse: any,dataType:string}>());
-export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{environmentsData: Environment}>());
+export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{applicationId: any,environmentsData: Environment}>());
 export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
-export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{groupPermissionData: GroupPermission}>());
+export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{applicationId:any,groupPermissionData: GroupPermission}>());
 export const groupPermissionDataSaved = createAction('[Application] groupPermissionDataSaved', props<{applicationName:string,dataType:string}>());
 
 
