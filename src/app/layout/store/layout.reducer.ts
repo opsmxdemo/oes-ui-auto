@@ -11,6 +11,7 @@ export interface State {
     usergroupRefresh: any;
     apiErrorCollection: boolean[];
     errorMessage: string;
+    approvalInstalgateCount: string;
 }
 
 export const initialState: State = {
@@ -21,7 +22,8 @@ export const initialState: State = {
     supportedFeatures: null,
     usergroupRefresh: null,
     apiErrorCollection:[false,false],
-    errorMessage: ''
+    errorMessage: '',
+    approvalInstalgateCount: ''
 }
 
 export function layoutReducer(
@@ -63,6 +65,11 @@ export function layoutReducer(
                     ...state,
                     usergroupRefresh: action.payload
             }
+        case LayoutAction.LayoutActionTypes.VISIBILITY:
+                return {
+                        ...state,
+                        approvalInstalgateCount: action.payload
+                }
         case LayoutAction.LayoutActionTypes.SERVERERROR:
             return {
                 ...state,

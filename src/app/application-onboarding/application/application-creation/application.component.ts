@@ -84,9 +84,9 @@ export class CreateApplicationComponent implements OnInit {
   showDat: boolean;
 
   savedApplicationData: any;
-  applicationId : any;
+  applicationId : number;
   savedServiceData :any;
-  serviceId :any;
+  serviceId : string;
 
   //visibility
   gateData : any;
@@ -1018,18 +1018,18 @@ export class CreateApplicationComponent implements OnInit {
     
     console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
     const postSapor = {
-      applicationId : 'appl',
+      applicationId : this.applicationId,
       serviceId : this.serviceId,
-      "service": {
+      service: {
         serviceName : this.servicesForm.value.services[serviceIndex].serviceName,
         pipelines : this.servicesForm.value.services[serviceIndex].saporConfiguration['pipelines']
-        //pipthis.servicesForm.value.services[serviceIndex])
       }
-
-    
     }
 
     console.log(JSON.stringify(postSapor));
+
+    this.store.dispatch(ApplicationActions.saveSaporConfig({saporConfigData : postSapor}));
+
 
 
   }

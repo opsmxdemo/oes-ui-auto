@@ -1,6 +1,6 @@
 import { Effect, ofType } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -91,6 +91,27 @@ export class LayoutEffect {
                 map(resData => {
                     this.store.dispatch(new LayoutAction.ApiSuccess(1));
                     return new LayoutAction.SupportedFeatures(resData['configuredFeatures']);
+                }),
+                catchError(errorRes => {
+                    return handleError(errorRes,1);
+                })
+            );
+        })
+    );
+
+    // Below effect is use to refresh the usergroups in gate
+    @Effect()
+    visibilityConfiguredCount = this.actions$.pipe(
+        ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
+        withLatestFrom(this.store.select('auth')),
+        switchMap(([action,authState]) => {
+              const httpHeaders: HttpHeaders = new HttpHeaders({
+                  'x-spinnaker-user': 'pxn65' 
+              }); { headers: httpHeaders }    
+            return this.http.get<string>(this.environment.config.endPointUrl+'visibilityservice/v1/users/'+ authState.user +'/approvalGateInstances/activeCount').pipe(
+                map(resData => {
+                   // this.store.dispatch(new LayoutAction.ApiSuccess(1));
+                    return new LayoutAction.ApprovalInstanceCount(resData['activeCount']);
                 }),
                 catchError(errorRes => {
                     return handleError(errorRes,1);
