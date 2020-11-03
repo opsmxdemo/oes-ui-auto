@@ -24,6 +24,7 @@ const routes: Routes = [
   {path:'cddashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'visibility', component: VisibilityComponent},
+  {path:'visibility/:applicationName/:applicationId', component: VisibilityComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
   {path:'error', component:AppErrorListingComponent}
 ];

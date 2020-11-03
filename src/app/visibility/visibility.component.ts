@@ -7,6 +7,7 @@ import {Observable} from 'rxjs';
 import * as Visibility from './store/visibility.actions';
 import {map, startWith} from 'rxjs/operators';
 import * as $ from 'jquery'; 
+import { ActivatedRoute } from '@angular/router';
 
 export interface User {
   applicationName: string;
@@ -52,9 +53,10 @@ export class VisibilityComponent implements OnInit {
   firstTimeLoad: boolean = true;
 
   // showApprovalHistory: boolean= false;
-  constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder) { }
+  constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    console.log(this.route);
     this.getAllApplications();
     this.store.select('visibility').subscribe(
       (resData) => { 

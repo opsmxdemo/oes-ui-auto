@@ -39,7 +39,7 @@ export class AppDashboardEffect {
             ofType(DashboardActions.loadAppDashboard),
             withLatestFrom(this.store.select('auth')),
             switchMap(([action,authState]) => {
-                return this.http.get(this.environment.config.endPointUrl + 'dashboardservice/v1/dashboard/'+ authState.user +'/applications').pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'dashboardservice/v2/dashboard/'+ authState.user +'/applications').pipe(
                     map(resdata => {
                         return DashboardActions.fetchedAppData({appData:resdata});
                     }),
@@ -75,7 +75,7 @@ export class AppDashboardEffect {
       this.actions$.pipe(
           ofType(DashboardActions.deleteApplication),
           switchMap(action => {
-              return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.applicationId).pipe(
+              return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId).pipe(
                   map(resdata => {
                       this.toastr.showSuccess(action.applicationId + ' is deleted successfully!!', 'SUCCESS')
                       // return OnboardingAction.appDeletedSuccessfully({index:action.index});

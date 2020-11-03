@@ -9,7 +9,8 @@
         <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;" >
           <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" routerLink="{{SideMenu.link}}"><a><i class="icon {{SideMenu.link}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'"></i> <span>{{SideMenu.name }} 
             <ng-template [ngIf]="SideMenu.name === 'Applications' ?true:false">
-              <span class="badge badge-primary">{{applicationCount}}</span>
+              <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="No. of Applications">{{applicationCount}}</span>
+              <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="No. of Active gates">{{approvalGateInstanceCount}}</span>
             </ng-template>
             </span></a>
           </li>
