@@ -211,7 +211,7 @@ export class ApplicationEffect {
   this.actions$.pipe(
       ofType(ApplicationAction.saveService),
       switchMap(action => {
-          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/service', action.serviceSaveData).pipe(
+          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/182/service', action.serviceSaveData).pipe(
               map(resdata => {
                   this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
                   return ApplicationAction.savedService({ savedServiceResponse:resdata, dataType: 'createService' });
@@ -555,26 +555,6 @@ onSaveToolconnectorwithTemplate = createEffect(() =>
             return this.http.put<any>(this.environment.config.endPointUrl + 'approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
                 map(resdata => {
                     return ApplicationAction.postSaveToolConnectorWithTemplate({ toolconnectorwithTemplateSavedData: resdata});                
-                }),
-                catchError(errorRes => {
-                    //this.toastr.showError('Error', 'ERROR')
-                    return handleError(errorRes);
-                })
-            );
-        })
-    )
-)
-
-// Below code is used to save the sapor configured data
-
-onSaveSaporData = createEffect(() =>
-    this.actions$.pipe(
-        ofType(ApplicationAction.saveSaporConfig),
-        switchMap((action) => {
-            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/feature/configuration', action.saporConfigData).pipe(
-                map(resdata => {
-                    this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
-                    return ApplicationAction.postSaveSaporConfig({ saporConfigSavedData: resdata});                
                 }),
                 catchError(errorRes => {
                     //this.toastr.showError('Error', 'ERROR')

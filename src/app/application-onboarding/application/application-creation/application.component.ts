@@ -97,7 +97,7 @@ export class CreateApplicationComponent implements OnInit {
   configuredToolTypes : any;
   templatesForToolType : any;
   accountsForTooltypes : any;
-  selectedTTTemplateTab ='tooltype-template-editor';
+  selectedTTTemplateTab ='tooltype-template-form';
   public tooltypeTemplateEditor: JsonEditorOptions;   
   public tooltypeTemplateData: any = null;
   templateId : any = [];
@@ -1243,12 +1243,15 @@ onChangeTemplateofTooltype(template,index){
       // Show validation on Tool type field and alert user to select Tool type first.
     }
 
-    this.newtemplate.nativeElement.click();
     this.toolTemplateForm = new FormGroup({
       toolType: new FormControl(toolType),
       name: new FormControl('',[Validators.required]),
       template: new FormControl('')
     });
+    setTimeout(() => {
+      this.newtemplate.nativeElement.click();
+    }, 100);
+    
     return;
   }
   console.log(template);
