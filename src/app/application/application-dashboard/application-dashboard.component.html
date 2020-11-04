@@ -33,7 +33,7 @@
                         <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
                 <h3>{{application.applicationName}} &nbsp;&nbsp;
-                  <span *ngIf="application.visibilityFlag === true" > 
+                  <span *ngIf="application.activeCount > 0 " > 
                     <a  [routerLink]="['/visibility',application.applicationName,application.applicationId]"  class="badge badge-info">View <i class="fa fa-eye" aria-hidden="true"></i></a></span>
                 </h3> 
                 <span class="datetime">{{application.date | date:'medium'}} </span>
