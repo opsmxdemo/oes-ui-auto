@@ -162,20 +162,31 @@ export class DataSourceComponent implements OnInit {
   onselectDatasource(operationPerform,accountData,index){
     $("[data-toggle='tooltip']").tooltip('hide');
     this.accountBelongsTo = '';
-    this.editMode = false
-    if(this.supportedDatasources['oesDataSources'] !== null && this.supportedDatasources['oesDataSources'].length > 0){
+    this.editMode = false;
+    debugger
+    if(this.supportedDatasources['oesDataSources'] !== null && this.supportedDatasources['oesDataSources'].length > 0) {
       this.supportedDatasources['oesDataSources'].forEach(oeslist => {
         if(oeslist.datasourceType === accountData.datasourceType){
-          this.accountBelongsTo = 'OES'
+          this.accountBelongsTo = 'sapor'
         }
       });
     }
     
-    if(this.accountBelongsTo === ''){
+    if(this.accountBelongsTo === '') {
       if(this.supportedDatasources['autopilotDataSources'] !== null && this.supportedDatasources['autopilotDataSources'].length > 0){
         this.supportedDatasources['autopilotDataSources'].forEach(oeslist => {
           if(oeslist.datasourceType === accountData.datasourceType){
-            this.accountBelongsTo = 'AP'
+            this.accountBelongsTo = 'deployment_verification'
+          }
+        });
+      }
+    }
+
+    if(this.accountBelongsTo === '') {
+      if(this.supportedDatasources['visibilityDataSources'] !== null && this.supportedDatasources['visibilityDataSources'].length > 0){
+        this.supportedDatasources['visibilityDataSources'].forEach(oeslist => {
+          if(oeslist.datasourceType === accountData.datasourceType){
+            this.accountBelongsTo = 'visibility'
           }
         });
       }
@@ -203,10 +214,12 @@ export class DataSourceComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.value) {
-        if(this.accountBelongsTo === 'OES'){
+        if(this.accountBelongsTo === 'sapor'){
           this.store.dispatch(DataSourceActions.deleteOESDatasourceAccount({ accountName: account.name, index: index }));
-        }else{
+        }else if(this.accountBelongsTo === 'deployment_verification'){
           this.store.dispatch(DataSourceActions.deleteAPDatasourceAccount({ accountName: account.name, id:account.id, index: index  }))
+        }else if(this.accountBelongsTo === 'visibility'){
+          this.store.dispatch(DataSourceActions.deleteVisibilityDatasourceAccount({accountName: account.name, id: account.id, index}))
         }
       } 
     })

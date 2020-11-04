@@ -104,7 +104,7 @@ export class CreateApplicationComponent implements OnInit {
   templateId : any = [];
   connectorId: any;
   approvalGatesOfaServiceList : any;
-
+  toolType : any;
 
   showserviceGroup:boolean;
   configuredFeature  =[]
@@ -467,7 +467,7 @@ export class CreateApplicationComponent implements OnInit {
         if (response.approvalGateSavedData != null && response.isGateSaved) {
           this.store.dispatch(ApplicationActions.isApprovalGateSaved());
           this.gateData = response.approvalGateSavedData;
-          //this.gateId = 
+          this.gateId = response.approvalGateSavedData.id;
           //this.store.dispatch(ApplicationActions.getApprovalGates()); 
           this.addConnector();
           this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
@@ -476,7 +476,7 @@ export class CreateApplicationComponent implements OnInit {
         if(response.approvalGatesList != null && response.isApprovalGatesLoaded){
           this.store.dispatch(ApplicationActions.isApprovalGatesLoaded());
           this.approvalGatesList = response.approvalGatesList;
-          this.gateId = this.approvalGatesList[0].id;
+          //this.gateId = this.approvalGatesList[0].id;
           console.log(this.approvalGatesList);
           //this.addConnector();
           //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
@@ -509,12 +509,12 @@ export class CreateApplicationComponent implements OnInit {
 
         this.loadEditTemplate(response);
 
-        if(response.isTemplateForTooltypeSaved){
+        if(response.isToolConnectorwithTemplateSaved !=null && response.isTemplateForTooltypeSaved){
           this.store.dispatch(ApplicationActions.isTemplateForTooltypeSaved());
           if(this.tooltypeTemplateModel != undefined){
             this.tooltypeTemplateModel.nativeElement.click();
           }
-          //this.store.dispatch(ApplicationActions.getTemplatesToolType)
+          this.store.dispatch(ApplicationActions.getTemplatesToolType({connectorType : this.toolType}));
         }
         
       }
@@ -1022,24 +1022,31 @@ export class CreateApplicationComponent implements OnInit {
     }
     if(this.editMode && this.environmentForm.valid){
       //if(this.userType.includes('Sapor')){
-        this.store.dispatch(ApplicationActions.saveEnvironments({environmentsData:this.envForm}));
+        this.store.dispatch(ApplicationActions.saveEnvironments({applicationId : this.applicationId,environmentsData:this.environmentForm.value}));
      // }
     }else{
-      this.store.dispatch(ApplicationActions.saveEnvironments({environmentsData:this.envForm}));
+      this.store.dispatch(ApplicationActions.saveEnvironments({applicationId : this.applicationId,environmentsData:this.environmentForm.value}));
     }
   }
 
   // Below function is use to submit group permission form
   SubmitGroupPermissionForm(){
-    this.groupForm = this.groupPermissionForm.value.userGroups;
-    console.log(this.groupPermissionForm.value.userGroups);   
-    this.store.dispatch(ApplicationActions.saveGroupPermissions({groupPermissionData:this.groupForm}));
-
+    this.groupForm = this.groupPermissionForm.value.userGroups;    
+    var userGroupPermissionDataToSave :any =[];
+    for(var i=0; i<this.groupPermissionForm.value.userGroups.length ; i++){
+      var groupName = this.userGroupData.find(x => x.userGroupId == this.groupPermissionForm.value.userGroups[i].userGroupId).userGroupName;
+      var obj ={
+        "userGroupId": this.groupPermissionForm.value.userGroups[i].userGroupId,
+     		"userGroupName" : groupName,
+	   		"permissionIds": this.groupPermissionForm.value.userGroups[i].permissionIds.filter(i => i.value == true).map(ele=>ele.name)
+      };
+      userGroupPermissionDataToSave.push(obj);
+    };
+    this.store.dispatch(ApplicationActions.saveGroupPermissions({applicationId: this.applicationId, groupPermissionData: userGroupPermissionDataToSave}));
   }
 
   // Below funcion is use to submit sapor data
-  SubmitSaporForm(serviceIndex){
-    
+  SubmitSaporForm(serviceIndex){    
     console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
     const postSapor = {
       applicationId : this.applicationId,
@@ -1113,6 +1120,7 @@ export class CreateApplicationComponent implements OnInit {
         this.mainForm.userGroups = this.groupPermissionForm.value.userGroups.map(usergroupData => {
           let usergroupObj:GroupPermission = {
             userGroupId: usergroupData.userGroupId,
+            userGroupName : usergroupData.userGroupName,
             permissionIds:[]
           }
           usergroupData.permissionIds.forEach(permission => {
@@ -1240,6 +1248,7 @@ onDeleteGateName(){
 
 onChangeTooltype(tooltype){
   console.log(tooltype);
+  this.toolType = tooltype;
   this.store.dispatch(ApplicationActions.getAccountToolType({connectorType : tooltype}));
   this.store.dispatch(ApplicationActions.getTemplatesToolType({connectorType : tooltype}));
 }

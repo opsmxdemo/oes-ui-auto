@@ -119,7 +119,6 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
             switchMap(() => {
-
                 return this.http.get<string[]>(this.environment.config.endPointUrl + 'platformservice/v1/usergroups').pipe(
                     map(resdata => {
                         return ApplicationAction.fetchUserGrops({ userGroupData: resdata })
@@ -137,7 +136,6 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.loadApp, ApplicationAction.enableEditMode),
             switchMap(() => {
-
                 return this.http.get<any>(this.environment.config.endPointUrl + 'platformservice/v1/permissions').pipe(
                     map(resdata => {
                         return ApplicationAction.fetchUserGropsPermissions({ userGroupPermissionsData: resdata })
@@ -229,9 +227,8 @@ export class ApplicationEffect {
    saveEnvironments = createEffect(() =>
    this.actions$.pipe(
        ofType(ApplicationAction.saveEnvironments),
-       switchMap(action => {
-           debugger
-           return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/environments', action.environmentsData).pipe(
+       switchMap(action => { 
+        return this.http.post<Environment>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+ action.applicationId+ '/environments', action.environmentsData).pipe(           
                map(resdata => {
                    return ApplicationAction.environmentDataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplicationEnvironments' });
                }),
@@ -244,12 +241,13 @@ export class ApplicationEffect {
    )
 )
 
+//dashboardservice/v2/applications/1/usergroups/permissions
  // Below effect is use for saved data in save group permission 
  saveGroupPermissions = createEffect(() =>
  this.actions$.pipe(
      ofType(ApplicationAction.saveGroupPermissions),
-     switchMap(action => {
-         return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v1/grouppermissions', action.groupPermissionData).pipe(
+     switchMap(action => {    
+         return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/usergroups/permissions', action.groupPermissionData).pipe(
              map(resdata => {
                  return ApplicationAction.groupPermissionDataSaved({ applicationName: 'applicationname comes here', dataType: 'createApplicationGroupPermissions' });
              }),
@@ -451,7 +449,7 @@ export class ApplicationEffect {
         )
     )
 
-    //visibilityservice/v1/approvalGates?serviceId=13
+   
     getApprovalGatesOfaService = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.getApprovalGatesOfaService),
@@ -546,6 +544,7 @@ onSaveTooltemplate = createEffect(() =>
     )
 )
 
+
 //Update tool template 
 onUpdateTooltemplate = createEffect(() =>
     this.actions$.pipe(
@@ -581,6 +580,10 @@ onGetTooltemplate = createEffect(() =>
         })
     )
 )
+///dashboardservice/v2/visibility/service/feature/configuration
+
+
+// Below code is used to save the sapor configured data
 
 //Effects to save the selected template and tool connector for the approval gate
 //PUT /approvalGates/{id}/toolConnectors/{connectorId}/template
