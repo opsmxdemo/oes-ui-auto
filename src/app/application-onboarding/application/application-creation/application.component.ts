@@ -103,6 +103,8 @@ export class CreateApplicationComponent implements OnInit {
   connectorId: any;
   approvalGatesOfaServiceList : any;
   toolType : any;
+  isVisibilityConfigured : boolean = false;
+  isVisibilityToolConnectorConfigured : boolean = false;
 
   showserviceGroup:boolean;
   configuredFeature  =[]
@@ -458,35 +460,38 @@ export class CreateApplicationComponent implements OnInit {
           this.gateData = response.approvalGateSavedData;
           this.gateId = response.approvalGateSavedData.id;
           //this.store.dispatch(ApplicationActions.getApprovalGates()); 
-          this.addConnector();
-          this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
+          //this.addConnector();
+          //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
           //this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({serviceId : this.serviceId}));      
         }
-        if(response.approvalGatesList != null && response.isApprovalGatesLoaded){
-          this.store.dispatch(ApplicationActions.isApprovalGatesLoaded());
-          this.approvalGatesList = response.approvalGatesList;
-          //this.gateId = this.approvalGatesList[0].id;
-          console.log(this.approvalGatesList);
-          //this.addConnector();
-          //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
-        }
+        // if(response.approvalGatesList != null && response.isApprovalGatesLoaded){
+        //   this.store.dispatch(ApplicationActions.isApprovalGatesLoaded());
+        //   this.approvalGatesList = response.approvalGatesList;
+        //   //this.gateId = this.approvalGatesList[0].id;
+        //   console.log(this.approvalGatesList);
+        //   //this.addConnector();
+        //   //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
+        // }
         if(response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded){
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
-          this.gateId = this.approvalGatesOfaServiceList[0].id;
-          console.log(this.approvalGatesOfaServiceList);
-          //this.addConnector();
-          //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
+          if(this.approvalGatesOfaServiceList.length > 0){
+            this.gateId = this.approvalGatesOfaServiceList[0].id;
+            console.log(this.approvalGatesOfaServiceList);
+            this.addConnector();
+            this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
+          }          
         }
         if(response.isApprovalGateEdited){
           this.isEditGateEnabled = false;
           this.store.dispatch(ApplicationActions.isApprovalGateEdited());
         }
-        if(response.configuredToolConnectorTypes && response.isConfiguredToolConnectorLoaded){
+        if(response.configuredToolConnectorTypes != null && response.isConfiguredToolConnectorLoaded){
           this.store.dispatch(ApplicationActions.isloadedConfiguredToolConnectorTypes());
           this.configuredToolTypes = response.configuredToolConnectorTypes;
+          console.log(this.configuredToolTypes);
         }
-        if(response.accountsForToolType && response.isAccountForToolTypeLoaded){
+        if(response.accountsForToolType != null && response.isAccountForToolTypeLoaded){
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
           this.accountsForTooltypes = response.accountsForToolType;
           //this.connectorId = this.accountsForTooltypes[0];
@@ -501,6 +506,37 @@ export class CreateApplicationComponent implements OnInit {
             this.tooltypeTemplateModel.nativeElement.click();
           }
           this.store.dispatch(ApplicationActions.getTemplatesToolType({connectorType : this.toolType}));
+        }
+        if (response.visibilityFeatureSavedData != null && response.isVisibilityFeatureSaved) {
+          this.store.dispatch(ApplicationActions.isVisibilityFeatureSaved());
+          console.log(response.visibilityFeatureSavedData);
+          this.gateData = response.visibilityFeatureSavedData;
+          this.gateId = response.visibilityFeatureSavedData.id;
+          //this.store.dispatch(ApplicationActions.getApprovalGates()); 
+          //this.addConnector();          
+          //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
+          this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));      
+        }
+        if(response.approvalGatesListOfaService  != null && response.isApprovalGatesOfaServiceLoaded){
+          this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
+          if(response.approvalGatesListOfaService.length > 0){
+            this.isVisibilityConfigured = true;
+          }else{
+            this.isVisibilityConfigured = false;
+             
+          }
+        }
+        if(response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedToolConnectorForaGate());
+          console.log("configuredToolConnectorData");
+          console.log(response.configuredToolConnectorData);
+          if(response.configuredToolConnectorData.length > 0){
+            this.isVisibilityToolConnectorConfigured = true;
+          }else{
+            this.isVisibilityToolConnectorConfigured = false;
+            this.addConnector();
+            this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
+          }
         }
         
       }
@@ -1067,9 +1103,12 @@ export class CreateApplicationComponent implements OnInit {
     var gateData = {
       "name" : this.gateForm.value.gateName,
       "serviceId" : this.serviceId
+    };
+    if(this.isVisibilityConfigured){
+      this.store.dispatch( ApplicationActions.saveApprovalGate({approvalGateData : gateData}));
+    }else{
+      this.store.dispatch(ApplicationActions.saveVisibilityFeature({approvalGateData : gateData}));  
     }
-    this.store.dispatch( ApplicationActions.saveApprovalGate({approvalGateData : gateData}));
-    //this.store.dispatch(ApplicationActions.getApprovalGates());  
   }
 
   //Below function is use to submit whole form and send request to backend
@@ -1173,6 +1212,9 @@ export class CreateApplicationComponent implements OnInit {
 
       
     }else if(item === 'visibility'){
+      //check gate already configured for the selectd service
+      console.log(this.serviceId);
+      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({serviceId : this.serviceId}));
 
     // defining reactive form for Visibility connector template Section
 
@@ -1213,7 +1255,7 @@ onEditGateName(){
   var approvalGateToEdit = {
     "id": this.gateId,
     "name": this.gateForm.value.gateName,
-    "serviceId": 1 //this.serviceId
+    "serviceId": 1
   }
   this.store.dispatch(ApplicationActions.editApprovalGate({gateId : this.gateId,gateDataToEdit : approvalGateToEdit }));
 }
@@ -1248,6 +1290,10 @@ saveTooltypeTemplate(){
   if(this.tooltypeTemplateModel !== undefined){
     this.tooltypeTemplateModel.nativeElement.click();
   }
+}
+
+deleteVisibilityFeature(){
+  this.store.dispatch(ApplicationActions.deleteVisibilityFeature({serviceId : this.serviceId, gateId : this.gateId}));
 }
 
 //Below function is use to fetched json from json editor

@@ -403,7 +403,7 @@
                                   </table>
                                   <div class="form-group mb-3 pl-1 text-muted">
                                     <form [formGroup]="gateForm">
-                                    <label>Gate Name</label>
+                                    <label>Approval Gate</label>
                                     <div class="d-flex  mr-2 align-items-center">
                                       <input type="text" class="form-control input_len" formControlName="gateName">
                                       <!-- <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Update gate name">
@@ -592,12 +592,12 @@
                                         <a class="btn btn-link btn-link-black" *ngIf="visibilityForm.value.visibilityConfig.length === 0 ? true : false " (click)="addConnector()">Add Visibility Config</a>
                                       </div> -->
 
-                                      <!-- <div class="col-12 pull-right" *ngIf = "templatesForToolType?.length > 0 ">
+                                      <div class="col-12 pull-right" *ngIf = "gateId != '' && gateId != null && gateId != undefined ">
                                         <div class="page_access text-right py-2 px-3">                                          
-                                          <button class="btn btn-primary ml-2" (click)="SubmitVisibilityForm()">Save</button>
-                                          <button class="btn btn-danger ml-1" (click)="cancelForm()">Delete</button>
+                                          <!-- <button class="btn btn-primary ml-2" (click)="SubmitVisibilityForm()">Save</button> -->
+                                          <button class="btn btn-danger ml-1" (click)="deleteVisibilityFeature()">Delete</button>
                                         </div>
-                                      </div> -->
+                                      </div>
                                       
                                     </div>
                                  

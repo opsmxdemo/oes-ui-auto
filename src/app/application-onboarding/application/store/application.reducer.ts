@@ -75,6 +75,15 @@ export interface State {
     toolconnectorwithTemplateData : any;
     approvalGatesListOfaService: any;
     isApprovalGatesOfaServiceLoaded: boolean;
+    isVisibilityFeatureSaved:boolean;
+    visibilityFeatureSavedData : any;	
+    configuredToolConnectorData: any;
+    isToolConnectoreForaGateLoaded: boolean;
+    deleteFeatureVisibilityMessage: any;
+    isDeletedVisibilityFeature: boolean;
+    serviceId : any;
+    gateId : any;
+	
 }
 
 export const initialState: State = {
@@ -127,6 +136,14 @@ export const initialState: State = {
     toolconnectorwithTemplateData : null,
     approvalGatesListOfaService: null,
     isApprovalGatesOfaServiceLoaded: false,
+    isVisibilityFeatureSaved : false,
+    visibilityFeatureSavedData : null,
+    configuredToolConnectorData: null,
+    isToolConnectoreForaGateLoaded: false,
+    deleteFeatureVisibilityMessage: null,
+    isDeletedVisibilityFeature: false,
+    serviceId : null,
+    gateId : null,
 
     // Sapor config variables
     saporConfigData : null,
@@ -447,7 +464,7 @@ export function ApplicationReducer(
                 isConfiguredToolConnectorLoaded: true
             })
         ),
-        on(ApplicationAction.isApprovalGatesLoaded,
+        on(ApplicationAction.isloadedConfiguredToolConnectorTypes,
             (state,action) => ({
                 ...state,
                 isConfiguredToolConnectorLoaded: false
@@ -535,6 +552,69 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isToolConnectorwithTemplateSaved: false
+            })
+        ),
+        on(ApplicationAction.saveVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                approvalGateData:action.approvalGateData,
+                isVisibilityFeatureSaved: false
+            })
+        ),
+        on(ApplicationAction.postSaveVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                visibilityFeatureSavedData:action.visibilityFeatureSavedData,
+                isVisibilityFeatureSaved: true
+            })
+        ),
+        on(ApplicationAction.isVisibilityFeatureSaved,
+            (state,action) => ({
+                ...state,
+                isVisibilityFeatureSaved: false
+            })
+        ),
+
+        on(ApplicationAction.getToolConnectorForaGate,
+            (state,action) => ({
+                ...state,
+                gateId : action.gateId,
+                isToolConnectoreForaGateLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadToolConnectorForaGate,
+            (state,action) => ({
+                ...state,
+                configuredToolConnectorData:action.configuredToolConnectorData,
+                isToolConnectoreForaGateLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedToolConnectorForaGate,
+            (state,action) => ({
+                ...state,
+                isToolConnectoreForaGateLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                gateId : action.gateId,
+                serviceId : action.serviceId,
+                isDeletedVisibilityFeature: false
+            })
+        ),
+        on(ApplicationAction.postDeleteVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                deleteFeatureVisibilityMessage:action.deleteFeatureVisibilityMessage,
+                isDeletedVisibilityFeature: true
+            })
+        ),
+        on(ApplicationAction.isDeleteVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                isDeletedVisibilityFeature: false
             })
         ),
         // Visibility Feature  Ends here //
