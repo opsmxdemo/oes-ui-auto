@@ -565,4 +565,24 @@ onSaveToolconnectorwithTemplate = createEffect(() =>
     )
 )
 
+// Below code is used to save the sapor configured data
+
+onSaveSaporData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveSaporConfig),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/feature/configuration', action.saporConfigData).pipe(
+                map(resdata => {
+                    this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                    return ApplicationAction.postSaveSaporConfig({ saporConfigSavedData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 }

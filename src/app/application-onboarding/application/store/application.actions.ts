@@ -98,6 +98,12 @@ export const loadedAPMGenerateCookbook = createAction('[Application] LoadedAPMGe
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');
 
+// Below action is used for sapor configuration
+
+export const saveSaporConfig = createAction('[Application] SaveSaporConfig', props<{saporConfigData:any}>());
+export const postSaveSaporConfig = createAction('[Application] PostSaveSaporConfig', props<{saporConfigSavedData:any}>());
+export const isSaporConfigSaved = createAction('[Application] isSaporConfigSaved');
+
 
 //Actions to Visibility Feature
 export const saveApprovalGate = createAction('[Application] SaveApprovalGate', props<{approvalGateData:any}>());

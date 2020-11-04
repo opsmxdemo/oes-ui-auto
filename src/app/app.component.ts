@@ -31,6 +31,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   endpointUrl: string;
   installationMode = '';
   hideTooltip: boolean = true;
+  approvalGateInstanceCount: string;
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -92,6 +93,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
           this.Sidebar = response.menu;
           this.applicationCount = response.appliactionData;
           this.installationMode = response.installationMode;
+          this.approvalGateInstanceCount = response.approvalInstalgateCount;
           if(response.apiErrorCollection.indexOf(true) > -1){
             this.apiError = true;
             this.router.navigate(['error']);
