@@ -42,6 +42,15 @@
           "disabled":false
        },
        {
+          "name":"Visibility",
+          "id":19.0,
+          "link":"visibility",
+          "subMenu":[
+             
+          ],
+          "disabled":false
+       },
+       {
           "name":"Policy Management",
           "id":3.0,
           "link":"policymanagement",

@@ -13,7 +13,11 @@ export interface State {
     serviceListLoading: boolean;
     applicationId: number;
     toolConnectors: [],
-    visibilityData: any
+    visibilityData: any,
+    approvalInstanceId: number,
+    connectorType: string,
+    visibilityDataLoaded: boolean,
+    connectorTypeLoading: boolean
 }
 
 export const initialState: State = {
@@ -24,7 +28,11 @@ export const initialState: State = {
     serviceListLoading: true,
     applicationId: null,
     toolConnectors: null,
-    visibilityData: null
+    visibilityData: null,
+    approvalInstanceId: null,
+    connectorType: null,
+    visibilityDataLoaded: null,
+    connectorTypeLoading: null
 };
 
 export function VisibilityReducer(
@@ -42,16 +50,21 @@ export function VisibilityReducer(
         on(Visibility.loadApplications,
             state => ({
                 ...state,
-                applicationListLoading: true
+                applicationListLoading: false
             })
         ),
         on(Visibility.fetchApplications,
             (state, action) => ({
                 ...state,
                 applicationList: action.applicationList,
-                applicationListLoading: false
+                applicationListLoading: true
             })
         ),
+        on(Visibility.stopLoadingApplication,
+            (state, action) => ({
+                ...state,
+                applicationListLoading: false
+            })),
         on(Visibility.loadServices,
             (state, action) => ({
                 ...state,
@@ -65,20 +78,34 @@ export function VisibilityReducer(
                 serviceListLoading: true
             })
         ),
+        on(Visibility.stopLoadingService,
+            (state, action) => ({
+                ...state,
+                serviceListLoading: false
+            })),
         on(Visibility.loadToolConnectors,
             (state, action) => ({
                 ...state,
+                id: action.id,
+               connectorTypeLoading : false
             })
         ),
         on(Visibility.fetchToolConnectors,
             (state, action) => ({
                 ...state,
-                toolConnectors: action.toolConnectors
+                toolConnectors: action.toolConnectors,
+               connectorTypeLoading : true
             })
         ),
+        on(Visibility.stopLoadingConnectors,
+            (state, action) => ({
+                ...state,
+               connectorTypeLoading : false
+            })),
         on(Visibility.loadVisibilityData,
             (state, action) => ({
                 ...state,
+                visibilityDataLoaded : true
             })
         ),
         on(Visibility.fetchVisbilityData,
@@ -86,7 +113,18 @@ export function VisibilityReducer(
                 ...state,
                 visibilityData: action.visibilityData
             })
-        )
+        ),
+        on(Visibility.postReview,
+            (state,action) => ({
+                ...state
+            })
+        ),
+        on(Visibility.fetchComments,
+            (state, action) => ({
+                ...state,
+                reviewComments: action.reviewComments
+            })
+        ),
     )(visibilityState, visibilityAction);
 };
 
