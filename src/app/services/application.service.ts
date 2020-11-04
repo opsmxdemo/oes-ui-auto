@@ -19,6 +19,11 @@ export class ApplicationService {
     //         catchError(this.handleError)
     //     );
     // }
+    getActiveGateCount(applicationId){
+        return this.httpClient.get(this.endpointUrl + 'visibilityservice/v1/applications/'+applicationId +'/approvalGateInstances/activeCount').pipe(
+            catchError(this.handleError)
+        )
+    }
     getServiceList(applicationId) {
         return this.httpClient.get(this.endpointUrl + 'dashboardservice/v1/applications/' + applicationId).pipe(
             catchError(this.handleError)
