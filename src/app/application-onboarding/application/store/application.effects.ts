@@ -211,7 +211,7 @@ export class ApplicationEffect {
   this.actions$.pipe(
       ofType(ApplicationAction.saveService),
       switchMap(action => {
-          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/182/service', action.serviceSaveData).pipe(
+          return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/service', action.serviceSaveData).pipe(
               map(resdata => {
                   this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
                   return ApplicationAction.savedService({ savedServiceResponse:resdata, dataType: 'createService' });
