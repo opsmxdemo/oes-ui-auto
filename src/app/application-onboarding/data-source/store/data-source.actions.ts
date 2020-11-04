@@ -27,3 +27,4 @@ export const DatasourceaccountDeleted = createAction('[Data-Source] DatasourceAc
 export const listErrorOccured = createAction('[Data-Source] ListErrorOccured', props<{errorMessage:string}>());
 export const deleteAPDatasourceAccount = createAction('[Data-Source] DeleteAPDatasourceAccount', props<{accountName:any,id:number,index:number}>())
 export const deleteOESDatasourceAccount = createAction('[Data-Source] DeleteOESDatasourceAccount', props<{accountName:any,index:number}>())
+export const deleteVisibilityDatasourceAccount = createAction('[Data-Source] DeleteVisibilityDatasourceAccount', props<{accountName:any,id:number,index:number}>())

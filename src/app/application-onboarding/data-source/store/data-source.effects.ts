@@ -67,7 +67,7 @@ export class DataSourceEffect {
         this.actions$.pipe(
             ofType(DataSourceAction.loadDatasourceList,DataSourceAction.loadAPDatasourceList),
             switchMap(() => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v2/credentials').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials').pipe(
                     map(resdata => {
                         return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
                     }),
@@ -84,7 +84,7 @@ export class DataSourceEffect {
         this.actions$.pipe(
             ofType(DataSourceAction.loadDatasourceList,DataSourceAction.loadVisibilityDatasourceList),
             switchMap(() => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'toolConnectors/configuredConnectorTypes').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors').pipe(
                     map(resdata => {
                         return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
                     }),
@@ -183,21 +183,24 @@ export class DataSourceEffect {
           ofType(DataSourceAction.createVisibilityDatasources),
           withLatestFrom(this.appStore.select('layout')),
           switchMap(([action,layoutState]) => {
+              debugger
               return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors', action.CreatedDataSource).pipe(
                   map(resdata => {
                       this.toastr.showSuccess(resdata['message'],'Success');
-                      
-                      const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
-                      const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
                       const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
-                      
-                      if(ap === 'deployment_verification'){
-                      this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                      }else if(sapor === 'sapor'){
-                      this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
-                      }else if(visibility === 'visibility'){
+
                       this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
-                      }
+
+                    //   const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                    //   const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                      debugger
+                    //   if(ap === 'deployment_verification'){
+                    //   this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                    //   }else if(sapor === 'sapor'){
+                    //   this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                    //   }else if(visibility === 'visibility'){
+                    //   this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
+                    //   }
                       return DataSourceAction.successResponse();
                   }),
                   catchError(errorRes => {
@@ -283,22 +286,28 @@ export class DataSourceEffect {
             switchMap(([action,layoutState]) => {
                 return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
-                        this.toastr.showSuccess(resdata['message'],'Success');
+                        this.toastr.showSuccess('Datasource "'+action.UpdatedDataSource.name+'" is updated successfully','Success');
+
+                        // this.toastr.showSuccess(resdata['message'],'Success');
                         if(layoutState.supportedFeatures){
                             console.log(layoutState.supportedFeatures);
                         }
-                        const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
-                        const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                        // const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                        // const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
                         const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
-
-                        if(ap === true){
-                        this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                        }else if(sapor === true){
-                        this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
-                        }else if(visibility === true){
-                        this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
+                        if(visibility === true){
+                            this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
                         }
                         return DataSourceAction.updatesuccessResponse();
+
+
+                        // if(ap === true){
+                        // this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        // }else if(sapor === true){
+                        // this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        // }else if(visibility === true){
+                        // }
+                        // return DataSourceAction.updatesuccessResponse();
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Datasource "'+action.UpdatedDataSource.name+'" is not updated due to: '+errorRes.error.message, 'ERROR')
@@ -346,6 +355,25 @@ export class DataSourceEffect {
          })
      )
  )
+
+  // Below effect is use for delete datasource Account .
+  deleteVisibilityDatasourceData = createEffect(() =>
+  this.actions$.pipe(
+      ofType(DataSourceAction.deleteVisibilityDatasourceAccount),
+      switchMap(action => {
+          return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/' + action.id).pipe(
+              map(resdata => {
+                  this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
+                  return DataSourceAction.DatasourceaccountDeleted({ index: action.index })
+              }),
+              catchError(errorRes => {
+                  this.toastr.showError('DataSource not deleted due to ' + errorRes.error.message, 'ERROR')
+                  return handleError(errorRes,'list');
+              })
+          );
+      })
+  )
+)
 
 
 

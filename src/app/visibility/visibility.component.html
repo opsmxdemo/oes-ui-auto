@@ -28,7 +28,7 @@
                     <th>Status</th>
                   </tr>
                   <ng-container *ngFor="let service of serviceList; let i=index;">
-                  <tr [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
+                  <tr  [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
                     <td class="service-selection" style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}
                       </td>
                   </tr>
@@ -37,13 +37,16 @@
                       <table class="gateNameSelection">
                         <tr>
                           <td>{{service.approvalGateName}} </td>
-                            <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status === 'Rejected','text-success':service.status === 'Approved','text-secondary':service.status === 'Waiting'}">{{service.status}}
+                            <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status.status === 'rejected','text-success':service.status.status === 'approved','text-activated':service.status.status === 'activated'}">{{service.status.status}}
                             </td>
                           </tr>
                       </table>
                     </td>
                   </tr>                   
-                </ng-container>               
+                </ng-container>                     
+                  <tr *ngIf="serviceListEmpty">
+                    <td align="center">No services!</td>
+                  </tr>          
                 </tbody>
               </table>
             </div>
@@ -113,10 +116,10 @@
                                 <!-- Grid row -->
 
                                 <div class="approvalStatus">
-                                    <div>Approval Status: </div>
-                                    <div *ngIf="selectedService.status === 'Approved'" style="color: #28a745">Approved</div>
-                                    <div *ngIf="selectedService.status === 'Rejected'" style="color: #dc3545;">Rejected</div>
-                                    <div *ngIf="selectedService.status === 'Waiting'" style="color: #000">Waiting</div>
+                                    <div>Gate Status: </div>
+                                    <div *ngIf="selectedService.status.status === 'approved'" style="color: #28a745; text-align: center;">Approved</div>
+                                    <div *ngIf="selectedService.status.status === 'rejected'" style="color: #dc3545; text-align: center;">Rejected</div>
+                                    <div *ngIf="selectedService.status.status === 'activated'" style="color: #000; text-align: center;">Activated</div>
                                 </div>
 
                                 <!-- Grid row -->
@@ -130,16 +133,36 @@
                                     </div>
 
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
-                                            class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('Approve', approvalGateComment)">Approve</button></div>
+                                            class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button></div>
                                             
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
-                                            class="btn btn-danger align-bottom" (click)="approvalGateReview('Reject', approvalGateComment)">Reject</button></div>
+                                            class="btn btn-danger align-bottom" (click)="approvalGateReview('reject', approvalGateComment)">Reject</button></div>
                                 </div>
 
 
                                 <div class="form-group row" *ngIf="!approvalWaitingStatus" >
-                                  <h5> Comments:</h5>
-                                  <div style="display: block;">{{approvalGateComment}}</div>
+                                  <table class="commentsText">
+                                    <tr>
+                                      <td><label >Comments:</label></td>
+                                      <td>
+                                        {{approvalGateComment}}
+                                      </td>
+                                  </tr>
+                                  <!-- <tr>
+                                      <td><label >Activated Time:</label></td>
+                                      <td>
+                                        {{approvalGateComment}}
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><label >Approval Time:</label></td>
+                                      <td>
+                                        {{approvalGateComment}}
+                                      </td>
+                                  </tr> -->
+                                </table>
+                                  
+                                    
                                   </div>
                                 <!-- Grid row -->
 
@@ -181,7 +204,7 @@
            
             <!-- </div> -->
             <!-- /.page-content -->
-            <div  class="row no-gutters">
+            <div  class="row no-gutters" *ngIf="approvalWaitingStatus">
                 <div class="col-sm-12 d-flex flex-column">
                     <div class="pt-1">
                       <!--  *ngFor="let connectors of connectorTypes"  -->
@@ -191,7 +214,7 @@
                         <ul> -->
                             <li class="nav-item" *ngFor="let connectors of toolConnectors" >
                                 <a class="nav-link" id="{{connectors.connectorType}}" data-toggle="tab" href="#{{connectors.connectorType}}" role="tab"
-                                    aria-controls="" aria-selected="false" (click)="onSelectingTab(connectors.connectorType)">{{connectors.connectorType}}</a> 
+                                    aria-controls="" aria-selected="false" (click)="onSelectingToolConnector(connectors.connectorType)" [ngClass]="{'active' : connectors.connectorType == selectedConnectorType}">{{connectors.connectorType}}</a> 
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link" id="autopilot-tab" data-toggle="tab" href="#autopilot" role="tab"
@@ -206,32 +229,49 @@
                                     aria-controls="jenkins" aria-selected="false">Jenkins</a>
                             </li> -->
                         </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane p-4 fade show active" id="{{selectedTab}}" role="tabpanel"
-                                aria-labelledby="">
-                                <div *ngIf="selectedTab == 'Jira'">
+                        <div class="tab-content" id="myTabContent" *ngIf="toolConnectors.length > 0">
+                            <div class="tab-pane p-4 fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
+                                <div *ngIf="connectorType == 'GIT'">
                                   <table class="table">
                                     <thead class="thead-light">
                                       <tr>
-                                        <th scope="col">Ticket#</th>
-                                        <th scope="col">Task ID</th>
-                                        <th scope="col">Description</th>
+                                        <th scope="col" class="visibilityCol1">Ticket#</th>
+                                        <th scope="col" class="visibilityCol2Git">Task ID</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr *ngFor="let eachData of visibilityData"> 
+                                      <tr *ngFor="let eachData of gitVisibilityData"> 
                                         <td>{{eachData.key}}</td>
                                         <td>{{eachData.value}}</td>
-                                        <td>{{eachData.data}}</td> 
+                                        <td>{{eachData.data | json}}</td> 
                                       </tr>
                                     </tbody>
                                   </table>
                                 </div>
-                                <div *ngIf="selectedTab == 'Git'">Git INFO2</div>
-                                <div *ngIf="selectedTab == 'Autopilot'">AUTOPILOT INFO3</div>
-                                <div *ngIf="selectedTab == 'Sonarqube'">SONAEQUBE INFO4</div>
+                                <div *ngIf="connectorType == 'JIRA'">
+                                  <table class="table">
+                                    <thead class="thead-light">
+                                      <tr>
+                                        <th scope="col" class="visibilityCol1">Ticket#</th>
+                                        <th scope="col" class="visibilityCol2Jira">Task ID</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let eachData of jiraVisibilityData"> 
+                                        <td>{{eachData.key}}</td>
+                                        <td>{{eachData.value}}</td>
+                                        <td *ngIf="eachData.data">{{eachData.data | json}} </td> 
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div *ngIf="connectorType == 'Autopilot'">AUTOPILOT INFO3</div>
+                                <div *ngIf="connectorType == 'Sonarqube'">SONAEQUBE INFO4</div>
                             </div>
                         </div>
+                        <div class="tab-content p-4 text-center" *ngIf="toolConnectors.length == 0">Tool Connectors not present!</div>
                     </div>
                     <!-- /.tab-lined -->
                     <!-- /.bottom_btns -->

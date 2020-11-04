@@ -84,6 +84,10 @@ export interface State {
     serviceId : any;
     gateId : any;
 	
+    templateId: any;
+    templateData: any;
+    isTemplateDataForToolTypeLoaded: boolean;
+    isTemplateDataForToolTypeUpdated: boolean;
 }
 
 export const initialState: State = {
@@ -144,6 +148,10 @@ export const initialState: State = {
     isDeletedVisibilityFeature: false,
     serviceId : null,
     gateId : null,
+    templateId: null,
+    templateData: null,
+    isTemplateDataForToolTypeLoaded:false,
+    isTemplateDataForToolTypeUpdated:false,
 
     // Sapor config variables
     saporConfigData : null,
@@ -510,6 +518,48 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isTemplateForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.getTemplateDataForTooltype,
+            (state,action) => ({
+                ...state,
+                templateId : action.templateId,
+                isTemplateDataForToolTypeLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadTemplateDataForTooltype,
+            (state,action) => ({
+                ...state,
+                templateData:action.templateData,
+                isTemplateDataForToolTypeLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedTemplateData,
+            (state,action) => ({
+                ...state,
+                isTemplateDataForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.updateTemplateForTooltype,
+            (state,action) => ({
+                ...state,
+                updatedTemplateForToolTypeData : action.updatedTemplateForToolTypeData,
+                isTemplateDataForToolTypeUpdated: false
+            })
+        ),
+        on(ApplicationAction.putSaveTemplateForTooltype,
+            (state,action) => ({
+                ...state,
+                templateForToolTypeSavedData:action.templateForToolTypeSavedData,
+                isTemplateDataForToolTypeUpdated: true
+            })
+        ),
+        on(ApplicationAction.isTemplateForTooltypeUpdated,
+            (state,action) => ({
+                ...state,
+                isTemplateDataForToolTypeUpdated: false
             })
         ),
 
