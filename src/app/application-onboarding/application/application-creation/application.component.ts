@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
@@ -32,6 +32,7 @@ export class CreateApplicationComponent implements OnInit {
   @ViewChild('metricModel') metricModel: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) tooltypeTemplateEditorJson: JsonEditorComponent;
   @ViewChild('tooltypeTemplateModel') tooltypeTemplateModel: ElementRef;
+  @ViewChild('newtemplate') newtemplate: ElementRef;
   
 
   userType = '';                                            // It contain type of user i.e, AP, OES or both.
@@ -99,7 +100,7 @@ export class CreateApplicationComponent implements OnInit {
   selectedTTTemplateTab ='tooltype-template-editor';
   public tooltypeTemplateEditor: JsonEditorOptions;   
   public tooltypeTemplateData: any = null;
-  templateId : any;
+  templateId : any = [];
   connectorId: any;
   approvalGatesOfaServiceList : any;
 
@@ -119,12 +120,16 @@ export class CreateApplicationComponent implements OnInit {
    
   ];
   selectedFeature=[];
+  toolTemplateForm: FormGroup;
+  toolTypeRowHoverd: any = [];
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
               public appStore: Store<fromApp.AppState>,
               public router: Router,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private render: Renderer2,
+              private eleRef: ElementRef) { }
 
   ngOnInit() {
     this.showserviceGroup=true;
@@ -827,6 +832,7 @@ export class CreateApplicationComponent implements OnInit {
         templateName: new FormControl(''),
       })
     );
+    this.toolTypeRowHoverd.push(false);
   }
 
   // Below function is use to remove exist environment 
@@ -1023,7 +1029,7 @@ export class CreateApplicationComponent implements OnInit {
   saveConnector(index){
     console.log(this.visibilityForm.value.visibilityConfig[index]);
     var dataToSaveToolConnectorwithTemplate = {
-      templateId : this.templateId
+      templateId : this.templateId[index]
     };
     this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({gateId: this.gateId, connectorId : this.connectorId, toolconnectorwithTemplateData : dataToSaveToolConnectorwithTemplate}));
   }
@@ -1211,11 +1217,34 @@ onChangeAccountofTooltype(account){
 
 }
 
-onChangeTemplateofTooltype(template){
-  console.log(template);
-  this.templateId = template;
-  console.log(this.visibilityForm.value);
+onChangeTemplateofTooltype(template,index){
+  if(template == '+') {
+    this.templateId[index] = '';
+    let visibilityConfigFormArray = this.visibilityForm.get('visibilityConfig') as FormArray
+    visibilityConfigFormArray.controls[index].get('templateName').setValue('');
+    let toolType = visibilityConfigFormArray.controls[index].get('connectorType').value;
 
+    if(!toolType) {
+      // Show validation on Tool type field and alert user to select Tool type first.
+    }
+
+    this.newtemplate.nativeElement.click();
+    this.toolTemplateForm = new FormGroup({
+      toolType: new FormControl(toolType),
+      name: new FormControl('',[Validators.required]),
+      template: new FormControl('')
+    });
+    return;
+  }
+  console.log(template);
+  this.templateId[index] = template;
+}
+
+saveToolTypeTemplateForm() {
+  if(this.toolTemplateForm.valid) {
+    this.tooltypeTemplateData = this.toolTemplateForm.value;
+    this.saveTooltypeTemplate();
+  }
 }
 
 saveTooltypeTemplate(){
