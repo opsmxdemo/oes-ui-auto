@@ -141,6 +141,12 @@ export function DataSourceReducer(
                 listLoading: true
             })
         ),
+        on(DataSourceAction.deleteVisibilityDatasourceAccount,
+            (state,action) => ({
+                ...state,
+                listLoading: true
+            })
+        ),
         on(DataSourceAction.DatasourceaccountDeleted,
             (state,action) => ({
                 ...state,
