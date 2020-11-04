@@ -546,6 +546,42 @@ onSaveTooltemplate = createEffect(() =>
     )
 )
 
+//Update tool template 
+onUpdateTooltemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.updateTemplateForTooltype),
+        switchMap((action) => {
+            return this.http.put<any>(`${this.environment.config.endPointUrl}visibilityservice/v1/visibilityToolTemplates/${action.updatedTemplateForToolTypeData.id}`, action.updatedTemplateForToolTypeData).pipe(
+                map(resdata => {
+                    return ApplicationAction.putSaveTemplateForTooltype({ templateForToolTypeSavedData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Get Template Data
+onGetTooltemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getTemplateDataForTooltype),
+        switchMap((action) => {
+            return this.http.get<any>(`${this.environment.config.endPointUrl}visibilityservice/v1/visibilityToolTemplates/${action.templateId}`).pipe(
+                map(resdata => {
+                    return ApplicationAction.loadTemplateDataForTooltype({ templateData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 //Effects to save the selected template and tool connector for the approval gate
 //PUT /approvalGates/{id}/toolConnectors/{connectorId}/template
 onSaveToolconnectorwithTemplate = createEffect(() =>

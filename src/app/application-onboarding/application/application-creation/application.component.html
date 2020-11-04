@@ -557,8 +557,13 @@
                                                             {{template.name}}</option>
                                                         <option value="+">+ Add Template</option>   
                                                       </select>
-                                                      <span class="ml-2 editTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Template" *ngIf="templateId[i]">
-                                                        <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
+                                                      <span class="ml-2 editTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Template" *ngIf="templateId[i]" (click)="editTemplate(i)">
+                                                        <a class="btn-link">
+                                                          <i class="fas fa-pencil-alt"></i>
+                                                        </a>
+                                                      </span>
+                                                      <span class="ml-2 editTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Template" *ngIf="templateId[i]" [hidden]="true">
+                                                        <a data-toggle="modal" data-target="#newTemplateForTooltype" data-backdrop="static" data-keyboard="false" class="btn-link" #edittemplate>
                                                           <i class="fas fa-pencil-alt"></i>
                                                         </a>
                                                       </span>
@@ -873,7 +878,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{{templateEditMode ? 'Edit Template':'New Template'}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" #tooltypeTemplateModel>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeTemplatePopup()" #tooltypeTemplateModel>
           <i class="fa fa-times"></i>
         </button>
       </div>
