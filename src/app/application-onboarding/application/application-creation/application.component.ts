@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, Renderer2 } from '@angular/core';
 import { FormGroup, Validators, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { SharedService } from 'src/app/services/shared.service';
@@ -32,6 +32,8 @@ export class CreateApplicationComponent implements OnInit {
   @ViewChild('metricModel') metricModel: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) tooltypeTemplateEditorJson: JsonEditorComponent;
   @ViewChild('tooltypeTemplateModel') tooltypeTemplateModel: ElementRef;
+  @ViewChild('newtemplate') newtemplate: ElementRef;
+  @ViewChild('edittemplate') edittemplate: ElementRef;
   
 
   userType = '';                                            // It contain type of user i.e, AP, OES or both.
@@ -96,10 +98,10 @@ export class CreateApplicationComponent implements OnInit {
   configuredToolTypes : any;
   templatesForToolType : any;
   accountsForTooltypes : any;
-  selectedTTTemplateTab ='tooltype-template-editor';
+  selectedTTTemplateTab ='tooltype-template-form';
   public tooltypeTemplateEditor: JsonEditorOptions;   
   public tooltypeTemplateData: any = null;
-  templateId : number;
+  templateId : any = [];
   connectorId: any;
   approvalGatesOfaServiceList : any;
   toolType : any;
@@ -119,12 +121,19 @@ export class CreateApplicationComponent implements OnInit {
    
   ];
   selectedFeature=[];
+  toolTemplateForm: FormGroup;
+  toolTypeRowHoverd: any = [];
+  templateDataForToolType: any;
+  editTemplateTriggered: boolean;
+  editTemplateTriggeredID: any;
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
               public appStore: Store<fromApp.AppState>,
               public router: Router,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private render: Renderer2,
+              private eleRef: ElementRef) { }
 
   ngOnInit() {
     this.showserviceGroup=true;
@@ -162,6 +171,8 @@ export class CreateApplicationComponent implements OnInit {
         }
       }
     )
+
+    this.editTemplateForm();
 
     // fetching data from store and check editMode mode is enable or disabled
     this.store.select(fromFeature.selectApplication).subscribe(
@@ -495,6 +506,9 @@ export class CreateApplicationComponent implements OnInit {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
           this.templatesForToolType = response.templatesForToolType;
         }
+
+        this.loadEditTemplate(response);
+
         if(response.isToolConnectorwithTemplateSaved !=null && response.isTemplateForTooltypeSaved){
           this.store.dispatch(ApplicationActions.isTemplateForTooltypeSaved());
           if(this.tooltypeTemplateModel != undefined){
@@ -510,6 +524,15 @@ export class CreateApplicationComponent implements OnInit {
     this.tooltypeTemplateEditor = new JsonEditorOptions()
     this.tooltypeTemplateEditor.mode = 'code';
     this.tooltypeTemplateEditor.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
+  }
+
+  editTemplateForm() {
+    this.toolTemplateForm = new FormGroup({
+      id: new FormControl(''),
+      toolType: new FormControl(''),
+      name: new FormControl('',[Validators.required]),
+      template: new FormControl('')
+    });
   }
 
   // Below function is use to define all forms exist in application On boarding component
@@ -827,6 +850,7 @@ export class CreateApplicationComponent implements OnInit {
         templateName: new FormControl(''),
       })
     );
+    this.toolTypeRowHoverd.push(false);
   }
 
   // Below function is use to remove exist environment 
@@ -1045,7 +1069,7 @@ export class CreateApplicationComponent implements OnInit {
   saveConnector(index){
     console.log(this.visibilityForm.value.visibilityConfig[index]);
     var dataToSaveToolConnectorwithTemplate = {
-      templateId : +this.templateId
+      templateId : this.templateId[index]
     };
     this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({gateId: this.gateId, connectorId : this.connectorId, toolconnectorwithTemplateData : dataToSaveToolConnectorwithTemplate}));
   }
@@ -1235,19 +1259,88 @@ onChangeAccountofTooltype(account){
 
 }
 
-onChangeTemplateofTooltype(template){
-  console.log(template);
-  this.templateId = template;
-  console.log(this.visibilityForm.value);
+onChangeTemplateofTooltype(template,index){
+  if(template == '+') {
+    this.templateId[index] = '';
+    let visibilityConfigFormArray = this.visibilityForm.get('visibilityConfig') as FormArray
+    visibilityConfigFormArray.controls[index].get('templateName').setValue('');
+    let toolType = visibilityConfigFormArray.controls[index].get('connectorType').value;
 
+    if(!toolType) {
+      // Show validation on Tool type field and alert user to select Tool type first.
+    }
+
+    this.toolTemplateForm.setValue({
+      id: null,
+      toolType: toolType,
+      name: '',
+      template: ''
+    });
+    this.toolTemplateForm.controls.id.disable();
+    this.selectedTTTemplateTab = 'tooltype-template-form';
+    setTimeout(() => {
+      this.newtemplate.nativeElement.click();
+    }, 100);
+    
+    return;
+  }
+  console.log(template);
+  this.templateId[index] = template;
+}
+
+editTemplate(index) {
+  if(this.templateId[index]) {
+    this.templateEditMode = true;
+    this.store.dispatch(ApplicationActions.getTemplateDataForTooltype({templateId: this.templateId[index]}));
+    this.editTemplateTriggered = true;
+    this.editTemplateTriggeredID = this.templateId[index];
+  }
+}
+
+loadEditTemplate(response) {
+  if(response.templateData && response.isTemplateDataForToolTypeLoaded){
+    this.store.dispatch(ApplicationActions.isLoadedTemplateData());
+    this.templateDataForToolType = response.templateData;
+    console.log(this.templateDataForToolType);
+    if(this.editTemplateTriggered) {
+      this.toolTemplateForm.controls.id.enable();
+      this.toolTemplateForm.setValue({
+        id: this.templateDataForToolType.id,
+        toolType: this.templateDataForToolType.toolType,
+        name: this.templateDataForToolType.name,
+        template: this.templateDataForToolType.template
+      });
+      this.editTemplateTriggered = false;
+      setTimeout(() => {
+        this.edittemplate.nativeElement.click();
+      }, 100);
+    }
+  }
+}
+
+saveToolTypeTemplateForm() {
+  if(this.toolTemplateForm.valid) {
+    this.tooltypeTemplateData = this.toolTemplateForm.value;
+    this.saveTooltypeTemplate();
+  }
 }
 
 saveTooltypeTemplate(){
   console.log(this.tooltypeTemplateData);
-  this.store.dispatch(ApplicationActions.saveTemplateForTooltype({templateForToolTypeData : this.tooltypeTemplateData}));
+  if(this.tooltypeTemplateData.id) {
+    this.store.dispatch(ApplicationActions.updateTemplateForTooltype({updatedTemplateForToolTypeData : this.tooltypeTemplateData}));
+  }
+  else {
+    this.store.dispatch(ApplicationActions.saveTemplateForTooltype({templateForToolTypeData : this.tooltypeTemplateData}));
+  }
+  
   if(this.tooltypeTemplateModel !== undefined){
     this.tooltypeTemplateModel.nativeElement.click();
   }
+}
+
+closeTemplatePopup() {
+  this.templateEditMode = false;
 }
 
 //Below function is use to fetched json from json editor

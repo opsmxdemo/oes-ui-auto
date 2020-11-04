@@ -134,6 +134,14 @@ export const getTemplatesToolType = createAction('[Application] GetTemplatesTool
 export const loadTemplateToolType = createAction('[Application] LoadTemplateToolType', props<{templatesForToolType:any}>());
 export const isLoadedTemplateToolType = createAction('[Application] IsLoadedTemplateToolType');
 
+export const getTemplateDataForTooltype = createAction('[Application] GetTemplateForTooltype', props<{templateId:any}>());
+export const loadTemplateDataForTooltype = createAction('[Application] LoadTemplateForTooltype', props<{templateData:any}>());
+export const isLoadedTemplateData = createAction('[Application] IsLoadedTemplateData');
+
+export const updateTemplateForTooltype = createAction('[Application] UpdateTemplateForTooltype', props<{updatedTemplateForToolTypeData:any}>());
+export const putSaveTemplateForTooltype = createAction('[Application] PutSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());
+export const isTemplateForTooltypeUpdated = createAction('[Application] IsTemplateForTooltypeUpdated');
+
 export const saveTemplateForTooltype = createAction('[Application] SaveTemplateForTooltype', props<{templateForToolTypeData:any}>());
 export const postSaveTemplateForTooltype = createAction('[Application] PostSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());
 export const isTemplateForTooltypeSaved = createAction('[Application] IsTemplateForTooltypeSaved');

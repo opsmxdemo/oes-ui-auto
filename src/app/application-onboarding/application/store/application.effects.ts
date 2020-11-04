@@ -544,14 +544,15 @@ onSaveTooltemplate = createEffect(() =>
     )
 )
 
-//Effects to save the selected template and tool connector for the approval gate
-onSaveToolconnectorwithTemplate = createEffect(() =>
+
+//Update tool template 
+onUpdateTooltemplate = createEffect(() =>
     this.actions$.pipe(
-        ofType(ApplicationAction.saveToolConnectorWithTemplate),
+        ofType(ApplicationAction.updateTemplateForTooltype),
         switchMap((action) => {
-            return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
+            return this.http.put<any>(`${this.environment.config.endPointUrl}visibilityservice/v1/visibilityToolTemplates/${action.updatedTemplateForToolTypeData.id}`, action.updatedTemplateForToolTypeData).pipe(
                 map(resdata => {
-                    return ApplicationAction.postSaveToolConnectorWithTemplate({ toolconnectorwithTemplateSavedData: resdata});                
+                    return ApplicationAction.putSaveTemplateForTooltype({ templateForToolTypeSavedData: resdata});                
                 }),
                 catchError(errorRes => {
                     //this.toastr.showError('Error', 'ERROR')
@@ -562,19 +563,37 @@ onSaveToolconnectorwithTemplate = createEffect(() =>
     )
 )
 
+//Get Template Data
+onGetTooltemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getTemplateDataForTooltype),
+        switchMap((action) => {
+            return this.http.get<any>(`${this.environment.config.endPointUrl}visibilityservice/v1/visibilityToolTemplates/${action.templateId}`).pipe(
+                map(resdata => {
+                    return ApplicationAction.loadTemplateDataForTooltype({ templateData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
 ///dashboardservice/v2/visibility/service/feature/configuration
 
 
 // Below code is used to save the sapor configured data
 
-onSaveSaporData = createEffect(() =>
+//Effects to save the selected template and tool connector for the approval gate
+//PUT /approvalGates/{id}/toolConnectors/{connectorId}/template
+onSaveToolconnectorwithTemplate = createEffect(() =>
     this.actions$.pipe(
-        ofType(ApplicationAction.saveSaporConfig),
+        ofType(ApplicationAction.saveToolConnectorWithTemplate),
         switchMap((action) => {
-            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/feature/configuration', action.saporConfigData).pipe(
+            return this.http.put<any>(this.environment.config.endPointUrl + 'approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
                 map(resdata => {
-                    this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
-                    return ApplicationAction.postSaveSaporConfig({ saporConfigSavedData: resdata});                
+                    return ApplicationAction.postSaveToolConnectorWithTemplate({ toolconnectorwithTemplateSavedData: resdata});                
                 }),
                 catchError(errorRes => {
                     //this.toastr.showError('Error', 'ERROR')
