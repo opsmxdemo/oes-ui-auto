@@ -1,9 +1,9 @@
-<div class="main_content p-0 bg-white">
+<div class="main_content p-0">
     <div class="d-flex">
-        <div class="leftBox bg-white mw-250">
-            <div class="leftBox_header text-muted text-center">
+        <div class="leftBox mw-330">
+            <div class="leftBox_header text-muted text-left">
                 <form class="example-form">
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width gate-search">
                     <input type="text"
                           placeholder="Select Application"
                           aria-label="Number"
@@ -20,35 +20,39 @@
             </div>
             <!-- /.leftBox_header -->
 
-            <div class="leftBox_body">
-                <table class="table table-sm table-avenir table-no-bordered table-no-dots " *ngIf="serviceList != undefined">
-                <tbody>
-                  <tr *ngIf="serviceList.length > 0">
+            <div class="service-list">
+              <div class="table table-sm table-avenir table-no-bordered table-no-dots " *ngIf="serviceList != undefined">
+                <!-- <tbody> -->
+                  <!-- <tr *ngIf="serviceList.length > 0">
                     <th >Service</th>
                     <th>Status</th>
-                  </tr>
-                  <ng-container *ngFor="let service of serviceList; let i=index;">
-                  <tr  [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
-                    <td class="service-selection" style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}
-                      </td>
-                  </tr>
-                  <tr class="gateNametr">
-                    <td  colspan="2">
+                  </tr> -->
+                <div class="mb-2" *ngFor="let service of serviceList; let i=index;" style="border: 1px solid #e6ecf1;border-radius: 5px;border-radius: 5px;cursor: pointer;" [ngClass]="{'bg-white': service.serviceId == selectedServiceId}"  [ngStyle]="{'box-shadow': service.serviceId == selectedServiceId ? '0 0 3px 1px rgb(47 65 81 / 53%)' : 'rgb(47 65 81 / 20%) 0px 0px 3px 1px'}">
+                  <div style="padding: 5px 10px;font-size: 13px;border-top-left-radius: 5px;border-top-right-radius: 5px;" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'rgb(128 128 128 / 14%)', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}">
+                    <span class="service-selection" style="" (click)="onClickService(service)">{{service.serviceName}}
+                    </span>
+                  </div>
+                  <div class="">
+                    <div style="padding: 5px 10px;">
                       <table class="gateNameSelection">
                         <tr>
                           <td>{{service.approvalGateName}} </td>
-                            <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status.status === 'rejected','text-success':service.status.status === 'approved','text-activated':service.status.status === 'activated'}">{{service.status.status}}
-                            </td>
-                          </tr>
+                          <td style="text-align: right;">
+                              <span [ngClass]= "{'text-danger':service.status.status === 'rejected','text-success':service.status.status === 'approved','text-activated':service.status.status === 'activated','text-waiting':service.status.status === 'waiting'}"
+                                    [title]="service.status.status">
+                                <i class="fas" [ngClass]= "{'fa-minus-circle':service.status.status === 'rejected','fa-check-circle':service.status.status === 'approved','fa-toggle-on':service.status.status === 'activated','fa-clock':service.status.status === 'waiting'}"></i>
+                              </span>
+                          </td>
+                        </tr>
                       </table>
-                    </td>
-                  </tr>                   
-                </ng-container>                     
-                  <tr *ngIf="serviceListEmpty">
-                    <td align="center">No services!</td>
-                  </tr>          
-                </tbody>
-              </table>
+                    </div>
+                  </div>                   
+                </div>                     
+                  <div *ngIf="serviceListEmpty">
+                    <span align="center">No services!</span>
+                  </div>          
+                <!-- </tbody> -->
+              </div>
             </div>
 
 
@@ -91,16 +95,26 @@
             <!-- // <div class="content mt-5"> -->
             <!--content inner-->
             <div class="content__inner" >
-                <div  class="container overflow-hidden" >
+                <div  class="" style="width: 100%; padding: 25px;">
                     <!--multisteps-form-->
                     <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
                 {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
               </button> -->
-                    <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
+                    <!-- <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
                         <mat-step [stepControl]="firstFormGroup">
-                            <!-- <form [formGroup]="firstFormGroup"> -->
                             <form>
-                                <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template>
+
+                            </form>
+                         
+                        </mat-step>
+
+                    </mat-horizontal-stepper> -->
+                    
+                    <blockquote class="blockquote">
+                      <p class="mb-0">{{selectedService.approvalGateName}}</p>
+                    </blockquote>
+                    <hr class="my-4">
+                                <!-- <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template> -->
                                 <!-- <mat-form-field>
                       <mat-label>Name</mat-label>
                       <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
@@ -131,6 +145,17 @@
                                         <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea>
 
                                     </div>
+
+                                    <!-- <label class="col-sm-1 col-form-label">Activated:</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea>
+                                    </div>
+
+                                    <label class="col-sm-1 col-form-label">Reviewed:</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea> -->
+
+                                    <!-- </div> -->
 
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
                                             class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button></div>
@@ -170,9 +195,6 @@
                                 <div class="pull-right">
                                 </div>
                                 
-                            </form>
-                         
-                        </mat-step>
                      
                         <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
                   <form [formGroup]="secondFormGroup">
@@ -195,7 +217,6 @@
                     <button mat-button (click)="stepper.reset()">Reset</button>
                   </div>
                 </mat-step> -->
-                    </mat-horizontal-stepper>
                 </div>
                 <!-- <div class="pull-right" *ngIf="!showApprovalHistory">
                     <a style="padding-right: 20px;" class="showElementHover" (click)="getApprovalHistory()">Approval History</a>
@@ -229,7 +250,7 @@
                                     aria-controls="jenkins" aria-selected="false">Jenkins</a>
                             </li> -->
                         </ul>
-                        <div class="tab-content" id="myTabContent" *ngIf="toolConnectors.length > 0">
+                        <div class="tab-content" id="myTabContent" *ngIf="showToolConnectorSection">
                             <div class="tab-pane p-4 fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
                                 <div *ngIf="connectorType == 'GIT'">
                                   <table class="table">
@@ -271,7 +292,7 @@
                                 <div *ngIf="connectorType == 'Sonarqube'">SONAEQUBE INFO4</div>
                             </div>
                         </div>
-                        <div class="tab-content p-4 text-center" *ngIf="toolConnectors.length == 0">Tool Connectors not present!</div>
+                        <div class="tab-content p-4 text-center" *ngIf="!showToolConnectorSection">Tool Connectors not present!</div>
                     </div>
                     <!-- /.tab-lined -->
                     <!-- /.bottom_btns -->
