@@ -28,12 +28,12 @@
                     <th>Status</th>
                   </tr> -->
                 <div class="mb-2" *ngFor="let service of serviceList; let i=index;" style="border: 1px solid #e6ecf1;border-radius: 5px;border-radius: 5px;cursor: pointer;" [ngClass]="{'bg-white': service.serviceId == selectedServiceId}"  [ngStyle]="{'box-shadow': service.serviceId == selectedServiceId ? '0 0 3px 1px rgb(47 65 81 / 53%)' : 'rgb(47 65 81 / 20%) 0px 0px 3px 1px'}">
-                  <div style="padding: 5px 10px;font-size: 13px;border-top-left-radius: 5px;border-top-right-radius: 5px;" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'rgb(128 128 128 / 14%)', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}" (click)="onClickService(service)">
-                    <span class="service-selection" >{{service.serviceName}}
+                  <div style="padding: 5px 10px;font-size: 13px;border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom: 1px solid rgb(218 218 218);" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'white', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}" (click)="onClickService(service)">
+                    <span class="service-selection" style="">{{service.serviceName}}
                     </span>
                   </div>
                   <div class="">
-                    <div style="padding: 5px 10px;">
+                    <div style="padding: 5px 10px; background: white;">
                       <table class="gateNameSelection">
                         <tr>
                           <td>{{service.approvalGateName}} </td>
