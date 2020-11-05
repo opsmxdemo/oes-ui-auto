@@ -68,6 +68,7 @@ export function VisibilityReducer(
         on(Visibility.loadServices,
             (state, action) => ({
                 ...state,
+                applicationId: action.applicationId,
                 serviceListLoading: false
             })
         ),

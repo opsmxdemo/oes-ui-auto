@@ -48,6 +48,7 @@ export class VisibilityComponent implements OnInit {
   approvalGateInstanceId: number;
   // connectorTypes: any[];
   connectorType: any;
+  showToolConnectorSection: boolean = false;
   // approvalGateComments: string;
   approvalGateResponse: string;
   approvalWaitingStatus: boolean = true;         //When status is waiting its true else Approve / Reject its false
@@ -57,12 +58,22 @@ export class VisibilityComponent implements OnInit {
   gitVisibilityData: any;
   jiraVisibilityData: any;
   selectedConnectorType: string;
+  paramsApplicationName: string;
+  paramsApplicationId: any;
 
   // showApprovalHistory: boolean= false;
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     console.log(this.route);
+
+    //assign the parameter is available
+    this.paramsApplicationName = this.route.snapshot.params.applicationName;
+    console.log(this.paramsApplicationName);
+    this.paramsApplicationId = this.route.snapshot.params.applicationId;
+
+
+
     this.getAllApplications();
     this.store.select('visibility').subscribe(
       (resData) => {         
@@ -72,8 +83,7 @@ export class VisibilityComponent implements OnInit {
           this.initFilterApplication();
           // to set initial Application 
           if(this.firstTimeLoad){
-            this.applicationFormControl.setValue(this.applicationList[0].name);
-            this.onSelectingApplication(this.applicationList[0].name);
+              this.onSelectingApplication(this.applicationList[0].name);
             this.firstTimeLoad = false;
           }
         }
@@ -107,6 +117,9 @@ export class VisibilityComponent implements OnInit {
             if(this.toolConnectors.length > 0){
             this.connectorType = this.toolConnectors[0]['connectorType'];
             this.onSelectingToolConnector(this.connectorType); 
+            this.showToolConnectorSection = true;
+            }else{
+              this.showToolConnectorSection = false;
             }
         }
         if(resData.visibilityData != null && resData.visibilityDataLoaded){
@@ -126,7 +139,7 @@ export class VisibilityComponent implements OnInit {
 
     setTimeout(()=>{      
       this.store.dispatch(Visibility.loadApplications());
-    }, 1500);
+    }, 2500);
   }
 
   //Filtering the application in input field
@@ -149,13 +162,26 @@ export class VisibilityComponent implements OnInit {
   }
 
   onSelectingApplication(selectedApplication){
-    this.selectedApplication = selectedApplication;
-    this.selectedApplicationId = this.applicationList.find(item => {
-      if(item.name == this.selectedApplication){
-        return item.applicationId;
-      }
-    })
-    this.store.dispatch(Visibility.loadServices(this.selectedApplicationId));
+
+    if((this.paramsApplicationId != null || this.paramsApplicationId != undefined) && this.firstTimeLoad){
+      this.selectedApplication = this.paramsApplicationName;
+      this.applicationFormControl.setValue(this.paramsApplicationName);
+      console.log('Params ID: ', this.paramsApplicationId);
+      this.store.dispatch(Visibility.loadServices({applicationId: this.paramsApplicationId}));
+    }else{
+
+      this.selectedApplication = selectedApplication;
+      console.log("selected APP: ", this.selectedApplication);
+      
+      this.selectedApplicationId = this.applicationList.find(item => {
+        if(item.name == this.selectedApplication){
+          return item.applicationId;
+        }
+      }).applicationId;
+      this.applicationFormControl.setValue(this.selectedApplication); 
+      console.log('Application ID: ', this.selectedApplicationId);
+      this.store.dispatch(Visibility.loadServices({applicationId: this.selectedApplicationId}));
+    }
 
   }
 

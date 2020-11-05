@@ -137,16 +137,16 @@ fetchRerunLogsResults = createEffect(() =>
             // platform-service-ui change
             return this.http.put(this.environment.config.endPointUrl +'visibilityservice/v1/approvalGateInstances/'+ action.approvalInstanceId + '/review', action.postData).pipe(                  
                 map(resdata => {  
-                   if(resdata['status']){
+                   if(resdata['statusCode']){
                     this.toastr.showSuccess(resdata['message'], 'SUCCESS');
                     this.store.dispatch(Visibility.loadServices({applicationId: action.applicationId})); 
-                   }else if(!resdata['status']){
-                    this.toastr.showError('Not able to submit the request', 'ERROR')  
+                   }else if(!resdata['statusCode']){
+                    this.toastr.showError('Not able to submit the request, please try again', 'ERROR')  
                    }
                    return Visibility.fetchComments({reviewComments:resdata});
                 }),
                 catchError(errorRes => {
-                    this.toastr.showError('PLease try again', 'ERROR')
+                    // this.toastr.showError('PLease try again', 'ERROR')
                     return handleError(errorRes);
                 })
             );
