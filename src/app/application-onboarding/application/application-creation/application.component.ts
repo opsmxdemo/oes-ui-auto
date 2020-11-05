@@ -96,6 +96,8 @@ export class CreateApplicationComponent implements OnInit {
   approvalGatesList : any;
   isEditGateEnabled : boolean = false;
   configuredToolTypes : any;
+  toolTypes : any;
+  toolTypesConfiguredForGate : any;
   templatesForToolType : any;
   accountsForTooltypes : any;
   selectedTTTemplateTab ='tooltype-template-form';
@@ -128,6 +130,7 @@ export class CreateApplicationComponent implements OnInit {
   templateDataForToolType: any;
   editTemplateTriggered: boolean;
   editTemplateTriggeredID: any;
+  addNewConnectorAllowed :boolean = false;
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -488,7 +491,7 @@ export class CreateApplicationComponent implements OnInit {
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
           if(this.approvalGatesOfaServiceList.length > 0){
             this.gateId = this.approvalGatesOfaServiceList[0].id;
-            console.log(this.approvalGatesOfaServiceList);
+            //console.log(this.approvalGatesOfaServiceList);
             this.addConnector();
             this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
           }          
@@ -500,7 +503,9 @@ export class CreateApplicationComponent implements OnInit {
         if(response.configuredToolConnectorTypes != null && response.isConfiguredToolConnectorLoaded){
           this.store.dispatch(ApplicationActions.isloadedConfiguredToolConnectorTypes());
           this.configuredToolTypes = response.configuredToolConnectorTypes;
-          console.log(this.configuredToolTypes);
+          this.toolTypes = this.configuredToolTypes;          
+          //console.log(this.configuredToolTypes);
+          this.addConnector();
         }
         if(response.accountsForToolType != null && response.isAccountForToolTypeLoaded){
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
@@ -514,7 +519,7 @@ export class CreateApplicationComponent implements OnInit {
 
         this.loadEditTemplate(response);
 
-        if(response.isToolConnectorwithTemplateSaved !=null && response.isTemplateForTooltypeSaved){
+        if(response.templateForToolTypeSavedData !=null && response.isTemplateForTooltypeSaved){
           this.store.dispatch(ApplicationActions.isTemplateForTooltypeSaved());
           if(this.tooltypeTemplateModel != undefined){
             this.tooltypeTemplateModel.nativeElement.click();
@@ -523,7 +528,7 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.visibilityFeatureSavedData != null && response.isVisibilityFeatureSaved) {
           this.store.dispatch(ApplicationActions.isVisibilityFeatureSaved());
-          console.log(response.visibilityFeatureSavedData);
+          //console.log(response.visibilityFeatureSavedData);
           this.gateData = response.visibilityFeatureSavedData;
           this.gateId = response.visibilityFeatureSavedData.id;
           //this.store.dispatch(ApplicationActions.getApprovalGates()); 
@@ -536,23 +541,40 @@ export class CreateApplicationComponent implements OnInit {
           if(response.approvalGatesListOfaService.length > 0){
             this.isVisibilityConfigured = true;
           }else{
-            this.isVisibilityConfigured = false;
-             
+            this.isVisibilityConfigured = false;             
           }
         }
         if(response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded){
           this.store.dispatch(ApplicationActions.isLoadedToolConnectorForaGate());
-          console.log("configuredToolConnectorData");
-          console.log(response.configuredToolConnectorData);
+          //console.log("configuredToolConnectorData");
+          //console.log(response.configuredToolConnectorData);
           if(response.configuredToolConnectorData.length > 0){
             this.isVisibilityToolConnectorConfigured = true;
+            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele=>ele.connectorType);  
+            let toolTypesValue = this.configuredToolTypes.filter( 
+              function(i) { 
+                  return this.indexOf(i) < 0; 
+              }, 
+              this.toolTypesConfiguredForGate 
+            );          
+            setTimeout(() => {
+              this.toolTypes = toolTypesValue; 
+              console.log(this.toolTypes); 
+              this.addConnector(); 
+            }, 100);
+          
+          
           }else{
             this.isVisibilityToolConnectorConfigured = false;
-            this.addConnector();
+            //this.addConnector();
             this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
           }
         }
-        
+        //response.toolconnectorwithTemplateSavedData !=null && 
+        if(response.isToolConnectorwithTemplateSaved){
+          this.store.dispatch(ApplicationActions.isToolConnectorWithTemplateSaved());
+          this.addNewConnectorAllowed = true;          
+        }        
       }
     )
 
@@ -877,8 +899,13 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.environmentForm.get('environments')).removeAt(index);
   }
 
+  addNewConnector(){
+    this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
+    
+  }
   //Below function is use to add more permission group
   addConnector() {
+    this.addNewConnectorAllowed = false;    
     (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
       new FormGroup({
         connectorType: new FormControl('', Validators.required),

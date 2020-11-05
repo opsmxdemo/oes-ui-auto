@@ -345,7 +345,7 @@ export class ApplicationEffect {
             switchMap((action) => {
                 return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.id).pipe(
                     map(resdata => {
-                        this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS')
+                        this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS');
                         return ApplicationAction.appDeletedSuccessfully({ index: action.index });
                     }),
                     catchError(errorRes => {
@@ -419,7 +419,7 @@ export class ApplicationEffect {
                 return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+ action.gateId, action.gateDataToEdit).pipe(
                     map(resdata => {
                         return ApplicationAction.postEditApprovalGate({ message: resdata});
-                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
@@ -438,7 +438,7 @@ export class ApplicationEffect {
                 return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+action.gateId).pipe(
                     map(resdata => {
                         return ApplicationAction.postDeleteApprovalGate({ message: resdata});
-                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
@@ -585,13 +585,13 @@ onGetTooltemplate = createEffect(() =>
 // Below code is used to save the sapor configured data
 
 //Effects to save the selected template and tool connector for the approval gate
-//PUT /approvalGates/{id}/toolConnectors/{connectorId}/template
 onSaveToolconnectorwithTemplate = createEffect(() =>
     this.actions$.pipe(
         ofType(ApplicationAction.saveToolConnectorWithTemplate),
         switchMap((action) => {
-            return this.http.put<any>(this.environment.config.endPointUrl + 'approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
+            return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
                 map(resdata => {
+                    this.toastr.showSuccess('Tool connector saved successfully!!', 'SUCCESS');
                     return ApplicationAction.postSaveToolConnectorWithTemplate({ toolconnectorwithTemplateSavedData: resdata});                
                 }),
                 catchError(errorRes => {
