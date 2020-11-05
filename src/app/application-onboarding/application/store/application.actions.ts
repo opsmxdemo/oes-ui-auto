@@ -153,3 +153,15 @@ export const isToolConnectorWithTemplateSaved = createAction('[Application] IsTo
 export const getApprovalGatesOfaService = createAction('[Application] GetApprovalGatesOfaService', props<{serviceId : any}>());
 export const loadApprovalGatesOfaService = createAction('[Application] LoadApprovalGatesOfaService', props<{approvalGatesListOfaService:any}>());
 export const isApprovalGatesOfaServiceLoaded = createAction('[Application] IsApprovalGatesOfaServiceLoaded');
+
+export const saveVisibilityFeature = createAction('[Application] SaveVisibilityFeature', props<{approvalGateData:any}>());
+export const postSaveVisibilityFeature = createAction('[Application] PostSaveVisibilityFeature', props<{visibilityFeatureSavedData:any}>());
+export const isVisibilityFeatureSaved = createAction('[Application] IsVisibilityFeatureSaved');
+
+export const getToolConnectorForaGate = createAction('[Application] GetToolConnectorForaGate', props<{gateId : any}>());
+export const loadToolConnectorForaGate = createAction('[Application] LoadToolConnectorForaGate', props<{configuredToolConnectorData:any}>());
+export const isLoadedToolConnectorForaGate = createAction('[Application] IsLoadedToolConnectorForaGate');
+
+export const deleteVisibilityFeature = createAction('[Application] DeleteVisibilityFeature', props<{serviceId : any,gateId:any}>());
+export const postDeleteVisibilityFeature = createAction('[Application] PostDeleteVisibilityFeature', props<{deleteFeatureVisibilityMessage:any}>());
+export const isDeleteVisibilityFeature = createAction('[Application] IsDeleteVisibilityFeature');

@@ -153,7 +153,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.applicationId).pipe(
+                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId).pipe(
                     map(resdata => {
 
                         return ApplicationAction.fetchAppData({ appData: resdata, applicationId: action.applicationId })
@@ -172,7 +172,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.createApplication),
             switchMap(action => {
-                return this.http.post<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application', action.appData).pipe(
+                return this.http.post<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application', action.appData).pipe(
                     map(resdata => {
                         return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'createApplication' });
                     }),
@@ -192,7 +192,7 @@ export class ApplicationEffect {
          switchMap(action => {
              return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application', action.applicationData).pipe(
                  map(resdata => {
-                    this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                    this.toastr.showSuccess('Application Saved Successfully', 'SUCCESS');
                     return ApplicationAction.savedApplication({ savedApplicationResponse: resdata,dataType: 'createApplication' });                     
                  }),
                  catchError(errorRes => {
@@ -211,7 +211,7 @@ export class ApplicationEffect {
       switchMap(action => {
           return this.http.post<SaveApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/service', action.serviceSaveData).pipe(
               map(resdata => {
-                  this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                  this.toastr.showSuccess('Service Saved Successfully', 'SUCCESS');
                   return ApplicationAction.savedService({ savedServiceResponse:resdata, dataType: 'createService' });
               }),
               catchError(errorRes => {
@@ -266,7 +266,7 @@ export class ApplicationEffect {
             ofType(ApplicationAction.updateApplication),
             withLatestFrom(this.store.select(fromFeature.selectApplication)),
             switchMap(([action, applicationState]) => {
-                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + applicationState.applicationId, action.appData).pipe(
+                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + applicationState.applicationId, action.appData).pipe(
                     map(resdata => {
                         return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
                     }),
@@ -343,9 +343,9 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.appDelete),
             switchMap((action) => {
-                return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.id).pipe(
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.id).pipe(
                     map(resdata => {
-                        this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS')
+                        this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS');
                         return ApplicationAction.appDeletedSuccessfully({ index: action.index });
                     }),
                     catchError(errorRes => {
@@ -419,7 +419,7 @@ export class ApplicationEffect {
                 return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+ action.gateId, action.gateDataToEdit).pipe(
                     map(resdata => {
                         return ApplicationAction.postEditApprovalGate({ message: resdata});
-                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
@@ -438,7 +438,7 @@ export class ApplicationEffect {
                 return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+action.gateId).pipe(
                     map(resdata => {
                         return ApplicationAction.postDeleteApprovalGate({ message: resdata});
-                        this.store.dispatch(ApplicationAction.getApprovalGates());
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
@@ -449,13 +449,12 @@ export class ApplicationEffect {
         )
     )
 
-   
+       
     getApprovalGatesOfaService = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.getApprovalGatesOfaService),
             switchMap((action) => {                
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates?serviceId='+ action.serviceId).pipe(
-                //return this.http.get('/assets/data/visibility/approvalGatesList.json').pipe(
                     map(resdata => {
                         return ApplicationAction.loadApprovalGatesOfaService({ approvalGatesListOfaService: resdata});
                     }),
@@ -586,13 +585,13 @@ onGetTooltemplate = createEffect(() =>
 // Below code is used to save the sapor configured data
 
 //Effects to save the selected template and tool connector for the approval gate
-//PUT /approvalGates/{id}/toolConnectors/{connectorId}/template
 onSaveToolconnectorwithTemplate = createEffect(() =>
     this.actions$.pipe(
         ofType(ApplicationAction.saveToolConnectorWithTemplate),
         switchMap((action) => {
-            return this.http.put<any>(this.environment.config.endPointUrl + 'approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
+            return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.gateId +'/toolConnectors/' + action.connectorId+ '/template', action.toolconnectorwithTemplateData).pipe(
                 map(resdata => {
+                    this.toastr.showSuccess('Tool connector saved successfully!!', 'SUCCESS');
                     return ApplicationAction.postSaveToolConnectorWithTemplate({ toolconnectorwithTemplateSavedData: resdata});                
                 }),
                 catchError(errorRes => {
@@ -602,6 +601,62 @@ onSaveToolconnectorwithTemplate = createEffect(() =>
             );
         })
     )
+)
+
+
+//Effect to save Visibility configuration for a service for the first time
+onSaveVisibilityFeature = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveVisibilityFeature),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/visibility/service/feature/configuration', action.approvalGateData).pipe(
+                map(resdata => {
+                    return ApplicationAction.postSaveVisibilityFeature({ visibilityFeatureSavedData: resdata});
+                    //this.store.dispatch(ApplicationAction.getApprovalGates());
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to get all connectors (along with the selected templates) already added for this approval gate
+getToolConnectorforaGate = createEffect(() =>
+this.actions$.pipe(
+      ofType(ApplicationAction.getToolConnectorForaGate),
+      switchMap((action) => {                    
+          return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/'+ action.gateId+'/toolConnectors').pipe(          
+              map(resdata => {
+                  return ApplicationAction.loadToolConnectorForaGate({ configuredToolConnectorData: resdata});
+              }),
+              catchError(errorRes => {
+                  //this.toastr.showError('Error', 'ERROR')
+                  return handleError(errorRes);
+              })
+          );
+      })
+  )
+)
+
+ // Effect to delete  visibility feature
+ onDeleteVisibilityFeature = createEffect(() =>
+ this.actions$.pipe(
+     ofType(ApplicationAction.deleteVisibilityFeature),
+     switchMap((action) => {
+         return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/visibility/service/' +action.serviceId + '/feature/configuration/' +action.gateId).pipe(
+             map(resdata => {
+                 return ApplicationAction.postDeleteVisibilityFeature({ deleteFeatureVisibilityMessage: resdata});                 
+             }),
+             catchError(errorRes => {
+                 //this.toastr.showError('Error', 'ERROR')
+                 return handleError(errorRes);
+             })
+         );
+     })
+ )
 )
 
 }
