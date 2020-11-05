@@ -25,15 +25,12 @@
       <div class="data_listArea">
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
           <div class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
-            [ngClass]="{'active':i === finalSelectedTabNumber,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
-                        'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
-                        'application-lastrun-review':application.applicationStatus === 'Review',
-                        'application-lastrun-empty': application.applicationStatus === ''}" >
+      >
                         
                         <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
                 <h3>{{application.applicationName}} &nbsp;&nbsp;
-                  <span *ngIf="application.activeCount > 0 " > 
+                  <span *ngIf="application.activeCount > 0 "> 
                     <a  [routerLink]="['/visibility',application.applicationName,application.applicationId]"  class="badge badge-info">View <i class="fa fa-eye" aria-hidden="true"></i></a></span>
                 </h3> 
                 <span class="datetime">{{application.date | date:'medium'}} </span>
