@@ -149,8 +149,8 @@
                   </option>
                 </select>
 
-                <i class="far fa-comment-alt ml-2 text-primary clickable" [ngClass]="{'blink_me':log.id == selectedClusterInfo?.id && commentNotificationMessage!=''}" aria-hidden="true" id="criticalityComment" data-toggle="dropdown"></i>
-                <span class="badge badge-info comment-badge clickable" *ngIf="log.id == selectedClusterInfo?.id" [innerHTML]='commentNotificationMessage' id="criticalityComment" data-toggle="dropdown"></span>
+                <i class="far fa-comment-alt ml-2 text-primary clickable" [ngClass]="{'blink_me':log.id == selectedClusterInfo?.id && commentNotificationMessage!=''}" aria-hidden="true" id="criticalityComment" data-toggle="dropdown" data-placement="top" title="{{log.feedbackComment}}"></i>
+                <span class="badge badge-info comment-badge clickable" *ngIf="log.id == selectedClusterInfo?.id" [innerHTML]='commentNotificationMessage' id="criticalityComment" data-toggle="dropdown" ></span>
                   
                 <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right" aria-labelledby="criticalityComment">
                   <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
@@ -170,8 +170,8 @@
                   </div>
                 </div>
               </div>
-              <div class="dropdown error_dropdown dropdown-log" *ngIf="logAnalysisResults.build_usecase && log.clusterTagInfo?.tag != null ">
-                <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag" 
+              <div class="dropdown error_dropdown dropdown-log" *ngIf="logAnalysisResults.build_usecase && eventTab == 'unexpected'">
+                <select #selectClusterTag (change)="changeClusterTag($event, log,  selectClusterTag.value, clusterCommentsList[indexOfelement])" [(ngModel)]="log.clusterTagInfo.tag!=null ? log.clusterTagInfo.tag : unclassified" 
                   data-toggle="dropdown"
                   class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
                   <!-- [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
@@ -179,7 +179,7 @@
                     {{tag}}
                   </option> 
                 </select>
-                <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
+                <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown" data-placement="top" title="{{log.clusterTagInfo.comments}}"></i>
                 <span class="badge badge-info comment-badge clickable" *ngIf="log.id == selectedClusterInfo?.id" [innerHTML]='tagCommentNotificationMessage' id="clustertagComment" data-toggle="dropdown"></span>
                 <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right" aria-labelledby="clustertagComment">
                   <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
