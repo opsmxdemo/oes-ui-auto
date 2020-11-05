@@ -1,6 +1,6 @@
 <div class="main_content p-0">
     <div class="d-flex">
-        <div class="leftBox mw-330">
+        <div class="leftBox mw-330 bg-white pt-4">
             <div class="leftBox_header text-muted text-left">
                 <form class="example-form">
                   <mat-form-field class="example-full-width gate-search">
@@ -28,8 +28,8 @@
                     <th>Status</th>
                   </tr> -->
                 <div class="mb-2" *ngFor="let service of serviceList; let i=index;" style="border: 1px solid #e6ecf1;border-radius: 5px;border-radius: 5px;cursor: pointer;" [ngClass]="{'bg-white': service.serviceId == selectedServiceId}"  [ngStyle]="{'box-shadow': service.serviceId == selectedServiceId ? '0 0 3px 1px rgb(47 65 81 / 53%)' : 'rgb(47 65 81 / 20%) 0px 0px 3px 1px'}">
-                  <div style="padding: 5px 10px;font-size: 13px;border-top-left-radius: 5px;border-top-right-radius: 5px;" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'rgb(128 128 128 / 14%)', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}">
-                    <span class="service-selection" style="" (click)="onClickService(service)">{{service.serviceName}}
+                  <div style="padding: 5px 10px;font-size: 13px;border-top-left-radius: 5px;border-top-right-radius: 5px;" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'rgb(128 128 128 / 14%)', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}" (click)="onClickService(service)">
+                    <span class="service-selection" >{{service.serviceName}}
                     </span>
                   </div>
                   <div class="">
@@ -84,7 +84,7 @@
 
       
 
-        <div class="page-content flex-grow-1" *ngIf="selectedService != undefined">
+        <div class="page-content flex-grow-1 bg-white pt-4 pl-4" *ngIf="selectedService != undefined">
             <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
                 <h3><img src="../../assets/images/application-icon.png" alt="" />{{selectedApplication}} <span *ngIf="selectedService != undefined">» {{selectedService.serviceName}}</span>
                 </h3>
@@ -130,10 +130,11 @@
                                 <!-- Grid row -->
 
                                 <div class="approvalStatus">
-                                    <div>Gate Status: </div>
-                                    <div *ngIf="selectedService.status.status === 'approved'" style="color: #28a745; text-align: center;">Approved</div>
-                                    <div *ngIf="selectedService.status.status === 'rejected'" style="color: #dc3545; text-align: center;">Rejected</div>
-                                    <div *ngIf="selectedService.status.status === 'activated'" style="color: #000; text-align: center;">Activated</div>
+                                    <div>Gate Status</div>
+                                    <div *ngIf="selectedService.status.status === 'approved'" style="color: #28a745; text-align: center; width: 200px;">Approved</div>
+                                    <div *ngIf="selectedService.status.status === 'rejected'" style="color: #dc3545; text-align: center; width: 200px;">Rejected</div>
+                                    <div *ngIf="selectedService.status.status === 'activated'" style="color: #007bff; text-align: center; width: 200px;">Activated</div>
+                                    <div *ngIf="selectedService.status.status === 'waiting'" style="color: #000; text-align: center; width: 200px;">Waiting</div>
                                 </div>
 
                                 <!-- Grid row -->
