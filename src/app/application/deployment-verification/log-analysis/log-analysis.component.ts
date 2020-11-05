@@ -114,6 +114,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   sensitivityChanged = false;
   tagCommentNotificationMessage = "";
   logId :any = undefined;
+  unclassified="UNCLASSIFIED"
   
 
   constructor(public store: Store<fromFeature.State>,
@@ -255,6 +256,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       (resData) => {
         if (resData.logsResults != null && resData.isLogsResultsLoaded){
           this.store.dispatch(LogAnalysisAction.loadedLogResults()); 
+          this.store.dispatch(LogAnalysisAction.loadLogTopics());
           this.logAnalysisResults = resData.logsResults;
           if (this.logAnalysisResults != null) {      
             this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
@@ -353,13 +355,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
               this.islogAnalysisAvailable = false;
             }
       
-            if (this.fetchLogTopics != null) {
-              this.clusterTagList = this.fetchLogTopics.clusterTags;
-              // fetching comments for each logs
-              this.logAnalysisData.clusters.forEach((item) => {
-                this.clusterCommentsList.push(item.clusterTagInfo.comments);
-              });
-            }
+            
             
       
             if (this.logAnalysisResults.scores) {
@@ -409,8 +405,19 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.islogAnalysisAvailable = false;
           }
         }
-        if(resData.fetchLogTopics != null){
-          this.fetchLogTopics = resData.fetchLogTopics;        
+        if(resData.logTopicsList != null){
+          
+          this.fetchLogTopics = resData.logTopicsList;
+          this.clusterTagList = this.fetchLogTopics.clusterTags;
+              
+              // fetching comments for each logs
+              if(this.logAnalysisClusters!=null)
+              {
+                this.logAnalysisData.clusters.forEach((item) => {
+                  this.clusterCommentsList.push(item.clusterTagInfo.comments);
+                });
+              }
+                      
         }
         if (resData.logsEventResults != null && resData.isLogsEventsLoaded ) {
           this.store.dispatch(LogAnalysisAction.loadedEventsLogs());
@@ -651,7 +658,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
   //function calling when cluster tag value changes
   changeClusterTag(e, log, value, clusterTag) {
-    this.tagCommentNotificationMessage = "Logs cluster tag Comments";
+    this.tagCommentNotificationMessage = "Reclassification Comments";
     setTimeout(function () {
       this.tagCommentNotificationMessage = "";
     }.bind(this), 5000);        
