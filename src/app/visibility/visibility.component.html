@@ -95,16 +95,26 @@
             <!-- // <div class="content mt-5"> -->
             <!--content inner-->
             <div class="content__inner" >
-                <div  class="container overflow-hidden" >
+                <div  class="" style="width: 100%; padding: 25px;">
                     <!--multisteps-form-->
                     <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
                 {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
               </button> -->
-                    <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
+                    <!-- <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
                         <mat-step [stepControl]="firstFormGroup">
-                            <!-- <form [formGroup]="firstFormGroup"> -->
                             <form>
-                                <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template>
+
+                            </form>
+                         
+                        </mat-step>
+
+                    </mat-horizontal-stepper> -->
+                    
+                    <blockquote class="blockquote">
+                      <p class="mb-0">{{selectedService.approvalGateName}}</p>
+                    </blockquote>
+                    <hr class="my-4">
+                                <!-- <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template> -->
                                 <!-- <mat-form-field>
                       <mat-label>Name</mat-label>
                       <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
@@ -135,6 +145,17 @@
                                         <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea>
 
                                     </div>
+
+                                    <!-- <label class="col-sm-1 col-form-label">Activated:</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea>
+                                    </div>
+
+                                    <label class="col-sm-1 col-form-label">Reviewed:</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea> -->
+
+                                    <!-- </div> -->
 
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
                                             class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button></div>
@@ -174,9 +195,6 @@
                                 <div class="pull-right">
                                 </div>
                                 
-                            </form>
-                         
-                        </mat-step>
                      
                         <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
                   <form [formGroup]="secondFormGroup">
@@ -199,7 +217,6 @@
                     <button mat-button (click)="stepper.reset()">Reset</button>
                   </div>
                 </mat-step> -->
-                    </mat-horizontal-stepper>
                 </div>
                 <!-- <div class="pull-right" *ngIf="!showApprovalHistory">
                     <a style="padding-right: 20px;" class="showElementHover" (click)="getApprovalHistory()">Approval History</a>
@@ -233,7 +250,7 @@
                                     aria-controls="jenkins" aria-selected="false">Jenkins</a>
                             </li> -->
                         </ul>
-                        <div class="tab-content" id="myTabContent" *ngIf="toolConnectors.length > 0">
+                        <div class="tab-content" id="myTabContent" *ngIf="showToolConnectorSection">
                             <div class="tab-pane p-4 fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
                                 <div *ngIf="connectorType == 'GIT'">
                                   <table class="table">
@@ -275,7 +292,7 @@
                                 <div *ngIf="connectorType == 'Sonarqube'">SONAEQUBE INFO4</div>
                             </div>
                         </div>
-                        <div class="tab-content p-4 text-center" *ngIf="toolConnectors.length == 0">Tool Connectors not present!</div>
+                        <div class="tab-content p-4 text-center" *ngIf="!showToolConnectorSection">Tool Connectors not present!</div>
                     </div>
                     <!-- /.tab-lined -->
                     <!-- /.bottom_btns -->
