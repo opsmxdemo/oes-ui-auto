@@ -264,7 +264,6 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             if (this.logAnalysisData.clusters) {
               if(this.logAnalysisData.clusters.length > 0){
                 this.islogAnalysisAvailable = true;
-                debugger
                 for(var i=0;i<this.logAnalysisData.clusters.length;i++)
                 {
                   if(this.logAnalysisData.clusters[i].clusterTagInfo.tag==null)
