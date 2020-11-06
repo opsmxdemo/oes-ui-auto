@@ -1,6 +1,6 @@
 {
-	"versionString": "Version: OES 3.1",
-	"gitHash": "asdaksjdldj4leldjladk",
+	"versionString": "Version: OES 3.1.1",
+	"gitHash": "290ccfd276c050469a082b9c2c1b460435e7e1ae",
 	"state": "release",
-	"buildDate": "20200914"
+	"buildDate": "20201106"
 }
