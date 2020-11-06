@@ -77,10 +77,10 @@ export class ApplicationDashboardComponent implements OnInit {
         if (resdata.appData != null) {
           this.dashboardLoading = resdata.dashboardLoading;
           this.applicationData = resdata.appData;
-          this.supportVisibility();
+          this.supportVisibility(resdata.appData);
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
-          this.applicationFinalData = resdata.appData;
+          //this.applicationFinalData = resdata.appData;
           if (this.previouSelectedApp != null) {
             this.previouSelectedApp = this.previouSelectedApp;
           } else {
@@ -90,7 +90,7 @@ export class ApplicationDashboardComponent implements OnInit {
           let index = -1;
           let i = 0;
 
-          this.applicationFinalData.forEach((ele, index) => {
+          resdata.appData.forEach((ele, index) => {
             // if(!ele['visibilityFlag']){
             //   ele['activeCount'] = 0;
             // }
@@ -336,16 +336,10 @@ export class ApplicationDashboardComponent implements OnInit {
     return href;
   }
 
-  //  1. application count should be greater than 0
-  //3. in the loop call the service function
-  //2. loop the application data
-  //4. in the service function call the get count api
-  //5. in the subscribe method of the service call.. add the count to the application data
-
-  supportVisibility() {
+  supportVisibility(appD:any) {
     let appFinal = new Array(this.applicationFinalData.length);
 
-    this.applicationFinalData.forEach((ele, index) => {
+    appD.forEach((ele, index) => {
       let appVar = { ...ele };
       if (appVar['visibilityFlag']) {
         this.applicationService.getActiveGateCount(ele.applicationId).subscribe((activeCountNumber: any) => {

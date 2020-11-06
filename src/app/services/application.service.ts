@@ -25,7 +25,7 @@ export class ApplicationService {
         )
     }
     getServiceList(applicationId) {
-        return this.httpClient.get(this.endpointUrl + 'dashboardservice/v1/applications/' + applicationId).pipe(
+        return this.httpClient.get(this.endpointUrl + 'dashboardservice/v2/applications/' + applicationId).pipe(
             catchError(this.handleError)
         );
     }
