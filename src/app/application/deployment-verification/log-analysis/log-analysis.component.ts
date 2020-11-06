@@ -114,7 +114,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   sensitivityChanged = false;
   tagCommentNotificationMessage = "";
   logId :any = undefined;
-  unclassified="UNCLASSIFIED"
+  selectedTags=[];
+  
   
 
   constructor(public store: Store<fromFeature.State>,
@@ -265,6 +266,19 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             if (this.logAnalysisData.clusters) {
               if(this.logAnalysisData.clusters.length > 0){
                 this.islogAnalysisAvailable = true;
+                for(var i=0;i<this.logAnalysisData.clusters.length;i++)
+                {
+                  if(this.logAnalysisData.clusters[i].clusterTagInfo.tag==null)
+                  {
+                    this.selectedTags[this.logAnalysisData.clusters[i].id]="UNCLASSIFIED"
+                  }
+                  else{
+                    this.selectedTags[this.logAnalysisData.clusters[i].id]=this.logAnalysisData.clusters[i].clusterTagInfo.tag
+                  }
+                  
+                  
+                }
+               console.log(this.selectedTags)
                 this.criticalArray = this.logAnalysisData.clusters.filter(function (el) {
                   return el.color == 'dark red';
                 });
