@@ -136,7 +136,7 @@
                     </span>
                   </div>
                   <div class="form-group" >
-                    <label>Image Source</label>
+                    <label>Image Source <i data-toggle="tooltip" data-placement="top" data-original-title="Image Source" class="fa fa-question-circle" aria-hidden="true"></i></label>
                     <select class="form-control" formControlName="imageSource" (change)="onImageSourceSelect($event.target.value)"
                     [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''">
                       <option value="" [disabled]="true">Select</option>
@@ -190,12 +190,8 @@
   
                     <div class="col-12" formArrayName="services">
                       <div class="row" *ngFor="let serviceArr of servicesForm.get('services')['controls']; let i=index">
-                        <div class="col-12 " [formGroupName]="i" *ngIf="this.servicesForm.value.services.length == i+1 || editMode">
-                          <div class="col-12 ">
-                            <hr class="ml-0 mt-3 mb-3" />
-                          </div>
-                          <div class="col-6">
-                          <div class="form-group mb-3 pl-4 text-muted">
+                        <div class="col-12 " [formGroupName]="i" *ngIf="this.servicesForm.value.services.length == i+1 || editMode">                          
+                          <div class="col-6 form-group mb-3 pl-4 text-muted">
                             <label>Service Name</label>
                             <div class="d-flex  mr-4 align-items-center">
                               <input type="text" class="form-control input_len" formControlName="serviceName" 
@@ -206,7 +202,7 @@
                               <a class="text-muted ml-3 formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete Service" 
                               (click)="deleteService(i)" *ngIf ="servicesForm.get('services')['controls'].length > 1 ? true : false">
                                 <i class="fas fa-trash-alt"></i></a>
-                              </div>
+                            </div>
                               <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').invalid && servicesForm.get('services')['controls'][i].get('serviceName').touched"
                               class="help-block">
                               <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['required']">Service name is required</span>
@@ -214,16 +210,7 @@
                               <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['startingFromNumber']">The service name must begin with a letter.</span>
                               <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').errors['symbols']">No Special characters are allowed.</span>
                             </span>
-                          </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="form-group mb-3 pl-4 text-muted">
-                            <div class="page_access text-right py-2 px-3">
-                             
-                            </div>
-                            </div>
-                          </div>
-
+                          </div>  
 
                           <div class="row">
                             <div class="col-4 mb-3 pl-4 form-group">
@@ -244,12 +231,13 @@
                                         <label class="custom-control-label" for="featureName{{i}}">{{featureName}}</label>
                                       </div>
                                       <td *ngIf = "editMode"><span *ngIf="!isFeaturePresent[i]['serviceFeatures'][f]">-</span><span><i *ngIf="isFeaturePresent[i]['serviceFeatures'][f]" class="fa fa-check" aria-hidden="true"></i></span></td>
-                                      <td *ngIf = "!editMode"><span >-</span></td>
+                                      <td *ngIf = "!editMode"><span>-</span></td>
+                                      <!-- <span><i *ngIf = "gateId != '' && gateId != null && gateId != undefined " class="fa fa-check" aria-hidden="true"></i></span> -->
                                     </tr>
                                   </ng-container>
                                 </tbody>
-                                </table>
-                              </div>
+                              </table>
+                            </div>
                               <div class="col-7" formGroupName="saporConfiguration" *ngIf="selectedFeature[i] === 'sapor'" >
 
                                 <div formArrayName="pipelines"  >
@@ -403,7 +391,7 @@
                                   </table>
                                   <div class="form-group mb-3 pl-1 text-muted">
                                     <form [formGroup]="gateForm">
-                                    <label>Approval Gate</label>
+                                    <label>Approval Gate <i data-toggle="tooltip" data-placement="top" data-original-title="Approval gate" class="fa fa-question-circle" aria-hidden="true"></i></label>
                                     <div class="d-flex  mr-2 align-items-center">
                                       <input type="text" class="form-control input_len" formControlName="gateName">
                                       <!-- <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Update gate name">
@@ -522,9 +510,9 @@
                                           <table class="table table-outline" formArrayName="visibilityConfig">
                                             <thead>
                                               <tr>
-                                                <th>Tool type</th>
-                                                <th>Account</th>
-                                                <th>Template</th>
+                                                <th>Connector <i data-toggle="tooltip" data-placement="top" data-original-title="Connector" class="fa fa-question-circle" aria-hidden="true"></i></th>
+                                                <th>Account <i data-toggle="tooltip" data-placement="top" data-original-title="Account" class="fa fa-question-circle" aria-hidden="true"></i></th>
+                                                <th>Template <i data-toggle="tooltip" data-placement="top" data-original-title="Template" class="fa fa-question-circle" aria-hidden="true"></i></th>
                                                 <th class="text-right" *ngIf="addNewConnectorAllowed"><a (click)="addNewConnector()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Connector"><i class="fas fa-plus"></i></a></th>
                                               </tr>
                                             </thead>
@@ -613,9 +601,7 @@
                                   </div>
                                 </div>
                               </div>
-                             
-                              
-                             
+
                           </div>
                           
                           
@@ -636,9 +622,9 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-12 ">
+                    <!-- <div class="col-12 ">
                       <hr class="ml-0 mt-3 mb-3" />
-                    </div>
+                    </div> -->
                     
                    
                   </div>
@@ -660,10 +646,10 @@
               <!-- /.col-8 -->
               <div class="col-8">
                 <div class="form-group group_permission">
-                  <label>Environments</label>
-                  <div class="col-8">
+                  <label>Environments <i data-toggle="tooltip" data-placement="top" data-original-title="Enviornments" class="fa fa-question-circle" aria-hidden="true"></i></label>
+                  <!-- <div class="col-8">
                     <hr class="ml-0 mt-3 mb-3" />
-                  </div>
+                  </div> -->
                   <div class="row" *ngIf="environmentForm.value.environments.length !== 0 ? true : false ">
                     <div class="col-9">
                       <form [formGroup]="environmentForm">
@@ -727,10 +713,10 @@
               <!-- /.col-8 -->
               <div  class="col-lg-8 col-12 col-xl-6">
                 <div class="form-group group_permission">
-                  <label>Group Permissions</label>
-                  <div class="col-12">
+                  <label>Group Permissions <i data-toggle="tooltip" data-placement="top" data-original-title="Group permissions" class="fa fa-question-circle" aria-hidden="true"></i></label>
+                  <!-- <div class="col-12">
                     <hr class="ml-0 mt-3 mb-3" />
-                  </div>
+                  </div> -->
                   <ng-container *ngIf = "userGroupData.length > 0 && userGroupPermissions.length > 0">
                     <div class="row" *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
                       <div class="col-12">
