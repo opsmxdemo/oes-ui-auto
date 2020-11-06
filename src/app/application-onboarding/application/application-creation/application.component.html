@@ -12,95 +12,62 @@
   
         <div class="col-sm-3">
           <div class="sidebar-tree">
-            <ul class="tree-inset  list-unstyled {{createApplicationForm.value.name !== ''?'tree-active':''}}">
-              <li class="ti-title">
-                <i class="{{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+            <ul class="tree-inset tree-active list-unstyled">
+              <li class="ti-title showElementHover" (click)="loadApplicationForm()" >
+                <i class="fas fa-check-circle"></i>
                 <span>Application Details</span>
               </li>
               <li class="ti-item">
-                <i class="{{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <i class="fas fa-check-circle"></i>
                 <span>Application Name :</span>
-                <strong>{{createApplicationForm.value.name}}</strong>
+                <strong></strong>
+              </li>
+            </ul>
+            <!-- /.tree-inset -->
+            <ul class="tree-inset tree-active list-unstyled">
+              <li class="ti-title showElementHover" (click)="loadServiceForm()">
+                <i class="fas fa-check-circle"></i>
+                <span>Service Details</span>
               </li>
               <li class="ti-item">
-                <i class="{{createApplicationForm.value.emailId !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Email :</span>
-                <strong>{{createApplicationForm.value.emailId}}</strong>
+                <i class="fas fa-check-circle"></i>
+                <span>Service Name:</span>
+                <strong></strong>
               </li>
-              <li class="ti-item" *ngIf = "userType === 'AP' ? false : true ">
-                <i class="{{createApplicationForm.getRawValue().imageSource !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Image Source :</span>
-                <strong>{{createApplicationForm.getRawValue().imageSource}}</strong>
+            </ul>
+
+             <!-- /.tree-inset -->
+             <ul class="tree-inset tree-active list-unstyled">
+              <li class="ti-title showElementHover" (click)="loadEnvironmentsForm()">
+                <i class="fas fa-check-circle"></i>
+                <span>Environments</span>
               </li>
               <li class="ti-item">
-                <i class="{{createApplicationForm.value.description !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Description :</span>
-                <strong>{{createApplicationForm.value.description}}</strong>
+                <i class="fas fa-check-circle"></i>
+                <span></span>
+                <strong></strong>
               </li>
-              <br>
-              <br>
             </ul>
-            
-            <ul class="tree-inset list-unstyled {{serviceArr.serviceName !== '' ? 'tree-active' : ''}}" *ngFor="let serviceArr of appData?.services; let i = index">
-              <li class="ti-title">
-                <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Service {{i+1}}</span>
+
+            <!-- /.tree-inset -->
+            <ul class="tree-inset tree-active list-unstyled">
+              <li class="ti-title showElementHover" (click)="loadGroupPermissionForm()">
+                <i class="fas fa-check-circle"></i>
+                <span>Group Permissions</span>
               </li>
-              <br>
               <li class="ti-item">
-                <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Service name</span>
-                <strong>{{serviceArr.serviceName}}</strong>
-              </li>
-              <li class="ti-item" *ngIf = "userType.includes('Deployment Verification')">
-                <i class="{{serviceArr.logTemp !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Log Template</span>
-                <strong>{{serviceArr.logTemp}}</strong>
-              </li>
-              <li class="ti-item" *ngIf = "userType.includes('Deployment Verification')">
-                <i class="{{serviceArr.metricTemp !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Metric Template</span>
-                <strong>{{serviceArr.metricTemp}}</strong>
-              </li>
-              <br>
-              <br>
-            </ul>
-           
-            <ul class="tree-inset list-unstyled {{environmentForm.value.environments[0].key !== '' ? 'tree-active' : ''}}"
-              *ngIf="environmentForm.value.environments.length !== 0 ? true : false ">
-              <li class="ti-title">
-                <i class="{{environmentForm.value.environments[0].key !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Environment Details</span>
-              </li>
-              <li class="ti-item" *ngFor="let env of environmentForm.value.environments; let index = i">
-                <i class="{{env.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>{{env.key !== ''? env.key : ''}} :</span>
-                <strong *ngIf="env.value !== ''? true:false">{{env.value !== ''? env.value : ''}}</strong>
+                <i class="fas fa-check-circle"></i>
+                <span></span>
+                <strong></strong>
               </li>
             </ul>
-            
-            <ul class="tree-inset list-unstyled {{groupPermissionForm.value.userGroups[0].userGroupId !== '' ? 'tree-active' : ''}}"
-              *ngIf="groupPermissionForm.value.userGroups.length > 0 ? true : false ">
-              <li class="ti-title">
-                <i class="{{groupPermissionForm.value.userGroups[0].userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Group Permissions Details</span>
-              </li>
-              <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
-                <i class="{{group.userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>{{group.userGroupId !== ''?groupProperties(true,group.userGroupId):''}} :</span>
-                <strong *ngIf="group.permission !== ''? true:false">{{groupProperties(false,group.permissionIds)}}</strong>
-              </li>
-            </ul>
-           
-            <ul class="tree-inset tree-finished list-unstyled {{groupPermissionForm.valid && createApplicationForm.valid && servicesForm.valid && environmentForm.valid ? 'tree-active' : ''}}">
-              <li class="ti-title">
-                <i class="{{groupPermissionForm.valid && createApplicationForm.valid && servicesForm.valid ? 'fas fa-circle' : 'far fa-circle'}}"></i>
-                <span>Finish Application</span>
-              </li>
-            </ul>
-           
+         
+          
+            <!-- /.tree-inset -->
           </div>
+          <!-- /.sidebar-tree -->
         </div>
+
        
   
         <!-- ###################### Tree Section Ends #####################################-->
@@ -111,7 +78,7 @@
   
               <!-- ###################### Application Section Starts #####################################-->
   
-              <div class="col-6">
+              <div class="col-6" *ngIf="showApplicationForm">
                 <form [formGroup]="createApplicationForm">
                   <div class="form-group">
                     <label>Application Name</label>
@@ -152,7 +119,7 @@
                     <textarea class="form-control" rows="3" formControlName="description"></textarea>
                   </div>
                 </form><br>
-                <div class="col-10">
+                <div class="col-10"  *ngIf="showApplicationForm">
                   <!-- <hr class="ml-0 mt-3 mb-3" /> -->
                 </div>
               
@@ -162,7 +129,7 @@
               </div>
               
                  <!--col-12-->
-                 <div class="col-8 pull-right">
+                 <div class="col-8 pull-right"  *ngIf="showApplicationForm">
                   <div class="page_access text-right py-2 px-3">
                     <button class="btn btn-primary ml-2" (click)="SubmitApplicationForm()">Save</button>
                     <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
@@ -181,7 +148,7 @@
                 <hr class="ml-0 mt-3 mb-3" />
               </div>
               <!-- /.col-8 -->
-              <div class="col-12" >
+              <div class="col-12" *ngIf="showServiceForm" >
                 <form [formGroup]="servicesForm">
                   <div class="form-group service_section">
                     <label>Services</label>
@@ -633,7 +600,7 @@
                 </form>
               </div>
              
-              <div class="col-6">
+              <div class="col-6" *ngIf="showServiceForm">
                 <a class="btn btn-link btn-link-black" (click)="addService()">Add another Service</a>
               </div>
               <!-- /.col-6 -->
@@ -642,11 +609,11 @@
   
                <!-- ###################### Environment Section Starts ###########################-->
   
-               <div class="col-10">
+               <div class="col-10" *ngIf="showServiceForm">
                 <hr class="ml-0 mt-3 mb-3" />
               </div>
               <!-- /.col-8 -->
-              <div class="col-8">
+              <div class="col-8" *ngIf="showEnvironmentForm">
                 <div class="form-group group_permission">
                   <label>Environments <i data-toggle="tooltip" data-placement="top" data-original-title="Enviornments" class="fa fa-question-circle" aria-hidden="true"></i></label>
                   <!-- <div class="col-8">
@@ -709,11 +676,11 @@
   
               <!-- ###################### Group Permission Section Starts ###########################-->
   
-              <div class="col-10">
+              <div class="col-10" *ngIf="showEnvironmentForm">
                 <hr class="ml-0 mt-3 mb-3" />
               </div>
               <!-- /.col-8 -->
-              <div  class="col-lg-8 col-12 col-xl-6">
+              <div  class="col-lg-8 col-12 col-xl-6" *ngIf="showPermissionForm">
                 <div class="form-group group_permission">
                   <label>Group Permissions <i data-toggle="tooltip" data-placement="top" data-original-title="Group permissions" class="fa fa-question-circle" aria-hidden="true"></i></label>
                   <!-- <div class="col-12">
@@ -787,7 +754,7 @@
               </div>
               <!-- /.col-6 -->
                <!--col-12-->
-               <div class="col-8 pull-right">
+               <div class="col-8 pull-right" *ngIf="showPermissionForm">
                 <div class="page_access text-right py-2 px-3">
                   <button class="btn btn-primary ml-2" (click)="SubmitGroupPermissionForm()">Save</button>
                   <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
@@ -805,11 +772,11 @@
   
   
   
-          <div *ngIf="showFeatures" class="p-3 bottom-strp-cover gray-strip text-right">
-            <button class="btn btn-default" (click)="cancelForm()">Cancel</button>
+          <!-- <div *ngIf="showFeatures" class="p-3 bottom-strp-cover gray-strip text-right">
+            <button class="btn btn-default" (click)="cancelForm()">Cancel</button> -->
             <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
-            <button class="btn btn-primary ml-2" (click)="SubmitForm()">Save & Finish</button>
-          </div>
+            <!-- <button class="btn btn-primary ml-2" (click)="SubmitForm()">Save & Finish</button>
+          </div> -->
         </div>
         <!-- /.col-sm-9 -->
       </div>

@@ -153,7 +153,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.applicationId).pipe(
+                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'platformservice/v1/applications/' + action.applicationId).pipe(
                     map(resdata => {
 
                         return ApplicationAction.fetchAppData({ appData: resdata, applicationId: action.applicationId })
@@ -622,11 +622,12 @@ this.actions$.pipe(
 )
 
 // Effect to get
+// Effect to get
 getSaporConfigDetails = createEffect(() =>
 this.actions$.pipe(
     ofType(ApplicationAction.getSaporConfig),
     switchMap((action) => {                
-        return this.http.get<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/'+ action.serviceId+'/application/'+action.applicationId+'/feature/configuration').pipe(
+        return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+309+'/services/'+ 298).pipe(
             map(resdata => {
                 return ApplicationAction.loadSaporConfig({ saporConfigList: resdata});
             }),
