@@ -47,10 +47,8 @@ export class VisibilityEffect {
             withLatestFrom(this.store.select('auth')),
             switchMap(([action, authState]) => {
                 console.log("authState: ", authState);
-                
-                // return this.http.get('/assets/data/visibility/applications.json').pipe( 
-                // return this.http.get(this.environment.config.endPointUrl + 'platformservice/v1/users/user2/applications?permissionId=approve_gate').pipe(
-                return this.http.get(this.environment.config.endPointUrl + 'platformservice/v1/users/' + authState.user + '/applications?permissionId=approve_gate').pipe(
+                // v1/users/user5/approvalGates/applications
+                return this.http.get(this.environment.config.endPointUrl + 'visibilityservice/v1/users/' + authState.user + '/approvalGates/applications').pipe(
                     map(resdata => { 
                 // console.log("this Message:", resdata);
                         return Visibility.fetchApplications({ applicationList: resdata });
@@ -97,6 +95,25 @@ export class VisibilityEffect {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.id + '/toolConnectors').pipe(
                     map(resdata => {
                         return Visibility.fetchToolConnectors({ toolConnectors: resdata });
+                    }),
+                    catchError(errorRes => {
+                        // this.toastr.showError('Server Error !!','ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for fetch Services
+    fetchGateInstanceDetails = createEffect(() =>
+        this.actions$.pipe(
+            ofType(Visibility.loadGateInstanceDetails),
+            switchMap((action) => {
+                // v1/approvalGateInstances/10
+                return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGateInstances/' + action.id ).pipe(
+                    map(resdata => {
+                        return Visibility.fetchGateInstanceDetails({ gateInstanceDetails: resdata });
                     }),
                     catchError(errorRes => {
                         // this.toastr.showError('Server Error !!','ERROR')
