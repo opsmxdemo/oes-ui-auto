@@ -37,16 +37,12 @@
                "id": 25.0,
                "link": "/application/trendanalysis",
                "disabled": false
-             }
-          ],
-          "disabled":false
-       },
-       {
-          "name":"Visibility",
-          "id":19.0,
-          "link":"visibility",
-          "subMenu":[
-             
+             },
+            {
+               "name":"Visibility",
+               "link":"visibility",
+               "disabled":false
+            }
           ],
           "disabled":false
        },
