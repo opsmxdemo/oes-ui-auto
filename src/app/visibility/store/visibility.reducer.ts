@@ -13,6 +13,8 @@ export interface State {
     serviceListLoading: boolean;
     applicationId: number;
     toolConnectors: [],
+    gateInstanceDetails: any,
+    gateInstanceDetailsLoading: boolean,
     visibilityData: any,
     approvalInstanceId: number,
     connectorType: string,
@@ -28,6 +30,8 @@ export const initialState: State = {
     serviceListLoading: true,
     applicationId: null,
     toolConnectors: null,
+    gateInstanceDetails: null,
+    gateInstanceDetailsLoading: false,
     visibilityData: null,
     approvalInstanceId: null,
     connectorType: null,
@@ -103,18 +107,43 @@ export function VisibilityReducer(
                 ...state,
                connectorTypeLoading : false
             })),
+        on(Visibility.loadGateInstanceDetails,
+            (state, action) => ({
+                ...state,
+                id: action.id,
+                gateInstanceDetailsLoading: false
+            })
+        ),
+        on(Visibility.fetchGateInstanceDetails,
+            (state, action) => ({
+                ...state,
+                gateInstanceDetails: action.gateInstanceDetails,
+                gateInstanceDetailsLoading: true,
+            })
+        ),
+        on(Visibility.stopGateInstanceLoading,
+            (state, action) => ({
+                ...state,
+               gateInstanceDetailsLoading : false
+            })),
         on(Visibility.loadVisibilityData,
             (state, action) => ({
                 ...state,
-                visibilityDataLoaded : true
+                visibilityDataLoaded : false
             })
         ),
         on(Visibility.fetchVisbilityData,
             (state, action) => ({
                 ...state,
-                visibilityData: action.visibilityData
+                visibilityData: action.visibilityData,
+                visibilityDataLoaded : true
             })
         ),
+        on(Visibility.visibilityDataLoading,
+            (state, action) => ({
+                ...state,
+               visibilityDataLoaded : false
+            })),
         on(Visibility.postReview,
             (state,action) => ({
                 ...state

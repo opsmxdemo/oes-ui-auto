@@ -15,8 +15,14 @@ export const loadToolConnectors = createAction('[Visibility] LoadToolConnectors'
 export const fetchToolConnectors = createAction('[Visibility] FetchToolConnectors', props<{ toolConnectors: any }>());
 export const stopLoadingConnectors = createAction('[Visibility] stopLoadingConnectors');
 
+export const loadGateInstanceDetails = createAction('[Visibility] LoadGateInstanceDetails', props<{ id: any }>());
+export const fetchGateInstanceDetails = createAction('[Visibility] FetchGateInstanceDetails', props<{ gateInstanceDetails: any }>());
+export const stopGateInstanceLoading = createAction('[Visibility] Stop Gate Instance Loading');
+
 export const loadVisibilityData = createAction('[Visibility] LoadVisibilityData', props<{approvalInstanceId: number, connectorType: string}>());
 export const fetchVisbilityData = createAction('[Visibility] FetchVisibilityData', props<{ visibilityData: any }>());
+export const visibilityDataLoading = createAction('[Visibility] Stop Visibility Data Loading');
+
 
 
 export const postReview = createAction('[Visibility] PostVisibilityReview', props<{approvalInstanceId: number, applicationId: number, postData:any}>());
