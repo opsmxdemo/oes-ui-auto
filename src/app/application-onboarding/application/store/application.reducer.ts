@@ -48,6 +48,11 @@ export interface State {
     saporConfigData : any;
     saporConfigSavedData : any;
     isSaporConfigSaved: boolean;
+    deleteSaporConfigMessage : any;
+    saporConfigList : any;
+    isSaporConfigLoaded: boolean;
+
+
 
     //Visibility 
     approvalGateSavedData : any;
@@ -157,6 +162,9 @@ export const initialState: State = {
     saporConfigData : null,
     saporConfigSavedData : null,
     isSaporConfigSaved: false,
+    deleteSaporConfigMessage: null,
+    saporConfigList: null,
+    isSaporConfigLoaded: false,
 
 }
 
@@ -763,6 +771,46 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             isSaporConfigSaved: false
+        })
+    ),
+
+    on(ApplicationAction.deleteSaporConfig,
+        (state,action) => ({
+            ...state,
+            isSaporConfigDeleted: false
+        })
+    ),
+    on(ApplicationAction.postDeleteSaporConfig,
+        (state,action) => ({
+            ...state,
+            deleteSaporConfigMessage:action.message,
+            isSaporConfigDeleted: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigDeleted,
+        (state,action) => ({
+            ...state,
+            isSaporConfigDeleted: false
+        })
+    ),
+
+    on(ApplicationAction.getSaporConfig,
+        (state,action) => ({
+            ...state,
+            isSaporConfigLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadSaporConfig,
+        (state,action) => ({
+            ...state,
+            saporConfigList:action.saporConfigList,
+            isSaporConfigLoaded: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigLoaded,
+        (state,action) => ({
+            ...state,
+            isSaporConfigLoaded: false
         })
     ),
 
