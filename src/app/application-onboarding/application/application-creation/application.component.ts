@@ -17,7 +17,7 @@ import * as $ from 'jquery';
 import { GroupPermission } from 'src/app/models/applicationOnboarding/createApplicationModel/groupPermissionModel/groupPermission.model';
 import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
 import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
-import {Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
+import { Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
 import { AppPage } from 'e2e/src/app.po';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 
@@ -34,7 +34,7 @@ export class CreateApplicationComponent implements OnInit {
   @ViewChild('tooltypeTemplateModel') tooltypeTemplateModel: ElementRef;
   @ViewChild('newtemplate') newtemplate: ElementRef;
   @ViewChild('edittemplate') edittemplate: ElementRef;
-  
+
 
   userType = '';                                            // It contain type of user i.e, AP, OES or both.
   createApplicationForm: FormGroup;                               // For Application Section
@@ -69,15 +69,15 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
   currentMetricTemplateIndex = -1;                                // It is use to store index value of current service where user is creating Metric template.
-  userGroupPermissions:Object[] = [];                             // It is use to store value of checkbox need to display in group section.
-  editApplicationCounter:number = 0;                              // It is use to restrict reexecuting of edit application method.
+  userGroupPermissions: Object[] = [];                             // It is use to store value of checkbox need to display in group section.
+  editApplicationCounter: number = 0;                              // It is use to restrict reexecuting of edit application method.
   editTemplateIndex = -1;                                         // It is use to store index value of template which user want to edit.
   templateEditMode = false;                                       // It is use to store true while user want to edit template parameter.
   editTemplateData = null;                                        // It is use to store data of template which user want to update.
   apiLoadingError = false;                                        // It is use to show or hide component error message.
   isMetricTemplateClicked = true;
   errorMessage = `<div><b>Application creation requires image source(s) and pipeline template(s).</b></div><ul><li>Please create an image source via  "Data sources" -> "New Data Source" -> Select Monitoring Provider To Create DataSource.</li><li>Pipeline template needs to be create in Spinnaker.If you are sure that these are there, Please refresh the page after some time.</li></ul>`
-  featureList:any;
+  featureList: any;
   exerciseAp = {
     data: [{ param: "logTemp" }, { param: "metricTemp" }]
   };
@@ -86,34 +86,34 @@ export class CreateApplicationComponent implements OnInit {
   showDat: boolean;
 
   savedApplicationData: any;
-  applicationId : number;
-  savedServiceData :any;
-  serviceId : string;
+  applicationId: number;
+  savedServiceData: any;
+  serviceId: string;
 
   //visibility
-  gateData : any;
-  gateId : any;
-  approvalGatesList : any;
-  isEditGateEnabled : boolean = false;
-  configuredToolTypes : any;
-  toolTypes : any;
-  toolTypesConfiguredForGate : any;
-  templatesForToolType : any;
-  accountsForTooltypes : any;
-  selectedTTTemplateTab ='tooltype-template-form';
-  public tooltypeTemplateEditor: JsonEditorOptions;   
+  gateData: any;
+  gateId: any;
+  approvalGatesList: any;
+  isEditGateEnabled: boolean = false;
+  configuredToolTypes: any;
+  toolTypes: any;
+  toolTypesConfiguredForGate: any;
+  templatesForToolType: any;
+  accountsForTooltypes: any;
+  selectedTTTemplateTab = 'tooltype-template-form';
+  public tooltypeTemplateEditor: JsonEditorOptions;
   public tooltypeTemplateData: any = null;
-  templateId : any = [];
+  templateId: any = [];
   connectorId: any;
-  approvalGatesOfaServiceList : any;
-  toolType : any;
-  isVisibilityConfigured : boolean = false;
-  isVisibilityToolConnectorConfigured : boolean = false;
+  approvalGatesOfaServiceList: any;
+  toolType: any;
+  isVisibilityConfigured: boolean = false;
+  isVisibilityToolConnectorConfigured: boolean = false;
 
-  showserviceGroup:boolean;
-  configuredFeature  =[]
+  showserviceGroup: boolean;
+  configuredFeature = []
   isFeaturePresent = []
-  
+
   todo = [
     'Get to work',
     'Pick up groceries',
@@ -122,33 +122,33 @@ export class CreateApplicationComponent implements OnInit {
   ];
 
   done = [
-   
+
   ];
-  selectedFeature=[];
+  selectedFeature = [];
   toolTemplateForm: FormGroup;
   toolTypeRowHoverd: any = [];
   templateDataForToolType: any;
   editTemplateTriggered: boolean;
   editTemplateTriggeredID: any;
-  addNewConnectorAllowed :boolean = false;
+  addNewConnectorAllowed: boolean = false;
   saporFinalData: any;
   showApplicationForm: boolean = false;
   showServiceForm: boolean = false;
-  showEnvironmentForm: boolean= false;
-  showPermissionForm: boolean= false;
+  showEnvironmentForm: boolean = false;
+  showPermissionForm: boolean = false;
   appInfoData: any;
-  
+
   constructor(public sharedService: SharedService,
-              public store: Store<fromFeature.State>,
-              public appStore: Store<fromApp.AppState>,
-              public router: Router,
-              private formBuilder: FormBuilder,
-              private render: Renderer2,
-              private eleRef: ElementRef) { }
+    public store: Store<fromFeature.State>,
+    public appStore: Store<fromApp.AppState>,
+    public router: Router,
+    private formBuilder: FormBuilder,
+    private render: Renderer2,
+    private eleRef: ElementRef) { }
 
   ngOnInit() {
     this.loadApplicationForm();
-    this.showserviceGroup=true;
+    this.showserviceGroup = true;
     this.gateId = "";
 
     this.showDat = false;
@@ -165,21 +165,21 @@ export class CreateApplicationComponent implements OnInit {
         //     this.store.dispatch(ApplicationActions.loadOESData());
         //   }
         // }
-        if(layoutRes.supportedFeatures != null){       
+        if (layoutRes.supportedFeatures != null) {
           //this.featureList = ["sapor","deployment_verification","visibility"];
           this.featureList = layoutRes.supportedFeatures;
           const saporExist = this.featureList.some(item => item.includes("sapor"));
-          if(saporExist){
+          if (saporExist) {
             this.store.dispatch(ApplicationActions.loadOESData());
             this.userType = this.featureList[0];
           }
-           //this.saporExist = saporExist;
-          
-         // if(this.featureList.some(item => item.includes('Deployment Verification'))){
+          //this.saporExist = saporExist;
+
+          // if(this.featureList.some(item => item.includes('Deployment Verification'))){
           //  this.userType = 'Deployment Verification';
-            //Dispatching action to load initial oes data to populate dropdown
+          //Dispatching action to load initial oes data to populate dropdown
           //  this.store.dispatch(ApplicationActions.loadOESData());
-         // }
+          // }
         }
       }
     )
@@ -192,36 +192,36 @@ export class CreateApplicationComponent implements OnInit {
         //this.apploading = responseData.applicationLoading;
         this.parentPage = responseData.parentPage;
 
-        if(responseData.initalOESDatacall === true && this.userType.includes('sapor')){
+        if (responseData.initalOESDatacall === true && this.userType.includes('sapor')) {
           let counter = 0;
-          if(responseData.initalOESDataLoaded.indexOf('calling') > -1){
+          if (responseData.initalOESDataLoaded.indexOf('calling') > -1) {
             //this.apploading = true;
-          }else{
+          } else {
             //this.apploading = false;
           }
-          responseData.initalOESDataLoaded.forEach(data=>{
-            if(data === 'error'){
+          responseData.initalOESDataLoaded.forEach(data => {
+            if (data === 'error') {
               counter++;
             }
           })
-          if(counter > 0){
+          if (counter > 0) {
             this.apiLoadingError = true;
-          }else{
+          } else {
             this.apiLoadingError = false;
           }
         }
 
 
         // checking sapor editMode
-        if(responseData.saporConfigList !== null){
+        if (responseData.saporConfigList !== null) {
           console.log(responseData.saporConfigList);
           this.saporFinalData = responseData.saporConfigList;
-        //  this.saporFinalData['saporConfiguration'] = responseData.saporConfigList;
+          //  this.saporFinalData['saporConfiguration'] = responseData.saporConfigList;
           console.log(this.saporFinalData);
 
 
         }
-        
+
         //checking is editMode enabled
         if (responseData.editMode && this.editApplicationCounter === 0) {
           debugger
@@ -236,56 +236,54 @@ export class CreateApplicationComponent implements OnInit {
             // Reseting metric and log Templates data
             this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
-            if(this.userType === 'deployment_verification'){
+            if (this.userType === 'deployment_verification') {
               // AP mode
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.emailId, [Validators.required,Validators.email]),
+                emailId: new FormControl(this.appData.emailId, [Validators.required, Validators.email]),
                 description: new FormControl(this.appData.description),
                 lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
               });
-            }else{
+            } else {
               // user belongs to OES mode also.
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.emailId, [Validators.required,Validators.email]),
+                emailId: new FormControl(this.appData.emailId, [Validators.required, Validators.email]),
                 description: new FormControl(this.appData.description),
                 imageSource: new FormControl(this.appData.imageSource, Validators.required),
                 lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
               });
               //populating dockerImagenamedropdown.
-              if(responseData.callDockerImageDataAPI){
+              if (responseData.callDockerImageDataAPI) {
                 this.onImageSourceSelect(this.appData.imageSource);
               }
             }
-            if(this.editMode)
-            {
-              
-              this.showserviceGroup=false;
+            if (this.editMode) {
+
+              this.showserviceGroup = false;
               var totalServices = this.appData.services.length
               this.servicesForm = new FormGroup({
                 services: new FormArray([])
-               });
-               for(let i =0;i<totalServices;i++)
-               {
+              });
+              for (let i = 0; i < totalServices; i++) {
                 (<FormArray>this.servicesForm.get('services')).push(
-                               new FormGroup({
-                                 serviceName: new FormControl({value: this.appData.services[i].serviceName, disabled: true}),
-                                })
+                  new FormGroup({
+                    serviceName: new FormControl({ value: this.appData.services[i].serviceName, disabled: true }),
+                  })
                 )
                 this.configuredFeature.push({
                   "configuredFeatures": [
-                      "deployment_verification",
-                      "sapor",
-                      "visibility"
+                    "deployment_verification",
+                    "sapor",
+                    "visibility"
                   ]
+                }
+                )
+                this.selectFeature(this.featureList[0], i)
               }
-              )
-              this.selectFeature(this.featureList[0],i)
-               }
-                 this.configuredFeaturepresent(totalServices)
+              this.configuredFeaturepresent(totalServices)
             }
-            
+
 
             //populating serviceForm ############################################################################
             // if (this.appData.services !== null && this.appData.services.length !== 0) {
@@ -316,7 +314,7 @@ export class CreateApplicationComponent implements OnInit {
             //             })
             //           );
             //         }
-                    
+
             //         //populating pipeline array
             //         serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
             //           const serviceArray = this.servicesForm.get('services') as FormArray;
@@ -364,7 +362,7 @@ export class CreateApplicationComponent implements OnInit {
             // }
 
             //populate environment Form if usertype include OES in it#################################################################################
-            if(this.appData.environments !==null){
+            if (this.appData.environments !== null) {
               if (this.appData.environments.length !== 0 && this.userType !== 'deployment_verification') {
                 // clearing form first
                 this.environmentForm = new FormGroup({
@@ -381,51 +379,51 @@ export class CreateApplicationComponent implements OnInit {
                 })
               }
             }
-            
+
 
             //populate groupPermission Form #############################################################################
-            if (this.appData.userGroups !==null && this.appData.userGroups.length !== 0) {
+            if (this.appData.userGroups !== null && this.appData.userGroups.length !== 0) {
               // clearing form first
               this.groupPermissionForm = new FormGroup({
                 userGroups: new FormArray([])
               });
               //populating the form
               const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
-              this.appData.userGroups.forEach((groupData,index) => {
+              this.appData.userGroups.forEach((groupData, index) => {
                 // pushing controls in usergroup form.
                 userGroupControl.push(
                   new FormGroup({
-                    userGroupId: new FormControl(groupData.userGroupId,[Validators.required,this.usergroupExist.bind(this)]),
+                    userGroupId: new FormControl(groupData.userGroupId, [Validators.required, this.usergroupExist.bind(this)]),
                     permissionIds: new FormArray([])
                   })
                 );
 
                 // pushing controls in permissionIDs
                 const permissionIdGroupControl = userGroupControl.at(index).get('permissionIds') as FormArray;
-                this.populatePermissions(permissionIdGroupControl,groupData.permissionIds);
+                this.populatePermissions(permissionIdGroupControl, groupData.permissionIds);
               })
             }
 
             //populating log and metric template data ######################################################################
-            if(this.userType === 'deployment_verification'){
+            if (this.userType === 'deployment_verification') {
               // Storing Log and Metric template data in state getting from appData
-              if(this.appData.logTemplate !== null){
+              if (this.appData.logTemplate !== null) {
                 this.appData.logTemplate.forEach(logTemp => {
-                  this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:logTemp}))
+                  this.store.dispatch(ApplicationActions.createdLogTemplate({ logTemplateData: logTemp }))
                 });
               }
-              if(this.appData.metricTemplate !== null){
+              if (this.appData.metricTemplate !== null) {
                 this.appData.metricTemplate.forEach(metricTemp => {
-                  this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:metricTemp}));
+                  this.store.dispatch(ApplicationActions.createdMetricTemplate({ metricTemplateData: metricTemp }));
                 });
               }
             }
-          }else{
+          } else {
             this.defineAllForms();
           }
         } else if (this.appData === null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
-          if(this.createApplicationForm === undefined && this.servicesForm === undefined){
+          if (this.createApplicationForm === undefined && this.servicesForm === undefined) {
             this.defineAllForms();
           }
         }
@@ -434,14 +432,14 @@ export class CreateApplicationComponent implements OnInit {
 
     // Below function is use to fetching data from state related to pipelineData
     this.store.select(fromFeature.selectApplication).subscribe(
-      (response) => {        
+      (response) => {
         if (response.pipelineData !== null) {
           this.pipelineExists = response.pipelineData;
         }
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
         }
-        if(response.savedApplicationData != null){
+        if (response.savedApplicationData != null) {
           this.savedApplicationData = response.savedApplicationData;
           this.applicationId = this.savedApplicationData.applicationId;
           //Response Json sample format
@@ -455,7 +453,7 @@ export class CreateApplicationComponent implements OnInit {
           //   "services": []
           // }
         }
-        if(response.savedServiceData != null){
+        if (response.savedServiceData != null) {
           this.savedServiceData = response.savedServiceData;
           this.serviceId = this.savedServiceData.id;
           //Respose json sample format
@@ -475,19 +473,19 @@ export class CreateApplicationComponent implements OnInit {
           // populating user group dropdown data
           this.populateUserGroupsDropdown();
         }
-        if (response.logtemplate.length > 0){
+        if (response.logtemplate.length > 0) {
           this.logTemplateData = response.logtemplate;
-          if(this.logModel !== undefined){
+          if (this.logModel !== undefined) {
             this.logModel.nativeElement.click();
           }
-          this.populateSelectedTemplateName(this.currentLogTemplateIndex,'logTemp')
+          this.populateSelectedTemplateName(this.currentLogTemplateIndex, 'logTemp')
         }
-        if (response.metrictemplate.length > 0){
+        if (response.metrictemplate.length > 0) {
           this.metricTemplateData = response.metrictemplate;
-          if(this.metricModel !== undefined){
+          if (this.metricModel !== undefined) {
             this.metricModel.nativeElement.click();
           }
-          this.populateSelectedTemplateName(this.currentMetricTemplateIndex,'metricTemp')
+          this.populateSelectedTemplateName(this.currentMetricTemplateIndex, 'metricTemp')
         }
         if (response.approvalGateSavedData != null && response.isGateSaved) {
           this.store.dispatch(ApplicationActions.isApprovalGateSaved());
@@ -506,45 +504,45 @@ export class CreateApplicationComponent implements OnInit {
         //   //this.addConnector();
         //   //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
         // }
-        if(response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded){
+        if (response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded) {
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
-          if(this.approvalGatesOfaServiceList.length > 0){
+          if (this.approvalGatesOfaServiceList.length > 0) {
             this.gateId = this.approvalGatesOfaServiceList[0].id;
             //console.log(this.approvalGatesOfaServiceList);
             this.addConnector();
-            this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
-          }          
+            this.store.dispatch(ApplicationActions.getToolConnectorForaGate({ gateId: this.gateId }));
+          }
         }
-        if(response.isApprovalGateEdited){
+        if (response.isApprovalGateEdited) {
           this.isEditGateEnabled = false;
           this.store.dispatch(ApplicationActions.isApprovalGateEdited());
         }
-        if(response.configuredToolConnectorTypes != null && response.isConfiguredToolConnectorLoaded){
+        if (response.configuredToolConnectorTypes != null && response.isConfiguredToolConnectorLoaded) {
           this.store.dispatch(ApplicationActions.isloadedConfiguredToolConnectorTypes());
           this.configuredToolTypes = response.configuredToolConnectorTypes;
-          this.toolTypes = this.configuredToolTypes;          
+          this.toolTypes = this.configuredToolTypes;
           //console.log(this.configuredToolTypes);
           this.addConnector();
         }
-        if(response.accountsForToolType != null && response.isAccountForToolTypeLoaded){
+        if (response.accountsForToolType != null && response.isAccountForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
           this.accountsForTooltypes = response.accountsForToolType;
           //this.connectorId = this.accountsForTooltypes[0];
         }
-        if(response.templatesForToolType && response.isTemplateForToolTypeLoaded){
+        if (response.templatesForToolType && response.isTemplateForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
           this.templatesForToolType = response.templatesForToolType;
         }
 
         this.loadEditTemplate(response);
 
-        if(response.templateForToolTypeSavedData !=null && response.isTemplateForTooltypeSaved){
+        if (response.templateForToolTypeSavedData != null && response.isTemplateForTooltypeSaved) {
           this.store.dispatch(ApplicationActions.isTemplateForTooltypeSaved());
-          if(this.tooltypeTemplateModel != undefined){
+          if (this.tooltypeTemplateModel != undefined) {
             this.tooltypeTemplateModel.nativeElement.click();
           }
-          this.store.dispatch(ApplicationActions.getTemplatesToolType({connectorType : this.toolType}));
+          this.store.dispatch(ApplicationActions.getTemplatesToolType({ connectorType: this.toolType }));
         }
         if (response.visibilityFeatureSavedData != null && response.isVisibilityFeatureSaved) {
           this.store.dispatch(ApplicationActions.isVisibilityFeatureSaved());
@@ -554,47 +552,47 @@ export class CreateApplicationComponent implements OnInit {
           //this.store.dispatch(ApplicationActions.getApprovalGates()); 
           //this.addConnector();          
           //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
-          this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));      
+          this.store.dispatch(ApplicationActions.getToolConnectorForaGate({ gateId: this.gateId }));
         }
-        if(response.approvalGatesListOfaService  != null && response.isApprovalGatesOfaServiceLoaded){
+        if (response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded) {
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
-          if(response.approvalGatesListOfaService.length > 0){
+          if (response.approvalGatesListOfaService.length > 0) {
             this.isVisibilityConfigured = true;
-          }else{
-            this.isVisibilityConfigured = false;             
+          } else {
+            this.isVisibilityConfigured = false;
           }
         }
-        if(response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded){
+        if (response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedToolConnectorForaGate());
           //console.log("configuredToolConnectorData");
           //console.log(response.configuredToolConnectorData);
-          if(response.configuredToolConnectorData.length > 0){
+          if (response.configuredToolConnectorData.length > 0) {
             this.isVisibilityToolConnectorConfigured = true;
-            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele=>ele.connectorType);  
-            let toolTypesValue = this.configuredToolTypes.filter( 
-              function(i) { 
-                  return this.indexOf(i) < 0; 
-              }, 
-              this.toolTypesConfiguredForGate 
-            );          
+            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele => ele.connectorType);
+            let toolTypesValue = this.configuredToolTypes.filter(
+              function (i) {
+                return this.indexOf(i) < 0;
+              },
+              this.toolTypesConfiguredForGate
+            );
             setTimeout(() => {
-              this.toolTypes = toolTypesValue; 
-              console.log(this.toolTypes); 
-              this.addConnector(); 
+              this.toolTypes = toolTypesValue;
+              console.log(this.toolTypes);
+              this.addConnector();
             }, 100);
-          
-          
-          }else{
+
+
+          } else {
             this.isVisibilityToolConnectorConfigured = false;
             //this.addConnector();
             this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes());
           }
         }
         //response.toolconnectorwithTemplateSavedData !=null && 
-        if(response.isToolConnectorwithTemplateSaved){
+        if (response.isToolConnectorwithTemplateSaved) {
           this.store.dispatch(ApplicationActions.isToolConnectorWithTemplateSaved());
-          this.addNewConnectorAllowed = true;          
-        }        
+          this.addNewConnectorAllowed = true;
+        }
       }
     )
 
@@ -608,7 +606,7 @@ export class CreateApplicationComponent implements OnInit {
     this.toolTemplateForm = new FormGroup({
       id: new FormControl(''),
       toolType: new FormControl(''),
-      name: new FormControl('',[Validators.required]),
+      name: new FormControl('', [Validators.required]),
       template: new FormControl('')
     });
   }
@@ -617,22 +615,22 @@ export class CreateApplicationComponent implements OnInit {
   defineAllForms() {
     // defining reactive form approach for createApplicationForm
     //if(this.userType === 'Deployment Verification'){
-      // For AP mode
-      this.createApplicationForm = new FormGroup({
-        name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
-        emailId: new FormControl('',[Validators.required,Validators.email]),
-        imageSource: new FormControl(''),
-        description: new FormControl('')
-      });
-   // }else{
-      // For OES and both oes and autopilot mode.
-      // this.createApplicationForm = new FormGroup({
-      //   name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
-      //   emailId: new FormControl('',[Validators.required,Validators.email]),
-      //   description: new FormControl(''),
-      //   imageSource: new FormControl('',Validators.required)
-      // });
-  //  }
+    // For AP mode
+    this.createApplicationForm = new FormGroup({
+      name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+      emailId: new FormControl('', [Validators.required, Validators.email]),
+      imageSource: new FormControl(''),
+      description: new FormControl('')
+    });
+    // }else{
+    // For OES and both oes and autopilot mode.
+    // this.createApplicationForm = new FormGroup({
+    //   name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+    //   emailId: new FormControl('',[Validators.required,Validators.email]),
+    //   description: new FormControl(''),
+    //   imageSource: new FormControl('',Validators.required)
+    // });
+    //  }
 
     // defining reactive form for Services Section
     this.servicesForm = new FormGroup({
@@ -649,14 +647,14 @@ export class CreateApplicationComponent implements OnInit {
       environments: new FormArray([])
     });
 
-     // defining reactive form for Visibility Gate Section
+    // defining reactive form for Visibility Gate Section
     this.gateForm = new FormGroup({
-        gateName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
-       });
+      gateName: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
+    });
 
-  
+
   }
-  
+
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
   valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
     const promise = new Promise<any>((resolve, reject) => {
@@ -669,7 +667,7 @@ export class CreateApplicationComponent implements OnInit {
           }
         },
         // below contain remove when name check api is implemented
-        (error)=>{
+        (error) => {
           resolve(null);
         }
       )
@@ -678,18 +676,18 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is use to populate permission in usergroup in edit mode
-  populatePermissions(formControl,assignedpermission){
-    setTimeout(()=>{
-      if(this.userGroupPermissions.length > 0){
+  populatePermissions(formControl, assignedpermission) {
+    setTimeout(() => {
+      if (this.userGroupPermissions.length > 0) {
         this.userGroupPermissions.forEach(permissionId => {
-          if(assignedpermission.indexOf(permissionId['permissionId']) > -1){
+          if (assignedpermission.indexOf(permissionId['permissionId']) > -1) {
             formControl.push(
               new FormGroup({
                 value: new FormControl(true),
                 name: new FormControl(permissionId['permissionId'])
               })
             )
-          }else{
+          } else {
             formControl.push(
               new FormGroup({
                 value: new FormControl(false),
@@ -697,136 +695,136 @@ export class CreateApplicationComponent implements OnInit {
               })
             )
           }
-          
+
         })
-      }else {
-        this.populatePermissions(formControl,assignedpermission);
+      } else {
+        this.populatePermissions(formControl, assignedpermission);
       }
-    },500)
+    }, 500)
   }
 
   // Below function is use to return relavent service form on basics of userType. i.e,AP , OESOnly or both.
-  setServiceForm(){
+  setServiceForm() {
     let serviceForm = null;
-    serviceForm =  new FormGroup({
-      serviceName: new FormControl('', [Validators.required,this.cannotContainSpace.bind(this)]),
+    serviceForm = new FormGroup({
+      serviceName: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
       featureName: new FormControl(''),
     })
-    
-   return serviceForm;
+
+    return serviceForm;
 
   }
 
   //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
-  cannotContainSpace(control: FormControl): {[s: string]: boolean} {
-  if(control.value !== null){
-    let startingValue = control.value.split('');
-    if(startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0){
-      return {containSpace: true}
+  cannotContainSpace(control: FormControl): { [s: string]: boolean } {
+    if (control.value !== null) {
+      let startingValue = control.value.split('');
+      if (startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0) {
+        return { containSpace: true }
+      }
+      if (+startingValue[0] > -1 && startingValue.length > 0) {
+        return { startingFromNumber: true }
+      }
+      if (!/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
+        return { symbols: true };
+      }
     }
-    if( +startingValue[0] > -1 && startingValue.length > 0){
-      return {startingFromNumber: true}
-    }
-    if ( !/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
-      return {symbols: true};
-    }
-  }
-  return null;
+    return null;
   }
 
   // Below function is custom valiadator which is use to validate userGroup name is already selected or not. If already exist then it will return error
-  usergroupExist(control: FormControl): {[s: string]: boolean} {
-    if(control.value !== null){
+  usergroupExist(control: FormControl): { [s: string]: boolean } {
+    if (control.value !== null) {
       let counter = 0;
-      if(+control.value > 0 && typeof(control.value) !== 'number'){
+      if (+control.value > 0 && typeof (control.value) !== 'number') {
         this.groupPermissionForm.value.userGroups.forEach(groupName => {
-          if(+groupName.userGroupId === +control.value){
+          if (+groupName.userGroupId === +control.value) {
             counter++;
           }
         })
       }
-      if(counter > 0){
-        return {groupNameExist: true}
+      if (counter > 0) {
+        return { groupNameExist: true }
       }
     }
     return null;
   }
 
   //Below function is use to populate docker image name dropdown 
-  populateDockerImagenDropdown(){
-    
+  populateDockerImagenDropdown() {
+
     this.dockerImageDropdownData = [];
-    if(this.editMode){
-      this.servicesForm.value.services.forEach((service,SerIndex) => {
-        this.dockerImageData.forEach((docker,imgIndex) => {
-          if(service.pipelines[0].dockerImageName.accountName === docker.imageSource){
+    if (this.editMode) {
+      this.servicesForm.value.services.forEach((service, SerIndex) => {
+        this.dockerImageData.forEach((docker, imgIndex) => {
+          if (service.pipelines[0].dockerImageName.accountName === docker.imageSource) {
             this.dockerImageDropdownData[SerIndex] = this.dockerImageData[imgIndex].images;
           }
         });
       })
-    }else{
+    } else {
       this.dockerAccountName = this.dockerImageData[0].imageSource;
       const arrayControl = this.servicesForm.get('services') as FormArray;
-      if(arrayControl != undefined && arrayControl != null){
+      if (arrayControl != undefined && arrayControl != null) {
         const innerarrayControl = arrayControl.at(0).get('pipelines') as FormArray;
-        if( innerarrayControl!= undefined && innerarrayControl != null){
+        if (innerarrayControl != undefined && innerarrayControl != null) {
           const mainData = innerarrayControl.at(0).get('dockerImageName');
-          if(mainData != undefined && mainData != null){
+          if (mainData != undefined && mainData != null) {
             mainData.patchValue({
               'accountName': this.dockerImageData[0].imageSource
             });
-          }         
-        }        
-      }     
+          }
+        }
+      }
       this.servicesForm.value.services.forEach(() => {
         this.dockerImageDropdownData.push(this.dockerImageData[0].images);
       })
     }
   }
 
-   //Below function is use to populate UserGroup dropdown exist in user group section. 
-   populateUserGroupsDropdown(){
+  //Below function is use to populate UserGroup dropdown exist in user group section. 
+  populateUserGroupsDropdown() {
     this.userGroupDropdownData = [];
-    this.groupPermissionForm.value.userGroups.forEach((groupName,index) => {
-      if(index<1){
+    this.groupPermissionForm.value.userGroups.forEach((groupName, index) => {
+      if (index < 1) {
         this.userGroupDropdownData.push(this.userGroupData);
-      }else{
-        this.userGroupDropdownData[index] = this.userGroupDropdownData[index-1].filter(el => el.userGroupId !== +this.groupPermissionForm.value.userGroups[index-1].userGroupId);
+      } else {
+        this.userGroupDropdownData[index] = this.userGroupDropdownData[index - 1].filter(el => el.userGroupId !== +this.groupPermissionForm.value.userGroups[index - 1].userGroupId);
       }
     })
   }
 
   // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
-  onImageSourceSelect(ImageSourceValue){
-    this.store.dispatch(ApplicationActions.loadDockerImageName({imageSourceName:ImageSourceValue}));
+  onImageSourceSelect(ImageSourceValue) {
+    this.store.dispatch(ApplicationActions.loadDockerImageName({ imageSourceName: ImageSourceValue }));
   }
 
   // Below function is use to populate Docker Image name dropdown after selecting DockerAccountName
-  onChangeDockerAcc(event,serviceIndex){
+  onChangeDockerAcc(event, serviceIndex) {
     this.dockerImageData.forEach(imageName => {
-      if(imageName.imageSource === event.target.value){
+      if (imageName.imageSource === event.target.value) {
         this.dockerImageDropdownData[serviceIndex] = imageName.images;
       }
     })
   }
 
   // Below function is use to populate newley created template into appropriate service field
-  populateSelectedTemplateName(index,type){
-    if(index > -1){
+  populateSelectedTemplateName(index, type) {
+    if (index > -1) {
       const arrayControl = this.servicesForm.get('services') as FormArray;
-      const innerarrayControl = arrayControl.at(index).get(type) 
-      if(this.userType.includes('deployment_verification')){
-        if(type === 'logTemp'){
-          if(this.templateEditMode){
+      const innerarrayControl = arrayControl.at(index).get(type)
+      if (this.userType.includes('deployment_verification')) {
+        if (type === 'logTemp') {
+          if (this.templateEditMode) {
             innerarrayControl.patchValue(this.logTemplateData[this.editTemplateIndex].templateName);
-          }else{
-            innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length-1].templateName);
+          } else {
+            innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length - 1].templateName);
           }
-        }else{
-          if(this.templateEditMode){
+        } else {
+          if (this.templateEditMode) {
             innerarrayControl.patchValue(this.metricTemplateData[this.editTemplateIndex].templateName);
-          }else{
-            innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length-1].templateName);
+          } else {
+            innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length - 1].templateName);
           }
         }
       }
@@ -834,18 +832,18 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is use to return proper group value
-  groupProperties(name,props){
+  groupProperties(name, props) {
     let prop = '';
-    if(name){
+    if (name) {
       this.userGroupData.forEach(group => {
-        if(group.userGroupId === +props){
+        if (group.userGroupId === +props) {
           prop = group.userGroupName;
         }
       })
-    }else{
-      props.forEach((permission,index) => {
-        if(permission.value === true){
-          prop +=  prop === '' ? permission.name : ','+permission.name;
+    } else {
+      props.forEach((permission, index) => {
+        if (permission.value === true) {
+          prop += prop === '' ? permission.name : ',' + permission.name;
         }
       });
     }
@@ -853,20 +851,20 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is use to check whether permission is selected or not after selection of usergroup.
-  permissionContrlValid(controlvalue){
+  permissionContrlValid(controlvalue) {
     let counter = 0;
     controlvalue.value.forEach(permission => {
-      if(permission.value === true){
+      if (permission.value === true) {
         counter++;
       }
     });
-    if(counter > 0){
+    if (counter > 0) {
       controlvalue.setErrors(null);
-    }else{
-      controlvalue.setErrors({'incorrect': true});
+    } else {
+      controlvalue.setErrors({ 'incorrect': true });
     }
     return counter > 0 ? false : true;
-  } 
+  }
 
   //Below function is use to add more permission group
   addGroup() {
@@ -875,7 +873,7 @@ export class CreateApplicationComponent implements OnInit {
     const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
     userGroupControl.push(
       new FormGroup({
-        userGroupId: new FormControl('',[Validators.required,this.usergroupExist.bind(this)]),
+        userGroupId: new FormControl('', [Validators.required, this.usergroupExist.bind(this)]),
         permissionIds: new FormArray([])
       })
     );
@@ -890,7 +888,7 @@ export class CreateApplicationComponent implements OnInit {
         })
       )
     })
-    
+
     // populating user group dropdown data
     this.populateUserGroupsDropdown();
   }
@@ -919,13 +917,13 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.environmentForm.get('environments')).removeAt(index);
   }
 
-  addNewConnector(){
-    this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
-    
+  addNewConnector() {
+    this.store.dispatch(ApplicationActions.getToolConnectorForaGate({ gateId: this.gateId }));
+
   }
   //Below function is use to add more permission group
   addConnector() {
-    this.addNewConnectorAllowed = false;    
+    this.addNewConnectorAllowed = false;
     (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
       new FormGroup({
         connectorType: new FormControl('', Validators.required),
@@ -972,29 +970,29 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is use to add new service in existing Service Section
   addService() {
-   // (<FormGroup>this.servicesForm.get('services')).push(this.setServiceForm());
+    // (<FormGroup>this.servicesForm.get('services')).push(this.setServiceForm());
 
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
     // Update dockerImageDropdownData array
-  //   //if(this.userType.includes('Sapor')){
-  //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
-  //     const arrayControl = this.servicesForm.get('services') as FormArray;
-  //     const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
-  //     const mainData = innerarrayControl.at(0).get('dockerImageName');
-  //     mainData.patchValue({
-  //         'accountName': this.dockerImageData[0].imageSource
-  //     });
-  // //  }
+    //   //if(this.userType.includes('Sapor')){
+    //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+    //     const arrayControl = this.servicesForm.get('services') as FormArray;
+    //     const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
+    //     const mainData = innerarrayControl.at(0).get('dockerImageName');
+    //     mainData.patchValue({
+    //         'accountName': this.dockerImageData[0].imageSource
+    //     });
+    // //  }
   }
 
   //Below function is use to delete existing service fron Service Section
   deleteService(index) {
     $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
-     // Update dockerImageDropdownData array
-     this.dockerImageDropdownData.splice(index, 1);
+    // Update dockerImageDropdownData array
+    this.dockerImageDropdownData.splice(index, 1);
   }
-  
+
   //valid all form data if something is left
   validForms() {
     // displaying error on reqd field which is invalid
@@ -1005,41 +1003,41 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is execute after click on add template btn.
-  onAddTemplate(index,type){
+  onAddTemplate(index, type) {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.templateEditMode = false;
-    if(type === "log"){
+    if (type === "log") {
       this.currentLogTemplateIndex = index;
-    }else{
+    } else {
       this.currentMetricTemplateIndex = index;
       this.isMetricTemplateClicked = !this.isMetricTemplateClicked;
     }
   }
 
   // Below function is execute after click on edit template btn.
-  onEditTemplate(index,type){
+  onEditTemplate(index, type) {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.editTemplateIndex = -1;
     this.currentLogTemplateIndex = -1;
     this.currentMetricTemplateIndex = -1;
     const serviceArrayControl = this.servicesForm.get('services') as FormArray;
     const templatControl = serviceArrayControl.at(index);
-    if(type === "log" && templatControl.value.logTemp !== ""){
+    if (type === "log" && templatControl.value.logTemp !== "") {
       this.templateEditMode = true;
       this.currentLogTemplateIndex = index;
-      this.logTemplateData.forEach((logdata,index)=>{
-       // if(templatControl.value.logTemp === logdata.templateName){
-          this.editTemplateIndex = index;
-          this.editTemplateData = {...logdata};
-       // }
+      this.logTemplateData.forEach((logdata, index) => {
+        // if(templatControl.value.logTemp === logdata.templateName){
+        this.editTemplateIndex = index;
+        this.editTemplateData = { ...logdata };
+        // }
       })
-    }else if(type === "metric" && templatControl.value.metricTemp !== ""){
+    } else if (type === "metric" && templatControl.value.metricTemp !== "") {
       this.templateEditMode = true;
       this.currentMetricTemplateIndex = index;
-      this.metricTemplateData.forEach((metricData,index)=>{
-        if(templatControl.value.metricTemp === metricData.templateName){
+      this.metricTemplateData.forEach((metricData, index) => {
+        if (templatControl.value.metricTemp === metricData.templateName) {
           this.editTemplateIndex = index;
-          this.editTemplateData = {...metricData};
+          this.editTemplateData = { ...metricData };
         }
       })
     }
@@ -1059,8 +1057,8 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is use to redirect to parent page after click on cancel btn
-  cancelForm(){
-    if(this.editMode){
+  cancelForm() {
+    if (this.editMode) {
       this.createApplicationForm.reset();
       this.environmentForm.reset();
       this.servicesForm.reset();
@@ -1070,104 +1068,111 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   // Below function is use to submit applicatio form
-  SubmitApplicationForm(){
+  SubmitApplicationForm() {
     console.log(this.createApplicationForm.value);
     this.appForm = this.createApplicationForm.value;
-    if(this.createApplicationForm.value.name){
+    if (this.createApplicationForm.value.name) {
       this.showFeatures = true;
     }
-      //Below action is use to save created form in database
-      if(this.editMode){
-       // this.store.dispatch(ApplicationActions.updateApplication({appData:this.appForm}));
-      }else{
-        this.store.dispatch(ApplicationActions.saveApplication({applicationData:this.appForm}));
-      }
+    //Below action is use to save created form in database
+    if (this.editMode) {
+      // this.store.dispatch(ApplicationActions.updateApplication({appData:this.appForm}));
+    } else {
+      this.store.dispatch(ApplicationActions.saveApplication({ applicationData: this.appForm }));
+    }
   }
 
   // Below function is use to save service form
-  saveServiceForm(index){
+  saveServiceForm(index) {
     console.log(this.servicesForm.value.services[index].serviceName);
     this.servForm = this.servicesForm.value.services[index];
     var serviceDataToSave = {
-      "name" : this.servicesForm.value.services[index].serviceName
+      "name": this.servicesForm.value.services[index].serviceName
     };
-    this.store.dispatch(ApplicationActions.saveService({applicationId : this.applicationId,serviceSaveData:serviceDataToSave}));
+    this.store.dispatch(ApplicationActions.saveService({ applicationId: this.applicationId, serviceSaveData: serviceDataToSave }));
+    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
+
   }
 
-   // Below function is use to submit environments form
-   SubmitEnvironmentsForm(){
+  // Below function is use to submit environments form
+  SubmitEnvironmentsForm() {
     console.log(this.environmentForm.value);
     this.envForm = this.environmentForm.value.environments;
-    if(this.createApplicationForm.value.name){
+    if (this.createApplicationForm.value.name) {
       this.showFeatures = true;
       //this.envForm = this.environmentForm.value.environments;
 
     }
-    if(this.editMode && this.environmentForm.valid){
+    if (this.editMode && this.environmentForm.valid) {
       //if(this.userType.includes('Sapor')){
-        this.store.dispatch(ApplicationActions.saveEnvironments({applicationId : this.applicationId,environmentsData:this.environmentForm.value}));
-     // }
-    }else{
-      this.store.dispatch(ApplicationActions.saveEnvironments({applicationId : this.applicationId,environmentsData:this.environmentForm.value}));
+      this.store.dispatch(ApplicationActions.saveEnvironments({ applicationId: this.applicationId, environmentsData: this.environmentForm.value }));
+      // }
+    } else {
+      this.store.dispatch(ApplicationActions.saveEnvironments({ applicationId: this.applicationId, environmentsData: this.environmentForm.value }));
     }
   }
 
   // Below function is use to submit group permission form
-  SubmitGroupPermissionForm(){
-    this.groupForm = this.groupPermissionForm.value.userGroups;    
-    var userGroupPermissionDataToSave :any =[];
-    for(var i=0; i<this.groupPermissionForm.value.userGroups.length ; i++){
+  SubmitGroupPermissionForm() {
+    this.groupForm = this.groupPermissionForm.value.userGroups;
+    var userGroupPermissionDataToSave: any = [];
+    for (var i = 0; i < this.groupPermissionForm.value.userGroups.length; i++) {
       var groupName = this.userGroupData.find(x => x.userGroupId == this.groupPermissionForm.value.userGroups[i].userGroupId).userGroupName;
-      var obj ={
+      var obj = {
         "userGroupId": this.groupPermissionForm.value.userGroups[i].userGroupId,
-     		"userGroupName" : groupName,
-	   		"permissionIds": this.groupPermissionForm.value.userGroups[i].permissionIds.filter(i => i.value == true).map(ele=>ele.name)
+        "userGroupName": groupName,
+        "permissionIds": this.groupPermissionForm.value.userGroups[i].permissionIds.filter(i => i.value == true).map(ele => ele.name)
       };
       userGroupPermissionDataToSave.push(obj);
     };
-    this.store.dispatch(ApplicationActions.saveGroupPermissions({applicationId: this.applicationId, groupPermissionData: userGroupPermissionDataToSave}));
+    this.store.dispatch(ApplicationActions.saveGroupPermissions({ applicationId: this.applicationId, groupPermissionData: userGroupPermissionDataToSave }));
   }
 
   // Below funcion is use to submit sapor data
-  SubmitSaporForm(serviceIndex){    
+  SubmitSaporForm(serviceIndex) {
     console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
     const postSapor = {
-      applicationId : this.applicationId,
-      serviceId : this.serviceId,
+      applicationId: this.applicationId,
+      serviceId: this.serviceId,
       service: {
-        serviceName : this.servicesForm.value.services[serviceIndex].serviceName,
-        pipelines : this.servicesForm.value.services[serviceIndex].saporConfiguration['pipelines']
+        serviceName: this.servicesForm.value.services[serviceIndex].serviceName,
+        pipelines: this.servicesForm.value.services[serviceIndex].saporConfiguration['pipelines']
       }
     }
 
     console.log(JSON.stringify(postSapor));
 
-    this.store.dispatch(ApplicationActions.saveSaporConfig({saporConfigData : postSapor}));
+    if(this.editMode){
+      this.store.dispatch(ApplicationActions.updateSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId, saporConfigData: postSapor}));
 
+    }else{
+      this.store.dispatch(ApplicationActions.saveSaporConfig({ saporConfigData: postSapor }));
+
+    }
   }
 
   // Below function is use to delete sapor
-  deleteSaporForm(serviceIndex){
+  deleteSaporForm(serviceIndex) {
 
-    this.store.dispatch(ApplicationActions.deleteSaporConfig({applicationId:this.applicationId,serviceId:this.serviceId}));
+    this.store.dispatch(ApplicationActions.deleteSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
   }
 
   // Below function is use to save each connector
-  saveConnector(index){
+  saveConnector(index) {
     console.log(this.visibilityForm.value.visibilityConfig[index]);
     var dataToSaveToolConnectorwithTemplate = {
-      templateId : this.templateId[index]
+      templateId: this.templateId[index]
     };
-    this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({gateId: this.gateId, connectorId : this.connectorId, toolconnectorwithTemplateData : dataToSaveToolConnectorwithTemplate}));
+    this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({ gateId: this.gateId, connectorId: this.connectorId, toolconnectorwithTemplateData: dataToSaveToolConnectorwithTemplate }));
   }
 
   // Bewlow function is use to submit visibility form
-  SubmitVisibilityForm(){
+  SubmitVisibilityForm() {
     console.log(this.visibilityForm.value);
   }
 
   // Below function is use to submit visibility gate data
-  saveGateForm(){
+  saveGateForm() {
     console.log(this.gateForm.value.gateName);
     //json to save approvalGate
     // {
@@ -1176,358 +1181,361 @@ export class CreateApplicationComponent implements OnInit {
     //   "serviceId": 1
     // }
     var gateData = {
-      "name" : this.gateForm.value.gateName,
-      "serviceId" : this.serviceId
+      "name": this.gateForm.value.gateName,
+      "serviceId": this.serviceId
     };
-    if(this.isVisibilityConfigured){
-      this.store.dispatch( ApplicationActions.saveApprovalGate({approvalGateData : gateData}));
-    }else{
-      this.store.dispatch(ApplicationActions.saveVisibilityFeature({approvalGateData : gateData}));  
+    if (this.isVisibilityConfigured) {
+      this.store.dispatch(ApplicationActions.saveApprovalGate({ approvalGateData: gateData }));
+    } else {
+      this.store.dispatch(ApplicationActions.saveVisibilityFeature({ approvalGateData: gateData }));
     }
   }
 
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
-      if (this.createApplicationForm.valid && this.servicesForm.valid && this.groupPermissionForm.valid) {
+    if (this.createApplicationForm.valid && this.servicesForm.valid && this.groupPermissionForm.valid) {
 
-        // Saving all 4 forms data into one
-        this.mainForm = this.createApplicationForm.value;
-        // Below is configuration related to service section when userType contain OES.
-        if(this.userType.includes('sapor')){
-          this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
-            ServiceArr.pipelines.forEach((PipelineArr, j) => {
-              PipelineArr.pipelineParameters.forEach((DataArr, k) => {
-                if (DataArr.value === '') {
-                  DataArr.value = this.getProperValue(i, j, k)
-                }
-              })
+      // Saving all 4 forms data into one
+      this.mainForm = this.createApplicationForm.value;
+      // Below is configuration related to service section when userType contain OES.
+      if (this.userType.includes('sapor')) {
+        this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
+          ServiceArr.pipelines.forEach((PipelineArr, j) => {
+            PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+              if (DataArr.value === '') {
+                DataArr.value = this.getProperValue(i, j, k)
+              }
             })
           })
-        }
-        
-        this.mainForm.services = this.servicesForm.getRawValue().services;
-        // usergroups section
-        this.mainForm.userGroups = this.groupPermissionForm.value.userGroups.map(usergroupData => {
-          let usergroupObj:GroupPermission = {
-            userGroupId: usergroupData.userGroupId,
-            userGroupName : usergroupData.userGroupName,
-            permissionIds:[]
-          }
-          usergroupData.permissionIds.forEach(permission => {
-            if(permission.value === true){
-              usergroupObj.permissionIds.push(permission.name);
-            }
-          });
-          return usergroupObj;
-        });
-
-        if(this.userType.includes('sapor')){
-          this.mainForm.environments = this.environmentForm.value.environments;
-        }
-        if(this.userType.includes('deployment_verification')){
-          this.mainForm.logTemplate = this.logTemplateData;
-          this.mainForm.metricTemplate = this.metricTemplateData;
-        }
-        
-        //Below action is use to save created form in database
-        if(this.editMode){
-          this.store.dispatch(ApplicationActions.updateApplication({appData:this.mainForm}));
-        }else{
-          this.store.dispatch(ApplicationActions.createApplication({appData:this.mainForm}));
-        }
-        
-      } else {
-        this.validForms();
+        })
       }
+
+      this.mainForm.services = this.servicesForm.getRawValue().services;
+      // usergroups section
+      this.mainForm.userGroups = this.groupPermissionForm.value.userGroups.map(usergroupData => {
+        let usergroupObj: GroupPermission = {
+          userGroupId: usergroupData.userGroupId,
+          userGroupName: usergroupData.userGroupName,
+          permissionIds: []
+        }
+        usergroupData.permissionIds.forEach(permission => {
+          if (permission.value === true) {
+            usergroupObj.permissionIds.push(permission.name);
+          }
+        });
+        return usergroupObj;
+      });
+
+      if (this.userType.includes('sapor')) {
+        this.mainForm.environments = this.environmentForm.value.environments;
+      }
+      if (this.userType.includes('deployment_verification')) {
+        this.mainForm.logTemplate = this.logTemplateData;
+        this.mainForm.metricTemplate = this.metricTemplateData;
+      }
+
+      //Below action is use to save created form in database
+      if (this.editMode) {
+        this.store.dispatch(ApplicationActions.updateApplication({ appData: this.mainForm }));
+      } else {
+        this.store.dispatch(ApplicationActions.createApplication({ appData: this.mainForm }));
+      }
+
+    } else {
+      this.validForms();
+    }
   }
 
   // Below function is use to get the feature type
-  
-  selectFeature(item,index){
+
+  selectFeature(item, index) {
+
     this.selectedFeature[index] = item;
     this.userIndex = index;
-     
 
-    if(item === 'deployment_verification'){
-    //   this.userType = item;
-    //   const arrayControl = this.servicesForm.get('services') as FormArray;
-    //   const innerarrayControl = arrayControl.at(index).get('configurations') as FormGroup;
-    //  autopilotParams.data.forEach(param => {
-    //     if(param.type == 'form-control'){
-    //       innerarrayControl.addControl( param.name, new FormControl(''));
-    //     }else{
-    //     }
-    //   });
 
-    }else if(item === 'sapor'){
-      const saporForm =  new FormGroup({
+    if (item === 'deployment_verification') {
+ 
+
+    } else if (item === 'sapor') {
+
+      const saporForm = new FormGroup({
         pipelines: new FormArray([
-        new FormGroup({
-          pipelinetemplate: new FormControl('', Validators.required),
-          dockerImageName: new FormGroup({
-            accountName: new FormControl('', Validators.required),
-            imageName: new FormControl('', Validators.required)
-          }),
-          pipelineParameters: new FormArray([])
-        })
-      ])
-    });
+          new FormGroup({
+            pipelinetemplate: new FormControl('', Validators.required),
+            dockerImageName: new FormGroup({
+              accountName: new FormControl('', Validators.required),
+              imageName: new FormControl('', Validators.required)
+            }),
+            pipelineParameters: new FormArray([])
+          })
+        ])
+      });
+
       this.userType = item;
       const arrayControl = this.servicesForm.get('services') as FormArray;
       const innerarrayControl = arrayControl.at(index) as FormGroup;
-      innerarrayControl.addControl('saporConfiguration',  saporForm);
+      innerarrayControl.addControl('saporConfiguration', saporForm);
+
 
       // edit related code goes here
+      if (this.saporFinalData && this.saporFinalData.service.pipelines.length) {
 
-      this.store.dispatch(ApplicationActions.getSaporConfig({applicationId: this.applicationId,serviceId:this.serviceId}));
+        const innerSaporConfig = arrayControl.at(index).get('saporConfiguration') as FormGroup;
+        const pipelineList = innerSaporConfig.get('pipelines') as FormArray;
+        const pipelineParam = pipelineList.at(0) as FormGroup;
 
-      //populating pipeline array
-      // this.saporFinalData.pipelines.forEach((pipelineArr, pipelineIndex) => {
-      //   const serviceArray = this.servicesForm.get('services') as FormArray;
-      //   const pipelineArray = serviceArray.at(index).get('pipelines') as FormArray;
-      //   pipelineArray.push(
-      //     new FormGroup({
-      //       pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
-      //       dockerImageName: new FormGroup({
-      //         accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
-      //         imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
-      //       }),
-      //       pipelineParameters: new FormArray([])
-      //     })
-      //   )
-      // });
+        pipelineParam.patchValue({
+          pipelinetemplate: this.saporFinalData.service.pipelines[0].pipelinetemplate,
+          dockerImageName: {
+            accountName: this.saporFinalData.service.pipelines[0].dockerImageName.accountName,
+            imageName: this.saporFinalData.service.pipelines[0].dockerImageName.imageName,
+          }
+        })
 
-      
-    }else if(item === 'visibility'){
+        if (this.saporFinalData.service.pipelines[0].pipelineParameters !== null && this.saporFinalData.service.pipelines[0].pipelineParameters !== undefined) {
+          //populating pipelieParameter array
+          this.saporFinalData.service.pipelines[0].pipelineParameters.forEach(pipelineParameterArr => {
+            const pipelineParameter = pipelineParam.get('pipelineParameters') as FormArray;
+            pipelineParameter.push(
+              new FormGroup({
+                value: new FormControl(pipelineParameterArr.value),
+                name: new FormControl(pipelineParameterArr.name),
+                type: new FormControl(pipelineParameterArr.type)
+              })
+            );
+          })
+        }
+
+      }
+
+    } else if (item === 'visibility') {
       //check gate already configured for the selectd service
       console.log(this.serviceId);
-      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({serviceId : this.serviceId}));
+      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
 
-    // defining reactive form for Visibility connector template Section
+      // defining reactive form for Visibility connector template Section
 
-     this.visibilityForm = new FormGroup({
-      visibilityConfig: new FormArray([])
-    });
-
-
-    }
-  
- 
-  }
-
-
-// refactor code functions goes here
-
-getApplicationDetails(){
-  
-}
-
-
-
-// selectFeature(item:string){
-//   this.selectedFeature = item;
-// }
-
-
-
-clearGateName(){
-  this.gateForm.reset();
-}
-
-onClickEditOfGateName(){
-  this.isEditGateEnabled = true;
-}
-
-onEditGateName(){
-  var approvalGateToEdit = {
-    "id": this.gateId,
-    "name": this.gateForm.value.gateName,
-    "serviceId": 1
-  }
-  this.store.dispatch(ApplicationActions.editApprovalGate({gateId : this.gateId,gateDataToEdit : approvalGateToEdit }));
-}
-
-onDeleteGateName(){
-  this.store.dispatch(ApplicationActions.deleteApprovalGate({gateId : this.gateId}));
-}
-
-onChangeTooltype(tooltype){
-  console.log(tooltype);
-  this.toolType = tooltype;
-  this.store.dispatch(ApplicationActions.getAccountToolType({connectorType : tooltype}));
-  this.store.dispatch(ApplicationActions.getTemplatesToolType({connectorType : tooltype}));
-}
-
-onChangeAccountofTooltype(account){
-  console.log(account);
-  this.connectorId = account;
-
-}
-
-onChangeTemplateofTooltype(template,index){
-  if(template == '+') {
-    this.templateId[index] = '';
-    let visibilityConfigFormArray = this.visibilityForm.get('visibilityConfig') as FormArray
-    visibilityConfigFormArray.controls[index].get('templateName').setValue('');
-    let toolType = visibilityConfigFormArray.controls[index].get('connectorType').value;
-
-    if(!toolType) {
-      // Show validation on Tool type field and alert user to select Tool type first.
-    }
-
-    this.toolTemplateForm.setValue({
-      id: null,
-      toolType: toolType,
-      name: '',
-      template: ''
-    });
-    this.toolTemplateForm.controls.id.disable();
-    this.selectedTTTemplateTab = 'tooltype-template-form';
-    setTimeout(() => {
-      this.newtemplate.nativeElement.click();
-    }, 100);
-    
-    return;
-  }
-  console.log(template);
-  this.templateId[index] = template;
-}
-
-editTemplate(index) {
-  if(this.templateId[index]) {
-    this.templateEditMode = true;
-    this.store.dispatch(ApplicationActions.getTemplateDataForTooltype({templateId: this.templateId[index]}));
-    this.editTemplateTriggered = true;
-    this.editTemplateTriggeredID = this.templateId[index];
-  }
-}
-
-loadEditTemplate(response) {
-  if(response.templateData && response.isTemplateDataForToolTypeLoaded){
-    this.store.dispatch(ApplicationActions.isLoadedTemplateData());
-    this.templateDataForToolType = response.templateData;
-    console.log(this.templateDataForToolType);
-    if(this.editTemplateTriggered) {
-      this.toolTemplateForm.controls.id.enable();
-      this.toolTemplateForm.setValue({
-        id: this.templateDataForToolType.id,
-        toolType: this.templateDataForToolType.toolType,
-        name: this.templateDataForToolType.name,
-        template: this.templateDataForToolType.template
+      this.visibilityForm = new FormGroup({
+        visibilityConfig: new FormArray([])
       });
-      this.editTemplateTriggered = false;
+
+
+    }
+
+
+  }
+
+
+  // refactor code functions goes here
+
+  getApplicationDetails() {
+
+  }
+
+
+
+  // selectFeature(item:string){
+  //   this.selectedFeature = item;
+  // }
+
+
+
+  clearGateName() {
+    this.gateForm.reset();
+  }
+
+  onClickEditOfGateName() {
+    this.isEditGateEnabled = true;
+  }
+
+  onEditGateName() {
+    var approvalGateToEdit = {
+      "id": this.gateId,
+      "name": this.gateForm.value.gateName,
+      "serviceId": 1
+    }
+    this.store.dispatch(ApplicationActions.editApprovalGate({ gateId: this.gateId, gateDataToEdit: approvalGateToEdit }));
+  }
+
+  onDeleteGateName() {
+    this.store.dispatch(ApplicationActions.deleteApprovalGate({ gateId: this.gateId }));
+  }
+
+  onChangeTooltype(tooltype) {
+    console.log(tooltype);
+    this.toolType = tooltype;
+    this.store.dispatch(ApplicationActions.getAccountToolType({ connectorType: tooltype }));
+    this.store.dispatch(ApplicationActions.getTemplatesToolType({ connectorType: tooltype }));
+  }
+
+  onChangeAccountofTooltype(account) {
+    console.log(account);
+    this.connectorId = account;
+
+  }
+
+  onChangeTemplateofTooltype(template, index) {
+    if (template == '+') {
+      this.templateId[index] = '';
+      let visibilityConfigFormArray = this.visibilityForm.get('visibilityConfig') as FormArray
+      visibilityConfigFormArray.controls[index].get('templateName').setValue('');
+      let toolType = visibilityConfigFormArray.controls[index].get('connectorType').value;
+
+      if (!toolType) {
+        // Show validation on Tool type field and alert user to select Tool type first.
+      }
+
+      this.toolTemplateForm.setValue({
+        id: null,
+        toolType: toolType,
+        name: '',
+        template: ''
+      });
+      this.toolTemplateForm.controls.id.disable();
+      this.selectedTTTemplateTab = 'tooltype-template-form';
       setTimeout(() => {
-        this.edittemplate.nativeElement.click();
+        this.newtemplate.nativeElement.click();
       }, 100);
+
+      return;
+    }
+    console.log(template);
+    this.templateId[index] = template;
+  }
+
+  editTemplate(index) {
+    if (this.templateId[index]) {
+      this.templateEditMode = true;
+      this.store.dispatch(ApplicationActions.getTemplateDataForTooltype({ templateId: this.templateId[index] }));
+      this.editTemplateTriggered = true;
+      this.editTemplateTriggeredID = this.templateId[index];
     }
   }
-}
 
-saveToolTypeTemplateForm() {
-  if(this.toolTemplateForm.valid) {
-    this.tooltypeTemplateData = this.toolTemplateForm.value;
-    this.saveTooltypeTemplate();
-  }
-}
-
-saveTooltypeTemplate(){
-  console.log(this.tooltypeTemplateData);
-  if(this.tooltypeTemplateData.id) {
-    this.store.dispatch(ApplicationActions.updateTemplateForTooltype({updatedTemplateForToolTypeData : this.tooltypeTemplateData}));
-  }
-  else {
-    this.store.dispatch(ApplicationActions.saveTemplateForTooltype({templateForToolTypeData : this.tooltypeTemplateData}));
-  }
-  
-  if(this.tooltypeTemplateModel !== undefined){
-    this.tooltypeTemplateModel.nativeElement.click();
-  }
-}
-
-deleteVisibilityFeature(){
-  this.store.dispatch(ApplicationActions.deleteVisibilityFeature({serviceId : this.serviceId, gateId : this.gateId}));
-}
-
-closeTemplatePopup() {
-  this.templateEditMode = false;
-}
-
-//Below function is use to fetched json from json editor
-getJsonFromTooltypeTemplateEditor(event = null){
-  this.tooltypeTemplateData = this.tooltypeTemplateEditorJson.get();
-}
-
-
-onClickTemplateTab(event){
-  if(event === 'tooltype-template-form-tab'){
-    this.selectedTTTemplateTab = 'tooltype-template-form';
-  } else if(event === 'tooltype-template-editor-tab') {
-    this.selectedTTTemplateTab = 'tooltype-template-editor';
-  }
-}
-
-autoFocus(focusedClass){
-  this.showserviceGroup=true;
-  
-}
-configuredFeaturepresent(totalServices){
-  
-  for(let i=0;i<totalServices;i++)
-  {
-    var myjson = {
-      servicename:this.appData.services[i].serviceName,
-      serviceFeatures:[]
-    }
-    this.isFeaturePresent.push(myjson)
-    for(let j=0;j<this.featureList.length;j++)
-    {
-      var value
-      for(let k =0;k<this.featureList.length; k++)
-      if(this.configuredFeature[i].configuredFeatures[k] == this.featureList[j].toLowerCase())
-      {
-        value=true;
-        break;
+  loadEditTemplate(response) {
+    if (response.templateData && response.isTemplateDataForToolTypeLoaded) {
+      this.store.dispatch(ApplicationActions.isLoadedTemplateData());
+      this.templateDataForToolType = response.templateData;
+      console.log(this.templateDataForToolType);
+      if (this.editTemplateTriggered) {
+        this.toolTemplateForm.controls.id.enable();
+        this.toolTemplateForm.setValue({
+          id: this.templateDataForToolType.id,
+          toolType: this.templateDataForToolType.toolType,
+          name: this.templateDataForToolType.name,
+          template: this.templateDataForToolType.template
+        });
+        this.editTemplateTriggered = false;
+        setTimeout(() => {
+          this.edittemplate.nativeElement.click();
+        }, 100);
       }
-      else{
-        value=false;
-      }
-      
-     this.isFeaturePresent[i].serviceFeatures.push(value)
     }
   }
-  
-}
 
-loadServiceForm(){
+  saveToolTypeTemplateForm() {
+    if (this.toolTemplateForm.valid) {
+      this.tooltypeTemplateData = this.toolTemplateForm.value;
+      this.saveTooltypeTemplate();
+    }
+  }
 
-  this.showServiceForm = true;
-  this.showApplicationForm = false;
-  this.showEnvironmentForm = false;
-  this.showPermissionForm = false;
-}
+  saveTooltypeTemplate() {
+    console.log(this.tooltypeTemplateData);
+    if (this.tooltypeTemplateData.id) {
+      this.store.dispatch(ApplicationActions.updateTemplateForTooltype({ updatedTemplateForToolTypeData: this.tooltypeTemplateData }));
+    }
+    else {
+      this.store.dispatch(ApplicationActions.saveTemplateForTooltype({ templateForToolTypeData: this.tooltypeTemplateData }));
+    }
 
-loadApplicationForm(){
-  this.showServiceForm = false;
-  this.showEnvironmentForm = false;
-  this.showPermissionForm = false;
-  this.showApplicationForm = true;
-  
+    if (this.tooltypeTemplateModel !== undefined) {
+      this.tooltypeTemplateModel.nativeElement.click();
+    }
+  }
 
-}
+  deleteVisibilityFeature() {
+    this.store.dispatch(ApplicationActions.deleteVisibilityFeature({ serviceId: this.serviceId, gateId: this.gateId }));
+  }
 
-loadEnvironmentsForm(){
-  this.showEnvironmentForm = true;
-  this.showPermissionForm = false;
-  this.showApplicationForm = false;
-  this.showServiceForm = false;
+  closeTemplatePopup() {
+    this.templateEditMode = false;
+  }
 
-}
+  //Below function is use to fetched json from json editor
+  getJsonFromTooltypeTemplateEditor(event = null) {
+    this.tooltypeTemplateData = this.tooltypeTemplateEditorJson.get();
+  }
 
-loadGroupPermissionForm(){
-  this.showPermissionForm = true;
-  this.showEnvironmentForm = false;
-  this.showApplicationForm = false;
-  this.showServiceForm = false;
-}
+
+  onClickTemplateTab(event) {
+    if (event === 'tooltype-template-form-tab') {
+      this.selectedTTTemplateTab = 'tooltype-template-form';
+    } else if (event === 'tooltype-template-editor-tab') {
+      this.selectedTTTemplateTab = 'tooltype-template-editor';
+    }
+  }
+
+  autoFocus(focusedClass) {
+    this.showserviceGroup = true;
+
+  }
+  configuredFeaturepresent(totalServices) {
+
+    for (let i = 0; i < totalServices; i++) {
+      var myjson = {
+        servicename: this.appData.services[i].serviceName,
+        serviceFeatures: []
+      }
+      this.isFeaturePresent.push(myjson)
+      for (let j = 0; j < this.featureList.length; j++) {
+        var value
+        for (let k = 0; k < this.featureList.length; k++)
+          if (this.configuredFeature[i].configuredFeatures[k] == this.featureList[j].toLowerCase()) {
+            value = true;
+            break;
+          }
+          else {
+            value = false;
+          }
+
+        this.isFeaturePresent[i].serviceFeatures.push(value)
+      }
+    }
+
+  }
+
+  loadServiceForm() {
+
+    this.showServiceForm = true;
+    this.showApplicationForm = false;
+    this.showEnvironmentForm = false;
+    this.showPermissionForm = false;
+  }
+
+  loadApplicationForm() {
+    this.showServiceForm = false;
+    this.showEnvironmentForm = false;
+    this.showPermissionForm = false;
+    this.showApplicationForm = true;
+
+
+  }
+
+  loadEnvironmentsForm() {
+    this.showEnvironmentForm = true;
+    this.showPermissionForm = false;
+    this.showApplicationForm = false;
+    this.showServiceForm = false;
+
+  }
+
+  loadGroupPermissionForm() {
+    this.showPermissionForm = true;
+    this.showEnvironmentForm = false;
+    this.showApplicationForm = false;
+    this.showServiceForm = false;
+  }
 
 }

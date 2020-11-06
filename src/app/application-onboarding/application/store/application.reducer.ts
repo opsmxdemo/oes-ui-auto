@@ -51,6 +51,7 @@ export interface State {
     deleteSaporConfigMessage : any;
     saporConfigList : any;
     isSaporConfigLoaded: boolean;
+    isSaporConfigUpdated: boolean;
 
 
 
@@ -165,6 +166,7 @@ export const initialState: State = {
     deleteSaporConfigMessage: null,
     saporConfigList: null,
     isSaporConfigLoaded: false,
+    isSaporConfigUpdated: false,
 
 }
 
@@ -756,14 +758,14 @@ export function ApplicationReducer(
     on(ApplicationAction.saveSaporConfig,
         (state,action) => ({
             ...state,
-            approvalGateData:action.saporConfigData,
+            saporConfigData:action.saporConfigData,
             isSaporConfigSaved: false
         })
     ),
     on(ApplicationAction.postSaveSaporConfig,
         (state,action) => ({
             ...state,
-            approvalGateSavedData:action.saporConfigSavedData,
+            saporConfigData:action.saporConfigSavedData,
             isSaporConfigSaved: true
         })
     ),
@@ -771,6 +773,28 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             isSaporConfigSaved: false
+        })
+    ),
+
+    // update sapor
+    on(ApplicationAction.updateSaporConfig,
+        (state,action) => ({
+            ...state,
+            saporConfigData:action.saporConfigData,
+            isSaporConfigUpdated: false
+        })
+    ),
+    on(ApplicationAction.postUpdateSaporConfig,
+        (state,action) => ({
+            ...state,
+            saporConfigData:action.saporConfigSavedData,
+            isSaporConfigUpdated: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigSaved,
+        (state,action) => ({
+            ...state,
+            isSaporConfigUpdated: false
         })
     ),
 
