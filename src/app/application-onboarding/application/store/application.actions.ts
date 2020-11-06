@@ -132,6 +132,15 @@ export const saveSaporConfig = createAction('[Application] SaveSaporConfig', pro
 export const postSaveSaporConfig = createAction('[Application] PostSaveSaporConfig', props<{saporConfigSavedData:any}>());
 export const isSaporConfigSaved = createAction('[Application] isSaporConfigSaved');
 
+export const deleteSaporConfig = createAction('[Application] DeleteSaporConfig', props<{applicationId:any,serviceId:any}>());
+export const postDeleteSaporConfig = createAction('[Application] PostDeleteSaporConfig', props<{message:any}>());
+export const isSaporConfigDeleted = createAction('[Application] IsSaporConfigDeleted');
+
+export const getSaporConfig = createAction('[Application] GetSaporConfig',props<{applicationId:any,serviceId:any}>());
+export const loadSaporConfig = createAction('[Application] LoadSaporConfig', props<{saporConfigList:any}>());
+export const isSaporConfigLoaded = createAction('[Application] IsSaporConfigLoaded');
+
+
 
 //Actions to Visibility Feature
 export const saveApprovalGate = createAction('[Application] SaveApprovalGate', props<{approvalGateData:any}>());
