@@ -140,6 +140,12 @@ export const getSaporConfig = createAction('[Application] GetSaporConfig',props<
 export const loadSaporConfig = createAction('[Application] LoadSaporConfig', props<{saporConfigList:any}>());
 export const isSaporConfigLoaded = createAction('[Application] IsSaporConfigLoaded');
 
+export const updateSaporConfig = createAction('[Application] UpdateSaporConfig', props<{applicationId:any,serviceId:any,saporConfigData:any}>());
+export const postUpdateSaporConfig = createAction('[Application] PostUpdateSaporConfig', props<{saporConfigSavedData:any}>());
+export const isSaporConfigUpdated = createAction('[Application] isSaporConfigUpdated');
+
+
+
 
 
 //Actions to Visibility Feature

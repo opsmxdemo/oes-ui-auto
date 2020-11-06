@@ -602,6 +602,26 @@ onSaveSaporData = createEffect(() =>
     )
 )
 
+// Below code is used to save the sapor configured data
+
+onUpdateSaporData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.updateSaporConfig),
+        switchMap((action) => {
+            return this.http.put<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/services/'+action.serviceId, action.saporConfigData).pipe(
+                map(resdata => {
+                    this.toastr.showSuccess('Updated Successfully', 'SUCCESS');
+                    return ApplicationAction.postUpdateSaporConfig({ saporConfigSavedData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 // Effect to delete approval gate for visibility feature
 onDeleteSaporConfig = createEffect(() =>
 this.actions$.pipe(
