@@ -40,7 +40,7 @@
                           <td style="text-align: right;">
                               <span [ngClass]= "{'text-danger':service.status.status === 'rejected','text-success':service.status.status === 'approved','text-activated':service.status.status === 'activated','text-waiting':service.status.status === 'waiting'}"
                                     [title]="service.status.status">
-                                <i class="fas" [ngClass]= "{'fa-minus-circle':service.status.status === 'rejected','fa-check-circle':service.status.status === 'approved','fa-toggle-on':service.status.status === 'activated','fa-clock':service.status.status === 'waiting'}"></i>
+                                <i class="fas" [ngClass]= "{'fa-minus-circle':service.status.status === 'rejected','fa-check-circle':service.status.status === 'approved','fa-unlock':service.status.status === 'activated','fa-spinner':service.status.status === 'waiting'}"></i>
                               </span>
                           </td>
                         </tr>
@@ -111,7 +111,12 @@
                     </mat-horizontal-stepper> -->
                     
                     <blockquote class="blockquote">
-                      <p class="mb-0">{{selectedService.approvalGateName}}</p>
+                      <p class="mb-0">{{selectedService.approvalGateName}} 
+                        <span [ngClass]= "{'text-danger':selectedService.status.status === 'rejected','text-success':selectedService.status.status === 'approved','text-activated':selectedService.status.status === 'activated','text-waiting':selectedService.status.status === 'waiting'}"
+                              [title]="selectedService.status.status">
+                          <i class="fas" [ngClass]= "{'fa-minus-circle':selectedService.status.status === 'rejected','fa-check-circle':selectedService.status.status === 'approved','fa-unlock':selectedService.status.status === 'activated','fa-spinner':selectedService.status.status === 'waiting'}"></i>
+                        </span>
+                      </p>
                     </blockquote>
                     <hr class="my-4">
                                 <!-- <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template> -->
@@ -127,15 +132,6 @@
                                         <label class="col-form-label" formControlName="owner">user2</label>
                                     </div> -->
                                 </div>
-                                <!-- Grid row -->
-
-                                <div class="approvalStatus">
-                                    <div>Gate Status</div>
-                                    <div *ngIf="selectedService.status.status === 'approved'" style="color: #28a745; text-align: center; width: 200px;">Approved</div>
-                                    <div *ngIf="selectedService.status.status === 'rejected'" style="color: #dc3545; text-align: center; width: 200px;">Rejected</div>
-                                    <div *ngIf="selectedService.status.status === 'activated'" style="color: #007bff; text-align: center; width: 200px;">Activated</div>
-                                    <div *ngIf="selectedService.status.status === 'waiting'" style="color: #000; text-align: center; width: 200px;">Waiting</div>
-                                </div>
 
                                 <!-- Grid row -->
                                 <div class="form-group row" *ngIf="approvalWaitingStatus" >
@@ -149,14 +145,12 @@
 
                                     <!-- <label class="col-sm-1 col-form-label">Activated:</label>
                                     <div class="col-sm-8">
-                                        <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea>
+                                        
                                     </div>
 
                                     <label class="col-sm-1 col-form-label">Reviewed:</label>
                                     <div class="col-sm-8">
-                                        <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea> -->
-
-                                    <!-- </div> -->
+                                         </div> -->
 
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
                                             class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button></div>
@@ -174,18 +168,20 @@
                                         {{approvalGateComment}}
                                       </td>
                                   </tr>
-                                  <!-- <tr>
+                                  <tr>
                                       <td><label >Activated Time:</label></td>
                                       <td>
-                                        {{approvalGateComment}}
+                                        <!-- {{approvalGateComment}} -->
+                                        Nov 2, 2020 at 02:30:00 PM
                                       </td>
                                   </tr>
                                   <tr>
                                       <td><label >Approval Time:</label></td>
                                       <td>
-                                        {{approvalGateComment}}
+                                        <!-- {{approvalGateComment}} -->
+                                        Nov 5, 2020 at 11:44:00 AM
                                       </td>
-                                  </tr> -->
+                                  </tr>
                                 </table>
                                   
                                     
@@ -226,7 +222,7 @@
            
             <!-- </div> -->
             <!-- /.page-content -->
-            <div  class="row no-gutters" *ngIf="approvalWaitingStatus">
+            <div  class="row no-gutters" >
                 <div class="col-sm-12 d-flex flex-column">
                     <div class="pt-1">
                       <!--  *ngFor="let connectors of connectorTypes"  -->
@@ -257,8 +253,8 @@
                                   <table class="table">
                                     <thead class="thead-light">
                                       <tr>
-                                        <th scope="col" class="visibilityCol1">Ticket#</th>
-                                        <th scope="col" class="visibilityCol2Git">Task ID</th>
+                                        <th scope="col" class="visibilityCol1">Type</th>
+                                        <th scope="col" class="visibilityCol2Git">Commit ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                     </thead>
