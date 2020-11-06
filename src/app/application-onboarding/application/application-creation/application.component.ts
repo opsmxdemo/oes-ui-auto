@@ -131,6 +131,12 @@ export class CreateApplicationComponent implements OnInit {
   editTemplateTriggered: boolean;
   editTemplateTriggeredID: any;
   addNewConnectorAllowed :boolean = false;
+  saporFinalData: any;
+  showApplicationForm: boolean = false;
+  showServiceForm: boolean = false;
+  showEnvironmentForm: boolean= false;
+  showPermissionForm: boolean= false;
+  appInfoData: any;
   
   constructor(public sharedService: SharedService,
               public store: Store<fromFeature.State>,
@@ -141,6 +147,7 @@ export class CreateApplicationComponent implements OnInit {
               private eleRef: ElementRef) { }
 
   ngOnInit() {
+    this.loadApplicationForm();
     this.showserviceGroup=true;
     this.gateId = "";
 
@@ -203,11 +210,24 @@ export class CreateApplicationComponent implements OnInit {
             this.apiLoadingError = false;
           }
         }
+
+
+        // checking sapor editMode
+        if(responseData.saporConfigList !== null){
+          console.log(responseData.saporConfigList);
+          this.saporFinalData = responseData.saporConfigList;
+        //  this.saporFinalData['saporConfiguration'] = responseData.saporConfigList;
+          console.log(this.saporFinalData);
+
+
+        }
         
         //checking is editMode enabled
         if (responseData.editMode && this.editApplicationCounter === 0) {
-          
+          debugger
+          this.appInfoData = responseData.applicationData;
           this.appData = responseData.applicationData;
+          console.log(this.appData);
           this.editMode = responseData.editMode;
           this.defineAllForms();
 
@@ -1226,15 +1246,7 @@ export class CreateApplicationComponent implements OnInit {
   selectFeature(item,index){
     this.selectedFeature[index] = item;
     this.userIndex = index;
-    // let autopilotParams = {
-    //   data: [{deploymentverification: true, name: "logTemp",type: 'form-control', validation: ['required'] }, { name: "metricTemp",type: 'form-control',validation: ['required']  }]
-    // };
-    
-    // let saporParams = {
-    //   data: [{sapor: true,name: "pipelines", type: 'form-array', validation: ['required']}]
-    // }
-
-  
+     
 
     if(item === 'deployment_verification'){
     //   this.userType = item;
@@ -1264,6 +1276,26 @@ export class CreateApplicationComponent implements OnInit {
       const arrayControl = this.servicesForm.get('services') as FormArray;
       const innerarrayControl = arrayControl.at(index) as FormGroup;
       innerarrayControl.addControl('saporConfiguration',  saporForm);
+
+      // edit related code goes here
+
+      this.store.dispatch(ApplicationActions.getSaporConfig({applicationId: this.applicationId,serviceId:this.serviceId}));
+
+      //populating pipeline array
+      // this.saporFinalData.pipelines.forEach((pipelineArr, pipelineIndex) => {
+      //   const serviceArray = this.servicesForm.get('services') as FormArray;
+      //   const pipelineArray = serviceArray.at(index).get('pipelines') as FormArray;
+      //   pipelineArray.push(
+      //     new FormGroup({
+      //       pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
+      //       dockerImageName: new FormGroup({
+      //         accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
+      //         imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
+      //       }),
+      //       pipelineParameters: new FormArray([])
+      //     })
+      //   )
+      // });
 
       
     }else if(item === 'visibility'){
@@ -1450,7 +1482,6 @@ configuredFeaturepresent(totalServices){
     for(let j=0;j<this.featureList.length;j++)
     {
       var value
-      debugger
       for(let k =0;k<this.featureList.length; k++)
       if(this.configuredFeature[i].configuredFeatures[k] == this.featureList[j].toLowerCase())
       {
@@ -1465,6 +1496,38 @@ configuredFeaturepresent(totalServices){
     }
   }
   
+}
+
+loadServiceForm(){
+
+  this.showServiceForm = true;
+  this.showApplicationForm = false;
+  this.showEnvironmentForm = false;
+  this.showPermissionForm = false;
+}
+
+loadApplicationForm(){
+  this.showServiceForm = false;
+  this.showEnvironmentForm = false;
+  this.showPermissionForm = false;
+  this.showApplicationForm = true;
+  
+
+}
+
+loadEnvironmentsForm(){
+  this.showEnvironmentForm = true;
+  this.showPermissionForm = false;
+  this.showApplicationForm = false;
+  this.showServiceForm = false;
+
+}
+
+loadGroupPermissionForm(){
+  this.showPermissionForm = true;
+  this.showEnvironmentForm = false;
+  this.showApplicationForm = false;
+  this.showServiceForm = false;
 }
 
 }
