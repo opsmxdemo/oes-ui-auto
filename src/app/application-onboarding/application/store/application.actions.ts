@@ -95,6 +95,34 @@ export const fetchAPMGenerateCookbook = createAction('[Application] FetchAPMGene
 export const loadAPMGenerateCookbook = createAction('[Application] LoadAPMGenerateCookbook', props<{APMCookbook:any}>());
 export const loadedAPMGenerateCookbook = createAction('[Application] LoadedAPMGenerateCookbook');
 
+
+//Actions to create metric and log template into deployment verification feature
+export const saveLogTemplate = createAction('[Application] SaveLogTemplate', props<{logTemplateData:any}>());
+export const savedLogTemplate = createAction('[Application] SavedLogTemplate', props<{savedLogTemplateData:any}>());
+export const isLogTemplateSaved = createAction('[Application] IsLogTemplateSaved');
+
+export const saveMetricTemplate = createAction('[Application] SaveMetricTemplate', props<{metricTemplateData:any}>());
+export const savedMetricTemplate = createAction('[Application] SavedMetricTemplate', props<{savedMetricTemplateData:any}>());
+export const isMetricTemplateSaved = createAction('[Application] IsMetricTemplateSaved');
+
+export const getLogTemplateforaApplication = createAction('[Application] GetLogTemplateforaApplication', props<{applicationId:any}>());
+export const loadLogTemplateforaApplication = createAction('[Application] LoadLogTemplateforaApplication', props<{logTemplatesofaApplication:any}>());
+export const isLoadedLogTemplatesforaApplication = createAction('[Application] IsLoadedLogTemplatesforaApplication');
+
+export const getMetricTemplateforaApplication = createAction('[Application] GetMetricTemplateforaApplication', props<{applicationId:any}>());
+export const loadMetricTemplateforaApplication = createAction('[Application] LoadMetricTemplateforaApplication', props<{metricTemplatesofaApplication:any}>());
+export const isLoadedMetricTemplatesforaApplication = createAction('[Application] IsLoadedMetricTemplatesforaApplication');
+
+export const editLogTemplate = createAction('[Application] EditLogTemplate', props<{logTemplateDataToEdit:any}>());
+export const editedLogTemplate = createAction('[Application] EditedLogTemplate', props<{editedLogTemplateData:any}>());
+export const isLogTemplateEdited = createAction('[Application] IsLogTemplateEdited');
+
+export const editMetricTemplate = createAction('[Application] EditMetricTemplate', props<{metricTemplateDataToEdit:any}>());
+export const editedMetricTemplate = createAction('[Application] EditedMetricTemplate', props<{editedMetricTemplateData:any}>());
+export const isMetricTemplateEdited = createAction('[Application] IsMetricTemplateEdited');
+
+
+
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');
 
