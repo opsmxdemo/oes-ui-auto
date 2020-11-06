@@ -153,7 +153,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.enableEditMode),
             switchMap(action => {
-                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId).pipe(
+                return this.http.get<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v1/application/' + action.applicationId).pipe(
                     map(resdata => {
 
                         return ApplicationAction.fetchAppData({ appData: resdata, applicationId: action.applicationId })
@@ -600,6 +600,43 @@ onSaveSaporData = createEffect(() =>
             );
         })
     )
+)
+
+// Effect to delete approval gate for visibility feature
+onDeleteSaporConfig = createEffect(() =>
+this.actions$.pipe(
+    ofType(ApplicationAction.deleteSaporConfig),
+    switchMap((action) => {
+        return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/'+ action.serviceId+'/application/'+action.applicationId+'/feature/configuration').pipe(
+            map(resdata => {
+                this.toastr.showSuccess('Deleted Successfully', 'SUCCESS');
+                return ApplicationAction.postDeleteSaporConfig({ message: resdata});
+            }),
+            catchError(errorRes => {
+                //this.toastr.showError('Error', 'ERROR')
+                return handleError(errorRes);
+            })
+        );
+    })
+    )
+)
+
+// Effect to get
+getSaporConfigDetails = createEffect(() =>
+this.actions$.pipe(
+    ofType(ApplicationAction.getSaporConfig),
+    switchMap((action) => {                
+        return this.http.get<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/'+ action.serviceId+'/application/'+action.applicationId+'/feature/configuration').pipe(
+            map(resdata => {
+                return ApplicationAction.loadSaporConfig({ saporConfigList: resdata});
+            }),
+            catchError(errorRes => {
+                //this.toastr.showError('Error', 'ERROR')
+                return handleError(errorRes);
+            })
+        );
+    })
+)
 )
 
 //Effects to save the selected template and tool connector for the approval gate

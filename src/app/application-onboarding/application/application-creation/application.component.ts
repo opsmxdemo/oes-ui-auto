@@ -1124,8 +1124,12 @@ export class CreateApplicationComponent implements OnInit {
 
     this.store.dispatch(ApplicationActions.saveSaporConfig({saporConfigData : postSapor}));
 
+  }
 
+  // Below function is use to delete sapor
+  deleteSaporForm(serviceIndex){
 
+    this.store.dispatch(ApplicationActions.deleteSaporConfig({applicationId:this.applicationId,serviceId:this.serviceId}));
   }
 
   // Below function is use to save each connector
