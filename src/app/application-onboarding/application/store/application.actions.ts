@@ -31,10 +31,22 @@ export const saveApplication = createAction('[Application] SaveApplication', pro
 export const savedApplication = createAction('[Application] SavedApplication', props<{savedApplicationResponse: any,dataType:string}>());
 export const saveService = createAction('[Application] SaveService', props<{applicationId:any,serviceSaveData:any}>());
 export const savedService = createAction('[Application] SavedService', props<{savedServiceResponse: any,dataType:string}>());
-export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{applicationId: any,environmentsData: Environment}>());
-export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
+
+// Below actions related to group permissions
+
 export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{applicationId:any,groupPermissionData: GroupPermission}>());
 export const groupPermissionDataSaved = createAction('[Application] groupPermissionDataSaved', props<{applicationName:string,dataType:string}>());
+
+export const getGroupPermissions = createAction('[Application] GetGroupPermissions', props<{applicationId: any}>());
+export const loadGroupPermissions = createAction('[Application] LoadGroupPermissions', props<{groupPermissionsListData: any}>());
+export const isgetGroupPermissionsLoaded = createAction('[Application] IsgetGroupPermissionsLoaded');
+
+export const updateGroupPermissions = createAction('[Application] UpdateGroupPermissions', props<{applicationId: any, groupPermissionsListData: any}>());
+export const postGroupPermissions = createAction('[Application] PostGroupPermissions', props<{groupPermissionsListUpdatedData: any}>());
+export const isgetGroupPermissionUpdated = createAction('[Application] IsgetGroupPermissionUpdated');
+
+export const deleteGroupPermissions = createAction('[Application] DeleteGroupPermissions', props<{applicationId:any}>());
+export const groupPermissiondeletedSuccessfully = createAction('[Application] GroupPermissiondeletedSuccessfully');
 
 
 // Below action is related to edit application 
@@ -144,6 +156,21 @@ export const updateSaporConfig = createAction('[Application] UpdateSaporConfig',
 export const postUpdateSaporConfig = createAction('[Application] PostUpdateSaporConfig', props<{saporConfigSavedData:any}>());
 export const isSaporConfigUpdated = createAction('[Application] isSaporConfigUpdated');
 
+// Below action is used for environments 
+
+export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{applicationId: any,environmentsData: Environment}>());
+export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
+
+export const getEnvironments = createAction('[Application] GetEnvironments', props<{applicationId: any}>());
+export const loadEnvironments = createAction('[Application] LoadEnvironments', props<{environmentsListData: any}>());
+export const isgetEnvironmentsLoaded = createAction('[Application] IsgetEnvironmentsLoaded');
+
+export const updateEnvironments = createAction('[Application] UpdateEnvironments', props<{applicationId: any, environmentsListData: any}>());
+export const postUpdateEnvironments = createAction('[Application] PostUpdateEnvironments', props<{environmentsListUpdatedData: any}>());
+export const isgetEnvironmentsUpdated = createAction('[Application] IsgetEnvironmentsUpdated');
+
+export const deleteEnvironments = createAction('[Application] DeleteEnvironments', props<{applicationId:any}>());
+export const environmentdeletedSuccessfully = createAction('[Application] EnvironmentsDeletedSuccessfully');
 
 
 

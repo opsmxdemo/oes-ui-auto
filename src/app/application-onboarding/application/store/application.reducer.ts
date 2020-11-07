@@ -18,6 +18,7 @@ export interface State {
     applicationData: CreateApplication;
     appSavedData: SaveApplication;
     appEnvionmentsData: Environment;
+    getEnvironmentListData: any;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
@@ -50,9 +51,13 @@ export interface State {
     isSaporConfigSaved: boolean;
     deleteSaporConfigMessage : any;
     saporConfigList : any;
+    environmentsListData: any;
     isSaporConfigLoaded: boolean;
     isSaporConfigUpdated: boolean;
 
+    // group permissions
+    groupPermissionsListData: any;
+    isGroupPermissions: boolean;
 
 
     //Visibility 
@@ -94,6 +99,8 @@ export interface State {
     templateData: any;
     isTemplateDataForToolTypeLoaded: boolean;
     isTemplateDataForToolTypeUpdated: boolean;
+    isEnviromentsLoaded: boolean;
+    isGroupPermissionsLoaded: boolean;
 }
 
 export const initialState: State = {
@@ -165,8 +172,14 @@ export const initialState: State = {
     isSaporConfigSaved: false,
     deleteSaporConfigMessage: null,
     saporConfigList: null,
+    environmentsListData: null,
     isSaporConfigLoaded: false,
     isSaporConfigUpdated: false,
+    getEnvironmentListData: null,
+    isEnviromentsLoaded: false,
+    groupPermissionsListData: null,
+    isGroupPermissions: false,
+    isGroupPermissionsLoaded: false,
 
 }
 
@@ -296,12 +309,72 @@ export function ApplicationReducer(
                 savedServiceData : action.savedServiceResponse
             })
         ),
+
+        // code related to environments goes here
+
         on(ApplicationAction.saveEnvironments,
             state => ({
                 ...state,
-                applicationLoading:true
+                isEnviromentsLoaded:true
             })
         ),
+
+        on(ApplicationAction.getEnvironments,
+            (state,action) => ({
+                ...state,
+                isEnviromentsLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadEnvironments,
+            (state,action) => ({
+                ...state,
+                environmentsListData:action.environmentsListData,
+                isEnviromentsLoaded: true
+            })
+        ),
+        on(ApplicationAction.isgetEnvironmentsLoaded,
+            (state,action) => ({
+                ...state,
+                isEnviromentsLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.updateEnvironments,
+            (state,action) => ({
+                ...state,
+                applicationId: action.applicationId,
+                environmentsListData:action.environmentsListData,
+                isEnviromentsLoaded: false
+            })
+        ),
+        on(ApplicationAction.postUpdateEnvironments,
+            (state,action) => ({
+                ...state,
+                saporConfigData:action.environmentsListUpdatedData,
+                isEnviromentsLoaded: true
+            })
+        ),
+        on(ApplicationAction.isgetEnvironmentsUpdated,
+            (state,action) => ({
+                ...state,
+                isEnviromentsLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteEnvironments,
+            state => ({
+                ...state,
+            })
+        ),
+        on(ApplicationAction.environmentdeletedSuccessfully,
+            (state,action) => ({
+                ...state,
+              
+            })
+        ),
+
+        // group permission related variables
+
         on(ApplicationAction.saveGroupPermissions,
             state => ({
                 ...state,
@@ -314,6 +387,62 @@ export function ApplicationReducer(
                 applicationLoading:true
             })
         ),
+
+        ////////
+        on(ApplicationAction.getGroupPermissions,
+            (state,action) => ({
+                ...state,
+                isGroupPermissionsLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadGroupPermissions,
+            (state,action) => ({
+                ...state,
+                groupPermissionsListData:action.groupPermissionsListData,
+                isGroupPermissionsLoaded: true
+            })
+        ),
+        // on(ApplicationAction.isgetGroupPermissionsLoaded,
+        //     (state,action) => ({
+        //         ...state,
+        //         isEnviromentsLoaded: false
+        //     })
+        // ),
+
+        on(ApplicationAction.updateGroupPermissions,
+            (state,action) => ({
+                ...state,
+                applicationId: action.applicationId,
+                groupPermissionsListData:action.groupPermissionsListData,
+                isGroupPermissionsLoaded: false
+            })
+        ),
+        on(ApplicationAction.postGroupPermissions,
+            (state,action) => ({
+                ...state,
+                groupPermissionsListData:action.groupPermissionsListUpdatedData,
+                isGroupPermissionsLoaded: true
+            })
+        ),
+        on(ApplicationAction.isgetGroupPermissionsLoaded,
+            (state,action) => ({
+                ...state,
+                isGroupPermissionsLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteGroupPermissions,
+            state => ({
+                ...state,
+            })
+        ),
+        on(ApplicationAction.groupPermissiondeletedSuccessfully,
+            (state,action) => ({
+                ...state,
+              
+            })
+        ),
+
         on(ApplicationAction.dataSaved,
             state => ({
                 ...state,
