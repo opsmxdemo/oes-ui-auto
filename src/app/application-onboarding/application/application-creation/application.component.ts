@@ -54,7 +54,8 @@ export class CreateApplicationComponent implements OnInit {
   cloudAccountExist: CloudAccount;                                // It contain data of all cloud Account exist.  
   editMode: boolean = false                                       // It use to define form is in edit phase
   appData: CreateApplication = null;                              // It use to hold application fetch from api.  
-  envData: Environment = null;                              // It use to hold application fetch from api.                                                                                
+  envData: any;                              // It use to hold application fetch from api. 
+  grpData: any;                              // It use to hold application grouppermissions fetch from api.                                                                                                                                                               
   editServiceForm: Service;                                       // It is use to save edit Service form data.
   parentPage: string = null;                                      // It is use to redirect the parent page after clicking cancel.
   apploading: boolean = false;                                    // It is use to show hide loading screen.
@@ -137,6 +138,7 @@ export class CreateApplicationComponent implements OnInit {
   showEnvironmentForm: boolean = false;
   showPermissionForm: boolean = false;
   appInfoData: any;
+  environmentsList: any;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -213,20 +215,20 @@ export class CreateApplicationComponent implements OnInit {
 
 
         // checking sapor editMode
+
         if (responseData.saporConfigList !== null) {
           console.log(responseData.saporConfigList);
           this.saporFinalData = responseData.saporConfigList;
-          //  this.saporFinalData['saporConfiguration'] = responseData.saporConfigList;
-          console.log(this.saporFinalData);
-
-
         }
+
+       
 
         //checking is editMode enabled
         if (responseData.editMode && this.editApplicationCounter === 0) {
-          debugger
+          
           this.appInfoData = responseData.applicationData;
           this.appData = responseData.applicationData;
+        //  this.applicationId = this.appData.applicationId;
           console.log(this.appData);
           this.editMode = responseData.editMode;
           this.defineAllForms();
@@ -236,28 +238,20 @@ export class CreateApplicationComponent implements OnInit {
             // Reseting metric and log Templates data
             this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
-            if (this.userType === 'deployment_verification') {
-              // AP mode
-              this.createApplicationForm = new FormGroup({
-                name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.emailId, [Validators.required, Validators.email]),
-                description: new FormControl(this.appData.description),
-                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
-              });
-            } else {
-              // user belongs to OES mode also.
-              this.createApplicationForm = new FormGroup({
-                name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.emailId, [Validators.required, Validators.email]),
-                description: new FormControl(this.appData.description),
-                imageSource: new FormControl(this.appData.imageSource, Validators.required),
-                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
-              });
-              //populating dockerImagenamedropdown.
-              if (responseData.callDockerImageDataAPI) {
-                this.onImageSourceSelect(this.appData.imageSource);
-              }
+
+            this.createApplicationForm = new FormGroup({
+              name: new FormControl(this.appData.name),
+              emailId: new FormControl(this.appData.emailId, [Validators.required, Validators.email]),
+              description: new FormControl(this.appData.description),
+              imageSource: new FormControl(this.appData.imageSource, Validators.required),
+              lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
+            });
+
+            if (responseData.callDockerImageDataAPI) {
+              this.onImageSourceSelect(this.appData.imageSource);
             }
+
+          
             if (this.editMode) {
 
               this.showserviceGroup = false;
@@ -361,24 +355,7 @@ export class CreateApplicationComponent implements OnInit {
             //   }
             // }
 
-            //populate environment Form if usertype include OES in it#################################################################################
-            if (this.appData.environments !== null) {
-              if (this.appData.environments.length !== 0 && this.userType !== 'deployment_verification') {
-                // clearing form first
-                this.environmentForm = new FormGroup({
-                  environments: new FormArray([])
-                });
-                this.appData.environments.forEach(environmentdata => {
-                  (<FormArray>this.environmentForm.get('environments')).push(
-                    new FormGroup({
-                      key: new FormControl(environmentdata.key, Validators.required),
-                      value: new FormControl(environmentdata.value),
-                      id: new FormControl(environmentdata.id)
-                    })
-                  );
-                })
-              }
-            }
+           
 
 
             //populate groupPermission Form #############################################################################
@@ -433,6 +410,16 @@ export class CreateApplicationComponent implements OnInit {
     // Below function is use to fetching data from state related to pipelineData
     this.store.select(fromFeature.selectApplication).subscribe(
       (response) => {
+         // checking environments data editMode
+         if (response.environmentsListData != null){
+          console.log(response.environmentsListData);
+          this.envData = response.environmentsListData;
+        }
+
+        if(response.groupPermissionsListData != null){
+          this.grpData = response.groupPermissionsListData;
+        }
+
         if (response.pipelineData !== null) {
           this.pipelineExists = response.pipelineData;
         }
@@ -1104,12 +1091,16 @@ export class CreateApplicationComponent implements OnInit {
 
     }
     if (this.editMode && this.environmentForm.valid) {
-      //if(this.userType.includes('Sapor')){
-      this.store.dispatch(ApplicationActions.saveEnvironments({ applicationId: this.applicationId, environmentsData: this.environmentForm.value }));
-      // }
+      this.store.dispatch(ApplicationActions.updateEnvironments({ applicationId: this.applicationId, environmentsListData: this.environmentForm.value }));
+      
     } else {
       this.store.dispatch(ApplicationActions.saveEnvironments({ applicationId: this.applicationId, environmentsData: this.environmentForm.value }));
     }
+  }
+
+  // Below function is use to delete environments form
+  deleteEnvironments() {
+    this.store.dispatch(ApplicationActions.deleteEnvironments({applicationId: this.applicationId}));
   }
 
   // Below function is use to submit group permission form
@@ -1125,7 +1116,20 @@ export class CreateApplicationComponent implements OnInit {
       };
       userGroupPermissionDataToSave.push(obj);
     };
+   
+   if(this.editMode){
+    this.store.dispatch(ApplicationActions.updateGroupPermissions({ applicationId: this.applicationId, groupPermissionsListData: userGroupPermissionDataToSave }));
+
+   }else{
     this.store.dispatch(ApplicationActions.saveGroupPermissions({ applicationId: this.applicationId, groupPermissionData: userGroupPermissionDataToSave }));
+
+   }
+   
+  }
+
+  //Bewlo fucntio is use to delete group permission
+  deleteGroupPermissions(){
+
   }
 
   // Below funcion is use to submit sapor data
@@ -1507,7 +1511,8 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   loadServiceForm() {
-
+    // this.applicationId = this.appData.applicationId;
+    // this.store.dispatch(ApplicationActions.getEnvironments({ applicationId: this.applicationId }));
     this.showServiceForm = true;
     this.showApplicationForm = false;
     this.showEnvironmentForm = false;
@@ -1515,6 +1520,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   loadApplicationForm() {
+  
     this.showServiceForm = false;
     this.showEnvironmentForm = false;
     this.showPermissionForm = false;
@@ -1524,10 +1530,41 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   loadEnvironmentsForm() {
+    // debugger
+    this.environmentForm = new FormGroup({
+      environments: new FormArray([])
+    });
+     if(this.editMode){
+      this.applicationId = this.appData.applicationId;
+      this.store.dispatch(ApplicationActions.getEnvironments({ applicationId: this.applicationId }));
+
+      //populate environment Form if usertype include OES in it#################################################################################
+    
+          this.environmentForm = new FormGroup({
+            environments: new FormArray([])
+          });
+          if(this.envData.environments != undefined){
+            this.envData.environments.forEach(environmentdata => {
+              (<FormArray>this.environmentForm.get('environments')).push(
+                new FormGroup({
+                  key: new FormControl(environmentdata.key, Validators.required),
+                  value: new FormControl(environmentdata.value),
+                  // id: new FormControl(environmentdata.id)
+                })
+              );
+            })
+          }
+         
+        } else{
+
+        }
+
+   // this.store.dispatch(ApplicationActions.loadEnvironments({}))
     this.showEnvironmentForm = true;
     this.showPermissionForm = false;
     this.showApplicationForm = false;
     this.showServiceForm = false;
+
 
   }
 
@@ -1536,6 +1573,12 @@ export class CreateApplicationComponent implements OnInit {
     this.showEnvironmentForm = false;
     this.showApplicationForm = false;
     this.showServiceForm = false;
+
+    if(this.editMode){
+      this.store.dispatch(ApplicationActions.getGroupPermissions({ applicationId: this.applicationId }));
+
+    }
+
   }
 
 }
