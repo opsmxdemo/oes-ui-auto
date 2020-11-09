@@ -12,20 +12,9 @@
   
         <div class="col-sm-3">
           <div class="sidebar-tree">
-            <!-- <ul class="tree-inset tree-active list-unstyled">
-              <li class="ti-title showElementHover" (click)="loadApplicationForm()" >
-                <i class="fas fa-check-circle"></i>
-                <span>Application Details</span>
-              </li>
-              <li class="ti-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Application Name :</span>
-                <strong></strong>
-              </li>
-            </ul> -->
-            <ul class="tree-inset  list-unstyled {{createApplicationForm.value.name !== ''?'tree-active':''}}">
+            <ul class="tree-inset  list-unstyled {{createApplicationForm.invalid == false ?'tree-active':''}}">
               <li class="ti-title">
-                <i (click)="loadApplicationForm()" class="{{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <i (click)="loadApplicationForm()" class="{{createApplicationForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Application Details</span>
               </li>
               <li class="ti-item">
@@ -33,61 +22,52 @@
                 <span>Application Name :</span>
                 <strong>{{createApplicationForm.value.name}}</strong>
               </li>
-              <li class="ti-item">
-                <i class="{{createApplicationForm.value.emailId !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>emailId :</span>
-                <strong>{{createApplicationForm.value.emailId}}</strong>
-              </li>
-              <li class="ti-item" *ngIf = "userType === 'AP' ? false : true ">
-                <i class="{{createApplicationForm.getRawValue().imageSource !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Image Source :</span>
-                <strong>{{createApplicationForm.getRawValue().imageSource}}</strong>
-              </li>
-              <li class="ti-item">
-                <i class="{{createApplicationForm.value.description !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Description :</span>
-                <strong>{{createApplicationForm.value.description}}</strong>
-              </li>
               <br>
               <br>
             </ul>
             <!-- /.tree-inset -->
-            <ul class="tree-inset tree-active list-unstyled">
+            <ul class="tree-inset  list-unstyled {{servicesForm.invalid == false ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadServiceForm()">
-                <i class="fas fa-check-circle"></i>
+                <i class="{{servicesForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Service Details</span>
               </li>
+             
+              <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
               <li class="ti-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Service Name:</span>
-                <strong></strong>
+                <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span>Service name</span>
+                <strong>{{serviceArr.serviceName}}</strong>
               </li>
+            </ng-container>
+              <br>
+              <br>
             </ul>
 
              <!-- /.tree-inset -->
-             <ul class="tree-inset tree-active list-unstyled">
-              <li class="ti-title showElementHover" (click)="loadEnvironmentsForm()">
-                <i class="fas fa-check-circle"></i>
-                <span>Environments</span>
-              </li>
-              <li class="ti-item">
-                <i class="fas fa-check-circle"></i>
-                <span></span>
-                <strong></strong>
-              </li>
-            </ul>
+         
+            <ul class="tree-inset list-unstyled">
+            <li class="ti-title showElementHover" (click)="loadEnvironmentsForm()">
+              <i class="{{environmentForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+              <span>Environments</span>
+            </li>
+            <!-- <li class="ti-item" *ngFor="let env of environmentForm.value.environments; let index = i">
+              <i class="{{env.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+              <span>{{env.key !== ''? env.key : ''}} :</span>
+              <strong *ngIf="env.value !== ''? true:false">{{env.value !== ''? env.value : ''}}</strong>
+            </li> -->
+          </ul>
 
             <!-- /.tree-inset -->
-            <ul class="tree-inset tree-active list-unstyled">
+            <ul class="tree-inset list-unstyled">
               <li class="ti-title showElementHover" (click)="loadGroupPermissionForm()">
-                <i class="fas fa-check-circle"></i>
+                <i class="{{groupPermissionForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Group Permissions</span>
               </li>
-              <li class="ti-item">
-                <i class="fas fa-check-circle"></i>
-                <span></span>
-                <strong></strong>
-              </li>
+              <!-- <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
+                <i class="{{group.userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span>{{group.userGroupId !== ''?groupProperties(true,group.userGroupId):''}} :</span>
+                <strong *ngIf="group.permission !== ''? true:false">{{groupProperties(false,group.permissionIds)}}</strong>
+              </li> -->
             </ul>
          
           
