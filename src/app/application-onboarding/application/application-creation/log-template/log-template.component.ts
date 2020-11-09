@@ -27,6 +27,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   @Input() templateIndex: number;
   @Input() isEditMode: boolean;
   @Input() applicationId:any;
+  @Input() applicationData : any;
 
 
   public editorOptions: JsonEditorOptions;
@@ -122,7 +123,11 @@ removeTagId:any;
     if(this.isEditMode){
       this.store.dispatch(ApplicationActions.updatedLogTemplate({logTemplateData:this.logTemplateData,index:this.templateIndex}));
     }else{
-      this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}));
+      this.logTemplateData['applicationId'] = this.applicationData['applicationId'];
+      this.logTemplateData['applicationName'] = this.applicationData['name'];
+      this.logTemplateData['emailId'] = this.applicationData['email'];
+      this.store.dispatch(ApplicationActions.saveLogTemplate({applicationId : this.applicationData['applicationId'], logTemplateData : this.logTemplateData}));
+      //this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}));      
     }
     this.data = {};
   }
@@ -307,8 +312,13 @@ SubmitForm(){
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
 
-   // Action to create the log template   
-   this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
+   // Action to create the log template 
+   this.logTemplateData['applicationId'] = this.applicationData['applicationId'];
+   this.logTemplateData['applicationName'] = this.applicationData['name'];
+   this.logTemplateData['emailId'] = this.applicationData['email'];
+
+   this.store.dispatch(ApplicationActions.saveLogTemplate({applicationId : this.applicationData['applicationId'], logTemplateData : this.logTemplateData}));  
+   //this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
    if(this.stepper != undefined){
      this.stepper.reset();
    }

@@ -145,6 +145,13 @@ export class CreateApplicationComponent implements OnInit {
   toolTypeDataSaved: any = [];
   toolTypesCount: number = 0;
 
+  deploymentVerificationForm : FormGroup;
+  logTemplatesForaApplication: any;
+  logTemplateList : any;
+  metricTemplateList : any;
+  metricTemplatesofaApplication : any;
+  serviceName : any;
+
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
     public appStore: Store<fromApp.AppState>,
@@ -454,27 +461,12 @@ console.log(response);
         }
         if (response.savedApplicationData != null) {
           this.savedApplicationData = response.savedApplicationData;
-          this.applicationId = this.savedApplicationData.applicationId;
-          //Response Json sample format
-          // {
-          //   "applicationId": "50",
-          //   "lastUpdatedTimestamp": "Fri Oct 30 09:39:07 UTC 2020",
-          //   "name": "xdsad",
-          //   "emailId": "meera@opsmx.io",
-          //   "description": "",
-          //   "imageSource": "docker.io/opsmx11",
-          //   "services": []
-          // }
+          this.applicationId = this.savedApplicationData.applicationId;          
         }
         if (response.savedServiceData != null) {
           this.savedServiceData = response.savedServiceData;
           this.serviceId = this.savedServiceData.id;
-          //Respose json sample format
-          // {
-          //   "id": 19,
-          //   "name": "paymentservice",
-          //   "applicationId": 53
-          // }
+          this.serviceName = this.savedServiceData.name;
         }
         if (response.dockerImageData !== null && response.dockerImageData !== undefined) {
           this.dockerImageData = response.dockerImageData;
@@ -617,6 +609,28 @@ console.log(response);
           this.store.dispatch(ApplicationActions.isToolConnectorWithTemplateSaved());
           this.addNewConnectorAllowed = true;
         }
+        if(response.logTemplatesofaApplication && response.isLogTemplateforApplicationLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedLogTemplatesforaApplication());
+          console.log("LOg Template for a application");
+          console.log(response.logTemplatesofaApplication);
+          this.logTemplatesForaApplication =   response.logTemplatesofaApplication.logTemplates.map(ele=>ele.templateName);
+          //this.logTemplatesForaApplication = ["logtemp1", "logtemp2", "logtemp3"];
+          this.logTemplateList = this.logTemplatesForaApplication;
+          if(this.logModel !== undefined){
+            this.logModel.nativeElement.click();
+          }
+        } 
+        if(response.metricTemplatesofaApplication && response.isMetricTemplateforApplicationLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedMetricTemplatesforaApplication());
+          console.log("Metric Template for a application");
+          console.log(response.metricTemplatesofaApplication);
+          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.data.map(ele=>ele.pipelineId);
+          //this.metricTemplatesofaApplication = ["metrictemp1", "metrictemp2", "metrictemp3"];
+          this.metricTemplateList = this.metricTemplatesofaApplication;
+          if(this.metricModel !== undefined){
+            this.metricModel.nativeElement.click();
+          }
+        }
       }
     )
 
@@ -666,6 +680,11 @@ console.log(response);
     // defining reactive form for Visibility Gate Section
     this.gateForm = new FormGroup({
       gateName: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
+    });
+
+    this.deploymentVerificationForm = new FormGroup({
+      logTemplate : new FormControl(""),
+      metricTemplate : new FormControl("")
     });
 
 
@@ -1643,6 +1662,23 @@ console.log(response);
 
     }
 
+  }
+
+
+  //Deployment Verification
+  saveDeploymentVerification(){
+    var depVeriObj = { 
+      "applicationId" : this.applicationId,
+      "serviceName": this.serviceName,
+      "serviceId" : this.serviceId ,
+      "logTemplateName" : this.deploymentVerificationForm.value.logTemplate,
+      "metricTemplateName" : this.deploymentVerificationForm.value.metricTemplate
+    };
+    this.store.dispatch(ApplicationActions.saveDeploymentVerificationFeature({templateServiceData : depVeriObj}));
+  }
+
+  deleteDeploymentVerification(){
+    this.store.dispatch(ApplicationActions.deleteDeploymentVerificationFeature({serviceId : this.serviceId, applicationId : this.applicationId}));
   }
 
 }
