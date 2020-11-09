@@ -508,18 +508,19 @@
                                                 <th>Connector <i data-toggle="tooltip" data-placement="top" data-original-title="Connector" class="fa fa-question-circle" aria-hidden="true"></i></th>
                                                 <th>Account <i data-toggle="tooltip" data-placement="top" data-original-title="Account" class="fa fa-question-circle" aria-hidden="true"></i></th>
                                                 <th>Template <i data-toggle="tooltip" data-placement="top" data-original-title="Template" class="fa fa-question-circle" aria-hidden="true"></i></th>
-                                                <th class="text-right" *ngIf="addNewConnectorAllowed"><a (click)="addNewConnector()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Connector"><i class="fas fa-plus"></i></a></th>
+                                                <th class="text-right" *ngIf="addNewConnectorAllowed && !hideVisibilityPlusIcon"><a (click)="addNewConnector()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Connector"><i class="fas fa-plus"></i></a></th>
                                               </tr>
                                             </thead>
                                             <tbody>
                                               <tr *ngFor="let optionsArr of visibilityForm.get('visibilityConfig')['controls'];let i=index" (mouseenter)="toolTypeRowHoverd[i] = true" (mouseleave)="toolTypeRowHoverd[i] = false">
                                                 <ng-container [formGroupName]="i">
                                                   <td>
-                                                    <select class="form-control" formControlName="connectorType" (change)="onChangeTooltype($event.target.value)">
+                                                    <select *ngIf="!toolTypeDataSaved[i]" class="form-control" formControlName="connectorType" (change)="onChangeTooltype($event.target.value)">
                                                       <option value="" [disabled]="true">Select</option>                                                       
-                                                      <option *ngFor="let tooltype of toolTypes" value="{{tooltype}}" >
+                                                      <option *ngFor="let tooltype of toolTypes[i]" value="{{tooltype}}" >
                                                           {{tooltype}}</option>
                                                     </select>
+                                                    <span *ngIf="toolTypeDataSaved[i]">{{optionsArr.controls.connectorType.value}}</span>
                                                     <!-- <input type="text" class="form-control" formControlName="connectorType" 
                                                     [ngClass]="!visibilityForm.get('visibilityConfig')['controls'][i].get('connectorType').valid && visibilityForm.get('visibilityConfig')['controls'][i].get('connectorType').touched ? 'is-invalid':''">
                                                     <span *ngIf="!visibilityForm.get('visibilityConfig')['controls'][i].get('connectorType').valid && visibilityForm.get('visibilityConfig')['controls'][i].get('connectorType').touched"
@@ -528,15 +529,16 @@
                                                   <td>                                                    
                                                     <select class="form-control" formControlName="accountName" (change)="onChangeAccountofTooltype($event.target.value)">
                                                       <option value="" [disabled]="true">Select</option>                                                       
-                                                      <option *ngFor="let account of accountsForTooltypes" value="{{account.visibilityToolConnectorId}}" >
+                                                      <option *ngFor="let account of accountsForTooltypes[i]" value="{{account.visibilityToolConnectorId}}" >
                                                           {{account.accountName}}</option>
-                                                    </select>                                                    
+                                                    </select>    
+                                                    <!-- <span>{{optionsArr.controls.accountName.value}}</span>                                                 -->
                                                   </td>
                                                   <td>
                                                     <div class="d-flex  mr-2 align-items-center position-relative">                                                      
                                                       <select class="form-control template-dropdown" formControlName="templateName" (change)="onChangeTemplateofTooltype($event.target.value, i)">
                                                         <option value="" [disabled]="true">Select</option>                                                       
-                                                        <option *ngFor="let template of templatesForToolType" value="{{template.id}}" >
+                                                        <option *ngFor="let template of templatesForToolType[i]" value="{{template.id}}" >
                                                             {{template.name}}</option>
                                                         <option value="+">+ Add Template</option>   
                                                       </select>
@@ -556,11 +558,20 @@
                                                         </a>
                                                       </span>
                                                     </div>
+                                                    <!-- <div>
+                                                      <span>{{optionsArr.controls.templateName.value}}</span>  
+                                                    </div> -->
                                                   </td>
                                                   <td class="hover-buttons-td">
                                                     <div class="d-flex  mr-2 align-items-center" *ngIf="toolTypeRowHoverd[i]">
-                                                      <span class="ml-2 mt-1">
-                                                        <a class="formarray_btn" data-toggle="tooltip" data-placement="top" title="Save"
+                                                      <span class="ml-2 mt-1" *ngIf="!editConnectorRow[i]">
+                                                        <a class="formarray_btn" data-toggle="tooltip" data-placement="top" title="Edit" *ngIf="!editConnectorRow[i]"
+                                                          (click)="editConnect(i)">
+                                                          <i class="fas fa-pen"></i>
+                                                        </a>
+                                                      </span>
+                                                      <span class="ml-2 mt-1" *ngIf="editConnectorRow[i]">
+                                                        <a class="formarray_btn" data-toggle="tooltip" data-placement="top" title="Save" *ngIf="editConnectorRow[i]"
                                                           (click)="saveConnector(i)">
                                                           <i class="fa fa-save"></i>
                                                         </a>
