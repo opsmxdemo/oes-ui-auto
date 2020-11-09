@@ -101,6 +101,7 @@ export interface State {
     isTemplateDataForToolTypeUpdated: boolean;
     isEnviromentsLoaded: boolean;
     isGroupPermissionsLoaded: boolean;
+    groupPermissionsGetListData: any;
 }
 
 export const initialState: State = {
@@ -180,6 +181,7 @@ export const initialState: State = {
     groupPermissionsListData: null,
     isGroupPermissions: false,
     isGroupPermissionsLoaded: false,
+    groupPermissionsGetListData: null,
 
 }
 
@@ -398,7 +400,7 @@ export function ApplicationReducer(
         on(ApplicationAction.loadGroupPermissions,
             (state,action) => ({
                 ...state,
-                groupPermissionsListData:action.groupPermissionsListData,
+                groupPermissionsGetListData:action.groupPermissionsListData,
                 isGroupPermissionsLoaded: true
             })
         ),

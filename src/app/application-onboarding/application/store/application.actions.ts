@@ -51,7 +51,7 @@ export const groupPermissiondeletedSuccessfully = createAction('[Application] Gr
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string,applicationId:string}>());
-export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication}>());
+export const updateApplication = createAction('[Application] UpdateApplication', props<{applicationId:number,appData:any}>());
 export const disabledEditMode = createAction('[Application] DisabledEditMode');
 
 // Below action is related to application list

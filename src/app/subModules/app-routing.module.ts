@@ -19,12 +19,12 @@ const routes: Routes = [
     {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent},
     { path: 'deploymentverification/:applicationName/:canaryId/:serviceId', component: DeploymentVerificationComponent },
     { path: 'trendanalysis', component: TrendAnalysisComponent },
+    {path:'visibility', component: VisibilityComponent},
+    {path:'visibility/:applicationName/:applicationId', component: VisibilityComponent},
 
   ]},
   {path:'cddashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
-  {path:'visibility', component: VisibilityComponent},
-  {path:'visibility/:applicationName/:applicationId', component: VisibilityComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
   {path:'error', component:AppErrorListingComponent}
 ];
