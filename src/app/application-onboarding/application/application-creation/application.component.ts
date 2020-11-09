@@ -267,7 +267,7 @@ export class CreateApplicationComponent implements OnInit {
               for (let i = 0; i < totalServices; i++) {
                 (<FormArray>this.servicesForm.get('services')).push(
                   new FormGroup({
-                    serviceName: new FormControl({ value: this.appData.services[i].serviceName, disabled: true }),
+                    serviceName: new FormControl({ value: this.appData.services[i].name, disabled: true }),
                   })
                 )
                 this.configuredFeature.push({
