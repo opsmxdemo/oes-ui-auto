@@ -241,7 +241,7 @@ export class CreateApplicationComponent implements OnInit {
 
             this.createApplicationForm = new FormGroup({
               name: new FormControl(this.appData.name),
-              emailId: new FormControl(this.appData.emailId, [Validators.required, Validators.email]),
+              emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
               description: new FormControl(this.appData.description),
               imageSource: new FormControl(this.appData.imageSource, Validators.required),
               lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
@@ -359,27 +359,9 @@ export class CreateApplicationComponent implements OnInit {
 
 
             //populate groupPermission Form #############################################################################
-            if (this.appData.userGroups !== null && this.appData.userGroups.length !== 0) {
-              // clearing form first
-              this.groupPermissionForm = new FormGroup({
-                userGroups: new FormArray([])
-              });
-              //populating the form
-              const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
-              this.appData.userGroups.forEach((groupData, index) => {
-                // pushing controls in usergroup form.
-                userGroupControl.push(
-                  new FormGroup({
-                    userGroupId: new FormControl(groupData.userGroupId, [Validators.required, this.usergroupExist.bind(this)]),
-                    permissionIds: new FormArray([])
-                  })
-                );
-
-                // pushing controls in permissionIDs
-                const permissionIdGroupControl = userGroupControl.at(index).get('permissionIds') as FormArray;
-                this.populatePermissions(permissionIdGroupControl, groupData.permissionIds);
-              })
-            }
+            // if (responseData.groupPermissionsListData != null) {
+             
+            // }
 
             //populating log and metric template data ######################################################################
             if (this.userType === 'deployment_verification') {
@@ -414,10 +396,49 @@ export class CreateApplicationComponent implements OnInit {
          if (response.environmentsListData != null){
           console.log(response.environmentsListData);
           this.envData = response.environmentsListData;
+
+          if(this.editMode){
+            this.environmentForm = new FormGroup({
+              environments: new FormArray([])
+            });
+            if(this.envData.environments != undefined){
+              this.envData.environments.forEach(environmentdata => {
+                (<FormArray>this.environmentForm.get('environments')).push(
+                  new FormGroup({
+                    key: new FormControl(environmentdata.key, Validators.required),
+                    value: new FormControl(environmentdata.value),
+                    // id: new FormControl(environmentdata.id)
+                  })
+                );
+              })
+            }
+          }
         }
 
-        if(response.groupPermissionsListData != null){
-          this.grpData = response.groupPermissionsListData;
+       //populate groupPermission Form #############################################################################
+console.log(response);
+        if(response.groupPermissionsGetListData != null){
+          this.grpData = response.groupPermissionsGetListData;
+          console.log(this.grpData);
+          //  // clearing form first
+           this.groupPermissionForm = new FormGroup({
+            userGroups: new FormArray([])
+          });
+          //populating the form
+          const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
+          this.grpData.forEach((groupData, index) => {
+            // pushing controls in usergroup form.
+            userGroupControl.push(
+              new FormGroup({
+                userGroupId: new FormControl(groupData.userGroupId, [Validators.required, this.usergroupExist.bind(this)]),
+                permissionIds: new FormArray([])
+              })
+            );
+
+            // pushing controls in permissionIDs
+            const permissionIdGroupControl = userGroupControl.at(index).get('permissionIds') as FormArray;
+            this.populatePermissions(permissionIdGroupControl, groupData.permissionIds);
+          })
         }
 
         if (response.pipelineData !== null) {
@@ -434,7 +455,7 @@ export class CreateApplicationComponent implements OnInit {
           //   "applicationId": "50",
           //   "lastUpdatedTimestamp": "Fri Oct 30 09:39:07 UTC 2020",
           //   "name": "xdsad",
-          //   "email": "meera@opsmx.io",
+          //   "emailId": "meera@opsmx.io",
           //   "description": "",
           //   "imageSource": "docker.io/opsmx11",
           //   "services": []
@@ -604,20 +625,12 @@ export class CreateApplicationComponent implements OnInit {
     //if(this.userType === 'Deployment Verification'){
     // For AP mode
     this.createApplicationForm = new FormGroup({
-      name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
+      name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
       emailId: new FormControl('', [Validators.required, Validators.email]),
       imageSource: new FormControl(''),
       description: new FormControl('')
     });
-    // }else{
-    // For OES and both oes and autopilot mode.
-    // this.createApplicationForm = new FormGroup({
-    //   name: new FormControl('',[Validators.required, this.cannotContainSpace.bind(this)], this.valitateApplicationName.bind(this)),
-    //   emailId: new FormControl('',[Validators.required,Validators.email]),
-    //   description: new FormControl(''),
-    //   imageSource: new FormControl('',Validators.required)
-    // });
-    //  }
+   
 
     // defining reactive form for Services Section
     this.servicesForm = new FormGroup({
@@ -1063,7 +1076,7 @@ export class CreateApplicationComponent implements OnInit {
     }
     //Below action is use to save created form in database
     if (this.editMode) {
-      // this.store.dispatch(ApplicationActions.updateApplication({appData:this.appForm}));
+       this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
     } else {
       this.store.dispatch(ApplicationActions.saveApplication({ applicationData: this.appForm }));
     }
@@ -1129,7 +1142,7 @@ export class CreateApplicationComponent implements OnInit {
 
   //Bewlo fucntio is use to delete group permission
   deleteGroupPermissions(){
-
+    this.store.dispatch(ApplicationActions.deleteGroupPermissions({applicationId: this.applicationId}));
   }
 
   // Below funcion is use to submit sapor data
@@ -1240,7 +1253,7 @@ export class CreateApplicationComponent implements OnInit {
 
       //Below action is use to save created form in database
       if (this.editMode) {
-        this.store.dispatch(ApplicationActions.updateApplication({ appData: this.mainForm }));
+       // this.store.dispatch(ApplicationActions.updateApplication({ appData: this.mainForm }));
       } else {
         this.store.dispatch(ApplicationActions.createApplication({ appData: this.mainForm }));
       }
@@ -1540,20 +1553,7 @@ export class CreateApplicationComponent implements OnInit {
 
       //populate environment Form if usertype include OES in it#################################################################################
     
-          this.environmentForm = new FormGroup({
-            environments: new FormArray([])
-          });
-          if(this.envData.environments != undefined){
-            this.envData.environments.forEach(environmentdata => {
-              (<FormArray>this.environmentForm.get('environments')).push(
-                new FormGroup({
-                  key: new FormControl(environmentdata.key, Validators.required),
-                  value: new FormControl(environmentdata.value),
-                  // id: new FormControl(environmentdata.id)
-                })
-              );
-            })
-          }
+         
          
         } else{
 
@@ -1575,6 +1575,7 @@ export class CreateApplicationComponent implements OnInit {
     this.showServiceForm = false;
 
     if(this.editMode){
+      this.applicationId = this.appData.applicationId;
       this.store.dispatch(ApplicationActions.getGroupPermissions({ applicationId: this.applicationId }));
 
     }

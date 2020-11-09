@@ -7,7 +7,7 @@ export class CreateApplication {
     applicationId:number;
     description: string;
     imageSource: string;
-    emailId: string;
+    email: string;
     lastUpdatedTimestamp: string;
     logTemplate: any;
     metricTemplate: any;
@@ -21,7 +21,7 @@ export class CreateApplication {
         this.applicationId = data.applicationId;
         this.description = data.description;
         this.imageSource = data.imageSource;
-        this.emailId = data.emailId;
+        this.email = data.email;
         this.lastUpdatedTimestamp = data.lastUpdatedTimestamp;
         this.logTemplate = data.logTemplate;
         this.metricTemplate = data.metricTemplate;

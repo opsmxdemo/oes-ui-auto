@@ -268,6 +268,7 @@ export class ApplicationEffect {
        switchMap((action) => {                
            return this.http.put<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/environments',action.environmentsListData).pipe(
                map(resdata => {
+                this.toastr.showSuccess('Environments updated Successfully', 'Success');
                    return ApplicationAction.postUpdateEnvironments({ environmentsListUpdatedData: resdata});
                }),
                catchError(errorRes => {
@@ -304,8 +305,10 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.saveGroupPermissions),
             switchMap(action => {
-                return this.http.post<Environment>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/' + action.applicationId + '/usergroups/permissions', action.groupPermissionData).pipe(
+                return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/' + action.applicationId + '/usergroups/permissions', action.groupPermissionData).pipe(
                     map(resdata => {
+                        this.toastr.showSuccess("Group Permissions Saved Successfully","Success");
+
                         return ApplicationAction.groupPermissionDataSaved({ applicationName: 'applicationname comes here', dataType: 'createApplicationGroupPermissions' });
                     }),
                     catchError(errorRes => {
@@ -342,6 +345,7 @@ export class ApplicationEffect {
        switchMap((action) => {                
            return this.http.put<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/usergroups/permissions',action.groupPermissionsListData).pipe(
                map(resdata => {
+                this.toastr.showSuccess("Group Permissions updated Successfully","Success");
                    return ApplicationAction.postGroupPermissions({ groupPermissionsListUpdatedData: resdata});
                }),
                catchError(errorRes => {
@@ -356,10 +360,10 @@ export class ApplicationEffect {
    this.actions$.pipe(
        ofType(ApplicationAction.deleteGroupPermissions),
        switchMap((action) => {
-           return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/'+action.applicationId+'/usergroups/permissions').pipe(
+           return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/grouppermissions').pipe(
                map(resdata => {
                   this.toastr.showSuccess('GroupPermissions deleted successfully!!', 'SUCCESS');
-                   return ApplicationAction.environmentdeletedSuccessfully();
+                   return ApplicationAction.groupPermissiondeletedSuccessfully();
                }),
                catchError(errorRes => {
                  //   this.toastr.showError('Application is not deleted due to: ' + errorRes.error.error, 'ERROR')

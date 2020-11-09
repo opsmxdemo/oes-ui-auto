@@ -35,7 +35,7 @@
               </li>
               <li class="ti-item">
                 <i class="{{createApplicationForm.value.emailId !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Email :</span>
+                <span>emailId :</span>
                 <strong>{{createApplicationForm.value.emailId}}</strong>
               </li>
               <li class="ti-item" *ngIf = "userType === 'AP' ? false : true ">
@@ -110,7 +110,7 @@
                 <form [formGroup]="createApplicationForm">
                   <div class="form-group">
                     <label>Application Name</label>
-                    <input type="text" appLowercase class="form-control" formControlName="name" [readonly]="editMode" [ngClass]="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched ? 'is-invalid':''">
+                    <input type="text" appLowercase class="form-control" formControlName="name"  [ngClass]="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched"
                       class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('name').errors['required']">Application Name is
@@ -123,17 +123,17 @@
                     </span>
                   </div>
                   <div class="form-group">
-                    <label>Email Id</label>
+                    <label>emailId Id</label>
                     <input type="text" class="form-control" formControlName="emailId" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="invalid-feedback">
-                      <span *ngIf="createApplicationForm.get('emailId').errors['required']">Email is required</span>
-                      <span *ngIf="createApplicationForm.get('emailId').errors['email']">Please enter valid Email Id</span>
+                      <span *ngIf="createApplicationForm.get('emailId').errors['required']">emailId is required</span>
+                      <span *ngIf="createApplicationForm.get('emailId').errors['emailId']">Please enter valid emailId Id</span>
                     </span>
                   </div>
                   <div class="form-group" >
                     <label>Image Source <i data-toggle="tooltip" data-placement="top" data-original-title="Image Source" class="fa fa-question-circle" aria-hidden="true"></i></label>
-                    <select class="form-control" formControlName="imageSource" (change)="onImageSourceSelect($event.target.value)"
-                    [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''">
+                    <select class="form-control"  formControlName="imageSource" (change)="onImageSourceSelect($event.target.value)"
+                    [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''" >
                       <option value="" [disabled]="true">Select</option>
                       <option *ngFor="let imageData of imageSourceData" value="{{imageData.name}}">{{imageData.name}}</option>
                     </select>
@@ -159,7 +159,7 @@
                  <!--col-12-->
                  <div class="col-8 pull-right"  *ngIf="showApplicationForm">
                   <div class="page_access text-right py-2 px-3">
-                    <button class="btn btn-primary ml-2" (click)="SubmitApplicationForm()">Save</button>
+                    <button class="btn btn-primary ml-2" [disabled]="createApplicationForm.invalid" (click)="SubmitApplicationForm()">Save</button>
                     <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
                     <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
                    
@@ -686,8 +686,8 @@
                  <!--col-12-->
                  <div class="col-8 pull-right">
                   <div class="page_access text-right py-2 px-3">
-                    <button class="btn btn-primary ml-2" *ngIf="editMode" (click)="SubmitEnvironmentsForm()">Update</button>
-                    <button class="btn btn-primary ml-2" *ngIf="!editMode" (click)="SubmitEnvironmentsForm()">Save</button>
+                    <!-- <button class="btn btn-primary ml-2" *ngIf="editMode" (click)="SubmitEnvironmentsForm()">Update</button> -->
+                    <button class="btn btn-primary ml-2" (click)="SubmitEnvironmentsForm()">Save</button>
                     <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
                     <button class="btn btn-danger ml-1" (click)="deleteEnvironments()">Delete</button>
  
@@ -703,17 +703,14 @@
   
               <!-- ###################### Group Permission Section Starts ###########################-->
   
-              <div class="col-10" *ngIf="showEnvironmentForm">
-                <hr class="ml-0 mt-3 mb-3" />
-              </div>
-              <!-- /.col-8 -->
+             
               <div  class="col-lg-8 col-12 col-xl-6" *ngIf="showPermissionForm">
                 <div class="form-group group_permission">
                   <label>Group Permissions <i data-toggle="tooltip" data-placement="top" data-original-title="Group permissions" class="fa fa-question-circle" aria-hidden="true"></i></label>
                   <!-- <div class="col-12">
                     <hr class="ml-0 mt-3 mb-3" />
                   </div> -->
-                  <ng-container *ngIf = "userGroupData.length > 0 && userGroupPermissions.length > 0">
+                  <ng-container>
                     <div class="row" *ngIf="groupPermissionForm.value.userGroups.length !== 0 ? true : false ">
                       <div class="col-12">
                         <form [formGroup]="groupPermissionForm">
