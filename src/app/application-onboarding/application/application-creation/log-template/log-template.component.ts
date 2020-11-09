@@ -26,6 +26,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   @Input() templateData: any;
   @Input() templateIndex: number;
   @Input() isEditMode: boolean;
+  @Input() applicationId:any;
 
 
   public editorOptions: JsonEditorOptions;
@@ -49,6 +50,14 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   logClusterData: any;
   clusterTagConfig: any;
   responseKeys : any;
+  clusterTagList=[];
+addTagInput:boolean=false;
+editTagInput:boolean=false;
+selectedDropDownTag:any;
+editedTagvalue:any;
+editedTagId:any;
+addedTag:any;
+removeTagId:any;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
@@ -90,6 +99,14 @@ export class LogTemplateComponent implements OnInit, OnChanges {
             this.store.dispatch(ApplicationActions.loadedDataSourceResponseKey());         
             this.responseKeys = responseData.responseKeys;          
         }
+        if(responseData.tags != null)
+        {
+          this.clusterTagList = responseData.tags
+        }
+        // if(responseData.savedTagResponse!=null)
+        // {
+        //  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+        // }
       }
     );
 
@@ -131,7 +148,11 @@ export class LogTemplateComponent implements OnInit, OnChanges {
    this.logTopicsForm = new FormGroup({
     topicsList: new FormArray([]),
     clusterList: new FormArray([]),
+    inputTags:new FormControl(),
+    enableClusterTags: new FormControl(),
     clusterTagId: new FormControl(false),
+    addedTags:new FormArray([]),
+
   });
 
  this.logSensitivityTypes = ["high","low","medium"];
@@ -195,15 +216,19 @@ getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
  this.store.dispatch(ApplicationActions.loadClusterTags());
-
+ this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
  //fetching data from state
  this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
-       if(response.logTopicsList != null) {
+       if(response.logTopicsList != null && response.isloadedlogTopicsData) {
+         this.store.dispatch(ApplicationActions.isLoadedLogTopics())
         this.logTopicsForm = new FormGroup({
           topicsList: new FormArray([]),
+          addedTags: new FormArray([]),
+          inputTags:new FormControl(),
           clusterList: new FormArray([]),
           clusterTagId: new FormControl(false),
+          enableClusterTags: new FormControl(),
         });
          this.loading = response.logListLoading;
          this.logTopicsData = response.logTopicsList['logTopics'];
@@ -224,7 +249,10 @@ getLogTopics(){
          this.loading = response.logDataSourcesLoading;
          this.dataSourceData = response.logDataSources;
      }
-    
+     if(response.tags != null) {
+      this.dataSourceData = response.logDataSources;
+  }
+  
  })   
 }
 
@@ -246,14 +274,7 @@ onClusterChange(status: boolean){
   if(status === true){
     this.store.select(fromFeature.selectLogTemplate).subscribe(
       (response) => {
-    if(response.logClusterTags != null){
-      
-      this.loading = response.logClusterLoading;
-      this.logClusterData = response.logClusterTags['clusterTopics'];
-      this.clusterTagConfig = response.logClusterTags['clusterTags'];
-             
-      // Populating Cluster 
-           
+          
     this.logClusterData.forEach((logClusterData, logClusterIndex) => {
      (<FormArray>this.logTopicsForm.get('clusterList')).push(
       new FormGroup({
@@ -262,8 +283,12 @@ onClusterChange(status: boolean){
        })
      );
   });
-    }
+    
   })   
+  }
+  else{
+    this.editTagInput=false;
+    this.addTagInput=false;
   }
   
 
@@ -273,10 +298,11 @@ onClusterChange(status: boolean){
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
+   console.log(this.logForm)
    if(this.clusterTagFlag === true){
-    this.logForm['Tags'] = this.logTopicsForm.value['clusterList'];
+    this.logForm['tags'] = this.logTopicsForm.value['clusterList'];
    }else{
-    this.logForm['Tags'] = '';
+    this.logForm['tags'] = [];
    }
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
@@ -287,6 +313,7 @@ SubmitForm(){
      this.stepper.reset();
    }
    this.logTopicsForm.value['clusterTagId'] = false;
+   this.logTopicsForm.value['enableClusterTags'] = false;
    this.createLogForm.value['autoBaseline'] = false;
    this.createLogForm.value['regExFilter'] = false;
     this.createLogForm.reset();
@@ -374,6 +401,76 @@ cannotContainSpace(control: FormControl): {
     this.logTopicsForm.reset(); 
     this.stepper.reset();
    
+  }
+  addNewTag(){
+    this.addTagInput=true;
+    this.editTagInput=false;
+    this.logTopicsForm.patchValue({
+      inputTags: ""
+   });
+   
+  }
+
+  editNewTag(){
+    this.editTagInput=true;
+    this.addTagInput=false;
+    this.logTopicsForm.patchValue({
+      inputTags: this.selectedDropDownTag
+   });
+  }
+  removeTags(){
+    for(let i=0;i<this.clusterTagList.length;i++)
+    {
+      if(this.clusterTagList[i].name==this.selectedDropDownTag)
+      {
+        this.removeTagId = this.clusterTagList[i].id
+      }
+    }
+    this.store.dispatch(ApplicationActions.deleteCustomTags({ applicationId: this.applicationId,tagId:this.removeTagId }));
+  }
+  selectedTag(value){
+    this.selectedDropDownTag = value;
+    this.logTopicsForm.patchValue({
+      inputTags: value
+   });
+  }
+  submitEditedTag(){
+    for(let i=0;i<this.clusterTagList.length;i++)
+    {
+      if(this.clusterTagList[i].name==this.selectedDropDownTag)
+      {
+        var myjson = {
+          "id":this.clusterTagList[i].id,
+          "name":this.logTopicsForm.get('inputTags').value
+        }
+        this.editedTagId = this.clusterTagList[i].id
+        // this.clusterTagList[i].name = this.logTopicsForm.get('inputTags').value // remove once api is there
+      }
+    }
+    this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
+  }
+  submitNewTag(){
+    this.addedTag= this.logTopicsForm.get('inputTags').value
+    var myjson = {
+      "name":this.addedTag
+    }
+    if(this.addedTag!=null)
+    {
+      this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
+    }
+  //   this.store.select(fromFeature.selectLogTemplate).subscribe(
+  //     (response) => {
+        
+  //         this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+  //         this.logTopicsForm.patchValue({
+  //     enableClusterTags: true
+  //  });
+      
+  // })
+  
+    
+    
+
   }
 
 

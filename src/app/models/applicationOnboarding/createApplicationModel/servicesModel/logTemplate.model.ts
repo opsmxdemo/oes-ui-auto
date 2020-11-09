@@ -16,7 +16,7 @@ export class CreateLogTemplate {
     regularExpression: string;
     clusterTagId: boolean;
     errorTopics:LogErrorTopics[];
-    tags: LogClusterTags[];
+    clustertagList: LogClusterTags[];
     
     constructor(data: any) {
         data = data || {};
@@ -36,9 +36,9 @@ export class CreateLogTemplate {
         data.errorTopics.forEach(element => {
             this.errorTopics.push(new LogErrorTopics(element));
         });
-        this.tags = [];
+        this.clustertagList = [];
         data.tag.forEach(element => {
-            this.tags.push(new LogClusterTags(element));
+            this.clustertagList.push(new LogClusterTags(element));
         })
        
     }
