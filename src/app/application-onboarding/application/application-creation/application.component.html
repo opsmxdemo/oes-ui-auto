@@ -722,7 +722,7 @@
                                         <select class="form-control" formControlName="userGroupId" (change)="permissionContrlValid(groupPermissionForm.get('userGroups')['controls'][i].get('permissionIds'))"
                                         [ngClass]="!groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').valid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').touched ? 'is-invalid':''">
                                           <option value="" [disabled]="true">Select</option>
-                                          <option *ngFor = "let user of userGroupDropdownData[i]" value="{{user.userGroupId}}">{{user.userGroupName}}</option>
+                                          <option *ngFor = "let user of userGroupDropdownData[i]  | nonAdmins: user" >{{user.userGroupName}}</option>
                                         </select>
                                         <span *ngIf="groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').invalid && groupPermissionForm.get('userGroups')['controls'][i].get('userGroupId').touched"
                                         class="invalid-feedback">

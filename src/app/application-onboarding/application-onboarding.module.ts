@@ -26,6 +26,7 @@ import { MetricTemplateEffect } from './application/application-creation/metric-
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { CreateDataSourceComponent } from './data-source/create-data-source/create-data-source.component';
 import { DataSourceFormsComponent } from './data-source/create-data-source/data-source-forms/data-source-forms.component';
+import { NonAdminPipe } from '../pipes/nonAdmin.pipe';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { DataSourceFormsComponent } from './data-source/create-data-source/data-
       MetricTemplateComponent,
       LogTemplateComponent,
       DataSourceFormsComponent,
-      CreateDataSourceComponent
+      CreateDataSourceComponent,
+      NonAdminPipe
     ],
     imports: [
      CommonModule,
