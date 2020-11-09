@@ -18,6 +18,7 @@ export interface State {
     isLogsEventsLoaded : boolean;
     isLoadedRerunResults : boolean;
     isLoadedClusterLogData : boolean;
+    logTopicsList:any;
 }
 
 export const initialState: State = {
@@ -33,7 +34,8 @@ export const initialState: State = {
     isLogsResultsLoaded : false,
     isLogsEventsLoaded: false,
     isLoadedRerunResults:false,
-    isLoadedClusterLogData :false
+    isLoadedClusterLogData :false,
+    logTopicsList:null,
 }
 
 export function LogAnalysisReducer(

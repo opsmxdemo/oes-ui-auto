@@ -274,9 +274,9 @@ onClusterChange(status: boolean){
 SubmitForm(){
    this.logForm = this.createLogForm.value;
    if(this.clusterTagFlag === true){
-    this.logForm['Tags'] = this.logTopicsForm.value['clusterList'];
+    this.logForm['tags'] = this.logTopicsForm.value['clusterList'];
    }else{
-    this.logForm['Tags'] = '';
+    this.logForm['tags'] = [];
    }
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
