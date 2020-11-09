@@ -71,8 +71,18 @@ export const loadMonitoringAccountName = createAction('[Application] LoadMonitor
 export const fetchMonitoringAccounts = createAction('[Application] fetchMonitoringAccounts', props<{logAccounts:any}>());
 export const loadLogTopics = createAction('[Application] LoadLogTopics');
 export const fetchLogTopics = createAction('[Application] FetchLogTopics', props<{logslist:[]}>());
+export const isLoadedLogTopics = createAction('[Application] IsLoadedLogTopics');
 export const loadClusterTags = createAction('[Application] LoadClusterTags');
 export const fetchClusterTags = createAction('[Application] FetchClusterTags', props<{clusterTags:[]}>());
+export const loadCustomTags = createAction('[Application] LoadCustomTags',props<{applicationId: any}>());
+export const fetchCustomTags = createAction('[Application] FetchCustomTags', props<{tags:any}>());
+export const addCustomTags = createAction('[Application] AddCustomTags',props<{applicationId: any,newtagData:any}>());
+export const savedCustomTag = createAction('[Application] SavedCustomTag', props<{savedTagResponse: any}>());
+export const editCustomTags = createAction('[Application] EditCustomTags',props<{applicationId: any,tagId:any,edittagData:any}>());
+export const savededitCustomTag = createAction('[Application] SavededitCustomTag', props<{savedEditTagResponse: any}>());
+export const deleteCustomTags = createAction('[Application] DeleteCustomTags',props<{applicationId: any,tagId:any}>());
+export const fetchDeleteCustomTag = createAction('[Application] FetchDeleteCustomTag', props<{deleteTagResponse: any}>());
+
 
 export const loadDataSourceResponseKey = createAction('[Application] LoadDataSourceResponseKey', props<{responseKeys:[]}>());
 export const fetchDataSourceResponseKey = createAction('[Application] FetchDataSourceResponseKey', props<{accountName:any}>());
