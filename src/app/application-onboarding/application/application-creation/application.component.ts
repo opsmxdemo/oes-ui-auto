@@ -97,10 +97,10 @@ export class CreateApplicationComponent implements OnInit {
   approvalGatesList: any;
   isEditGateEnabled: boolean = false;
   configuredToolTypes: any;
-  toolTypes: any;
+  toolTypes: any = [];
   toolTypesConfiguredForGate: any;
-  templatesForToolType: any;
-  accountsForTooltypes: any;
+  templatesForToolType: any = [];
+  accountsForTooltypes: any = [];
   selectedTTTemplateTab = 'tooltype-template-form';
   public tooltypeTemplateEditor: JsonEditorOptions;
   public tooltypeTemplateData: any = null;
@@ -139,6 +139,11 @@ export class CreateApplicationComponent implements OnInit {
   showPermissionForm: boolean = false;
   appInfoData: any;
   environmentsList: any;
+  hideVisibilityPlusIcon: boolean;
+  currentRowIndexVisibility: number = 0;
+  editConnectorRow: any = [];
+  toolTypeDataSaved: any = [];
+  toolTypesCount: number = 0;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -518,9 +523,9 @@ console.log(response);
           if (this.approvalGatesOfaServiceList.length > 0) {
             this.gateId = this.approvalGatesOfaServiceList[0].id;
             //console.log(this.approvalGatesOfaServiceList);
-            this.addConnector();
-            this.store.dispatch(ApplicationActions.getToolConnectorForaGate({ gateId: this.gateId }));
-          }
+            // this.addConnector();
+            this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
+          }          
         }
         if (response.isApprovalGateEdited) {
           this.isEditGateEnabled = false;
@@ -529,18 +534,24 @@ console.log(response);
         if (response.configuredToolConnectorTypes != null && response.isConfiguredToolConnectorLoaded) {
           this.store.dispatch(ApplicationActions.isloadedConfiguredToolConnectorTypes());
           this.configuredToolTypes = response.configuredToolConnectorTypes;
-          this.toolTypes = this.configuredToolTypes;
+          this.toolTypesCount = this.configuredToolTypes.length;
+          this.toolTypes[0] = this.configuredToolTypes;          
           //console.log(this.configuredToolTypes);
+          if(this.toolTypes[0].length < 2) {
+            this.hideVisibilityPlusIcon = true;
+          } else {
+            this.hideVisibilityPlusIcon = false;
+          }
           this.addConnector();
         }
         if (response.accountsForToolType != null && response.isAccountForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
-          this.accountsForTooltypes = response.accountsForToolType;
+          this.accountsForTooltypes[this.currentRowIndexVisibility - 1] = response.accountsForToolType;
           //this.connectorId = this.accountsForTooltypes[0];
         }
         if (response.templatesForToolType && response.isTemplateForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
-          this.templatesForToolType = response.templatesForToolType;
+          this.templatesForToolType[this.currentRowIndexVisibility - 1] = response.templatesForToolType;
         }
 
         this.loadEditTemplate(response);
@@ -584,9 +595,14 @@ console.log(response);
               this.toolTypesConfiguredForGate
             );
             setTimeout(() => {
-              this.toolTypes = toolTypesValue;
-              console.log(this.toolTypes);
-              this.addConnector();
+              this.toolTypes[this.currentRowIndexVisibility] = toolTypesValue; 
+              if(this.toolTypes[this.currentRowIndexVisibility].length < 2) {
+                this.hideVisibilityPlusIcon = true;
+              } else {
+                this.hideVisibilityPlusIcon = false;
+              }
+              console.log(this.toolTypes); 
+              this.addConnector(); 
             }, 100);
 
 
@@ -923,21 +939,49 @@ console.log(response);
   }
   //Below function is use to add more permission group
   addConnector() {
-    this.addNewConnectorAllowed = false;
+    this.addNewConnectorAllowed = false;   
+    let formArray = <FormArray>this.visibilityForm.get('visibilityConfig');
     (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
       new FormGroup({
         connectorType: new FormControl('', Validators.required),
         accountName: new FormControl(''),
+        _accountName: new FormControl(''),
         templateName: new FormControl(''),
+        _templateName: new FormControl(''),
       })
     );
+    this.editConnectorRow.push(true);
+    this.toolTypeDataSaved.push(false);
+    this.editConnectorRowSetAllFalseExcept(this.editConnectorRow.length - 1);
+    this.currentRowIndexVisibility = formArray.controls.length;
     this.toolTypeRowHoverd.push(false);
+  }
+
+  editConnectorRowSetAllFalseExcept(index) {
+    let self = this;
+    let visibilityFormArr = <FormArray> this.visibilityForm.controls.visibilityConfig;
+    this.editConnectorRow.forEach((row, i) => {
+      self.editConnectorRow[i] = false;
+      visibilityFormArr.controls[i].get('accountName').disable();
+      visibilityFormArr.controls[i].get('templateName').disable();
+    });
+    this.editConnectorRow[index] = true;
+    visibilityFormArr.controls[index].get('accountName').enable();
+    visibilityFormArr.controls[index].get('templateName').enable();
+  }
+
+  editConnect(index) {
+    this.editConnectorRowSetAllFalseExcept(index);
   }
 
   // Below function is use to remove exist environment 
   removeConnector(index) {
     $("[data-toggle='tooltip']").tooltip('hide');
     (<FormArray>this.visibilityForm.get('visibilityConfig')).removeAt(index);
+    if((<FormArray>this.visibilityForm.get('visibilityConfig')).controls.length < this.toolTypesCount) {
+      this.hideVisibilityPlusIcon = false;
+      this.addNewConnectorAllowed = true;
+    }
   }
 
   // Below function is execute on select of pipeline type in Services Section
@@ -1180,7 +1224,26 @@ console.log(response);
     var dataToSaveToolConnectorwithTemplate = {
       templateId: this.templateId[index]
     };
-    this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({ gateId: this.gateId, connectorId: this.connectorId, toolconnectorwithTemplateData: dataToSaveToolConnectorwithTemplate }));
+    let visibilityFormArr = <FormArray> this.visibilityForm.controls.visibilityConfig;
+
+    // let _templateName = this.templatesForToolType[index].find(obj => obj.id == visibilityFormArr.controls[index].get('accountName').value);
+    // let _accountName = this.accountsForTooltypes[index].find(obj => obj.id == visibilityFormArr.controls[index].get('templateName').value);
+
+    visibilityFormArr.controls[index].get('accountName').disable();
+    visibilityFormArr.controls[index].get('templateName').disable();
+
+    // this.toolTypes.forEach((toolType, i) => {
+    //   if(toolType == visibilityFormArr.controls[index].get('connectorType').value) {
+    //     delete this.toolTypes[i];
+    //   }
+    // });
+
+    this.store.dispatch(ApplicationActions.saveToolConnectorWithTemplate({gateId: this.gateId, connectorId : this.connectorId, toolconnectorwithTemplateData : dataToSaveToolConnectorwithTemplate}));
+    setTimeout(() => {
+      this.editConnectorRow[index] = false;
+      this.toolTypeDataSaved[index] = true;
+    }, 100);
+    
   }
 
   // Bewlow function is use to submit visibility form
