@@ -102,6 +102,15 @@ export interface State {
     isEnviromentsLoaded: boolean;
     isGroupPermissionsLoaded: boolean;
     groupPermissionsGetListData: any;
+
+    //Deployment Verification
+    logTemplatesofaApplication: any;
+    isLogTemplateforApplicationLoaded: boolean;
+    deleteFeatureDeploymentVerificationMessage: any;
+    isDeletedDeploymentVerificationFeature: boolean;
+    metricTemplatesofaApplication: any;
+    isMetricTemplateforApplicationLoaded: boolean;
+    metricTemplateData : any;
 }
 
 export const initialState: State = {
@@ -182,6 +191,15 @@ export const initialState: State = {
     isGroupPermissions: false,
     isGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
+
+     //Deployment Verification
+     logTemplatesofaApplication: null,
+     isLogTemplateforApplicationLoaded: false,    
+     deleteFeatureDeploymentVerificationMessage: null,
+     isDeletedDeploymentVerificationFeature: false,
+     metricTemplatesofaApplication: null,
+     isMetricTemplateforApplicationLoaded: false,
+     metricTemplateData : null
 
 }
 
@@ -968,6 +986,104 @@ export function ApplicationReducer(
             isSaporConfigLoaded: false
         })
     ),
+
+    // Deployment Verification Feature  Starts here //
+    on(ApplicationAction.saveLogTemplate,
+        (state,action) => ({
+            ...state,
+            applicationId:action.applicationId,
+            logTemplateData : action.logTemplateData
+            //isLogTemplate: false
+        })
+    ),
+    // on(ApplicationAction.postSaveVisibilityFeature,
+    //     (state,action) => ({
+    //         ...state,
+    //         visibilityFeatureSavedData:action.visibilityFeatureSavedData,
+    //         isVisibilityFeatureSaved: true
+    //     })
+    // ),
+    // on(ApplicationAction.isVisibilityFeatureSaved,
+    //     (state,action) => ({
+    //         ...state,
+    //         isVisibilityFeatureSaved: false
+    //     })
+    // ),
+
+    on(ApplicationAction.getLogTemplateforaApplication,
+        (state,action) => ({
+            ...state,
+            applicationId : action.applicationId,
+            isLogTemplateforApplicationLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadLogTemplateforaApplication,
+        (state,action) => ({
+            ...state,
+            logTemplatesofaApplication:action.logTemplatesofaApplication,
+            isLogTemplateforApplicationLoaded: true
+        })
+    ),
+    on(ApplicationAction.isLoadedLogTemplatesforaApplication,
+        (state,action) => ({
+            ...state,
+            isLogTemplateforApplicationLoaded: false
+        })
+    ),
+
+    on(ApplicationAction.saveMetricTemplate,
+        (state,action) => ({
+            ...state,
+            applicationId:action.applicationId,
+            metricTemplateData : action.metricTemplateData
+            //isLogTemplate: false
+        })
+    ),
+
+    on(ApplicationAction.getMetricTemplateforaApplication,
+        (state,action) => ({
+            ...state,
+            applicationId : action.applicationId,
+            isMetricTemplateforApplicationLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadMetricTemplateforaApplication,
+        (state,action) => ({
+            ...state,
+            metricTemplatesofaApplication:action.metricTemplatesofaApplication,
+            isMetricTemplateforApplicationLoaded: true
+        })
+    ),
+    on(ApplicationAction.isLoadedMetricTemplatesforaApplication,
+        (state,action) => ({
+            ...state,
+            isMetricTemplateforApplicationLoaded: false
+        })
+    ),
+
+    on(ApplicationAction.deleteDeploymentVerificationFeature,
+        (state,action) => ({
+            ...state,
+            applicationId : action.applicationId,
+            serviceId : action.serviceId,
+            isDeletedDeploymentVerificationFeature: false
+        })
+    ),
+    on(ApplicationAction.postDeleteDeploymentVerificationFeature,
+        (state,action) => ({
+            ...state,
+            deleteFeatureVisibilityMessage:action.deleteFeatureDeploymentVerificationMessage,
+            isDeletedDeploymentVerificationFeature: true
+        })
+    ),
+    on(ApplicationAction.isDeleteDeploymentVerificationFeature,
+        (state,action) => ({
+            ...state,
+            isDeletedDeploymentVerificationFeature: false
+        })
+    ),
+
+    // Deployment Verification Feature  Ends here //
 
         // ###  Reseting template data for both metric and log ### // 
     )(applicationState,applicationAction);

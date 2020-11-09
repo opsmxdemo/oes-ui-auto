@@ -21,6 +21,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   @ViewChild('stepper') stepper: MatHorizontalStepper;
 
   @Input() metricTemplate:boolean;
+  @Input() applicationData : any;
 
   public editorOptions: JsonEditorOptions;
   public data: any = null;
@@ -325,7 +326,11 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     if(this.isEditMode){
       this.store.dispatch(ApplicationActions.updatedMetricTemplate({metricTemplateData:this.metricTemplateData,index:this.templateIndex}));
     }else{
-      this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateData}));
+      this.metricTemplateData['applicationId'] = this.applicationData['applicationId'];
+      this.metricTemplateData['applicationName'] = this.applicationData['name'];
+      this.metricTemplateData['emailId'] = this.applicationData['email'];
+      this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.metricTemplateData}));
+      //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateData}));
     }
     this.data = {};
   }
@@ -379,8 +384,10 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
   savemetrictemplate(){    
     this.metricTemplateFormData = {
+      "applicationId"   : this.applicationData['applicationId'],
+      "applicationName" : this.applicationData['name'],
+      "emailId"         : this.applicationData['email'],
       "templateName" : this.createMetricForm.value.templateName,
-      "applicationName": "",
       "data": {
         "groups" : []
       }
@@ -408,8 +415,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       };      
       this.metricTemplateFormData.data.groups.push(groupObj);
     });
+    this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.metricTemplateFormData}));
     //this.metricTemplateFormData.data.groups=groupObj;
-    this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateFormData}));
+    //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateFormData}));
     this.clearFormData();
     
   }
@@ -437,13 +445,16 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   saveapminfra(){
           
     this.apminfraTemplate = {
-      "templateName" : this.apmFormGroup.value.templateName,
-      "applicationName": this.apmFormGroup.value.apmApplication != null ? this.apmFormGroup.value.apmApplication : this.infraFormGroup.value.applicationName,
-      "data": {
-        "groups" : [],
-        "isNormalize": this.metricConfigForm.value.isNormalize,
-        "percent_diff_threshold" : (this.metricConfigForm.value.threshold ? "easy" :"hard")
-      }
+      "applicationId"   : this.applicationData['applicationId'],
+      "applicationName" : this.applicationData['name'],
+      "emailId"         : this.applicationData['email'],
+      "templateName"    : this.apmFormGroup.value.templateName,
+      //"applicationName" : this.apmFormGroup.value.apmApplication != null ? this.apmFormGroup.value.apmApplication : this.infraFormGroup.value.applicationName,
+      "data"            : {
+                            "groups" : [],
+                            "isNormalize": this.metricConfigForm.value.isNormalize,
+                            "percent_diff_threshold" : (this.metricConfigForm.value.threshold ? "easy" :"hard")
+                          }
     };  
     
     var cookbookArray = [];
@@ -451,7 +462,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     var filteredCookbookArray = [];
     filteredCookbookArray = cookbookArray.filter(obj => obj.isSelectedToSave == true);
     this.apminfraTemplate.data.groups =filteredCookbookArray;
-    this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
+    this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.apminfraTemplate}));
+    //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
     this.clearFormData();
   }
 

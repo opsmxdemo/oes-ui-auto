@@ -849,4 +849,126 @@ export class ApplicationEffect {
         )
     )
 
+// ****** DEPLOYMENT VERIFICATION EFFECTS START HERE ******* //
+
+    //Effect to save logtemplate associate to application
+///autopilot/api/v1/applications/{applicationId}/logTemplates
+onSaveLogTemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveLogTemplate),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/logTemplates', action.logTemplateData).pipe(
+                map(resdata => {
+                    this.store.dispatch(ApplicationAction.getLogTemplateforaApplication({applicationId : action.applicationId}));
+                    return ApplicationAction.savedLogTemplate({ savedLogTemplateData: resdata});
+                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to get all log templates for a application
+///autopilot/api/v1/applications/1/logTemplates
+getLogTemplateforaApplication = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getLogTemplateforaApplication),
+        switchMap((action) => {                    
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+ action.applicationId+'/logTemplates').pipe(          
+                map(resdata => {
+                    return ApplicationAction.loadLogTemplateforaApplication({ logTemplatesofaApplication: resdata});
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effect to save logtemplate associate to application
+//POST /autopilot/api/v1/applications/1/metricTemplates?isEdit=false
+onSaveMetricTemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveMetricTemplate),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/metricTemplates?isEdit=false', action.metricTemplateData).pipe(
+                map(resdata => {
+                    this.store.dispatch(ApplicationAction.getLogTemplateforaApplication({applicationId : action.applicationId}));
+                    return ApplicationAction.savedMetricTemplate({ savedMetricTemplateData: resdata});                   
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to get all log templates for a application
+///autopilot/api/v1/applications/1/metricTemplates
+getMetricTemplateforaApplication = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getMetricTemplateforaApplication),
+        switchMap((action) => {                    
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+ action.applicationId+'/metricTemplates').pipe(          
+                map(resdata => {
+                    return ApplicationAction.loadMetricTemplateforaApplication({ metricTemplatesofaApplication: resdata});
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effect to save deployment verification feature or associate service to template
+//dashboardservice/v2/autopilot/service/feature/configuration
+onSaveDeploymentVerification = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.saveDeploymentVerificationFeature),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/autopilot/service/feature/configuration', action.templateServiceData).pipe(
+                map(resdata => {
+                    return ApplicationAction.postDeploymentVerificationFeature({ deploymentVerificationSavedData: resdata});                   
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//dashboardservice/v2/autopilot/service/{serviceId}/application/{applicationId}/feature/configuration
+// Effect to delete  visibility feature
+onDeleteDeploymentVerificationFeature = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.deleteDeploymentVerificationFeature),
+        switchMap((action) => {
+            return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/autopilot/service/' +action.serviceId + '/application/'+action.applicationId +'/feature/configuration').pipe(
+                map(resdata => {
+                    this.toastr.showSuccess('Deleted Successfully', 'SUCCESS');
+                    return ApplicationAction.postDeleteDeploymentVerificationFeature({ deleteFeatureDeploymentVerificationMessage: resdata});                 
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+// ****** DEPLOYMENT VERIFICATION EFFECTS ENDS HERE ******* //
+
 }
