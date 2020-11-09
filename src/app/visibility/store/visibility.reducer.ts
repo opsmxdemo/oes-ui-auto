@@ -13,7 +13,13 @@ export interface State {
     serviceListLoading: boolean;
     applicationId: number;
     toolConnectors: [],
-    visibilityData: any
+    gateInstanceDetails: any,
+    gateInstanceDetailsLoading: boolean,
+    visibilityData: any,
+    approvalInstanceId: number,
+    connectorType: string,
+    visibilityDataLoaded: boolean,
+    connectorTypeLoading: boolean
 }
 
 export const initialState: State = {
@@ -24,7 +30,13 @@ export const initialState: State = {
     serviceListLoading: true,
     applicationId: null,
     toolConnectors: null,
-    visibilityData: null
+    gateInstanceDetails: null,
+    gateInstanceDetailsLoading: false,
+    visibilityData: null,
+    approvalInstanceId: null,
+    connectorType: null,
+    visibilityDataLoaded: null,
+    connectorTypeLoading: null
 };
 
 export function VisibilityReducer(
@@ -42,19 +54,25 @@ export function VisibilityReducer(
         on(Visibility.loadApplications,
             state => ({
                 ...state,
-                applicationListLoading: true
+                applicationListLoading: false
             })
         ),
         on(Visibility.fetchApplications,
             (state, action) => ({
                 ...state,
                 applicationList: action.applicationList,
-                applicationListLoading: false
+                applicationListLoading: true
             })
         ),
+        on(Visibility.stopLoadingApplication,
+            (state, action) => ({
+                ...state,
+                applicationListLoading: false
+            })),
         on(Visibility.loadServices,
             (state, action) => ({
                 ...state,
+                applicationId: action.applicationId,
                 serviceListLoading: false
             })
         ),
@@ -65,28 +83,78 @@ export function VisibilityReducer(
                 serviceListLoading: true
             })
         ),
+        on(Visibility.stopLoadingService,
+            (state, action) => ({
+                ...state,
+                serviceListLoading: false
+            })),
         on(Visibility.loadToolConnectors,
             (state, action) => ({
                 ...state,
+                id: action.id,
+               connectorTypeLoading : false
             })
         ),
         on(Visibility.fetchToolConnectors,
             (state, action) => ({
                 ...state,
-                toolConnectors: action.toolConnectors
+                toolConnectors: action.toolConnectors,
+               connectorTypeLoading : true
             })
         ),
+        on(Visibility.stopLoadingConnectors,
+            (state, action) => ({
+                ...state,
+               connectorTypeLoading : false
+            })),
+        on(Visibility.loadGateInstanceDetails,
+            (state, action) => ({
+                ...state,
+                id: action.id,
+                gateInstanceDetailsLoading: false
+            })
+        ),
+        on(Visibility.fetchGateInstanceDetails,
+            (state, action) => ({
+                ...state,
+                gateInstanceDetails: action.gateInstanceDetails,
+                gateInstanceDetailsLoading: true,
+            })
+        ),
+        on(Visibility.stopGateInstanceLoading,
+            (state, action) => ({
+                ...state,
+               gateInstanceDetailsLoading : false
+            })),
         on(Visibility.loadVisibilityData,
             (state, action) => ({
                 ...state,
+                visibilityDataLoaded : false
             })
         ),
         on(Visibility.fetchVisbilityData,
             (state, action) => ({
                 ...state,
-                visibilityData: action.visibilityData
+                visibilityData: action.visibilityData,
+                visibilityDataLoaded : true
             })
-        )
+        ),
+        on(Visibility.visibilityDataLoading,
+            (state, action) => ({
+                ...state,
+               visibilityDataLoaded : false
+            })),
+        on(Visibility.postReview,
+            (state,action) => ({
+                ...state
+            })
+        ),
+        on(Visibility.fetchComments,
+            (state, action) => ({
+                ...state,
+                reviewComments: action.reviewComments
+            })
+        ),
     )(visibilityState, visibilityAction);
 };
 

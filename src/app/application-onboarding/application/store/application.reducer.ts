@@ -18,6 +18,7 @@ export interface State {
     applicationData: CreateApplication;
     appSavedData: SaveApplication;
     appEnvionmentsData: Environment;
+    getEnvironmentListData: any;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
@@ -48,6 +49,16 @@ export interface State {
     saporConfigData : any;
     saporConfigSavedData : any;
     isSaporConfigSaved: boolean;
+    deleteSaporConfigMessage : any;
+    saporConfigList : any;
+    environmentsListData: any;
+    isSaporConfigLoaded: boolean;
+    isSaporConfigUpdated: boolean;
+
+    // group permissions
+    groupPermissionsListData: any;
+    isGroupPermissions: boolean;
+
 
     //Visibility 
     approvalGateSavedData : any;
@@ -75,6 +86,22 @@ export interface State {
     toolconnectorwithTemplateData : any;
     approvalGatesListOfaService: any;
     isApprovalGatesOfaServiceLoaded: boolean;
+    isVisibilityFeatureSaved:boolean;
+    visibilityFeatureSavedData : any;	
+    configuredToolConnectorData: any;
+    isToolConnectoreForaGateLoaded: boolean;
+    deleteFeatureVisibilityMessage: any;
+    isDeletedVisibilityFeature: boolean;
+    serviceId : any;
+    gateId : any;
+	
+    templateId: any;
+    templateData: any;
+    isTemplateDataForToolTypeLoaded: boolean;
+    isTemplateDataForToolTypeUpdated: boolean;
+    isEnviromentsLoaded: boolean;
+    isGroupPermissionsLoaded: boolean;
+    groupPermissionsGetListData: any;
 }
 
 export const initialState: State = {
@@ -127,11 +154,34 @@ export const initialState: State = {
     toolconnectorwithTemplateData : null,
     approvalGatesListOfaService: null,
     isApprovalGatesOfaServiceLoaded: false,
+    isVisibilityFeatureSaved : false,
+    visibilityFeatureSavedData : null,
+    configuredToolConnectorData: null,
+    isToolConnectoreForaGateLoaded: false,
+    deleteFeatureVisibilityMessage: null,
+    isDeletedVisibilityFeature: false,
+    serviceId : null,
+    gateId : null,
+    templateId: null,
+    templateData: null,
+    isTemplateDataForToolTypeLoaded:false,
+    isTemplateDataForToolTypeUpdated:false,
 
     // Sapor config variables
     saporConfigData : null,
     saporConfigSavedData : null,
     isSaporConfigSaved: false,
+    deleteSaporConfigMessage: null,
+    saporConfigList: null,
+    environmentsListData: null,
+    isSaporConfigLoaded: false,
+    isSaporConfigUpdated: false,
+    getEnvironmentListData: null,
+    isEnviromentsLoaded: false,
+    groupPermissionsListData: null,
+    isGroupPermissions: false,
+    isGroupPermissionsLoaded: false,
+    groupPermissionsGetListData: null,
 
 }
 
@@ -261,12 +311,72 @@ export function ApplicationReducer(
                 savedServiceData : action.savedServiceResponse
             })
         ),
+
+        // code related to environments goes here
+
         on(ApplicationAction.saveEnvironments,
             state => ({
                 ...state,
-                applicationLoading:true
+                isEnviromentsLoaded:true
             })
         ),
+
+        on(ApplicationAction.getEnvironments,
+            (state,action) => ({
+                ...state,
+                isEnviromentsLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadEnvironments,
+            (state,action) => ({
+                ...state,
+                environmentsListData:action.environmentsListData,
+                isEnviromentsLoaded: true
+            })
+        ),
+        on(ApplicationAction.isgetEnvironmentsLoaded,
+            (state,action) => ({
+                ...state,
+                isEnviromentsLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.updateEnvironments,
+            (state,action) => ({
+                ...state,
+                applicationId: action.applicationId,
+                environmentsListData:action.environmentsListData,
+                isEnviromentsLoaded: false
+            })
+        ),
+        on(ApplicationAction.postUpdateEnvironments,
+            (state,action) => ({
+                ...state,
+                saporConfigData:action.environmentsListUpdatedData,
+                isEnviromentsLoaded: true
+            })
+        ),
+        on(ApplicationAction.isgetEnvironmentsUpdated,
+            (state,action) => ({
+                ...state,
+                isEnviromentsLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteEnvironments,
+            state => ({
+                ...state,
+            })
+        ),
+        on(ApplicationAction.environmentdeletedSuccessfully,
+            (state,action) => ({
+                ...state,
+              
+            })
+        ),
+
+        // group permission related variables
+
         on(ApplicationAction.saveGroupPermissions,
             state => ({
                 ...state,
@@ -279,6 +389,62 @@ export function ApplicationReducer(
                 applicationLoading:true
             })
         ),
+
+        ////////
+        on(ApplicationAction.getGroupPermissions,
+            (state,action) => ({
+                ...state,
+                isGroupPermissionsLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadGroupPermissions,
+            (state,action) => ({
+                ...state,
+                groupPermissionsGetListData:action.groupPermissionsListData,
+                isGroupPermissionsLoaded: true
+            })
+        ),
+        // on(ApplicationAction.isgetGroupPermissionsLoaded,
+        //     (state,action) => ({
+        //         ...state,
+        //         isEnviromentsLoaded: false
+        //     })
+        // ),
+
+        on(ApplicationAction.updateGroupPermissions,
+            (state,action) => ({
+                ...state,
+                applicationId: action.applicationId,
+                groupPermissionsListData:action.groupPermissionsListData,
+                isGroupPermissionsLoaded: false
+            })
+        ),
+        on(ApplicationAction.postGroupPermissions,
+            (state,action) => ({
+                ...state,
+                groupPermissionsListData:action.groupPermissionsListUpdatedData,
+                isGroupPermissionsLoaded: true
+            })
+        ),
+        on(ApplicationAction.isgetGroupPermissionsLoaded,
+            (state,action) => ({
+                ...state,
+                isGroupPermissionsLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteGroupPermissions,
+            state => ({
+                ...state,
+            })
+        ),
+        on(ApplicationAction.groupPermissiondeletedSuccessfully,
+            (state,action) => ({
+                ...state,
+              
+            })
+        ),
+
         on(ApplicationAction.dataSaved,
             state => ({
                 ...state,
@@ -447,7 +613,7 @@ export function ApplicationReducer(
                 isConfiguredToolConnectorLoaded: true
             })
         ),
-        on(ApplicationAction.isApprovalGatesLoaded,
+        on(ApplicationAction.isloadedConfiguredToolConnectorTypes,
             (state,action) => ({
                 ...state,
                 isConfiguredToolConnectorLoaded: false
@@ -496,6 +662,48 @@ export function ApplicationReducer(
             })
         ),
 
+        on(ApplicationAction.getTemplateDataForTooltype,
+            (state,action) => ({
+                ...state,
+                templateId : action.templateId,
+                isTemplateDataForToolTypeLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadTemplateDataForTooltype,
+            (state,action) => ({
+                ...state,
+                templateData:action.templateData,
+                isTemplateDataForToolTypeLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedTemplateData,
+            (state,action) => ({
+                ...state,
+                isTemplateDataForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.updateTemplateForTooltype,
+            (state,action) => ({
+                ...state,
+                updatedTemplateForToolTypeData : action.updatedTemplateForToolTypeData,
+                isTemplateDataForToolTypeUpdated: false
+            })
+        ),
+        on(ApplicationAction.putSaveTemplateForTooltype,
+            (state,action) => ({
+                ...state,
+                templateForToolTypeSavedData:action.templateForToolTypeSavedData,
+                isTemplateDataForToolTypeUpdated: true
+            })
+        ),
+        on(ApplicationAction.isTemplateForTooltypeUpdated,
+            (state,action) => ({
+                ...state,
+                isTemplateDataForToolTypeUpdated: false
+            })
+        ),
+
         on(ApplicationAction.saveTemplateForTooltype,
             (state,action) => ({
                 ...state,
@@ -535,6 +743,69 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isToolConnectorwithTemplateSaved: false
+            })
+        ),
+        on(ApplicationAction.saveVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                approvalGateData:action.approvalGateData,
+                isVisibilityFeatureSaved: false
+            })
+        ),
+        on(ApplicationAction.postSaveVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                visibilityFeatureSavedData:action.visibilityFeatureSavedData,
+                isVisibilityFeatureSaved: true
+            })
+        ),
+        on(ApplicationAction.isVisibilityFeatureSaved,
+            (state,action) => ({
+                ...state,
+                isVisibilityFeatureSaved: false
+            })
+        ),
+
+        on(ApplicationAction.getToolConnectorForaGate,
+            (state,action) => ({
+                ...state,
+                gateId : action.gateId,
+                isToolConnectoreForaGateLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadToolConnectorForaGate,
+            (state,action) => ({
+                ...state,
+                configuredToolConnectorData:action.configuredToolConnectorData,
+                isToolConnectoreForaGateLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedToolConnectorForaGate,
+            (state,action) => ({
+                ...state,
+                isToolConnectoreForaGateLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                gateId : action.gateId,
+                serviceId : action.serviceId,
+                isDeletedVisibilityFeature: false
+            })
+        ),
+        on(ApplicationAction.postDeleteVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                deleteFeatureVisibilityMessage:action.deleteFeatureVisibilityMessage,
+                isDeletedVisibilityFeature: true
+            })
+        ),
+        on(ApplicationAction.isDeleteVisibilityFeature,
+            (state,action) => ({
+                ...state,
+                isDeletedVisibilityFeature: false
             })
         ),
         // Visibility Feature  Ends here //
@@ -618,14 +889,14 @@ export function ApplicationReducer(
     on(ApplicationAction.saveSaporConfig,
         (state,action) => ({
             ...state,
-            approvalGateData:action.saporConfigData,
+            saporConfigData:action.saporConfigData,
             isSaporConfigSaved: false
         })
     ),
     on(ApplicationAction.postSaveSaporConfig,
         (state,action) => ({
             ...state,
-            approvalGateSavedData:action.saporConfigSavedData,
+            saporConfigData:action.saporConfigSavedData,
             isSaporConfigSaved: true
         })
     ),
@@ -633,6 +904,68 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             isSaporConfigSaved: false
+        })
+    ),
+
+    // update sapor
+    on(ApplicationAction.updateSaporConfig,
+        (state,action) => ({
+            ...state,
+            saporConfigData:action.saporConfigData,
+            isSaporConfigUpdated: false
+        })
+    ),
+    on(ApplicationAction.postUpdateSaporConfig,
+        (state,action) => ({
+            ...state,
+            saporConfigData:action.saporConfigSavedData,
+            isSaporConfigUpdated: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigSaved,
+        (state,action) => ({
+            ...state,
+            isSaporConfigUpdated: false
+        })
+    ),
+
+    on(ApplicationAction.deleteSaporConfig,
+        (state,action) => ({
+            ...state,
+            isSaporConfigDeleted: false
+        })
+    ),
+    on(ApplicationAction.postDeleteSaporConfig,
+        (state,action) => ({
+            ...state,
+            deleteSaporConfigMessage:action.message,
+            isSaporConfigDeleted: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigDeleted,
+        (state,action) => ({
+            ...state,
+            isSaporConfigDeleted: false
+        })
+    ),
+
+    on(ApplicationAction.getSaporConfig,
+        (state,action) => ({
+            ...state,
+            isSaporConfigLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadSaporConfig,
+        (state,action) => ({
+            ...state,
+            saporConfigList:action.saporConfigList,
+            isSaporConfigLoaded: true
+        })
+    ),
+    on(ApplicationAction.isSaporConfigLoaded,
+        (state,action) => ({
+            ...state,
+            isSaporConfigLoaded: false
         })
     ),
 

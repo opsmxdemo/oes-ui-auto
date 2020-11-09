@@ -31,15 +31,27 @@ export const saveApplication = createAction('[Application] SaveApplication', pro
 export const savedApplication = createAction('[Application] SavedApplication', props<{savedApplicationResponse: any,dataType:string}>());
 export const saveService = createAction('[Application] SaveService', props<{applicationId:any,serviceSaveData:any}>());
 export const savedService = createAction('[Application] SavedService', props<{savedServiceResponse: any,dataType:string}>());
-export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{applicationId: any,environmentsData: Environment}>());
-export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
+
+// Below actions related to group permissions
+
 export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{applicationId:any,groupPermissionData: GroupPermission}>());
 export const groupPermissionDataSaved = createAction('[Application] groupPermissionDataSaved', props<{applicationName:string,dataType:string}>());
+
+export const getGroupPermissions = createAction('[Application] GetGroupPermissions', props<{applicationId: any}>());
+export const loadGroupPermissions = createAction('[Application] LoadGroupPermissions', props<{groupPermissionsListData: any}>());
+export const isgetGroupPermissionsLoaded = createAction('[Application] IsgetGroupPermissionsLoaded');
+
+export const updateGroupPermissions = createAction('[Application] UpdateGroupPermissions', props<{applicationId: any, groupPermissionsListData: any}>());
+export const postGroupPermissions = createAction('[Application] PostGroupPermissions', props<{groupPermissionsListUpdatedData: any}>());
+export const isgetGroupPermissionUpdated = createAction('[Application] IsgetGroupPermissionUpdated');
+
+export const deleteGroupPermissions = createAction('[Application] DeleteGroupPermissions', props<{applicationId:any}>());
+export const groupPermissiondeletedSuccessfully = createAction('[Application] GroupPermissiondeletedSuccessfully');
 
 
 // Below action is related to edit application 
 export const enableEditMode = createAction('[Application] EnableEditMode', props<{editMode:boolean,applicationName:string,page:string,applicationId:string}>());
-export const updateApplication = createAction('[Application] UpdateApplication', props<{appData:CreateApplication}>());
+export const updateApplication = createAction('[Application] UpdateApplication', props<{applicationId:number,appData:any}>());
 export const disabledEditMode = createAction('[Application] DisabledEditMode');
 
 // Below action is related to application list
@@ -105,6 +117,34 @@ export const fetchAPMGenerateCookbook = createAction('[Application] FetchAPMGene
 export const loadAPMGenerateCookbook = createAction('[Application] LoadAPMGenerateCookbook', props<{APMCookbook:any}>());
 export const loadedAPMGenerateCookbook = createAction('[Application] LoadedAPMGenerateCookbook');
 
+
+//Actions to create metric and log template into deployment verification feature
+export const saveLogTemplate = createAction('[Application] SaveLogTemplate', props<{logTemplateData:any}>());
+export const savedLogTemplate = createAction('[Application] SavedLogTemplate', props<{savedLogTemplateData:any}>());
+export const isLogTemplateSaved = createAction('[Application] IsLogTemplateSaved');
+
+export const saveMetricTemplate = createAction('[Application] SaveMetricTemplate', props<{metricTemplateData:any}>());
+export const savedMetricTemplate = createAction('[Application] SavedMetricTemplate', props<{savedMetricTemplateData:any}>());
+export const isMetricTemplateSaved = createAction('[Application] IsMetricTemplateSaved');
+
+export const getLogTemplateforaApplication = createAction('[Application] GetLogTemplateforaApplication', props<{applicationId:any}>());
+export const loadLogTemplateforaApplication = createAction('[Application] LoadLogTemplateforaApplication', props<{logTemplatesofaApplication:any}>());
+export const isLoadedLogTemplatesforaApplication = createAction('[Application] IsLoadedLogTemplatesforaApplication');
+
+export const getMetricTemplateforaApplication = createAction('[Application] GetMetricTemplateforaApplication', props<{applicationId:any}>());
+export const loadMetricTemplateforaApplication = createAction('[Application] LoadMetricTemplateforaApplication', props<{metricTemplatesofaApplication:any}>());
+export const isLoadedMetricTemplatesforaApplication = createAction('[Application] IsLoadedMetricTemplatesforaApplication');
+
+export const editLogTemplate = createAction('[Application] EditLogTemplate', props<{logTemplateDataToEdit:any}>());
+export const editedLogTemplate = createAction('[Application] EditedLogTemplate', props<{editedLogTemplateData:any}>());
+export const isLogTemplateEdited = createAction('[Application] IsLogTemplateEdited');
+
+export const editMetricTemplate = createAction('[Application] EditMetricTemplate', props<{metricTemplateDataToEdit:any}>());
+export const editedMetricTemplate = createAction('[Application] EditedMetricTemplate', props<{editedMetricTemplateData:any}>());
+export const isMetricTemplateEdited = createAction('[Application] IsMetricTemplateEdited');
+
+
+
 // Below action is used for both reseting metric and log template data
 export const resetTemplateData = createAction('[Application] ResetTemplateData');
 
@@ -113,6 +153,36 @@ export const resetTemplateData = createAction('[Application] ResetTemplateData')
 export const saveSaporConfig = createAction('[Application] SaveSaporConfig', props<{saporConfigData:any}>());
 export const postSaveSaporConfig = createAction('[Application] PostSaveSaporConfig', props<{saporConfigSavedData:any}>());
 export const isSaporConfigSaved = createAction('[Application] isSaporConfigSaved');
+
+export const deleteSaporConfig = createAction('[Application] DeleteSaporConfig', props<{applicationId:any,serviceId:any}>());
+export const postDeleteSaporConfig = createAction('[Application] PostDeleteSaporConfig', props<{message:any}>());
+export const isSaporConfigDeleted = createAction('[Application] IsSaporConfigDeleted');
+
+export const getSaporConfig = createAction('[Application] GetSaporConfig',props<{applicationId:any,serviceId:any}>());
+export const loadSaporConfig = createAction('[Application] LoadSaporConfig', props<{saporConfigList:any}>());
+export const isSaporConfigLoaded = createAction('[Application] IsSaporConfigLoaded');
+
+export const updateSaporConfig = createAction('[Application] UpdateSaporConfig', props<{applicationId:any,serviceId:any,saporConfigData:any}>());
+export const postUpdateSaporConfig = createAction('[Application] PostUpdateSaporConfig', props<{saporConfigSavedData:any}>());
+export const isSaporConfigUpdated = createAction('[Application] isSaporConfigUpdated');
+
+// Below action is used for environments 
+
+export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{applicationId: any,environmentsData: Environment}>());
+export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
+
+export const getEnvironments = createAction('[Application] GetEnvironments', props<{applicationId: any}>());
+export const loadEnvironments = createAction('[Application] LoadEnvironments', props<{environmentsListData: any}>());
+export const isgetEnvironmentsLoaded = createAction('[Application] IsgetEnvironmentsLoaded');
+
+export const updateEnvironments = createAction('[Application] UpdateEnvironments', props<{applicationId: any, environmentsListData: any}>());
+export const postUpdateEnvironments = createAction('[Application] PostUpdateEnvironments', props<{environmentsListUpdatedData: any}>());
+export const isgetEnvironmentsUpdated = createAction('[Application] IsgetEnvironmentsUpdated');
+
+export const deleteEnvironments = createAction('[Application] DeleteEnvironments', props<{applicationId:any}>());
+export const environmentdeletedSuccessfully = createAction('[Application] EnvironmentsDeletedSuccessfully');
+
+
 
 
 //Actions to Visibility Feature
@@ -144,6 +214,14 @@ export const getTemplatesToolType = createAction('[Application] GetTemplatesTool
 export const loadTemplateToolType = createAction('[Application] LoadTemplateToolType', props<{templatesForToolType:any}>());
 export const isLoadedTemplateToolType = createAction('[Application] IsLoadedTemplateToolType');
 
+export const getTemplateDataForTooltype = createAction('[Application] GetTemplateForTooltype', props<{templateId:any}>());
+export const loadTemplateDataForTooltype = createAction('[Application] LoadTemplateForTooltype', props<{templateData:any}>());
+export const isLoadedTemplateData = createAction('[Application] IsLoadedTemplateData');
+
+export const updateTemplateForTooltype = createAction('[Application] UpdateTemplateForTooltype', props<{updatedTemplateForToolTypeData:any}>());
+export const putSaveTemplateForTooltype = createAction('[Application] PutSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());
+export const isTemplateForTooltypeUpdated = createAction('[Application] IsTemplateForTooltypeUpdated');
+
 export const saveTemplateForTooltype = createAction('[Application] SaveTemplateForTooltype', props<{templateForToolTypeData:any}>());
 export const postSaveTemplateForTooltype = createAction('[Application] PostSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());
 export const isTemplateForTooltypeSaved = createAction('[Application] IsTemplateForTooltypeSaved');
@@ -155,3 +233,15 @@ export const isToolConnectorWithTemplateSaved = createAction('[Application] IsTo
 export const getApprovalGatesOfaService = createAction('[Application] GetApprovalGatesOfaService', props<{serviceId : any}>());
 export const loadApprovalGatesOfaService = createAction('[Application] LoadApprovalGatesOfaService', props<{approvalGatesListOfaService:any}>());
 export const isApprovalGatesOfaServiceLoaded = createAction('[Application] IsApprovalGatesOfaServiceLoaded');
+
+export const saveVisibilityFeature = createAction('[Application] SaveVisibilityFeature', props<{approvalGateData:any}>());
+export const postSaveVisibilityFeature = createAction('[Application] PostSaveVisibilityFeature', props<{visibilityFeatureSavedData:any}>());
+export const isVisibilityFeatureSaved = createAction('[Application] IsVisibilityFeatureSaved');
+
+export const getToolConnectorForaGate = createAction('[Application] GetToolConnectorForaGate', props<{gateId : any}>());
+export const loadToolConnectorForaGate = createAction('[Application] LoadToolConnectorForaGate', props<{configuredToolConnectorData:any}>());
+export const isLoadedToolConnectorForaGate = createAction('[Application] IsLoadedToolConnectorForaGate');
+
+export const deleteVisibilityFeature = createAction('[Application] DeleteVisibilityFeature', props<{serviceId : any,gateId:any}>());
+export const postDeleteVisibilityFeature = createAction('[Application] PostDeleteVisibilityFeature', props<{deleteFeatureVisibilityMessage:any}>());
+export const isDeleteVisibilityFeature = createAction('[Application] IsDeleteVisibilityFeature');

@@ -1,9 +1,9 @@
-<div class="main_content p-0 bg-white">
+<div class="main_content p-0">
     <div class="d-flex">
-        <div class="leftBox bg-white mw-250">
-            <div class="leftBox_header text-muted text-center">
+        <div class="leftBox mw-330 pt-4">
+            <div class="leftBox_header text-muted text-left">
                 <form class="example-form">
-                  <mat-form-field class="example-full-width">
+                  <mat-form-field class="example-full-width gate-search">
                     <input type="text"
                           placeholder="Select Application"
                           aria-label="Number"
@@ -20,32 +20,42 @@
             </div>
             <!-- /.leftBox_header -->
 
-            <div class="leftBox_body">
-                <table class="table table-sm table-avenir table-no-bordered table-no-dots " *ngIf="serviceList != undefined">
-                <tbody>
-                  <tr *ngIf="serviceList.length > 0">
+            <div class="service-list">
+              <div class="table table-sm table-avenir table-no-bordered table-no-dots " *ngIf="serviceList != undefined">
+                <!-- <tbody> -->
+                  <!-- <tr *ngIf="serviceList.length > 0">
                     <th >Service</th>
                     <th>Status</th>
-                  </tr>
-                  <ng-container *ngFor="let service of serviceList; let i=index;">
-                  <tr [ngClass]="{'active-service': service.serviceId == selectedServiceId}">
-                    <td class="service-selection" style="padding-left: 2px !important;" (click)="onClickService(service)">{{service.serviceName}}
-                      </td>
-                  </tr>
-                  <tr class="gateNametr">
-                    <td  colspan="2">
+                  </tr> -->
+                <div class="mb-2" *ngFor="let service of serviceList; let i=index;" style="border: 1px solid #e6ecf1;border-radius: 5px;border-radius: 5px;cursor: pointer;" [ngClass]="{'bg-white': service.serviceId == selectedServiceId}"  [ngStyle]="{'box-shadow': service.serviceId == selectedServiceId ? '0 0 3px 1px rgb(47 65 81 / 53%)' : 'rgb(47 65 81 / 20%) 0px 0px 3px 1px'}">
+                  <div class="serviceBox" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'white', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}" (click)="onClickService(service)" *ngIf="service.status.status != 'pending'">
+                    <span class="service-selection">{{service.serviceName}}
+                    </span>
+                  </div>
+                  <div class="serviceBox" [ngStyle]="{'background': service.serviceId == selectedServiceId ? 'rgb(47 65 81 / 53%)' : 'white', 'color': service.serviceId == selectedServiceId ? 'white' : 'black'}" (click)="servicePending(service)"  *ngIf="service.status.status === 'pending'">
+                    <span class="service-selection">{{service.serviceName}}
+                    </span></div>
+                  <div class="">
+                    <div style="padding: 5px 10px; background: white;">
                       <table class="gateNameSelection">
                         <tr>
                           <td>{{service.approvalGateName}} </td>
-                            <td style="text-align: left;" width="50" [ngClass]= "{'text-danger':service.status === 'Rejected','text-success':service.status === 'Approved','text-secondary':service.status === 'Waiting'}">{{service.status}}
-                            </td>
-                          </tr>
+                          <td style="text-align: right;">
+                              <span [ngClass]= "{'text-danger':service.status.status === 'rejected','text-success':service.status.status === 'approved','text-activated':service.status.status === 'activated','text-waiting':service.status.status === 'pending'}"
+                                    [title]="service.status.status">
+                                <i class="fas" [ngClass]= "{'fa-minus-circle':service.status.status === 'rejected','fa-check-circle':service.status.status === 'approved','fa-unlock':service.status.status === 'activated','fa-spinner':service.status.status === 'pending'}" ></i>
+                              </span>
+                          </td>
+                        </tr>
                       </table>
-                    </td>
-                  </tr>                   
-                </ng-container>               
-                </tbody>
-              </table>
+                    </div>
+                  </div>                   
+                </div>                     
+                  <div *ngIf="serviceListEmpty">
+                    <span align="center">No services!</span>
+                  </div>          
+                <!-- </tbody> -->
+              </div>
             </div>
 
 
@@ -77,7 +87,7 @@
 
       
 
-        <div class="page-content flex-grow-1" *ngIf="selectedService != undefined">
+        <div class="page-content flex-grow-1 bg-white pt-4 pl-4" *ngIf="selectedService != undefined">
             <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center">
                 <h3><img src="../../assets/images/application-icon.png" alt="" />{{selectedApplication}} <span *ngIf="selectedService != undefined">» {{selectedService.serviceName}}</span>
                 </h3>
@@ -88,16 +98,31 @@
             <!-- // <div class="content mt-5"> -->
             <!--content inner-->
             <div class="content__inner" >
-                <div  class="container overflow-hidden" >
+                <div  class="" style="width: 100%; padding: 25px;">
                     <!--multisteps-form-->
                     <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
                 {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
               </button> -->
-                    <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
+                    <!-- <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
                         <mat-step [stepControl]="firstFormGroup">
-                            <!-- <form [formGroup]="firstFormGroup"> -->
                             <form>
-                                <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template>
+
+                            </form>
+                         
+                        </mat-step>
+
+                    </mat-horizontal-stepper> -->
+                    
+                    <blockquote class="blockquote">
+                      <p class="mb-0">{{selectedService.approvalGateName}} 
+                        <span [ngClass]= "{'text-danger':gateStatus === 'rejected','text-success':gateStatus === 'approved','text-activated':gateStatus === 'activated','text-waiting':gateStatus === 'pending'}"
+                              [title]="gateStatus">
+                          <i class="fas" [ngClass]= "{'fa-minus-circle':gateStatus === 'rejected','fa-check-circle':gateStatus === 'approved','fa-unlock':gateStatus === 'activated','fa-spinner':gateStatus === 'pending'}"></i>
+                        </span>
+                      </p>
+                    </blockquote>
+                    <hr class="my-4">
+                                <!-- <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template> -->
                                 <!-- <mat-form-field>
                       <mat-label>Name</mat-label>
                       <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
@@ -110,17 +135,9 @@
                                         <label class="col-form-label" formControlName="owner">user2</label>
                                     </div> -->
                                 </div>
-                                <!-- Grid row -->
-
-                                <div class="approvalStatus">
-                                    <div>Approval Status: </div>
-                                    <div *ngIf="selectedService.status === 'Approved'" style="color: #28a745">Approved</div>
-                                    <div *ngIf="selectedService.status === 'Rejected'" style="color: #dc3545;">Rejected</div>
-                                    <div *ngIf="selectedService.status === 'Waiting'" style="color: #000">Waiting</div>
-                                </div>
 
                                 <!-- Grid row -->
-                                <div class="form-group row" *ngIf="approvalWaitingStatus" >
+                                <div class="form-group row" *ngIf="approvalWaitingStatus && !gateStatusPending" >
                                     <!-- Default input -->
                                     <label class="col-sm-1 col-form-label">Comments:</label>
                                     <div class="col-sm-8">
@@ -129,17 +146,59 @@
 
                                     </div>
 
+                                    <!-- <label class="col-sm-1 col-form-label">Activated:</label>
+                                    <div class="col-sm-8">
+                                        
+                                    </div>
+
+                                    <label class="col-sm-1 col-form-label">Reviewed:</label>
+                                    <div class="col-sm-8">
+                                         </div> -->
+
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
-                                            class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('Approve', approvalGateComment)">Approve</button></div>
+                                            class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button></div>
                                             
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
-                                            class="btn btn-danger align-bottom" (click)="approvalGateReview('Reject', approvalGateComment)">Reject</button></div>
+                                            class="btn btn-danger align-bottom" (click)="approvalGateReview('reject', approvalGateComment)">Reject</button></div>
                                 </div>
 
 
-                                <div class="form-group row" *ngIf="!approvalWaitingStatus" >
-                                  <h5> Comments:</h5>
-                                  <div style="display: block;">{{approvalGateComment}}</div>
+                                <div class="form-group row" *ngIf="!approvalWaitingStatus " >
+                                  <table class="commentsText" *ngIf="!gateStatusPending">
+                                    <tr>
+                                      <td><label >Comments:</label></td>
+                                      <td>
+                                        {{approvalGateComment}}
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><label >Callback URL:</label></td>
+                                      <td>
+                                        <a href="{{gateApprovalCallBackURL}}">{{gateApprovalCallBackURL}}</a>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><label >Activated Time:</label></td>
+                                      <td>
+                                        <!-- {{approvalGateComment}} {{date | date:"dd/MM/yyyy HH:mm"}} -->
+                                        {{this.gateActivatedTime | date: "MMM dd, yyyy HH:mm"}}
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><label >Approval Time:</label></td>
+                                      <td>
+                                        <!-- {{approvalGateComment}} -->
+                                        {{this.gateApprovalTime | date: "MMM dd, yyyy HH:mm"}}
+                                      </td>
+                                  </tr>
+                                </table>
+                                <table class="commentsText" *ngIf="gateStatusPending">
+                                    <tr>
+                                      <td colspan="2">This gate is not activated.</td>
+                                  </tr>
+                                  </table>
+                                  
+                                    
                                   </div>
                                 <!-- Grid row -->
 
@@ -147,9 +206,6 @@
                                 <div class="pull-right">
                                 </div>
                                 
-                            </form>
-                         
-                        </mat-step>
                      
                         <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
                   <form [formGroup]="secondFormGroup">
@@ -172,7 +228,6 @@
                     <button mat-button (click)="stepper.reset()">Reset</button>
                   </div>
                 </mat-step> -->
-                    </mat-horizontal-stepper>
                 </div>
                 <!-- <div class="pull-right" *ngIf="!showApprovalHistory">
                     <a style="padding-right: 20px;" class="showElementHover" (click)="getApprovalHistory()">Approval History</a>
@@ -181,7 +236,7 @@
            
             <!-- </div> -->
             <!-- /.page-content -->
-            <div  class="row no-gutters">
+            <div  class="row no-gutters" *ngIf="!gateStatusPending">
                 <div class="col-sm-12 d-flex flex-column">
                     <div class="pt-1">
                       <!--  *ngFor="let connectors of connectorTypes"  -->
@@ -191,7 +246,7 @@
                         <ul> -->
                             <li class="nav-item" *ngFor="let connectors of toolConnectors" >
                                 <a class="nav-link" id="{{connectors.connectorType}}" data-toggle="tab" href="#{{connectors.connectorType}}" role="tab"
-                                    aria-controls="" aria-selected="false" (click)="onSelectingTab(connectors.connectorType)">{{connectors.connectorType}}</a> 
+                                    aria-controls="" aria-selected="false" (click)="onSelectingToolConnector(connectors.connectorType)" [ngClass]="{'active' : connectors.connectorType == selectedConnectorType}">{{connectors.connectorType}}</a> 
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link" id="autopilot-tab" data-toggle="tab" href="#autopilot" role="tab"
@@ -206,32 +261,49 @@
                                     aria-controls="jenkins" aria-selected="false">Jenkins</a>
                             </li> -->
                         </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane p-4 fade show active" id="{{selectedTab}}" role="tabpanel"
-                                aria-labelledby="">
-                                <div *ngIf="selectedTab == 'Jira'">
+                        <div class="tab-content" id="myTabContent" *ngIf="showToolConnectorSection">
+                            <div class="tab-pane p-4 fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
+                                <div *ngIf="selectedConnectorType == 'GIT'">
                                   <table class="table">
                                     <thead class="thead-light">
                                       <tr>
-                                        <th scope="col">Ticket#</th>
-                                        <th scope="col">Task ID</th>
-                                        <th scope="col">Description</th>
+                                        <th scope="col" class="visibilityCol1">Type</th>
+                                        <th scope="col" class="visibilityCol2Git">Commit ID</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr *ngFor="let eachData of visibilityData"> 
+                                      <tr *ngFor="let eachData of gitVisibilityData"> 
                                         <td>{{eachData.key}}</td>
                                         <td>{{eachData.value}}</td>
-                                        <td>{{eachData.data}}</td> 
+                                        <td>{{eachData.data | json}}</td> 
                                       </tr>
                                     </tbody>
                                   </table>
                                 </div>
-                                <div *ngIf="selectedTab == 'Git'">Git INFO2</div>
-                                <div *ngIf="selectedTab == 'Autopilot'">AUTOPILOT INFO3</div>
-                                <div *ngIf="selectedTab == 'Sonarqube'">SONAEQUBE INFO4</div>
+                                <div *ngIf="selectedConnectorType == 'JIRA'">
+                                  <table class="table">
+                                    <thead class="thead-light">
+                                      <tr>
+                                        <th scope="col" class="visibilityCol1">Ticket#</th>
+                                        <th scope="col" class="visibilityCol2Jira">Task ID</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let eachData of jiraVisibilityData"> 
+                                        <td>{{eachData.key}}</td>
+                                        <td>{{eachData.value}}</td>
+                                        <td *ngIf="eachData.data">{{eachData.data | json}} </td> 
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div *ngIf="connectorType == 'Autopilot'">AUTOPILOT INFO</div>
+                                <div *ngIf="connectorType == 'Sonarqube'">SONAEQUBE INFO</div>
                             </div>
                         </div>
+                        <div class="tab-content p-4 text-center" *ngIf="!showToolConnectorSection && !gateStatusPending">Tool Connectors not present!</div>
                     </div>
                     <!-- /.tab-lined -->
                     <!-- /.bottom_btns -->
