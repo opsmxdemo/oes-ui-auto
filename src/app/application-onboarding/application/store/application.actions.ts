@@ -82,6 +82,8 @@ export const editCustomTags = createAction('[Application] EditCustomTags',props<
 export const savededitCustomTag = createAction('[Application] SavededitCustomTag', props<{savedEditTagResponse: any}>());
 export const deleteCustomTags = createAction('[Application] DeleteCustomTags',props<{applicationId: any,tagId:any}>());
 export const fetchDeleteCustomTag = createAction('[Application] FetchDeleteCustomTag', props<{deleteTagResponse: any}>());
+export const getScoringAlgo = createAction('[Application] GetScoringAlgo');
+export const fetchScoringAlgo = createAction('[Application] FetchScoringAlgo', props<{scoringAlgoResponse: any}>());
 
 
 export const loadDataSourceResponseKey = createAction('[Application] LoadDataSourceResponseKey', props<{responseKeys:[]}>());

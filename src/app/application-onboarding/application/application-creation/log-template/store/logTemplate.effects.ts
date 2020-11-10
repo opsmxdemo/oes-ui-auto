@@ -158,6 +158,25 @@ this.actions$.pipe(
      )
  )
 
+ // Below effect is use for gettingScoringAlgo  .
+ fetchScoringAlgo = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.getScoringAlgo),
+         switchMap((action) => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/scoring-algorithms' ).pipe(
+                 map(resdata => {
+                    
+                     return ApplicationAction.fetchScoringAlgo({ scoringAlgoResponse : resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
  // Below effect is use for fetch cluster tags table data.
  fetchClusterTags = createEffect(() =>
      this.actions$.pipe(
