@@ -262,17 +262,30 @@ export class CreateApplicationComponent implements OnInit {
             this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
             this.applicationId = this.appData.applicationId;
-            this.createApplicationForm = new FormGroup({
-              name: new FormControl(this.appData.name),
-              emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
-              description: new FormControl(this.appData.description),
-              imageSource: new FormControl(this.appData.imageSource, Validators.required),
-              lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
-            });
-
-            if (responseData.callDockerImageDataAPI) {
-              this.onImageSourceSelect(this.appData.imageSource);
+            if(responseData.imageSourceListData != null && responseData.isfetchImageSourceLoaded){
+              console.log(responseData.imageSourceListData);
+              this.createApplicationForm = new FormGroup({
+                name: new FormControl(this.appData.name),
+                emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
+                description: new FormControl(this.appData.description),
+                imageSource: new FormControl(responseData.imageSourceListData.imageSource),
+                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
+              });
+            }else{
+              this.createApplicationForm = new FormGroup({
+                name: new FormControl(this.appData.name),
+                emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
+                description: new FormControl(this.appData.description),
+                imageSource: new FormControl(''),
+                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
+              });
             }
+
+           
+
+            // if (responseData.callDockerImageDataAPI) {
+            //   this.onImageSourceSelect(this.appData.imageSource);
+            // }
 
           
             if (this.editMode) {
@@ -364,7 +377,6 @@ export class CreateApplicationComponent implements OnInit {
         }
 
        //populate groupPermission Form #############################################################################
-console.log(response);
         if(response.groupPermissionsGetListData != null && response.isGroupPermissionsLoaded){
           this.grpData = response.groupPermissionsGetListData;
           console.log(this.grpData);
@@ -398,6 +410,16 @@ console.log(response);
         }
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
+          if(response.imageSourceListData != null && response.isfetchImageSourceLoaded){
+            console.log(response.imageSourceListData);
+            this.createApplicationForm = new FormGroup({
+              name: new FormControl(this.appData.name),
+              emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
+              description: new FormControl(this.appData.description),
+              imageSource: new FormControl(response.imageSourceListData.imageSource),
+              lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
+            });
+          }
         }
         if (response.savedApplicationData != null) {
           this.savedApplicationData = response.savedApplicationData;

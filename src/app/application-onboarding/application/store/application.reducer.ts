@@ -20,6 +20,7 @@ export interface State {
     appEnvionmentsData: Environment;
     getEnvironmentListData: any;
     imageSourceListData: any;
+    isfetchImageSourceLoaded: boolean;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
@@ -202,6 +203,7 @@ export const initialState: State = {
     isGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
     imageSourceListData: null,
+    isfetchImageSourceLoaded: null,
 
      //Deployment Verification
      logTemplatesofaApplication: null,
@@ -351,7 +353,7 @@ export function ApplicationReducer(
         on(ApplicationAction.getImageSource,
             (state,action) => ({
                 ...state,
-                applicationLoading:true,
+                isfetchImageSourceLoaded:false,
                 applicationId: action.applicationId,
 
             })
@@ -359,7 +361,14 @@ export function ApplicationReducer(
         on(ApplicationAction.loadImageSource,
             (state,action) => ({
                 ...state,
+                isfetchImageSourceLoaded: true,
                 imageSourceListData:action.imageSourceListData,
+            })
+        ),
+        on(ApplicationAction.isgetImageSourceLoaded,
+            (state,action) => ({
+                ...state,
+                isfetchImageSourceLoaded: false
             })
         ),
 
