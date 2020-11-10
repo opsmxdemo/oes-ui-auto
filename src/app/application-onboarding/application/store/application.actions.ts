@@ -248,18 +248,18 @@ export const getMetricTemplateforaApplication = createAction('[Application] GetM
 export const loadMetricTemplateforaApplication = createAction('[Application] LoadMetricTemplateforaApplication', props<{metricTemplatesofaApplication:any}>());
 export const isLoadedMetricTemplatesforaApplication = createAction('[Application] IsLoadedMetricTemplatesforaApplication');
 
-//POST /autopilot/api/v1/applications/{applicationId}/logTemplates	
-export const editLogTemplate = createAction('[Application] EditLogTemplate', props<{logTemplateDataToEdit:any}>());
+//PUT - autopilot/api/v1/applications/1/logTemplates/{logTemplateName}	
+export const editLogTemplate = createAction('[Application] EditLogTemplate', props<{applicationId : any, templateName : any,logTemplateDataToEdit:any}>());
 export const editedLogTemplate = createAction('[Application] EditedLogTemplate', props<{editedLogTemplateData:any}>());
 export const isLogTemplateEdited = createAction('[Application] IsLogTemplateEdited');
 
 //POST /autopilot/api/v1/applications/1/metricTemplates?isEdit=true
-export const editMetricTemplate = createAction('[Application] EditMetricTemplate', props<{metricTemplateDataToEdit:any}>());
+export const editMetricTemplate = createAction('[Application] EditMetricTemplate', props<{applicationId : any, templateName: any, metricTemplateDataToEdit:any}>());
 export const editedMetricTemplate = createAction('[Application] EditedMetricTemplate', props<{editedMetricTemplateData:any}>());
 export const isMetricTemplateEdited = createAction('[Application] IsMetricTemplateEdited');
 
-//GET   - autopilot/templatesofService/{serviceId}
-export const getTemplatesForaService = createAction('[Application] GetTemplatesForaService', props<{serviceId:any}>());
+///autopilot/api/v1/applications/{applicationId}/service/{serviceId}/template
+export const getTemplatesForaService = createAction('[Application] GetTemplatesForaService', props<{applicationId: any,serviceId:any}>());
 export const loadTemplatesForaService = createAction('[Application] LoadTemplatesForaService', props<{templatesForaService:any}>());
 export const isLoadedTemplatesForaService = createAction('[Application] IsLoadedTemplatesForaService');
 

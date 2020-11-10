@@ -152,6 +152,13 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateList : any;
   metricTemplatesofaApplication : any;
   serviceName : any;
+  logTemplate : any;
+  metricTemplate : any;
+  logTemplateDetails : any;
+  metricTemplateDetails : any;
+  logTemplateEditMode : boolean = false;
+  metricTemplateEditMode : boolean = false;
+  selectedApplicationData : any;
   currentServiceIndex: number = 0;
 
   constructor(public sharedService: SharedService,
@@ -242,6 +249,7 @@ export class CreateApplicationComponent implements OnInit {
           
           this.appInfoData = responseData.applicationData;
           this.appData = responseData.applicationData;
+          this.selectedApplicationData = this.appData;
         //  this.applicationId = this.appData.applicationId;
           console.log(this.appData);
           this.editMode = responseData.editMode;
@@ -392,7 +400,8 @@ console.log(response);
         }
         if (response.savedApplicationData != null) {
           this.savedApplicationData = response.savedApplicationData;
-          this.applicationId = this.savedApplicationData.applicationId;          
+          this.applicationId = this.savedApplicationData.applicationId;
+          this.selectedApplicationData = this.savedApplicationData;          
         }
         if (response.savedServiceData != null) {
           this.savedServiceData = response.savedServiceData;
@@ -562,6 +571,14 @@ console.log(response);
             this.metricModel.nativeElement.click();
           }
         }
+        if(response.logTemplateDetails && response.isLogTemplateDetailsLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedLogTemplate());
+          this.logTemplateDetails = response.logTemplateDetails;        
+        } 
+        if(response.metricTemplateDetails && response.isMetricTemplateDetailsLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedMetricTemplate());
+          this.metricTemplateDetails = response.metricTemplateDetails;        
+        } 
       }
     )
 
@@ -1001,12 +1018,13 @@ console.log(response);
   // Below function is execute after click on add template btn.
   onAddTemplate(index, type) {
     $("[data-toggle='tooltip']").tooltip('hide');
-    this.templateEditMode = false;
     if (type === "log") {
       this.currentLogTemplateIndex = index;
+      this.logTemplateEditMode = false;
     } else {
       this.currentMetricTemplateIndex = index;
       this.isMetricTemplateClicked = !this.isMetricTemplateClicked;
+      this.metricTemplateEditMode = false;
     }
   }
 
@@ -1287,7 +1305,12 @@ console.log(response);
 
 
     if (item === 'deployment_verification') {
- 
+            //check edit mode or create mode
+      if(this.editMode){
+        this.store.dispatch(ApplicationActions.getTemplatesForaService({applicationId: this.applicationId, serviceId: this.serviceId}));
+        this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));
+        this.store.dispatch(ApplicationActions.getMetricTemplateforaApplication({applicationId : this.applicationId}));
+      }
 
     } else if (item === 'sapor') {
 
@@ -1617,5 +1640,19 @@ console.log(response);
   deleteDeploymentVerification(){
     this.store.dispatch(ApplicationActions.deleteDeploymentVerificationFeature({serviceId : this.serviceId, applicationId : this.applicationId}));
   }
+
+  onEditLogMetricTemplateClick(type){
+    this.logTemplate = this.deploymentVerificationForm.value['logTemplate'];
+    this.metricTemplate = this.deploymentVerificationForm.value['metricTemplate'];
+    if(type == 'log'){
+      this.store.dispatch(ApplicationActions.getLogTemplateDetails({applicationId : this.applicationId, templateName: this.logTemplate}));
+      this.logTemplateEditMode = true;
+      //this.store.dispatch(ApplicationActions.getLogTemplateDetails({applicationId : 39, templateName: this.logTemplate}));
+    }else if(type == 'metric'){
+      this.metricTemplateEditMode = true;
+      this.store.dispatch(ApplicationActions.getMetricTemplateDetails({applicationId : this.applicationId, templateName: this.metricTemplate}));
+    }
+  }
+  
 
 }

@@ -30,8 +30,7 @@
               <li class="ti-title showElementHover" (click)="loadServiceForm()">
                 <i class="{{servicesForm.invalid == false ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Service Details</span>
-              </li>
-             
+              </li>             
               <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
               <li class="ti-item">
                 <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
@@ -345,7 +344,7 @@
                                           <option value="" [disabled]="true">Select</option>
                                           <option *ngFor="let logTemplate of logTemplateList" value="{{logTemplate}}">{{logTemplate}}</option>
                                         </select>
-                                        <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditTemplate(i,'log')">
+                                        <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditLogMetricTemplateClick('log')">
                                           <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link" >
                                             <i class="fas fa-pencil-alt"></i>
                                           </a>
@@ -364,7 +363,7 @@
                                           <option value="" [disabled]="true">Select</option>
                                           <option *ngFor="let metricTemplate of metricTemplateList" value="{{metricTemplate.templateName}}">{{metricTemplate.templateName}}</option>
                                         </select>
-                                        <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditTemplate(i,'metric')">
+                                        <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditLogMetricTemplateClick('metric')">
                                           <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
                                             <i class="fas fa-pencil-alt"></i>
                                           </a>
@@ -847,13 +846,13 @@
   <div class="modal-dialog modal-dialog-centered modal-width" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{templateEditMode?'Edit Log Template':'New Log Template'}}</h5>
+        <h5 class="modal-title">{{logTemplateEditMode?'Edit Log Template':'New Log Template'}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" #logModel>
           <i class="fa fa-times"></i>
         </button>
       </div>
       <div class="modal-body p-0">
-        <app-log-template [isEditMode]="templateEditMode" [templateData]="editTemplateData" [templateIndex]="editTemplateIndex" [applicationId] = "applicationId" [applicationData]="savedApplicationData"></app-log-template>
+        <app-log-template [isEditMode]="logTemplateEditMode" [templateData]="logTemplateDetails" [templateIndex]="editTemplateIndex" [applicationId] = "applicationId" [applicationData]="selectedApplicationData"></app-log-template>
       </div>
     </div>
   </div>
@@ -864,13 +863,13 @@
   <div class="modal-dialog modal-dialog-centered modal-width" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{templateEditMode ? 'Edit Metric Template':'New Metric Template'}}</h5>
+        <h5 class="modal-title">{{metricTemplateEditMode ? 'Edit Metric Template':'New Metric Template'}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" #metricModel>
           <i class="fa fa-times"></i>
         </button>
       </div>
       <div class="modal-body p-0">
-        <app-metric-template [isEditMode]="templateEditMode" [templateData]="editTemplateData" [templateIndex]="editTemplateIndex" [metricTemplate]="isMetricTemplateClicked" [applicationData]="savedApplicationData"></app-metric-template>
+        <app-metric-template [isEditMode]="metricTemplateEditMode" [templateData]="metricTemplateDetails" [templateIndex]="editTemplateIndex" [metricTemplate]="isMetricTemplateClicked" [applicationData]="selectedApplicationData"></app-metric-template>
       </div>
     </div>
   </div>

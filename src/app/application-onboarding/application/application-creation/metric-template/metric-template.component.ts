@@ -324,11 +324,13 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   // Below function is use to save log template data on click of save btn
   Submitmetricdata(){
     if(this.isEditMode){
-      this.store.dispatch(ApplicationActions.updatedMetricTemplate({metricTemplateData:this.metricTemplateData,index:this.templateIndex}));
+      this.store.dispatch(ApplicationActions.editMetricTemplate({applicationId : this.applicationData['applicationId'], templateName: this.metricTemplateData['templateName'], metricTemplateDataToEdit : this.metricTemplateData}));
+      //this.store.dispatch(ApplicationActions.updatedMetricTemplate({metricTemplateData:this.metricTemplateData,index:this.templateIndex}));
     }else{
       this.metricTemplateData['applicationId'] = this.applicationData['applicationId'];
       this.metricTemplateData['applicationName'] = this.applicationData['name'];
       this.metricTemplateData['emailId'] = this.applicationData['email'];
+      this.metricTemplateData['isEdit'] = false;
       this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.metricTemplateData}));
       //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateData}));
     }
@@ -387,6 +389,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       "applicationId"   : this.applicationData['applicationId'],
       "applicationName" : this.applicationData['name'],
       "emailId"         : this.applicationData['email'],
+      "isEdit"          : false,
       "templateName" : this.createMetricForm.value.templateName,
       "data": {
         "groups" : []
@@ -448,6 +451,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       "applicationId"   : this.applicationData['applicationId'],
       "applicationName" : this.applicationData['name'],
       "emailId"         : this.applicationData['email'],
+      "isEdit"          : false,
       "templateName"    : this.apmFormGroup.value.templateName,
       //"applicationName" : this.apmFormGroup.value.apmApplication != null ? this.apmFormGroup.value.apmApplication : this.infraFormGroup.value.applicationName,
       "data"            : {
