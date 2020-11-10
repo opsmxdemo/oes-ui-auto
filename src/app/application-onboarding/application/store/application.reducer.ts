@@ -19,6 +19,7 @@ export interface State {
     appSavedData: SaveApplication;
     appEnvionmentsData: Environment;
     getEnvironmentListData: any;
+    imageSourceListData: any;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
@@ -191,6 +192,7 @@ export const initialState: State = {
     isGroupPermissions: false,
     isGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
+    imageSourceListData: null,
 
      //Deployment Verification
      logTemplatesofaApplication: null,
@@ -330,6 +332,21 @@ export function ApplicationReducer(
             })
         ),
 
+        on(ApplicationAction.getImageSource,
+            (state,action) => ({
+                ...state,
+                applicationLoading:true,
+                applicationId: action.applicationId,
+
+            })
+        ),
+        on(ApplicationAction.loadImageSource,
+            (state,action) => ({
+                ...state,
+                imageSourceListData:action.imageSourceListData,
+            })
+        ),
+
         // code related to environments goes here
 
         on(ApplicationAction.saveEnvironments,
@@ -422,12 +439,12 @@ export function ApplicationReducer(
                 isGroupPermissionsLoaded: true
             })
         ),
-        // on(ApplicationAction.isgetGroupPermissionsLoaded,
-        //     (state,action) => ({
-        //         ...state,
-        //         isEnviromentsLoaded: false
-        //     })
-        // ),
+        on(ApplicationAction.isgetGroupPermissionsLoaded,
+            (state,action) => ({
+                ...state,
+                isGroupPermissionsLoaded: false
+            })
+        ),
 
         on(ApplicationAction.updateGroupPermissions,
             (state,action) => ({

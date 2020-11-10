@@ -28,15 +28,15 @@
             <!-- /.tree-inset -->
             <ul class="tree-inset  list-unstyled {{servicesForm.invalid == false ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadServiceForm()">
-                <i class="{{servicesForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <i class="{{servicesForm.invalid == false ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Service Details</span>
               </li>
              
               <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
               <li class="ti-item">
                 <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span *ngIf="!editMode">Service name</span>
-                <strong (click)="editServiceClick(serviceArr)">{{serviceArr.serviceName}}</strong>
+                <span>Service name</span>
+                <strong>{{serviceArr.serviceName}}</strong>
               </li>
             </ng-container>
               <br>
@@ -45,9 +45,9 @@
 
              <!-- /.tree-inset -->
          
-            <ul class="tree-inset list-unstyled">
+            <ul class="tree-inset list-unstyled {{environmentForm.invalid == true ?'tree-active':''}}">
             <li class="ti-title showElementHover" (click)="loadEnvironmentsForm()">
-              <i class="{{environmentForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+              <i class="{{environmentForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
               <span>Environments</span>
             </li>
             <!-- <li class="ti-item" *ngFor="let env of environmentForm.value.environments; let index = i">
@@ -57,10 +57,23 @@
             </li> -->
           </ul>
 
+          <!-- <ul class="tree-inset list-unstyled {{environmentForm.value.environments[0].key !== '' ? 'tree-active' : ''}}"
+          *ngIf="environmentForm.value.environments.length !== 0 ? true : false ">
+          <li class="ti-title">
+            <i class="{{environmentForm.value.environments[0].key !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+            <span>Environment Details</span>
+          </li>
+          <li class="ti-item" *ngFor="let env of environmentForm.value.environments; let index = i">
+            <i class="{{env.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+            <span>{{env.key !== ''? env.key : ''}} :</span>
+            <strong *ngIf="env.value !== ''? true:false">{{env.value !== ''? env.value : ''}}</strong>
+          </li>
+        </ul> -->
+
             <!-- /.tree-inset -->
-            <ul class="tree-inset list-unstyled">
+            <ul class="tree-inset list-unstyled {{groupPermissionForm.invalid == true ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadGroupPermissionForm()">
-                <i class="{{groupPermissionForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <i class="{{groupPermissionForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Group Permissions</span>
               </li>
               <!-- <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
@@ -69,6 +82,18 @@
                 <strong *ngIf="group.permission !== ''? true:false">{{groupProperties(false,group.permissionIds)}}</strong>
               </li> -->
             </ul>
+            <!-- <ul class="tree-inset list-unstyled {{groupPermissionForm.value.userGroups[0].userGroupId !== '' ? 'tree-active' : ''}}"
+              *ngIf="groupPermissionForm.value.userGroups.length > 0 ? true : false ">
+              <li class="ti-title">
+                <i class="{{groupPermissionForm.value.userGroups[0].userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span>Group Permissions Details</span>
+              </li>
+              <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
+                <i class="{{group.userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span>{{group.userGroupId !== ''?groupProperties(true,group.userGroupId):''}} :</span>
+                <strong *ngIf="group.permission !== ''? true:false">{{groupProperties(false,group.permissionIds)}}</strong>
+              </li>
+            </ul> -->
          
           
             <!-- /.tree-inset -->

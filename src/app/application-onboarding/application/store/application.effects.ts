@@ -320,6 +320,24 @@ export class ApplicationEffect {
         )
     )
 
+    // Effect to get Imagesource
+     
+    getApplicationImagesource = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.getImageSource),
+         switchMap((action) => {                
+             return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/imagesource').pipe(
+                 map(resdata => {
+                     return ApplicationAction.loadImageSource({ imageSourceListData: resdata});
+                 }),
+                 catchError(errorRes => {
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
     // Effect to get groupPermission
      
     getGroupPermissions = createEffect(() =>
