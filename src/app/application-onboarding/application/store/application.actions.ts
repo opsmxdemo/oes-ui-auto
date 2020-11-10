@@ -154,7 +154,11 @@ export const isgetEnvironmentsUpdated = createAction('[Application] IsgetEnviron
 export const deleteEnvironments = createAction('[Application] DeleteEnvironments', props<{applicationId:any}>());
 export const environmentdeletedSuccessfully = createAction('[Application] EnvironmentsDeletedSuccessfully');
 
+// Below action is used for get imageSource
 
+export const getImageSource = createAction('[Application] getImageSource', props<{applicationId : any}>());
+export const loadImageSource = createAction('[Application] LoadImageSource', props<{imageSourceListData: any}>());
+export const isgetImageSourceLoaded = createAction('[Application] IsgetImageSourceLoaded');
 
 
 //Actions to Visibility Feature
