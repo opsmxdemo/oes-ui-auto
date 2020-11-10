@@ -1,0 +1,5 @@
+{ 
+    “serviceId“ : 56,
+    “logtemplateName“ : "logtemplateeditflow",
+    “metricTemplateName” : “metrictemplatetest”
+}
