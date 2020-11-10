@@ -317,7 +317,7 @@ onClusterChange(status: boolean){
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
-   console.log(this.logForm)
+   this.logForm['scoringAlgorithm'] = this.logTopicsForm.value['selectScoreAlgo']
    if(this.clusterTagFlag === true){
     this.logForm['tags'] = this.logTopicsForm.value['clusterList'];
    }else{
@@ -343,6 +343,8 @@ SubmitForm(){
     this.createLogForm.reset();
     this.logTopicsForm.reset();
     this.selectedDataSource =  null;
+    this.editTagInput=false;
+    this.addTagInput=false;
 }
 
 // Below function to add new log topics
