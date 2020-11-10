@@ -111,6 +111,13 @@ export interface State {
     metricTemplatesofaApplication: any;
     isMetricTemplateforApplicationLoaded: boolean;
     metricTemplateData : any;
+    templatesForaService:any;
+    isTemplatesForaServiceLoaded: boolean;
+    logTemplateDetails:any;
+    isLogTemplateDetailsLoaded: boolean;    
+    templateName : any;
+    metricTemplateDetails : any;
+    isMetricTemplateDetailsLoaded : boolean;
 }
 
 export const initialState: State = {
@@ -199,7 +206,14 @@ export const initialState: State = {
      isDeletedDeploymentVerificationFeature: false,
      metricTemplatesofaApplication: null,
      isMetricTemplateforApplicationLoaded: false,
-     metricTemplateData : null
+     metricTemplateData : null,
+     templatesForaService: null,
+     isTemplatesForaServiceLoaded: false,
+     logTemplateDetails: null,
+     isLogTemplateDetailsLoaded: false,
+     templateName : null,
+     metricTemplateDetails : null,
+     isMetricTemplateDetailsLoaded : false
 
 }
 
@@ -1082,6 +1096,73 @@ export function ApplicationReducer(
             isDeletedDeploymentVerificationFeature: false
         })
     ),
+
+    on(ApplicationAction.getTemplatesForaService,
+        (state,action) => ({
+            ...state,
+            applicationId : action.applicationId,
+            serviceId : action.serviceId,
+            isTemplatesForaServiceLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadTemplatesForaService,
+        (state,action) => ({
+            ...state,
+            templatesForaService:action.templatesForaService,
+            isTemplatesForaServiceLoaded: true
+        })
+    ),
+    on(ApplicationAction.isLoadedTemplatesForaService,
+        (state,action) => ({
+            ...state,
+            isTemplatesForaServiceLoaded: false
+        })
+    ),
+
+    on(ApplicationAction.getLogTemplateDetails,
+        (state,action) => ({
+            ...state,
+            applicationId : action.applicationId,
+            templateName : action.templateName,
+            isLogTemplateDetailsLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadLogTemplateDetails,
+        (state,action) => ({
+            ...state,
+            logTemplateDetails:action.logTemplateDetails,
+            isLogTemplateDetailsLoaded: true
+        })
+    ),
+    on(ApplicationAction.isLoadedLogTemplate,
+        (state,action) => ({
+            ...state,
+            isLogTemplateDetailsLoaded: false
+        })
+    ),
+
+    on(ApplicationAction.getMetricTemplateDetails,
+        (state,action) => ({
+            ...state,
+            applicationId : action.applicationId,
+            templateName : action.templateName,
+            isMetricTemplateDetailsLoaded: false
+        })
+    ),
+    on(ApplicationAction.loadMetricTemplateDetails,
+        (state,action) => ({
+            ...state,
+            metricTemplateDetails:action.metricTemplateDetails,
+            isMetricTemplateDetailsLoaded: true
+        })
+    ),
+    on(ApplicationAction.isLoadedMetricTemplate,
+        (state,action) => ({
+            ...state,
+            isMetricTemplateDetailsLoaded: false
+        })
+    ),
+
 
     // Deployment Verification Feature  Ends here //
 

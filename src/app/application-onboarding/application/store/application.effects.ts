@@ -899,7 +899,7 @@ onSaveMetricTemplate = createEffect(() =>
         switchMap((action) => {
             return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/metricTemplates?isEdit=false', action.metricTemplateData).pipe(
                 map(resdata => {
-                    this.store.dispatch(ApplicationAction.getLogTemplateforaApplication({applicationId : action.applicationId}));
+                    this.store.dispatch(ApplicationAction.getMetricTemplateforaApplication({applicationId : action.applicationId}));
                     return ApplicationAction.savedMetricTemplate({ savedMetricTemplateData: resdata});                   
                 }),
                 catchError(errorRes => {
@@ -968,6 +968,105 @@ onDeleteDeploymentVerificationFeature = createEffect(() =>
         })
     )
 )
+
+//Effects to get templates associated to a service
+///autopilot/api/v1/applications/{applicationId}/service/{serviceId}/template
+getTemplatesForaService = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getTemplatesForaService),
+        switchMap((action) => { 
+            //return this.http.get('/assets/data/dv/templatesOfService.json').pipe(                   
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/service/'+ action.serviceId +'/template').pipe(          
+                map(resdata => {
+                    return ApplicationAction.loadTemplatesForaService({ templatesForaService: resdata});
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to get  details a log template
+////GET -  /autopilot/api/v1/applications/{applicationId}/logTemplates/{logTemplateName}
+getLogTemplateDetails = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getLogTemplateDetails),
+        switchMap((action) => {             
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+ action.applicationId +'/logTemplates/'+ action.templateName).pipe(          
+                map(resdata => {
+                    return ApplicationAction.loadLogTemplateDetails({ logTemplateDetails: resdata});
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to get details a metric template
+//GET  /autopilot/api/v1/applications/{applicationId}/metricTemplates/{metricTemplateName}
+getMetricTemplateDetails = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.getMetricTemplateDetails),
+        switchMap((action) => {             
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+ action.applicationId +'/metricTemplates/'+ action.templateName).pipe(          
+                map(resdata => {
+                    return ApplicationAction.loadMetricTemplateDetails({ metricTemplateDetails: resdata});
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effects to get all log templates for a application
+//PUT - autopilot/api/v1/applications/1/logTemplates/{logTemplateName}
+onEditLogTemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.editLogTemplate),
+        switchMap((action) => {
+            return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/logTemplates/'+ action.templateName, action.logTemplateDataToEdit).pipe(
+                map(resdata => {
+                    this.store.dispatch(ApplicationAction.getLogTemplateforaApplication({applicationId : action.applicationId}));
+                    return ApplicationAction.editedLogTemplate({ editedLogTemplateData: resdata});                
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
+//Effect to save logtemplate associate to application
+//POST /autopilot/api/v1/applications/1/metricTemplates?isEdit=true
+onEditMetricTemplate = createEffect(() =>
+    this.actions$.pipe(
+        ofType(ApplicationAction.editMetricTemplate),
+        switchMap((action) => {
+            return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/metricTemplates?isEdit=true', action.metricTemplateDataToEdit).pipe(
+                map(resdata => {
+                    this.store.dispatch(ApplicationAction.getMetricTemplateforaApplication({applicationId : action.applicationId}));
+                    return ApplicationAction.editedMetricTemplate({ editedMetricTemplateData: resdata});                   
+                }),
+                catchError(errorRes => {
+                    //this.toastr.showError('Error', 'ERROR')
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+)
+
 
 // ****** DEPLOYMENT VERIFICATION EFFECTS ENDS HERE ******* //
 
