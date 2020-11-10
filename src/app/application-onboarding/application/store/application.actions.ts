@@ -194,6 +194,10 @@ export const getTemplateDataForTooltype = createAction('[Application] GetTemplat
 export const loadTemplateDataForTooltype = createAction('[Application] LoadTemplateForTooltype', props<{templateData:any}>());
 export const isLoadedTemplateData = createAction('[Application] IsLoadedTemplateData');
 
+export const getFeaturesForAService = createAction('[Application] GetFeaturesForAService', props<{serviceId:any}>());
+export const loadFetauresForService = createAction('[Application] LoadFetauresForService', props<{serviceFeatureList:any}>());
+export const isLoadedServiceFeatureList = createAction('[Application] isLoadedServiceFeatureList');
+
 export const updateTemplateForTooltype = createAction('[Application] UpdateTemplateForTooltype', props<{updatedTemplateForToolTypeData:any}>());
 export const putSaveTemplateForTooltype = createAction('[Application] PutSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());
 export const isTemplateForTooltypeUpdated = createAction('[Application] IsTemplateForTooltypeUpdated');

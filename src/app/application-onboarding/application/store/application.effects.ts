@@ -711,6 +711,24 @@ export class ApplicationEffect {
             })
         )
     )
+
+    //Get Feature List for a Serice
+    onGetServiceFeatureList = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.getFeaturesForAService),
+            switchMap((action) => {
+                return this.http.get<any>(`${this.environment.config.endPointUrl}platformservice/v1/services/${action.serviceId}/features`).pipe(
+                    map(resdata => {
+                        return ApplicationAction.loadFetauresForService({ serviceFeatureList: resdata });
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
     ///dashboardservice/v2/visibility/service/feature/configuration
 
 

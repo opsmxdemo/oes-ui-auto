@@ -100,6 +100,7 @@ export interface State {
     templateData: any;
     isTemplateDataForToolTypeLoaded: boolean;
     isTemplateDataForToolTypeUpdated: boolean;
+    isServiceFeatureListLoaded: boolean;
     isEnviromentsLoaded: boolean;
     isGroupPermissionsLoaded: boolean;
     groupPermissionsGetListData: any;
@@ -176,6 +177,7 @@ export const initialState: State = {
     templateData: null,
     isTemplateDataForToolTypeLoaded:false,
     isTemplateDataForToolTypeUpdated:false,
+    isServiceFeatureListLoaded:false,
 
     // Sapor config variables
     saporConfigData : null,
@@ -715,6 +717,27 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isTemplateDataForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.getFeaturesForAService,
+            (state,action) => ({
+                ...state,
+                serviceId : action.serviceId,
+                isServiceFeatureListLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadFetauresForService,
+            (state,action) => ({
+                ...state,
+                serviceFeatureList:action.serviceFeatureList,
+                isServiceFeatureListLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedServiceFeatureList,
+            (state,action) => ({
+                ...state,
+                isServiceFeatureListLoaded: false
             })
         ),
 
