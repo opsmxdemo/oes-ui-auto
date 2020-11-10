@@ -1012,7 +1012,7 @@ getTemplatesForaService = createEffect(() =>
         ofType(ApplicationAction.getTemplatesForaService),
         switchMap((action) => { 
             //return this.http.get('/assets/data/dv/templatesOfService.json').pipe(                   
-            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/service/'+ action.serviceId +'/template').pipe(          
+            return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/service/'+ action.serviceId).pipe(          
                 map(resdata => {
                     return ApplicationAction.loadTemplatesForaService({ templatesForaService: resdata});
                 }),
