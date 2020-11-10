@@ -128,7 +128,7 @@ scoringAlgoData :any;
   // Below function is use to save log template data on click of save btn
   Submitlogdata(){
     if(this.isEditMode){
-      this.store.dispatch(ApplicationActions.editLogTemplate({applicationId : this.applicationData['applicationId'], templateName : this.logTemplateData['templateName'], logTemplateDataToEdit: this.templateData}))
+      this.store.dispatch(ApplicationActions.editLogTemplate({applicationId : this.applicationData['applicationId'], templateName : this.logTemplateData['templateName'], logTemplateDataToEdit: this.logTemplateData}));
       //this.store.dispatch(ApplicationActions.updatedLogTemplate({logTemplateData:this.logTemplateData,index:this.templateIndex}));
     }else{
       this.logTemplateData['applicationId'] = this.applicationData['applicationId'];

@@ -253,6 +253,7 @@ export class CreateApplicationComponent implements OnInit {
         //  this.applicationId = this.appData.applicationId;
           console.log(this.appData);
           this.editMode = responseData.editMode;
+          
           this.defineAllForms();
 
           if (responseData.applicationData !== null) {
@@ -260,7 +261,7 @@ export class CreateApplicationComponent implements OnInit {
             // Reseting metric and log Templates data
             this.store.dispatch(ApplicationActions.resetTemplateData());
             //populating createApplicationForm ################################################################
-
+            this.applicationId = this.appData.applicationId;
             this.createApplicationForm = new FormGroup({
               name: new FormControl(this.appData.name),
               emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
@@ -564,7 +565,7 @@ console.log(response);
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplatesforaApplication());
           console.log("Metric Template for a application");
           console.log(response.metricTemplatesofaApplication);
-          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.data.map(ele=>ele.pipelineId);
+          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.metricTemplates.map(ele=>ele.pipelineId);
           //this.metricTemplatesofaApplication = ["metrictemp1", "metrictemp2", "metrictemp3"];
           this.metricTemplateList = this.metricTemplatesofaApplication;
           if(this.metricModel !== undefined){
