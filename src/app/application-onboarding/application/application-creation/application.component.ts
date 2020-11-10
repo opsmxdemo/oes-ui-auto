@@ -113,8 +113,8 @@ export class CreateApplicationComponent implements OnInit {
   isVisibilityToolConnectorConfigured: boolean = false;
 
   showserviceGroup: boolean;
-  configuredFeature = []
-  isFeaturePresent = []
+  configuredFeature: any = {}
+  isFeaturePresent: any = {}
 
   todo = [
     'Get to work',
@@ -152,6 +152,7 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateList : any;
   metricTemplatesofaApplication : any;
   serviceName : any;
+  currentServiceIndex: number = 0;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -267,29 +268,31 @@ export class CreateApplicationComponent implements OnInit {
           
             if (this.editMode) {
 
-              this.showserviceGroup = false;
-              var totalServices = this.appData.services.length
-              this.servicesForm = new FormGroup({
-                services: new FormArray([])
-              });
-              for (let i = 0; i < totalServices; i++) {
-                (<FormArray>this.servicesForm.get('services')).push(
-                  new FormGroup({
-                    serviceName: new FormControl({ value: this.appData.services[i].name, disabled: true }),
-                    serviceId: new FormControl({ value: this.appData.services[i].id, disabled: true }),
-                  })
-                )
-                this.configuredFeature.push({
-                  "configuredFeatures": [
-                    "deployment_verification",
-                    "sapor",
-                    "visibility"
-                  ]
+              // this.editServiceClick(this.appData.services[0]);
+              if(this.appData.services && this.appData.services.length > 0) {
+                this.currentServiceIndex = 0;
+                this.serviceId = this.appData.services[0].id;
+                this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: this.appData.services[0].id}));
+                // this.setServiceForm(this.appData.services[0])
+
+                this.showserviceGroup = false;
+                var totalServices = this.appData.services.length
+                this.servicesForm = new FormGroup({
+                  services: new FormArray([])
+                });
+                for (let i = 0; i < totalServices; i++) {
+                  (<FormArray>this.servicesForm.get('services')).push(
+                    new FormGroup({
+                      serviceName: new FormControl({ value: this.appData.services[i].name, disabled: true }),
+                      featureName: new FormControl(''),
+                      serviceId: new FormControl({ value: this.appData.services[i].id, disabled: true })
+                    })
+                  )
+                  if(!this.isFeaturePresent[this.appData.services[i].id]) this.isFeaturePresent[this.appData.services[i].id] = {};
+                  
+                  // this.selectFeature(this.featureList[0], i)
                 }
-                )
-                this.selectFeature(this.featureList[0], i)
               }
-              this.configuredFeaturepresent(totalServices)
             }
 
           } else {
@@ -307,7 +310,7 @@ export class CreateApplicationComponent implements OnInit {
 
     // Below function is use to fetching data from state related to pipelineData
     this.store.select(fromFeature.selectApplication).subscribe(
-      (response) => {
+      (response: any) => {
          // checking environments data editMode
          if (response.environmentsListData != null && response.isEnviromentsLoaded){
        
@@ -332,6 +335,23 @@ export class CreateApplicationComponent implements OnInit {
           this.environmentForm = new FormGroup({
             environments: new FormArray([])
           });
+        }
+
+        if(response.serviceFeatureList != null && response.isServiceFeatureListLoaded) {
+          console.log(response.serviceFeatureList);
+          this.configuredFeature[response.serviceId] = response.serviceFeatureList.configuredFeatures ? response.serviceFeatureList.configuredFeatures : [];
+          // this.configuredFeature.push({
+          //   "configuredFeatures": [
+          //       "deployment_verification",
+          //       "sapor",
+          //       "visibility"
+          //     ]
+          //   }
+          // )
+          this.featureList.forEach(fea => {
+            this.isFeaturePresent[response.serviceId][fea] = false;
+          });
+          this.configuredFeaturepresent(response.serviceId);
         }
 
        //populate groupPermission Form #############################################################################
@@ -650,11 +670,12 @@ console.log(response);
   }
 
   // Below function is use to return relavent service form on basics of userType. i.e,AP , OESOnly or both.
-  setServiceForm() {
+  setServiceForm(val = {name: '', id: null}) {
     let serviceForm = null;
     serviceForm = new FormGroup({
-      serviceName: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
+      serviceName: new FormControl(val.name, [Validators.required, this.cannotContainSpace.bind(this)]),
       featureName: new FormControl(''),
+      serviceId: new FormControl(val.id)
     })
 
     return serviceForm;
@@ -947,6 +968,7 @@ console.log(response);
     // (<FormGroup>this.servicesForm.get('services')).push(this.setServiceForm());
 
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
+    this.currentServiceIndex = (<FormArray>this.servicesForm.get('services')).length - 1;
     // Update dockerImageDropdownData array
     //   //if(this.userType.includes('Sapor')){
     //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
@@ -1491,28 +1513,23 @@ console.log(response);
     this.showserviceGroup = true;
 
   }
-  configuredFeaturepresent(totalServices) {
+  configuredFeaturepresent(serviceId) {
 
-    for (let i = 0; i < totalServices; i++) {
-      var myjson = {
-        servicename: this.appData.services[i].serviceName,
-        serviceFeatures: []
-      }
-      this.isFeaturePresent.push(myjson)
+    // for (let i = 0; i < totalServices; i++) {
+      // var myjson = {
+      //   // servicename: this.appData.services[i].serviceName,
+      //   serviceFeatures: []
+      // }
+      if(!this.isFeaturePresent[serviceId]) this.isFeaturePresent[serviceId] = {};
+
       for (let j = 0; j < this.featureList.length; j++) {
-        var value
-        for (let k = 0; k < this.featureList.length; k++)
-          if (this.configuredFeature[i].configuredFeatures[k] == this.featureList[j].toLowerCase()) {
-            value = true;
-            break;
-          }
-          else {
-            value = false;
-          }
-
-        this.isFeaturePresent[i].serviceFeatures.push(value)
+        if (this.configuredFeature[serviceId].includes(this.featureList[j].toLowerCase())) {
+          this.isFeaturePresent[serviceId][this.featureList[j].toLowerCase()] = true;
+        } else {
+          this.isFeaturePresent[serviceId][this.featureList[j].toLowerCase()] = false;
+        }
       }
-    }
+    // }
 
   }
 
@@ -1525,9 +1542,13 @@ console.log(response);
     this.showPermissionForm = false;
   }
 
-  editServiceClick(service: any) {
+  editServiceClick(service: any, index) {
     console.log(service);
     this.serviceId = service.serviceId;
+    this.currentServiceIndex = index;
+    this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: service.serviceId}))
+    this.loadServiceForm();
+    // this.configuredFeaturepresent(service.serviceId);
   }
 
   loadApplicationForm() {

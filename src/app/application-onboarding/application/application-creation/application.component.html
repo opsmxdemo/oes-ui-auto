@@ -35,8 +35,8 @@
               <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
               <li class="ti-item">
                 <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
-                <span>Service name</span>
-                <strong>{{serviceArr.serviceName}}</strong>
+                <span *ngIf="!editMode">Service name</span>
+                <strong (click)="editServiceClick(serviceArr, i)" style="cursor: pointer;">{{serviceArr.serviceName}}</strong>
               </li>
             </ng-container>
               <br>
@@ -184,7 +184,7 @@
                   <div class="form-group service_section">
                     <div class="col-12" formArrayName="services">
                       <div class="row" *ngFor="let serviceArr of servicesForm.get('services')['controls']; let i=index">
-                        <div class="col-12 padding0" [formGroupName]="i" *ngIf="this.servicesForm.value.services.length == i+1 || editMode">                          
+                        <div class="col-12 padding0" [formGroupName]="i" *ngIf="currentServiceIndex == i">                          
                           <div class="col-6 form-group mb-3 text-muted padding0">
                             <label>Service Name</label>
                             <div class="d-flex  mr-4 align-items-center">
@@ -224,8 +224,19 @@
                                         <input id="featureName{{i}}" type="radio" class="custom-control-input" value="{{featureName}}" name="featureName" formControlName="featureName">
                                         <label class="custom-control-label" for="featureName{{i}}">{{featureName}}</label>
                                       </div>
-                                      <td *ngIf = "editMode"><span *ngIf="!isFeaturePresent[i]['serviceFeatures'][f]">-</span><span><i *ngIf="isFeaturePresent[i]['serviceFeatures'][f]" class="fa fa-check" aria-hidden="true"></i></span></td>
-                                      <td *ngIf = "!editMode && featureName == 'visibility'"><span *ngIf="gateId == '' || gateId == null || gateId == undefined">-</span><span><i *ngIf = "gateId != '' && gateId != null && gateId != undefined" class="fa fa-check" aria-hidden="true"></i></span></td>
+                                      </td>
+                                      <td *ngIf = "editMode">
+                                        <span *ngIf="!isFeaturePresent[serviceId] || !isFeaturePresent[serviceId][featureName]">-</span>
+                                        <span>
+                                          <i *ngIf="isFeaturePresent[serviceId] && isFeaturePresent[serviceId][featureName]" class="fa fa-check" aria-hidden="true"></i>
+                                        </span>
+                                      </td>
+                                      <td *ngIf = "!editMode && featureName == 'visibility'">
+                                        <span *ngIf="gateId == '' || gateId == null || gateId == undefined">-</span>
+                                        <span *ngIf = "gateId != '' && gateId != null && gateId != undefined">
+                                          <i class="fa fa-check" aria-hidden="true"></i>
+                                        </span>
+                                      </td>
                                       <td *ngIf = "!editMode && featureName == 'deployment_verification'"><span>-</span></td>
                                       <td *ngIf = "!editMode && featureName == 'sapor'"><span>-</span></td>
                                       <!-- <span><i *ngIf = "gateId != '' && gateId != null && gateId != undefined " class="fa fa-check" aria-hidden="true"></i></span> -->
