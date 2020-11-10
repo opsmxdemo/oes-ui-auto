@@ -169,6 +169,7 @@ export class AppliactionListComponent implements OnInit {
   // Below function is use for edit application
   editApplication(appData){
     $("[data-toggle='tooltip']").tooltip('hide');
+    this.store.dispatch(ApplicationActions.getImageSource({ applicationId: appData.applicationId }));
     this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: appData.name,page:'/setup/applications',applicationId:appData.applicationId}));
   }
 

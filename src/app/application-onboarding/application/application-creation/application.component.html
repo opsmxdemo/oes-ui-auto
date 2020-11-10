@@ -29,7 +29,7 @@
             <ul class="tree-inset  list-unstyled {{servicesForm.invalid == false ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadServiceForm()">
                 <i class="{{servicesForm.invalid == false ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Service Details</span>
+                <span>Services</span>
               </li>             
               <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
               <li class="ti-item">
