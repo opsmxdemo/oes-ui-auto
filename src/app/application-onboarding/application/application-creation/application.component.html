@@ -36,7 +36,7 @@
               <li class="ti-item">
                 <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
                 <span *ngIf="!editMode">Service name</span>
-                <strong (click)="editServiceClick(serviceArr, i)">{{serviceArr.serviceName}}</strong>
+                <strong (click)="editServiceClick(serviceArr, i)" style="cursor: pointer;">{{serviceArr.serviceName}}</strong>
               </li>
             </ng-container>
               <br>
