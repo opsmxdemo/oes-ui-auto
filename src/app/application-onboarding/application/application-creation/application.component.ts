@@ -234,7 +234,7 @@ export class CreateApplicationComponent implements OnInit {
           this.saporFinalData = responseData.saporConfigList;
         }
 
-       
+        // alert(responseData.editMode);
 
         //checking is editMode enabled
         if (responseData.editMode && this.editApplicationCounter === 0) {
@@ -276,6 +276,7 @@ export class CreateApplicationComponent implements OnInit {
                 (<FormArray>this.servicesForm.get('services')).push(
                   new FormGroup({
                     serviceName: new FormControl({ value: this.appData.services[i].name, disabled: true }),
+                    serviceId: new FormControl({ value: this.appData.services[i].id, disabled: true }),
                   })
                 )
                 this.configuredFeature.push({
@@ -1613,6 +1614,11 @@ console.log(response);
     this.showApplicationForm = false;
     this.showEnvironmentForm = false;
     this.showPermissionForm = false;
+  }
+
+  editServiceClick(service: any) {
+    console.log(service);
+    this.serviceId = service.serviceId;
   }
 
   loadApplicationForm() {
