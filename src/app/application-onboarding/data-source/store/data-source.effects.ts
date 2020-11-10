@@ -120,7 +120,7 @@ export class DataSourceEffect {
             ofType(DataSourceAction.createAPDatasources),
             withLatestFrom(this.appStore.select('layout')),
             switchMap(([action,layoutState]) => {
-                return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v2/credentials', action.CreatedDataSource).pipe(
+                return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials', action.CreatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Datasource "'+action.CreatedDataSource.name+'" is created successfully','Success');
                         const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
@@ -218,7 +218,7 @@ export class DataSourceEffect {
             ofType(DataSourceAction.updateAPDatasources),
             withLatestFrom(this.appStore.select('layout')),
             switchMap(([action,layoutState]) => {
-                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v2/credentials/'+action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
+                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials/'+action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Datasource "'+action.UpdatedDataSource.name+'" is updated successfully','Success');
                         
@@ -342,7 +342,7 @@ export class DataSourceEffect {
      this.actions$.pipe(
          ofType(DataSourceAction.deleteAPDatasourceAccount),
          switchMap(action => {
-             return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v2/credentials/' + action.id).pipe(
+             return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials/' + action.id).pipe(
                  map(resdata => {
                      this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
                      return DataSourceAction.DatasourceaccountDeleted({ index: action.index })
