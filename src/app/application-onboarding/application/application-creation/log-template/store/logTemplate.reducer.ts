@@ -18,7 +18,7 @@ export interface State {
     logDataSources: [];
     accountName: any;
     isloadedResponseKey:boolean;
-   
+    scoringAlgoResponse:any;
     responseKeys:any;
     applicationId:any
     tags:any
@@ -53,6 +53,7 @@ export const initialState: State = {
     jsonDataedit : null,
     editTagResponse:null,
     deleteTagResponse:null,
+    scoringAlgoResponse:null,
 }
 
 export function LogTemplateReducer(
@@ -201,6 +202,19 @@ export function LogTemplateReducer(
             (state,action) => ({
                 ...state,
                 deleteTagResponse: action.deleteTagResponse,
+                isloadedResponseKey:true
+            })
+        ),
+        on(ApplicationAction.getScoringAlgo,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+            })
+        ),
+        on(ApplicationAction.fetchScoringAlgo,
+            (state,action) => ({
+                ...state,
+                scoringAlgoResponse: action.scoringAlgoResponse,
                 isloadedResponseKey:true
             })
         ),

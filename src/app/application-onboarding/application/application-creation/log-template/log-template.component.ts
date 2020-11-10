@@ -59,6 +59,7 @@ editedTagvalue:any;
 editedTagId:any;
 addedTag:any;
 removeTagId:any;
+scoringAlgoData :any;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
@@ -75,6 +76,7 @@ removeTagId:any;
   ngOnInit(): void {
 
     this.store.dispatch(DataSourceActions.loadDatasourceList());
+    this.store.dispatch(ApplicationActions.getScoringAlgo()); 
     this.store.select(fromFeature.selectDataSource).subscribe(
       (responseData) => {
         if(responseData.supportedDatasource != null){
@@ -103,6 +105,11 @@ removeTagId:any;
         if(responseData.tags != null)
         {
           this.clusterTagList = responseData.tags
+        }
+        if(responseData.scoringAlgoResponse != null)
+        {
+
+          this.scoringAlgoData = responseData.scoringAlgoResponse;
         }
         // if(responseData.savedTagResponse!=null)
         // {
@@ -138,7 +145,8 @@ removeTagId:any;
    defineForms() {
     this.createLogForm = new FormGroup({
      templateName: new FormControl('',[Validators.required]),
-     monitoringProvider:  new FormControl('',Validators.required),
+     monitoringProvider:  new FormControl(''),
+     scoringAlgorithm:new FormControl(''),
      accountName:  new FormControl('',Validators.required),
      namespace: new FormControl('',[Validators.required]),
      index: new FormControl('',[Validators.required]),
@@ -155,6 +163,7 @@ removeTagId:any;
     topicsList: new FormArray([]),
     clusterList: new FormArray([]),
     inputTags:new FormControl(),
+    selectScoreAlgo:new FormControl(),
     enableClusterTags: new FormControl(),
     clusterTagId: new FormControl(false),
     addedTags:new FormArray([]),
@@ -173,6 +182,7 @@ onDataSourceSelect(dataSourceValue: string){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      scoringAlgorithm:new FormControl(this.logTopicsForm.value['selectScoreAlgo']),
       accountName:  new FormControl('',Validators.required),
       index: new FormControl('',[Validators.required]),
       kibanaIndex: new FormControl('',[Validators.required]),
@@ -187,6 +197,7 @@ onDataSourceSelect(dataSourceValue: string){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      scoringAlgorithm:new FormControl(this.logTopicsForm.value['selectScoreAlgo']),
       namespace: new FormControl('',[Validators.required]),
       autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
@@ -197,6 +208,7 @@ onDataSourceSelect(dataSourceValue: string){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      scoringAlgorithm:new FormControl(this.logTopicsForm.value['selectScoreAlgo']),
       accountName:  new FormControl('',Validators.required),
       autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
@@ -232,6 +244,7 @@ getLogTopics(){
           topicsList: new FormArray([]),
           addedTags: new FormArray([]),
           inputTags:new FormControl(),
+          selectScoreAlgo:new FormControl(this.scoringAlgoData.defaultValue),
           clusterList: new FormArray([]),
           clusterTagId: new FormControl(false),
           enableClusterTags: new FormControl(),
