@@ -154,7 +154,11 @@ export const isgetEnvironmentsUpdated = createAction('[Application] IsgetEnviron
 export const deleteEnvironments = createAction('[Application] DeleteEnvironments', props<{applicationId:any}>());
 export const environmentdeletedSuccessfully = createAction('[Application] EnvironmentsDeletedSuccessfully');
 
+// Below action is used for get imageSource
 
+export const getImageSource = createAction('[Application] getImageSource', props<{applicationId : any}>());
+export const loadImageSource = createAction('[Application] LoadImageSource', props<{imageSourceListData: any}>());
+export const isgetImageSourceLoaded = createAction('[Application] IsgetImageSourceLoaded');
 
 
 //Actions to Visibility Feature
@@ -189,6 +193,10 @@ export const isLoadedTemplateToolType = createAction('[Application] IsLoadedTemp
 export const getTemplateDataForTooltype = createAction('[Application] GetTemplateForTooltype', props<{templateId:any}>());
 export const loadTemplateDataForTooltype = createAction('[Application] LoadTemplateForTooltype', props<{templateData:any}>());
 export const isLoadedTemplateData = createAction('[Application] IsLoadedTemplateData');
+
+export const getFeaturesForAService = createAction('[Application] GetFeaturesForAService', props<{serviceId:any}>());
+export const loadFetauresForService = createAction('[Application] LoadFetauresForService', props<{serviceFeatureList:any}>());
+export const isLoadedServiceFeatureList = createAction('[Application] isLoadedServiceFeatureList');
 
 export const updateTemplateForTooltype = createAction('[Application] UpdateTemplateForTooltype', props<{updatedTemplateForToolTypeData:any}>());
 export const putSaveTemplateForTooltype = createAction('[Application] PutSaveTemplateForTooltype', props<{templateForToolTypeSavedData:any}>());

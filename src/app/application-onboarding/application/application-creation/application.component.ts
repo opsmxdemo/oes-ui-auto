@@ -113,8 +113,8 @@ export class CreateApplicationComponent implements OnInit {
   isVisibilityToolConnectorConfigured: boolean = false;
 
   showserviceGroup: boolean;
-  configuredFeature = []
-  isFeaturePresent = []
+  configuredFeature: any = {}
+  isFeaturePresent: any = {}
 
   todo = [
     'Get to work',
@@ -159,6 +159,7 @@ export class CreateApplicationComponent implements OnInit {
   logTemplateEditMode : boolean = false;
   metricTemplateEditMode : boolean = false;
   selectedApplicationData : any;
+  currentServiceIndex: number = 0;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -241,7 +242,7 @@ export class CreateApplicationComponent implements OnInit {
           this.saporFinalData = responseData.saporConfigList;
         }
 
-       
+        // alert(responseData.editMode);
 
         //checking is editMode enabled
         if (responseData.editMode && this.editApplicationCounter === 0) {
@@ -275,133 +276,38 @@ export class CreateApplicationComponent implements OnInit {
           
             if (this.editMode) {
 
-              this.showserviceGroup = false;
-              var totalServices = this.appData.services.length
-              this.servicesForm = new FormGroup({
-                services: new FormArray([])
-              });
-              for (let i = 0; i < totalServices; i++) {
-                (<FormArray>this.servicesForm.get('services')).push(
-                  new FormGroup({
-                    serviceName: new FormControl({ value: this.appData.services[i].name, disabled: true }),
-                  })
-                )
-                this.configuredFeature.push({
-                  "configuredFeatures": [
-                    "deployment_verification",
-                    "sapor",
-                    "visibility"
-                  ]
+              // this.editServiceClick(this.appData.services[0]);
+              if(this.appData.services && this.appData.services.length > 0) {
+                this.currentServiceIndex = 0;
+                this.serviceId = this.appData.services[0].id;
+                this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: this.appData.services[0].id}));
+                // this.setServiceForm(this.appData.services[0])
+
+                this.showserviceGroup = false;
+                var totalServices = this.appData.services.length
+                this.servicesForm = new FormGroup({
+                  services: new FormArray([])
+                });
+                for (let i = 0; i < totalServices; i++) {
+                  (<FormArray>this.servicesForm.get('services')).push(
+                    new FormGroup({
+                      serviceName: new FormControl({ value: this.appData.services[i].name, disabled: true }),
+                      featureName: new FormControl(''),
+                      serviceId: new FormControl({ value: this.appData.services[i].id, disabled: true })
+                    })
+                  )
+                  if(!this.isFeaturePresent[this.appData.services[i].id]) this.isFeaturePresent[this.appData.services[i].id] = {};
+                  
+                  // this.selectFeature(this.featureList[0], i)
                 }
-                )
-                this.selectFeature(this.featureList[0], i)
-              }
-              this.configuredFeaturepresent(totalServices)
-            }
-
-
-            //populating serviceForm ############################################################################
-            // if (this.appData.services !== null && this.appData.services.length !== 0) {
-            //   this.servicesForm = new FormGroup({
-            //     services: new FormArray([])
-            //   });
-            //   switch(this.userType){
-            //     case 'OES':
-            //     case 'OES-AP':
-            //       //populating services array in OES mode
-            //       this.appData.services.forEach((serviceArr, serviceindex) => {
-            //         if(this.userType === 'OES-AP'){
-            //           (<FormArray>this.servicesForm.get('services')).push(
-            //             new FormGroup({
-            //               serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
-            //               id: new FormControl(serviceArr.id),
-            //               logTemp: new FormControl(serviceArr.logTemp),
-            //               metricTemp: new FormControl(serviceArr.metricTemp),
-            //               pipelines: new FormArray([])
-            //             })
-            //           );
-            //         }else{
-            //           (<FormArray>this.servicesForm.get('services')).push(
-            //             new FormGroup({
-            //               serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
-            //               id: new FormControl(serviceArr.id),
-            //               pipelines: new FormArray([])
-            //             })
-            //           );
-            //         }
-
-            //         //populating pipeline array
-            //         serviceArr.pipelines.forEach((pipelineArr, pipelineIndex) => {
-            //           const serviceArray = this.servicesForm.get('services') as FormArray;
-            //           const pipelineArray = serviceArray.at(serviceindex).get('pipelines') as FormArray;
-            //           pipelineArray.push(
-            //             new FormGroup({
-            //               pipelinetemplate: new FormControl(pipelineArr.pipelinetemplate, Validators.required),
-            //               dockerImageName: new FormGroup({
-            //                 accountName: new FormControl(pipelineArr.dockerImageName.accountName, Validators.required),
-            //                 imageName: new FormControl(pipelineArr.dockerImageName.imageName, Validators.required)
-            //               }),
-            //               pipelineParameters: new FormArray([])
-            //             })
-            //           )
-            //           if(pipelineArr.pipelineParameters !== null && pipelineArr.pipelineParameters !== undefined){
-            //             //populating pipelieParameter array
-            //             pipelineArr.pipelineParameters.forEach(pipelineParameterArr => {
-            //               const pipelineParameter = pipelineArray.at(pipelineIndex).get('pipelineParameters') as FormArray;
-            //               pipelineParameter.push(
-            //                 new FormGroup({
-            //                   value: new FormControl(pipelineParameterArr.value),
-            //                   name: new FormControl(pipelineParameterArr.name),
-            //                   type: new FormControl(pipelineParameterArr.type)
-            //                 })
-            //               );
-            //             })
-            //           }
-            //         })
-            //       })
-            //       break;
-            //     case 'AP':
-            //       //populating services array in OES mode
-            //       this.appData.services.forEach(serviceArr => {
-            //         (<FormArray>this.servicesForm.get('services')).push(
-            //           new FormGroup({
-            //             serviceName: new FormControl({value: serviceArr.serviceName, disabled: true}),
-            //             id: new FormControl(serviceArr.id),
-            //             logTemp: new FormControl(serviceArr.logTemp),
-            //             metricTemp: new FormControl(serviceArr.metricTemp)
-            //           })
-            //         );
-            //       });
-            //       break;
-            //   }
-            // }
-
-           
-
-
-            //populate groupPermission Form #############################################################################
-            // if (responseData.groupPermissionsListData != null) {
-             
-            // }
-
-            //populating log and metric template data ######################################################################
-            if (this.userType === 'deployment_verification') {
-              // Storing Log and Metric template data in state getting from appData
-              if (this.appData.logTemplate !== null) {
-                this.appData.logTemplate.forEach(logTemp => {
-                  this.store.dispatch(ApplicationActions.createdLogTemplate({ logTemplateData: logTemp }))
-                });
-              }
-              if (this.appData.metricTemplate !== null) {
-                this.appData.metricTemplate.forEach(metricTemp => {
-                  this.store.dispatch(ApplicationActions.createdMetricTemplate({ metricTemplateData: metricTemp }));
-                });
               }
             }
+
           } else {
             this.defineAllForms();
           }
-        } else if (this.appData === null && this.imageSourceData === null) {
+        } 
+        else if (this.appData === null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
           if (this.createApplicationForm === undefined && this.servicesForm === undefined) {
             this.defineAllForms();
@@ -412,17 +318,15 @@ export class CreateApplicationComponent implements OnInit {
 
     // Below function is use to fetching data from state related to pipelineData
     this.store.select(fromFeature.selectApplication).subscribe(
-      (response) => {
+      (response: any) => {
          // checking environments data editMode
-         if (response.environmentsListData != null){
-          console.log(response.environmentsListData);
+         if (response.environmentsListData != null && response.isEnviromentsLoaded){
+       
           this.envData = response.environmentsListData;
 
           if(this.editMode){
-            this.environmentForm = new FormGroup({
-              environments: new FormArray([])
-            });
-            if(this.envData.environments != undefined){
+            
+            //if(this.envData.environments != undefined){
               this.envData.environments.forEach(environmentdata => {
                 (<FormArray>this.environmentForm.get('environments')).push(
                   new FormGroup({
@@ -432,13 +336,35 @@ export class CreateApplicationComponent implements OnInit {
                   })
                 );
               })
-            }
+            //}
           }
+        }else{
+          this.environmentForm.reset();
+          this.environmentForm = new FormGroup({
+            environments: new FormArray([])
+          });
+        }
+
+        if(response.serviceFeatureList != null && response.isServiceFeatureListLoaded) {
+          console.log(response.serviceFeatureList);
+          this.configuredFeature[response.serviceId] = response.serviceFeatureList.configuredFeatures ? response.serviceFeatureList.configuredFeatures : [];
+          // this.configuredFeature.push({
+          //   "configuredFeatures": [
+          //       "deployment_verification",
+          //       "sapor",
+          //       "visibility"
+          //     ]
+          //   }
+          // )
+          this.featureList.forEach(fea => {
+            this.isFeaturePresent[response.serviceId][fea] = false;
+          });
+          this.configuredFeaturepresent(response.serviceId);
         }
 
        //populate groupPermission Form #############################################################################
 console.log(response);
-        if(response.groupPermissionsGetListData != null){
+        if(response.groupPermissionsGetListData != null && response.isGroupPermissionsLoaded){
           this.grpData = response.groupPermissionsGetListData;
           console.log(this.grpData);
           //  // clearing form first
@@ -460,6 +386,10 @@ console.log(response);
             const permissionIdGroupControl = userGroupControl.at(index).get('permissionIds') as FormArray;
             this.populatePermissions(permissionIdGroupControl, groupData.permissionIds);
           })
+        }else{
+          this.groupPermissionForm = new FormGroup({
+            userGroups: new FormArray([])
+          });
         }
 
         if (response.pipelineData !== null) {
@@ -757,11 +687,12 @@ console.log(response);
   }
 
   // Below function is use to return relavent service form on basics of userType. i.e,AP , OESOnly or both.
-  setServiceForm() {
+  setServiceForm(val = {name: '', id: null}) {
     let serviceForm = null;
     serviceForm = new FormGroup({
-      serviceName: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
+      serviceName: new FormControl(val.name, [Validators.required, this.cannotContainSpace.bind(this)]),
       featureName: new FormControl(''),
+      serviceId: new FormControl(val.id)
     })
 
     return serviceForm;
@@ -1054,6 +985,7 @@ console.log(response);
     // (<FormGroup>this.servicesForm.get('services')).push(this.setServiceForm());
 
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
+    this.currentServiceIndex = (<FormArray>this.servicesForm.get('services')).length - 1;
     // Update dockerImageDropdownData array
     //   //if(this.userType.includes('Sapor')){
     //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
@@ -1604,28 +1536,23 @@ console.log(response);
     this.showserviceGroup = true;
 
   }
-  configuredFeaturepresent(totalServices) {
+  configuredFeaturepresent(serviceId) {
 
-    for (let i = 0; i < totalServices; i++) {
-      var myjson = {
-        servicename: this.appData.services[i].serviceName,
-        serviceFeatures: []
-      }
-      this.isFeaturePresent.push(myjson)
+    // for (let i = 0; i < totalServices; i++) {
+      // var myjson = {
+      //   // servicename: this.appData.services[i].serviceName,
+      //   serviceFeatures: []
+      // }
+      if(!this.isFeaturePresent[serviceId]) this.isFeaturePresent[serviceId] = {};
+
       for (let j = 0; j < this.featureList.length; j++) {
-        var value
-        for (let k = 0; k < this.featureList.length; k++)
-          if (this.configuredFeature[i].configuredFeatures[k] == this.featureList[j].toLowerCase()) {
-            value = true;
-            break;
-          }
-          else {
-            value = false;
-          }
-
-        this.isFeaturePresent[i].serviceFeatures.push(value)
+        if (this.configuredFeature[serviceId].includes(this.featureList[j].toLowerCase())) {
+          this.isFeaturePresent[serviceId][this.featureList[j].toLowerCase()] = true;
+        } else {
+          this.isFeaturePresent[serviceId][this.featureList[j].toLowerCase()] = false;
+        }
       }
-    }
+    // }
 
   }
 
@@ -1636,6 +1563,15 @@ console.log(response);
     this.showApplicationForm = false;
     this.showEnvironmentForm = false;
     this.showPermissionForm = false;
+  }
+
+  editServiceClick(service: any, index) {
+    console.log(service);
+    this.serviceId = service.serviceId;
+    this.currentServiceIndex = index;
+    this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: service.serviceId}))
+    this.loadServiceForm();
+    // this.configuredFeaturepresent(service.serviceId);
   }
 
   loadApplicationForm() {

@@ -320,6 +320,24 @@ export class ApplicationEffect {
         )
     )
 
+    // Effect to get Imagesource
+     
+    getApplicationImagesource = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.getImageSource),
+         switchMap((action) => {                
+             return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/imagesource').pipe(
+                 map(resdata => {
+                     return ApplicationAction.loadImageSource({ imageSourceListData: resdata});
+                 }),
+                 catchError(errorRes => {
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
     // Effect to get groupPermission
      
     getGroupPermissions = createEffect(() =>
@@ -684,6 +702,24 @@ export class ApplicationEffect {
                 return this.http.get<any>(`${this.environment.config.endPointUrl}visibilityservice/v1/visibilityToolTemplates/${action.templateId}`).pipe(
                     map(resdata => {
                         return ApplicationAction.loadTemplateDataForTooltype({ templateData: resdata });
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    //Get Feature List for a Serice
+    onGetServiceFeatureList = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.getFeaturesForAService),
+            switchMap((action) => {
+                return this.http.get<any>(`${this.environment.config.endPointUrl}platformservice/v1/services/${action.serviceId}/features`).pipe(
+                    map(resdata => {
+                        return ApplicationAction.loadFetauresForService({ serviceFeatureList: resdata });
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')

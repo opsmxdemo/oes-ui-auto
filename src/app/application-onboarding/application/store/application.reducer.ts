@@ -19,6 +19,7 @@ export interface State {
     appSavedData: SaveApplication;
     appEnvionmentsData: Environment;
     getEnvironmentListData: any;
+    imageSourceListData: any;
     applicationLoading: boolean;
     cloudAccountExist: CloudAccount;
     imageSource: string[];
@@ -99,6 +100,7 @@ export interface State {
     templateData: any;
     isTemplateDataForToolTypeLoaded: boolean;
     isTemplateDataForToolTypeUpdated: boolean;
+    isServiceFeatureListLoaded: boolean;
     isEnviromentsLoaded: boolean;
     isGroupPermissionsLoaded: boolean;
     groupPermissionsGetListData: any;
@@ -182,6 +184,7 @@ export const initialState: State = {
     templateData: null,
     isTemplateDataForToolTypeLoaded:false,
     isTemplateDataForToolTypeUpdated:false,
+    isServiceFeatureListLoaded:false,
 
     // Sapor config variables
     saporConfigData : null,
@@ -198,6 +201,7 @@ export const initialState: State = {
     isGroupPermissions: false,
     isGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
+    imageSourceListData: null,
 
      //Deployment Verification
      logTemplatesofaApplication: null,
@@ -344,6 +348,21 @@ export function ApplicationReducer(
             })
         ),
 
+        on(ApplicationAction.getImageSource,
+            (state,action) => ({
+                ...state,
+                applicationLoading:true,
+                applicationId: action.applicationId,
+
+            })
+        ),
+        on(ApplicationAction.loadImageSource,
+            (state,action) => ({
+                ...state,
+                imageSourceListData:action.imageSourceListData,
+            })
+        ),
+
         // code related to environments goes here
 
         on(ApplicationAction.saveEnvironments,
@@ -436,12 +455,12 @@ export function ApplicationReducer(
                 isGroupPermissionsLoaded: true
             })
         ),
-        // on(ApplicationAction.isgetGroupPermissionsLoaded,
-        //     (state,action) => ({
-        //         ...state,
-        //         isEnviromentsLoaded: false
-        //     })
-        // ),
+        on(ApplicationAction.isgetGroupPermissionsLoaded,
+            (state,action) => ({
+                ...state,
+                isGroupPermissionsLoaded: false
+            })
+        ),
 
         on(ApplicationAction.updateGroupPermissions,
             (state,action) => ({
@@ -712,6 +731,27 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isTemplateDataForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.getFeaturesForAService,
+            (state,action) => ({
+                ...state,
+                serviceId : action.serviceId,
+                isServiceFeatureListLoaded: false
+            })
+        ),
+        on(ApplicationAction.loadFetauresForService,
+            (state,action) => ({
+                ...state,
+                serviceFeatureList:action.serviceFeatureList,
+                isServiceFeatureListLoaded: true
+            })
+        ),
+        on(ApplicationAction.isLoadedServiceFeatureList,
+            (state,action) => ({
+                ...state,
+                isServiceFeatureListLoaded: false
             })
         ),
 
