@@ -570,7 +570,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       }
     }
 
-    console.log(this.apmcookbookForm.value.cookbooklist)
+    //console.log(this.apmcookbookForm.value.cookbooklist)
 
     
     
