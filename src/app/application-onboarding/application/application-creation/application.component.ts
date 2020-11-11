@@ -165,6 +165,7 @@ export class CreateApplicationComponent implements OnInit {
   configuredImage: any;
   deploymentVerificaionFeatureSavedResponse : any;
   deploymentVerificationFeatureSaved : boolean = false;
+  serviceStatus: any = {};
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -321,7 +322,7 @@ export class CreateApplicationComponent implements OnInit {
                     })
                   )
                   if(!this.isFeaturePresent[this.appData.services[i].id]) this.isFeaturePresent[this.appData.services[i].id] = {};
-                  
+                  this.serviceStatus[i] = 'Edit';
                   // this.selectFeature(this.featureList[0], i)
                 }
               }
@@ -343,14 +344,12 @@ export class CreateApplicationComponent implements OnInit {
     this.store.select(fromFeature.selectApplication).subscribe(
       (response: any) => {
          // checking environments data editMode
-         if (response.environmentsListData != null && response.isEnviromentsLoaded){
-       
-          this.envData = response.environmentsListData;
+         if (response.environmentsListGetData != null && response.isGetEnviromentsListLoaded){
+          this.store.dispatch(ApplicationActions.isgetEnvironmentsListLoaded());
+          this.envData = response.environmentsListGetData;
 
           if(this.editMode){
-            
-            
-            //if(this.envData.environments != undefined){
+            if(this.envData.environments != undefined){
               this.envData.environments.forEach(environmentdata => {
                 (<FormArray>this.environmentForm.get('environments')).push(
                   new FormGroup({
@@ -360,7 +359,7 @@ export class CreateApplicationComponent implements OnInit {
                   })
                 );
               })
-            //}
+            }
           }
         }else{
          
@@ -385,13 +384,16 @@ export class CreateApplicationComponent implements OnInit {
         }
 
        //populate groupPermission Form #############################################################################
-        if(response.groupPermissionsGetListData != null && response.isGroupPermissionsLoaded){
-          this.grpData = response.groupPermissionsGetListData;
-          console.log(this.grpData);
-          //  // clearing form first
+        if(response.groupPermissionsGetListData != null && response.isgetGroupPermissionsLoaded){
+           //  // clearing form first
            this.groupPermissionForm = new FormGroup({
             userGroups: new FormArray([])
           });
+          this.grpData = response.groupPermissionsGetListData;
+          //this.store.dispatch(ApplicationActions.isgetGroupPermissionsLoaded());
+
+          console.log(this.grpData);
+         
           //populating the form
           const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
           this.grpData.forEach((groupData, index) => {
@@ -1078,6 +1080,7 @@ export class CreateApplicationComponent implements OnInit {
 
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
     this.currentServiceIndex = (<FormArray>this.servicesForm.get('services')).length - 1;
+    this.serviceStatus[this.currentServiceIndex] = 'New';
     // Update dockerImageDropdownData array
     //   //if(this.userType.includes('Sapor')){
     //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
@@ -1100,6 +1103,7 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
     // Update dockerImageDropdownData array
     this.dockerImageDropdownData.splice(index, 1);
+    this.store.dispatch(ApplicationActions.deleteService({applicationId: this.applicationId, serviceId: this.serviceId}));
   }
 
   //valid all form data if something is left
@@ -1692,7 +1696,7 @@ export class CreateApplicationComponent implements OnInit {
 
   loadEnvironmentsForm() {
     // debugger
-    this.environmentForm.reset();
+    // this.environmentForm.reset();
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
     });
@@ -1761,5 +1765,14 @@ export class CreateApplicationComponent implements OnInit {
     }
   }
   
-
+  featureNameCase(featureName) {
+    if(featureName == "deployment_verification")
+      return "Deployment Verification";
+    else if(featureName == 'visibility')
+      return "Visibility";
+    else if(featureName == 'sapor')
+      return "Sapor";
+    else
+      return featureName;
+  }
 }

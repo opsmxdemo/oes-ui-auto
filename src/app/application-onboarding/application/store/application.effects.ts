@@ -250,7 +250,7 @@ export class ApplicationEffect {
          switchMap((action) => {                
              return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/environments').pipe(
                  map(resdata => {
-                     return ApplicationAction.loadEnvironments({ environmentsListData: resdata});
+                     return ApplicationAction.loadEnvironments({ environmentsListGetData: resdata});
                  }),
                  catchError(errorRes => {
                      return handleError(errorRes);
@@ -570,6 +570,25 @@ export class ApplicationEffect {
                 return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.gateId).pipe(
                     map(resdata => {
                         return ApplicationAction.postDeleteApprovalGate({ message: resdata });
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Effect to delete approval gate for visibility feature
+    onDeleteServices = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.deleteService),
+            switchMap((action) => {
+                return this.http.delete<any>(this.environment.config.endPointUrl + `dashboardservice/v2/applications/${action.applicationId}/service/${action.serviceId}`).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postDeleteService({ deleteServiceMessage: resdata });
                         //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
                     catchError(errorRes => {
