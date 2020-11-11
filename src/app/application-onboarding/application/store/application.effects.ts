@@ -797,7 +797,7 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.getSaporConfig),
             switchMap((action) => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/' + 309 + '/services/' + 298).pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/' + action.applicationId + '/services/' + action.serviceId).pipe(
                     map(resdata => {
                         return ApplicationAction.loadSaporConfig({ saporConfigList: resdata });
                     }),
