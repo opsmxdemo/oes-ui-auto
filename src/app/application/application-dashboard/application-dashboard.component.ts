@@ -113,7 +113,6 @@ export class ApplicationDashboardComponent implements OnInit {
 
             this.finalLabelArray.push(label);
           })
-          console.log(this.applicationData);
           if (this.showAppDataType === '') {
             this.showAppDataType = this.finalLabelArray[0];
           } else {
@@ -346,7 +345,6 @@ export class ApplicationDashboardComponent implements OnInit {
           appVar['activeCount'] = activeCountNumber.activeCount;
           appFinal[index] = appVar;
           this.applicationFinalData = appFinal;
-          console.log('ssss', this.applicationFinalData);
         },
           (error) => {
             this.statusMessage = 'error';              //Error callback
@@ -355,7 +353,7 @@ export class ApplicationDashboardComponent implements OnInit {
         appFinal[index] = appVar;
       }
     });
-
+    this.applicationFinalData = appFinal;
   }
 
   // Below function is use to delete application
