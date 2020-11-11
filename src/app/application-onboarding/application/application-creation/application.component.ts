@@ -371,6 +371,7 @@ export class CreateApplicationComponent implements OnInit {
           //   }
           // )
           this.featureList.forEach(fea => {
+            if(!this.isFeaturePresent[response.serviceId]) this.isFeaturePresent[response.serviceId] = {};
             this.isFeaturePresent[response.serviceId][fea] = false;
           });
           this.configuredFeaturepresent(response.serviceId);
