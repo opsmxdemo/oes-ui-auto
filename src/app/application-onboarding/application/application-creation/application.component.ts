@@ -161,7 +161,8 @@ export class CreateApplicationComponent implements OnInit {
   selectedApplicationData : any;
   currentServiceIndex: number = 0;
   configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
-  editVisibilityIndex: number ;
+  editVisibilityAccountsIndex: number  = 0;
+  editVisibilityTemplateIndex: number = 0;
   configuredImage: any;
   deploymentVerificaionFeatureSavedResponse : any;
   deploymentVerificationFeatureSaved : boolean = false;
@@ -258,7 +259,7 @@ export class CreateApplicationComponent implements OnInit {
           this.appData = responseData.applicationData;
           this.selectedApplicationData = this.appData;
         //  this.applicationId = this.appData.applicationId;
-          console.log(this.appData);
+          // console.log(this.appData);
           this.editMode = responseData.editMode;
           
           this.defineAllForms();
@@ -366,7 +367,7 @@ export class CreateApplicationComponent implements OnInit {
         }
 
         if(response.serviceFeatureList != null && response.isServiceFeatureListLoaded) {
-          console.log(response.serviceFeatureList);
+          // console.log(response.serviceFeatureList);
           this.configuredFeature[response.serviceId] = response.serviceFeatureList.configuredFeatures ? response.serviceFeatureList.configuredFeatures : [];
           // this.configuredFeature.push({
           //   "configuredFeatures": [
@@ -421,7 +422,8 @@ export class CreateApplicationComponent implements OnInit {
         if (response.imageSource !== null) {
           this.imageSourceData = response.imageSource;
           if(response.imageSourceListData != null && response.isfetchImageSourceLoaded){
-            console.log(response.imageSourceListData);
+            // console.log(response.imageSourceListData);
+            if(this.appData != null){
             this.createApplicationForm = new FormGroup({
               name: new FormControl(this.appData.name),
               emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
@@ -429,6 +431,7 @@ export class CreateApplicationComponent implements OnInit {
               imageSource: new FormControl(response.imageSourceListData.imageSource),
               lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
             });
+            }
             if (response.callDockerImageDataAPI) {
               this.onImageSourceSelect(response.imageSourceListData.imageSource);
             }
@@ -488,6 +491,8 @@ export class CreateApplicationComponent implements OnInit {
         if (response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded) {
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
+          console.log("approvalGatesListOfaService: ", this.approvalGatesOfaServiceList);
+           
           if (this.approvalGatesOfaServiceList.length > 0) {
             this.gateId = this.approvalGatesOfaServiceList[0].id;   
             if(this.editMode){
@@ -522,12 +527,12 @@ export class CreateApplicationComponent implements OnInit {
           if(!this.editMode){
           this.accountsForTooltypes[this.currentRowIndexVisibility - 1] = response.accountsForToolType;
           }else{
-            this.accountsForTooltypes[this.editVisibilityIndex] = response.accountsForToolType;
+            this.accountsForTooltypes[this.editVisibilityAccountsIndex] = response.accountsForToolType;
             
             let visibilityArr = <FormArray>this.visibilityForm.get('visibilityConfig');
-            visibilityArr.controls[this.editVisibilityIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityIndex].visibilityToolConnectorId);
+            visibilityArr.controls[this.editVisibilityAccountsIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityAccountsIndex].visibilityToolConnectorId);
 
-            this.editVisibilityIndex++;
+            this.editVisibilityAccountsIndex++;
           }
           //this.connectorId = this.accountsForTooltypes[0];
           console.log("Account Types: ", this.accountsForTooltypes);
@@ -536,7 +541,17 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.templatesForToolType && response.isTemplateForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
+          if(!this.editMode){
           this.templatesForToolType[this.currentRowIndexVisibility - 1] = response.templatesForToolType;
+          }else{
+          this.templatesForToolType[this.editVisibilityTemplateIndex] = response.templatesForToolType;
+            let visibilityTemplateArr = <FormArray>this.visibilityForm.get('visibilityConfig');
+            visibilityTemplateArr.controls[this.editVisibilityTemplateIndex].get('templateName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityTemplateIndex].templateId);
+
+            this.editVisibilityTemplateIndex++;
+          }
+          console.log("Template Types: ", this.templatesForToolType);
+          console.log("Row index Visibility: ", this.currentRowIndexVisibility);
         }
 
         this.loadEditTemplate(response);
@@ -1470,13 +1485,14 @@ export class CreateApplicationComponent implements OnInit {
     } else if (item === 'visibility') {
       //check gate already configured for the selectd service
       // console.log(this.serviceId);
-        this.editVisibilityIndex = 0;
+        this.editVisibilityAccountsIndex = 0;
+        this.editVisibilityTemplateIndex = 0;
       this.visibilityForm = new FormGroup({
         visibilityConfig: new FormArray([])
       });
 
       // this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
-      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 77 }));
+      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 22 }));        
 
       // defining reactive form for Visibility connector template Section
 
