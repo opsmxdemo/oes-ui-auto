@@ -677,7 +677,6 @@ export class CreateApplicationComponent implements OnInit {
         if(response.metricTemplateDetails!=null && response.isMetricTemplateDetailsLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplate());
           this.metricTemplateDetails = response.metricTemplateDetails;        
-<<<<<<< 2a892c5178f9278dc6240585325788f982def7d0
         }
         if(response.deploymentVerificationSavedData !=null && response.isSavedDeploymentVerificationFeature) {
           this.store.dispatch(ApplicationActions.isDeploymentVerificationSaved());
@@ -686,11 +685,6 @@ export class CreateApplicationComponent implements OnInit {
             this.deploymentVerificationFeatureSaved = true;
           }
         }
-=======
-        } 
-      },(error: any) => {
-        console.log("Subscribe Error: ", error);        
->>>>>>> Display of tool connectors in edit mode
       }
     )
 
