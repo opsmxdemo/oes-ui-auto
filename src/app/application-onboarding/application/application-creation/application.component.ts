@@ -162,6 +162,7 @@ export class CreateApplicationComponent implements OnInit {
   currentServiceIndex: number = 0;
   configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
   editVisibilityIndex: number ;
+  configuredImage: any;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -266,6 +267,7 @@ export class CreateApplicationComponent implements OnInit {
             this.applicationId = this.appData.applicationId;
             if(responseData.imageSourceListData != null && responseData.isfetchImageSourceLoaded){
               console.log(responseData.imageSourceListData);
+              this.configuredImage = responseData.imageSourceListData.imageSource;
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
                 emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
@@ -273,6 +275,9 @@ export class CreateApplicationComponent implements OnInit {
                 imageSource: new FormControl(responseData.imageSourceListData.imageSource),
                 lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
               });
+              if (responseData.callDockerImageDataAPI) {
+                this.onImageSourceSelect(this.configuredImage);
+              }
             }else{
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
@@ -285,12 +290,12 @@ export class CreateApplicationComponent implements OnInit {
 
            
 
-            // if (responseData.callDockerImageDataAPI) {
-            //   this.onImageSourceSelect(this.appData.imageSource);
-            // }
+            
 
           
             if (this.editMode) {
+
+             
 
               // this.editServiceClick(this.appData.services[0]);
               if(this.appData.services && this.appData.services.length > 0) {
@@ -341,6 +346,7 @@ export class CreateApplicationComponent implements OnInit {
 
           if(this.editMode){
             
+            
             //if(this.envData.environments != undefined){
               this.envData.environments.forEach(environmentdata => {
                 (<FormArray>this.environmentForm.get('environments')).push(
@@ -354,10 +360,7 @@ export class CreateApplicationComponent implements OnInit {
             //}
           }
         }else{
-          this.environmentForm.reset();
-          this.environmentForm = new FormGroup({
-            environments: new FormArray([])
-          });
+         
         }
 
         if(response.serviceFeatureList != null && response.isServiceFeatureListLoaded) {
@@ -421,6 +424,9 @@ export class CreateApplicationComponent implements OnInit {
               imageSource: new FormControl(response.imageSourceListData.imageSource),
               lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
             });
+            if (response.callDockerImageDataAPI) {
+              this.onImageSourceSelect(response.imageSourceListData.imageSource);
+            }
           }
         }
         if (response.savedApplicationData != null) {
@@ -812,13 +818,13 @@ export class CreateApplicationComponent implements OnInit {
 
     this.dockerImageDropdownData = [];
     if (this.editMode) {
-      this.servicesForm.value.services.forEach((service, SerIndex) => {
-        this.dockerImageData.forEach((docker, imgIndex) => {
-          if (service.pipelines[0].dockerImageName.accountName === docker.imageSource) {
-            this.dockerImageDropdownData[SerIndex] = this.dockerImageData[imgIndex].images;
-          }
-        });
-      })
+      // this.servicesForm.value.services.forEach((service, SerIndex) => {
+      //   this.dockerImageData.forEach((docker, imgIndex) => {
+      //     if (service.pipelines[0].dockerImageName.accountName === docker.imageSource) {
+      //       this.dockerImageDropdownData[SerIndex] = this.dockerImageData[imgIndex].images;
+      //     }
+      //   });
+      // })
     } else {
       this.dockerAccountName = this.dockerImageData[0].imageSource;
       const arrayControl = this.servicesForm.get('services') as FormArray;
@@ -1183,13 +1189,7 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to submit environments form
   SubmitEnvironmentsForm() {
-    console.log(this.environmentForm.value);
-    this.envForm = this.environmentForm.value.environments;
-    if (this.createApplicationForm.value.name) {
-      this.showFeatures = true;
-      //this.envForm = this.environmentForm.value.environments;
-
-    }
+   
     if (this.editMode && this.environmentForm.valid) {
       this.store.dispatch(ApplicationActions.updateEnvironments({ applicationId: this.applicationId, environmentsListData: this.environmentForm.value }));
       
@@ -1664,6 +1664,7 @@ export class CreateApplicationComponent implements OnInit {
 
   loadEnvironmentsForm() {
     // debugger
+    this.environmentForm.reset();
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
     });
