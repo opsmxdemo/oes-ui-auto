@@ -127,7 +127,7 @@
                     </span>
                   </div>
                   <div class="form-group">
-                    <label>emailId Id</label>
+                    <label>email Id</label>
                     <input type="text" class="form-control" formControlName="emailId" [ngClass]="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('emailId').invalid && createApplicationForm.get('emailId').touched" class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('emailId').errors['required']">emailId is required</span>
