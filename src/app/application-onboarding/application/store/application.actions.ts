@@ -147,8 +147,8 @@ export const saveEnvironments = createAction('[Application] SaveEnvironments', p
 export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
 
 export const getEnvironments = createAction('[Application] GetEnvironments', props<{applicationId: any}>());
-export const loadEnvironments = createAction('[Application] LoadEnvironments', props<{environmentsListData: any}>());
-export const isgetEnvironmentsLoaded = createAction('[Application] IsgetEnvironmentsLoaded');
+export const loadEnvironments = createAction('[Application] LoadEnvironments', props<{environmentsListGetData: any}>());
+export const isgetEnvironmentsListLoaded = createAction('[Application] IsgetEnvironmentsListLoaded');
 
 export const updateEnvironments = createAction('[Application] UpdateEnvironments', props<{applicationId: any, environmentsListData: any}>());
 export const postUpdateEnvironments = createAction('[Application] PostUpdateEnvironments', props<{environmentsListUpdatedData: any}>());

@@ -33,7 +33,7 @@ export interface State {
     initalOESDataLoaded: string[];
     applicationId:string;
     supportedFeaturesData: any;
-
+    isGetEnviromentsListLoaded: boolean;
     //new app onboarding flow
     savedApplicationData : any;
     savedServiceData : any;
@@ -55,6 +55,7 @@ export interface State {
     deleteSaporConfigMessage : any;
     saporConfigList : any;
     environmentsListData: any;
+    environmentsListGetData: any;
     isSaporConfigLoaded: boolean;
     isSaporConfigUpdated: boolean;
 
@@ -106,6 +107,7 @@ export interface State {
     isServiceFeatureListLoaded: boolean;
     isEnviromentsLoaded: boolean;
     isGroupPermissionsLoaded: boolean;
+    isgetGroupPermissionsLoaded: boolean;
     groupPermissionsGetListData: any;
 
     //Deployment Verification
@@ -197,13 +199,16 @@ export const initialState: State = {
     deleteSaporConfigMessage: null,
     saporConfigList: null,
     environmentsListData: null,
+    environmentsListGetData: null,
     isSaporConfigLoaded: false,
     isSaporConfigUpdated: false,
     getEnvironmentListData: null,
     isEnviromentsLoaded: false,
+    isGetEnviromentsListLoaded: false,
     groupPermissionsListData: null,
     isGroupPermissions: false,
     isGroupPermissionsLoaded: false,
+    isgetGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
     imageSourceListData: null,
     isfetchImageSourceLoaded: true,
@@ -387,20 +392,20 @@ export function ApplicationReducer(
         on(ApplicationAction.getEnvironments,
             (state,action) => ({
                 ...state,
-                isEnviromentsLoaded: false
+                isGetEnviromentsListLoaded: false
             })
         ),
         on(ApplicationAction.loadEnvironments,
             (state,action) => ({
                 ...state,
-                environmentsListData:action.environmentsListData,
-                isEnviromentsLoaded: true
+                environmentsListGetData:action.environmentsListGetData,
+                isGetEnviromentsListLoaded: true
             })
         ),
-        on(ApplicationAction.isgetEnvironmentsLoaded,
+        on(ApplicationAction.isgetEnvironmentsListLoaded,
             (state,action) => ({
                 ...state,
-                isEnviromentsLoaded: false
+                isGetEnviromentsListLoaded: false
             })
         ),
 
@@ -457,20 +462,20 @@ export function ApplicationReducer(
         on(ApplicationAction.getGroupPermissions,
             (state,action) => ({
                 ...state,
-                isGroupPermissionsLoaded: false
+                isgetGroupPermissionsLoaded: false
             })
         ),
         on(ApplicationAction.loadGroupPermissions,
             (state,action) => ({
                 ...state,
                 groupPermissionsGetListData:action.groupPermissionsListData,
-                isGroupPermissionsLoaded: true
+                isgetGroupPermissionsLoaded: true
             })
         ),
         on(ApplicationAction.isgetGroupPermissionsLoaded,
             (state,action) => ({
                 ...state,
-                isGroupPermissionsLoaded: false
+                isgetGroupPermissionsLoaded: false
             })
         ),
 

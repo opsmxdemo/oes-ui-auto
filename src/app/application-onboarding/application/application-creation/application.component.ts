@@ -342,14 +342,12 @@ export class CreateApplicationComponent implements OnInit {
     this.store.select(fromFeature.selectApplication).subscribe(
       (response: any) => {
          // checking environments data editMode
-         if (response.environmentsListData != null && response.isEnviromentsLoaded){
-       
-          this.envData = response.environmentsListData;
+         if (response.environmentsListGetData != null && response.isGetEnviromentsListLoaded){
+          this.store.dispatch(ApplicationActions.isgetEnvironmentsListLoaded());
+          this.envData = response.environmentsListGetData;
 
           if(this.editMode){
-            
-            
-            //if(this.envData.environments != undefined){
+            if(this.envData.environments != undefined){
               this.envData.environments.forEach(environmentdata => {
                 (<FormArray>this.environmentForm.get('environments')).push(
                   new FormGroup({
@@ -359,7 +357,7 @@ export class CreateApplicationComponent implements OnInit {
                   })
                 );
               })
-            //}
+            }
           }
         }else{
          
@@ -384,13 +382,16 @@ export class CreateApplicationComponent implements OnInit {
         }
 
        //populate groupPermission Form #############################################################################
-        if(response.groupPermissionsGetListData != null && response.isGroupPermissionsLoaded){
-          this.grpData = response.groupPermissionsGetListData;
-          console.log(this.grpData);
-          //  // clearing form first
+        if(response.groupPermissionsGetListData != null && response.isgetGroupPermissionsLoaded){
+           //  // clearing form first
            this.groupPermissionForm = new FormGroup({
             userGroups: new FormArray([])
           });
+          this.grpData = response.groupPermissionsGetListData;
+          //this.store.dispatch(ApplicationActions.isgetGroupPermissionsLoaded());
+
+          console.log(this.grpData);
+         
           //populating the form
           const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
           this.grpData.forEach((groupData, index) => {
@@ -1682,7 +1683,7 @@ export class CreateApplicationComponent implements OnInit {
 
   loadEnvironmentsForm() {
     // debugger
-    this.environmentForm.reset();
+    // this.environmentForm.reset();
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
     });

@@ -250,7 +250,7 @@ export class ApplicationEffect {
          switchMap((action) => {                
              return this.http.get<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/environments').pipe(
                  map(resdata => {
-                     return ApplicationAction.loadEnvironments({ environmentsListData: resdata});
+                     return ApplicationAction.loadEnvironments({ environmentsListGetData: resdata});
                  }),
                  catchError(errorRes => {
                      return handleError(errorRes);
