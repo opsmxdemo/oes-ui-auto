@@ -163,6 +163,7 @@ export class CreateApplicationComponent implements OnInit {
   configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
   editVisibilityIndex: number ;
   configuredImage: any;
+  serviceStatus: any = {};
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -319,7 +320,7 @@ export class CreateApplicationComponent implements OnInit {
                     })
                   )
                   if(!this.isFeaturePresent[this.appData.services[i].id]) this.isFeaturePresent[this.appData.services[i].id] = {};
-                  
+                  this.serviceStatus[i] = 'Edit';
                   // this.selectFeature(this.featureList[0], i)
                 }
               }
@@ -1069,6 +1070,7 @@ export class CreateApplicationComponent implements OnInit {
 
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
     this.currentServiceIndex = (<FormArray>this.servicesForm.get('services')).length - 1;
+    this.serviceStatus[this.currentServiceIndex] = 'New';
     // Update dockerImageDropdownData array
     //   //if(this.userType.includes('Sapor')){
     //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
@@ -1087,6 +1089,7 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.servicesForm.get('services')).removeAt(index);
     // Update dockerImageDropdownData array
     this.dockerImageDropdownData.splice(index, 1);
+    this.store.dispatch(ApplicationActions.deleteService({applicationId: this.applicationId, serviceId: this.serviceId}));
   }
 
   //valid all form data if something is left
@@ -1748,5 +1751,14 @@ export class CreateApplicationComponent implements OnInit {
     }
   }
   
-
+  featureNameCase(featureName) {
+    if(featureName == "deployment_verification")
+      return "Deployment Verification";
+    else if(featureName == 'visibility')
+      return "Visibility";
+    else if(featureName == 'sapor')
+      return "Sapor";
+    else
+      return featureName;
+  }
 }
