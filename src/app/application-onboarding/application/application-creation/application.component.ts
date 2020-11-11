@@ -826,6 +826,9 @@ export class CreateApplicationComponent implements OnInit {
       //     }
       //   });
       // })
+      this.appData.services.forEach(() => {
+        this.dockerImageDropdownData.push(this.dockerImageData[0].images);
+      })
     } else {
       this.dockerAccountName = this.dockerImageData[0].imageSource;
       const arrayControl = this.servicesForm.get('services') as FormArray;
@@ -1405,6 +1408,16 @@ export class CreateApplicationComponent implements OnInit {
       const innerarrayControl = arrayControl.at(index) as FormGroup;
       innerarrayControl.addControl('saporConfiguration', saporForm);
 
+
+      // this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
+      //   ServiceArr.pipelines.forEach((PipelineArr, j) => {
+      //     PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+      //       if (DataArr.value === '') {
+      //         DataArr.value = this.getProperValue(i, j, k)
+      //       }
+      //     })
+      //   })
+      // })
 
       // edit related code goes here
       if (this.saporFinalData && this.saporFinalData.service.pipelines.length) {
