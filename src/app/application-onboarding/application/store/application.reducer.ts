@@ -125,6 +125,10 @@ export interface State {
     templateName : any;
     metricTemplateDetails : any;
     isMetricTemplateDetailsLoaded : boolean;
+    deploymentVerificationSavedData:any;
+    isSavedDeploymentVerificationFeature: boolean;
+    templateServiceData : any;
+
 }
 
 export const initialState: State = {
@@ -227,7 +231,10 @@ export const initialState: State = {
      isLogTemplateDetailsLoaded: false,
      templateName : null,
      metricTemplateDetails : null,
-     isMetricTemplateDetailsLoaded : false
+     isMetricTemplateDetailsLoaded : false,
+     deploymentVerificationSavedData:null,
+    isSavedDeploymentVerificationFeature: false,
+    templateServiceData : null
 
 }
 
@@ -1249,6 +1256,27 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             isMetricTemplateDetailsLoaded: false
+        })
+    ),
+
+    on(ApplicationAction.saveDeploymentVerificationFeature,
+        (state,action) => ({
+            ...state,
+            templateServiceData:action.templateServiceData,
+            isSavedDeploymentVerificationFeature: false
+        })
+    ),
+    on(ApplicationAction.postDeploymentVerificationFeature,
+        (state,action) => ({
+            ...state,
+            deploymentVerificationSavedData:action.deploymentVerificationSavedData,
+            isSavedDeploymentVerificationFeature: true
+        })
+    ),
+    on(ApplicationAction.isDeleteDeploymentVerificationFeature,
+        (state,action) => ({
+            ...state,
+            isSavedDeploymentVerificationFeature: false
         })
     ),
 
