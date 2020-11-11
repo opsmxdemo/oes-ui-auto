@@ -473,6 +473,7 @@ cannotContainSpace(control: FormControl): {
         // this.clusterTagList[i].name = this.logTopicsForm.get('inputTags').value // remove once api is there
       }
     }
+    this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value
     this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
   }
   submitNewTag(){
