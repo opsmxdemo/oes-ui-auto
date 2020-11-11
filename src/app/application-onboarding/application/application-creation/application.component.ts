@@ -160,6 +160,9 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateEditMode : boolean = false;
   selectedApplicationData : any;
   currentServiceIndex: number = 0;
+  configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
+  editVisibilityIndex: number ;
+  configuredImage: any;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -170,6 +173,7 @@ export class CreateApplicationComponent implements OnInit {
     private eleRef: ElementRef) { }
 
   ngOnInit() {
+    this.defineAllForms();
     this.loadApplicationForm();
     this.showserviceGroup = true;
     this.gateId = "";
@@ -245,7 +249,7 @@ export class CreateApplicationComponent implements OnInit {
         // alert(responseData.editMode);
 
         //checking is editMode enabled
-        if (responseData.editMode && this.editApplicationCounter === 0) {
+        if (responseData.editMode && responseData.applicationData != null && this.editApplicationCounter === 0) {
           
           this.appInfoData = responseData.applicationData;
           this.appData = responseData.applicationData;
@@ -264,6 +268,7 @@ export class CreateApplicationComponent implements OnInit {
             this.applicationId = this.appData.applicationId;
             if(responseData.imageSourceListData != null && responseData.isfetchImageSourceLoaded){
               console.log(responseData.imageSourceListData);
+              this.configuredImage = responseData.imageSourceListData.imageSource;
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
                 emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
@@ -271,6 +276,9 @@ export class CreateApplicationComponent implements OnInit {
                 imageSource: new FormControl(responseData.imageSourceListData.imageSource),
                 lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
               });
+              if (responseData.callDockerImageDataAPI) {
+                this.onImageSourceSelect(this.configuredImage);
+              }
             }else{
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
@@ -283,12 +291,12 @@ export class CreateApplicationComponent implements OnInit {
 
            
 
-            // if (responseData.callDockerImageDataAPI) {
-            //   this.onImageSourceSelect(this.appData.imageSource);
-            // }
+            
 
           
             if (this.editMode) {
+
+             
 
               // this.editServiceClick(this.appData.services[0]);
               if(this.appData.services && this.appData.services.length > 0) {
@@ -320,8 +328,7 @@ export class CreateApplicationComponent implements OnInit {
           } else {
             this.defineAllForms();
           }
-        } 
-        else if (this.appData === null && this.imageSourceData === null) {
+        } else if (responseData.applicationData == null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
           if (this.createApplicationForm === undefined && this.servicesForm === undefined) {
             this.defineAllForms();
@@ -340,6 +347,7 @@ export class CreateApplicationComponent implements OnInit {
 
           if(this.editMode){
             
+            
             //if(this.envData.environments != undefined){
               this.envData.environments.forEach(environmentdata => {
                 (<FormArray>this.environmentForm.get('environments')).push(
@@ -353,10 +361,7 @@ export class CreateApplicationComponent implements OnInit {
             //}
           }
         }else{
-          this.environmentForm.reset();
-          this.environmentForm = new FormGroup({
-            environments: new FormArray([])
-          });
+         
         }
 
         if(response.serviceFeatureList != null && response.isServiceFeatureListLoaded) {
@@ -420,6 +425,9 @@ export class CreateApplicationComponent implements OnInit {
               imageSource: new FormControl(response.imageSourceListData.imageSource),
               lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
             });
+            if (response.callDockerImageDataAPI) {
+              this.onImageSourceSelect(response.imageSourceListData.imageSource);
+            }
           }
         }
         if (response.savedApplicationData != null) {
@@ -477,7 +485,12 @@ export class CreateApplicationComponent implements OnInit {
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
           if (this.approvalGatesOfaServiceList.length > 0) {
-            this.gateId = this.approvalGatesOfaServiceList[0].id;
+            this.gateId = this.approvalGatesOfaServiceList[0].id;   
+            if(this.editMode){
+              // this.gateForm.value.gateName = this.approvalGatesOfaServiceList[0].id;
+              this.gateForm.get('gateName').setValue(this.approvalGatesOfaServiceList[0].name);
+              console.log("Approval Gates List: ", this.approvalGatesOfaServiceList);
+            }
             //console.log(this.approvalGatesOfaServiceList);
             // this.addConnector();
             this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
@@ -492,7 +505,7 @@ export class CreateApplicationComponent implements OnInit {
           this.configuredToolTypes = response.configuredToolConnectorTypes;
           this.toolTypesCount = this.configuredToolTypes.length;
           this.toolTypes[0] = this.configuredToolTypes;          
-          //console.log(this.configuredToolTypes);
+          console.log("configured Tool Types: ", this.configuredToolTypes);
           if(this.toolTypes[0].length < 2) {
             this.hideVisibilityPlusIcon = true;
           } else {
@@ -502,8 +515,20 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.accountsForToolType != null && response.isAccountForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
+          if(!this.editMode){
           this.accountsForTooltypes[this.currentRowIndexVisibility - 1] = response.accountsForToolType;
+          }else{
+            this.accountsForTooltypes[this.editVisibilityIndex] = response.accountsForToolType;
+            
+            let visibilityArr = <FormArray>this.visibilityForm.get('visibilityConfig');
+            visibilityArr.controls[this.editVisibilityIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityIndex].visibilityToolConnectorId);
+
+            this.editVisibilityIndex++;
+          }
           //this.connectorId = this.accountsForTooltypes[0];
+          console.log("Account Types: ", this.accountsForTooltypes);
+          console.log("Row index Visibility: ", this.currentRowIndexVisibility);
+
         }
         if (response.templatesForToolType && response.isTemplateForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
@@ -539,27 +564,58 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedToolConnectorForaGate());
-          //console.log("configuredToolConnectorData");
+          console.log("configuredToolConnectorData", response.configuredToolConnectorData);
           //console.log(response.configuredToolConnectorData);
           if (response.configuredToolConnectorData.length > 0) {
             this.isVisibilityToolConnectorConfigured = true;
-            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele => ele.connectorType);
-            let toolTypesValue = this.configuredToolTypes.filter(
-              function (i) {
-                return this.indexOf(i) < 0;
-              },
-              this.toolTypesConfiguredForGate
-            );
-            setTimeout(() => {
-              this.toolTypes[this.currentRowIndexVisibility] = toolTypesValue; 
-              if(this.toolTypes[this.currentRowIndexVisibility].length < 2) {
-                this.hideVisibilityPlusIcon = true;
-              } else {
-                this.hideVisibilityPlusIcon = false;
+            this.configuredVisibilityToolConnectorData = response.configuredToolConnectorData
+
+            if(this.editMode){
+
+
+              this.visibilityForm = new FormGroup({
+                visibilityConfig: new FormArray([])
+              });
+                // name: new FormControl(permissionId['permissionId'])
+
+              for (let i = 0; i < this.configuredVisibilityToolConnectorData.length; i++) {
+
+              this.onChangeTooltype(this.configuredVisibilityToolConnectorData[i].connectorType);
+              (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
+                  new FormGroup({
+                    connectorType: new FormControl(this.configuredVisibilityToolConnectorData[i].connectorType) ,
+                    accountName: new FormControl(this.configuredVisibilityToolConnectorData[i].accountName),
+                    templateId: new FormControl(this.configuredVisibilityToolConnectorData[i].templateId),
+                    templateName: new FormControl(this.configuredVisibilityToolConnectorData[i].templateName),
+                    visibilityToolConnectorId: new FormControl(this.configuredVisibilityToolConnectorData[i].visibilityToolConnectorId),
+                  })
+                );
+
+                this.toolTypeDataSaved[i] = true;
               }
-              console.log(this.toolTypes); 
-              this.addConnector(); 
-            }, 100);
+              console.log("Visibility config Details: ", this.visibilityForm);
+              
+            }
+
+            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele => ele.connectorType);
+            if(this.configuredToolTypes != null && this.configuredToolTypes != undefined){
+              let toolTypesValue = this.configuredToolTypes.filter(
+                function (i) {
+                  return this.indexOf(i) < 0;
+                },
+                this.toolTypesConfiguredForGate
+              );
+              setTimeout(() => {
+                this.toolTypes[this.currentRowIndexVisibility] = toolTypesValue; 
+                if(this.toolTypes[this.currentRowIndexVisibility].length < 2) {
+                  this.hideVisibilityPlusIcon = true;
+                } else {
+                  this.hideVisibilityPlusIcon = false;
+                }
+                console.log(this.toolTypes); 
+                this.addConnector(); 
+              }, 100);
+            }
 
 
           } else {
@@ -763,12 +819,15 @@ export class CreateApplicationComponent implements OnInit {
 
     this.dockerImageDropdownData = [];
     if (this.editMode) {
-      this.servicesForm.value.services.forEach((service, SerIndex) => {
-        this.dockerImageData.forEach((docker, imgIndex) => {
-          if (service.pipelines[0].dockerImageName.accountName === docker.imageSource) {
-            this.dockerImageDropdownData[SerIndex] = this.dockerImageData[imgIndex].images;
-          }
-        });
+      // this.servicesForm.value.services.forEach((service, SerIndex) => {
+      //   this.dockerImageData.forEach((docker, imgIndex) => {
+      //     if (service.pipelines[0].dockerImageName.accountName === docker.imageSource) {
+      //       this.dockerImageDropdownData[SerIndex] = this.dockerImageData[imgIndex].images;
+      //     }
+      //   });
+      // })
+      this.appData.services.forEach(() => {
+        this.dockerImageDropdownData.push(this.dockerImageData[0].images);
       })
     } else {
       this.dockerAccountName = this.dockerImageData[0].imageSource;
@@ -1128,19 +1187,12 @@ export class CreateApplicationComponent implements OnInit {
       "name": this.servicesForm.value.services[index].serviceName
     };
     this.store.dispatch(ApplicationActions.saveService({ applicationId: this.applicationId, serviceSaveData: serviceDataToSave }));
-    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
 
   }
 
   // Below function is use to submit environments form
   SubmitEnvironmentsForm() {
-    console.log(this.environmentForm.value);
-    this.envForm = this.environmentForm.value.environments;
-    if (this.createApplicationForm.value.name) {
-      this.showFeatures = true;
-      //this.envForm = this.environmentForm.value.environments;
-
-    }
+   
     if (this.editMode && this.environmentForm.valid) {
       this.store.dispatch(ApplicationActions.updateEnvironments({ applicationId: this.applicationId, environmentsListData: this.environmentForm.value }));
       
@@ -1357,6 +1409,16 @@ export class CreateApplicationComponent implements OnInit {
       innerarrayControl.addControl('saporConfiguration', saporForm);
 
 
+      // this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
+      //   ServiceArr.pipelines.forEach((PipelineArr, j) => {
+      //     PipelineArr.pipelineParameters.forEach((DataArr, k) => {
+      //       if (DataArr.value === '') {
+      //         DataArr.value = this.getProperValue(i, j, k)
+      //       }
+      //     })
+      //   })
+      // })
+
       // edit related code goes here
       if (this.saporFinalData && this.saporFinalData.service.pipelines.length) {
 
@@ -1390,14 +1452,17 @@ export class CreateApplicationComponent implements OnInit {
 
     } else if (item === 'visibility') {
       //check gate already configured for the selectd service
-      console.log(this.serviceId);
-      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
-
-      // defining reactive form for Visibility connector template Section
-
+      // console.log(this.serviceId);
+        this.editVisibilityIndex = 0;
       this.visibilityForm = new FormGroup({
         visibilityConfig: new FormArray([])
       });
+
+      // this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
+      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 77 }));
+
+      // defining reactive form for Visibility connector template Section
+
 
 
     }
@@ -1425,6 +1490,8 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   onClickEditOfGateName() {
+
+    console.log(this.gateForm.value.gateName);
     this.isEditGateEnabled = true;
   }
 
@@ -1595,6 +1662,8 @@ export class CreateApplicationComponent implements OnInit {
     this.currentServiceIndex = index;
     this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: service.serviceId}))
     this.loadServiceForm();
+    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
+
     // this.configuredFeaturepresent(service.serviceId);
   }
 
@@ -1610,6 +1679,7 @@ export class CreateApplicationComponent implements OnInit {
 
   loadEnvironmentsForm() {
     // debugger
+    this.environmentForm.reset();
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
     });

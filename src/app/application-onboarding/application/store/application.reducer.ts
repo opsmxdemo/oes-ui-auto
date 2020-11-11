@@ -203,7 +203,7 @@ export const initialState: State = {
     isGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
     imageSourceListData: null,
-    isfetchImageSourceLoaded: null,
+    isfetchImageSourceLoaded: true,
 
      //Deployment Verification
      logTemplatesofaApplication: null,
@@ -545,10 +545,20 @@ export function ApplicationReducer(
         on(ApplicationAction.fetchDockerImageName,
             (state,action) => ({
                 ...state,
-                dockerImageData: action.dockerImageData
+                dockerImageData: action.dockerImageData,
+                //callDockerImageDataAPI: true
+
             }),
         
         ),
+        // on(ApplicationAction.isFetchDockerImageDataUpdated,
+        //     (state,action) => ({
+        //         ...state,
+        //         callDockerImageDataAPI: false
+
+        //     }),
+        
+        // ),
         on(ApplicationAction.fetchSupportedFeatures,
             (state,action) => ({
                 ...state,
