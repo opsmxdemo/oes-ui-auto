@@ -419,7 +419,7 @@
                                         </span>
                                       </ng-container>  
                                       <ng-container *ngIf="gateId != '' && !isEditGateEnabled">
-                                        <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Update gate name" (click)="onClickEditOfGateName()">
+                                        <span class="ml-2 addTemplate" data-placement="top" title="Update gate name" (click)="onClickEditOfGateName()">
                                           <a data-keyboard="false" class="btn-link">
                                             <i class="fas fa-pencil-alt"></i>
                                           </a>
@@ -431,7 +431,7 @@
                                         </span> -->
                                       </ng-container> 
                                       <ng-container *ngIf="isEditGateEnabled">                                    
-                                        <span class="ml-2 addTemplate tick-button" data-toggle="tooltip" data-placement="top" data-original-title="Save" (click)="onEditGateName()">
+                                        <span class="ml-2 addTemplate tick-button"  data-placement="top" title="Save" (click)="onEditGateName()">
                                           <a data-keyboard="false" class="btn-link">
                                             <i class="fa fa-check" aria-hidden="true"></i>
                                           </a>
@@ -539,6 +539,7 @@
                                                     class="invalid-feedback">connectorType is required</span> -->
                                                   </td>
                                                   <td>                                                    
+                                                    Account type: {{accountsForTooltypes | json}}
                                                     <select class="form-control" formControlName="accountName" (change)="onChangeAccountofTooltype($event.target.value)">
                                                       <option value="" [disabled]="true">Select</option>                                                       
                                                       <option *ngFor="let account of accountsForTooltypes[i]" value="{{account.visibilityToolConnectorId}}" >
