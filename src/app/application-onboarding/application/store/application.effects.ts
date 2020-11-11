@@ -581,6 +581,25 @@ export class ApplicationEffect {
         )
     )
 
+    // Effect to delete approval gate for visibility feature
+    onDeleteServices = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.deleteService),
+            switchMap((action) => {
+                return this.http.delete<any>(this.environment.config.endPointUrl + `dashboardservice/v2/applications/${action.applicationId}/service/${action.serviceId}`).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postDeleteService({ deleteServiceMessage: resdata });
+                        //this.store.dispatch(ApplicationAction.getApprovalGates());
+                    }),
+                    catchError(errorRes => {
+                        //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
 
     getApprovalGatesOfaService = createEffect(() =>
         this.actions$.pipe(

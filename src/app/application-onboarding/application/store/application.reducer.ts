@@ -6,6 +6,7 @@ import { CloudAccount } from '../../../models/applicationOnboarding/createApplic
 import { ApplicationList } from '../../../models/applicationOnboarding/applicationList/applicationList.model';
 import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
 import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
+import { act } from '@ngrx/effects';
 
 
 export interface State {
@@ -79,6 +80,7 @@ export interface State {
     isAccountForToolTypeLoaded: boolean;
     accountsForToolType : any;
     isTemplateForToolTypeLoaded: boolean;
+    isServiceDeleted: boolean;
     templatesForToolType : any;
     templateForToolTypeSavedData : any;
     isTemplateForTooltypeSaved: boolean;
@@ -164,6 +166,7 @@ export const initialState: State = {
     isAccountForToolTypeLoaded: false,
     accountsForToolType : null,
     isTemplateForToolTypeLoaded: false,
+    isServiceDeleted: false,
     templatesForToolType : null,
     templateForToolTypeSavedData : null,
     isTemplateForTooltypeSaved: false,
@@ -719,6 +722,28 @@ export function ApplicationReducer(
             (state,action) => ({
                 ...state,
                 isTemplateForToolTypeLoaded: false
+            })
+        ),
+
+        on(ApplicationAction.deleteService,
+            (state,action) => ({
+                ...state,
+                applicationId : action.applicationId,
+                serviceId: action.serviceId,
+                isServiceDeleted: false
+            })
+        ),
+        on(ApplicationAction.postDeleteService,
+            (state,action) => ({
+                ...state,
+                deleteServiceMessage:action.deleteServiceMessage,
+                isServiceDeleted: true
+            })
+        ),
+        on(ApplicationAction.isDeleteService,
+            (state,action) => ({
+                ...state,
+                isServiceDeleted: false
             })
         ),
 

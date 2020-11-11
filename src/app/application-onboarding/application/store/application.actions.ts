@@ -228,6 +228,10 @@ export const deleteVisibilityFeature = createAction('[Application] DeleteVisibil
 export const postDeleteVisibilityFeature = createAction('[Application] PostDeleteVisibilityFeature', props<{deleteFeatureVisibilityMessage:any}>());
 export const isDeleteVisibilityFeature = createAction('[Application] IsDeleteVisibilityFeature');
 
+export const deleteService = createAction('[Application] DeleteService', props<{applicationId: any,serviceId : any}>());
+export const postDeleteService = createAction('[Application] PostDeleteService', props<{deleteServiceMessage:any}>());
+export const isDeleteService = createAction('[Application] IsDeleteService');
+
 
 //Deployment verification Feature actions
 //POST /autopilot/api/v1/applications/{applicationId}/logTemplates	
