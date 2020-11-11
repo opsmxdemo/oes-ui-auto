@@ -42,6 +42,7 @@ yarn-error.log
 testem.log
 /typings
 .angulardoc.json
+.vscode/
 
 # System Files
 .DS_Store

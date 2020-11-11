@@ -160,6 +160,8 @@ export class CreateApplicationComponent implements OnInit {
   metricTemplateEditMode : boolean = false;
   selectedApplicationData : any;
   currentServiceIndex: number = 0;
+  configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
+  editVisibilityIndex: number ;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -245,7 +247,7 @@ export class CreateApplicationComponent implements OnInit {
         // alert(responseData.editMode);
 
         //checking is editMode enabled
-        if (responseData.editMode && this.editApplicationCounter === 0) {
+        if (responseData.editMode && responseData.applicationData != null && this.editApplicationCounter === 0) {
           
           this.appInfoData = responseData.applicationData;
           this.appData = responseData.applicationData;
@@ -320,8 +322,7 @@ export class CreateApplicationComponent implements OnInit {
           } else {
             this.defineAllForms();
           }
-        } 
-        else if (this.appData === null && this.imageSourceData === null) {
+        } else if (responseData.applicationData == null && this.imageSourceData === null) {
           // defining all forms when not in edit mode
           if (this.createApplicationForm === undefined && this.servicesForm === undefined) {
             this.defineAllForms();
@@ -477,7 +478,12 @@ export class CreateApplicationComponent implements OnInit {
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
           if (this.approvalGatesOfaServiceList.length > 0) {
-            this.gateId = this.approvalGatesOfaServiceList[0].id;
+            this.gateId = this.approvalGatesOfaServiceList[0].id;   
+            if(this.editMode){
+              // this.gateForm.value.gateName = this.approvalGatesOfaServiceList[0].id;
+              this.gateForm.get('gateName').setValue(this.approvalGatesOfaServiceList[0].name);
+              console.log("Approval Gates List: ", this.approvalGatesOfaServiceList);
+            }
             //console.log(this.approvalGatesOfaServiceList);
             // this.addConnector();
             this.store.dispatch(ApplicationActions.getToolConnectorForaGate({gateId : this.gateId}));
@@ -492,7 +498,7 @@ export class CreateApplicationComponent implements OnInit {
           this.configuredToolTypes = response.configuredToolConnectorTypes;
           this.toolTypesCount = this.configuredToolTypes.length;
           this.toolTypes[0] = this.configuredToolTypes;          
-          //console.log(this.configuredToolTypes);
+          console.log("configured Tool Types: ", this.configuredToolTypes);
           if(this.toolTypes[0].length < 2) {
             this.hideVisibilityPlusIcon = true;
           } else {
@@ -502,8 +508,20 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.accountsForToolType != null && response.isAccountForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
+          if(!this.editMode){
           this.accountsForTooltypes[this.currentRowIndexVisibility - 1] = response.accountsForToolType;
+          }else{
+            this.accountsForTooltypes[this.editVisibilityIndex] = response.accountsForToolType;
+            
+            let visibilityArr = <FormArray>this.visibilityForm.get('visibilityConfig');
+            visibilityArr.controls[this.editVisibilityIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityIndex].visibilityToolConnectorId);
+
+            this.editVisibilityIndex++;
+          }
           //this.connectorId = this.accountsForTooltypes[0];
+          console.log("Account Types: ", this.accountsForTooltypes);
+          console.log("Row index Visibility: ", this.currentRowIndexVisibility);
+
         }
         if (response.templatesForToolType && response.isTemplateForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
@@ -539,27 +557,58 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedToolConnectorForaGate());
-          //console.log("configuredToolConnectorData");
+          console.log("configuredToolConnectorData", response.configuredToolConnectorData);
           //console.log(response.configuredToolConnectorData);
           if (response.configuredToolConnectorData.length > 0) {
             this.isVisibilityToolConnectorConfigured = true;
-            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele => ele.connectorType);
-            let toolTypesValue = this.configuredToolTypes.filter(
-              function (i) {
-                return this.indexOf(i) < 0;
-              },
-              this.toolTypesConfiguredForGate
-            );
-            setTimeout(() => {
-              this.toolTypes[this.currentRowIndexVisibility] = toolTypesValue; 
-              if(this.toolTypes[this.currentRowIndexVisibility].length < 2) {
-                this.hideVisibilityPlusIcon = true;
-              } else {
-                this.hideVisibilityPlusIcon = false;
+            this.configuredVisibilityToolConnectorData = response.configuredToolConnectorData
+
+            if(this.editMode){
+
+
+              this.visibilityForm = new FormGroup({
+                visibilityConfig: new FormArray([])
+              });
+                // name: new FormControl(permissionId['permissionId'])
+
+              for (let i = 0; i < this.configuredVisibilityToolConnectorData.length; i++) {
+
+              this.onChangeTooltype(this.configuredVisibilityToolConnectorData[i].connectorType);
+              (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
+                  new FormGroup({
+                    connectorType: new FormControl(this.configuredVisibilityToolConnectorData[i].connectorType) ,
+                    accountName: new FormControl(this.configuredVisibilityToolConnectorData[i].accountName),
+                    templateId: new FormControl(this.configuredVisibilityToolConnectorData[i].templateId),
+                    templateName: new FormControl(this.configuredVisibilityToolConnectorData[i].templateName),
+                    visibilityToolConnectorId: new FormControl(this.configuredVisibilityToolConnectorData[i].visibilityToolConnectorId),
+                  })
+                );
+
+                this.toolTypeDataSaved[i] = true;
               }
-              console.log(this.toolTypes); 
-              this.addConnector(); 
-            }, 100);
+              console.log("Visibility config Details: ", this.visibilityForm);
+              
+            }
+
+            this.toolTypesConfiguredForGate = response.configuredToolConnectorData.map(ele => ele.connectorType);
+            if(this.configuredToolTypes != null && this.configuredToolTypes != undefined){
+              let toolTypesValue = this.configuredToolTypes.filter(
+                function (i) {
+                  return this.indexOf(i) < 0;
+                },
+                this.toolTypesConfiguredForGate
+              );
+              setTimeout(() => {
+                this.toolTypes[this.currentRowIndexVisibility] = toolTypesValue; 
+                if(this.toolTypes[this.currentRowIndexVisibility].length < 2) {
+                  this.hideVisibilityPlusIcon = true;
+                } else {
+                  this.hideVisibilityPlusIcon = false;
+                }
+                console.log(this.toolTypes); 
+                this.addConnector(); 
+              }, 100);
+            }
 
 
           } else {
@@ -1390,14 +1439,17 @@ export class CreateApplicationComponent implements OnInit {
 
     } else if (item === 'visibility') {
       //check gate already configured for the selectd service
-      console.log(this.serviceId);
-      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
-
-      // defining reactive form for Visibility connector template Section
-
+      // console.log(this.serviceId);
+        this.editVisibilityIndex = 0;
       this.visibilityForm = new FormGroup({
         visibilityConfig: new FormArray([])
       });
+
+      // this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
+      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 77 }));
+
+      // defining reactive form for Visibility connector template Section
+
 
 
     }
@@ -1425,6 +1477,8 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   onClickEditOfGateName() {
+
+    console.log(this.gateForm.value.gateName);
     this.isEditGateEnabled = true;
   }
 
