@@ -1273,7 +1273,7 @@ export function ApplicationReducer(
             isSavedDeploymentVerificationFeature: true
         })
     ),
-    on(ApplicationAction.isDeleteDeploymentVerificationFeature,
+    on(ApplicationAction.isDeploymentVerificationSaved,
         (state,action) => ({
             ...state,
             isSavedDeploymentVerificationFeature: false

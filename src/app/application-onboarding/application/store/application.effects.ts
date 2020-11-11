@@ -991,14 +991,14 @@ onSaveDeploymentVerification = createEffect(() =>
     this.actions$.pipe(
         ofType(ApplicationAction.saveDeploymentVerificationFeature),
         switchMap((action) => {
-            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/autopilot/service/feature/configuration', action.templateServiceData).pipe(
+            return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/autopilot/service/feature/configuration', action.templateServiceData,{observe: 'response'}).pipe(
                 map(resdata => {
-                    if(resdata['status'] == true){
+                    if(resdata['status'] == 200){
                         this.toastr.showSuccess('Feature saved successfully','SUCCESS');
                     }else{
                         this.toastr.showError('Failed to save. Try again','ERROR');
                     }
-                    return ApplicationAction.postDeploymentVerificationFeature({ deploymentVerificationSavedData: resdata});                   
+                    return ApplicationAction.postDeploymentVerificationFeature({ deploymentVerificationSavedData: {'status' : true}});                   
                 }),
                 catchError(errorRes => {
                     this.toastr.showError('Failed to save. Try again','ERROR');
