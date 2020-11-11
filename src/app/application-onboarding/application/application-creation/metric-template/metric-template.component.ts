@@ -324,6 +324,10 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   // Below function is use to save log template data on click of save btn
   Submitmetricdata(){
     if(this.isEditMode){
+      this.metricTemplateData['applicationId'] = this.applicationData['applicationId'];
+      this.metricTemplateData['applicationName'] = this.applicationData['name'];
+      this.metricTemplateData['emailId'] = this.applicationData['email'];
+      this.metricTemplateData['isEdit'] = true;
       this.store.dispatch(ApplicationActions.editMetricTemplate({applicationId : this.applicationData['applicationId'], templateName: this.metricTemplateData['templateName'], metricTemplateDataToEdit : this.metricTemplateData}));
       //this.store.dispatch(ApplicationActions.updatedMetricTemplate({metricTemplateData:this.metricTemplateData,index:this.templateIndex}));
     }else{

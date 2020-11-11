@@ -361,7 +361,7 @@
                                       <div class="d-flex  mr-5 align-items-center">
                                         <select class="form-control" formControlName="metricTemplate">
                                           <option value="" [disabled]="true">Select</option>
-                                          <option *ngFor="let metricTemplate of metricTemplateList" value="{{metricTemplate.templateName}}">{{metricTemplate.templateName}}</option>
+                                          <option *ngFor="let metricTemplate of metricTemplateList" value="{{metricTemplate}}">{{metricTemplate}}</option>
                                         </select>
                                         <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditLogMetricTemplateClick('metric')">
                                           <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
