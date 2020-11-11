@@ -24,6 +24,7 @@ export const fetchCloudAccount = createAction('[Application] FetchCloudAccount',
 export const fetchImageSource = createAction('[Application] FetchImageSource', props<{imageSource: string[]}>());
 export const loadDockerImageName = createAction('[Application] LoadDockerImageName', props<{imageSourceName:string}>());
 export const fetchDockerImageName = createAction('[Application] FetchDockerImageName', props<{dockerImageData:any}>());
+export const isFetchDockerImageDataUpdated = createAction('[Application] IsFetchDockerImageDataUpdated');
 export const fetchUserGrops = createAction('[Application] FetchUserGrops', props<{userGroupData:string[]}>());
 export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
 // Below refactor actions goes here

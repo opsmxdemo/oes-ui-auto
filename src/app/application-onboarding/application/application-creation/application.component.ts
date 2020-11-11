@@ -173,6 +173,7 @@ export class CreateApplicationComponent implements OnInit {
     private eleRef: ElementRef) { }
 
   ngOnInit() {
+    this.defineAllForms();
     this.loadApplicationForm();
     this.showserviceGroup = true;
     this.gateId = "";
@@ -1183,7 +1184,6 @@ export class CreateApplicationComponent implements OnInit {
       "name": this.servicesForm.value.services[index].serviceName
     };
     this.store.dispatch(ApplicationActions.saveService({ applicationId: this.applicationId, serviceSaveData: serviceDataToSave }));
-    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
 
   }
 
@@ -1649,6 +1649,8 @@ export class CreateApplicationComponent implements OnInit {
     this.currentServiceIndex = index;
     this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: service.serviceId}))
     this.loadServiceForm();
+    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
+
     // this.configuredFeaturepresent(service.serviceId);
   }
 
