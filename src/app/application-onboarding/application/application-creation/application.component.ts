@@ -163,6 +163,8 @@ export class CreateApplicationComponent implements OnInit {
   configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
   editVisibilityIndex: number ;
   configuredImage: any;
+  deploymentVerificaionFeatureSavedResponse : any;
+  deploymentVerificationFeatureSaved : boolean = false;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -629,7 +631,7 @@ export class CreateApplicationComponent implements OnInit {
           this.store.dispatch(ApplicationActions.isToolConnectorWithTemplateSaved());
           this.addNewConnectorAllowed = true;
         }
-        if(response.logTemplatesofaApplication && response.isLogTemplateforApplicationLoaded){
+        if(response.logTemplatesofaApplication!=null && response.isLogTemplateforApplicationLoaded){
           this.store.dispatch(ApplicationActions.isLoadedLogTemplatesforaApplication());
           console.log("LOg Template for a application");
           console.log(response.logTemplatesofaApplication);
@@ -640,7 +642,7 @@ export class CreateApplicationComponent implements OnInit {
             this.logModel.nativeElement.click();
           }
         } 
-        if(response.metricTemplatesofaApplication && response.isMetricTemplateforApplicationLoaded){
+        if(response.metricTemplatesofaApplication!= null && response.isMetricTemplateforApplicationLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplatesforaApplication());
           console.log("Metric Template for a application");
           console.log(response.metricTemplatesofaApplication);
@@ -651,14 +653,21 @@ export class CreateApplicationComponent implements OnInit {
             this.metricModel.nativeElement.click();
           }
         }
-        if(response.logTemplateDetails && response.isLogTemplateDetailsLoaded){
+        if(response.logTemplateDetails!=null && response.isLogTemplateDetailsLoaded){
           this.store.dispatch(ApplicationActions.isLoadedLogTemplate());
           this.logTemplateDetails = response.logTemplateDetails;        
         } 
-        if(response.metricTemplateDetails && response.isMetricTemplateDetailsLoaded){
+        if(response.metricTemplateDetails!=null && response.isMetricTemplateDetailsLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplate());
           this.metricTemplateDetails = response.metricTemplateDetails;        
-        } 
+        }
+        if(response.deploymentVerificationSavedData !=null && response.isSavedDeploymentVerificationFeature) {
+          this.store.dispatch(ApplicationActions.isDeploymentVerificationSaved());
+          this.deploymentVerificaionFeatureSavedResponse = response.deploymentVerificationSavedData;
+          if(this.deploymentVerificaionFeatureSavedResponse['status'] == true){
+            this.deploymentVerificationFeatureSaved = true;
+          }
+        }
       }
     )
 
@@ -1079,6 +1088,10 @@ export class CreateApplicationComponent implements OnInit {
     //         'accountName': this.dockerImageData[0].imageSource
     //     });
     // //  }
+
+    //code to reset the feature save check false. To rest the tick mark which is showing on feature list once feature saved.
+    this.gateId = "";
+    this.deploymentVerificationFeatureSaved = false;
   }
 
   //Below function is use to delete existing service fron Service Section

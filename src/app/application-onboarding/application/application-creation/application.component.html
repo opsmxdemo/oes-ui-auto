@@ -236,7 +236,13 @@
                                           <i class="fa fa-check" aria-hidden="true"></i>
                                         </span>
                                       </td>
-                                      <td *ngIf = "!editMode && featureName == 'deployment_verification'"><span>-</span></td>
+                                      <td *ngIf = "!editMode && featureName == 'deployment_verification'">
+                                        <span *ngIf = "!deploymentVerificationFeatureSaved">-</span>
+                                        <span *ngIf = "deploymentVerificationFeatureSaved">
+                                          <i class="fa fa-check" aria-hidden="true"></i>
+                                        </span>
+                                        
+                                      </td>
                                       <td *ngIf = "!editMode && featureName == 'sapor'"><span>-</span></td>
                                       <!-- <span><i *ngIf = "gateId != '' && gateId != null && gateId != undefined " class="fa fa-check" aria-hidden="true"></i></span> -->
                                     </tr>
@@ -379,7 +385,7 @@
                                       <div class="page_access text-right py-2 px-3">
                                         <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
                                         <button class="btn btn-primary ml-2" (click)="saveDeploymentVerification()">Save</button>                                      
-                                        <button class="btn btn-danger ml-1" (click)="deleteDeploymentVerification()">Delete</button>
+                                        <button class="btn btn-danger ml-1" (click)="deleteDeploymentVerification()" *ngIf="deploymentVerificationFeatureSaved">Delete</button>
                                       </div>
                                     </div>
                                   </form>
