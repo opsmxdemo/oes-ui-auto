@@ -1349,6 +1349,11 @@ export class CreateApplicationComponent implements OnInit {
     }
   }
 
+  onClickEditOfGateName() {
+    console.log(this.gateForm.value.gateName);
+    this.isEditGateEnabled = true;
+  }
+
   //Below function is use to submit whole form and send request to backend
   SubmitForm() {
     if (this.createApplicationForm.valid && this.servicesForm.valid && this.groupPermissionForm.valid) {
@@ -1491,16 +1496,10 @@ export class CreateApplicationComponent implements OnInit {
         visibilityConfig: new FormArray([])
       });
 
-      // this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
-      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 22 }));        
-
+      this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
+      // this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 22 }));        
       // defining reactive form for Visibility connector template Section
-
-
-
     }
-
-
   }
 
 
@@ -1510,22 +1509,12 @@ export class CreateApplicationComponent implements OnInit {
 
   }
 
-
-
   // selectFeature(item:string){
   //   this.selectedFeature = item;
   // }
 
-
-
   clearGateName() {
     this.gateForm.reset();
-  }
-
-  onClickEditOfGateName() {
-
-    console.log(this.gateForm.value.gateName);
-    this.isEditGateEnabled = true;
   }
 
   onEditGateName() {

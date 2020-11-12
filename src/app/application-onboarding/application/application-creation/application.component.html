@@ -531,6 +531,7 @@
                                             </thead>
                                             <tbody>
                                               <tr *ngFor="let optionsArr of visibilityForm.get('visibilityConfig')['controls'];let i=index" (mouseenter)="toolTypeRowHoverd[i] = true" (mouseleave)="toolTypeRowHoverd[i] = false">
+                                                <!-- <div>Options Array: {{optionsArr.controls.connectorType.value | json}}  and i  =  {{i}}  ToolTypeDataSaved: {{toolTypeDataSaved[i]}} ||| AccountType:    {{accountsForTooltypes[i] | json}}  ||| Template Types: {{templatesForToolType[i] | json}}  </div> -->
                                                 <ng-container [formGroupName]="i">
                                                   <td>
                                                     <select *ngIf="!toolTypeDataSaved[i]" class="form-control" formControlName="connectorType" (change)="onChangeTooltype($event.target.value)">
