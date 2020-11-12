@@ -41,7 +41,7 @@ export class CorrelationEffect {
     this.actions$.pipe(
         ofType(CorrelationActions.fetchUnxepectedClusters),
         switchMap((action) => {                                       
-            return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId ).pipe(                  
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/api/v1/correlation/log/' + action.canaryId + '/' + action.serviceId ).pipe(                  
                 map(resdata => {
                    return CorrelationActions.loadUnxepectedClusters({unexpectedClusters:resdata});
                 }),
@@ -56,7 +56,7 @@ allMetrics = createEffect(() =>
     this.actions$.pipe(
         ofType(CorrelationActions.allMetrics),
         switchMap((action) => {                                       
-            return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/metric/' + action.canaryId + '/' + action.serviceId ).pipe(                  
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/api/v1/correlation/metric/' + action.canaryId + '/' + action.serviceId ).pipe(                  
                 map(resdata => {
                    return CorrelationActions.loadallMetrics({allMetricsData:resdata});
                 }),
@@ -72,7 +72,7 @@ clusterData = createEffect(() =>
 this.actions$.pipe(
     ofType(CorrelationActions.clusterData),
     switchMap((action) => {                                       
-        return this.http.get(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId+"?time="+action.ClickedTimeStamp).pipe(                  
+        return this.http.get(this.environment.config.endPointUrl +'autopilot/api/v1/correlation/log/' + action.canaryId + '/' + action.serviceId + '/'+action.clusterId+"?time="+action.ClickedTimeStamp).pipe(                  
             map(resdata => {
                return CorrelationActions.loadCluterData({clusterData:resdata});
             }),
@@ -90,7 +90,7 @@ timeSeriesData = createEffect(() =>
         withLatestFrom(this.store.select('auth')),
         switchMap(([action,authState]) => {             
             // platform-service-ui change
-            return this.http.post(this.environment.config.endPointUrl +'autopilot/v1/correlation/log/'  ,action.postData).pipe(                  
+            return this.http.post(this.environment.config.endPointUrl +'autopilot/api/v1/correlation/log/'  ,action.postData).pipe(                  
                 map(resdata => {  
                    
                    return CorrelationActions.loadTimeseriesData({timeSeriesData:resdata});
@@ -110,7 +110,7 @@ metrictimeSeriesData = createEffect(() =>
         withLatestFrom(this.store.select('auth')),
         switchMap(([action,authState]) => {             
             // platform-service-ui change
-            return this.http.post(this.environment.config.endPointUrl +'autopilot/v1/correlation/metric/'  ,action.postData).pipe(                  
+            return this.http.post(this.environment.config.endPointUrl +'autopilot/api/v1/correlation/metric/'  ,action.postData).pipe(                  
                 map(resdata => {  
                    
                    return CorrelationActions.metricloadTimeseriesData({metrictimeSeriesData:resdata});
