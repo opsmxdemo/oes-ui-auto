@@ -128,7 +128,17 @@ export interface State {
     deploymentVerificationSavedData:any;
     isSavedDeploymentVerificationFeature: boolean;
     templateServiceData : any;
-
+    isMetricTemplateSaved : boolean;
+    savedMetricTemplateData : any;
+    logTemplateData: any;
+    savedLogTemplateData:any;
+    isLogTemplateSaved: boolean;
+    logTemplateDataToEdit : any;
+    isLogTemplateEdited: boolean;
+    editedLogTemplateData : any;
+    metricTemplateDataToEdit : any,
+    isMetricTemplateEdited: boolean,
+    editedMetricTemplateData : any
 }
 
 export const initialState: State = {
@@ -217,25 +227,35 @@ export const initialState: State = {
     imageSourceListData: null,
     isfetchImageSourceLoaded: true,
 
-     //Deployment Verification
-     logTemplatesofaApplication: null,
-     isLogTemplateforApplicationLoaded: false,    
-     deleteFeatureDeploymentVerificationMessage: null,
-     isDeletedDeploymentVerificationFeature: false,
-     metricTemplatesofaApplication: null,
-     isMetricTemplateforApplicationLoaded: false,
-     metricTemplateData : null,
-     templatesForaService: null,
-     isTemplatesForaServiceLoaded: false,
-     logTemplateDetails: null,
-     isLogTemplateDetailsLoaded: false,
-     templateName : null,
-     metricTemplateDetails : null,
-     isMetricTemplateDetailsLoaded : false,
-     deploymentVerificationSavedData:null,
+    //Deployment Verification
+    logTemplatesofaApplication: null,
+    isLogTemplateforApplicationLoaded: false,    
+    deleteFeatureDeploymentVerificationMessage: null,
+    isDeletedDeploymentVerificationFeature: false,
+    metricTemplatesofaApplication: null,
+    isMetricTemplateforApplicationLoaded: false,
+    metricTemplateData : null,
+    templatesForaService: null,
+    isTemplatesForaServiceLoaded: false,
+    logTemplateDetails: null,
+    isLogTemplateDetailsLoaded: false,
+    templateName : null,
+    metricTemplateDetails : null,
+    isMetricTemplateDetailsLoaded : false,
+    deploymentVerificationSavedData:null,
     isSavedDeploymentVerificationFeature: false,
-    templateServiceData : null
-
+    templateServiceData : null,
+    isMetricTemplateSaved : false,
+    savedMetricTemplateData : null,
+    logTemplateData: null,
+    savedLogTemplateData:null,
+    isLogTemplateSaved: false,
+    logTemplateDataToEdit : null,
+    isLogTemplateEdited: false,
+    editedLogTemplateData : null,
+    metricTemplateDataToEdit : null,
+    isMetricTemplateEdited: false,
+    editedMetricTemplateData : null
 }
 
 export function ApplicationReducer(
@@ -1102,23 +1122,23 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             applicationId:action.applicationId,
-            logTemplateData : action.logTemplateData
-            //isLogTemplate: false
+            logTemplateData : action.logTemplateData,
+            isLogTemplateSaved: false
         })
     ),
-    // on(ApplicationAction.postSaveVisibilityFeature,
-    //     (state,action) => ({
-    //         ...state,
-    //         visibilityFeatureSavedData:action.visibilityFeatureSavedData,
-    //         isVisibilityFeatureSaved: true
-    //     })
-    // ),
-    // on(ApplicationAction.isVisibilityFeatureSaved,
-    //     (state,action) => ({
-    //         ...state,
-    //         isVisibilityFeatureSaved: false
-    //     })
-    // ),
+    on(ApplicationAction.savedLogTemplate,
+        (state,action) => ({
+            ...state,
+            savedLogTemplateData:action.savedLogTemplateData,
+            isLogTemplateSaved: true
+        })
+    ),
+    on(ApplicationAction.isLogTemplateSaved,
+        (state,action) => ({
+            ...state,
+            isLogTemplateSaved: false
+        })
+    ),
 
     on(ApplicationAction.getLogTemplateforaApplication,
         (state,action) => ({
@@ -1145,8 +1165,21 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             applicationId:action.applicationId,
-            metricTemplateData : action.metricTemplateData
-            //isLogTemplate: false
+            metricTemplateData : action.metricTemplateData,
+            isMetricTemplateSaved: false
+        })
+    ),
+    on(ApplicationAction.savedMetricTemplate,
+        (state,action) => ({
+            ...state,
+            savedMetricTemplateData:action.savedMetricTemplateData,
+            isMetricTemplateSaved: true
+        })
+    ),
+    on(ApplicationAction.isMetricTemplateSaved,
+        (state,action) => ({
+            ...state,
+            isMetricTemplateSaved: false
         })
     ),
 
@@ -1277,6 +1310,52 @@ export function ApplicationReducer(
         (state,action) => ({
             ...state,
             isSavedDeploymentVerificationFeature: false
+        })
+    ),
+
+    on(ApplicationAction.editLogTemplate,
+        (state,action) => ({
+            ...state,
+            applicationId:action.applicationId,
+            templateName : action.templateName,
+            logTemplateDataToEdit : action.logTemplateDataToEdit,
+            isLogTemplateEdited: false
+        })
+    ),
+    on(ApplicationAction.editedLogTemplate,
+        (state,action) => ({
+            ...state,
+            editedLogTemplateData:action.editedLogTemplateData,
+            isLogTemplateEdited: true
+        })
+    ),
+    on(ApplicationAction.isLogTemplateEdited,
+        (state,action) => ({
+            ...state,
+            isLogTemplateEdited: false
+        })
+    ),
+
+    on(ApplicationAction.editMetricTemplate,
+        (state,action) => ({
+            ...state,
+            applicationId:action.applicationId,
+            templateName : action.templateName,
+            logTemplateDataToEdit : action.metricTemplateDataToEdit,
+            isMetricTemplateEdited: false
+        })
+    ),
+    on(ApplicationAction.editedMetricTemplate,
+        (state,action) => ({
+            ...state,
+            editedMetricTemplateData:action.editedMetricTemplateData,
+            isMetricTemplateEdited: true
+        })
+    ),
+    on(ApplicationAction.isMetricTemplateEdited,
+        (state,action) => ({
+            ...state,
+            isMetricTemplateEdited: false
         })
     ),
 

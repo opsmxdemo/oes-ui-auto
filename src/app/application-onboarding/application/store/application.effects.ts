@@ -915,7 +915,7 @@ onSaveLogTemplate = createEffect(() =>
             return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/logTemplates', action.logTemplateData).pipe(
                 map(resdata => {
                     this.store.dispatch(ApplicationAction.getLogTemplateforaApplication({applicationId : action.applicationId}));
-                    return ApplicationAction.savedLogTemplate({ savedLogTemplateData: resdata});
+                    return ApplicationAction.savedLogTemplate({ savedLogTemplateData: {'templateName' : action.logTemplateData['templateName']}});
                 
                 }),
                 catchError(errorRes => {
@@ -955,7 +955,7 @@ onSaveMetricTemplate = createEffect(() =>
             return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/metricTemplates?isEdit=false', action.metricTemplateData).pipe(
                 map(resdata => {
                     this.store.dispatch(ApplicationAction.getMetricTemplateforaApplication({applicationId : action.applicationId}));
-                    return ApplicationAction.savedMetricTemplate({ savedMetricTemplateData: resdata});                   
+                    return ApplicationAction.savedMetricTemplate({ savedMetricTemplateData: {"templateName" : action.metricTemplateData['templateName']}});                   
                 }),
                 catchError(errorRes => {
                     //this.toastr.showError('Error', 'ERROR')
@@ -995,10 +995,12 @@ onSaveDeploymentVerification = createEffect(() =>
                 map(resdata => {
                     if(resdata['status'] == 200){
                         this.toastr.showSuccess('Feature saved successfully','SUCCESS');
+                        var statusResponse = {'status' : true};
                     }else{
                         this.toastr.showError('Failed to save. Try again','ERROR');
+                        var statusResponse = {'status' : false};
                     }
-                    return ApplicationAction.postDeploymentVerificationFeature({ deploymentVerificationSavedData: {'status' : true}});                   
+                    return ApplicationAction.postDeploymentVerificationFeature({ deploymentVerificationSavedData: statusResponse });                   
                 }),
                 catchError(errorRes => {
                     this.toastr.showError('Failed to save. Try again','ERROR');
@@ -1095,8 +1097,7 @@ onEditLogTemplate = createEffect(() =>
         switchMap((action) => {
             return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/logTemplates/'+ action.templateName, action.logTemplateDataToEdit).pipe(
                 map(resdata => {
-                    this.store.dispatch(ApplicationAction.getLogTemplateforaApplication({applicationId : action.applicationId}));
-                    return ApplicationAction.editedLogTemplate({ editedLogTemplateData: resdata});                
+                    return ApplicationAction.editedLogTemplate({ editedLogTemplateData: {"templateName" : action.templateName}});                
                 }),
                 catchError(errorRes => {
                     //this.toastr.showError('Error', 'ERROR')
@@ -1115,8 +1116,7 @@ onEditMetricTemplate = createEffect(() =>
         switchMap((action) => {
             return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/metricTemplates?isEdit=true', action.metricTemplateDataToEdit).pipe(
                 map(resdata => {
-                    this.store.dispatch(ApplicationAction.getMetricTemplateforaApplication({applicationId : action.applicationId}));
-                    return ApplicationAction.editedMetricTemplate({ editedMetricTemplateData: resdata});                   
+                    return ApplicationAction.editedMetricTemplate({ editedMetricTemplateData: {"templateName" : action.templateName}});                   
                 }),
                 catchError(errorRes => {
                     //this.toastr.showError('Error', 'ERROR')

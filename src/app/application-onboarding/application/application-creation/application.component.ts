@@ -650,25 +650,19 @@ export class CreateApplicationComponent implements OnInit {
         }
         if(response.logTemplatesofaApplication!=null && response.isLogTemplateforApplicationLoaded){
           this.store.dispatch(ApplicationActions.isLoadedLogTemplatesforaApplication());
-          console.log("LOg Template for a application");
-          console.log(response.logTemplatesofaApplication);
           this.logTemplatesForaApplication =   response.logTemplatesofaApplication.logTemplates.map(ele=>ele.templateName);
-          //this.logTemplatesForaApplication = ["logtemp1", "logtemp2", "logtemp3"];
           this.logTemplateList = this.logTemplatesForaApplication;
-          if(this.logModel !== undefined){
-            this.logModel.nativeElement.click();
-          }
+          //code to autopopulate log template in the dropdown after save 
+          var index = this.logTemplateList.indexOf(this.logTemplate);       
+          this.deploymentVerificationForm.patchValue({logTemplate : this.logTemplateList[index]}); 
         } 
         if(response.metricTemplatesofaApplication!= null && response.isMetricTemplateforApplicationLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplatesforaApplication());
-          console.log("Metric Template for a application");
-          console.log(response.metricTemplatesofaApplication);
           this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.metricTemplates.map(ele=>ele.pipelineId);
-          //this.metricTemplatesofaApplication = ["metrictemp1", "metrictemp2", "metrictemp3"];
-          this.metricTemplateList = this.metricTemplatesofaApplication;
-          if(this.metricModel !== undefined){
-            this.metricModel.nativeElement.click();
-          }
+          this.metricTemplateList = this.metricTemplatesofaApplication; 
+          //code to autopopulate metric template in the dropdown after save 
+          var index = this.metricTemplateList.indexOf(this.metricTemplate);       
+          this.deploymentVerificationForm.patchValue({metricTemplate : this.metricTemplateList[index]}); 
         }
         if(response.logTemplateDetails!=null && response.isLogTemplateDetailsLoaded){
           this.store.dispatch(ApplicationActions.isLoadedLogTemplate());
@@ -684,6 +678,43 @@ export class CreateApplicationComponent implements OnInit {
           if(this.deploymentVerificaionFeatureSavedResponse['status'] == true){
             this.deploymentVerificationFeatureSaved = true;
           }
+        }
+        if(response.savedMetricTemplateData != null && response.isMetricTemplateSaved){
+          if(this.metricModel !== undefined){
+            this.metricModel.nativeElement.click();
+          }
+          this.store.dispatch(ApplicationActions.isMetricTemplateSaved());
+          this.metricTemplate = response.savedMetricTemplateData['templateName'];
+        }
+        if(response.savedLogTemplateData != null && response.isLogTemplateSaved){
+          if(this.logModel !== undefined){
+            this.logModel.nativeElement.click();
+          }
+          this.store.dispatch(ApplicationActions.isLogTemplateSaved());
+          this.logTemplate = response.savedLogTemplateData['templateName'];
+        }
+        if(response.editedMetricTemplateData != null && response.isMetricTemplateEdited){
+          if(this.metricModel !== undefined){
+            this.metricModel.nativeElement.click();
+          }
+          this.store.dispatch(ApplicationActions.isMetricTemplateEdited());
+          this.metricTemplate = response.editedMetricTemplateData['templateName'];
+          this.store.dispatch(ApplicationActions.getMetricTemplateforaApplication({applicationId : this.applicationId}));
+        }
+        if(response.editedLogTemplateData != null && response.isLogTemplateEdited){
+          if(this.logModel !== undefined){
+            this.logModel.nativeElement.click();
+          }
+          this.store.dispatch(ApplicationActions.isLogTemplateEdited());
+          this.logTemplate = response.editedLogTemplateData['templateName'];          
+          this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));          
+        }
+        if(response.templatesForaService!= null && response.isTemplatesForaServiceLoaded){
+          this.store.dispatch(ApplicationActions.isLoadedTemplatesForaService());
+          this.metricTemplate = response.templatesForaService['metricTemplateName'];
+          this.logTemplate = response.templatesForaService['logTemplateName'];
+          this.store.dispatch(ApplicationActions.getMetricTemplateforaApplication({applicationId : this.applicationId}));          
+          this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));
         }
       }
     )
@@ -1413,11 +1444,9 @@ export class CreateApplicationComponent implements OnInit {
 
 
     if (item === 'deployment_verification') {
-            //check edit mode or create mode
+      //check edit mode or create mode
       if(this.editMode){
         this.store.dispatch(ApplicationActions.getTemplatesForaService({applicationId: this.applicationId, serviceId: this.serviceId}));
-        this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));
-        this.store.dispatch(ApplicationActions.getMetricTemplateforaApplication({applicationId : this.applicationId}));
       }
 
     } else if (item === 'sapor') {

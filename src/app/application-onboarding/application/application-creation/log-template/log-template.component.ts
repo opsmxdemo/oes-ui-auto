@@ -244,7 +244,7 @@ getLogTopics(){
           topicsList: new FormArray([]),
           addedTags: new FormArray([]),
           inputTags:new FormControl(),
-          selectScoreAlgo:new FormControl(this.scoringAlgoData.defaultValue),
+          selectScoreAlgo:new FormControl(this.scoringAlgoData['defaultValue']),
           clusterList: new FormArray([]),
           clusterTagId: new FormControl(false),
           enableClusterTags: new FormControl(),
