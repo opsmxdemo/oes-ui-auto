@@ -12,12 +12,12 @@
   
         <div class="col-sm-3">
           <div class="sidebar-tree">
-            <ul class="tree-inset  list-unstyled {{createApplicationForm.invalid == false ?'tree-active':''}}">
-              <li class="ti-title">
-                <i (click)="loadApplicationForm()" class="{{createApplicationForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+            <ul class="tree-inset list-unstyled {{createApplicationForm.invalid == false ?'tree-active':''}}" (click)="loadApplicationForm()">
+              <li class="ti-title showElementHover">
+                <i  class="{{createApplicationForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Application Details</span>
               </li>
-              <li class="ti-item">
+              <li class="ti-item showElementHover" (click)="loadApplicationForm()">
                 <i class="{{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}}"></i>
                 <span>Application Name :</span>
                 <strong>{{createApplicationForm.value.name}}</strong>
@@ -29,7 +29,7 @@
             <ul class="tree-inset  list-unstyled {{servicesForm.invalid == false ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadServiceForm()">
                 <i class="{{servicesForm.invalid == false ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Services</span>
+                <span data-toggle="tooltip" data-placement="top" data-original-title="One of the logical entity of the application">Services</span>
               </li>             
               <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
               <li class="ti-item">
@@ -47,7 +47,7 @@
             <ul class="tree-inset list-unstyled {{environmentForm.invalid == true ?'tree-active':''}}">
             <li class="ti-title showElementHover" (click)="loadEnvironmentsForm()">
               <i class="{{environmentForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-              <span>Environments</span>
+              <span data-toggle="tooltip" data-placement="top" data-original-title="Environmental values for the CICD pipeline">Environments</span>
             </li>
             <!-- <li class="ti-item" *ngFor="let env of environmentForm.value.environments; let index = i">
               <i class="{{env.value !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
@@ -72,8 +72,8 @@
             <!-- /.tree-inset -->
             <ul class="tree-inset list-unstyled {{groupPermissionForm.invalid == true ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadGroupPermissionForm()">
-                <i class="{{groupPermissionForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
-                <span>Group Permissions</span>
+                <i  class="{{groupPermissionForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <span data-toggle="tooltip" data-placement="top" data-original-title="Authorisation definition for this application">Group Permissions</span>
               </li>
               <!-- <li class="ti-item" *ngFor="let group of groupPermissionForm.value.userGroups; let index = i">
                 <i class="{{group.userGroupId !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
@@ -135,7 +135,7 @@
                     </span>
                   </div>
                   <div class="form-group" >
-                    <label>Image Source <i data-toggle="tooltip" data-placement="top" data-original-title="Image Source" class="fa fa-question-circle" aria-hidden="true"></i></label>
+                    <label>Image Source <i data-toggle="tooltip" data-placement="top" data-original-title="Repository to fetch images for Release Management" class="fa fa-question-circle" aria-hidden="true"></i></label>
                     <select class="form-control"  formControlName="imageSource" (change)="onImageSourceSelect($event.target.value)"
                     [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''" >
                       <option value="" [disabled]="true">Select</option>
@@ -335,7 +335,7 @@
                                         <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
                                         <button class="btn btn-primary ml-2" (click)="SubmitSaporForm(i)">Save</button>
                                         <!-- <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button> -->
-                                        <button class="btn btn-danger ml-1"  (click)="deleteSaporForm(i)" >Delete</button>
+                                        <button class="btn btn-danger ml-1" data-toggle="tooltip" data-placement="top" data-original-title="Disable and remove the feature for this service" (click)="deleteSaporForm(i)" >Delete</button>
                                       </div>
                                     </div>
                                   </div>

@@ -402,7 +402,9 @@ export class ApplicationEffect {
                 
                 return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId, action.appData).pipe(
                     map(resdata => {
-                        return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
+                       // return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
+                       this.toastr.showSuccess(action.appData.name + 'Updated Successfully','Success')
+                       return ApplicationAction.updateApplicationDone();
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
