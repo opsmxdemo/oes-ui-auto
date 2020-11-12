@@ -570,7 +570,7 @@
                                                       <select class="form-control template-dropdown" formControlName="templateName" (change)="onChangeTemplateofTooltype($event.target.value, i)">
                                                         <option value="" [disabled]="true">Select</option>                                                       
 
-                                                        <option *ngFor="let template of templatesForToolType[i]" value="2" > {{template.name}}</option>
+                                                        <option *ngFor="let template of templatesForToolType[i]" value="{{template.id}}" > {{template.name}}</option>
                                                         <option value="+">+ Add Template</option>   
                                                       </select>
                                                       <span class="ml-2 editTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Template" *ngIf="templateId[i]" (click)="editTemplate(i)">

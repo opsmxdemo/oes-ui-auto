@@ -249,7 +249,7 @@ export class CreateApplicationComponent implements OnInit {
         // code for sapor
 
         if (responseData.saporConfigList !== null) {
-          console.log(responseData.saporConfigList);
+          // console.log(responseData.saporConfigList);
           this.saporFinalData = responseData.saporConfigList;
         }
 
@@ -282,7 +282,7 @@ export class CreateApplicationComponent implements OnInit {
             //populating createApplicationForm ################################################################
             this.applicationId = this.appData.applicationId;
             if(responseData.imageSourceListData != null && responseData.isfetchImageSourceLoaded){
-              console.log(responseData.imageSourceListData);
+              // console.log(responseData.imageSourceListData);
               this.configuredImage = responseData.imageSourceListData.imageSource;
               this.createApplicationForm = new FormGroup({
                 name: new FormControl(this.appData.name),
@@ -404,7 +404,7 @@ export class CreateApplicationComponent implements OnInit {
           this.grpData = response.groupPermissionsGetListData;
           //this.store.dispatch(ApplicationActions.isgetGroupPermissionsLoaded());
 
-          console.log(this.grpData);
+          // console.log(this.grpData);
          
           //populating the form
           const userGroupControl = this.groupPermissionForm.get('userGroups') as FormArray;
@@ -502,14 +502,14 @@ export class CreateApplicationComponent implements OnInit {
         if (response.approvalGatesListOfaService != null && response.isApprovalGatesOfaServiceLoaded) {
           this.store.dispatch(ApplicationActions.isApprovalGatesOfaServiceLoaded());
           this.approvalGatesOfaServiceList = response.approvalGatesListOfaService;
-          console.log("approvalGatesListOfaService: ", this.approvalGatesOfaServiceList);
+          // console.log("approvalGatesListOfaService: ", this.approvalGatesOfaServiceList);
            
           if (this.approvalGatesOfaServiceList.length > 0) {
             this.gateId = this.approvalGatesOfaServiceList[0].id;   
             if(this.editMode){
               // this.gateForm.value.gateName = this.approvalGatesOfaServiceList[0].id;
               this.gateForm.get('gateName').setValue(this.approvalGatesOfaServiceList[0].name);
-              console.log("Approval Gates List: ", this.approvalGatesOfaServiceList);
+              // console.log("Approval Gates List: ", this.approvalGatesOfaServiceList);
             }
             //console.log(this.approvalGatesOfaServiceList);
             // this.addConnector();
@@ -525,7 +525,7 @@ export class CreateApplicationComponent implements OnInit {
           this.configuredToolTypes = response.configuredToolConnectorTypes;
           this.toolTypesCount = this.configuredToolTypes.length;
           this.toolTypes[0] = this.configuredToolTypes;          
-          console.log("configured Tool Types: ", this.configuredToolTypes);
+          // console.log("configured Tool Types: ", this.configuredToolTypes);
           if(this.toolTypes[0].length < 2) {
             this.hideVisibilityPlusIcon = true;
           } else {
@@ -537,7 +537,7 @@ export class CreateApplicationComponent implements OnInit {
           this.store.dispatch(ApplicationActions.isLoadedAccountToolType());
           if(!this.editMode){
           this.accountsForTooltypes[this.currentRowIndexVisibility - 1] = response.accountsForToolType;
-          }else{
+          }else if(this.editMode){
             this.accountsForTooltypes[this.editVisibilityAccountsIndex] = response.accountsForToolType;
             
             let visibilityArr = <FormArray>this.visibilityForm.get('visibilityConfig');
@@ -546,23 +546,23 @@ export class CreateApplicationComponent implements OnInit {
             this.editVisibilityAccountsIndex++;
           }
           //this.connectorId = this.accountsForTooltypes[0];
-          console.log("Account Types: ", this.accountsForTooltypes);
-          console.log("Row index Visibility: ", this.currentRowIndexVisibility);
+          // console.log("Account Types: ", this.accountsForTooltypes);
+          // console.log("Row index Visibility: ", this.currentRowIndexVisibility);
 
         }
         if (response.templatesForToolType && response.isTemplateForToolTypeLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedTemplateToolType());
           if(!this.editMode){
           this.templatesForToolType[this.currentRowIndexVisibility - 1] = response.templatesForToolType;
-          }else{
+          }else if(this.editMode){
           this.templatesForToolType[this.editVisibilityTemplateIndex] = response.templatesForToolType;
             let visibilityTemplateArr = <FormArray>this.visibilityForm.get('visibilityConfig');
             visibilityTemplateArr.controls[this.editVisibilityTemplateIndex].get('templateName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityTemplateIndex].templateId);
 
             this.editVisibilityTemplateIndex++;
           }
-          console.log("Template Types: ", this.templatesForToolType);
-          console.log("Row index Visibility: ", this.currentRowIndexVisibility);
+          // console.log("Template Types: ", this.templatesForToolType);
+          // console.log("Row index Visibility: ", this.currentRowIndexVisibility);
         }
 
         this.loadEditTemplate(response);
@@ -594,7 +594,7 @@ export class CreateApplicationComponent implements OnInit {
         }
         if (response.configuredToolConnectorData != null && response.isToolConnectoreForaGateLoaded) {
           this.store.dispatch(ApplicationActions.isLoadedToolConnectorForaGate());
-          console.log("configuredToolConnectorData", response.configuredToolConnectorData);
+          // console.log("configuredToolConnectorData", response.configuredToolConnectorData);
           //console.log(response.configuredToolConnectorData);
           if (response.configuredToolConnectorData.length > 0) {
             this.isVisibilityToolConnectorConfigured = true;
@@ -623,7 +623,7 @@ export class CreateApplicationComponent implements OnInit {
 
                 this.toolTypeDataSaved[i] = true;
               }
-              console.log("Visibility config Details: ", this.visibilityForm);
+              // console.log("Visibility config Details: ", this.visibilityForm);
               
             }
 
@@ -642,7 +642,7 @@ export class CreateApplicationComponent implements OnInit {
                 } else {
                   this.hideVisibilityPlusIcon = false;
                 }
-                console.log(this.toolTypes); 
+                // console.log(this.toolTypes); 
                 this.addConnector(); 
               }, 100);
             }
@@ -1241,9 +1241,6 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to submit applicatio form
   SubmitApplicationForm() {
-  //  this.appPrimaryEdit = false;
-
-    console.log(this.createApplicationForm.value);
     this.appForm = this.createApplicationForm.value;
     if (this.createApplicationForm.value.name) {
       this.showFeatures = true;
@@ -1267,7 +1264,6 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to save service form
   saveServiceForm(index) {
-    console.log(this.servicesForm.value.services[index].serviceName);
     this.servForm = this.servicesForm.value.services[index];
     var serviceDataToSave = {
       "name": this.servicesForm.value.services[index].serviceName
@@ -1323,7 +1319,7 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below funcion is use to submit sapor data
   SubmitSaporForm(serviceIndex) {
-    console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
+    // console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
     const postSapor = {
       applicationId: this.applicationId,
       serviceId: this.serviceId,
@@ -1333,7 +1329,7 @@ export class CreateApplicationComponent implements OnInit {
       }
     }
 
-    console.log(JSON.stringify(postSapor));
+    // console.log(JSON.stringify(postSapor));
 
     if(this.editMode){
       this.store.dispatch(ApplicationActions.updateSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId, saporConfigData: postSapor}));
@@ -1352,7 +1348,7 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to save each connector
   saveConnector(index) {
-    console.log(this.visibilityForm.value.visibilityConfig[index]);
+    // console.log(this.visibilityForm.value.visibilityConfig[index]);
     var dataToSaveToolConnectorwithTemplate = {
       templateId: this.templateId[index]
     };
@@ -1380,12 +1376,12 @@ export class CreateApplicationComponent implements OnInit {
 
   // Bewlow function is use to submit visibility form
   SubmitVisibilityForm() {
-    console.log(this.visibilityForm.value);
+    // console.log(this.visibilityForm.value);
   }
 
   // Below function is use to submit visibility gate data
   saveGateForm() {
-    console.log(this.gateForm.value.gateName);
+    // console.log(this.gateForm.value.gateName);
     //json to save approvalGate
     // {
     //   "id": 1,
@@ -1404,7 +1400,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   onClickEditOfGateName() {
-    console.log(this.gateForm.value.gateName);
+    // console.log(this.gateForm.value.gateName);
     this.isEditGateEnabled = true;
   }
 
@@ -1583,14 +1579,14 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   onChangeTooltype(tooltype) {
-    console.log(tooltype);
+    // console.log('Tooltype: ', tooltype);
     this.toolType = tooltype;
     this.store.dispatch(ApplicationActions.getAccountToolType({ connectorType: tooltype }));
     this.store.dispatch(ApplicationActions.getTemplatesToolType({ connectorType: tooltype }));
   }
 
   onChangeAccountofTooltype(account) {
-    console.log(account);
+    // console.log('account: ', account);
     this.connectorId = account;
 
   }
@@ -1620,7 +1616,7 @@ export class CreateApplicationComponent implements OnInit {
 
       return;
     }
-    console.log(template);
+    // console.log("template:", template );
     this.templateId[index] = template;
   }
 
@@ -1637,7 +1633,7 @@ export class CreateApplicationComponent implements OnInit {
     if (response.templateData && response.isTemplateDataForToolTypeLoaded) {
       this.store.dispatch(ApplicationActions.isLoadedTemplateData());
       this.templateDataForToolType = response.templateData;
-      console.log(this.templateDataForToolType);
+      // console.log(this.templateDataForToolType);
       if (this.editTemplateTriggered) {
         this.toolTemplateForm.controls.id.enable();
         this.toolTemplateForm.setValue({
@@ -1662,7 +1658,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   saveTooltypeTemplate() {
-    console.log(this.tooltypeTemplateData);
+    // console.log(this.tooltypeTemplateData);
     if (this.tooltypeTemplateData.id) {
       this.store.dispatch(ApplicationActions.updateTemplateForTooltype({ updatedTemplateForToolTypeData: this.tooltypeTemplateData }));
     }
@@ -1731,7 +1727,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   editServiceClick(service: any, index) {
-    console.log(service);
+    // console.log(service);
     this.serviceId = service.serviceId;
     this.currentServiceIndex = index;
     this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: service.serviceId}))

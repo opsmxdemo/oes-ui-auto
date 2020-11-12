@@ -2,7 +2,7 @@ import { ofType, createEffect, act } from '@ngrx/effects';
 import { Actions } from '@ngrx/effects';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, withLatestFrom, flatMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromFeature from '../../store/feature.reducer';
 import * as fromApp from '../../../store/app.reducer';
@@ -643,12 +643,16 @@ export class ApplicationEffect {
     getAccountsForToolType = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.getAccountToolType),
-            switchMap((action) => {
+            flatMap((action) => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/connectorTypes/' + action.connectorType).pipe(
                     //return this.http.get('/assets/data/visibility/accountsForToolConnectors.json').pipe(
                     map(resdata => {
+                        
                         return ApplicationAction.loadAccountToolType({ accountsForToolType: resdata });
-                    }),
+                    }, (error: any) => { 
+                        console.log("Log erro: ", error);
+        
+                    }), 
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
                         return handleError(errorRes);
@@ -663,7 +667,7 @@ export class ApplicationEffect {
     getTemplatesForTooltype = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.getTemplatesToolType),
-            switchMap((action) => {
+            flatMap((action) => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/' + action.connectorType + '/templates').pipe(
                     //return this.http.get('/assets/data/visibility/templateForTooltype.json').pipe(
                     map(resdata => {
@@ -879,7 +883,7 @@ export class ApplicationEffect {
     getToolConnectorforaGate = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.getToolConnectorForaGate),
-            switchMap((action) => {
+            flatMap((action) => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.gateId + '/toolConnectors').pipe(
                     map(resdata => {
                         return ApplicationAction.loadToolConnectorForaGate({ configuredToolConnectorData: resdata });
