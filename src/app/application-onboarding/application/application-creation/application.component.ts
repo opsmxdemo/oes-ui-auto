@@ -1581,8 +1581,10 @@ export class CreateApplicationComponent implements OnInit {
   onChangeTooltype(tooltype) {
     // console.log('Tooltype: ', tooltype);
     this.toolType = tooltype;
+    setTimeout(() => {
     this.store.dispatch(ApplicationActions.getAccountToolType({ connectorType: tooltype }));
-    this.store.dispatch(ApplicationActions.getTemplatesToolType({ connectorType: tooltype }));
+    this.store.dispatch(ApplicationActions.getTemplatesToolType({ connectorType: tooltype }));      
+    }, 1000);
   }
 
   onChangeAccountofTooltype(account) {

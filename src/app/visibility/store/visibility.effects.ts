@@ -5,7 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../../store/app.reducer';
 import { of } from 'rxjs';
-import { withLatestFrom, switchMap, map, catchError } from 'rxjs/operators';
+import { withLatestFrom, switchMap, map, catchError, flatMap } from 'rxjs/operators';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import * as Visibility from './visibility.actions';
@@ -89,7 +89,7 @@ export class VisibilityEffect {
     fetchToolConnectors = createEffect(() =>
         this.actions$.pipe(
             ofType(Visibility.loadToolConnectors),
-            switchMap((action) => {
+            flatMap((action) => {
                 // return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getServiceList?canaryId=' + action.canaryId).pipe(
                 // return this.http.get<any>('/assets/data/visibility/toolConnectors.json').pipe(
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.id + '/toolConnectors').pipe(
@@ -109,7 +109,7 @@ export class VisibilityEffect {
     fetchGateInstanceDetails = createEffect(() =>
         this.actions$.pipe(
             ofType(Visibility.loadGateInstanceDetails),
-            switchMap((action) => {
+            flatMap((action) => {
                 // v1/approvalGateInstances/10
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGateInstances/' + action.id ).pipe(
                     map(resdata => {
@@ -128,8 +128,7 @@ export class VisibilityEffect {
     fetchVisibilityData = createEffect(() =>
         this.actions$.pipe(
             ofType(Visibility.loadVisibilityData),
-            switchMap((action) => {
-                // return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/canaries/getServiceList?canaryId=' + action.canaryId).pipe(
+            flatMap((action) => {
                 // return this.http.get<any>('/assets/data/visibility/visibilityData.json').pipe(
                 return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGateInstances/' + action.approvalInstanceId + '/toolConnectors/' + action.connectorType + '/visibilityData').pipe(
                     map(resdata => {
