@@ -9,16 +9,21 @@
         <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;" >
           <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" routerLink="{{SideMenu.link}}"><a><i class="icon {{SideMenu.link}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'"></i> <span>{{SideMenu.name }} 
             <ng-template [ngIf]="SideMenu.name === 'Applications' ?true:false">
-              <span class="badge badge-primary">{{applicationCount}}</span>
+              <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Applications">{{applicationCount}}</span>
+              <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Active gates">{{approvalGateInstanceCount}}</span>
             </ng-template>
             </span></a>
           </li>
             <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">
               <ul class="subnav list-unstyled m-0" *ngFor = "let submenu of SideMenu.subMenu">
-                <li class="{{submenu.disabled === true? 'disabled_menu': disabledLink(submenu.name)}} {{activeRoutes(submenu.link)}}" routerLink="{{submenu.link}}" (click)="navigateMenu($event,submenu.name)"><a><i class="icon {{subMenuclass(submenu.link)}}" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'"></i> <span>{{submenu.name}}</span></a></li>
+                <li class="{{submenu.disabled === true? 'disabled_menu': disabledLink(submenu.name)}} {{activeRoutes(submenu.link)}}" routerLink="{{submenu.link}}" (click)="navigateMenu($event,submenu.name)"><a>
+                  <i class="icon {{subMenuclass(submenu.link)}}" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></i> 
+                  <i class="fa fa-line-chart" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/trendanalysis'"></i>
+                  <i class="fa fa-eye" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/visibility'"></i>
+                  <!-- <i class="{{subMenuclass(submenu.link)}}"></i>  -->
+                  <span>{{submenu.name}}</span></a></li>
               </ul>
             </ng-template>
-          
         </ul>
       </div>
       <a class="sidebar_bottom d-flex align-items-center justify-content-between">

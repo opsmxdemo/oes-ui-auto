@@ -24,7 +24,7 @@ export class SharedService {
 
   //Below function is use to validate Application name exist or not through api.i.e, ApplicationComponent
   validateApplicationName(name: string, type: string) {
-    return this.httpClient.get(this.endpointUrl + 'oes/appOnboarding/nameCheck/' + name);
+    return this.httpClient.get(this.endpointUrl + 'platformservice/v1/applications/'+name+'/does-exist');
   }
   setUserData(val: any) {
     this.userData = val;

@@ -79,6 +79,104 @@ export class LogTemplateEffect {
      )
  )
 
+ // Below effect is use for fetch tags  data.
+ fetchTags = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.loadCustomTags),
+         switchMap((action) => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + action.applicationId + '/tags').pipe(
+                 map(resdata => {
+                     return ApplicationAction.fetchCustomTags({ tags: resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
+ // Below effect is use for add new tag
+ addTags = createEffect(() =>
+ this.actions$.pipe(
+     ofType(ApplicationAction.addCustomTags),
+     switchMap(action => {
+         
+         return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/tags', action.newtagData).pipe(
+             map(resdata => {
+                 this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                 this.store.dispatch(ApplicationAction.loadCustomTags({ applicationId: action.applicationId }));
+                 return ApplicationAction.savedCustomTag({ savedTagResponse:resdata });
+             }),
+             catchError(errorRes => {
+             //  this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                 return handleError(errorRes);
+             })
+         );
+     })
+ )
+)
+
+// Below effect is use for edit tag data 
+editTags = createEffect(() =>
+this.actions$.pipe(
+    ofType(ApplicationAction.editCustomTags),
+    switchMap(action => {
+        
+        return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+action.applicationId+'/tags/'+action.tagId, action.edittagData).pipe(
+            map(resdata => {
+                this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+                this.store.dispatch(ApplicationAction.loadCustomTags({ applicationId: action.applicationId }));
+                return ApplicationAction.savededitCustomTag({ savedEditTagResponse:resdata });
+            }),
+            catchError(errorRes => {
+            //  this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
+                return handleError(errorRes);
+            })
+        );
+    })
+)
+)
+
+ // Below effect is use for delete tags  .
+ deleteTags = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.deleteCustomTags),
+         switchMap((action) => {
+             return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + action.applicationId + '/tags/'+action.tagId).pipe(
+                 map(resdata => {
+                    this.store.dispatch(ApplicationAction.loadCustomTags({ applicationId: action.applicationId }));
+                     return ApplicationAction.fetchDeleteCustomTag({deleteTagResponse : resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
+ // Below effect is use for gettingScoringAlgo  .
+ fetchScoringAlgo = createEffect(() =>
+     this.actions$.pipe(
+         ofType(ApplicationAction.getScoringAlgo),
+         switchMap((action) => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/scoring-algorithms' ).pipe(
+                 map(resdata => {
+                    
+                     return ApplicationAction.fetchScoringAlgo({ scoringAlgoResponse : resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
+
  // Below effect is use for fetch cluster tags table data.
  fetchClusterTags = createEffect(() =>
      this.actions$.pipe(

@@ -9,6 +9,7 @@ import { DeploymentVerificationComponent } from '../application/deployment-verif
 import { ApplicationComponent } from '../application/application.component';
 import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
 import { AppErrorListingComponent } from '../error-handling/app-error-listing/app-error-listing.component';
+import { VisibilityComponent } from '../visibility/visibility.component';
 
 const routes: Routes = [
   
@@ -18,6 +19,8 @@ const routes: Routes = [
     {path:'deploymentverification/:applicationName/:canaryId', component: DeploymentVerificationComponent},
     { path: 'deploymentverification/:applicationName/:canaryId/:serviceId', component: DeploymentVerificationComponent },
     { path: 'trendanalysis', component: TrendAnalysisComponent },
+    {path:'visibility', component: VisibilityComponent},
+    {path:'visibility/:applicationName/:applicationId', component: VisibilityComponent},
 
   ]},
   {path:'cddashboard', component:CdDashboardComponent},

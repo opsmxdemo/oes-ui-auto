@@ -18,7 +18,18 @@ export interface State {
     logDataSources: [];
     accountName: any;
     isloadedResponseKey:boolean;
+    scoringAlgoResponse:any;
     responseKeys:any;
+    applicationId:any
+    tags:any
+    jsonData:any;
+    savedTagResponse:any;
+    tagId:any;
+    jsonDataedit : any;
+    editTagResponse:any;
+    deleteTagResponse:any;
+    isloadedlogTopicsData:any;
+    
 }
 
 export const initialState: State = {
@@ -32,7 +43,17 @@ export const initialState: State = {
     logDataSourcesLoading: false,
     accountName: null,
     isloadedResponseKey:false,
-    responseKeys:null
+    isloadedlogTopicsData:false,
+    responseKeys:null,
+    applicationId:null,
+    tags:null,
+    jsonData:null,
+    savedTagResponse:null,
+    tagId:null,
+    jsonDataedit : null,
+    editTagResponse:null,
+    deleteTagResponse:null,
+    scoringAlgoResponse:null,
 }
 
 export function LogTemplateReducer(
@@ -58,14 +79,22 @@ export function LogTemplateReducer(
         on(ApplicationAction.loadLogTopics,
             state => ({
                 ...state,
+                isloadedlogTopicsData:false,
                 logListLoading:true
+            })
+        ),
+        on(ApplicationAction.isLoadedLogTopics,
+            state => ({
+                ...state,
+                isloadedlogTopicsData:false
             })
         ),
         on(ApplicationAction.fetchLogTopics,
             (state,action) => ({
                 ...state,
                 logTopicsList: action.logslist,
-                logListLoading:false
+                logListLoading:false,
+                isloadedlogTopicsData:true
             })
         ),
         on(ApplicationAction.loadClusterTags,
@@ -112,6 +141,81 @@ export function LogTemplateReducer(
             (state) => ({
                 ...state,                
                 isloadedResponseKey:false
+            })
+        ),
+        on(ApplicationAction.loadCustomTags,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+                applicationId : action.applicationId
+            })
+        ),
+        on(ApplicationAction.fetchCustomTags,
+            (state,action) => ({
+                ...state,
+                tags: action.tags,
+                isloadedResponseKey:true
+            })
+        ),
+        on(ApplicationAction.addCustomTags,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+                applicationId : action.applicationId,
+                jsonData : action.newtagData
+
+            })
+        ),
+        on(ApplicationAction.savedCustomTag,
+            (state,action) => ({
+                ...state,
+                savedTagResponse: action.savedTagResponse,
+                isloadedResponseKey:true
+            })
+        ),
+        on(ApplicationAction.editCustomTags,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+                applicationId : action.applicationId,
+                tagId:action.tagId,
+                jsonDataedit : action.edittagData
+
+            })
+        ),
+        on(ApplicationAction.savededitCustomTag,
+            (state,action) => ({
+                ...state,
+                editTagResponse: action.savedEditTagResponse,
+                isloadedResponseKey:true
+            })
+        ),
+        on(ApplicationAction.deleteCustomTags,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+                applicationId : action.applicationId,
+                tagId:action.tagId
+            })
+        ),
+        on(ApplicationAction.fetchDeleteCustomTag,
+            (state,action) => ({
+                ...state,
+                deleteTagResponse: action.deleteTagResponse,
+                isloadedResponseKey:true
+            })
+        ),
+        on(ApplicationAction.getScoringAlgo,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+            })
+        ),
+        on(ApplicationAction.fetchScoringAlgo,
+            (state,action) => ({
+                ...state,
+                scoringAlgoResponse: action.scoringAlgoResponse,
+                isloadedResponseKey:true
             })
         ),
 

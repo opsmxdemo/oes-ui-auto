@@ -26,6 +26,8 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   @Input() templateData: any;
   @Input() templateIndex: number;
   @Input() isEditMode: boolean;
+  @Input() applicationId:any;
+  @Input() applicationData : any;
 
 
   public editorOptions: JsonEditorOptions;
@@ -49,6 +51,15 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   logClusterData: any;
   clusterTagConfig: any;
   responseKeys : any;
+  clusterTagList=[];
+addTagInput:boolean=false;
+editTagInput:boolean=false;
+selectedDropDownTag:any;
+editedTagvalue:any;
+editedTagId:any;
+addedTag:any;
+removeTagId:any;
+scoringAlgoData :any;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
@@ -65,6 +76,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   ngOnInit(): void {
 
     this.store.dispatch(DataSourceActions.loadDatasourceList());
+    this.store.dispatch(ApplicationActions.getScoringAlgo()); 
     this.store.select(fromFeature.selectDataSource).subscribe(
       (responseData) => {
         if(responseData.supportedDatasource != null){
@@ -90,6 +102,19 @@ export class LogTemplateComponent implements OnInit, OnChanges {
             this.store.dispatch(ApplicationActions.loadedDataSourceResponseKey());         
             this.responseKeys = responseData.responseKeys;          
         }
+        if(responseData.tags != null)
+        {
+          this.clusterTagList = responseData.tags
+        }
+        if(responseData.scoringAlgoResponse != null)
+        {
+
+          this.scoringAlgoData = responseData.scoringAlgoResponse;
+        }
+        // if(responseData.savedTagResponse!=null)
+        // {
+        //  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+        // }
       }
     );
 
@@ -103,9 +128,14 @@ export class LogTemplateComponent implements OnInit, OnChanges {
   // Below function is use to save log template data on click of save btn
   Submitlogdata(){
     if(this.isEditMode){
-      this.store.dispatch(ApplicationActions.updatedLogTemplate({logTemplateData:this.logTemplateData,index:this.templateIndex}));
+      this.store.dispatch(ApplicationActions.editLogTemplate({applicationId : this.applicationData['applicationId'], templateName : this.logTemplateData['templateName'], logTemplateDataToEdit: this.logTemplateData}));
+      //this.store.dispatch(ApplicationActions.updatedLogTemplate({logTemplateData:this.logTemplateData,index:this.templateIndex}));
     }else{
-      this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}));
+      this.logTemplateData['applicationId'] = this.applicationData['applicationId'];
+      this.logTemplateData['applicationName'] = this.applicationData['name'];
+      this.logTemplateData['emailId'] = this.applicationData['email'];
+      this.store.dispatch(ApplicationActions.saveLogTemplate({applicationId : this.applicationData['applicationId'], logTemplateData : this.logTemplateData}));
+      //this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}));      
     }
     this.data = {};
   }
@@ -115,7 +145,8 @@ export class LogTemplateComponent implements OnInit, OnChanges {
    defineForms() {
     this.createLogForm = new FormGroup({
      templateName: new FormControl('',[Validators.required]),
-     monitoringProvider:  new FormControl('',Validators.required),
+     monitoringProvider:  new FormControl(''),
+     scoringAlgorithm:new FormControl(''),
      accountName:  new FormControl('',Validators.required),
      namespace: new FormControl('',[Validators.required]),
      index: new FormControl('',[Validators.required]),
@@ -131,7 +162,12 @@ export class LogTemplateComponent implements OnInit, OnChanges {
    this.logTopicsForm = new FormGroup({
     topicsList: new FormArray([]),
     clusterList: new FormArray([]),
+    inputTags:new FormControl(),
+    selectScoreAlgo:new FormControl(),
+    enableClusterTags: new FormControl(),
     clusterTagId: new FormControl(false),
+    addedTags:new FormArray([]),
+
   });
 
  this.logSensitivityTypes = ["high","low","medium"];
@@ -146,6 +182,7 @@ onDataSourceSelect(dataSourceValue: string){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      scoringAlgorithm:new FormControl(this.logTopicsForm.value['selectScoreAlgo']),
       accountName:  new FormControl('',Validators.required),
       index: new FormControl('',[Validators.required]),
       kibanaIndex: new FormControl('',[Validators.required]),
@@ -160,6 +197,7 @@ onDataSourceSelect(dataSourceValue: string){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      scoringAlgorithm:new FormControl(this.logTopicsForm.value['selectScoreAlgo']),
       namespace: new FormControl('',[Validators.required]),
       autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
@@ -170,6 +208,7 @@ onDataSourceSelect(dataSourceValue: string){
     this.createLogForm = new FormGroup({
       templateName: new FormControl(this.createLogForm.value.templateName,[Validators.required, this.cannotContainSpace.bind(this)]),
       monitoringProvider:  new FormControl(this.createLogForm.value.monitoringProvider,Validators.required),
+      scoringAlgorithm:new FormControl(this.logTopicsForm.value['selectScoreAlgo']),
       accountName:  new FormControl('',Validators.required),
       autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
@@ -195,15 +234,20 @@ getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
  this.store.dispatch(ApplicationActions.loadClusterTags());
-
+ this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
  //fetching data from state
  this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
-       if(response.logTopicsList != null) {
+       if(response.logTopicsList != null && response.isloadedlogTopicsData) {
+         this.store.dispatch(ApplicationActions.isLoadedLogTopics())
         this.logTopicsForm = new FormGroup({
           topicsList: new FormArray([]),
+          addedTags: new FormArray([]),
+          inputTags:new FormControl(),
+          selectScoreAlgo:new FormControl(this.scoringAlgoData['defaultValue']),
           clusterList: new FormArray([]),
           clusterTagId: new FormControl(false),
+          enableClusterTags: new FormControl(),
         });
          this.loading = response.logListLoading;
          this.logTopicsData = response.logTopicsList['logTopics'];
@@ -224,7 +268,10 @@ getLogTopics(){
          this.loading = response.logDataSourcesLoading;
          this.dataSourceData = response.logDataSources;
      }
-    
+     if(response.tags != null) {
+      this.dataSourceData = response.logDataSources;
+  }
+  
  })   
 }
 
@@ -246,14 +293,7 @@ onClusterChange(status: boolean){
   if(status === true){
     this.store.select(fromFeature.selectLogTemplate).subscribe(
       (response) => {
-    if(response.logClusterTags != null){
-      
-      this.loading = response.logClusterLoading;
-      this.logClusterData = response.logClusterTags['clusterTopics'];
-      this.clusterTagConfig = response.logClusterTags['clusterTags'];
-             
-      // Populating Cluster 
-           
+          
     this.logClusterData.forEach((logClusterData, logClusterIndex) => {
      (<FormArray>this.logTopicsForm.get('clusterList')).push(
       new FormGroup({
@@ -262,8 +302,12 @@ onClusterChange(status: boolean){
        })
      );
   });
-    }
+    
   })   
+  }
+  else{
+    this.editTagInput=false;
+    this.addTagInput=false;
   }
   
 
@@ -273,6 +317,7 @@ onClusterChange(status: boolean){
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
+   this.logForm['scoringAlgorithm'] = this.logTopicsForm.value['selectScoreAlgo']
    if(this.clusterTagFlag === true){
     this.logForm['tags'] = this.logTopicsForm.value['clusterList'];
    }else{
@@ -281,17 +326,25 @@ SubmitForm(){
    this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
    this.logTemplateData = this.logForm;
 
-   // Action to create the log template   
-   this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
+   // Action to create the log template 
+   this.logTemplateData['applicationId'] = this.applicationData['applicationId'];
+   this.logTemplateData['applicationName'] = this.applicationData['name'];
+   this.logTemplateData['emailId'] = this.applicationData['email'];
+
+   this.store.dispatch(ApplicationActions.saveLogTemplate({applicationId : this.applicationData['applicationId'], logTemplateData : this.logTemplateData}));  
+   //this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
    if(this.stepper != undefined){
      this.stepper.reset();
    }
    this.logTopicsForm.value['clusterTagId'] = false;
+   this.logTopicsForm.value['enableClusterTags'] = false;
    this.createLogForm.value['autoBaseline'] = false;
    this.createLogForm.value['regExFilter'] = false;
     this.createLogForm.reset();
     this.logTopicsForm.reset();
     this.selectedDataSource =  null;
+    this.editTagInput=false;
+    this.addTagInput=false;
 }
 
 // Below function to add new log topics
@@ -374,6 +427,77 @@ cannotContainSpace(control: FormControl): {
     this.logTopicsForm.reset(); 
     this.stepper.reset();
    
+  }
+  addNewTag(){
+    this.addTagInput=true;
+    this.editTagInput=false;
+    this.logTopicsForm.patchValue({
+      inputTags: ""
+   });
+   
+  }
+
+  editNewTag(){
+    this.editTagInput=true;
+    this.addTagInput=false;
+    this.logTopicsForm.patchValue({
+      inputTags: this.selectedDropDownTag
+   });
+  }
+  removeTags(){
+    for(let i=0;i<this.clusterTagList.length;i++)
+    {
+      if(this.clusterTagList[i].name==this.selectedDropDownTag)
+      {
+        this.removeTagId = this.clusterTagList[i].id
+      }
+    }
+    this.store.dispatch(ApplicationActions.deleteCustomTags({ applicationId: this.applicationId,tagId:this.removeTagId }));
+  }
+  selectedTag(value){
+    this.selectedDropDownTag = value;
+    this.logTopicsForm.patchValue({
+      inputTags: value
+   });
+  }
+  submitEditedTag(){
+    for(let i=0;i<this.clusterTagList.length;i++)
+    {
+      if(this.clusterTagList[i].name==this.selectedDropDownTag)
+      {
+        var myjson = {
+          "id":this.clusterTagList[i].id,
+          "name":this.logTopicsForm.get('inputTags').value
+        }
+        this.editedTagId = this.clusterTagList[i].id
+        // this.clusterTagList[i].name = this.logTopicsForm.get('inputTags').value // remove once api is there
+      }
+    }
+    this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value
+    this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
+  }
+  submitNewTag(){
+    this.addedTag= this.logTopicsForm.get('inputTags').value
+    var myjson = {
+      "name":this.addedTag
+    }
+    if(this.addedTag!=null)
+    {
+      this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
+    }
+  //   this.store.select(fromFeature.selectLogTemplate).subscribe(
+  //     (response) => {
+        
+  //         this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+  //         this.logTopicsForm.patchValue({
+  //     enableClusterTags: true
+  //  });
+      
+  // })
+  
+    
+    
+
   }
 
 

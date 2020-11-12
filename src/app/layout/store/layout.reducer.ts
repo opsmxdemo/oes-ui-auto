@@ -7,9 +7,11 @@ export interface State {
     appliactionData: number;
     sidebarVisible: string;
     installationMode: string;
+    supportedFeatures: [];
     usergroupRefresh: any;
     apiErrorCollection: boolean[];
     errorMessage: string;
+    approvalInstalgateCount: string;
 }
 
 export const initialState: State = {
@@ -17,9 +19,11 @@ export const initialState: State = {
     appliactionData: 0,
     sidebarVisible: '',
     installationMode:'',
+    supportedFeatures: null,
     usergroupRefresh: null,
     apiErrorCollection:[false,false],
-    errorMessage: ''
+    errorMessage: '',
+    approvalInstalgateCount: ''
 }
 
 export function layoutReducer(
@@ -51,11 +55,21 @@ export function layoutReducer(
                 ...state,
                 installationMode: action.payload
             }
+            case LayoutAction.LayoutActionTypes.SUPPORTEDFEATURES:
+                return {
+                    ...state,
+                    supportedFeatures: action.payload
+                }
         case LayoutAction.LayoutActionTypes.USERGROUPREFRESH:
             return {
                     ...state,
                     usergroupRefresh: action.payload
             }
+        case LayoutAction.LayoutActionTypes.VISIBILITY:
+                return {
+                        ...state,
+                        approvalInstalgateCount: action.payload
+                }
         case LayoutAction.LayoutActionTypes.SERVERERROR:
             return {
                 ...state,
