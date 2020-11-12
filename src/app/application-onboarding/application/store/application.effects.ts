@@ -331,6 +331,7 @@ export class ApplicationEffect {
                      return ApplicationAction.loadImageSource({ imageSourceListData: resdata});
                  }),
                  catchError(errorRes => {
+                     //this.toastr.showError('Imagesource not confiugred for this application ','Error');
                      return handleError(errorRes);
                  })
              );
@@ -398,7 +399,8 @@ export class ApplicationEffect {
             ofType(ApplicationAction.updateApplication),
             withLatestFrom(this.store.select(fromFeature.selectApplication)),
             switchMap(([action, applicationState]) => {
-                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + applicationState.applicationId, action.appData).pipe(
+                
+                return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId, action.appData).pipe(
                     map(resdata => {
                         return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
                     }),
@@ -757,10 +759,15 @@ export class ApplicationEffect {
         this.actions$.pipe(
             ofType(ApplicationAction.saveSaporConfig),
             switchMap((action) => {
-                return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/feature/configuration', action.saporConfigData).pipe(
+                return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/sapor/service/feature/configuration', action.saporConfigData, {observe: 'response'}).pipe(
                     map(resdata => {
-                        this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
-                        return ApplicationAction.postSaveSaporConfig({ saporConfigSavedData: resdata });
+                        if(resdata['status'] == 200){
+                            this.toastr.showSuccess('Feature saved successfully','SUCCESS');
+                        }else{
+                            this.toastr.showError('Failed to save. Try again','ERROR');
+                        }
+                        return ApplicationAction.postSaveSaporConfig({ 'saporConfigSavedData': {'status': true} });                  
+
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
