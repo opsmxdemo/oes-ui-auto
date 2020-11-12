@@ -268,7 +268,7 @@
                                   <div class="row" 
                                     *ngFor="let pipelineArr of serviceArr.get('saporConfiguration.pipelines')['controls'];let j=index">
                                     <div class="col-12 text-center" *ngIf="createApplicationForm.value.imageSource == '' && applicationId">
-                                      <div class="help-block" style="font-size:16px;">To configure Sapor feature please select an imagesource in <a class="showElementHover" (click)="loadApplicationForm()">application</a> </div>
+                                      <div class="help-block" style="font-size:16px;">To configure Sapor feature please select an imagesource in <a class="imageSourceLabel" (click)="loadApplicationForm()">application</a> </div>
                                      
                                       <br><br>
                                 </div>

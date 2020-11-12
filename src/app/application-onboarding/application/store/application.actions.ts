@@ -29,7 +29,10 @@ export const fetchUserGrops = createAction('[Application] FetchUserGrops', props
 export const fetchUserGropsPermissions = createAction('[Application] FetchUserGropsPermissions', props<{userGroupPermissionsData:[]}>());
 // Below refactor actions goes here
 export const saveApplication = createAction('[Application] SaveApplication', props<{applicationData:SaveApplication}>());
+
 export const savedApplication = createAction('[Application] SavedApplication', props<{savedApplicationResponse: any,dataType:string}>());
+export const isSavedApplicationSaved = createAction('[Application] IsSavedApplicationLoaded');
+
 export const saveService = createAction('[Application] SaveService', props<{applicationId:any,serviceSaveData:any}>());
 export const savedService = createAction('[Application] SavedService', props<{savedServiceResponse: any,dataType:string}>());
 

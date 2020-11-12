@@ -37,6 +37,7 @@ export interface State {
     //new app onboarding flow
     savedApplicationData : any;
     savedServiceData : any;
+    isApplicationLoaded: boolean;
 
     // Application List variables
     applicationList: ApplicationList[];
@@ -162,6 +163,7 @@ export const initialState: State = {
     initalOESDataLoaded: ['dummy','dummy'],
     applicationId:null,
     savedApplicationData: null,
+    isApplicationLoaded: false,
     savedServiceData : null,
     logtemplate: [],
     metrictemplate:[],
@@ -361,16 +363,24 @@ export function ApplicationReducer(
         on(ApplicationAction.saveApplication,
             state => ({
                 ...state,
-                applicationLoading:true
+                applicationLoading:true,
+                isApplicationLoaded: false,
             })
         ),
         on(ApplicationAction.savedApplication,
             (state,action) => ({
                 ...state,
                 applicationLoading:true,
+                isApplicationLoaded:true,
                 savedApplicationData : action.savedApplicationResponse
             })
-        ),        
+        ),    
+        on(ApplicationAction.isSavedApplicationSaved,
+            state => ({
+                ...state,
+                isApplicationLoaded:false
+            })
+        ),    
         on(ApplicationAction.saveService,
             state => ({
                 ...state,

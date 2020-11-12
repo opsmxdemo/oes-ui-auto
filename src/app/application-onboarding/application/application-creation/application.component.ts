@@ -186,6 +186,7 @@ export class CreateApplicationComponent implements OnInit {
     this.gateId = "";
     this.appPrimaryEdit = false;
     this.showDat = false;
+    this.applicationId = null;
     // Reseting metric and log Templates data
     this.store.dispatch(ApplicationActions.resetTemplateData());
 
@@ -448,7 +449,8 @@ export class CreateApplicationComponent implements OnInit {
             }
           }
         }
-        if (response.savedApplicationData != null) {
+        if (response.savedApplicationData != null && response.isApplicationLoaded) {
+          this.store.dispatch(ApplicationActions.isSavedApplicationSaved()); 
           this.savedApplicationData = response.savedApplicationData;
           this.applicationId = this.savedApplicationData.applicationId;
           this.selectedApplicationData = this.savedApplicationData;          
@@ -1246,14 +1248,14 @@ export class CreateApplicationComponent implements OnInit {
       this.showFeatures = true;
     }
     //Below action is use to save created form in database
-    if (this.editMode && this.applicationId) {
+    if (this.editMode) {
        this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
        this.loadServiceForm();
     } else {
-      if(!this.editMode && this.applicationId){
+      if(this.applicationId != null){
         this.appPrimaryEdit = true;
         this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
-
+        this.loadServiceForm();
       }else{
         this.store.dispatch(ApplicationActions.saveApplication({ applicationData: this.appForm }));
         this.loadServiceForm();
