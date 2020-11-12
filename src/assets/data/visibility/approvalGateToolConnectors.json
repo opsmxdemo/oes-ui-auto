@@ -1,0 +1,7 @@
+[
+  {
+    "visibilityToolConnectorId": 1,
+    "connectorType": "git",
+    "accountName": "myGitAccount"
+  }
+]

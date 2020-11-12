@@ -47,6 +47,7 @@
                       <tbody>
                           <tr *ngFor="let datasourceData of currentPage | filter:searchData; let i=index">
                             <td>{{datasourceData.name}}</td>
+                            <!-- <td *ngIf = "datasourceData.usage === 'visibility'">{{datasourceData.displayName}}</td> -->
                             <td>{{datasourceData.datasourceType}}</td>
                              <td>
                               <span data-toggle="tooltip" data-placement="top" data-original-title="Edit" (click)="onselectDatasource('Edit',datasourceData,i)">

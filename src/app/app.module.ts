@@ -34,6 +34,7 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { TrendAnalysisComponent } from './application/trend-analysis/trend-analysis.component'; 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { VisibilityComponent } from './visibility/visibility.component';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -55,7 +56,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     TableRowComponent,
     HasChildComponent,
     CdDashboardComponent,
-    TrendAnalysisComponent
+    TrendAnalysisComponent,
+    VisibilityComponent
   ],
   imports: [
     BrowserModule,

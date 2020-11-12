@@ -1,0 +1,19 @@
+[
+  {
+    "visibilityToolConnectorId": 2,
+    "connectorType": "Jira"
+  },
+  {
+    "visibilityToolConnectorId": 1,
+    "connectorType": "Git",
+    "accountName": "myGitAccount"
+  },
+  {
+    "visibilityToolConnectorId": 3,
+    "connectorType": "Autopilot"
+  },
+  {
+    "visibilityToolConnectorId": 4,
+    "connectorType": "Sonarqube"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "serviceId": 1,
+    "serviceName": "My service",
+    "approvalGateId": 1,
+    "approvalGateName": "Production Gate1",
+    "approvalGateInstanceId": 1,
+    "status": "Waiting"
+  },
+  {
+    "serviceId": 2,
+    "serviceName": "My service2",
+    "approvalGateId": 1,
+    "approvalGateName": "Production Gate2",
+    "approvalGateInstanceId": 1,
+    "status": "Waiting"
+  },
+  {
+    "serviceId": 3,
+    "serviceName": "My service3",
+    "approvalGateId": 1,
+    "approvalGateName": "Production Gate3",
+    "approvalGateInstanceId": 1,
+    "status": "Rejected"
+  },
+  {
+    "serviceId": 4,
+    "serviceName": "My servic4",
+    "approvalGateId": 1,
+    "approvalGateName": "Production Gate4",
+    "approvalGateInstanceId": 1,
+    "status": "Approved"
+  },
+  {
+    "serviceId": 5,
+    "serviceName": "My service5",
+    "approvalGateId": 1,
+    "approvalGateName": "Production Gate5",
+    "approvalGateInstanceId": 1,
+    "status": "Approved"
+  }
+]

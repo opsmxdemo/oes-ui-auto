@@ -41,7 +41,7 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
         name: '',
         configurationFields: {},
       };
-      if(this.accountBelongsTo === 'AP'){
+      if(this.accountBelongsTo === 'deployment_verification'){
         if(this.supportedDataSources['autopilotDataSources'] !== null && this.supportedDataSources['autopilotDataSources'].length > 0){
           this.supportedDataSources['autopilotDataSources'].forEach(datasourceObj => {
             if(datasourceObj.datasourceType === this.accountData.datasourceType){
@@ -49,9 +49,17 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
             }
           });
         }
-      }else{
+      }else if(this.accountBelongsTo === 'sapor'){
         if(this.supportedDataSources['oesDataSources'] !== null && this.supportedDataSources['oesDataSources'].length > 0){
           this.supportedDataSources['oesDataSources'].forEach(datasourceObj => {
+            if(datasourceObj.datasourceType === this.accountData.datasourceType){
+              this.currentFormData = datasourceObj.configurationFields;
+            }
+          });
+        }
+      }else if(this.accountBelongsTo === 'visibility'){
+        if(this.supportedDataSources['visibilityDataSources'] !== null && this.supportedDataSources['visibilityDataSources'].length > 0){
+          this.supportedDataSources['visibilityDataSources'].forEach(datasourceObj => {
             if(datasourceObj.datasourceType === this.accountData.datasourceType){
               this.currentFormData = datasourceObj.configurationFields;
             }
@@ -95,20 +103,45 @@ export class CreateDataSourceComponent implements OnInit, OnChanges {
 
   // Below function is use to execute on create dataSource
   onSaveForm(event) {
+    debugger
     let postData = { ...this.selectedProviderObj };
     postData['name']=event.form.value.name;
     postData['configurationFields'] = event.form.value.configFields;
-    if (this.providerBelongsTo === 'AP') {
+
+    if (this.providerBelongsTo === 'deployment_verification') {
       if(this.isEditMode){
         this.store.dispatch(DataSourceActions.updateAPDatasources({ UpdatedDataSource: postData }));
       }else{
         this.store.dispatch(DataSourceActions.createAPDatasources({ CreatedDataSource: postData }));
       }
-    } else {
+    } else if (this.providerBelongsTo === 'sapor') {
       if(this.isEditMode){
         this.store.dispatch(DataSourceActions.updateOESDatasources({ UpdatedDataSource: postData }));
       }else{
         this.store.dispatch(DataSourceActions.createOESDatasources({ CreatedDataSource: postData }));
+      }
+    } else if (this.providerBelongsTo === 'visibility') { 
+    //   const finalJson = {
+    //     connectorType: "GIT",
+    //     accountName: "git_credentails",
+    //     connectorProperties: [
+    //         {
+    //             key: postData.configurationFields.username,
+    //             value: "ramyaravi-opsmx"
+    //         }, {
+    //             key: "apitoken",
+    //             value: "e2585c0fce6bf049152cf9ec780266f98a05a0be"
+    //         },
+    //          {
+    //             key: "url",
+    //             value: "https://api.github.com"
+    //         }
+    //     ],
+    // };
+      if(this.isEditMode){
+        this.store.dispatch(DataSourceActions.updateVisibilityDatasources({ UpdatedDataSource: postData }));
+      }else{
+        this.store.dispatch(DataSourceActions.createVisibilityDatasources({ CreatedDataSource: postData }));
       }
     }
 

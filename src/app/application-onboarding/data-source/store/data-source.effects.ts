@@ -79,13 +79,30 @@ export class DataSourceEffect {
         )
     )
 
+    // Below effect is use for fetch Visibility data related to Accounts List page
+    fetchVisibilityDatasourceListData = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DataSourceAction.loadDatasourceList,DataSourceAction.loadVisibilityDatasourceList),
+            switchMap(() => {
+                return this.http.get<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors').pipe(
+                    map(resdata => {
+                        return DataSourceAction.fetchDatasourceList({ DatasourceList: resdata });
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes,'list');
+                    })
+                );
+            })
+        )
+    )
+
 
     // Below effect is use for fetch data related to DataSource
     fetchSupportedDatasources = createEffect(() =>
         this.actions$.pipe(
             ofType(DataSourceAction.loadDatasource),
             switchMap(() => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'dashboardservice/v1/datasources').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/datasources').pipe(
                     map(resdata => {
                         return DataSourceAction.fetchSupportedDatasources({ SupportedDataSource: resdata });
                     }),
@@ -106,16 +123,16 @@ export class DataSourceEffect {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials', action.CreatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Datasource "'+action.CreatedDataSource.name+'" is created successfully','Success');
-                        switch(layoutState.installationMode){
-                            case 'AP':
-                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                              break;
-                            case 'OES':
-                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
-                              break;
-                            case 'OES-AP':
-                              this.store.dispatch(DataSourceAction.loadDatasourceList());
-                              break;
+                        const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                        const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                        const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
+
+                        if (ap === true){
+                        this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        }else if (sapor === true){
+                        this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        }else if (visibility === true){
+                        this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
                         }
                         return DataSourceAction.successResponse();
                     }),
@@ -137,16 +154,17 @@ export class DataSourceEffect {
                 return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/saveAccount', action.CreatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(resdata['message'],'Success');
-                        switch(layoutState.installationMode){
-                            case 'AP':
-                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                              break;
-                            case 'OES':
-                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
-                              break;
-                            case 'OES-AP':
-                              this.store.dispatch(DataSourceAction.loadDatasourceList());
-                              break;
+                        
+                        const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                        const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                        const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
+                        
+                        if(ap === 'deployment_verification'){
+                        this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        }else if(sapor === 'sapor'){
+                        this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        }else if(visibility === 'visibility'){
+                        this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
                         }
                         return DataSourceAction.successResponse();
                     }),
@@ -159,6 +177,41 @@ export class DataSourceEffect {
         )
     )
 
+      // Below effect is use for create Visibility DataSource Account .
+      createVisibilityDatasource = createEffect(() =>
+      this.actions$.pipe(
+          ofType(DataSourceAction.createVisibilityDatasources),
+          withLatestFrom(this.appStore.select('layout')),
+          switchMap(([action,layoutState]) => {
+              debugger
+              return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors', action.CreatedDataSource).pipe(
+                  map(resdata => {
+                      this.toastr.showSuccess(resdata['message'],'Success');
+                      const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
+
+                      this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
+
+                    //   const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                    //   const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                      debugger
+                    //   if(ap === 'deployment_verification'){
+                    //   this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                    //   }else if(sapor === 'sapor'){
+                    //   this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                    //   }else if(visibility === 'visibility'){
+                    //   this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
+                    //   }
+                      return DataSourceAction.successResponse();
+                  }),
+                  catchError(errorRes => {
+                      this.toastr.showError('Datasource "'+action.CreatedDataSource.name+'" is not created due to: '+errorRes.error.message, 'ERROR')
+                      return handleError(errorRes,'create');
+                  })
+              );
+          })
+      )
+  )
+
     // Below effect is use for update APDataSource Account .
     updateAPDatasource = createEffect(() =>
         this.actions$.pipe(
@@ -168,16 +221,17 @@ export class DataSourceEffect {
                 return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials/'+action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Datasource "'+action.UpdatedDataSource.name+'" is updated successfully','Success');
-                        switch(layoutState.installationMode){
-                            case 'AP':
-                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                              break;
-                            case 'OES':
-                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
-                              break;
-                            case 'OES-AP':
-                              this.store.dispatch(DataSourceAction.loadDatasourceList());
-                              break;
+                        
+                        const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                        const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                        const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
+
+                        if(ap === true){
+                        this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        }else if(sapor === true){
+                        this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        }else if(visibility === true){
+                        this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
                         }
                         return DataSourceAction.updatesuccessResponse();
                     }),
@@ -199,18 +253,61 @@ export class DataSourceEffect {
                 return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'oes/accountsConfig/updateAccount/'+ action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
                     map(resdata => {
                         this.toastr.showSuccess(resdata['message'],'Success');
-                        switch(layoutState.installationMode){
-                            case 'AP':
-                              this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                              break;
-                            case 'OES':
-                              this.store.dispatch(DataSourceAction.loadOESDatasourceList());
-                              break;
-                            case 'OES-AP':
-                              this.store.dispatch(DataSourceAction.loadDatasourceList());
-                              break;
+                        if(layoutState.supportedFeatures){
+                            console.log(layoutState.supportedFeatures);
+                        }
+                        const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                        const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                        const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
+
+                        if(ap === true){
+                        this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        }else if(sapor === true){
+                        this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        }else if(visibility === true){
+                        this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
                         }
                         return DataSourceAction.updatesuccessResponse();
+                    }),
+                    catchError(errorRes => {
+                        this.toastr.showError('Datasource "'+action.UpdatedDataSource.name+'" is not updated due to: '+errorRes.error.message, 'ERROR')
+                        return handleError(errorRes,'create');
+                    })
+                );
+            })
+        )
+    )
+
+    // Below effect is use for update VisibilityDataSource Account .
+    updateVisibilityDatasource = createEffect(() =>
+        this.actions$.pipe(
+            ofType(DataSourceAction.updateVisibilityDatasources),
+            withLatestFrom(this.appStore.select('layout')),
+            switchMap(([action,layoutState]) => {
+                return this.http.put<EditDataSource>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/'+ action.UpdatedDataSource.id, action.UpdatedDataSource).pipe(
+                    map(resdata => {
+                        this.toastr.showSuccess('Datasource "'+action.UpdatedDataSource.name+'" is updated successfully','Success');
+
+                        // this.toastr.showSuccess(resdata['message'],'Success');
+                        if(layoutState.supportedFeatures){
+                            console.log(layoutState.supportedFeatures);
+                        }
+                        // const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                        // const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
+                        const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
+                        if(visibility === true){
+                            this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
+                        }
+                        return DataSourceAction.updatesuccessResponse();
+
+
+                        // if(ap === true){
+                        // this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        // }else if(sapor === true){
+                        // this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        // }else if(visibility === true){
+                        // }
+                        // return DataSourceAction.updatesuccessResponse();
                     }),
                     catchError(errorRes => {
                         this.toastr.showError('Datasource "'+action.UpdatedDataSource.name+'" is not updated due to: '+errorRes.error.message, 'ERROR')
@@ -258,6 +355,25 @@ export class DataSourceEffect {
          })
      )
  )
+
+  // Below effect is use for delete datasource Account .
+  deleteVisibilityDatasourceData = createEffect(() =>
+  this.actions$.pipe(
+      ofType(DataSourceAction.deleteVisibilityDatasourceAccount),
+      switchMap(action => {
+          return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors/' + action.id).pipe(
+              map(resdata => {
+                  this.toastr.showSuccess(action.accountName + ' is deleted successfully!!', 'SUCCESS')
+                  return DataSourceAction.DatasourceaccountDeleted({ index: action.index })
+              }),
+              catchError(errorRes => {
+                  this.toastr.showError('DataSource not deleted due to ' + errorRes.error.message, 'ERROR')
+                  return handleError(errorRes,'list');
+              })
+          );
+      })
+  )
+)
 
 
 
