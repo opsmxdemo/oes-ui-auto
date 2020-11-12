@@ -114,12 +114,12 @@
                 <form [formGroup]="createApplicationForm">
                   <div class="form-group">
                     <label>Application Name</label>
-                    <input type="text" appLowercase class="form-control" formControlName="name"  [ngClass]="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched ? 'is-invalid':''">
+                    <input type="text" appLowercase class="form-control" [readonly]="editMode" formControlName="name"  [ngClass]="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched ? 'is-invalid':''">
                     <span *ngIf="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched"
                       class="invalid-feedback">
                       <span *ngIf="createApplicationForm.get('name').errors['required']">Application Name is
                         required</span>
-                      <span *ngIf="createApplicationForm.get('name').errors['applicationExist']">Application already
+                      <span *ngIf="createApplicationForm.get('name').errors['nameExists'] && !appPrimaryEdit">Application already
                         exists with same name. Please choose a unique application name</span>
                       <span *ngIf="createApplicationForm.get('name').errors['containSpace']">Space is not allowed in application name</span>
                       <span *ngIf="createApplicationForm.get('name').errors['startingFromNumber']">The application name must begin with a letter.</span>
@@ -163,7 +163,7 @@
                  <!--col-12-->
                  <div class="col-8 pull-right"  *ngIf="showApplicationForm">
                   <div class="page_access text-right py-2 px-3">
-                    <button class="btn btn-primary ml-2" [disabled]="createApplicationForm.invalid" (click)="SubmitApplicationForm()">Save</button>
+                    <button class="btn btn-primary ml-2" (click)="SubmitApplicationForm()">Save & Next</button>
                     <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
                     <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
                    
@@ -243,7 +243,12 @@
                                         </span>
                                         
                                       </td>
-                                      <td *ngIf = "!editMode && featureName == 'sapor'"><span>-</span></td>
+                                      <td *ngIf = "!editMode && featureName == 'sapor'">
+                                        <span *ngIf = "!saporFeatureSaved">-</span>
+                                        <span *ngIf = "saporFeatureSaved">
+                                          <i class="fa fa-check" aria-hidden="true"></i>
+                                        </span>
+                                      </td>
                                       <!-- <span><i *ngIf = "gateId != '' && gateId != null && gateId != undefined " class="fa fa-check" aria-hidden="true"></i></span> -->
                                     </tr>
                                   </ng-container>
@@ -262,6 +267,11 @@
                                   </table>
                                   <div class="row" 
                                     *ngFor="let pipelineArr of serviceArr.get('saporConfiguration.pipelines')['controls'];let j=index">
+                                    <div class="col-12 text-center" *ngIf="createApplicationForm.value.imageSource == '' && applicationId">
+                                      <div class="help-block" style="font-size:16px;">To configure Sapor feature please select an imagesource in <a class="showElementHover" (click)="loadApplicationForm()">application</a> </div>
+                                     
+                                      <br><br>
+                                </div>
                                     <div class="col-12 " [formGroupName]="j">
                                       <div class="form-group mb-3 pl-5 text-muted">
                                         <label>Select Service Pipeline</label>
@@ -531,6 +541,7 @@
                                             </thead>
                                             <tbody>
                                               <tr *ngFor="let optionsArr of visibilityForm.get('visibilityConfig')['controls'];let i=index" (mouseenter)="toolTypeRowHoverd[i] = true" (mouseleave)="toolTypeRowHoverd[i] = false">
+                                                <!-- <div>Options Array: {{optionsArr.controls.connectorType.value | json}}  and i  =  {{i}}  ToolTypeDataSaved: {{toolTypeDataSaved[i]}} ||| AccountType:    {{accountsForTooltypes[i] | json}}  ||| Template Types: {{templatesForToolType[i] | json}}  </div> -->
                                                 <ng-container [formGroupName]="i">
                                                   <td>
                                                     <select *ngIf="!toolTypeDataSaved[i]" class="form-control" formControlName="connectorType" (change)="onChangeTooltype($event.target.value)">
