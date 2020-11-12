@@ -66,6 +66,8 @@ export class CreateApplicationComponent implements OnInit {
   dockerAccountName = '';                                         // It is use to store default docker Account name.
   userGroupData = [];                                             // It is use to store array value of userGroups. 
   userGroupDropdownData = [];                                     // It is use to store userGroupDropdown data .
+  SaporConfigSavedResponse: any;                                    // It is use to store the response after save sapor con
+  saporFeatureSaved : boolean = false;                              // It is use to save the sapor config feature enabled
   logTemplateData = [];                                           // It is use to store log Template data created from json editor.
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
@@ -167,6 +169,7 @@ export class CreateApplicationComponent implements OnInit {
   deploymentVerificaionFeatureSavedResponse : any;
   deploymentVerificationFeatureSaved : boolean = false;
   serviceStatus: any = {};
+  appPrimaryEdit: boolean = false;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -181,7 +184,7 @@ export class CreateApplicationComponent implements OnInit {
     this.loadApplicationForm();
     this.showserviceGroup = true;
     this.gateId = "";
-
+    this.appPrimaryEdit = false;
     this.showDat = false;
     // Reseting metric and log Templates data
     this.store.dispatch(ApplicationActions.resetTemplateData());
@@ -243,11 +246,19 @@ export class CreateApplicationComponent implements OnInit {
         }
 
 
-        // checking sapor editMode
+        // code for sapor
 
         if (responseData.saporConfigList !== null) {
           console.log(responseData.saporConfigList);
           this.saporFinalData = responseData.saporConfigList;
+        }
+
+        if(responseData.saporConfigSavedData != null && responseData.isSaporConfigSaved) {
+          this.store.dispatch(ApplicationActions.isSaporConfigSaved());
+          this.SaporConfigSavedResponse = responseData.saporConfigSavedData;
+          if(this.SaporConfigSavedResponse['status'] == true){
+            this.saporFeatureSaved = true;
+          }
         }
 
         // alert(responseData.editMode);
@@ -709,7 +720,7 @@ export class CreateApplicationComponent implements OnInit {
     //if(this.userType === 'Deployment Verification'){
     // For AP mode
     this.createApplicationForm = new FormGroup({
-      name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this)]),
+      name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this),this.valitateApplicationName.bind(this)]),
       emailId: new FormControl('', [Validators.required, Validators.email]),
       imageSource: new FormControl(''),
       description: new FormControl('')
@@ -747,12 +758,12 @@ export class CreateApplicationComponent implements OnInit {
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
   valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
     const promise = new Promise<any>((resolve, reject) => {
-      this.sharedService.validateApplicationName(control.value, 'application').subscribe(
+      this.sharedService.validateApplicationName(control.value, 'name').subscribe(
         (response) => {
-          if (response['applicationExist'] === true) {
-            resolve({ 'applicationExist': true });
+          if (response['nameExists'] === true) {
+            this.createApplicationForm.get('name').setErrors({ 'nameExists': true });
           } else {
-            resolve(null);
+            this.createApplicationForm.get('name').setErrors(null);
           }
         },
         // below contain remove when name check api is implemented
@@ -1110,6 +1121,7 @@ export class CreateApplicationComponent implements OnInit {
     //code to reset the feature save check false. To rest the tick mark which is showing on feature list once feature saved.
     this.gateId = "";
     this.deploymentVerificationFeatureSaved = false;
+    this.saporFeatureSaved = false;
   }
 
   //Below function is use to delete existing service fron Service Section
@@ -1198,16 +1210,27 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to submit applicatio form
   SubmitApplicationForm() {
+  //  this.appPrimaryEdit = false;
+
     console.log(this.createApplicationForm.value);
     this.appForm = this.createApplicationForm.value;
     if (this.createApplicationForm.value.name) {
       this.showFeatures = true;
     }
     //Below action is use to save created form in database
-    if (this.editMode) {
+    if (this.editMode && this.applicationId) {
        this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
+       this.loadServiceForm();
     } else {
-      this.store.dispatch(ApplicationActions.saveApplication({ applicationData: this.appForm }));
+      if(!this.editMode && this.applicationId){
+        this.appPrimaryEdit = true;
+        this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
+
+      }else{
+        this.store.dispatch(ApplicationActions.saveApplication({ applicationData: this.appForm }));
+        this.loadServiceForm();
+      }
+     
     }
   }
 
@@ -1690,7 +1713,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   loadApplicationForm() {
-  
+    this.appPrimaryEdit = true;
     this.showServiceForm = false;
     this.showEnvironmentForm = false;
     this.showPermissionForm = false;

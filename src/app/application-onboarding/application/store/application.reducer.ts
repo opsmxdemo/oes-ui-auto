@@ -427,7 +427,7 @@ export function ApplicationReducer(
         on(ApplicationAction.postUpdateEnvironments,
             (state,action) => ({
                 ...state,
-                saporConfigData:action.environmentsListUpdatedData,
+                environmentsListUpdatedData:action.environmentsListUpdatedData,
                 isEnviromentsLoaded: true
             })
         ),
@@ -1024,7 +1024,7 @@ export function ApplicationReducer(
     on(ApplicationAction.postSaveSaporConfig,
         (state,action) => ({
             ...state,
-            saporConfigData:action.saporConfigSavedData,
+            saporConfigSavedData:action.saporConfigSavedData,
             isSaporConfigSaved: true
         })
     ),
