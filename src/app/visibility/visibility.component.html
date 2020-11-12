@@ -160,8 +160,10 @@
                                             
                                     <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
                                             class="btn btn-danger align-bottom" (click)="approvalGateReview('reject', approvalGateComment)">Reject</button></div>
+                                    <div class="p-3"><label class="pr-2" >Activated Time: </label>
+                                        <span>{{this.gateActivatedTime | date: "MMM dd, yyyy HH:mm"}}</span>
+                                    </div>
                                 </div>
-
 
                                 <div class="form-group row" *ngIf="!approvalWaitingStatus " >
                                   <table class="commentsText" *ngIf="!gateStatusPending">

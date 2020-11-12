@@ -58,8 +58,8 @@ export class VisibilityComponent implements OnInit {
   selectedApplicationId: any;
   serviceListEmpty: boolean;
   visibilityData: any[];
-  gitVisibilityData: any;
-  jiraVisibilityData: any;
+  gitVisibilityData: any = [];
+  jiraVisibilityData: any = [];
   selectedConnectorType: string;
 
   //If the Visibility is redirected from other page load the application based on params
@@ -129,7 +129,7 @@ export class VisibilityComponent implements OnInit {
           this.gateApprovalTime = this.gateInstanceDetails.lastUpdatedTime;
           this.gateApprovalCallBackURL = this.gateInstanceDetails.approvalCallbackURL;
           this.approvalGateComment = this.gateInstanceDetails.approvalStatus.comment;
-          this.gateStatus = this.gateInstanceDetails.approvalStatus.status;
+          // this.gateStatus = this.gateInstanceDetails.approvalStatus.status;
           
           // this.store.dispatch(Visibility.stopLoadingConnectors());   
           
@@ -137,8 +137,12 @@ export class VisibilityComponent implements OnInit {
         if(resData.visibilityData != null && resData.visibilityDataLoaded){
           if(this.selectedConnectorType === "GIT"){
           this.gitVisibilityData = resData.visibilityData;
+          console.log("GIT: ", this.gitVisibilityData);
+          
           }else if (this.selectedConnectorType === "JIRA"){
           this.jiraVisibilityData = resData.visibilityData;
+          console.log("JIRA: ", this.jiraVisibilityData);
+          
           }
         } 
       });
