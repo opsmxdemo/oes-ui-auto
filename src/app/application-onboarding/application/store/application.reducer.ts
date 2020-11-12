@@ -484,6 +484,12 @@ export function ApplicationReducer(
                 applicationLoading:true
             })
         ),
+        on(ApplicationAction.updateApplicationDone,
+            state => ({
+                ...state,
+                applicationLoading:false
+            })
+        ),
 
         ////////
         on(ApplicationAction.getGroupPermissions,
@@ -546,6 +552,7 @@ export function ApplicationReducer(
                 applicationLoading:false
             })
         ),
+      
         on(ApplicationAction.fetchCloudAccount,
             (state,action) => ({
                 ...state,

@@ -77,6 +77,7 @@ export class VisibilityComponent implements OnInit {
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder, private route: ActivatedRoute, public toastr: NotificationService,) { }
 
   ngOnInit(): void {
+    $("[data-toggle='tooltip']").tooltip('hide');
     //assign the parameter is available
     this.paramsApplicationName = this.route.snapshot.params.applicationName;
     this.paramsApplicationId = this.route.snapshot.params.applicationId;

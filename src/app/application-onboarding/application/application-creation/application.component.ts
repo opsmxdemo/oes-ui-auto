@@ -1732,7 +1732,7 @@ export class CreateApplicationComponent implements OnInit {
     this.currentServiceIndex = index;
     this.store.dispatch(ApplicationActions.getFeaturesForAService({serviceId: service.serviceId}))
     this.loadServiceForm();
-    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId }));
+    this.store.dispatch(ApplicationActions.getSaporConfig({ applicationId: this.applicationId, serviceId: service.serviceId }));
 
     // this.configuredFeaturepresent(service.serviceId);
   }
