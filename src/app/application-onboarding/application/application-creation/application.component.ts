@@ -469,21 +469,7 @@ export class CreateApplicationComponent implements OnInit {
           this.userGroupPermissions = response.userGroupsPermissions;
           // populating user group dropdown data
           this.populateUserGroupsDropdown();
-        }
-        if (response.logtemplate.length > 0) {
-          this.logTemplateData = response.logtemplate;
-          if (this.logModel !== undefined) {
-            this.logModel.nativeElement.click();
-          }
-          this.populateSelectedTemplateName(this.currentLogTemplateIndex, 'logTemp')
-        }
-        if (response.metrictemplate.length > 0) {
-          this.metricTemplateData = response.metrictemplate;
-          if (this.metricModel !== undefined) {
-            this.metricModel.nativeElement.click();
-          }
-          this.populateSelectedTemplateName(this.currentMetricTemplateIndex, 'metricTemp')
-        }
+        }        
         if (response.approvalGateSavedData != null && response.isGateSaved) {
           this.store.dispatch(ApplicationActions.isApprovalGateSaved());
           this.gateData = response.approvalGateSavedData;
@@ -945,29 +931,7 @@ export class CreateApplicationComponent implements OnInit {
     })
   }
 
-  // Below function is use to populate newley created template into appropriate service field
-  populateSelectedTemplateName(index, type) {
-    if (index > -1) {
-      const arrayControl = this.servicesForm.get('services') as FormArray;
-      const innerarrayControl = arrayControl.at(index).get(type)
-      if (this.userType.includes('deployment_verification')) {
-        if (type === 'logTemp') {
-          if (this.templateEditMode) {
-            innerarrayControl.patchValue(this.logTemplateData[this.editTemplateIndex].templateName);
-          } else {
-            innerarrayControl.patchValue(this.logTemplateData[this.logTemplateData.length - 1].templateName);
-          }
-        } else {
-          if (this.templateEditMode) {
-            innerarrayControl.patchValue(this.metricTemplateData[this.editTemplateIndex].templateName);
-          } else {
-            innerarrayControl.patchValue(this.metricTemplateData[this.metricTemplateData.length - 1].templateName);
-          }
-        }
-      }
-    }
-  }
-
+  
   // Below function is use to return proper group value
   groupProperties(name, props) {
     let prop = '';
@@ -1815,7 +1779,6 @@ export class CreateApplicationComponent implements OnInit {
     if(type == 'log'){
       this.store.dispatch(ApplicationActions.getLogTemplateDetails({applicationId : this.applicationId, templateName: this.logTemplate}));
       this.logTemplateEditMode = true;
-      //this.store.dispatch(ApplicationActions.getLogTemplateDetails({applicationId : 39, templateName: this.logTemplate}));
     }else if(type == 'metric'){
       this.metricTemplateEditMode = true;
       this.store.dispatch(ApplicationActions.getMetricTemplateDetails({applicationId : this.applicationId, templateName: this.metricTemplate}));
