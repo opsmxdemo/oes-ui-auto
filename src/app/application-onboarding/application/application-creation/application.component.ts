@@ -173,6 +173,7 @@ export class CreateApplicationComponent implements OnInit {
   appPrimaryEdit: boolean = false;
   triggerURL: string;                                                                           // store trigger url
   deleteVisibilityToolConnectorId: any;                                      // variable to store value of delete Visbility Tool Connector Id
+  showFeatureData: boolean;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -191,6 +192,7 @@ export class CreateApplicationComponent implements OnInit {
     this.appPrimaryEdit = false;
     this.showDat = false;
     this.applicationId = null;
+    this.showFeatureData = false;
     // Reseting metric and log Templates data
     this.store.dispatch(ApplicationActions.resetTemplateData());
 
@@ -835,6 +837,7 @@ export class CreateApplicationComponent implements OnInit {
       featureName: new FormControl(''),
       serviceId: new FormControl(val.id)
     })
+    this.showFeatureData = true;
 
     return serviceForm;
 
@@ -1132,6 +1135,7 @@ export class CreateApplicationComponent implements OnInit {
     this.gateId = "";
     this.deploymentVerificationFeatureSaved = false;
     this.saporFeatureSaved = false;
+    this.showFeatureData = false;
   }
 
   //Below function is use to delete existing service fron Service Section
@@ -1248,7 +1252,7 @@ export class CreateApplicationComponent implements OnInit {
       "name": this.servicesForm.value.services[index].serviceName
     };
     this.store.dispatch(ApplicationActions.saveService({ applicationId: this.applicationId, serviceSaveData: serviceDataToSave }));
-
+    this.showFeatureData = true;
   }
 
   // Below function is use to submit environments form
