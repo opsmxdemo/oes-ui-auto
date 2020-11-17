@@ -58,8 +58,8 @@ export class VisibilityComponent implements OnInit {
   selectedApplicationId: any;
   serviceListEmpty: boolean;
   visibilityData: any[];
-  gitVisibilityData: any = [];
-  jiraVisibilityData: any = [];
+  // gitVisibilityData: any = [];
+  // jiraVisibilityData: any = [];
   selectedConnectorType: string;
 
   //If the Visibility is redirected from other page load the application based on params
@@ -135,13 +135,27 @@ export class VisibilityComponent implements OnInit {
           
         }
         if(resData.visibilityData != null && resData.visibilityDataLoaded){
+            this.visibilityData = [];
+            this.store.dispatch(Visibility.visibilityDataLoading());
           if(this.selectedConnectorType === "GIT"){
-          this.gitVisibilityData = resData.visibilityData;
-          console.log("GIT: ", this.gitVisibilityData);
+          this.visibilityData = resData.visibilityData;
+          console.log("GIT: ", this.visibilityData);
           
           }else if (this.selectedConnectorType === "JIRA"){
-          this.jiraVisibilityData = resData.visibilityData;
-          console.log("JIRA: ", this.jiraVisibilityData);
+          this.visibilityData = resData.visibilityData;
+          console.log("JIRA: ", this.visibilityData);
+          
+          }else if (this.selectedConnectorType === "AUTOPILOT"){
+          this.visibilityData = resData.visibilityData;
+          console.log("AUTOPILOT: ", this.visibilityData);
+          
+          }else if (this.selectedConnectorType === "SONARQUBE"){
+          this.visibilityData = resData.visibilityData;
+          console.log("SONARQUBE: ", this.visibilityData);
+          
+          }else if (this.selectedConnectorType === "JENKINS"){
+          this.visibilityData = resData.visibilityData;
+          console.log("JENKINS: ", this.visibilityData);
           
           }
         } 
