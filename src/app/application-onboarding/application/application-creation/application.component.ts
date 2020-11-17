@@ -17,6 +17,7 @@ import * as $ from 'jquery';
 import { GroupPermission } from 'src/app/models/applicationOnboarding/createApplicationModel/groupPermissionModel/groupPermission.model';
 import { SaveApplication } from 'src/app/models/applicationOnboarding/createApplicationModel/saveApplicationModel';
 import { Environment } from 'src/app/models/applicationOnboarding/createApplicationModel/environmentModel/environment.model';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
 import { AppPage } from 'e2e/src/app.po';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
@@ -170,6 +171,8 @@ export class CreateApplicationComponent implements OnInit {
   deploymentVerificationFeatureSaved : boolean = false;
   serviceStatus: any = {};
   appPrimaryEdit: boolean = false;
+  triggerURL: string;                                                                           // store trigger url
+  deleteVisibilityToolConnectorId: any;                                      // variable to store value of delete Visbility Tool Connector Id
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -177,7 +180,8 @@ export class CreateApplicationComponent implements OnInit {
     public router: Router,
     private formBuilder: FormBuilder,
     private render: Renderer2,
-    private eleRef: ElementRef) { }
+    private eleRef: ElementRef, 
+    private environment: AppConfigService) { }
 
   ngOnInit() {
     this.defineAllForms();
@@ -494,6 +498,7 @@ export class CreateApplicationComponent implements OnInit {
            
           if (this.approvalGatesOfaServiceList.length > 0) {
             this.gateId = this.approvalGatesOfaServiceList[0].id;   
+            this.triggerURL =  this.environment.config.endPointUrl + "visibilityservice/v1/approvalGates/" + this.gateId + "/trigger"
             if(this.editMode){
               // this.gateForm.value.gateName = this.approvalGatesOfaServiceList[0].id;
               this.gateForm.get('gateName').setValue(this.approvalGatesOfaServiceList[0].name);
@@ -1062,6 +1067,14 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to remove exist environment 
   removeConnector(index) {
     $("[data-toggle='tooltip']").tooltip('hide');
+    
+    this.deleteVisibilityToolConnectorId = <FormArray>this.visibilityForm.get('visibilityConfig').value[index].visibilityToolConnectorId;
+  
+    // console.log("Visibility Tool Connector ID: ", <FormArray>this.visibilityForm.get('visibilityConfig').value[index].visibilityToolConnectorId);
+    // console.log("REMOVE at: ", <FormArray>this.visibilityForm.get('visibilityConfig'));
+
+    this.store.dispatch(ApplicationActions.deleteVisibilityToolConnector({ approvalGateId: this.gateId, visibilityToolConnectorId: this.deleteVisibilityToolConnectorId }));
+    
     (<FormArray>this.visibilityForm.get('visibilityConfig')).removeAt(index);
     if((<FormArray>this.visibilityForm.get('visibilityConfig')).controls.length < this.toolTypesCount) {
       this.hideVisibilityPlusIcon = false;
@@ -1504,11 +1517,14 @@ export class CreateApplicationComponent implements OnInit {
     } else if (item === 'visibility') {
       //check gate already configured for the selectd service
       // console.log(this.serviceId);
-        this.editVisibilityAccountsIndex = 0;
-        this.editVisibilityTemplateIndex = 0;
+
       this.visibilityForm = new FormGroup({
         visibilityConfig: new FormArray([])
       });
+      if(this.editMode){
+        this.editVisibilityAccountsIndex = 0;
+        this.editVisibilityTemplateIndex = 0;
+      }
 
       this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: this.serviceId }));
       // this.store.dispatch(ApplicationActions.getApprovalGatesOfaService({ serviceId: 22 }));        
