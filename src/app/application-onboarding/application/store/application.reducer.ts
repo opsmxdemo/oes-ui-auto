@@ -139,7 +139,9 @@ export interface State {
     editedLogTemplateData : any;
     metricTemplateDataToEdit : any,
     isMetricTemplateEdited: boolean,
-    editedMetricTemplateData : any
+    editedMetricTemplateData : any,
+    deleteVisibilityToolConnectorMessage: any,                  // Message retrived after deleting the visibility Tool connector
+    visibilityToolConnectorId: number
 }
 
 export const initialState: State = {
@@ -257,7 +259,9 @@ export const initialState: State = {
     editedLogTemplateData : null,
     metricTemplateDataToEdit : null,
     isMetricTemplateEdited: false,
-    editedMetricTemplateData : null
+    editedMetricTemplateData : null,
+    deleteVisibilityToolConnectorMessage: null,
+    visibilityToolConnectorId: null
 }
 
 export function ApplicationReducer(
@@ -742,6 +746,28 @@ export function ApplicationReducer(
             })
         ),
 
+        // Delete visibiltiy tool connector
+        on(ApplicationAction.deleteVisibilityToolConnector,
+            (state,action) => ({
+                ...state,
+                approvalGateId : action.approvalGateId,
+                visibilityToolConnectorId : action.visibilityToolConnectorId,
+                isDeletedVisibilityToolConnector: false
+            })
+        ),
+        on(ApplicationAction.postDeleteVisibilityToolConnector,
+            (state,action) => ({
+                ...state,
+                deleteVisibilityToolConnectorMessage:action.deleteVisibilityToolConnectorMessage,
+                isDeletedVisibilityToolConnector: true
+            })
+        ),
+        on(ApplicationAction.isDeleteVisibilityToolConnector,
+            (state,action) => ({
+                ...state,
+                isDeletedVisibilityToolConnector: false
+            })
+        ),
         on(ApplicationAction.getAccountToolType,
             (state,action) => ({
                 ...state,

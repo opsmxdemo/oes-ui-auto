@@ -641,6 +641,23 @@ export class ApplicationEffect {
         )
     )
 
+    // Effect to delete  visibility Toold Connector
+    onDeleteVisibilityToolConnector = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.deleteVisibilityToolConnector),
+            switchMap((action) => {
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.approvalGateId + '/toolConnectors/' + action.visibilityToolConnectorId).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postDeleteVisibilityToolConnector({ deleteVisibilityToolConnectorMessage: resdata });
+                    }),
+                    catchError(errorRes => {
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
     // Effect to get all tool connector accounts for a particular connector type
     getAccountsForToolType = createEffect(() =>
         this.actions$.pipe(

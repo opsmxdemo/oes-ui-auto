@@ -265,44 +265,46 @@
                         </ul>
                         <div class="tab-content" id="myTabContent" *ngIf="showToolConnectorSection">
                             <div class="tab-pane p-4 fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
-                                <div *ngIf="selectedConnectorType == 'GIT'">
+                                <div>
                                   <table class="table">
                                     <thead class="thead-light">
-                                      <tr>
-                                        <th scope="col" class="visibilityCol1">Type</th>
+                                      <tr *ngIf="selectedConnectorType == 'GIT'">
+                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
                                         <th scope="col" class="visibilityCol2Git">Commit ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr *ngFor="let eachData of gitVisibilityData"> 
-                                        <td>{{eachData.key}}</td>
-                                        <td>{{eachData.value}}</td>
-                                        <td>{{eachData.data | json}}</td> 
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <div *ngIf="selectedConnectorType == 'JIRA'">
-                                  <table class="table">
-                                    <thead class="thead-light">
-                                      <tr>
-                                        <th scope="col" class="visibilityCol1">Ticket#</th>
+                                      <tr *ngIf="selectedConnectorType == 'JIRA'">
+                                        <!-- <th scope="col" class="visibilityCol1">Ticket#</th> -->
                                         <th scope="col" class="visibilityCol2Jira">Task ID</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
+                                      </tr>
+                                      <tr *ngIf="selectedConnectorType == 'AUTOPILOT'">
+                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol2Jira">Autopilot ID</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
+                                      </tr>
+                                      <tr *ngIf="selectedConnectorType == 'SONARQUBE'">
+                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol2Jira">Project Key</th>
+                                        <th scope="col" class="visibilityCol3">Data</th>
+                                      </tr>
+                                      <tr *ngIf="selectedConnectorType == 'JENKINS'">
+                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol2Jira">Build ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr *ngFor="let eachData of jiraVisibilityData"> 
-                                        <td>{{eachData.key}}</td>
+                                      <tr *ngFor="let eachData of visibilityData"> 
+                                        <!-- <td>{{eachData.key}}</td> -->
                                         <td>{{eachData.value}}</td>
-                                        <td *ngIf="eachData.data">{{eachData.data | json}} </td> 
+                                        <td>{{eachData.data == null ? 'No data to Display' : eachData.data | json}}</td> 
                                       </tr>
                                     </tbody>
                                   </table>
                                 </div>
-                                <div *ngIf="connectorType == 'Autopilot'">AUTOPILOT INFO</div>
-                                <div *ngIf="connectorType == 'Sonarqube'">SONAEQUBE INFO</div>
+                                <div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-content p-4 text-center" *ngIf="!showToolConnectorSection && !gateStatusPending">Tool Connectors not present!</div>
