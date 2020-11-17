@@ -27,6 +27,7 @@ import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { CreateDataSourceComponent } from './data-source/create-data-source/create-data-source.component';
 import { DataSourceFormsComponent } from './data-source/create-data-source/data-source-forms/data-source-forms.component';
 import { NonAdminPipe } from '../pipes/nonAdmin.pipe';
+import { ClipboardModule } from 'ngx-clipboard';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { NonAdminPipe } from '../pipes/nonAdmin.pipe';
       DataSourceEffect,
       LogTemplateEffect,
       MetricTemplateEffect
-     ])
+     ]),
+     ClipboardModule
     ],
   })
   export class ApplicationOnboardingModule { }
