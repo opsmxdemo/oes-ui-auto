@@ -45,7 +45,7 @@ export class DeploymentVerificationComponent implements OnInit {
   reclassificationHistory: any;
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
-  control = new FormControl(this.deployementRun);
+  control: FormControl;
   canaryList: string[];
   incredementDisable = false;
   decrementDisable = false;
@@ -61,7 +61,7 @@ export class DeploymentVerificationComponent implements OnInit {
   myControl = new FormControl();
   options: User[] = [];
   filteredOptions: Observable<User[]>;
-  isShow = true;
+  isShow = false;
   deployementApplications: any;
   deploymentServices: any;
   deploymentApplicationHealth = {};
@@ -136,6 +136,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.control = new FormControl(this.deployementRun);
       // fix for the scroll position from App dashboard - it was loading somewhere from the middle
         this.router.events.subscribe((evt) => {
             if (!(evt instanceof NavigationEnd)) {
