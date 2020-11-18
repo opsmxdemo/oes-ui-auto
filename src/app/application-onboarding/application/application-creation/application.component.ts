@@ -479,6 +479,8 @@ export class CreateApplicationComponent implements OnInit {
         if (response.approvalGateSavedData != null && response.isGateSaved) {
           this.store.dispatch(ApplicationActions.isApprovalGateSaved());
           this.gateData = response.approvalGateSavedData;
+          console.log("log Gate Data: ", this.gateData);
+          
           this.gateId = response.approvalGateSavedData.id;
           //this.store.dispatch(ApplicationActions.getApprovalGates()); 
           //this.addConnector();
@@ -504,6 +506,7 @@ export class CreateApplicationComponent implements OnInit {
             if(this.editMode){
               // this.gateForm.value.gateName = this.approvalGatesOfaServiceList[0].id;
               this.gateForm.get('gateName').setValue(this.approvalGatesOfaServiceList[0].name);
+              this.gateForm.controls.gateName.disable();
               // console.log("Approval Gates List: ", this.approvalGatesOfaServiceList);
             }
             //console.log(this.approvalGatesOfaServiceList);
@@ -574,6 +577,7 @@ export class CreateApplicationComponent implements OnInit {
           //console.log(response.visibilityFeatureSavedData);
           this.gateData = response.visibilityFeatureSavedData;
           this.gateId = response.visibilityFeatureSavedData.id;
+          this.triggerURL =  this.environment.config.endPointUrl + "visibilityservice/v1/approvalGates/" + this.gateId + "/trigger";
           //this.store.dispatch(ApplicationActions.getApprovalGates()); 
           //this.addConnector();          
           //this.store.dispatch(ApplicationActions.getConfiguredToolConnectorTypes()); 
@@ -1380,6 +1384,7 @@ export class CreateApplicationComponent implements OnInit {
     //   "name": "OES Production Gate",
     //   "serviceId": 1
     // }
+    this.gateForm.controls.gateName.disable();
     var gateData = {
       "name": this.gateForm.value.gateName,
       "serviceId": this.serviceId
@@ -1393,6 +1398,8 @@ export class CreateApplicationComponent implements OnInit {
 
   onClickEditOfGateName() {
     // console.log(this.gateForm.value.gateName);
+
+    this.gateForm.controls.gateName.enable();
     this.isEditGateEnabled = true;
     $("[data-toggle='tooltip']").tooltip('hide');
   }
@@ -1570,6 +1577,7 @@ export class CreateApplicationComponent implements OnInit {
     }
     this.store.dispatch(ApplicationActions.editApprovalGate({ gateId: this.gateId, gateDataToEdit: approvalGateToEdit }));
     $("[data-toggle='tooltip']").tooltip('hide');
+    this.gateForm.controls.gateName.disable();
   }
 
   onDeleteGateName() {
