@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 import { AppConfigService } from 'src/app/services/app-config.service';
+import { NotificationService } from 'src/app/services/notification.service';
+
 
 //below function is use to fetch error and return appropriate comments
 const handleError = (errorRes: any,index:number) => {
@@ -21,6 +23,28 @@ const handleError = (errorRes: any,index:number) => {
     return of(new LayoutAction.ServerError(errorData));
 }
 
+//below function is use to fetch error and return appropriate comments
+const handleErrorMessage = (errorRes: any) => {
+    let errorMessage = 'An unknown error occurred';
+    if (!errorRes.error) {
+        return of((LayoutAction.ErrorResponse));
+    }
+    switch (errorRes.error.message) {
+        case 'Authentication Error':
+            errorMessage = 'Invalid login credentials';
+            break;
+        case 'Email Exist':
+            errorMessage = 'This email exist already';
+            break;
+        default:
+            errorMessage = 'Error Occurred';
+            break;
+    }
+    return of((LayoutAction.ErrorResponse));
+}
+
+
+
 @Injectable()
 export class LayoutEffect {
     user: any;
@@ -28,8 +52,30 @@ export class LayoutEffect {
         public http: HttpClient,
         public store: Store<fromApp.AppState>,
         public router: Router,
-        private environment: AppConfigService
+        private environment: AppConfigService,
+        public notification: NotificationService,
+
     ) { }
+
+     // Below effect is use for fetch supported features. 
+     @Effect()
+     fetchSupportedFeatures = this.actions$.pipe(
+         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
+         switchMap(() => {
+             return this.http.get<string>(this.environment.config.endPointUrl+'platformservice/v1/featureList').pipe(
+                 map(resData => {
+                     this.store.dispatch(new LayoutAction.ApiSuccess(1));
+                     return new LayoutAction.SupportedFeatures(resData['configuredFeatures']);
+                 }),
+                 catchError(errorRes => {
+                     //return handleError(errorRes,1);
+                     //this.notification.showError("Issue in refreshing the usergroups","Error");
+                     return handleErrorMessage(errorRes);
+
+                 })
+             );
+         })
+     );
 
       // Below effect is use to refresh the usergroups in gate
       @Effect()
@@ -43,7 +89,10 @@ export class LayoutEffect {
                       return new LayoutAction.usergroupRefresh(resData);
                   }),
                   catchError(errorRes => {
-                      return handleError(errorRes,1);
+                      //return handleError(errorRes,1);
+                      this.notification.showError("Issue in refreshing the usergroups","Error");
+                      return handleErrorMessage(errorRes);
+
                   })
               );
           })
@@ -65,39 +114,7 @@ export class LayoutEffect {
         })
     );
 
-    // Below effect is use for fetch installation mode data. 
-    @Effect()
-    fetchInstallationMode = this.actions$.pipe(
-        ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
-        switchMap(() => {
-            return this.http.get<string>(this.environment.config.endPointUrl+'dashboardservice/v1/installation/installationmode').pipe(
-                map(resData => {
-                    this.store.dispatch(new LayoutAction.ApiSuccess(1));
-                    return new LayoutAction.InstallationMode(resData['mode']);
-                }),
-                catchError(errorRes => {
-                    return handleError(errorRes,1);
-                })
-            );
-        })
-    );
-
-    // Below effect is use for fetch supported features. 
-    @Effect()
-    fetchSupportedFeatures = this.actions$.pipe(
-        ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
-        switchMap(() => {
-            return this.http.get<string>(this.environment.config.endPointUrl+'platformservice/v1/featureList').pipe(
-                map(resData => {
-                    this.store.dispatch(new LayoutAction.ApiSuccess(1));
-                    return new LayoutAction.SupportedFeatures(resData['configuredFeatures']);
-                }),
-                catchError(errorRes => {
-                    return handleError(errorRes,1);
-                })
-            );
-        })
-    );
+   
 
     // Below effect is use to refresh the usergroups in gate
     @Effect()
@@ -105,16 +122,16 @@ export class LayoutEffect {
         ofType(LayoutAction.LayoutActionTypes.LOADPAGE),
         withLatestFrom(this.store.select('auth')),
         switchMap(([action,authState]) => {
-              const httpHeaders: HttpHeaders = new HttpHeaders({
-                  'x-spinnaker-user': 'pxn65' 
-              }); { headers: httpHeaders }    
             return this.http.get<string>(this.environment.config.endPointUrl+'visibilityservice/v1/users/'+ authState.user +'/approvalGateInstances/activeCount').pipe(
                 map(resData => {
                    // this.store.dispatch(new LayoutAction.ApiSuccess(1));
                     return new LayoutAction.ApprovalInstanceCount(resData['activeCount']);
                 }),
                 catchError(errorRes => {
-                    return handleError(errorRes,1);
+                   // return handleError(errorRes,1);
+                   this.notification.showError("Error in fetching visibilty active count", "Error");
+                    return handleErrorMessage(errorRes);
+                   
                 })
             );
         })
