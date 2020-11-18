@@ -212,8 +212,10 @@
               </button>
             </div>
             <div id="timeAnalysisGraph{{log.id}} fadeIN" class="card-body inlineDisplay fadeIN" *ngIf="log.id==slectedTimeAnalysis " [hidden]="!isShow">
-              <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
               
+              <button type="button" class="close pull-right" aria-label="Close" (click)="closeTimeAnalysis()">
+                <span aria-hidden="true">&times;</span>
+              </button>
               <fusioncharts
               width="{{chartSize}}"
               height="350"
