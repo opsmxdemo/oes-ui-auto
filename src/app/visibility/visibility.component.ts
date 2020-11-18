@@ -70,7 +70,8 @@ export class VisibilityComponent implements OnInit {
   gateInstanceDetails: any;
   gateActivatedTime: any;
   gateApprovalTime: any;
-  gateApprovalCallBackURL: any;
+  gateApprovalCallBackURL: any;                       // callback URL from Instance Details
+  gateRejectionCallBackURL: any;                       // rejection URL from Instance Details
   gateStatusPending: boolean;
 
   // showApprovalHistory: boolean= false;
@@ -128,6 +129,7 @@ export class VisibilityComponent implements OnInit {
           this.gateActivatedTime = new Date(this.gateInstanceDetails.activatedTime);          
           this.gateApprovalTime = this.gateInstanceDetails.lastUpdatedTime;
           this.gateApprovalCallBackURL = this.gateInstanceDetails.approvalCallbackURL;
+          this.gateRejectionCallBackURL = this.gateInstanceDetails.rejectionCallbackURL;
           this.approvalGateComment = this.gateInstanceDetails.approvalStatus.comment;
           // this.gateStatus = this.gateInstanceDetails.approvalStatus.status;
           
@@ -233,7 +235,7 @@ export class VisibilityComponent implements OnInit {
     // this.approvalWaitingStatus= false;
     this.approvalGateComment = 'This gate is not activated';
     this.gateStatusPending = true;
-      this.toastr.showError('This approval gate is not activated.','Status');
+      this.toastr.showInfo('This approval gate is not activated.','Status');
   }
 
   onSelectingToolConnector(connectorType){    
