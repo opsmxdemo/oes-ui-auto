@@ -1224,6 +1224,13 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to submit applicatio form
   SubmitApplicationForm() {
+    if(this.createApplicationForm.invalid) {
+      this.createApplicationForm.controls.name.markAsUntouched();
+      this.createApplicationForm.controls.name.markAsTouched();
+      this.createApplicationForm.controls.emailId.markAsUntouched();
+      this.createApplicationForm.controls.emailId.markAsTouched();
+      return;
+    }
     this.appForm = this.createApplicationForm.value;
     if (this.createApplicationForm.value.name) {
       this.showFeatures = true;

@@ -15,6 +15,7 @@ import * as $ from 'jquery';
 import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConfigService } from './services/app-config.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -36,8 +37,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
               private route: ActivatedRoute,
-              public environment: AppConfigService) {
+              public environment: AppConfigService,
+              private location: Location) {
                 this.endpointUrl = environment.config.endPointUrl;
+                console.log(location.path())
+                localStorage.setItem('currentUrl', location.path());
                }
   // For tooltip
   ngAfterViewChecked() {
@@ -60,7 +64,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if (response.authResponse === null) {
           var browserUrl = window.location.href;
           var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/application";
+          let redirectTo = localStorage.getItem('currentUrl') ? localStorage.getItem('currentUrl') : "/application";
+          var resultUrl = arr[0] + "//" + arr[2] + redirectTo;
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
         }else if(response.authResponse === 'success'){
@@ -101,7 +106,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
             const url = this.router.url;
             if(url.includes('error')){
               this.apiError = false;
-              this.router.navigate(['application']);
+              if(localStorage.getItem('currentUrl')) {
+                this.router.navigate([localStorage.getItem('currentUrl')]);
+              } else {
+                this.router.navigate(['application']);
+              }
             }
           }
         }
