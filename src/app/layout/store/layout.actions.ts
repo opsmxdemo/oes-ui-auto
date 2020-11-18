@@ -4,16 +4,16 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 
 export enum LayoutActionTypes {
     LOADPAGE = '[Layout] LoadPage',
+    SUPPORTEDFEATURES = '[Layout] Supported Features',
     SIDEBAR_FETCH = '[Layout] SideBar Fetch',
     ERROR_RESPONSE = '[Layout] Error Response',
     APPLICATIONDATA = '[Layout] Appliaction Data',
     SIDEBARTOGGLE = '[Layout] Sidebar Toggle',
-    INSTALLATIONMODE = '[Layout] Installation Mode',
     USERGROUPREFRESH = '[Layout] Usergroup Refresh',
     SERVERERROR = '[Layout] Server Error',
     APISUCCESS = '[Layout] Api Success',
-    SUPPORTEDFEATURES = '[Layout] Supported Features',
-    VISIBILITY = '[Layout] ApprovalInstance Count'
+    VISIBILITY = '[Layout] ApprovalInstance Count',
+    // ERROR_MESSAGE = '[Layout] Error Message',
 }
 
 export class LoadPage implements Action {
@@ -37,11 +37,6 @@ export class ApplicationData implements Action {
 
 export class SideBarToggle implements Action {
     readonly type = LayoutActionTypes.SIDEBARTOGGLE;
-    constructor(public payload:string){}
-}
-
-export class InstallationMode implements Action {
-    readonly type = LayoutActionTypes.INSTALLATIONMODE;
     constructor(public payload:string){}
 }
 
@@ -73,14 +68,13 @@ export class ApiSuccess implements Action {
     constructor(public payload:number){}
 }
 
-export type LayoutActions = LoadPage   
+export type LayoutActions = LoadPage  
+                        |   SupportedFeatures
                         |   SideBarFetch
                         |   ErrorResponse
                         |   ApplicationData
                         |   ApprovalInstanceCount
                         |   SideBarToggle
-                        |   InstallationMode
-                        |   SupportedFeatures
                         |   usergroupRefresh
                         |   ServerError
                         |   ApiSuccess;

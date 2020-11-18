@@ -30,9 +30,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
   Sidebar: Menu;
   applicationCount: number = 0;
   endpointUrl: string;
-  installationMode = '';
   hideTooltip: boolean = true;
   approvalGateInstanceCount: string;
+  featureList: any;
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -85,8 +85,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
           //Dispatch action to fetch Supported Data Source data from API  
           this.store.dispatch(DataSourceActions.loadDatasource());
 
-          // Below function is use to dispatch action based on installation mode
-          this.initialData(this.installationMode);
+          // Below function is use to dispatch action based on featureType
+
+          setTimeout(() => {
+            this.initialData();
+          }, 4000)
         }
       }
     );
@@ -97,7 +100,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if(this.isAuthenticate){
           this.Sidebar = response.menu;
           this.applicationCount = response.appliactionData;
-          this.installationMode = response.installationMode;
+           this.featureList = response.supportedFeatures;
           this.approvalGateInstanceCount = response.approvalInstalgateCount;
           if(response.apiErrorCollection.indexOf(true) > -1){
             this.apiError = true;
@@ -135,24 +138,17 @@ export class AppComponent implements OnInit, AfterViewChecked {
     },1000)
   }
 
-  // Dispatch actions to fetch initial data of component based on installation mode.
-  initialData(mode){
-    if(mode !== undefined && mode !== ''){
-      if(mode.includes('OES')){
-        //Dispatching action to fetch audit initial data
-        this.store.dispatch(AuditActions.loadAudit());
+  // Dispatch actions to fetch initial data of component based on featureType.
+  initialData() {
+    if (this.featureList.includes('sapor')) {
+      this.store.dispatch(AuditActions.loadAudit());
 
-        //Dispatching action for policy management initial data
-        this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
-      }
-    }else{
-      setTimeout(()=>{
-        this.initialData(this.installationMode);
-      },500)
+      //Dispatching action for policy management initial data
+      this.store.dispatch(PolicyActions.loadPolicy({ relatedTab: 'DYNAMIC' }));
     }
-    
 
   }
+ 
 
   loginRedirect(callback): void {
     window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
@@ -176,27 +172,28 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   
 
-  // Below function is use ro disabled link by checking installation mode 
-  disabledLink(linkName){
-    let className = '';
-    switch(this.installationMode){
-      case 'AP':
-        if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis'){
-          className = '';
-        }else{
-          className = 'disabled_menu';
-        }
-        break;
-      case 'OES':
-        if(linkName !== 'Deployment Verification'){
-          className = '';
-        }else{
-          className = 'disabled_menu';
-        }
-        break;
-      case 'OES-AP':
+  // Below function is use ro disabled link by checking featureType 
+  disabledLink(linkName) {
+    let className = 'disabled_menu';
+    if (this.featureList.includes('deployment_verification')) {
+      console.log('dep');
+      if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis') {
         className = '';
-        break;
+      }
+    }
+    if (this.featureList.includes('visibility')) {
+      console.log('vis');
+
+      if (linkName === 'Visibility') {
+        className = '';
+      }
+    }
+    if (this.featureList.includes('sapor')) {
+      console.log('sapo');
+
+      if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard') {
+        className = '';
+      }
     }
     return className;
   }

@@ -3,11 +3,10 @@ import { Menu } from 'src/app/models/layoutModel/sidenavModel/menu.model';
 
 
 export interface State {
+    supportedFeatures: [];
     menu: Menu;
     appliactionData: number;
     sidebarVisible: string;
-    installationMode: string;
-    supportedFeatures: [];
     usergroupRefresh: any;
     apiErrorCollection: boolean[];
     errorMessage: string;
@@ -15,11 +14,10 @@ export interface State {
 }
 
 export const initialState: State = {
+    supportedFeatures: null,
     menu: null,
     appliactionData: 0,
     sidebarVisible: '',
-    installationMode:'',
-    supportedFeatures: null,
     usergroupRefresh: null,
     apiErrorCollection:[false,false],
     errorMessage: '',
@@ -35,6 +33,11 @@ export function layoutReducer(
             return {
                 ...state
             }
+        case LayoutAction.LayoutActionTypes.SUPPORTEDFEATURES:
+                return {
+                    ...state,
+                    supportedFeatures: action.payload
+                }
         case LayoutAction.LayoutActionTypes.SIDEBAR_FETCH:
             return {
                 ...state,
@@ -50,16 +53,7 @@ export function layoutReducer(
                 ...state,
                 sidebarVisible: action.payload
             }
-        case LayoutAction.LayoutActionTypes.INSTALLATIONMODE:
-            return {
-                ...state,
-                installationMode: action.payload
-            }
-            case LayoutAction.LayoutActionTypes.SUPPORTEDFEATURES:
-                return {
-                    ...state,
-                    supportedFeatures: action.payload
-                }
+    
         case LayoutAction.LayoutActionTypes.USERGROUPREFRESH:
             return {
                     ...state,
