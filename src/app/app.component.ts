@@ -175,19 +175,19 @@ export class AppComponent implements OnInit, AfterViewChecked {
   // Below function is use ro disabled link by checking featureType 
   disabledLink(linkName) {
     let className = 'disabled_menu';
-    if (this.featureList.includes('deployment_verification')) {
+    if (this.featureList && this.featureList.includes('deployment_verification')) {
       if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis') {
         className = '';
       }
+    }else{
+      className = '';
     }
-    if (this.featureList.includes('visibility')) {
-
+    if (this.featureList && this.featureList.includes('visibility')) {
       if (linkName === 'Visibility') {
         className = '';
       }
     }
-    if (this.featureList.includes('sapor')) {
-
+    if (this.featureList && this.featureList.includes('sapor')) {
       if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard') {
         className = '';
       }
