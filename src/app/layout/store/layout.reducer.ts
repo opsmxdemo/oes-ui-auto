@@ -10,7 +10,7 @@ export interface State {
     usergroupRefresh: any;
     apiErrorCollection: boolean[];
     errorMessage: string;
-    approvalInstalgateCount: string;
+    approvalInstalgateCount: any;
 }
 
 export const initialState: State = {
@@ -21,7 +21,7 @@ export const initialState: State = {
     usergroupRefresh: null,
     apiErrorCollection:[false,false],
     errorMessage: '',
-    approvalInstalgateCount: ''
+    approvalInstalgateCount: 0
 }
 
 export function layoutReducer(
