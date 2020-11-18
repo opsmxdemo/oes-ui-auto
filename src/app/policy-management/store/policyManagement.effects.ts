@@ -49,13 +49,17 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.loadPolicy,PolicyAction.dynamicPolicSuccessfullSubmission,PolicyAction.staticPolicySuccessfullSubmission,PolicyAction.deletedPolicySuccessfully),
             switchMap(() => {
+                debugger
                 return this.http.get<PolicyTable[]>(this.environment.config.endPointUrl + 'oes/policy/list').pipe(
                     map(resdata => {
                         if (resdata['status'] === 400) {
                             this.toastr.showError(resdata['response'].message, 'ERROR')
                             return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
                         } else if (resdata['status'] === 200) {
+                           
                             return PolicyAction.loadTableData({ TableData: resdata['response'] });
+                        } else {
+                            return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
                         }
                     }),
 
