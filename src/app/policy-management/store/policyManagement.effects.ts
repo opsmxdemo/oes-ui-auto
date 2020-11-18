@@ -49,7 +49,6 @@ export class PolicyEffect {
         this.actions$.pipe(
             ofType(PolicyAction.loadPolicy,PolicyAction.dynamicPolicSuccessfullSubmission,PolicyAction.staticPolicySuccessfullSubmission,PolicyAction.deletedPolicySuccessfully),
             switchMap(() => {
-                debugger
                 return this.http.get<PolicyTable[]>(this.environment.config.endPointUrl + 'oes/policy/list').pipe(
                     map(resdata => {
                         if (resdata['status'] === 400) {
