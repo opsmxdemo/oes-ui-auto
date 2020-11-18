@@ -51,6 +51,8 @@ export class ApplicationDashboardComponent implements OnInit {
   clusters: null;                    // getting cluster data for network chart
   links = [];                      // getting edges data for network chart
   networkChartData = null;              // It is use to store network chart data fetched from api.
+  serviceErrorMessageSapor: string;
+  serviceErrorMessageAutopilot: string;
 
 
 
@@ -152,7 +154,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.showAppDataType = appType;
     var appPresent = true
     for (let i = 0; i < this.applicationFinalData.length; i++) {
-      if (this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId) {
+      if (this.previouSelectedApp && this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId) {
         appPresent = true
         break;
       }
@@ -168,10 +170,10 @@ export class ApplicationDashboardComponent implements OnInit {
         this.autoPilotServiceData = serviceDataList['autopilotService'];
         this.spinnerService = false;
         if (this.oesServiceData === null || this.oesServiceData.length === 0) {
-          this.serviceErrorMessage = 'No services found in this application';
+          this.serviceErrorMessageSapor = 'No services found in this application.';
         }
         if (this.autoPilotServiceData === null || this.autoPilotServiceData.length === 0) {
-          this.serviceErrorMessage = 'No services found in this application';
+          this.serviceErrorMessageAutopilot = 'No services found in this application.';
         }
       },
         (error) => {

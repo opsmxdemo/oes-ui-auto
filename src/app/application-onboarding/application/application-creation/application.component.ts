@@ -749,12 +749,15 @@ export class CreateApplicationComponent implements OnInit {
     // defining reactive form approach for createApplicationForm
     //if(this.userType === 'Deployment Verification'){
     // For AP mode
-    this.createApplicationForm = new FormGroup({
-      name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this),this.valitateApplicationName.bind(this)]),
-      emailId: new FormControl('', [Validators.required, Validators.email]),
-      imageSource: new FormControl(''),
-      description: new FormControl('')
-    });
+    if(!this.editMode){
+      this.createApplicationForm = new FormGroup({
+        name: new FormControl('', [Validators.required, this.cannotContainSpace.bind(this),this.valitateApplicationName.bind(this)]),
+        emailId: new FormControl('', [Validators.required, Validators.email]),
+        imageSource: new FormControl(''),
+        description: new FormControl('')
+      });
+    }
+   
    
 
     // defining reactive form for Services Section
@@ -787,6 +790,9 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
   valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
+   if(this.applicationId){
+
+   }else{
     const promise = new Promise<any>((resolve, reject) => {
       this.sharedService.validateApplicationName(control.value, 'name').subscribe(
         (response) => {
@@ -803,7 +809,11 @@ export class CreateApplicationComponent implements OnInit {
       )
     });
     return promise;
-  }
+   }
+     
+    }
+  
+
 
   // Below function is use to populate permission in usergroup in edit mode
   populatePermissions(formControl, assignedpermission) {
