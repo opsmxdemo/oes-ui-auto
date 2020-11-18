@@ -1350,6 +1350,8 @@ export class CreateApplicationComponent implements OnInit {
     visibilityFormArr.controls[index].get('accountName').disable();
     visibilityFormArr.controls[index].get('templateName').disable();
 
+    $("[data-toggle='tooltip']").tooltip('hide');
+
     // this.toolTypes.forEach((toolType, i) => {
     //   if(toolType == visibilityFormArr.controls[index].get('connectorType').value) {
     //     delete this.toolTypes[i];
@@ -1392,6 +1394,7 @@ export class CreateApplicationComponent implements OnInit {
   onClickEditOfGateName() {
     // console.log(this.gateForm.value.gateName);
     this.isEditGateEnabled = true;
+    $("[data-toggle='tooltip']").tooltip('hide');
   }
 
   //Below function is use to submit whole form and send request to backend
@@ -1556,6 +1559,7 @@ export class CreateApplicationComponent implements OnInit {
 
   clearGateName() {
     this.gateForm.reset();
+    $("[data-toggle='tooltip']").tooltip('hide');
   }
 
   onEditGateName() {
@@ -1565,6 +1569,7 @@ export class CreateApplicationComponent implements OnInit {
       "serviceId": 1
     }
     this.store.dispatch(ApplicationActions.editApprovalGate({ gateId: this.gateId, gateDataToEdit: approvalGateToEdit }));
+    $("[data-toggle='tooltip']").tooltip('hide');
   }
 
   onDeleteGateName() {
