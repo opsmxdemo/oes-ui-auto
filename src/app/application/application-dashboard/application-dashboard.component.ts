@@ -325,7 +325,7 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
 
-  public addNewApplication() {
+  addNewApplication() {
     this.applicationFeatureStore.dispatch(ApplicationActions.loadApp({ page: 'application' }));
   }
 

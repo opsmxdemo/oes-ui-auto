@@ -55,7 +55,10 @@ export class PolicyEffect {
                             this.toastr.showError(resdata['response'].message, 'ERROR')
                             return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
                         } else if (resdata['status'] === 200) {
+                           
                             return PolicyAction.loadTableData({ TableData: resdata['response'] });
+                        } else {
+                            return PolicyAction.errorOccured({ errorMessage: resdata['response'].message });
                         }
                     }),
 

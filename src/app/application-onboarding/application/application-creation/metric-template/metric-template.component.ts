@@ -58,9 +58,16 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     public store: Store<fromFeature.State>) { }
 
   ngOnChanges(changes: SimpleChanges){
-    if(this.isEditMode && this.templateData != null){
+    if(this.isEditMode && this.templateData != null ){
       this.data = this.templateData;
-      this.selectedTab = 'metric-editor';
+      if(this.templateData.data.groups[0].metrics[0].metricType == 'ADVANCED'){
+        this.selectedTab = 'metric-form';
+        this.onChangeDatasource(this.templateData.advancedProvider,'custom');
+        this.populateCustomMetricForm();
+      }else{
+        
+      }
+     
     }else{
       this.selectedTab = 'metric-apminfra';
       this.data = null;
@@ -388,12 +395,13 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     }
   }
 
-  savemetrictemplate(){    
+  savemetrictemplate(){   
+    
     this.metricTemplateFormData = {
       "applicationId"   : this.applicationData['applicationId'],
       "applicationName" : this.applicationData['name'],
       "emailId"         : this.applicationData['email'],
-      "isEdit"          : false,
+      "isEdit"          : this.isEditMode,
       "templateName" : this.createMetricForm.value.templateName,
       "data": {
         "groups" : []
@@ -422,7 +430,16 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       };      
       this.metricTemplateFormData.data.groups.push(groupObj);
     });
-    this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.metricTemplateFormData}));
+    
+    if(this.isEditMode){
+      this.store.dispatch(ApplicationActions.editMetricTemplate({applicationId : this.applicationData['applicationId'], templateName: this.metricTemplateFormData['templateName'], metricTemplateDataToEdit : this.metricTemplateFormData}));
+      this.clearFormData();
+
+    }else{
+      this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.metricTemplateFormData}));
+
+    }
+  
     //this.metricTemplateFormData.data.groups=groupObj;
     //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.metricTemplateFormData}));
     this.clearFormData();
@@ -588,6 +605,38 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
           this.selectAllAPM=true;
         }
       }
+  }
+
+  // this function to populate fields in edit mode of custom metric form
+  populateCustomMetricForm(){
+          //Form for custom metric
+          this.createMetricForm = new FormGroup({
+            templateName: new FormControl(this.templateData.templateName,Validators.required),
+            dataSource : new FormControl({value: this.templateData.advancedProvider,disabled: true}),
+            accountName : new FormControl(this.templateData.data.groups[0].metrics[0].accountName),
+            data: new FormGroup({
+              groups : new FormArray([])
+            })
+          });
+      
+          this.queryForm = new FormGroup({
+            queryList: new FormArray([])
+          });
+      
+          this.templateData.data.groups.forEach(queryData => {
+            (<FormArray>this.queryForm.get('queryList')).push(
+              new FormGroup({
+              group : new FormControl(queryData.group),
+              name: new FormControl(queryData.metrics[0].name),
+              riskDirection: new FormControl(queryData.metrics[0].riskDirection),
+              customThresholdHigher : new FormControl(queryData.metrics[0].customThresholdHigher),
+              customThresholdLower : new FormControl(queryData.metrics[0].customThresholdLower),
+              critical: new FormControl(queryData.metrics[0].critical),
+              watchlist : new FormControl(queryData.metrics[0].watchlist),
+              metricWeight: new FormControl(queryData.metrics[0].metricWeight)
+              })
+            );
+          })
   }
 
 }

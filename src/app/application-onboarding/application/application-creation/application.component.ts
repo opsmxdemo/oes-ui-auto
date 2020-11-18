@@ -664,7 +664,7 @@ export class CreateApplicationComponent implements OnInit {
         } 
         if(response.metricTemplatesofaApplication!= null && response.isMetricTemplateforApplicationLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplatesforaApplication());
-          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.metricTemplates.map(ele=>ele.pipelineId);
+          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.metricTemplates.map(ele=>ele.templateName);
           this.metricTemplateList = this.metricTemplatesofaApplication; 
           //code to autopopulate metric template in the dropdown after save 
           var index = this.metricTemplateList.indexOf(this.metricTemplate);       
