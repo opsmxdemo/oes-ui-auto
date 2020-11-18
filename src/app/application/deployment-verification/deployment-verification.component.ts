@@ -61,7 +61,7 @@ export class DeploymentVerificationComponent implements OnInit {
   myControl = new FormControl();
   options: User[] = [];
   filteredOptions: Observable<User[]>;
-  isShow = true;
+  isShow = false;
   deployementApplications: any;
   deploymentServices: any;
   deploymentApplicationHealth = {};
