@@ -1487,7 +1487,7 @@ export class CreateApplicationComponent implements OnInit {
 
     } else if (item === 'sapor') {
 
-      const saporForm = new FormGroup({
+      this.saporForm = new FormGroup({
         pipelines: new FormArray([
           new FormGroup({
             pipelinetemplate: new FormControl('', Validators.required),
@@ -1503,7 +1503,7 @@ export class CreateApplicationComponent implements OnInit {
       this.userType = item;
       const arrayControl = this.servicesForm.get('services') as FormArray;
       const innerarrayControl = arrayControl.at(index) as FormGroup;
-      innerarrayControl.addControl('saporConfiguration', saporForm);
+      innerarrayControl.addControl('saporConfiguration', this.saporForm);
 
 
       // this.servicesForm.getRawValue().services.forEach((ServiceArr, i) => {
@@ -1532,6 +1532,24 @@ export class CreateApplicationComponent implements OnInit {
               imageName: this.saporFinalData.service.pipelines[0].dockerImageName.imageName,
             }
           })
+
+          pipelineParam.controls.pipelinetemplate.disable();
+          console.log(pipelineParam.controls);
+
+          let dockerData = pipelineParam.get('dockerImageName');
+          console.log(dockerData);
+          dockerData.get('accountName').disable();
+          dockerData.get('imageName').disable();
+          // (<FormGroup> pipelineParam.get{ 'dockerImageName'}).conr{'accountName'}.disable();
+          // pipelineParam.controls.controls.imageName.disable();
+
+//           let visibilityFormArr = <FormArray> this.visibilityForm.controls.visibilityConfig;
+
+// visibilityFormArr.controls[index].get('accountName').disable();
+          //pipelineParam.controls.dockerImageName['controls'].imageName.disable();
+
+
+
          // this.saporForm.controls.pipelinetemplate.disable();
          // this.saporForm.controls.dockerImageName.disable();
           
