@@ -18,14 +18,20 @@ export interface State {
     isLogsEventsLoaded : boolean;
     isLoadedRerunResults : boolean;
     isLoadedClusterLogData : boolean;
+    isloadedResponseKey:boolean;
     logTopicsList:any;
+    tags:any;
+    applicationId:any;
 }
 
 export const initialState: State = {
     logsResults: null,
     errorMessage: null,
+    tags:null,
+    applicationId:null,
     deployementLoading: false,
     logsEventResults : null,
+    isloadedResponseKey:false,
     clusterLogs: null,
     timeStampData:null,
     rerunResponse:null,
@@ -142,6 +148,20 @@ export function LogAnalysisReducer(
                 ...state,
                 logTopicsList: action.logslist,
                 logListLoading: false
+            })
+        ),
+        on(LogAnalysisActions.loadCustomTags,
+            (state,action) => ({
+                ...state,
+                isloadedResponseKey:false,
+                applicationId : action.applicationId
+            })
+        ),
+        on(LogAnalysisActions.fetchCustomTags,
+            (state,action) => ({
+                ...state,
+                tags: action.tags,
+                isloadedResponseKey:true
             })
         ),
         on(LogAnalysisActions.loadTimeAnalysisGraphData,

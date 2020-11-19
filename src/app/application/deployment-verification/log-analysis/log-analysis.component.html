@@ -176,8 +176,8 @@
 
                   class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
                   <!-- [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
-                  <option *ngFor='let tag of clusterTagList' [value]="tag" class="{{tag.textclass}}">
-                    {{tag}}
+                  <option *ngFor='let tag of clusterTagList' [value]="tag.name" class="{{tag.textclass}}">
+                    {{tag.name}}
                   </option> 
                 </select>
                 <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
