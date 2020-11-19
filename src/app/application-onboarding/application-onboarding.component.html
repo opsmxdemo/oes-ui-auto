@@ -13,7 +13,7 @@
                         <li class="nav-item disabledMenu">
                             <a class="nav-link">Cloud Services</a>
                         </li>
-                        <li *ngIf = "userType === 'AP' ? false : true" class="nav-item" routerLink="/setup/accounts" routerLinkActive="active">
+                        <li *ngIf = "featureList.includes('sapor')" class="nav-item" routerLink="/setup/accounts" routerLinkActive="active">
                             <a class="nav-link">Accounts</a>
                         </li>
                     </ul>
