@@ -265,8 +265,10 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             if (this.logAnalysisData.clusters) {
               if(this.logAnalysisData.clusters.length > 0){
                 this.islogAnalysisAvailable = true;
+                
                 for(var i=0;i<this.logAnalysisData.clusters.length;i++)
                 {
+                  if(this.logAnalysisData.clusters[i].clusterTagInfo != null){
                   if(this.logAnalysisData.clusters[i].clusterTagInfo.tag==null)
                   {
                     this.selectedTags[this.logAnalysisData.clusters[i].id]="UNCLASSIFIED"
@@ -274,6 +276,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                   else{
                     this.selectedTags[this.logAnalysisData.clusters[i].id]=this.logAnalysisData.clusters[i].clusterTagInfo.tag
                   }
+                }
 
 
                 }
