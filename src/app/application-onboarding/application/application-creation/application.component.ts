@@ -166,7 +166,7 @@ export class CreateApplicationComponent implements OnInit {
   configuredVisibilityToolConnectorData: any;                            // Store visibility configured visibility data for edit Mode
   editVisibilityAccountsIndex: number  = 0;
   editVisibilityTemplateIndex: number = 0;
-  configuredImage: any;
+  configuredImage: any = '';
   deploymentVerificaionFeatureSavedResponse : any;
   deploymentVerificationFeatureSaved : boolean = false;
   serviceStatus: any = {};
@@ -174,6 +174,7 @@ export class CreateApplicationComponent implements OnInit {
   triggerURL: string;                                                                           // store trigger url
   deleteVisibilityToolConnectorId: any;                                      // variable to store value of delete Visbility Tool Connector Id
   showFeatureData: boolean;
+  saporForm: FormGroup;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -291,13 +292,8 @@ export class CreateApplicationComponent implements OnInit {
             if(responseData.imageSourceListData != null && responseData.isfetchImageSourceLoaded){
               // console.log(responseData.imageSourceListData);
               this.configuredImage = responseData.imageSourceListData.imageSource;
-              this.createApplicationForm = new FormGroup({
-                name: new FormControl(this.appData.name),
-                emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
-                description: new FormControl(this.appData.description),
-                imageSource: new FormControl(responseData.imageSourceListData.imageSource),
-                lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
-              });
+              this.prePopulateApplicationForm(this.appData);
+              
               if (responseData.callDockerImageDataAPI) {
                 this.onImageSourceSelect(this.configuredImage);
               }
@@ -446,14 +442,12 @@ export class CreateApplicationComponent implements OnInit {
           this.imageSourceData = response.imageSource;
           if(response.imageSourceListData != null && response.isfetchImageSourceLoaded){
             // console.log(response.imageSourceListData);
+          //  this.onImageSourceSelect(response.imageSource);
+          this.configuredImage = response.imageSourceListData.imageSource;
             if(this.appData != null){
-            this.createApplicationForm = new FormGroup({
-              name: new FormControl(this.appData.name),
-              emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
-              description: new FormControl(this.appData.description),
-              imageSource: new FormControl(response.imageSourceListData.imageSource),
-              lastUpdatedTimestamp: new FormControl(this.appData.lastUpdatedTimestamp)
-            });
+
+              this.prePopulateApplicationForm(this.appData);
+           
             }
             if (response.callDockerImageDataAPI) {
               this.onImageSourceSelect(response.imageSourceListData.imageSource);
@@ -1139,16 +1133,7 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.servicesForm.get('services')).push(this.setServiceForm());
     this.currentServiceIndex = (<FormArray>this.servicesForm.get('services')).length - 1;
     this.serviceStatus[this.currentServiceIndex] = 'New';
-    // Update dockerImageDropdownData array
-    //   //if(this.userType.includes('Sapor')){
-    //     this.dockerImageDropdownData.push(this.dockerImageData[0].images);
-    //     const arrayControl = this.servicesForm.get('services') as FormArray;
-    //     const innerarrayControl = arrayControl.at(this.servicesForm.value.services.length-1).get('pipelines') as FormArray;
-    //     const mainData = innerarrayControl.at(0).get('dockerImageName');
-    //     mainData.patchValue({
-    //         'accountName': this.dockerImageData[0].imageSource
-    //     });
-    // //  }
+ 
 
     //code to reset the feature save check false. To rest the tick mark which is showing on feature list once feature saved.
     this.gateId = "";
@@ -1239,6 +1224,8 @@ export class CreateApplicationComponent implements OnInit {
       this.groupPermissionForm.reset();
     }
     this.router.navigate([this.parentPage]);
+    $("[data-toggle='tooltip']").tooltip('hide');
+    this.store.dispatch(ApplicationActions.loadAppList());
   }
 
   // Below function is use to submit applicatio form
@@ -1531,35 +1518,43 @@ export class CreateApplicationComponent implements OnInit {
       // })
 
       // edit related code goes here
-      if (this.saporFinalData && this.saporFinalData.service.pipelines.length) {
+      if(this.editMode){
+       
+        if (this.saporFinalData && this.saporFinalData.service.pipelines.length) {
 
-        const innerSaporConfig = arrayControl.at(index).get('saporConfiguration') as FormGroup;
-        const pipelineList = innerSaporConfig.get('pipelines') as FormArray;
-        const pipelineParam = pipelineList.at(0) as FormGroup;
-
-        pipelineParam.patchValue({
-          pipelinetemplate: this.saporFinalData.service.pipelines[0].pipelinetemplate,
-          dockerImageName: {
-            accountName: this.saporFinalData.service.pipelines[0].dockerImageName.accountName,
-            imageName: this.saporFinalData.service.pipelines[0].dockerImageName.imageName,
-          }
-        })
-
-        if (this.saporFinalData.service.pipelines[0].pipelineParameters !== null && this.saporFinalData.service.pipelines[0].pipelineParameters !== undefined) {
-          //populating pipelieParameter array
-          this.saporFinalData.service.pipelines[0].pipelineParameters.forEach(pipelineParameterArr => {
-            const pipelineParameter = pipelineParam.get('pipelineParameters') as FormArray;
-            pipelineParameter.push(
-              new FormGroup({
-                value: new FormControl(pipelineParameterArr.value),
-                name: new FormControl(pipelineParameterArr.name),
-                type: new FormControl(pipelineParameterArr.type)
-              })
-            );
+          const innerSaporConfig = arrayControl.at(index).get('saporConfiguration') as FormGroup;
+          const pipelineList = innerSaporConfig.get('pipelines') as FormArray;
+          const pipelineParam = pipelineList.at(0) as FormGroup;
+  
+          pipelineParam.patchValue({
+            pipelinetemplate: this.saporFinalData.service.pipelines[0].pipelinetemplate,
+            dockerImageName: {
+              accountName: this.saporFinalData.service.pipelines[0].dockerImageName.accountName,
+              imageName: this.saporFinalData.service.pipelines[0].dockerImageName.imageName,
+            }
           })
+         // this.saporForm.controls.pipelinetemplate.disable();
+         // this.saporForm.controls.dockerImageName.disable();
+          
+  
+          if (this.saporFinalData.service.pipelines[0].pipelineParameters !== null && this.saporFinalData.service.pipelines[0].pipelineParameters !== undefined) {
+            //populating pipelieParameter array
+            this.saporFinalData.service.pipelines[0].pipelineParameters.forEach(pipelineParameterArr => {
+              const pipelineParameter = pipelineParam.get('pipelineParameters') as FormArray;
+              pipelineParameter.push(
+                new FormGroup({
+                  value: new FormControl(pipelineParameterArr.value),
+                  name: new FormControl(pipelineParameterArr.name),
+                  type: new FormControl(pipelineParameterArr.type)
+                })
+              );
+            })
+          }
+  
         }
-
+      
       }
+   
 
     } else if (item === 'visibility') {
       //check gate already configured for the selectd service
@@ -1860,5 +1855,30 @@ export class CreateApplicationComponent implements OnInit {
       return "Sapor";
     else
       return featureName;
+  }
+
+  //populate application form
+  prePopulateApplicationForm(appData){
+
+    if(this.configuredImage){
+      this.createApplicationForm.controls.imageSource.disable();
+      this.createApplicationForm = new FormGroup({
+        name: new FormControl(appData.name),
+        emailId: new FormControl(appData.email, [Validators.required, Validators.email]),
+        description: new FormControl(appData.description),
+        imageSource: new FormControl(this.configuredImage),
+        lastUpdatedTimestamp: new FormControl(appData.lastUpdatedTimestamp)
+      });
+    }else{
+      this.createApplicationForm = new FormGroup({
+        name: new FormControl(appData.name),
+        emailId: new FormControl(appData.email, [Validators.required, Validators.email]),
+        description: new FormControl(appData.description),
+        imageSource: new FormControl(this.configuredImage),
+        lastUpdatedTimestamp: new FormControl(appData.lastUpdatedTimestamp)
+      });
+    }
+
+   
   }
 }
