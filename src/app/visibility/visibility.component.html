@@ -188,16 +188,19 @@
                                   <tr>
                                       <td><label >Activated Time:</label></td>
                                       <td>
-                                        <!-- {{approvalGateComment}} {{date | date:"dd/MM/yyyy HH:mm"}} -->
                                         {{gateActivatedTime | date: "MMM dd, yyyy HH:mm"}}
                                       </td>
                                   </tr>
                                   <tr>
-                                      <td *ngIf="gateInstanceDetails.approvalStatus.status === 'approved'"><label >Approval Time:</label></td>
-                                      <td *ngIf="gateInstanceDetails.approvalStatus.status === 'rejected'"><label >Rejection Time:</label></td>
+                                      <td><label >Reviewed at:</label></td>
                                       <td>
-                                        <!-- {{approvalGateComment}} -->
                                         {{gateApprovalTime | date: "MMM dd, yyyy HH:mm"}}
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td><label >Reviewer:</label></td>
+                                      <td>
+                                        {{gateInstanceDetails.reviewedBy}}
                                       </td>
                                   </tr>
                                 </table>
@@ -254,8 +257,7 @@
                         </ul>
                         <ul> -->
                             <li class="nav-item" *ngFor="let connectors of toolConnectors" >
-                                <a class="nav-link" id="{{connectors.connectorType}}" data-toggle="tab" href="#{{connectors.connectorType}}" role="tab"
-                                    aria-controls="" aria-selected="false" (click)="onSelectingToolConnector(connectors.connectorType)" [ngClass]="{'active' : connectors.connectorType == selectedConnectorType}">{{connectors.connectorType}}</a> 
+                                <a class="nav-link" id="{{connectors.connectorType}}" data-toggle="tab" href="#{{connectors.connectorType}}" role="tab" aria-controls="" aria-selected="false" (click)="onSelectingToolConnector(connectors.connectorType)" [ngClass]="{'active' : connectors.connectorType == selectedConnectorType}">{{connectors.connectorType}}</a> 
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link" id="autopilot-tab" data-toggle="tab" href="#autopilot" role="tab"
@@ -271,40 +273,48 @@
                             </li> -->
                         </ul>
                         <div class="tab-content" id="myTabContent" *ngIf="showToolConnectorSection">
-                            <div class="tab-pane p-4 fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
+                            <div class="tab-pane fade show active" id="{{connectorType}}" role="tabpanel" aria-labelledby="">
                                 <div>
                                   <table class="table">
-                                    <thead class="thead-light">
+                                    <!-- <thead class="thead-light">
                                       <tr *ngIf="selectedConnectorType == 'GIT'">
-                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol1">Type</th>
                                         <th scope="col" class="visibilityCol2Git">Commit ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                       <tr *ngIf="selectedConnectorType == 'JIRA'">
-                                        <!-- <th scope="col" class="visibilityCol1">Ticket#</th> -->
+                                        <th scope="col" class="visibilityCol1">Ticket#</th>
                                         <th scope="col" class="visibilityCol2Jira">Task ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                       <tr *ngIf="selectedConnectorType == 'AUTOPILOT'">
-                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol1">Type</th>
                                         <th scope="col" class="visibilityCol2Jira">Autopilot ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                       <tr *ngIf="selectedConnectorType == 'SONARQUBE'">
-                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol1">Type</th>
                                         <th scope="col" class="visibilityCol2Jira">Project Key</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
                                       <tr *ngIf="selectedConnectorType == 'JENKINS'">
-                                        <!-- <th scope="col" class="visibilityCol1">Type</th> -->
+                                        <th scope="col" class="visibilityCol1">Type</th>
                                         <th scope="col" class="visibilityCol2Jira">Build ID</th>
                                         <th scope="col" class="visibilityCol3">Data</th>
                                       </tr>
-                                    </thead>
+                                    </thead> -->
                                     <tbody>
                                       <tr *ngFor="let eachData of visibilityData"> 
                                         <!-- <td>{{eachData.key}}</td> -->
-                                        <td>{{eachData.value}}</td>
+                                        <td class="tcFirstColumn">
+                                          <div>
+                                            <span *ngIf="selectedConnectorType == 'GIT' && eachData.data != null ">Commit ID</span>
+                                            <span *ngIf="selectedConnectorType == 'JIRA' && eachData.data != null ">Ticket Num</span>
+                                            <span *ngIf="selectedConnectorType == 'JENKINS' && eachData.data != null ">Build ID</span>
+                                            <span *ngIf="selectedConnectorType == 'AUTOPILOT' && eachData.data != null ">Canary ID</span>
+                                            <span  *ngIf="selectedConnectorType == 'SONARQUBE' && eachData.data != null ">Project Key</span>
+                                          </div>
+                                          {{eachData.value}}</td>
                                         <td>{{eachData.data == null ? 'No data to Display' : eachData.data | json}}</td> 
                                       </tr>
                                     </tbody>

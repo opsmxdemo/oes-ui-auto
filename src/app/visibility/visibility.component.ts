@@ -22,7 +22,7 @@ export interface User {
 })
 export class VisibilityComponent implements OnInit {
 
-  @Input() approvalGateComment : string;
+  // @Input() approvalGateComment : string;
 
   isLinear = false;
   firstFormGroup: FormGroup;
@@ -50,7 +50,7 @@ export class VisibilityComponent implements OnInit {
   // connectorTypes: any[];
   connectorType: any;
   showToolConnectorSection: boolean = false;
-  // approvalGateComments: string;
+  approvalGateComment: string;
   approvalGateResponse: string;
   approvalWaitingStatus: boolean = true;         //When status is waiting its true else Approve / Reject its false
   gateStatus: string = '';                                          // Store the action / status of the Approval Gate
@@ -112,15 +112,19 @@ export class VisibilityComponent implements OnInit {
         }
 
         if(resData.toolConnectors != null && resData.toolConnectors != undefined && resData.connectorTypeLoading){
-          this.toolConnectors = resData.toolConnectors;            
+          this.showToolConnectorSection = false;                    // Initially do not display the tool connectors until the data is present
           this.store.dispatch(Visibility.stopLoadingConnectors());   
+          this.toolConnectors = resData.toolConnectors; 
+          // this.toolConnectors.sort(function(a, b) {
+          //     var typeA = a.connectorType.toUpperCase();
+          //     var typeB = b.connectorType.toUpperCase();
+          //     return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
+          // });
           
             if(this.toolConnectors.length > 0){
+            this.showToolConnectorSection = true;
             this.selectedConnectorType = this.toolConnectors[0]['connectorType'];
             this.onSelectingToolConnector(this.selectedConnectorType); 
-            this.showToolConnectorSection = true;
-            }else{
-              this.showToolConnectorSection = false;
             }
         }
 
