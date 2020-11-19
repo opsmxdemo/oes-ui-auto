@@ -141,9 +141,11 @@
                   <div class="form-group" >
                     <label>Image Source <i data-toggle="tooltip" data-placement="top" data-original-title="Repository to fetch images for Release Management" class="fa fa-question-circle" aria-hidden="true"></i></label>
                     <select class="form-control"  formControlName="imageSource" (change)="onImageSourceSelect($event.target.value)"
-                    [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''" >
-                      <option value="" [disabled]="true">Select</option>
+                    [ngClass]="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched?'is-invalid':''">
+                      <option value="">Select</option>
                       <option *ngFor="let imageData of imageSourceData" value="{{imageData.name}}">{{imageData.name}}</option>
+                      <option *ngIf="configuredImage && editMode" value="{{configuredImage}}">{{configuredImage}}</option>
+
                     </select>
                     <span *ngIf="createApplicationForm.get('imageSource').invalid && createApplicationForm.get('imageSource').touched"
                       class="invalid-feedback">
@@ -322,7 +324,7 @@
                                                   <option value="">Select</option>
                                                   <option value="True">True</option>
                                                   <option value="False">False</option>
-                                                </select>
+                                                </select> 
                                               </div>
                                               <span *ngIf="!pipelineParameterArr.get('value').valid && pipelineParameterArr.get('value').touched"
                                                       class="help-block">{{pipelineParameterArr.get('name').value}} is required</span>
@@ -334,9 +336,13 @@
                                     <div class="col-12 pull-right">
                                       <div class="page_access text-right py-2 px-3">
                                         <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
-                                        <button class="btn btn-primary ml-2" (click)="SubmitSaporForm(i)">Save</button>
+                                        <button class="btn btn-primary ml-2" *ngIf="servicesForm.valid" (click)="SubmitSaporForm(i)">Save</button>
                                         <!-- <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button> -->
-                                        <button class="btn btn-danger ml-1" data-toggle="tooltip" data-placement="top" data-original-title="Disable and remove the feature for this service" (click)="deleteSaporForm(i)" >Delete</button>
+                                        <!-- <button class="btn btn-danger ml-1" data-toggle="tooltip" data-placement="top" data-original-title="Disable and remove the feature for this service" (click)="deleteSaporForm(i)" >Delete</button> -->
+                                        <button class="btn btn-danger ml-1" (click)="deleteSaporForm(i)" *ngIf="!editMode && saporFeatureSaved">Delete</button>
+                                        <button class="btn btn-danger ml-1" (click)="deleteSaporForm(i)" *ngIf="editMode && isFeaturePresent[serviceId] && isFeaturePresent[serviceId]['sapor']">Delete</button>
+                                        <button class="btn btn-primary ml-1" (click)="cancelForm()" *ngIf="saporFeatureSaved">Finish</button>
+
                                       </div>
                                     </div>
                                   </div>
