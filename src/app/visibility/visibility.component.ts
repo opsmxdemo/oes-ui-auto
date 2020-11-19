@@ -114,12 +114,14 @@ export class VisibilityComponent implements OnInit {
         if(resData.toolConnectors != null && resData.toolConnectors != undefined && resData.connectorTypeLoading){
           this.showToolConnectorSection = false;                    // Initially do not display the tool connectors until the data is present
           this.store.dispatch(Visibility.stopLoadingConnectors());   
-          this.toolConnectors = resData.toolConnectors; 
-          // this.toolConnectors.sort(function(a, b) {
-          //     var typeA = a.connectorType.toUpperCase();
-          //     var typeB = b.connectorType.toUpperCase();
-          //     return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
-          // });
+          this.toolConnectors = Object.assign([], resData.toolConnectors); 
+          console.log("Tool : ", this.toolConnectors);
+          
+          this.toolConnectors.sort(function(a, b) {
+              var typeA = a.connectorType.toUpperCase();
+              var typeB = b.connectorType.toUpperCase();
+              return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
+          });
           
             if(this.toolConnectors.length > 0){
             this.showToolConnectorSection = true;
