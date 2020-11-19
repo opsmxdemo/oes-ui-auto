@@ -231,11 +231,21 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
     (<FormArray>this.queryForm.get('queryList')).push(
       new FormGroup({
-        group : new FormControl(),
-        name: new FormControl(),
+        group : new FormControl('', [
+          Validators.required
+        ]),
+        name: new FormControl('', [
+          Validators.required
+        ]),
         riskDirection: new FormControl('HigherOrLower'),
-        customThresholdHigher : new FormControl(),
-        customThresholdLower : new FormControl(),
+        customThresholdHigher : new FormControl('10', [
+          Validators.required,
+          Validators.pattern("^[0-9]*$"),
+        ]),
+        customThresholdLower : new FormControl('10', [
+          Validators.required,
+          Validators.pattern("^[0-9]*$"),
+        ]),
         critical: new FormControl(false),
         watchlist : new FormControl(false),
         metricWeight: new FormControl('1')
@@ -396,7 +406,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   }
 
   savemetrictemplate(){   
-    
+    if(this.queryForm.invalid){
+      return;
+    }
     this.metricTemplateFormData = {
       "applicationId"   : this.applicationData['applicationId'],
       "applicationName" : this.applicationData['name'],
@@ -449,11 +461,21 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   addNewQuery(){
     (<FormArray>this.queryForm.get('queryList')).push(
       new FormGroup({
-        group : new FormControl(),
-        name: new FormControl(),
+        group : new FormControl('', [
+          Validators.required
+        ]),
+        name: new FormControl('', [
+          Validators.required
+        ]),
         riskDirection: new FormControl('HigherOrLower'),
-        customThresholdHigher : new FormControl(),
-        customThresholdLower : new FormControl(),
+        customThresholdHigher : new FormControl('10', [
+          Validators.required,
+          Validators.pattern("^[0-9]*$"),
+        ]),
+        customThresholdLower : new FormControl('10', [
+          Validators.required,
+          Validators.pattern("^[0-9]*$"),
+        ]),
         critical: new FormControl(false),
         watchlist : new FormControl(false),
         metricWeight: new FormControl('1')
@@ -499,11 +521,21 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     });
     (<FormArray>this.queryForm.get('queryList')).push(
       new FormGroup({
-        group : new FormControl(),
-        name: new FormControl(),
+        group : new FormControl('', [
+          Validators.required
+        ]),
+        name: new FormControl('', [
+          Validators.required
+        ]),
         riskDirection: new FormControl('HigherOrLower'),
-        customThresholdHigher : new FormControl(),
-        customThresholdLower : new FormControl(),
+        customThresholdHigher : new FormControl('10', [
+          Validators.required,
+          Validators.pattern("^[0-9]*$"),
+        ]),
+        customThresholdLower : new FormControl('10', [
+          Validators.required,
+          Validators.pattern("^[0-9]*$"),
+        ]),
         critical: new FormControl(false),
         watchlist : new FormControl(false),
         metricWeight: new FormControl('1')
