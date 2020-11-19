@@ -12,7 +12,8 @@ import * as fromApp from '../store/app.reducer';
 })
 export class ApplicationOnboardingComponent implements OnInit {
 
-  userType = '';                                            // It contain type of user i.e, AP, OES or both.
+  featureList: any;                                           // It contain type of user i.e, Autopilot Sapor and Visibility.
+  
 
 
   constructor(public store: Store<fromFeature.State>,
@@ -21,27 +22,30 @@ export class ApplicationOnboardingComponent implements OnInit {
   ngOnInit(){
 
     // Below function is use to fetch data from AppState to update usertype
-    // this.appStore.select('layout').subscribe(
-    //   (layoutRes) => {
-    //     if(layoutRes.installationMode !== ''){
-    //       this.userType = layoutRes.installationMode;
-    //       if(this.userType !== ''){
-    //         // dispatching action relatted to datasource list
-    //         switch(this.userType){
-    //           case 'AP':
-    //             this.store.dispatch(DataSourceActions.loadAPDatasourceList());
-    //             break;
-    //           case 'OES':
-    //             this.store.dispatch(DataSourceActions.loadOESDatasourceList());
-    //             break;
-    //           case 'OES-AP':
-    //             this.store.dispatch(DataSourceActions.loadDatasourceList());
-    //             break;
-    //         }
-    //       }
-    //     }
-    //   }
-    // )
+    this.appStore.select('layout').subscribe(
+      (layoutRes) => {
+        if(layoutRes.supportedFeatures !== null){
+          this.featureList = layoutRes.supportedFeatures;
+          if(this.featureList != ''){
+            // dispatching action relatted to datasource list
+            if (this.featureList && this.featureList.includes('deployment_verification')) {
+              this.store.dispatch(DataSourceActions.loadAPDatasourceList());
+            }
+
+            if (this.featureList && this.featureList.includes('sapor')) {
+              this.store.dispatch(DataSourceActions.loadOESDatasourceList());
+
+            }
+
+            if (this.featureList && this.featureList.includes('visibility')) {
+              this.store.dispatch(DataSourceActions.loadDatasourceList());
+
+            }
+           
+          }
+        }
+      }
+    )
   }
 
 }
