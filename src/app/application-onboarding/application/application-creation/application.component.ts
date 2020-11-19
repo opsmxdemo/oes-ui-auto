@@ -801,7 +801,6 @@ export class CreateApplicationComponent implements OnInit {
             this.createApplicationForm.get('name').setErrors(null);
           }
         },
-        // below contain remove when name check api is implemented
         (error) => {
           resolve(null);
         }
