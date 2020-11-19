@@ -175,6 +175,21 @@ fetchClusterLogsData = createEffect(() =>
     )
 )
 
-
+fetchTags = createEffect(() =>
+     this.actions$.pipe(
+         ofType(LogAnalysisActions.loadCustomTags),
+         switchMap((action) => {
+             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + action.applicationId + '/tags').pipe(
+                 map(resdata => {
+                     return LogAnalysisActions.fetchCustomTags({ tags: resdata });
+                 }),
+                 catchError(errorRes => {
+                    // this.toastr.showError('Server Error !!', 'ERROR')
+                     return handleError(errorRes);
+                 })
+             );
+         })
+     )
+ )
 
 }

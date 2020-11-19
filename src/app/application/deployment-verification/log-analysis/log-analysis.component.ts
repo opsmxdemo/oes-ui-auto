@@ -24,7 +24,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   @Input() serviceId: any[];
   @Input() isRerun : boolean;
   @Input() serviceStatus : any[];
-
+  @Input() applicationId :any;
   @Output() selectedServiceIdFromChild = new EventEmitter<any>();
   @Output() enterdToLogLines = new EventEmitter<boolean>();
 
@@ -257,6 +257,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         if (resData.logsResults != null && resData.isLogsResultsLoaded){
           this.store.dispatch(LogAnalysisAction.loadedLogResults()); 
           this.store.dispatch(LogAnalysisAction.loadLogTopics());
+          this.store.dispatch(LogAnalysisAction.loadCustomTags({ applicationId: this.applicationId }));
           this.logAnalysisResults = resData.logsResults;
           if (this.logAnalysisResults != null) {      
             this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
@@ -419,10 +420,15 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.islogAnalysisAvailable = false;
           }
         }
+        if(resData.tags !=null)
+        {
+          this.clusterTagList = resData.tags
+        }
+        
         if(resData.logTopicsList != null){
           this.fetchLogTopics = resData.fetchLogTopics;        	
           this.fetchLogTopics = resData.logTopicsList;
-          this.clusterTagList = this.fetchLogTopics.clusterTags;
+          
 
               // fetching comments for each logs
               if(this.logAnalysisClusters!=null)
