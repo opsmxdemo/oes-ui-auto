@@ -108,8 +108,8 @@
           <!-- /#particle_chart -->
               
           <!-- /.chart_ratio -->
-          <div *ngIf="oesServiceData && oesServiceData.length === 0 && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessage}}</p>
+          <div *ngIf="oesServiceData && oesServiceData.length === 0 &&  showAppDataType === 'Services' || oesServiceData === null && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
+            <p class="error-service-msg">{{serviceErrorMessageSapor}}</p>
           </div>
           <!-- <div *ngIf="showAppDataType === 'Services' && statusMessage === 'error'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessage}}</p>
@@ -135,12 +135,12 @@
               </tbody>
             </table>
           </div>
-        <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0 && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessage}}</p>
+        <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0  && showAppDataType === 'Deployment Verification' || autoPilotServiceData === null && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
+            <p class="error-service-msg">{{serviceErrorMessageAutopilot}}</p>
           </div>
-          <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
+          <!-- <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessage}}</p>
-          </div>
+          </div> -->
           
           <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData && autoPilotServiceData.length>0">
             <table class="table table-pet-service text-center mb-0">
