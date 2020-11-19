@@ -341,7 +341,12 @@ export class CreateApplicationComponent implements OnInit {
                     })
                   )
                   if(!this.isFeaturePresent[this.appData.services[i].id]) this.isFeaturePresent[this.appData.services[i].id] = {};
-                  this.serviceStatus[i] = 'Edit';
+
+                  if(!this.appData.services || !this.appData.services[i] || !this.appData.services[i].id) {
+                    this.serviceStatus[i] = 'New';
+                  } else {
+                    this.serviceStatus[i] = 'Edit';
+                  }
                   // this.selectFeature(this.featureList[0], i)
                 }
               }
@@ -612,10 +617,10 @@ export class CreateApplicationComponent implements OnInit {
               this.onChangeTooltype(this.configuredVisibilityToolConnectorData[i].connectorType);
               (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
                   new FormGroup({
-                    connectorType: new FormControl(this.configuredVisibilityToolConnectorData[i].connectorType) ,
-                    accountName: new FormControl(this.configuredVisibilityToolConnectorData[i].accountName),
+                    connectorType: new FormControl(this.configuredVisibilityToolConnectorData[i].connectorType, Validators.required) ,
+                    accountName: new FormControl(this.configuredVisibilityToolConnectorData[i].accountName, Validators.required),
                     templateId: new FormControl(this.configuredVisibilityToolConnectorData[i].templateId),
-                    templateName: new FormControl(this.configuredVisibilityToolConnectorData[i].templateName),
+                    templateName: new FormControl(this.configuredVisibilityToolConnectorData[i].templateName, Validators.required),
                     visibilityToolConnectorId: new FormControl(this.configuredVisibilityToolConnectorData[i].visibilityToolConnectorId),
                   })
                 );
@@ -1051,9 +1056,9 @@ export class CreateApplicationComponent implements OnInit {
     (<FormArray>this.visibilityForm.get('visibilityConfig')).push(
       new FormGroup({
         connectorType: new FormControl('', Validators.required),
-        accountName: new FormControl(''),
+        accountName: new FormControl('', Validators.required),
         _accountName: new FormControl(''),
-        templateName: new FormControl(''),
+        templateName: new FormControl('', Validators.required),
         _templateName: new FormControl(''),
       })
     );
@@ -1274,6 +1279,7 @@ export class CreateApplicationComponent implements OnInit {
     };
     this.store.dispatch(ApplicationActions.saveService({ applicationId: this.applicationId, serviceSaveData: serviceDataToSave }));
     this.showFeatureData = true;
+    this.serviceStatus[index] = 'Edit';
   }
 
   // Below function is use to submit environments form
@@ -1353,6 +1359,16 @@ export class CreateApplicationComponent implements OnInit {
   // Below function is use to save each connector
   saveConnector(index) {
     // console.log(this.visibilityForm.value.visibilityConfig[index]);
+    if(this.visibilityForm.get('visibilityConfig')['controls'][index].invalid) {
+      this.visibilityForm.get('visibilityConfig')['controls'][index].controls.connectorType.markAsUntouched();
+      this.visibilityForm.get('visibilityConfig')['controls'][index].controls.connectorType.markAsTouched();
+      this.visibilityForm.get('visibilityConfig')['controls'][index].controls.accountName.markAsUntouched();
+      this.visibilityForm.get('visibilityConfig')['controls'][index].controls.accountName.markAsTouched();
+      this.visibilityForm.get('visibilityConfig')['controls'][index].controls.templateName.markAsUntouched();
+      this.visibilityForm.get('visibilityConfig')['controls'][index].controls.templateName.markAsTouched();
+      return;
+    }
+
     var dataToSaveToolConnectorwithTemplate = {
       templateId: this.templateId[index]
     };
