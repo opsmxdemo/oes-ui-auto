@@ -32,5 +32,6 @@ export const loadReclassificationHistoryData = createAction('[LogAnalysis] loadR
 
 export const loadCustomTags = createAction('[Application] LoadCustomTags',props<{applicationId: any}>());
 export const fetchCustomTags = createAction('[Application] FetchCustomTags', props<{tags:any}>());
+export const loadedCustomTags = createAction('[LogAnalysis] LoadedCustomTags');
 
 

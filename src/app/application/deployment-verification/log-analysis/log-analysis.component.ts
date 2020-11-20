@@ -102,6 +102,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     }
   ];
   clusterTagList = [];
+  clusterTagList1 = []
   classifiedLogsList = [];
   logTemplate = "";
   selectedClusterInfo: any;
@@ -420,9 +421,18 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.islogAnalysisAvailable = false;
           }
         }
-        if(resData.tags !=null)
+        if(resData.tags !=null && resData.isloadedCustomTags && this.clusterTagList.length==0)
         {
-          this.clusterTagList = resData.tags
+          
+          this.clusterTagList1 = resData.tags
+          for(let i =0;i<this.clusterTagList1.length;i++){
+            this.clusterTagList.push(this.clusterTagList1[i])
+          }
+          var myobj = {
+            "id":"",
+            "name":"UNCLASSIFIED"
+          }
+          this.clusterTagList.push(myobj)
         }
         
         if(resData.logTopicsList != null){
