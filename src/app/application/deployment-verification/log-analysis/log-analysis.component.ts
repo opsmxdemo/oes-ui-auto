@@ -354,6 +354,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                     "series": warningClusters
                   }
                 ];
+              }else if(this.logAnalysisData.clusters.length <1){
+                $('.toggleGraph').trigger('click');
               }
             } else {
               this.bubbleChartData = [
