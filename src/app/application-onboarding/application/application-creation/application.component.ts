@@ -1090,11 +1090,21 @@ export class CreateApplicationComponent implements OnInit {
 
     this.store.dispatch(ApplicationActions.deleteVisibilityToolConnector({ approvalGateId: this.gateId, visibilityToolConnectorId: this.deleteVisibilityToolConnectorId }));
     
-    (<FormArray>this.visibilityForm.get('visibilityConfig')).removeAt(index);
-    if((<FormArray>this.visibilityForm.get('visibilityConfig')).controls.length < this.toolTypesCount) {
-      this.hideVisibilityPlusIcon = false;
-      this.addNewConnectorAllowed = true;
+    if((<FormArray>this.visibilityForm.get('visibilityConfig')).controls.length > 1) {
+      (<FormArray>this.visibilityForm.get('visibilityConfig')).removeAt(index);
+      if((<FormArray>this.visibilityForm.get('visibilityConfig')).controls.length < this.toolTypesCount) {
+        this.hideVisibilityPlusIcon = false;
+        this.addNewConnectorAllowed = true;
+      }
+    } else {
+      (<FormArray>this.visibilityForm.get('visibilityConfig')).controls[index].reset();
+      this.toolTypeDataSaved[0] = false;
+      let visibilityFormArr = <FormArray> this.visibilityForm.controls.visibilityConfig;
+      visibilityFormArr.controls[index].get('accountName').enable();
+      visibilityFormArr.controls[index].get('templateName').enable();
+      this.editConnectorRow[0] = true;
     }
+    
   }
 
   // Below function is execute on select of pipeline type in Services Section
