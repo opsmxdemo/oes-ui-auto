@@ -13,12 +13,12 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-          <button type="button" class="close pull-right" aria-label="Close" (click)="showSearch=false">
+          <button type="button" class="close closed pull-right" aria-label="Close" (click)="showSearch=false">
             <span aria-hidden="true">&times;</span>
           </button>
          </form>
     
-          <div class="appName border" style="font-size: 16px; margin-top: 10px;" *ngIf="!showSearch"><b><u>{{selectedApplicationName}}</u></b> &nbsp;&nbsp;  <div class=" pull-right absolute"><i class="fas fa-search" (click)="showSearchFunc()" aria-hidden="true"></i></div>
+          <div class="appName border" style="font-size: 16px; margin-top: 10px;" *ngIf="!showSearch"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  <div class=" pull-right absolute"><i class="fas fa-search" (click)="showSearchFunc()" aria-hidden="true"></i></div>
             
           </div>
      
@@ -153,7 +153,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Manual Canary Trigger</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close " data-dismiss="modal" aria-label="Close">
               <i class="fa fa-times"></i>
             </button>
           </div>
