@@ -1,5 +1,5 @@
 import { JsonEditorComponent, JsonEditorOptions } from "ang-jsoneditor";
-import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation, ElementRef } from '@angular/core';
 // platform-service-ui change
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
@@ -34,6 +34,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   @ViewChild('sideNav') Sidenav: MatSidenav;
+  @ViewChild('focus') focused: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
   public editorOptions: JsonEditorOptions;
   // public data: any = null;
@@ -55,7 +56,8 @@ export class DeploymentVerificationComponent implements OnInit {
   counter = 1;
   serviceConter = 1;
   canaryCheckCounter = 1;
-  selectedTab = '';                                 // this variable is use to store value of selected tab.
+  selectedTab = '';  
+  showSearch:boolean=false;                               // this variable is use to store value of selected tab.
 
   ///code for showing select application shows here
   myControl = new FormControl();
@@ -309,6 +311,7 @@ checkIfCanaryExists(id){
   // code for application dropdown display starts here
 
   onSelectionChangeApplication(event) {
+    this.showSearch=false;
     if (this.deploymentApplicationHealth['analysisType'] == "Logs and Metrics" || this.deploymentApplicationHealth['analysisType'] == "Logs Only") {
           this.selectedTab = 'log-analysis';
           this.onClickTab('log-analysis-tab');
@@ -801,5 +804,9 @@ checkIfCanaryExists(id){
       this.Sidenav.close();
       this.isShow = false;
     }   
+  }
+  showSearchFunc(){
+    this.showSearch=true;
+    this.applicationForm.setValue({application: ''});
   }
 }
