@@ -94,7 +94,7 @@
         <ul class="nav nav-tabs" id="myTabDefault" role="tablist">
           <li class="nav-item" (click)="getLogAnalysis()" data-toggle="tooltip"
             title="Errors and warnings appearing only in Release version and the common Errors/Warnings that occur more often in Release version as compared to Baseline.">
-            <a class="nav-link active" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab"
+            <a class="nav-link active expectedTab" id="{{eventTabLabeledBy}}" data-toggle="tab" href="#unexpected" role="tab"
               aria-controls="unexpected" aria-selected="true">Unexpected <i *ngIf="logAnalysisData== undefined && eventTab == 'unexpected'" class="far fas fa-circle-notch fa-spin"></i></a>
           </li>
           <li class="nav-item" (click)="onClickLogEventTab('expected')" data-toggle="tooltip"

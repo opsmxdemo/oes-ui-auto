@@ -516,6 +516,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.selectedServiceIdFromChild.emit(this.serviceId);
             this.classifiedLogsList = [];
             this.sensitivityChanged = false;
+            $(".nav-link").removeClass("active")
+            $(".expectedTab").addClass("active")
           }
         }
         if (resData.clusterLogs != null && resData.isLoadedClusterLogData) {
