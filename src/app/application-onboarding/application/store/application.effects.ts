@@ -1113,7 +1113,8 @@ getLogTemplateDetails = createEffect(() =>
 getMetricTemplateDetails = createEffect(() =>
     this.actions$.pipe(
         ofType(ApplicationAction.getMetricTemplateDetails),
-        switchMap((action) => {             
+        switchMap((action) => {  
+            //return this.http.get('/assets/data/dv/apminfra-metric.json').pipe(    
             return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+ action.applicationId +'/metricTemplates/'+ action.templateName).pipe(          
                 map(resdata => {
                     return ApplicationAction.loadMetricTemplateDetails({ metricTemplateDetails: resdata});

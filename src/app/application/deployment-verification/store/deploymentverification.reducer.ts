@@ -22,6 +22,10 @@ export interface State {
     reclassificationHistoryResults:any;
     isloadedApplicationHealth:boolean;
     isloadedServiceInformation : boolean;
+
+    servicesOfApplicationId : any;    
+    isLoadedServicesOfApplication:boolean;
+    applicationId : any;
 }
 
 export const initialState: State = {
@@ -41,7 +45,11 @@ export const initialState: State = {
     manualTriggerResponse: null,
     reclassificationHistoryResults:null,
     isloadedApplicationHealth:false,
-    isloadedServiceInformation : false
+    isloadedServiceInformation : false,
+
+    servicesOfApplicationId : null,
+    isLoadedServicesOfApplication:false,
+    applicationId : null
 }
 
 export function DeploymentdReducer(
@@ -181,6 +189,26 @@ export function DeploymentdReducer(
                 reclassificationHistoryResults:action.reclassificationHistoryResults,
                 deployementLoading: false
             })
-        )
+        ),
+        on(DeploymentActions.loadServicesOfApplication,
+            (state,action) => ({
+                ...state,
+                servicesOfApplicationId: action.servicesOfApplication,
+                isLoadedServicesOfApplication:true
+            })
+        ),
+        on(DeploymentActions.fetchServicesOfApplication,
+            (state,action) => ({
+                ...state,
+                applicationId: action.applicationId,
+                isLoadedServicesOfApplication: false
+            })
+        ),
+        on(DeploymentActions.loadedServicesOfApplication,
+            (state) => ({
+                ...state,
+                isLoadedServicesOfApplication: false
+            })         
+        ),
     )(deploymentVerificationState,deploymentVerificationdActions);
 }

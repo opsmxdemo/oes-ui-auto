@@ -52,22 +52,24 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   selectedAPMDSAccount :any;
   apminfraTemplate = null;
   metricConfigForm : FormGroup;
-  selectAllAPM:boolean=true
+  selectAllAPM:boolean=true;
+  templateDataGroups : any;
 
   constructor(private _formBuilder: FormBuilder,
     public store: Store<fromFeature.State>) { }
 
   ngOnChanges(changes: SimpleChanges){
     if(this.isEditMode && this.templateData != null ){
-      this.data = this.templateData;
+      this.data = this.templateData;           
       if(this.templateData.data.groups[0].metrics[0].metricType == 'ADVANCED'){
         this.selectedTab = 'metric-form';
         this.onChangeDatasource(this.templateData.advancedProvider,'custom');
         this.populateCustomMetricForm();
-      }else{
-        
+      }else if(this.templateData.data.groups[0].metrics[0].metricType == 'APM' ||  this.templateData.data.groups[0].metrics[0].metricType == 'Infrastructure'){
+        this.selectedTab = 'metric-apminfra';
+        this.onChangeDatasource(this.templateData.apmProvider,'apm');
+        this.onChangeDatasource(this.templateData.infraProvider,'infra');
       }
-     
     }else{
       this.selectedTab = 'metric-apminfra';
       this.data = null;
@@ -102,15 +104,56 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
         }
         if(responseData.APMDSAccounts != null && responseData.isLoadedAccountForAPMDataSource){
           this.store.dispatch(ApplicationActions.loadedAccountForAPMDataSource());
-          this.APMDSAccounts = responseData.APMDSAccounts;
+          if(responseData.APMDSAccounts.length > 0){
+            this.APMDSAccounts = responseData.APMDSAccounts;
+            if(this.isEditMode){
+              if(this.templateData != null){    
+                if(this.templateData.data != undefined){               
+                  if(this.templateData.data.groups.length > 0){  
+                    var groupsArray = this.templateData.data.groups;  
+                    this.templateDataGroups = groupsArray.filter(i => i.metrics.length > 0);
+                    var apm = this.templateDataGroups.filter(i => i.metrics[0].metricType == 'APM');
+                    if(apm.length > 0){
+                      this.onChangeDSAccount(apm[0].metrics[0].accountName,'apm');
+                      this.apmFormGroup.patchValue({
+                        apmProviderAccount : apm[0].metrics[0].accountName
+                      });
+                    }                   
+                  }
+                }
+              }
+            } 
+          }                   
         }
         if(responseData.InfraDSAccounts != null && responseData.isLoadedAccountForInfraDataScource){
           this.store.dispatch(ApplicationActions.loadedAccountForInfraDataSource());
-          this.InfraDSAccounts = responseData.InfraDSAccounts;
+          if(responseData.InfraDSAccounts.length > 0){
+            this.InfraDSAccounts = responseData.InfraDSAccounts;
+            if(this.isEditMode){
+              if(this.templateData != null){    
+                if(this.templateData.data != undefined){               
+                  if(this.templateData.data.groups.length > 0){   
+                    var groupsArray = this.templateData.data.groups;  
+                    this.templateDataGroups = groupsArray.filter(i => i.metrics.length > 0);                   
+                    var infra = this.templateDataGroups.filter(i => i.metrics[0].metricType == 'Infrastructure');
+                    if(infra.length > 0){
+                      this.onChangeDSAccount(infra[0].metrics[0].accountName,'infra');
+                      this.infraFormGroup.patchValue({
+                        infraProviderAccount : infra[0].metrics[0].accountName
+                      });
+                    }                                        
+                  }
+                }
+              }              
+            }
+          } 
         }
         if(responseData.APMApplicationForAccounts != null && responseData.isLoadedApplicationForAPM){
           this.store.dispatch(ApplicationActions.loadedApplicationForAPMAccounts());
           this.APMApplicationForAccounts = responseData.APMApplicationForAccounts;
+          if(this.isEditMode){
+            this.onChangeAccountForDS(this.templateData.datasourceAppName,'apm');
+          }
         }
         if(responseData.INFRACookbook != null && responseData.isLoadedInfraCookbook){
           this.store.dispatch(ApplicationActions.loadedInfraGenerateCookbook());
@@ -155,6 +198,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                     )
                   })
                  });
+                 if(this.isEditMode){                  
+                  this.prepopulateApmInfraForm();
+                }
               }
              }         
             }
@@ -200,6 +246,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
                       )
                     })                               
                    });
+                  }
+                  if(this.isEditMode){                  
+                    this.prepopulateApmInfraForm();
                   }
                 }
               }
@@ -348,6 +397,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       this.store.dispatch(ApplicationActions.editMetricTemplate({applicationId : this.applicationData['applicationId'], templateName: this.metricTemplateData['templateName'], metricTemplateDataToEdit : this.metricTemplateData}));
       //this.store.dispatch(ApplicationActions.updatedMetricTemplate({metricTemplateData:this.metricTemplateData,index:this.templateIndex}));
     }else{
+      //datasourceAppName
       this.metricTemplateData['applicationId'] = this.applicationData['applicationId'];
       this.metricTemplateData['applicationName'] = this.applicationData['name'];
       this.metricTemplateData['emailId'] = this.applicationData['email'];
@@ -489,29 +539,52 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   }
 
   saveapminfra(){
-          
-    this.apminfraTemplate = {
-      "applicationId"   : this.applicationData['applicationId'],
-      "applicationName" : this.applicationData['name'],
-      "emailId"         : this.applicationData['email'],
-      "isEdit"          : false,
-      "templateName"    : this.apmFormGroup.value.templateName,
-      //"applicationName" : this.apmFormGroup.value.apmApplication != null ? this.apmFormGroup.value.apmApplication : this.infraFormGroup.value.applicationName,
-      "data"            : {
-                            "groups" : [],
-                            "isNormalize": this.metricConfigForm.value.isNormalize,
-                            "percent_diff_threshold" : (this.metricConfigForm.value.threshold ? "easy" :"hard")
-                          }
-    };  
+    if(this.isEditMode){
+      this.apminfraTemplate = {
+        "applicationId"     : this.applicationData['applicationId'],
+        "applicationName"   : this.applicationData['name'],
+        "emailId"           : this.applicationData['email'],
+        "isEdit"            : true,
+        "templateName"      : this.apmFormGroup.controls.templateName.value,
+        "datasourceAppName" : this.apmFormGroup.controls.apmApplication.value,
+        "data"              : {
+                                "groups" : [],
+                                "isNormalize": this.metricConfigForm.controls.isNormalize.value,
+                                "percent_diff_threshold" : (this.metricConfigForm.controls.threshold.value ? "easy" :"hard")
+                              }
+      };  
+      
+      var cookbookArray = [];
+      cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist);
+      var filteredCookbookArray = [];
+      filteredCookbookArray = cookbookArray.filter(obj => obj.isSelectedToSave == true);
+      this.apminfraTemplate.data.groups =filteredCookbookArray;
+      this.store.dispatch(ApplicationActions.editMetricTemplate({applicationId : this.applicationData['applicationId'], templateName: this.apmFormGroup.value.templateName, metricTemplateDataToEdit : this.apminfraTemplate}));
+    }else{
+      this.apminfraTemplate = {
+        "applicationId"     : this.applicationData['applicationId'],
+        "applicationName"   : this.applicationData['name'],
+        "emailId"           : this.applicationData['email'],
+        "isEdit"            : false,
+        "templateName"      : this.apmFormGroup.value.templateName,
+        "datasourceAppName" : this.apmFormGroup.value.apmApplication,
+        "data"              : {
+                                "groups" : [],
+                                "isNormalize": this.metricConfigForm.value.isNormalize,
+                                "percent_diff_threshold" : (this.metricConfigForm.value.threshold ? "easy" :"hard")
+                              }
+      };  
+      
+      var cookbookArray = [];
+      cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist);
+      var filteredCookbookArray = [];
+      filteredCookbookArray = cookbookArray.filter(obj => obj.isSelectedToSave == true);
+      this.apminfraTemplate.data.groups =filteredCookbookArray;
+      this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.apminfraTemplate}));
+      //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
+      this.clearFormData();
+    }      
     
-    var cookbookArray = [];
-    cookbookArray = this.apmcookbookForm.value.cookbooklist.concat(this.infracookbookForm.value.cookbooklist);
-    var filteredCookbookArray = [];
-    filteredCookbookArray = cookbookArray.filter(obj => obj.isSelectedToSave == true);
-    this.apminfraTemplate.data.groups =filteredCookbookArray;
-    this.store.dispatch(ApplicationActions.saveMetricTemplate({applicationId : this.applicationData['applicationId'], metricTemplateData : this.apminfraTemplate}));
-    //this.store.dispatch(ApplicationActions.createdMetricTemplate({metricTemplateData:this.apminfraTemplate}));
-    this.clearFormData();
   }
 
   clearFormData(){
@@ -545,50 +618,13 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     this.infraFormGroup.reset();
 
     this.infracookbookForm = new FormGroup({
-      cookbooklist: new FormArray([
-        // new FormGroup({
-        //   group : new FormControl(),
-        //   isSelectedToSave : new FormControl(),
-        //   metrics: new FormArray([
-        //     new FormGroup({
-        //       name: new FormControl(),                      
-        //       accountName : new FormControl(),
-        //       aggregator : new FormControl(),
-        //       displayUnit : new FormControl(),
-        //       metricType : new FormControl(),
-        //       aggregatorTimeInterval: new FormControl(),
-        //       aggregatorTimeIntervalUnit : new FormControl(),
-        //       duration: new FormControl(),
-        //       riskDirection : new FormControl(),
-        //       critical : new FormControl(),
-        //       watchlist : new FormControl()
-        //     })
-        //   ])
-        //})
+      cookbooklist: new FormArray([       
       ])
     });
 
 
     this.apmcookbookForm = new FormGroup({
-      cookbooklist: new FormArray([
-        // new FormGroup({
-        //   group : new FormControl(),
-        //   isSelectedToSave : new FormControl(),
-        //   metrics: new FormArray([
-        //     new FormGroup({
-        //       name: new FormControl(),                      
-        //       accountName : new FormControl(),
-        //       aggregator : new FormControl(),
-        //       displayUnit : new FormControl(),
-        //       label : new FormControl(),
-        //       metricType : new FormControl(),
-        //       aggregatorTimeIntervalUnit: new FormControl(),
-        //       riskDirection : new FormControl(),
-        //       critical : new FormControl(),
-        //       watchlist : new FormControl()
-        //     })
-        //   ])
-        // })
+      cookbooklist: new FormArray([        
       ])
     });
 
@@ -639,6 +675,145 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       }
   }
 
+  //Function to form based edit apm infra metric template
+  prepopulateApmInfraForm(){
+    //console.log(this.templateData);
+    
+    this.apmFormGroup.patchValue({
+      templateName : this.templateData.templateName,
+      apmProvider : this.templateData.apmProvider,
+      apmApplication : this.templateData.datasourceAppName
+    });
+    this.infraFormGroup.patchValue({
+      infraProvider : this.templateData.infraProvider
+    });
+    this.metricConfigForm.patchValue({
+      isNormalize : this.templateData.data.isNormalize,
+      threshold   : (this.templateData.data.percent_diff_threshold == 'easy' ? true : false)
+    });
+    //code to disable the non editable values
+
+    this.apmFormGroup.controls.templateName.disable();
+    this.apmFormGroup.controls.apmProvider.disable();
+    this.apmFormGroup.controls.apmApplication.disable();
+    this.apmFormGroup.controls.apmProviderAccount.disable();
+
+    this.infraFormGroup.controls.infraProvider.disable();
+    this.infraFormGroup.controls.applicationName.disable();
+
+    this.metricConfigForm.controls.isNormalize.disable();
+    this.metricConfigForm.controls.threshold.disable();
+
+    //this.apmcookbookForm.controls.cookbooklist.disable();
+    //this.infracookbookForm.controls.cookbooklist.disable();
+
+    if(this.templateData != null){    
+      if(this.templateData.data != undefined){               
+          if(this.templateData.data.groups.length > 0){
+
+            var groupsArray = this.templateData.data.groups;  
+            this.templateDataGroups = groupsArray.filter(i => i.metrics.length > 0);
+            var apm = this.templateDataGroups.filter(i => i.metrics[0].metricType == 'APM');
+            var infra = this.templateDataGroups.filter(i => i.metrics[0].metricType == 'Infrastructure');
+
+            if(apm.length > 0){
+              this.apmFormGroup.patchValue({
+                apmProviderAccount : apm[0].metrics[0].accountName
+              });
+            }
+            if(infra.length > 0){
+              this.infraFormGroup.patchValue({
+                applicationName : infra[0].metrics[0].accountName
+              });
+            }
+
+            //code to remove all items from the Form before pushing
+            const control = <FormArray>this.apmcookbookForm.controls['cookbooklist'];
+                for(let i = control.length-1; i >= 0; i--) {
+                    control.removeAt(i)
+            }
+            if(apm.length > 0){
+            apm.forEach((cookbook,cookbookindex) => {
+              (<FormArray>this.apmcookbookForm.get('cookbooklist')).push(
+                new FormGroup({
+                  group: new FormControl(cookbook.group),
+                  isSelectedToSave :new FormControl(true),
+                  metrics: new FormArray([])
+                })
+              ); 
+
+              //populating metrics array
+              cookbook.metrics.forEach((metricObj, metricIndex) => {
+                const cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
+                const metricArray = cookbookArray.at(cookbookindex).get('metrics') as FormArray;
+                metricArray.push(
+                  new FormGroup({
+                    name: new FormControl(metricObj.name),                      
+                    accountName : new FormControl(metricObj.accountName),
+                    aggregator : new FormControl(metricObj.aggregator),
+                    displayUnit : new FormControl(metricObj.displayUnit),
+                    label : new FormControl (metricObj.label),
+                    metricType : new FormControl(metricObj.metricType),
+                    aggregatorTimeIntervalUnit: new FormControl(metricObj.aggregatorTimeIntervalUnit),
+                    riskDirection : new FormControl(metricObj.riskDirection),
+                    critical : new FormControl(metricObj.critical),
+                    watchlist : new FormControl(metricObj.watchlist)
+                  })
+                )
+              })                               
+             });
+            }
+
+             //code to remove all items from the Form before pushing
+             const control1 = <FormArray>this.infracookbookForm.controls['cookbooklist'];
+             for(let i = control.length-1; i >= 0; i--) {
+              control1.removeAt(i)
+             }
+             if(infra.length > 0){
+              infra.forEach((cookbook,cookbookindex) => {
+                (<FormArray>this.infracookbookForm.get('cookbooklist')).push(
+                  new FormGroup({
+                    group: new FormControl(cookbook.group),
+                    averageWeight : new FormControl(),
+                    isSelectedToSave :new FormControl(true),
+                    metrics: new FormArray([])
+                  })
+                ); 
+                
+                //populating metrics array
+                cookbook.metrics.forEach((metricObj, metricIndex) => {
+                  const cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
+                  const metricArray = cookbookArray.at(cookbookindex).get('metrics') as FormArray;
+                  metricArray.push(
+                    new FormGroup({
+                      name: new FormControl(metricObj.name),                       
+                      accountName : new FormControl(metricObj.accountName),
+                      aggregator : new FormControl(metricObj.aggregator),
+                      displayUnit : new FormControl(metricObj.displayUnit),
+                      metricType : new FormControl(metricObj.metricType),
+                      aggregatorTimeInterval: new FormControl(metricObj.aggregatorTimeInterval),
+                      aggregatorTimeIntervalUnit : new FormControl(metricObj.aggregatorTimeIntervalUnit),
+                      duration: new FormControl(metricObj.duration),
+                      riskDirection : new FormControl(metricObj.riskDirection),
+                      critical : new FormControl(metricObj.critical),
+                      watchlist : new FormControl(metricObj.watchlist)                    
+                    })
+                  )
+                })
+              });
+            }
+
+            }
+          }
+        }
+    // this.apmcookbookForm.get('cookbooklist')).patchValue({
+    //   group: 
+    //   isSelectedToSave :new FormControl(true),
+    //   metrics: new FormArray([])
+    // });
+    //this.deploymentVerificationForm.patchValue({metricTemplate : this.metricTemplateList[index]}); 
+  }
+  
   // this function to populate fields in edit mode of custom metric form
   populateCustomMetricForm(){
           //Form for custom metric

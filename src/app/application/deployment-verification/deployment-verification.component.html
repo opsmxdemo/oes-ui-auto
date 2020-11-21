@@ -148,49 +148,51 @@
       <!-- /.table-footer px-3 py-2 -->
     </div>
   </div>
-    <div class="modal bd-example-modal-lg fade" id="manualTrigger" tabindex="-1" role="dialog" aria-labelledby="manualTriggerLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Manual Canary Trigger</h5>
-            <button type="button" class="close " data-dismiss="modal" aria-label="Close">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <!-- Enable the below code for Form / Editor options -->
-
-            <!-- <ul class="nav tab-lined nav-tabs mb-2" id="myTab" role="tablist" (click)="onManualTriggerClickTab($event)">
+  <div class="modal bd-example-modal-lg fade" id="manualTrigger" tabindex="-1" role="dialog" aria-labelledby="manualTriggerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-width" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Manual Canary Trigger</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body p-0">
+          <!-- Enable the below code for Form / Editor options -->
+          <div class="tab-default pt-3">
+            <ul class="nav tab-lined nav-tabs mb-2" id="myTab" role="tablist" (click)="onManualTriggerClickTab($event)">
               <li class="nav-item" >
-                <a class="nav-link active" id="manualTrigger-form-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-form-tab" aria-selected="true">Form</a>
+                <a class="nav-link active" id="manualTrigger-form-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-form" aria-selected="true">Form</a>
               </li>
               <li  class="nav-item">
-                <a class="nav-link active"  id="manualTrigger-editor-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-editor-tab" aria-selected="true">Editor</a>
+                <a class="nav-link"  id="manualTrigger-editor-tab" data-toggle="tab" role="tab" aria-controls="manualTrigger-editor" aria-selected="true">Editor</a>
               </li>            
-            </ul> -->
-            <div class="tab-content" id="myTabContent">
-              <div id="metric-form" role="tabpanel" aria-labelledby="manualTrigger-form-tab">         
-                  <div *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" class="col-12 maindiv">
-                    <form #manualTriggerData="ngForm" >
+            </ul>
+            <div class="tab-content" id="manutaltriggertab">
+              
+              <div id="manualTrigger-form" role="tabpanel" aria-labelledby="manualTrigger-form-tab" >         
+                  <div  class="col-12 maindiv" *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" >
+                    <form [formGroup]="manualTriggerForm" >
                       <div class="form-group text-muted">
-                        <label>Application <span data-toggle="tooltip" data-placement="right" title="Tooltip on right"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <select class="form-control col-sm-6">
-                          <option value=""></option>
-                          <option>Choose</option>
+                        <label>Application <span data-toggle="tooltip" data-placement="right" title="Name of the application"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>                          
+                        <select class="form-control col-sm-6" formControlName="application" (change)="onChangeApplicationManualTrigger($event.target.selectedIndex)">
+                          <option value="" [disabled]="true">Select</option>                            
+                          <option *ngFor="let application of applications" value="{{application.applicationName}}"  >
+                            {{application.applicationName}}</option>                           
                         </select>
                       </div>
-                      <div class="form-group text-muted">
+                      <!-- <div class="form-group text-muted">
                         <label>User Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
                         <input type="text" class="form-control col-sm-6" autofocus="true" />
-                      </div>
+                      </div> -->
                       <div class="form-group text-muted">
-                        <label>Canary Lifetime <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
+                        <label>Analysis Lifetime <span data-toggle="tooltip" title="The time in hours for which the Canary Analysis should be run"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
                         <div class="d-flex align-items-center">
-                          <input type="text" class="form-control mr-2 col-sm-6" />
+                          <input type="text" class="form-control mr-2 col-sm-6" formControlName="lifetimeHours"/>
                           <span>hours</span>
                         </div>
                       </div>
-                      <div class="form-group text-muted">
+                      <!-- <div class="form-group text-muted">
                         <label>Combined Canary Result Strategy <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
                         <select class="form-control col-sm-6">
                           <option value="">Select Strategy</option>
@@ -198,24 +200,53 @@
                           <option>Option</option>
                           <option>Option</option>
                         </select>
+                      </div> -->
+                      <div class="form-group text-muted position-relative">
+                        <label>Metric Successful Score (successMetricsResultScore)<span data-toggle="tooltip" title="The score under which the Metric Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <input type="text" class="form-control is-invalid col-sm-6" formControlName="successMetricsResultScore" />
+                        <!-- <div class="invalid-feedback">
+                          Error message goes here.
+                        </div> -->
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Metric Unhealthy Score (minimumMetricsResultScore)<span data-toggle="tooltip" title="The score above which the Metric Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <input type="text" class="form-control col-sm-6" formControlName="minimumMetricsResultScore" />
                       </div>
                       <div class="form-group text-muted position-relative">
-                        <label>Successful Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                        <input type="text" class="form-control is-invalid col-sm-6" />
-                        <div class="invalid-feedback">
+                        <label>Logs Successful Score (canaryResultScore)<span data-toggle="tooltip" title="The score under which the Log Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <input type="text" class="form-control is-invalid col-sm-6" formControlName="canaryResultScore" />
+                        <!-- <div class="invalid-feedback">
                           Error message goes here.
+                        </div> -->
+                      </div>
+                      <div class="form-group text-muted">
+                        <label>Logs Unhealthy Score(minimumCanaryResultScore) <span data-toggle="tooltip" title="The score above which the Log Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <input type="text" class="form-control col-sm-6" formControlName="minimumCanaryResultScore" />
+                      </div>
+                      <!-- <div class="formgroup" [formGroup]="formGroup"> -->
+                        <div class="form-group text-muted">
+                          <label>Baseline Start Time (ms)<span data-toggle="tooltip" title="Baseline Start Time (ms)"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                          <mat-form-field>
+                            <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" formControlName="baselineStartTimeMs">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <ngx-mat-datetime-picker #picker touchUi></ngx-mat-datetime-picker>
+                          </mat-form-field>
                         </div>
-                      </div>
-                      <div class="form-group text-muted">
-                        <label>Unhealthy Score <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                        <input type="text" class="form-control col-sm-6" />
-                      </div>
-
+                        <div class="form-group text-muted">
+                          <label>Canary Start Time (ms)<span data-toggle="tooltip" title="Canary Start Time (ms)"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                          <mat-form-field>
+                            <input matInput [ngxMatDatetimePicker]="picker1" placeholder="Choose a date" formControlName="canaryStartTimeMs">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <ngx-mat-datetime-picker #picker1 touchUi></ngx-mat-datetime-picker>
+                          </mat-form-field>
+                         </div>
+                        
+                      <!-- </div> -->
                       <div class="text-divider">
-                        <h4>Analysis Config</h4>
+                        <h4>Scope</h4>
                       </div>
 
-                      <div class="form-group text-muted">
+                      <!-- <div class="form-group text-muted">
                         <label>Metric Template Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
                         <select class="form-control col-sm-6">
                           <option value="">Select Metric Template</option>
@@ -232,19 +263,118 @@
                           <option>Option</option>
                           <option>Option</option>
                         </select>
+                      </div> -->
+                      <div class="form-group text-muted">
+                        <label>Begin Canary Analysis After Mins <span data-toggle="tooltip" title="Time to enable warming up of the container"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>                          
+                        <div class="d-flex align-items-center">
+                          <input type="text" class="form-control mr-2 col-sm-6" formControlName="beginCanaryAnalysisAfterMins"/>
+                          <span>minutes</span>
+                        </div>
                       </div>
                       <div class="form-group text-muted">
-                        <label>Begin Canary Analysis After Mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                        <input type="text" class="form-control col-sm-6" />
-                      </div>
-                      <div class="form-group text-muted">
-                        <label>Canary Analysis interval mins <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
-                        <input type="text" class="form-control col-sm-6" />
+                        <label>Canary Analysis interval mins <span data-toggle="tooltip" title="Intervals in which metric-data is fetched and analysed"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <div class="d-flex align-items-center">
+                          <input type="text" class="form-control mr-2 col-sm-6" formControlName="canaryAnalysisIntervalMins"/>
+                          <span>minutes</span>
+                        </div>
                       </div>
 
                       <div class="text-divider">
-                        <h4>Matric Scope</h4>
+                        <h4>Log Identifiers</h4>
                       </div>
+
+                      <div class="row" *ngIf="servicesOfApplication?.length != 0">
+                        <div class="col-12">
+                          <form [formGroup]="logServiceForm">
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="form-group">
+                                  <table class="table table-outline table-md" formArrayName="identifiers">
+                                    <thead>
+                                      <tr>
+                                       <th>Service</th>
+                                       <th>Baseline</th>
+                                       <th>Canary</th>                                        
+                                       <th class="text-right"><a (click)="addLogServiceMT()" data-toggle="tooltip" data-placement="top" data-original-title="Add next service"><i class="fas fa-plus"></i></a></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody *ngFor="let logservice of logServiceForm.get('identifiers')['controls']; let i=index">                              
+                                      <tr [formGroupName]=i>
+                                        <td class="px-1">
+                                          <select class="form-control" formControlName="service">
+                                            <option value="" [disabled]="true">Select</option>                            
+                                            <option *ngFor="let service of servicesOfApplication" value="{{service.serviceName}}"  >
+                                              {{service.serviceName}}</option>                           
+                                          </select>
+                                        </td>
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="baseline"></td>
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="canary"></td>
+                                        <td class="px-1">
+                                         <a (click)="deleteLogService(logservice,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <!-- /.form-group -->
+                              </div>
+                              <!-- /.col-6 -->
+                            </div>
+                            <!-- /.row -->   
+                           </form> 
+                        </div>
+                      </div>
+
+                      <div class="text-divider">
+                        <h4>Metric Identifiers</h4>
+                      </div>
+
+                      <div class="row" *ngIf="servicesOfApplication?.length != 0">
+                        <div class="col-12">
+                          <form [formGroup]="metricServiceForm">
+                            <div class="row">
+                              <div class="col-12">
+                                <div class="form-group">
+                                  <table class="table table-outline table-md" formArrayName="identifiers">
+                                    <thead>
+                                      <tr>
+                                       <th>Service</th>
+                                       <th>Baseline</th>
+                                       <th>Canary</th>                                        
+                                       <th class="text-right"><a (click)="addMetricServiceMT()" data-toggle="tooltip" data-placement="top" data-original-title="Add next service"><i class="fas fa-plus"></i></a></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody *ngFor="let metricservice of metricServiceForm.get('identifiers')['controls']; let i=index">                              
+                                      <tr [formGroupName]=i>
+                                        <td class="px-1">
+                                          <select class="form-control" formControlName="service">
+                                            <option value="" [disabled]="true">Select</option>                            
+                                            <option *ngFor="let service of servicesOfApplication" value="{{service.serviceName}}"  >
+                                              {{service.serviceName}}</option>                           
+                                          </select>
+                                        </td>
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="baseline"></td>
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="canary"></td>
+                                        <td class="px-1">
+                                         <a (click)="deleteMetricService(metricservice,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <!-- /.form-group -->
+                              </div>
+                              <!-- /.col-6 -->
+                            </div>
+                            <!-- /.row -->   
+                           </form> 
+                        </div>
+                      </div>
+
+                      
+                      <!-- <div>{{formGroup.get('date').value?.toLocaleString()}}</div> -->
+
+                      <!--
                       <div class="form-group text-muted">
                         <label>Baseline Identifier <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
                         <input type="text" class="form-control col-sm-6" />
@@ -260,27 +390,30 @@
                       <div class="form-group text-muted">
                         <label>Canary Start Time <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
                         <input type="text" class="form-control col-sm-6" />
-                      </div>
+                      </div> -->
                     </form>
                   </div>
               </div>
               
-              <div id="manualTrigger-editor-tab" role="tabpanel" aria-labelledby="manualTrigger-editor-tab">          
-                <div class="col-12 maindiv" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'">
+              <div id="manualTrigger-editor" role="tabpanel" aria-labelledby="manualTrigger-editor-tab" >
+                <div class="col-12 maindiv" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" >
                   <json-editor [options]="editorOptions" [data]="data" (change)="showManualTriggerJson($event)"></json-editor>
                 </div>            
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
-            <button type="submit" class="btn  btn-primary"*ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
-            <button type="submit" class="btn  btn-primary"*ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
-          </div>
-          <!-- /.modal-footer -->
         </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
+          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerForm()" data-dismiss="modal">Trigger</button>
+          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
+        </div>
+        <!-- /.modal-footer -->
       </div>
     </div>
+  </div>
+
     <div class="modal bd-example-modal-lg fade " id="reclassificationHistory" tabindex="-1" role="dialog" aria-labelledby="reclassificationHistory" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-width" role="document">
         <div class="modal-content">

@@ -31,7 +31,9 @@ import { CorrelationComponent } from './correlation/correlation.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CorrelationformComponent } from './correlation/correlationform/correlationform.component';
 import { CorrelationformdetailsComponent } from './correlation/correlationform/correlationformdetails/correlationformdetails.component';
-import { CorrelationEffect } from './correlation/store/correlation.effects'
+import { CorrelationEffect } from './correlation/store/correlation.effects';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
@@ -71,7 +73,11 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
         MetricAnalysisEffect,
         LogAnalysisEffect,
         CorrelationEffect
-     ])
+     ]),
+     NgxMatDatetimePickerModule,
+     NgxMatTimepickerModule,
+     NgxMatNativeDateModule, 
+     NgxMatMomentModule 
     ],
   })
   export class DeploymentVerificationModule { }
