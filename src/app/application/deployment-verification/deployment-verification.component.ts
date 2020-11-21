@@ -126,6 +126,8 @@ export class DeploymentVerificationComponent implements OnInit {
   logServiceForm: FormGroup;
   metricServiceForm : FormGroup;
 
+  username: any;
+
   @ViewChild('picker') picker: any;
   @ViewChild('picker1') picker1: any;
 
@@ -142,19 +144,7 @@ export class DeploymentVerificationComponent implements OnInit {
   public stepSecond = 1;
   public color: ThemePalette = 'primary';
 
-  // public formGroup = new FormGroup({
-  //   date: new FormControl(null, [Validators.required]),
-  //   date2: new FormControl(null, [Validators.required])
-  // })
-  // public dateControl = new FormControl(new Date(2021,9,4,5,6,7));
-  // public dateControlMinMax = new FormControl(new Date());
-
-  // public options = [
-  //   { value: true, label: 'True' },
-  //   { value: false, label: 'False' }
-  // ];
-
-  // public listColors = ['primary', 'accent', 'warn'];
+ 
 
   public stepHours = [1, 2, 3, 4, 5];
   public stepMinutes = [1, 5, 10, 15, 20, 25];
@@ -193,7 +183,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
-    this.selectedManualTriggerTab = 'manualTrigger-editor-tab'; //setting default tab selected as form
+    this.selectedManualTriggerTab = 'manualTrigger-form-tab'; //setting default tab selected as form
 
     // hide tooltip 
     $("[data-toggle='tooltip']").tooltip('hide');
@@ -335,6 +325,14 @@ export class DeploymentVerificationComponent implements OnInit {
         }
       });
 
+      this.store.select('auth').subscribe(
+        (response) => {
+          if(response.authenticated){            
+            this.username = response.user;
+          }
+        }
+      );
+
   }
 
 checkIfCanaryExists(id){
@@ -468,73 +466,8 @@ deleteLogService(query,index){
   // Below function is use to fetched json from json editor
   showManualTriggerJson(event = null) {
     this.manualTriggerData = this.editor.get();
-
-    // {
-    //   "application": "jsreeapp1",
-    //   "isJsonResponse": true,
-    //   "canaryConfig": {
-    //     "canaryAnalysisConfig": {
-    //       "beginCanaryAnalysisAfterMins": "0",
-    //       "canaryAnalysisIntervalMins": "6",
-    //       "notificationHours": []
-    //     },
-    //     "canaryHealthCheckHandler": {
-    //       "minimumCanaryResultScore": "60",
-    //       "minimumMetricsResultScore": "75"
-    //     },
-    //     "canarySuccessCriteria": {
-    //       "canaryResultScore": "80",
-    //       "successMetricsResultScore": "80"
-    //     },
-    //     "combinedCanaryResultStrategy": "AGGREGATE",
-    //     "lifetimeHours": "0.1",
-    //     "name": "user2"
-    //   },
-    //   "canaryDeployments": [
-    //     {
-    //       "baseline": {
-    //         "log": {
-    //           "Service1": {
-    //             "container_name": "baseapp_rest_1"
-    //           },
-    //           "Service2": {
-    //             "container_name": "baseapp_rest_1"
-    //           }
-    //         },
-    //         "metric": {
-    //           "Service1": {
-    //             "variable1": "service:baseapp"
-    //           },
-    //           "Service2": {
-    //             "variable1": "service:baseapp"
-    //           }
-    //         }
-    //       },
-    //       "baselineStartTimeMs": 1595516400000,
-    //       "canaryStartTimeMs": 1595516400000,
-    //       "canary": {
-    //         "log": {
-    //           "Service1": {
-    //             "container_name": "canaryapp_rest_1"
-    //           },
-    //           "Service2": {
-    //             "container_name": "canaryapp_rest_1"
-    //           }
-    //         },
-    //         "metric": {
-    //           "Service1": {
-    //             "variable1": "service:canaryapp"
-    //           },
-    //           "Service2": {
-    //             "variable1": "service:canaryapp"
-    //           }
-    //         }
-    //       }
-    //     }
-    //   ]
-    // }
-   
   }
+  
   // Below function is use to save manualTrigger data on click of triggerBtn
   submitManualTriggerData() {
     this.store.dispatch(
@@ -546,13 +479,43 @@ deleteLogService(query,index){
   }
 
   submitManualTriggerForm(){
-    console.log(this.manualTriggerForm);
-    console.log(this.logServiceForm);
-    console.log(this.metricServiceForm);
+    
     let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
     let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;
-    //console.log(new Date(baselineStartTimeMs).getTime());
+    
+    var logArray= this.logServiceForm.value.identifiers;
+    var logbaselineObj = {};
+    for(var i=0;i<logArray.length;i++){
+      logbaselineObj[logArray[i].service] = logArray[i].baseline;
+    }
+    var logcanaryObj = {};
+    for(var i=0;i<logArray.length;i++){
+      logcanaryObj[logArray[i].service] = logArray[i].canary;
+    }
 
+    var metricArray= this.metricServiceForm.value.identifiers;
+    var metricbaselineObj = {};
+    for(var i=0;i<metricArray.length;i++){
+      metricbaselineObj[metricArray[i].service] = metricArray[i].baseline;
+    }
+    var metriccanaryObj = {};
+    for(var i=0;i<metricArray.length;i++){
+      metriccanaryObj[metricArray[i].service] = metricArray[i].canary;
+    }
+    var canaryDeploymentArray = [
+      {
+        "baseline": {
+          "log": logbaselineObj,
+          "metric": metricbaselineObj
+        },
+        "baselineStartTimeMs": new Date(baselineStartTimeMs).getTime(),
+        "canaryStartTimeMs": new Date(canaryStartTimeMs).getTime(),
+        "canary": {
+          "log": logcanaryObj,
+          "metric": metriccanaryObj
+        }
+      }
+    ];
     
     this.manualTriggerData =    {
       "application": this.manualTriggerForm.value.application,
@@ -573,53 +536,11 @@ deleteLogService(query,index){
         },
         "combinedCanaryResultStrategy": "AGGREGATE",
         "lifetimeHours": this.manualTriggerForm.value.lifetimeHours,
-        "name": "user2"
+        "name": this.username
       },
-      "canaryDeployments": [
-        {
-          "baseline": {
-            "log": {
-              "Service1": {
-                "container_name": "baseapp_rest_1"
-              },
-              "Service2": {
-                "container_name": "baseapp_rest_1"
-              }
-            },
-            "metric": {
-              "Service1": {
-                "variable1": "service:baseapp"
-              },
-              "Service2": {
-                "variable1": "service:baseapp"
-              }
-            }
-          },
-          "baselineStartTimeMs": new Date(baselineStartTimeMs).getTime(),
-          "canaryStartTimeMs": new Date(canaryStartTimeMs).getTime(),
-          "canary": {
-            "log": {
-              "Service1": {
-                "container_name": "canaryapp_rest_1"
-              },
-              "Service2": {
-                "container_name": "canaryapp_rest_1"
-              }
-            },
-            "metric": {
-              "Service1": {
-                "variable1": "service:canaryapp"
-              },
-              "Service2": {
-                "variable1": "service:canaryapp"
-              }
-            }
-          }
-        }
-      ]
+      "canaryDeployments": canaryDeploymentArray
     };
-
-    console.log(this.manualTriggerData);
+    this.submitManualTriggerData();
 
   }
 
