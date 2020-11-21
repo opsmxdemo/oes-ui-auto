@@ -75,8 +75,7 @@
             </tr> 
           </tbody>
         </table>
-
-        <table class="table-sm table-avenir serviceTable" *ngIf="!serviceIdExists">
+        <table class="table-sm table-avenir serviceTable" *ngIf="!serviceIdExists && deploymentApplicationHealth['applicationHealthStatus'] != 'IN PROGRESS' ">
           <tbody>
             <tr>
               <td>

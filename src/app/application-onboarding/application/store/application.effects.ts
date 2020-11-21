@@ -231,7 +231,9 @@ export class ApplicationEffect {
                 return this.http.post<Environment>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/' + action.applicationId + '/environments', action.environmentsData).pipe(
                     map(resdata => {
                         this.toastr.showSuccess('Environments Saved Successfully','Success');
-                        return ApplicationAction.environmentDataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplicationEnvironments' });
+                        return ApplicationAction.postSaveEnvironments({ 'environmentsSavedData': {'status': true} });                  
+
+                       // return ApplicationAction.environmentDataSaved({ applicationName: 'action.environmentsData.name', dataType: 'createApplicationEnvironments' });
                     }),
                     catchError(errorRes => {
                         //     this.toastr.showError('Please raise a ticket with tech support with the following information: ' + errorRes.error.error, 'ERROR')
@@ -269,7 +271,10 @@ export class ApplicationEffect {
            return this.http.put<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/environments',action.environmentsListData).pipe(
                map(resdata => {
                 this.toastr.showSuccess('Environments updated Successfully', 'Success');
-                   return ApplicationAction.postUpdateEnvironments({ environmentsListUpdatedData: resdata});
+
+                return ApplicationAction.postSaveEnvironments({ 'environmentsSavedData': {'status': true} });                  
+
+                //   return ApplicationAction.postUpdateEnvironments({ environmentsListUpdatedData: resdata});
                }),
                catchError(errorRes => {
                    return handleError(errorRes);
@@ -285,9 +290,10 @@ export class ApplicationEffect {
           switchMap((action) => {
               return this.http.delete<any>(this.environment.config.endPointUrl + 'oes/appOnboarding/applications/'+action.applicationId+'/environments').pipe(
                   map(resdata => {
+                    this.store.dispatch(ApplicationAction.getEnvironments({ applicationId: action.applicationId }));
                      this.toastr.showSuccess('Environments deleted successfully!!', 'SUCCESS');
                       return ApplicationAction.environmentdeletedSuccessfully();
-                  }),
+                    }),
                   catchError(errorRes => {
                     //   this.toastr.showError('Application is not deleted due to: ' + errorRes.error.error, 'ERROR')
                       return handleError(errorRes);
@@ -307,6 +313,8 @@ export class ApplicationEffect {
             switchMap(action => {
                 return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/applications/' + action.applicationId + '/usergroups/permissions', action.groupPermissionData).pipe(
                     map(resdata => {
+                        return ApplicationAction.postSaveGroupPermissions({ 'groupPermissionSavedData': {'status': true} });                  
+
                         this.toastr.showSuccess("Group Permissions Saved Successfully","Success");
 
                         return ApplicationAction.groupPermissionDataSaved({ applicationName: 'applicationname comes here', dataType: 'createApplicationGroupPermissions' });

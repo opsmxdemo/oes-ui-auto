@@ -50,7 +50,7 @@ export class DeploymentVerificationEffect {
             ofType(DeploymentActions.loadLatestRun),
             withLatestFrom(this.store.select('auth')),
             switchMap(([action,authState]) => {   
-                return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/users/'+authState.user+'/applications/latest-canary').pipe(
+                return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v2/users/'+authState.user+'/applications/latest-canary').pipe(
                     map(resdata => {
                         this.store.dispatch(DeploymentActions.updateCanaryRun({canaryId: resdata['canaryId']}));
                         this.store.dispatch(DeploymentActions.loadApplicationHelath({ canaryId: resdata['canaryId'] }));
@@ -211,7 +211,7 @@ fetchServicesOfApplicationId = createEffect(() =>
     this.actions$.pipe(
         ofType(DeploymentActions.fetchServicesOfApplication),
         switchMap((action) => {
-            return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v1/applications/' + action.applicationId).pipe(
+            return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v2/applications/' + action.applicationId).pipe(
                 map(resdata => {
                     return DeploymentActions.loadServicesOfApplication({servicesOfApplication:resdata});
                 }),
