@@ -39,6 +39,8 @@ export const savedService = createAction('[Application] SavedService', props<{sa
 // Below actions related to group permissions
 
 export const saveGroupPermissions = createAction('[Application] SaveGroupPermissions', props<{applicationId:any,groupPermissionData: GroupPermission}>());
+export const postSaveGroupPermissions = createAction('[Applucation] PostSaveGroupPermissions', props<{groupPermissionSavedData:any}>());
+export const isGrouppermissionConfigSaved = createAction('[Application] IsGrouppermissionConfigSaved');
 export const groupPermissionDataSaved = createAction('[Application] groupPermissionDataSaved', props<{applicationName:string,dataType:string}>());
 
 export const getGroupPermissions = createAction('[Application] GetGroupPermissions', props<{applicationId: any}>());
@@ -148,6 +150,8 @@ export const isSaporConfigUpdated = createAction('[Application] isSaporConfigUpd
 // Below action is used for environments 
 
 export const saveEnvironments = createAction('[Application] SaveEnvironments', props<{applicationId: any,environmentsData: Environment}>());
+export const postSaveEnvironments = createAction('[Applucation] PostSaveEnvironments', props<{environmentsSavedData:any}>());
+export const isEnvironmentsConfigSaved = createAction('[Application] IsEnvironmentsConfigSaved');
 export const environmentDataSaved = createAction('[Application] EnvironmentDataSaved', props<{applicationName:string,dataType:string}>());
 
 export const getEnvironments = createAction('[Application] GetEnvironments', props<{applicationId: any}>());
@@ -155,7 +159,7 @@ export const loadEnvironments = createAction('[Application] LoadEnvironments', p
 export const isgetEnvironmentsListLoaded = createAction('[Application] IsgetEnvironmentsListLoaded');
 
 export const updateEnvironments = createAction('[Application] UpdateEnvironments', props<{applicationId: any, environmentsListData: any}>());
-export const postUpdateEnvironments = createAction('[Application] PostUpdateEnvironments', props<{environmentsListUpdatedData: any}>());
+export const postUpdateEnvironments = createAction('[Application] PostUpdateEnvironments', props<{environmentsUpdatedData: any}>());
 export const isgetEnvironmentsUpdated = createAction('[Application] IsgetEnvironmentsUpdated');
 
 export const deleteEnvironments = createAction('[Application] DeleteEnvironments', props<{applicationId:any}>());

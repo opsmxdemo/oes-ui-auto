@@ -69,6 +69,9 @@ export class CreateApplicationComponent implements OnInit {
   userGroupDropdownData = [];                                     // It is use to store userGroupDropdown data .
   SaporConfigSavedResponse: any;                                    // It is use to store the response after save sapor con
   saporFeatureSaved : boolean = false;                              // It is use to save the sapor config feature enabled
+  environmentFeatureSaved : boolean = false;                        // It is use to save the environment config feature enabled
+  environmentFeatureUpdated: boolean = false;
+  groupPermissionFeatureSaved : boolean = false;                    // It is use to save the group permission config feature enabled
   logTemplateData = [];                                           // It is use to store log Template data created from json editor.
   metricTemplateData = [];                                        // It is use to store metric Template data created from json editor.
   currentLogTemplateIndex = -1;                                   // It is use to store index value of current service where user is creating log template.
@@ -175,6 +178,8 @@ export class CreateApplicationComponent implements OnInit {
   deleteVisibilityToolConnectorId: any;                                      // variable to store value of delete Visbility Tool Connector Id
   showFeatureData: boolean;
   saporForm: FormGroup;
+  EnvironmentConfigSavedResponse: any;
+  GroupPermissionConfigSavedResponse: any;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -267,6 +272,27 @@ export class CreateApplicationComponent implements OnInit {
           if(this.SaporConfigSavedResponse['status'] == true){
             this.saporFeatureSaved = true;
           }
+        }
+
+        if(responseData.environmentSavedData != null && responseData.isEnvironmentsConfigSaved) {
+          this.EnvironmentConfigSavedResponse = responseData.environmentSavedData;
+          if(this.EnvironmentConfigSavedResponse['status'] == true){
+            this.environmentFeatureSaved = true;
+          }       
+        }
+
+        if(responseData.environmentsListData != null && responseData.isUpdateEnvConfigSaved) {
+          this.EnvironmentConfigSavedResponse = responseData.environmentSavedData;
+          if(this.EnvironmentConfigSavedResponse['status'] == true){
+            this.environmentFeatureUpdated = true;
+          }       
+        }
+
+        if(responseData.groupPermissionSavedData != null && responseData.isGroupConfigSaved) {
+          this.GroupPermissionConfigSavedResponse = responseData.groupPermissionSavedData;
+          if(this.GroupPermissionConfigSavedResponse['status'] == true){
+            this.groupPermissionFeatureSaved = true;
+          }       
         }
 
         // alert(responseData.editMode);
@@ -1149,6 +1175,9 @@ export class CreateApplicationComponent implements OnInit {
     this.deploymentVerificationFeatureSaved = false;
     this.saporFeatureSaved = false;
     this.showFeatureData = false;
+    this.environmentFeatureSaved = false;
+    this.environmentFeatureUpdated = false;
+    this.groupPermissionFeatureSaved = false;
   }
 
   //Below function is use to delete existing service fron Service Section

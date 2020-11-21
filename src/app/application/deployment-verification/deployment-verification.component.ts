@@ -77,7 +77,7 @@ export class DeploymentVerificationComponent implements OnInit {
   applicationList = [];
   applicationExists: boolean;
   canaryIdExists: boolean;
-  serviceIdExists: boolean;
+  serviceIdExists: boolean = false;
 
   applicationListOptions: Observable<any[]>;
   applicationId: any;

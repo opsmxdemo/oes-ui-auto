@@ -53,6 +53,8 @@ export interface State {
     saporConfigData : any;
     saporConfigSavedData : any;
     isSaporConfigSaved: boolean;
+    isEnvironmentsConfigSaved: boolean;
+    isUpdateEnvConfigSaved: boolean;
     deleteSaporConfigMessage : any;
     saporConfigList : any;
     environmentsListData: any;
@@ -63,6 +65,7 @@ export interface State {
     // group permissions
     groupPermissionsListData: any;
     isGroupPermissions: boolean;
+    groupPermissionSavedData: any;
 
 
     //Visibility 
@@ -106,10 +109,16 @@ export interface State {
     isTemplateDataForToolTypeLoaded: boolean;
     isTemplateDataForToolTypeUpdated: boolean;
     isServiceFeatureListLoaded: boolean;
+    environmentSavedData: any;
+    groupSavedData: any;
+  //  environmentsUpdatedData: any;
+    isEnvironmentSaved: boolean;
+
     isEnviromentsLoaded: boolean;
     isGroupPermissionsLoaded: boolean;
     isgetGroupPermissionsLoaded: boolean;
     groupPermissionsGetListData: any;
+    isGroupConfigSaved:boolean;
 
     //Deployment Verification
     logTemplatesofaApplication: any;
@@ -214,13 +223,20 @@ export const initialState: State = {
     saporConfigData : null,
     saporConfigSavedData : null,
     isSaporConfigSaved: false,
+    isEnvironmentsConfigSaved: false,
+    isGroupConfigSaved: false,
+    isUpdateEnvConfigSaved: false,
     deleteSaporConfigMessage: null,
     saporConfigList: null,
     environmentsListData: null,
     environmentsListGetData: null,
+    isEnvironmentSaved: false,
     isSaporConfigLoaded: false,
     isSaporConfigUpdated: false,
     getEnvironmentListData: null,
+    environmentSavedData: null,
+    groupSavedData: null,
+   // environmentsUpdatedData: null,
     isEnviromentsLoaded: false,
     isGetEnviromentsListLoaded: false,
     groupPermissionsListData: null,
@@ -228,6 +244,8 @@ export const initialState: State = {
     isGroupPermissionsLoaded: false,
     isgetGroupPermissionsLoaded: false,
     groupPermissionsGetListData: null,
+    groupPermissionSavedData: null,
+
     imageSourceListData: null,
     isfetchImageSourceLoaded: true,
 
@@ -424,11 +442,48 @@ export function ApplicationReducer(
         // code related to environments goes here
 
         on(ApplicationAction.saveEnvironments,
-            state => ({
+           (state,action) => ({
                 ...state,
-                isEnviromentsLoaded:true
+                environmentSavedData: action.environmentsData,
+                isEnvironmentsConfigSaved: false
             })
         ),
+        on(ApplicationAction.postSaveEnvironments,
+            (state,action) => ({
+                ...state,
+                environmentSavedData:action.environmentsSavedData,
+                isEnvironmentsConfigSaved: true
+            })
+        ),
+        on(ApplicationAction.isEnvironmentsConfigSaved,
+            (state,action) => ({
+                ...state,
+                isEnvironmentsConfigSaved: false
+            })
+        ),
+
+        on(ApplicationAction.updateEnvironments,
+            (state,action) => ({
+                ...state,
+                applicationId: action.applicationId,
+                environmentsListData:action.environmentsListData,
+                isUpdateEnvConfigSaved: false
+            })
+        ),
+        on(ApplicationAction.postUpdateEnvironments,
+            (state,action) => ({
+                ...state,
+                environmentsListData:action.environmentsUpdatedData,
+                isUpdateEnvConfigSaved: true
+            })
+        ),
+        on(ApplicationAction.isgetEnvironmentsUpdated,
+            (state,action) => ({
+                ...state,
+                isUpdateEnvConfigSaved: false
+            })
+        ),
+    
 
         on(ApplicationAction.getEnvironments,
             (state,action) => ({
@@ -450,27 +505,7 @@ export function ApplicationReducer(
             })
         ),
 
-        on(ApplicationAction.updateEnvironments,
-            (state,action) => ({
-                ...state,
-                applicationId: action.applicationId,
-                environmentsListData:action.environmentsListData,
-                isEnviromentsLoaded: false
-            })
-        ),
-        on(ApplicationAction.postUpdateEnvironments,
-            (state,action) => ({
-                ...state,
-                environmentsListUpdatedData:action.environmentsListUpdatedData,
-                isEnviromentsLoaded: true
-            })
-        ),
-        on(ApplicationAction.isgetEnvironmentsUpdated,
-            (state,action) => ({
-                ...state,
-                isEnviromentsLoaded: false
-            })
-        ),
+     
 
         on(ApplicationAction.deleteEnvironments,
             state => ({
@@ -492,6 +527,30 @@ export function ApplicationReducer(
                 applicationLoading:true
             })
         ),
+
+
+
+        on(ApplicationAction.saveGroupPermissions,
+            (state,action) => ({
+                 ...state,
+                 groupSavedData: action.groupPermissionData,
+                 isGroupConfigSaved: false
+             })
+         ),
+         on(ApplicationAction.postSaveGroupPermissions,
+             (state,action) => ({
+                 ...state,
+                 groupSavedData:action.groupPermissionSavedData,
+                 isGroupConfigSaved: true
+             })
+         ),
+         on(ApplicationAction.isGrouppermissionConfigSaved,
+             (state,action) => ({
+                 ...state,
+                 isGroupConfigSaved: false
+             })
+         ),
+
         on(ApplicationAction.updateApplication,
             state => ({
                 ...state,
