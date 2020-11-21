@@ -657,7 +657,7 @@ export class CreateApplicationComponent implements OnInit {
         } 
         if(response.metricTemplatesofaApplication!= null && response.isMetricTemplateforApplicationLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplatesforaApplication());
-          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.metricTemplates.map(ele=>ele.pipelineId);
+          this.metricTemplatesofaApplication =   response.metricTemplatesofaApplication.metricTemplates.map(ele=>ele.templateName);
           this.metricTemplateList = this.metricTemplatesofaApplication; 
           //code to autopopulate metric template in the dropdown after save 
           var index = this.metricTemplateList.indexOf(this.metricTemplate);       
@@ -669,7 +669,7 @@ export class CreateApplicationComponent implements OnInit {
         } 
         if(response.metricTemplateDetails!=null && response.isMetricTemplateDetailsLoaded){
           this.store.dispatch(ApplicationActions.isLoadedMetricTemplate());
-          this.metricTemplateDetails = response.metricTemplateDetails;        
+          this.metricTemplateDetails = response.metricTemplateDetails;
         }
         if(response.deploymentVerificationSavedData !=null && response.isSavedDeploymentVerificationFeature) {
           this.store.dispatch(ApplicationActions.isDeploymentVerificationSaved());
@@ -1149,6 +1149,7 @@ export class CreateApplicationComponent implements OnInit {
       this.currentMetricTemplateIndex = index;
       this.isMetricTemplateClicked = !this.isMetricTemplateClicked;
       this.metricTemplateEditMode = false;
+      this.metricTemplateDetails = null;
     }
   }
 

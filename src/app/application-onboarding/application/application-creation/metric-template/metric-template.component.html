@@ -97,7 +97,7 @@
                                  <tr>
                                    <th>
                                      <div class="custom-control custom-checkbox">
-                                      <input type="checkbox" class="custom-control-input" id="selectAll" (change)="onselectAllAPM($event)" >
+                                      <input type="checkbox" class="custom-control-input" id="selectAll" (change)="onselectAllAPM($event)" [disabled]="isEditMode ? 'disabled' : ''">
                                       <label class="custom-control-label" for="selectAll">Select All</label>
                                      </div>
                                    </th>
@@ -106,8 +106,8 @@
                                <tbody>                                
                                 <tr *ngFor="let apmgroup of apmcookbookForm.value.cookbooklist ; let i=index;" >
                                   <td [formGroupName]=i>
-                                    <div class="custom-control custom-checkbox">                                      
-                                      <input type="checkbox" (change)="checkboxClicked($event)" class="custom-control-input" formControlName="isSelectedToSave"   id={{apmgroup.group}} >
+                                    <div class="custom-control custom-checkbox" [ngClass]="isEditMode ? 'custom-disable' : ''">                                      
+                                      <input type="checkbox" (change)="checkboxClicked($event)" class="custom-control-input" formControlName="isSelectedToSave"   id={{apmgroup.group}} [disabled]="isEditMode ? 'disabled' : ''">
                                       <label class="custom-control-label" for={{apmgroup.group}}>{{apmgroup.group}}</label>
                                     </div>
                                   </td>
@@ -189,7 +189,7 @@
                                  <tr>
                                    <th>
                                      <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" id="in_selectAll">
+                                       <input type="checkbox" class="custom-control-input" id="in_selectAll" [disabled]="isEditMode ? 'disabled' : ''">
                                        <label class="custom-control-label" for="in_selectAll">Select All</label>
                                      </div>
                                    </th>
@@ -198,13 +198,12 @@
                                <tbody>
                                  <tr *ngFor="let group of infracookbookForm.value.cookbooklist; let i=index">
                                    <td [formGroupName]=i>
-                                     <div class="custom-control custom-checkbox">
+                                     <div class="custom-control custom-checkbox" [ngClass]="isEditMode ? 'custom-disable' : ''">
                                        <input type="checkbox" class="custom-control-input" [checked]="group.isSelectedToSave" id={{group.group}} formControlName="isSelectedToSave">
                                        <label class="custom-control-label" for={{group.group}}>{{group.group}}</label>
                                      </div>
                                    </td>
-                                 </tr>
-                                 
+                                 </tr>                                 
                                </tbody>
                              </table>
                            </div>

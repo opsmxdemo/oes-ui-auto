@@ -1,11 +1,11 @@
 import { JsonEditorComponent, JsonEditorOptions } from "ang-jsoneditor";
-import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation, Input ,NgZone } from '@angular/core';
 // platform-service-ui change
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
 import { AutopiloService } from '../../services/autopilot.service';
 import { NotificationService } from '../../services/notification.service';
-import { FormControl } from '@angular/forms';
+import { FormControl , FormArray} from '@angular/forms';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
@@ -13,11 +13,14 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import * as fromFeature from './store/feature.reducer';
 import * as fromApp from '../../store/app.reducer';
 import * as DeploymentAction from './store/deploymentverification.actions';
-import * as MetricAnalysisActions from './metric-analysis/store/metric-analysis.actions';
+import * as ApplicationDashbordAction from '../application-dashboard/store/dashboard.actions';
 import { Store } from '@ngrx/store';
 import * as $ from 'jquery';
 import { MatSidenav } from '@angular/material/sidenav';
 import Swal from 'sweetalert2';
+import { AnyTxtRecord } from 'dns';
+import * as moment from 'moment';
+import { ThemePalette } from '@angular/material/core';
 
 export interface User {
   applicationName: string;
@@ -113,11 +116,52 @@ export class DeploymentVerificationComponent implements OnInit {
   isRerunLogs : boolean = false;
   serviceIdFromChild :any = null;
   statusOfSelectedService : any;
+
+  manualTriggerForm : FormGroup;
+
+  applications : any;
+  servicesOfApplication : any;
+  logServiceForm: FormGroup;
+  metricServiceForm : FormGroup;
+
+  @ViewChild('picker') picker: any;
+  @ViewChild('picker1') picker1: any;
+
+  public date: moment.Moment;
+  public disabled = false;
+  public showSpinners = true;
+  public showSeconds = false;
+  public touchUi = false;
+  public enableMeridian = false;
+  public minDate: moment.Moment;
+  public maxDate: moment.Moment;
+  public stepHour = 1;
+  public stepMinute = 1;
+  public stepSecond = 1;
+  public color: ThemePalette = 'primary';
+
+  // public formGroup = new FormGroup({
+  //   date: new FormControl(null, [Validators.required]),
+  //   date2: new FormControl(null, [Validators.required])
+  // })
+  // public dateControl = new FormControl(new Date(2021,9,4,5,6,7));
+  // public dateControlMinMax = new FormControl(new Date());
+
+  // public options = [
+  //   { value: true, label: 'True' },
+  //   { value: false, label: 'False' }
+  // ];
+
+  // public listColors = ['primary', 'accent', 'warn'];
+
+  public stepHours = [1, 2, 3, 4, 5];
+  public stepMinutes = [1, 5, 10, 15, 20, 25];
+  public stepSeconds = [1, 5, 10, 15, 20, 25];
   // App form end
 
   constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService, public appStore: Store<fromApp.AppState>,
-    private fb: FormBuilder, private router: Router) {
+    private fb: FormBuilder, private router: Router,private zone: NgZone) {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
@@ -147,12 +191,15 @@ export class DeploymentVerificationComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
-    this.selectedManualTriggerTab = 'manualTrigger-editor-tab'; //setting default tab selected as form
+    this.selectedManualTriggerTab = 'manualTrigger-form-tab'; //setting default tab selected as form
 
     // hide tooltip 
     $("[data-toggle='tooltip']").tooltip('hide');
     this.selectedTab = '';
     this.getAllApplications();
+
+    this.store.dispatch(ApplicationDashbordAction.loadAppDashboard());
+    this.initializeForms();
 
     if (this.route.params['_value'].applicationName != null && this.route.params['_value'].canaryId != null) {
       this.canaryId = this.route.params['_value'].canaryId;
@@ -269,8 +316,22 @@ export class DeploymentVerificationComponent implements OnInit {
         } else {
           this.tableIsEmpty = true;
         }
+        if (resData.servicesOfApplicationId != null && resData.isLoadedServicesOfApplication) {
+          this.store.dispatch(DeploymentAction.loadedServicesOfApplication());
+          this.servicesOfApplication = resData.servicesOfApplicationId.autopilotService;
+          console.log(this.servicesOfApplication);
+
+        }
       }
     );
+
+    this.store.select('appDashboard').subscribe(
+      (resData) => {
+        if(resData.appData != null){
+          console.log(resData.appData);
+          this.applications = resData.appData;
+        }
+      });
 
   }
 
@@ -281,11 +342,196 @@ checkIfCanaryExists(id){
         this.canaryIdExists = true;
       }
 }
-  //code while submitting the manual trigger form
+
+//code while submitting the manual trigger form
+serviceListDummy = {
+  "oesService": null,
+  "autopilotService": [
+    {
+      "serviceName": "service2qatestgcofc",
+      "status": "Fail",
+      "finalScore": 0,
+      "logsScore": 0,
+      "metricsScore": 100,
+      "canaryId": 148,
+      "serviceId": 166
+    },
+    {
+      "serviceName": "service1qatestdsebg",
+      "status": "Fail",
+      "finalScore": 0,
+      "logsScore": 0,
+      "metricsScore": 100,
+      "canaryId": 148,
+      "serviceId": 165
+    }
+  ]
+};
+
+initializeForms(){
+  this.manualTriggerForm = new FormGroup({
+    application: new FormControl(),
+    lifetimeHours: new FormControl(),
+    beginCanaryAnalysisAfterMins: new FormControl(),
+    canaryAnalysisIntervalMins: new FormControl(),  
+    minimumCanaryResultScore: new FormControl(),
+    minimumMetricsResultScore: new FormControl(),  
+    canaryResultScore: new FormControl(),
+    successMetricsResultScore: new FormControl(),
+    baselineStartTimeMs : new FormControl(),
+    canaryStartTimeMs : new FormControl()      
+  });
+
+  // this.manualTriggerForm = new FormGroup({
+  //   application: new FormControl(),
+  //   isJsonResponse: new FormControl(true),
+  //   canaryConfig : new FormControl({
+  //     canaryAnalysisConfig: new FormControl({
+  //       beginCanaryAnalysisAfterMins: new FormControl(),
+  //       canaryAnalysisIntervalMins: new FormControl(),
+  //       notificationHours: new FormArray([])
+  //     }),
+  //     canaryHealthCheckHandler: new FormControl({
+  //       minimumCanaryResultScore: new FormControl(),
+  //       minimumMetricsResultScore: new FormControl()
+  //     }),
+  //     canarySuccessCriteria: new FormControl({
+  //       canaryResultScore: new FormControl(),
+  //       successMetricsResultScore: new FormControl()
+  //     }),
+  //     combinedCanaryResultStrategy: new FormControl(),
+  //     lifetimeHours: new FormControl(),
+  //     name: new FormControl()
+  //   }),
+  //   canaryDeployments: new FormArray([])
+  // });
+
+  this.logServiceForm = new FormGroup({
+    identifiers: new FormArray([])
+  });
+
+  (<FormArray>this.logServiceForm.get('identifiers')).push(
+    new FormGroup({
+      service : new FormControl(),
+      baseline: new FormControl(),
+      canary: new FormControl()
+    })
+  );
+
+  this.metricServiceForm = new FormGroup({
+    identifiers: new FormArray([])
+  });
+
+  (<FormArray>this.metricServiceForm.get('identifiers')).push(
+    new FormGroup({
+      service : new FormControl(),
+      baseline: new FormControl(),
+      canary: new FormControl()
+    })
+  );
+}
+
+
+addMetricServiceMT(){
+  (<FormArray>this.metricServiceForm.get('identifiers')).push(
+    new FormGroup({
+      service : new FormControl(),
+      baseline: new FormControl(),
+      canary: new FormControl()
+    })
+  );
+}
+
+deleteMetricService(query,index){
+  this.metricServiceForm.controls.identifiers['controls'].splice(index,1);
+  this.metricServiceForm.value.identifiers.splice(index, 1);
+}
+
+addLogServiceMT(){
+  (<FormArray>this.logServiceForm.get('identifiers')).push(
+    new FormGroup({
+      service : new FormControl(),
+      baseline: new FormControl(),
+      canary: new FormControl()
+    })
+  );
+}
+
+deleteLogService(query,index){
+  this.logServiceForm.controls.identifiers['controls'].splice(index,1);
+  this.logServiceForm.value.identifiers.splice(index, 1);
+}
+
 
   // Below function is use to fetched json from json editor
   showManualTriggerJson(event = null) {
     this.manualTriggerData = this.editor.get();
+
+    // {
+    //   "application": "jsreeapp1",
+    //   "isJsonResponse": true,
+    //   "canaryConfig": {
+    //     "canaryAnalysisConfig": {
+    //       "beginCanaryAnalysisAfterMins": "0",
+    //       "canaryAnalysisIntervalMins": "6",
+    //       "notificationHours": []
+    //     },
+    //     "canaryHealthCheckHandler": {
+    //       "minimumCanaryResultScore": "60",
+    //       "minimumMetricsResultScore": "75"
+    //     },
+    //     "canarySuccessCriteria": {
+    //       "canaryResultScore": "80",
+    //       "successMetricsResultScore": "80"
+    //     },
+    //     "combinedCanaryResultStrategy": "AGGREGATE",
+    //     "lifetimeHours": "0.1",
+    //     "name": "user2"
+    //   },
+    //   "canaryDeployments": [
+    //     {
+    //       "baseline": {
+    //         "log": {
+    //           "Service1": {
+    //             "container_name": "baseapp_rest_1"
+    //           },
+    //           "Service2": {
+    //             "container_name": "baseapp_rest_1"
+    //           }
+    //         },
+    //         "metric": {
+    //           "Service1": {
+    //             "variable1": "service:baseapp"
+    //           },
+    //           "Service2": {
+    //             "variable1": "service:baseapp"
+    //           }
+    //         }
+    //       },
+    //       "baselineStartTimeMs": 1595516400000,
+    //       "canaryStartTimeMs": 1595516400000,
+    //       "canary": {
+    //         "log": {
+    //           "Service1": {
+    //             "container_name": "canaryapp_rest_1"
+    //           },
+    //           "Service2": {
+    //             "container_name": "canaryapp_rest_1"
+    //           }
+    //         },
+    //         "metric": {
+    //           "Service1": {
+    //             "variable1": "service:canaryapp"
+    //           },
+    //           "Service2": {
+    //             "variable1": "service:canaryapp"
+    //           }
+    //         }
+    //       }
+    //     }
+    //   ]
+    // }
+   
   }
   // Below function is use to save manualTrigger data on click of triggerBtn
   submitManualTriggerData() {
@@ -297,6 +543,84 @@ checkIfCanaryExists(id){
     this.data = {};
   }
 
+  submitManualTriggerForm(){
+    console.log(this.manualTriggerForm);
+    console.log(this.logServiceForm);
+    console.log(this.metricServiceForm);
+    let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
+    let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;
+    //console.log(new Date(baselineStartTimeMs).getTime());
+
+    
+    this.manualTriggerData =    {
+      "application": this.manualTriggerForm.value.application,
+      "isJsonResponse": true,
+      "canaryConfig": {
+        "canaryAnalysisConfig": {
+          "beginCanaryAnalysisAfterMins": this.manualTriggerForm.value.beginCanaryAnalysisAfterMins,
+          "canaryAnalysisIntervalMins": this.manualTriggerForm.value.canaryAnalysisIntervalMins,
+          "notificationHours": []
+        },
+        "canaryHealthCheckHandler": {
+          "minimumCanaryResultScore": this.manualTriggerForm.value.minimumCanaryResultScore,
+          "minimumMetricsResultScore": this.manualTriggerForm.value.minimumMetricsResultScore,
+        },
+        "canarySuccessCriteria": {
+          "canaryResultScore": this.manualTriggerForm.value.canaryResultScore,
+          "successMetricsResultScore": this.manualTriggerForm.value.successMetricsResultScore,
+        },
+        "combinedCanaryResultStrategy": "AGGREGATE",
+        "lifetimeHours": this.manualTriggerForm.value.lifetimeHours,
+        "name": "user2"
+      },
+      "canaryDeployments": [
+        {
+          "baseline": {
+            "log": {
+              "Service1": {
+                "container_name": "baseapp_rest_1"
+              },
+              "Service2": {
+                "container_name": "baseapp_rest_1"
+              }
+            },
+            "metric": {
+              "Service1": {
+                "variable1": "service:baseapp"
+              },
+              "Service2": {
+                "variable1": "service:baseapp"
+              }
+            }
+          },
+          "baselineStartTimeMs": new Date(baselineStartTimeMs).getTime(),
+          "canaryStartTimeMs": new Date(canaryStartTimeMs).getTime(),
+          "canary": {
+            "log": {
+              "Service1": {
+                "container_name": "canaryapp_rest_1"
+              },
+              "Service2": {
+                "container_name": "canaryapp_rest_1"
+              }
+            },
+            "metric": {
+              "Service1": {
+                "variable1": "service:canaryapp"
+              },
+              "Service2": {
+                "variable1": "service:canaryapp"
+              }
+            }
+          }
+        }
+      ]
+    };
+
+    console.log(this.manualTriggerData);
+
+  }
+
   // Below function is execute on click of Form or Editor tab.
   onManualTriggerClickTab(event) {
     if (event.target.id === 'manualTrigger-form-tab') {
@@ -304,6 +628,13 @@ checkIfCanaryExists(id){
     } else if (event.target.id === 'manualTrigger-editor-tab') {
       this.selectedManualTriggerTab = "manualTrigger-editor-tab";
     }
+  }
+
+  onChangeApplicationManualTrigger(applicationListIndex){
+    console.log(applicationListIndex);
+    const applicationId  = this.applications[applicationListIndex - 1].applicationId;
+    this.store.dispatch(DeploymentAction.fetchServicesOfApplication({applicationId : applicationId}));
+
   }
 
   // code for application dropdown display starts here
