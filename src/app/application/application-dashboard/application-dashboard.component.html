@@ -108,8 +108,8 @@
           <!-- /#particle_chart -->
               
           <!-- /.chart_ratio -->
-          <div *ngIf="oesServiceData && oesServiceData.length === 0 && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessage}}</p>
+          <div *ngIf="oesServiceData && oesServiceData.length === 0 &&  showAppDataType === 'Services' || oesServiceData === null && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
+            <p class="error-service-msg">{{serviceErrorMessageSapor}}</p>
           </div>
           <!-- <div *ngIf="showAppDataType === 'Services' && statusMessage === 'error'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessage}}</p>
@@ -130,24 +130,24 @@
                   <td>{{service.finalScore}}</td>
                   <td
                     [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">
-                    {{service.status}}</td>
+                    <a target="_blank" href="{{service.href}}">{{service.status}}</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
-        <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0 && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessage}}</p>
+        <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0  && showAppDataType === 'Deployment Verification' || autoPilotServiceData === null && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
+            <p class="error-service-msg">{{serviceErrorMessageAutopilot}}</p>
           </div>
-          <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
+          <!-- <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessage}}</p>
-          </div>
+          </div> -->
           
           <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData && autoPilotServiceData.length>0">
             <table class="table table-pet-service text-center mb-0">
             <thead>
               <tr>
                 <th>Service</th>
-                <th>Score</th>
+                <th>Overall Score</th>
                 <th>Metric</th>
                 <th>Logs</th>
                 <th>Status</th>
@@ -169,7 +169,7 @@
                   <span *ngIf="service.logsScore == -1 || service.logsScore === null">- </span>
                  <span *ngIf="service.logsScore != -1 && service.logsScore != null">{{service.logsScore}} </span>
                   </td>
-                <td [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED', 'text-warning': service.status == 'Review'}">{{service.status}}</td>
+                <td class="showElementHover" [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED', 'text-warning': service.status == 'Review'}" (click)="getServiceCanaryReport(service.canaryId)">{{service.status}}</td>
               </tr>
             </tbody>
           </table>

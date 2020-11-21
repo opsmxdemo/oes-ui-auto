@@ -403,7 +403,7 @@ export class ApplicationEffect {
                 return this.http.put<CreateApplication>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId, action.appData).pipe(
                     map(resdata => {
                        // return ApplicationAction.dataSaved({ applicationName: action.appData.name, dataType: 'updateApplication' });
-                       this.toastr.showSuccess(action.appData.name + 'Updated Successfully','Success')
+                       this.toastr.showSuccess(action.appData.name + ' Updated Successfully','Success')
                        return ApplicationAction.updateApplicationDone();
                     }),
                     catchError(errorRes => {
@@ -509,7 +509,7 @@ export class ApplicationEffect {
         )
     )
 
-    // Effect to save approval gate for visibility feature
+    // Effect to save approval gate for visibility feature -------------------- This is not been used need to check this
     onSaveApprovalGate = createEffect(() =>
         this.actions$.pipe(
             ofType(ApplicationAction.saveApprovalGate),
@@ -554,6 +554,7 @@ export class ApplicationEffect {
             switchMap((action) => {
                 return this.http.put<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.gateId, action.gateDataToEdit).pipe(
                     map(resdata => {
+                        this.toastr.showSuccess('Approval gate saved successfully','SUCCESS');
                         return ApplicationAction.postEditApprovalGate({ message: resdata });
                         //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),
@@ -634,6 +635,23 @@ export class ApplicationEffect {
                     }),
                     catchError(errorRes => {
                         //this.toastr.showError('Error', 'ERROR')
+                        return handleError(errorRes);
+                    })
+                );
+            })
+        )
+    )
+
+    // Effect to delete  visibility Toold Connector
+    onDeleteVisibilityToolConnector = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ApplicationAction.deleteVisibilityToolConnector),
+            switchMap((action) => {
+                return this.http.delete<any>(this.environment.config.endPointUrl + 'visibilityservice/v1/approvalGates/' + action.approvalGateId + '/toolConnectors/' + action.visibilityToolConnectorId).pipe(
+                    map(resdata => {
+                        return ApplicationAction.postDeleteVisibilityToolConnector({ deleteVisibilityToolConnectorMessage: resdata });
+                    }),
+                    catchError(errorRes => {
                         return handleError(errorRes);
                     })
                 );
@@ -869,6 +887,13 @@ export class ApplicationEffect {
             switchMap((action) => {
                 return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/visibility/service/feature/configuration', action.approvalGateData).pipe(
                     map(resdata => {
+                    if(resdata['id']){
+                        this.toastr.showSuccess('Approval gate saved successfully','SUCCESS');
+                        var statusResponse = {'status' : true};
+                    }else{
+                        this.toastr.showError('Failed to save Approval gate. Try again','ERROR');
+                        var statusResponse = {'status' : false};
+                    }
                         return ApplicationAction.postSaveVisibilityFeature({ visibilityFeatureSavedData: resdata });
                         //this.store.dispatch(ApplicationAction.getApprovalGates());
                     }),

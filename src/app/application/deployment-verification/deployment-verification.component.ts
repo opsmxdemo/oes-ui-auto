@@ -1,5 +1,5 @@
 import { JsonEditorComponent, JsonEditorOptions } from "ang-jsoneditor";
-import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation, Input ,NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ViewEncapsulation,ElementRef, Input ,NgZone } from '@angular/core';
 // platform-service-ui change
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SharedService } from '../../services/shared.service';
@@ -37,6 +37,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) _auto: MatAutocompleteTrigger;
   @ViewChild('sideNav') Sidenav: MatSidenav;
+  @ViewChild('focus') focused: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
   public editorOptions: JsonEditorOptions;
   // public data: any = null;
@@ -58,13 +59,14 @@ export class DeploymentVerificationComponent implements OnInit {
   counter = 1;
   serviceConter = 1;
   canaryCheckCounter = 1;
-  selectedTab = '';                                 // this variable is use to store value of selected tab.
+  selectedTab = '';  
+  showSearch:boolean=false;                               // this variable is use to store value of selected tab.
 
   ///code for showing select application shows here
   myControl = new FormControl();
   options: User[] = [];
   filteredOptions: Observable<User[]>;
-  isShow = true;
+  isShow = false;
   deployementApplications: any;
   deploymentServices: any;
   deploymentApplicationHealth = {};
@@ -191,7 +193,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
-    this.selectedManualTriggerTab = 'manualTrigger-form-tab'; //setting default tab selected as form
+    this.selectedManualTriggerTab = 'manualTrigger-editor-tab'; //setting default tab selected as form
 
     // hide tooltip 
     $("[data-toggle='tooltip']").tooltip('hide');
@@ -640,6 +642,7 @@ deleteLogService(query,index){
   // code for application dropdown display starts here
 
   onSelectionChangeApplication(event) {
+    this.showSearch=false;
     if (this.deploymentApplicationHealth['analysisType'] == "Logs and Metrics" || this.deploymentApplicationHealth['analysisType'] == "Logs Only") {
           this.selectedTab = 'log-analysis';
           this.onClickTab('log-analysis-tab');
@@ -1132,5 +1135,9 @@ deleteLogService(query,index){
       this.Sidenav.close();
       this.isShow = false;
     }   
+  }
+  showSearchFunc(){
+    this.showSearch=true;
+    this.applicationForm.setValue({application: ''});
   }
 }

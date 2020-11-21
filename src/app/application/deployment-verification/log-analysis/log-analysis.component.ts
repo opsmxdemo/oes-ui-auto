@@ -24,7 +24,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   @Input() serviceId: any[];
   @Input() isRerun : boolean;
   @Input() serviceStatus : any[];
-
+  @Input() applicationId :any;
   @Output() selectedServiceIdFromChild = new EventEmitter<any>();
   @Output() enterdToLogLines = new EventEmitter<boolean>();
 
@@ -102,6 +102,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     }
   ];
   clusterTagList = [];
+  clusterTagList1 = []
   classifiedLogsList = [];
   logTemplate = "";
   selectedClusterInfo: any;
@@ -257,6 +258,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         if (resData.logsResults != null && resData.isLogsResultsLoaded){
           this.store.dispatch(LogAnalysisAction.loadedLogResults()); 
           this.store.dispatch(LogAnalysisAction.loadLogTopics());
+          this.store.dispatch(LogAnalysisAction.loadCustomTags({ applicationId: this.applicationId }));
           this.logAnalysisResults = resData.logsResults;
           if (this.logAnalysisResults != null) {      
             this.logAnalysisResults.sensitivity ? this.selectedSensitivity = this.logAnalysisResults.sensitivity : this.selectedSensitivity = "";
@@ -265,8 +267,10 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             if (this.logAnalysisData.clusters) {
               if(this.logAnalysisData.clusters.length > 0){
                 this.islogAnalysisAvailable = true;
+                
                 for(var i=0;i<this.logAnalysisData.clusters.length;i++)
                 {
+                  if(this.logAnalysisData.clusters[i].clusterTagInfo != null){
                   if(this.logAnalysisData.clusters[i].clusterTagInfo.tag==null)
                   {
                     this.selectedTags[this.logAnalysisData.clusters[i].id]="UNCLASSIFIED"
@@ -274,6 +278,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                   else{
                     this.selectedTags[this.logAnalysisData.clusters[i].id]=this.logAnalysisData.clusters[i].clusterTagInfo.tag
                   }
+                }
 
 
                 }
@@ -349,6 +354,8 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
                     "series": warningClusters
                   }
                 ];
+              }else if(this.logAnalysisData.clusters.length <1){
+                $('.toggleGraph').trigger('click');
               }
             } else {
               this.bubbleChartData = [
@@ -416,10 +423,24 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
             this.islogAnalysisAvailable = false;
           }
         }
+        if(resData.tags !=null && resData.isloadedCustomTags && this.clusterTagList.length==0)
+        {
+          
+          this.clusterTagList1 = resData.tags
+          for(let i =0;i<this.clusterTagList1.length;i++){
+            this.clusterTagList.push(this.clusterTagList1[i])
+          }
+          var myobj = {
+            "id":"",
+            "name":"UNCLASSIFIED"
+          }
+          this.clusterTagList.push(myobj)
+        }
+        
         if(resData.logTopicsList != null){
           this.fetchLogTopics = resData.fetchLogTopics;        	
           this.fetchLogTopics = resData.logTopicsList;
-          this.clusterTagList = this.fetchLogTopics.clusterTags;
+          
 
               // fetching comments for each logs
               if(this.logAnalysisClusters!=null)

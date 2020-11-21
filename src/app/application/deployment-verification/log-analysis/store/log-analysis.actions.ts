@@ -30,4 +30,8 @@ export const reloadAfterRerun = createAction('[LogAnalysis] ReloadAfterRerun', p
 export const fetchReclassificationHistoryData = createAction('[LogAnalysis] FetchReclassificationHistoryData', props<{logTemplateName: any;}>());
 export const loadReclassificationHistoryData = createAction('[LogAnalysis] loadReclassificationHistoryData', props<{reclassificationHistoryResults:any}>());
 
+export const loadCustomTags = createAction('[Application] LoadCustomTags',props<{applicationId: any}>());
+export const fetchCustomTags = createAction('[Application] FetchCustomTags', props<{tags:any}>());
+export const loadedCustomTags = createAction('[LogAnalysis] LoadedCustomTags');
+
 

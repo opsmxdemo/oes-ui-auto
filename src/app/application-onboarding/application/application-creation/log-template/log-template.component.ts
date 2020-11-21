@@ -77,6 +77,7 @@ scoringAlgoData :any;
 
     this.store.dispatch(DataSourceActions.loadDatasourceList());
     this.store.dispatch(ApplicationActions.getScoringAlgo()); 
+    
     this.store.select(fromFeature.selectDataSource).subscribe(
       (responseData) => {
         if(responseData.supportedDatasource != null){
@@ -234,7 +235,7 @@ getLogTopics(){
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
  this.store.dispatch(ApplicationActions.loadClusterTags());
- this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+ 
  //fetching data from state
  this.store.select(fromFeature.selectLogTemplate).subscribe(
      (response) => {
@@ -499,6 +500,8 @@ cannotContainSpace(control: FormControl): {
     
 
   }
-
+getTagsList(){
+  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+}
 
 }

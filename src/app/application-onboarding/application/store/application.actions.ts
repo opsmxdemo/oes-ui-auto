@@ -189,6 +189,11 @@ export const getConfiguredToolConnectorTypes = createAction('[Application] GetCo
 export const loadConfiguredToolConnectorTypes = createAction('[Application] LoadConfiguredToolConnectorTypes', props<{configuredToolConnectorTypes:any}>());
 export const isloadedConfiguredToolConnectorTypes = createAction('[Application] IsloadedConfiguredToolConnectorTypes');
 
+// To delete the tool connectors in the Visibiltity Configuration
+export const deleteVisibilityToolConnector = createAction('[Application] DeleteVisibilityToolConnector', props<{approvalGateId : any, visibilityToolConnectorId:any}>());
+export const postDeleteVisibilityToolConnector = createAction('[Application] PostDeleteVisibilityToolConnector', props<{deleteVisibilityToolConnectorMessage:any}>());
+export const isDeleteVisibilityToolConnector = createAction('[Application] IsDeleteVisibilityToolConnector');
+
 export const getAccountToolType = createAction('[Application] GetAccountToolType', props<{connectorType : any}>());
 export const loadAccountToolType = createAction('[Application] LoadAccountToolType', props<{accountsForToolType:any}>());
 export const isLoadedAccountToolType = createAction('[Application] IsLoadedAccountToolType');

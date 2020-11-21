@@ -127,11 +127,11 @@ export class DataSourceEffect {
                         const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
                         const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
 
-                        if (ap === true){
+                        if (ap === 'deployment_verification'){
                         this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                        }else if (sapor === true){
+                        }else if (sapor === 'sapor'){
                         this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
-                        }else if (visibility === true){
+                        }else if (visibility === 'visibility'){
                         this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
                         }
                         return DataSourceAction.successResponse();
@@ -187,20 +187,18 @@ export class DataSourceEffect {
               return this.http.post<CreateDataSource>(this.environment.config.endPointUrl + 'visibilityservice/v1/toolConnectors', action.CreatedDataSource).pipe(
                   map(resdata => {
                       this.toastr.showSuccess(resdata['message'],'Success');
+                      const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
+                      const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
                       const visibility = layoutState.supportedFeatures.find(ob => ob === 'visibility');
-
                       this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
 
-                    //   const ap = layoutState.supportedFeatures.find(ob => ob === 'deployment_verification');
-                    //   const sapor = layoutState.supportedFeatures.find(ob => ob === 'sapor');
-                      debugger
-                    //   if(ap === 'deployment_verification'){
-                    //   this.store.dispatch(DataSourceAction.loadAPDatasourceList());
-                    //   }else if(sapor === 'sapor'){
-                    //   this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
-                    //   }else if(visibility === 'visibility'){
-                    //   this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
-                    //   }
+                      if(ap === 'deployment_verification'){
+                        this.store.dispatch(DataSourceAction.loadAPDatasourceList());
+                        }else if(sapor === 'sapor'){
+                        this.store.dispatch(DataSourceAction.loadOESDatasourceList());  
+                        }else if(visibility === 'visibility'){
+                        this.store.dispatch(DataSourceAction.loadVisibilityDatasourceList());
+                        }
                       return DataSourceAction.successResponse();
                   }),
                   catchError(errorRes => {

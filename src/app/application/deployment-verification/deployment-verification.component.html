@@ -3,9 +3,9 @@
     <div class="leftBox bg-white mw-250">
     <div class=" text-muted text-center pt-3" *ngIf="!applicationExists">No Applications! </div>
       <div class="leftBox_body text-muted text-center" *ngIf="applicationExists">
-        <form [formGroup]="applicationForm" novalidate class="example-form">
+        <form [formGroup]="applicationForm" novalidate class="example-form maxwidth100" *ngIf = "showSearch">
           <mat-form-field>
-            <input type="text" matInput placeholder="Select Application" floatLabel="always" formControlName="application" [matAutocomplete]="autoApplication" 
+            <input #focus type="text" matInput placeholder="Select Application" floatLabel="always" formControlName="application" [matAutocomplete]="autoApplication" 
             />
             <mat-autocomplete (optionSelected)="onSelectionChangeApplication($event.option.value)" autoActiveFirstOption #autoApplication="matAutocomplete" >
               <mat-option *ngFor="let applications of applicationListOptions | async" [value]="applications.applicationName">
@@ -13,19 +13,25 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-        </form>
+          <button type="button" class="close closed pull-right" aria-label="Close" (click)="showSearch=false">
+            <span aria-hidden="true">&times;</span>
+          </button>
+         </form>
     
-          <div class="appName"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  
+          <div class="appName border" style="font-size: 16px; margin-top: 10px;" *ngIf="!showSearch"><b>{{selectedApplicationName}}</b> &nbsp;&nbsp;  <div class=" pull-right absolute"><i class="fas fa-search" (click)="showSearchFunc()" aria-hidden="true"></i></div>
+            
+          </div>
+     
+        <div class="app-status" style="margin-top: 10px;" *ngIf = "!showSearch">
+          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'REVIEW','text-muted':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS'}">{{deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase()}}
             <a *ngIf="deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'IN PROGRESS'" class="ci_run ico16 popover-hover"><i class="fas fa-circle-notch fa-spin"></i></a> &nbsp;&nbsp;
             <a *ngIf="deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'IN PROGRESS'" data-toggle="tooltip" data-placement="top" title="Stop Running Canary"><i (click)="cancelRunningCanary(control.value)" class="fa fa-stop showElementHover stop-icon" aria-hidden="true"></i></a>
           </div>
-     
-        <div class="app-status">
-          <div class="pull-left" [ngClass]= "{'text-danger':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'FAIL','text-success':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'SUCCESS','text-warning':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'REVIEW','text-muted':deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS'}">{{deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase()}}</div>
+          
           <div class="pull-right">{{calculateDiff(deploymentApplicationHealth['runStartTime'])}} </div>
         </div>
  
-        <div class="input-group" *ngIf="canaryIdExists">
+        <div class="input-group" *ngIf="canaryIdExists && !showSearch">
           <div class="input-group-prepend">
             <button [ngStyle]="{cursor : decrementDisable ? 'no-drop' :'pointer' }" class="input-group-text" (click)="decrementCanaryRun(control.value)" type="button" id="button-addon1"><i class="fa fa-angle-left"></i></button>
           </div>
@@ -46,7 +52,7 @@
         </div>
       </div>
       <!-- /.leftBox_header -->
-      <div class="leftBox_body">
+      <div class="leftBox_body" *ngIf="!showSearch">
         <table class="table-sm table-avenir table-bordered serviceTable" *ngIf="serviceIdExists">
           <tbody>
             
@@ -453,7 +459,7 @@
       <div class="row no-gutters" *ngIf="canaryIdExists">
         <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
           <mat-drawer-container class="example-container" autosize>
-            <mat-drawer #sideNav class="example-sidenav" [position]="'end'" mode="side" opened="true">
+            <mat-drawer #sideNav class="example-sidenav" [position]="'end'" mode="side" opened="false">
               <div class="rightBox m-0 position-sticky">
                 <!-- <div class="rightBox_header bg-white d-flex align-items-center">
                   <div class="btns_icon d-flex ml-auto">
@@ -744,7 +750,7 @@
                     <div class="tab-pane p-4 fade " id="log-analysis" role="tabpanel" aria-labelledby="log-analysis-tab"
                     [ngClass]="{'active': selectedTab == 'log-analysis','show': deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'}">
                         <ng-container *ngIf = "selectedTab === 'log-analysis'">
-                          <app-log-analysis [canaryId]="control.value" [serviceId]="selectedServiceId" [isRerun]="isRerunLogs" [serviceStatus]="statusOfSelectedService" (selectedServiceIdFromChild)="getlogAnalysisData($event)" (enterdToLogLines)="getEventsFromLogAnalysis($event)"></app-log-analysis>
+                          <app-log-analysis [applicationId]="applicationId" [canaryId]="control.value" [serviceId]="selectedServiceId" [isRerun]="isRerunLogs" [serviceStatus]="statusOfSelectedService" (selectedServiceIdFromChild)="getlogAnalysisData($event)" (enterdToLogLines)="getEventsFromLogAnalysis($event)"></app-log-analysis>
                         </ng-container>
                       </div>
                       <div class="tab-pane mp-4"  id="metric-analysis" role="tabpanel" aria-labelledby="metric-analysis-tab"

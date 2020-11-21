@@ -15,6 +15,7 @@ import * as $ from 'jquery';
 import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConfigService } from './services/app-config.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -29,15 +30,18 @@ export class AppComponent implements OnInit, AfterViewChecked {
   Sidebar: Menu;
   applicationCount: number = 0;
   endpointUrl: string;
-  installationMode = '';
   hideTooltip: boolean = true;
   approvalGateInstanceCount: string;
+  featureList: any;
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
               private route: ActivatedRoute,
-              public environment: AppConfigService) {
+              public environment: AppConfigService,
+              private location: Location) {
                 this.endpointUrl = environment.config.endPointUrl;
+                console.log(location.path())
+                localStorage.setItem('currentUrl', location.path());
                }
   // For tooltip
   ngAfterViewChecked() {
@@ -60,7 +64,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if (response.authResponse === null) {
           var browserUrl = window.location.href;
           var arr = browserUrl.split("/");
-          var resultUrl = arr[0] + "//" + arr[2] + "/application";
+          let redirectTo = localStorage.getItem('currentUrl') ? localStorage.getItem('currentUrl') : "/application";
+          var resultUrl = arr[0] + "//" + arr[2] + redirectTo;
           var encodedUrl = encodeURIComponent(resultUrl);
           this.loginRedirect(encodedUrl)
         }else if(response.authResponse === 'success'){
@@ -80,8 +85,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
           //Dispatch action to fetch Supported Data Source data from API  
           this.store.dispatch(DataSourceActions.loadDatasource());
 
-          // Below function is use to dispatch action based on installation mode
-          this.initialData(this.installationMode);
+          // Below function is use to dispatch action based on featureType
+
+          setTimeout(() => {
+            this.initialData();
+          }, 4000)
         }
       }
     );
@@ -92,7 +100,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
         if(this.isAuthenticate){
           this.Sidebar = response.menu;
           this.applicationCount = response.appliactionData;
-          this.installationMode = response.installationMode;
+           this.featureList = response.supportedFeatures;
           this.approvalGateInstanceCount = response.approvalInstalgateCount;
           if(response.apiErrorCollection.indexOf(true) > -1){
             this.apiError = true;
@@ -101,7 +109,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
             const url = this.router.url;
             if(url.includes('error')){
               this.apiError = false;
-              this.router.navigate(['application']);
+              if(localStorage.getItem('currentUrl')) {
+                this.router.navigate([localStorage.getItem('currentUrl')]);
+              } else {
+                this.router.navigate(['application']);
+              }
             }
           }
         }
@@ -126,24 +138,17 @@ export class AppComponent implements OnInit, AfterViewChecked {
     },1000)
   }
 
-  // Dispatch actions to fetch initial data of component based on installation mode.
-  initialData(mode){
-    if(mode !== undefined && mode !== ''){
-      if(mode.includes('OES')){
-        //Dispatching action to fetch audit initial data
-        this.store.dispatch(AuditActions.loadAudit());
+  // Dispatch actions to fetch initial data of component based on featureType.
+  initialData() {
+    if (this.featureList.includes('sapor')) {
+      this.store.dispatch(AuditActions.loadAudit());
 
-        //Dispatching action for policy management initial data
-        this.store.dispatch(PolicyActions.loadPolicy({relatedTab:'DYNAMIC'}));
-      }
-    }else{
-      setTimeout(()=>{
-        this.initialData(this.installationMode);
-      },500)
+      //Dispatching action for policy management initial data
+      this.store.dispatch(PolicyActions.loadPolicy({ relatedTab: 'DYNAMIC' }));
     }
-    
 
   }
+ 
 
   loginRedirect(callback): void {
     window.location.href = `${this.endpointUrl}auth/redirectauto?to=${callback}`;
@@ -167,27 +172,25 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
   
 
-  // Below function is use ro disabled link by checking installation mode 
-  disabledLink(linkName){
-    let className = '';
-    switch(this.installationMode){
-      case 'AP':
-        if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis'){
-          className = '';
-        }else{
-          className = 'disabled_menu';
-        }
-        break;
-      case 'OES':
-        if(linkName !== 'Deployment Verification'){
-          className = '';
-        }else{
-          className = 'disabled_menu';
-        }
-        break;
-      case 'OES-AP':
+  // Below function is use ro disabled link by checking featureType 
+  disabledLink(linkName) {
+    let className = 'disabled_menu';
+    if (this.featureList && this.featureList.includes('deployment_verification')) {
+      if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis') {
         className = '';
-        break;
+      }
+    }else{
+      className = '';
+    }
+    if (this.featureList && this.featureList.includes('visibility')) {
+      if (linkName === 'Visibility') {
+        className = '';
+      }
+    }
+    if (this.featureList && this.featureList.includes('sapor')) {
+      if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard') {
+        className = '';
+      }
     }
     return className;
   }

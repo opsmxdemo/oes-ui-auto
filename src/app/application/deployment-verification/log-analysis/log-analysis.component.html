@@ -176,8 +176,8 @@
 
                   class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select">
                   <!-- [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}" -->
-                  <option *ngFor='let tag of clusterTagList' [value]="tag" class="{{tag.textclass}}">
-                    {{tag}}
+                  <option *ngFor='let tag of clusterTagList' [value]="tag.name" class="{{tag.textclass}}">
+                    {{tag.name}}
                   </option> 
                 </select>
                 <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
@@ -212,8 +212,10 @@
               </button>
             </div>
             <div id="timeAnalysisGraph{{log.id}} fadeIN" class="card-body inlineDisplay fadeIN" *ngIf="log.id==slectedTimeAnalysis " [hidden]="!isShow">
-              <button class="close" mat-button (click)="closeTimeAnalysis()"><b>X</b></button>
               
+              <button type="button" class="close pull-right" aria-label="Close" (click)="closeTimeAnalysis()">
+                <span aria-hidden="true">&times;</span>
+              </button>
               <fusioncharts
               width="{{chartSize}}"
               height="350"
@@ -271,7 +273,7 @@
             </div>
           </div>
         </div>
-        <h3 *ngIf="logAnalysisData?.clusters?.length == 0">No Content</h3>
+        <h3 *ngIf="logAnalysisData?.clusters?.length == 0">No Errors found</h3>
       </div>
     </div>
   </div>

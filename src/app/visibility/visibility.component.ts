@@ -22,7 +22,7 @@ export interface User {
 })
 export class VisibilityComponent implements OnInit {
 
-  @Input() approvalGateComment : string;
+  // @Input() approvalGateComment : string;
 
   isLinear = false;
   firstFormGroup: FormGroup;
@@ -50,7 +50,7 @@ export class VisibilityComponent implements OnInit {
   // connectorTypes: any[];
   connectorType: any;
   showToolConnectorSection: boolean = false;
-  // approvalGateComments: string;
+  approvalGateComment: string;
   approvalGateResponse: string;
   approvalWaitingStatus: boolean = true;         //When status is waiting its true else Approve / Reject its false
   gateStatus: string = '';                                          // Store the action / status of the Approval Gate
@@ -58,8 +58,8 @@ export class VisibilityComponent implements OnInit {
   selectedApplicationId: any;
   serviceListEmpty: boolean;
   visibilityData: any[];
-  gitVisibilityData: any = [];
-  jiraVisibilityData: any = [];
+  // gitVisibilityData: any = [];
+  // jiraVisibilityData: any = [];
   selectedConnectorType: string;
 
   //If the Visibility is redirected from other page load the application based on params
@@ -70,7 +70,8 @@ export class VisibilityComponent implements OnInit {
   gateInstanceDetails: any;
   gateActivatedTime: any;
   gateApprovalTime: any;
-  gateApprovalCallBackURL: any;
+  gateApprovalCallBackURL: any;                       // callback URL from Instance Details
+  gateRejectionCallBackURL: any;                       // rejection URL from Instance Details
   gateStatusPending: boolean;
 
   // showApprovalHistory: boolean= false;
@@ -111,15 +112,21 @@ export class VisibilityComponent implements OnInit {
         }
 
         if(resData.toolConnectors != null && resData.toolConnectors != undefined && resData.connectorTypeLoading){
-          this.toolConnectors = resData.toolConnectors;            
+          this.showToolConnectorSection = false;                    // Initially do not display the tool connectors until the data is present
           this.store.dispatch(Visibility.stopLoadingConnectors());   
+          this.toolConnectors = Object.assign([], resData.toolConnectors); 
+          console.log("Tool : ", this.toolConnectors);
+          
+          this.toolConnectors.sort(function(a, b) {
+              var typeA = a.connectorType.toUpperCase();
+              var typeB = b.connectorType.toUpperCase();
+              return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
+          });
           
             if(this.toolConnectors.length > 0){
+            this.showToolConnectorSection = true;
             this.selectedConnectorType = this.toolConnectors[0]['connectorType'];
             this.onSelectingToolConnector(this.selectedConnectorType); 
-            this.showToolConnectorSection = true;
-            }else{
-              this.showToolConnectorSection = false;
             }
         }
 
@@ -128,6 +135,7 @@ export class VisibilityComponent implements OnInit {
           this.gateActivatedTime = new Date(this.gateInstanceDetails.activatedTime);          
           this.gateApprovalTime = this.gateInstanceDetails.lastUpdatedTime;
           this.gateApprovalCallBackURL = this.gateInstanceDetails.approvalCallbackURL;
+          this.gateRejectionCallBackURL = this.gateInstanceDetails.rejectionCallbackURL;
           this.approvalGateComment = this.gateInstanceDetails.approvalStatus.comment;
           // this.gateStatus = this.gateInstanceDetails.approvalStatus.status;
           
@@ -135,13 +143,27 @@ export class VisibilityComponent implements OnInit {
           
         }
         if(resData.visibilityData != null && resData.visibilityDataLoaded){
+            this.visibilityData = [];
+            this.store.dispatch(Visibility.visibilityDataLoading());
           if(this.selectedConnectorType === "GIT"){
-          this.gitVisibilityData = resData.visibilityData;
-          console.log("GIT: ", this.gitVisibilityData);
+          this.visibilityData = resData.visibilityData;
+          console.log("GIT: ", this.visibilityData);
           
           }else if (this.selectedConnectorType === "JIRA"){
-          this.jiraVisibilityData = resData.visibilityData;
-          console.log("JIRA: ", this.jiraVisibilityData);
+          this.visibilityData = resData.visibilityData;
+          console.log("JIRA: ", this.visibilityData);
+          
+          }else if (this.selectedConnectorType === "AUTOPILOT"){
+          this.visibilityData = resData.visibilityData;
+          console.log("AUTOPILOT: ", this.visibilityData);
+          
+          }else if (this.selectedConnectorType === "SONARQUBE"){
+          this.visibilityData = resData.visibilityData;
+          console.log("SONARQUBE: ", this.visibilityData);
+          
+          }else if (this.selectedConnectorType === "JENKINS"){
+          this.visibilityData = resData.visibilityData;
+          console.log("JENKINS: ", this.visibilityData);
           
           }
         } 
@@ -219,7 +241,7 @@ export class VisibilityComponent implements OnInit {
     // this.approvalWaitingStatus= false;
     this.approvalGateComment = 'This gate is not activated';
     this.gateStatusPending = true;
-      this.toastr.showError('This approval gate is not activated.','Status');
+      this.toastr.showInfo('This approval gate is not activated.','Status');
   }
 
   onSelectingToolConnector(connectorType){    
