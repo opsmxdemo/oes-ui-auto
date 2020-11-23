@@ -174,11 +174,15 @@
                     <form [formGroup]="manualTriggerForm" >
                       <div class="form-group text-muted">
                         <label>Application <span data-toggle="tooltip" data-placement="right" title="Name of the application"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>                          
-                        <select class="form-control col-sm-6" formControlName="application" (change)="onChangeApplicationManualTrigger($event.target.selectedIndex)">
-                          <option value="" [disabled]="true">Select</option>                            
-                          <option *ngFor="let application of applications" value="{{application.applicationName}}"  >
-                            {{application.applicationName}}</option>                           
-                        </select>
+                        <div class="d-flex align-items-center">
+                          <select class="form-control col-sm-6 mr-2" formControlName="application" (change)="onChangeApplicationManualTrigger($event.target.selectedIndex)" [ngClass]="manualTriggerForm.get('application').invalid && manualTriggerForm.get('application').touched ? 'is-invalid':''">
+                            <option value="" [disabled]="true">Select</option>                            
+                            <option *ngFor="let application of applications" value="{{application.applicationName}}"  >
+                              {{application.applicationName}}</option>                           
+                          </select>
+                          <span class="mandatory">*</span>
+                        </div>
+                        <span *ngIf="manualTriggerForm.get('application').invalid && manualTriggerForm.get('application').touched" class="invalid-feedback"></span>
                       </div>
                       <!-- <div class="form-group text-muted">
                         <label>User Name <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
@@ -187,9 +191,11 @@
                       <div class="form-group text-muted">
                         <label>Analysis Lifetime <span data-toggle="tooltip" title="The time in hours for which the Canary Analysis should be run"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
                         <div class="d-flex align-items-center">
-                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="lifetimeHours"/>
-                          <span>hours</span>
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="lifetimeHours" [ngClass]="manualTriggerForm.get('lifetimeHours').invalid && manualTriggerForm.get('lifetimeHours').touched ? 'is-invalid':''"/>
+                          <span>hours</span><span class="mandatory ml-2">*</span>
                         </div>
+                        <span *ngIf="manualTriggerForm.get('lifetimeHours').invalid && manualTriggerForm.get('lifetimeHours').touched" class="invalid-feedback"></span>
+                        <!-- <span *ngIf="manualTriggerForm.get('lifetimeHours').errors['required']"> Analysis Lifetime is required</span> -->
                       </div>
                       <!-- <div class="form-group text-muted">
                         <label>Combined Canary Result Strategy <img src="../../../assets/images/help_icon.png" alt="icon" /></label>
@@ -201,43 +207,53 @@
                         </select>
                       </div> -->
                       <div class="form-group text-muted position-relative">
-                        <label>Metric Successful Score<span data-toggle="tooltip" title="The score under which the Metric Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="number" class="form-control is-invalid col-sm-6" formControlName="successMetricsResultScore" />
-                        <!-- <div class="invalid-feedback">
-                          Error message goes here.
-                        </div> -->
+                        <label>Metric Successful Score <span data-toggle="tooltip" title="The score under which the Metric Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <div class="d-flex align-items-center">
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="successMetricsResultScore" />
+                          <!-- <span class="mandatory">*</span> -->
+                          <!-- <div class="invalid-feedback">
+                            Error message goes here.
+                          </div> -->                         
+                        </div>
                       </div>
                       <div class="form-group text-muted">
-                        <label>Metric Unhealthy Score<span data-toggle="tooltip" title="The score above which the Metric Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="number" class="form-control col-sm-6" formControlName="minimumMetricsResultScore" />
+                        <label>Metric Unhealthy Score <span data-toggle="tooltip" title="The score above which the Metric Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <div class="d-flex align-items-center">
+                          <input type="number" class="form-control col-sm-6 mr-2" formControlName="minimumMetricsResultScore" />
+                          <!-- <span class="mandatory">*</span> -->
+                        </div>
                       </div>
                       <div class="form-group text-muted position-relative">
-                        <label>Logs Successful Score<span data-toggle="tooltip" title="The score under which the Log Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="number" class="form-control is-invalid col-sm-6" formControlName="canaryResultScore" />
+                        <label>Logs Successful Score <span data-toggle="tooltip" title="The score under which the Log Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <input type="number" class="form-control col-sm-6" formControlName="canaryResultScore" />
+                        <!-- <span class="mandatory">*</span> -->
                         <!-- <div class="invalid-feedback">
                           Error message goes here.
                         </div> -->
                       </div>
                       <div class="form-group text-muted">
-                        <label>Logs Unhealthy Score<span data-toggle="tooltip" title="The score above which the Log Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="number" class="form-control col-sm-6" formControlName="minimumCanaryResultScore" />
+                        <label>Logs Unhealthy Score <span data-toggle="tooltip" title="The score above which the Log Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                        <input type="number" class="form-control col-sm-6 mr-2" formControlName="minimumCanaryResultScore" />
+                        <!-- <span class="mandatory">*</span> -->
                       </div>
                       <!-- <div class="formgroup" [formGroup]="formGroup"> -->
                         <div class="form-group text-muted">
-                          <label>Baseline Start Time (ms)<span data-toggle="tooltip" title="Baseline Start Time (ms)"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                          <label class="mr-2">Baseline Start Time (ms) <span data-toggle="tooltip" title="Baseline Start Time (ms)"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>                          
                           <mat-form-field>
                             <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" formControlName="baselineStartTimeMs">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <ngx-mat-datetime-picker #picker touchUi></ngx-mat-datetime-picker>
                           </mat-form-field>
+                          <span class="mandatory ml-2">*</span>
                         </div>
                         <div class="form-group text-muted">
-                          <label>Canary Start Time (ms)<span data-toggle="tooltip" title="Canary Start Time (ms)"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
+                          <label class="mr-2">New Release Start Time (ms) <span data-toggle="tooltip" title="Canary Start Time (ms)"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
                           <mat-form-field>
                             <input matInput [ngxMatDatetimePicker]="picker1" placeholder="Choose a date" formControlName="canaryStartTimeMs">
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <ngx-mat-datetime-picker #picker1 touchUi></ngx-mat-datetime-picker>
                           </mat-form-field>
+                          <span class="mandatory ml-2">*</span>
                          </div>
                         
                       <!-- </div> -->
@@ -266,16 +282,18 @@
                       <div class="form-group text-muted">
                         <label>Begin Canary Analysis After Mins <span data-toggle="tooltip" title="Time to enable warming up of the container"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>                          
                         <div class="d-flex align-items-center">
-                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="beginCanaryAnalysisAfterMins"/>
-                          <span>minutes</span>
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="beginCanaryAnalysisAfterMins" [ngClass]="manualTriggerForm.get('beginCanaryAnalysisAfterMins').invalid && manualTriggerForm.get('beginCanaryAnalysisAfterMins').touched ? 'is-invalid':''"/>
+                          <span>minutes</span><span class="mandatory ml-2">*</span>
                         </div>
+                        <span *ngIf="manualTriggerForm.get('beginCanaryAnalysisAfterMins').invalid && manualTriggerForm.get('beginCanaryAnalysisAfterMins').touched" class="invalid-feedback"></span>
                       </div>
                       <div class="form-group text-muted">
                         <label>Canary Analysis Interval Mins <span data-toggle="tooltip" title="Intervals in which metric-data is fetched and analysed"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
                         <div class="d-flex align-items-center">
-                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="canaryAnalysisIntervalMins"/>
-                          <span>minutes</span>
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="canaryAnalysisIntervalMins" [ngClass]="manualTriggerForm.get('canaryAnalysisIntervalMins').invalid && manualTriggerForm.get('canaryAnalysisIntervalMins').touched ? 'is-invalid':''"/>
+                          <span>minutes</span><span class="mandatory ml-2">*</span>
                         </div>
+                        <span *ngIf="manualTriggerForm.get('canaryAnalysisIntervalMins').invalid && manualTriggerForm.get('canaryAnalysisIntervalMins').touched" class="invalid-feedback"></span>
                       </div>
 
                       <div class="text-divider">
@@ -292,8 +310,8 @@
                                     <thead>
                                       <tr>
                                        <th>Service</th>
-                                       <th>Baseline</th>
-                                       <th>Canary</th>                                        
+                                       <th>Baseline <span data-toggle="tooltip" title="Unique id of the log baseline"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></th>
+                                       <th>New Release <span data-toggle="tooltip" title="Unique id of the log new release"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></th>                                        
                                        <th class="text-right"><a (click)="addLogServiceMT()" data-toggle="tooltip" data-placement="top" data-original-title="Add next service"><i class="fas fa-plus"></i></a></th>
                                       </tr>
                                     </thead>
@@ -306,11 +324,11 @@
                                               {{service.serviceName}}</option>                           
                                           </select>
                                         </td>
-                                        <td class="px-1"><input type="text" class="form-control" formControlName="baseline"></td>
-                                        <td class="px-1"><input type="text" class="form-control" formControlName="canary"></td>
-                                        <td class="px-1">
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="baseline" placeholder="{container_name: baseapp}"></td>
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="canary" placeholder="{container_name: canaryapp}"></td>
+                                        <!-- <td class="px-1">
                                          <a (click)="deleteLogService(logservice,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
-                                        </td>
+                                        </td> -->
                                       </tr>
                                     </tbody>
                                   </table>
@@ -338,8 +356,8 @@
                                     <thead>
                                       <tr>
                                        <th>Service</th>
-                                       <th>Baseline</th>
-                                       <th>Canary</th>                                        
+                                       <th>Baseline <span data-toggle="tooltip" title="Unique id of the metric baseline"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></th>
+                                       <th>New Release <span data-toggle="tooltip" title="Unique id of the metric new release"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></th>                                        
                                        <th class="text-right"><a (click)="addMetricServiceMT()" data-toggle="tooltip" data-placement="top" data-original-title="Add next service"><i class="fas fa-plus"></i></a></th>
                                       </tr>
                                     </thead>
@@ -352,11 +370,11 @@
                                               {{service.serviceName}}</option>                           
                                           </select>
                                         </td>
-                                        <td class="px-1"><input type="text" class="form-control" formControlName="baseline"></td>
-                                        <td class="px-1"><input type="text" class="form-control" formControlName="canary"></td>
-                                        <td class="px-1">
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="baseline" placeholder="{variable1: service:baseapp}"></td>
+                                        <td class="px-1"><input type="text" class="form-control" formControlName="canary" placeholder="{variable1: service:canaryapp}"></td>
+                                        <!-- <td class="px-1">
                                          <a (click)="deleteMetricService(metricservice,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
-                                        </td>
+                                        </td> -->
                                       </tr>
                                     </tbody>
                                   </table>
@@ -404,9 +422,9 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
-          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerForm()" data-dismiss="modal">Trigger</button>
-          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
+          <button class="btn btn-default" data-dismiss="modal" aria-label="Close" #manualTrigerModal>Cancel</button>
+          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerForm()">Trigger</button>
+          <button  class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
         </div>
         <!-- /.modal-footer -->
       </div>
