@@ -50,6 +50,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
     });
     $('[data-toggle="dropdown"]').dropdown();
     $('[data-toggle="popover"]').popover();
+
+    //Fix for multiple sticky tooltips
+    if($('body').find('.tooltip-inner').length > 1){
+      const removeElements = (elms) => elms.forEach(el => el.remove());
+      removeElements( document.querySelectorAll(".tooltip.fade") );
+    }
   }
   ngOnInit() {
 
