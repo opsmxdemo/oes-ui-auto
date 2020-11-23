@@ -24,7 +24,11 @@
     <div class="col-sm-8">
       <div class="data_listArea">
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
-          <div *ngIf="application" class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])">
+          <div *ngIf="application" class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
+          [ngClass]="{'active':i === finalSelectedTabNumber,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
+          'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
+          'application-lastrun-review':application.applicationStatus === 'Review',
+          'application-lastrun-empty': application.applicationStatus === ''}">
                         
                         <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
