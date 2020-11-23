@@ -1032,7 +1032,7 @@ deleteLogService(query,index){
 
   // for getting reclassification history data
   getReclassifiactionHistory() {
-    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentApplicationHealth['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId }));
+    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentServiceInformation['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId }));
   }
 
   //function executes when a rerun happen from log-analysis component
