@@ -424,7 +424,10 @@
                                     <form [formGroup]="gateForm">
                                     <label>Approval Gate <i data-toggle="tooltip" data-placement="top" data-original-title="Visibility during delivery to make informed Approvals" class="fa fa-question-circle" aria-hidden="true"></i></label>
                                     <div class="d-flex  mr-2 align-items-center">
-                                      <input type="text" class="form-control input_len" formControlName="gateName">
+                                    <input type="text"  class="form-control  input_len" formControlName="gateName"  [ngClass]="gateForm.get('gateName').invalid && gateForm.get('gateName').touched ? 'is-invalid':''"> 
+                                    <span *ngIf="gateForm.get('gateName').invalid && gateForm.get('gateName').touched" class="invalid-feedback">
+                                      <span *ngIf="gateForm.get('gateName').errors['required']">Approval Gate Name is required</span>
+                                    </span>
                                       <!-- <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Update gate name">
                                         <a data-keyboard="false" class="btn-link">
                                           <i class="fas fa-pencil-alt"></i>
