@@ -29,6 +29,16 @@ export class ApplicationService {
             catchError(this.handleError)
         );
     }
+    getServiceInfo(applicationId){
+        return this.httpClient.get(this.endpointUrl + 'platformservice/v1/applications/' + applicationId).pipe(
+            catchError(this.handleError)
+        );
+    }
+    getFeaturesConfiguredService(serviceId){
+        return this.httpClient.get(this.endpointUrl + 'platformservice/v1/services/'+serviceId+'/features').pipe(
+            catchError(this.handleError)
+        )
+    }
     getServiceListDemo(applicationId) {
         return this.httpClient.get(this.endpointUrl +'oes/dashboard/applications/'+ applicationId +'/services').pipe(
             catchError(this.handleError)
