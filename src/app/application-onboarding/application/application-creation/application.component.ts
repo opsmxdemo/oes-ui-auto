@@ -1442,6 +1442,13 @@ export class CreateApplicationComponent implements OnInit {
     //   "name": "OES Production Gate",
     //   "serviceId": 1
     // }
+    //Check for gateName validation
+    if(this.gateForm.invalid) {
+      this.gateForm.controls.gateName.markAsUntouched();
+      this.gateForm.controls.gateName.markAsTouched();
+      return;
+    }
+
     this.gateForm.controls.gateName.disable();
     var gateData = {
       "name": this.gateForm.value.gateName,
