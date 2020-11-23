@@ -142,7 +142,7 @@
                   alt="graph" /></div> -->
 
               <div class="dropdown error_dropdown dropdown-log">
-                <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color" class="btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select"
+                <select (change)="changeCriticality($event,log)" [(ngModel)]="log.color" class="  btn dropdown-toggle pb-0 pl-0 pr-2 pt-0 criticality-select" [disabled]="eventTab=='expected' || eventTab=='baseline' || eventTab=='all'"
                   [ngClass]="{'text-danger':log.color == 'dark red', 'text-error':log.color=='red','text-warning':log.color=='yellow','text-muted':log.color=='green'}">
                   <option *ngFor='let criticality of criticalityList' [value]="criticality.criticalityColor" class="{{criticality.textclass}}">
                     {{criticality.displayValue}}

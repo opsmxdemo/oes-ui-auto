@@ -728,6 +728,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.logAnalysisData = undefined;
     this.clusterId = null;
     this.eventTab = eventTab;
+    
     this.eventTabLabeledBy = eventTab + '-tab';
     this.store.dispatch(LogAnalysisAction.loadEventLogResults({ canaryId: this.canaryId, serviceId: this.serviceId, event: eventTab }));
     this.enterdToLogLines.emit(true);
@@ -946,6 +947,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   }
 
   reset(){
+    this.eventTab = 'unexpected'
     if(this.eventTab == 'unexpected'){
       this.getLogAnalysis();
     }else{
