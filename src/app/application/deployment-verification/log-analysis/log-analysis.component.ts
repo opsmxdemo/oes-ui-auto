@@ -728,12 +728,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     this.logAnalysisData = undefined;
     this.clusterId = null;
     this.eventTab = eventTab;
-    if(this.eventTab=='expected' || this.eventTab=='baseline' || this.eventTab=='all'){
-      $(".criticalityDropDown").prop("disabled", true);
-    }
-    else{
-      $(".criticalityDropDown").prop("disabled", false);
-    }
+    
     this.eventTabLabeledBy = eventTab + '-tab';
     this.store.dispatch(LogAnalysisAction.loadEventLogResults({ canaryId: this.canaryId, serviceId: this.serviceId, event: eventTab }));
     this.enterdToLogLines.emit(true);
