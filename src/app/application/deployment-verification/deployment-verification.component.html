@@ -187,7 +187,7 @@
                       <div class="form-group text-muted">
                         <label>Analysis Lifetime <span data-toggle="tooltip" title="The time in hours for which the Canary Analysis should be run"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
                         <div class="d-flex align-items-center">
-                          <input type="text" class="form-control mr-2 col-sm-6" formControlName="lifetimeHours"/>
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="lifetimeHours"/>
                           <span>hours</span>
                         </div>
                       </div>
@@ -202,25 +202,25 @@
                       </div> -->
                       <div class="form-group text-muted position-relative">
                         <label>Metric Successful Score<span data-toggle="tooltip" title="The score under which the Metric Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="text" class="form-control is-invalid col-sm-6" formControlName="successMetricsResultScore" />
+                        <input type="number" class="form-control is-invalid col-sm-6" formControlName="successMetricsResultScore" />
                         <!-- <div class="invalid-feedback">
                           Error message goes here.
                         </div> -->
                       </div>
                       <div class="form-group text-muted">
                         <label>Metric Unhealthy Score<span data-toggle="tooltip" title="The score above which the Metric Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="text" class="form-control col-sm-6" formControlName="minimumMetricsResultScore" />
+                        <input type="number" class="form-control col-sm-6" formControlName="minimumMetricsResultScore" />
                       </div>
                       <div class="form-group text-muted position-relative">
                         <label>Logs Successful Score<span data-toggle="tooltip" title="The score under which the Log Analysis should fail"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="text" class="form-control is-invalid col-sm-6" formControlName="canaryResultScore" />
+                        <input type="number" class="form-control is-invalid col-sm-6" formControlName="canaryResultScore" />
                         <!-- <div class="invalid-feedback">
                           Error message goes here.
                         </div> -->
                       </div>
                       <div class="form-group text-muted">
                         <label>Logs Unhealthy Score<span data-toggle="tooltip" title="The score above which the Log Analysis should be a pass"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
-                        <input type="text" class="form-control col-sm-6" formControlName="minimumCanaryResultScore" />
+                        <input type="number" class="form-control col-sm-6" formControlName="minimumCanaryResultScore" />
                       </div>
                       <!-- <div class="formgroup" [formGroup]="formGroup"> -->
                         <div class="form-group text-muted">
@@ -266,14 +266,14 @@
                       <div class="form-group text-muted">
                         <label>Begin Canary Analysis After Mins <span data-toggle="tooltip" title="Time to enable warming up of the container"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>                          
                         <div class="d-flex align-items-center">
-                          <input type="text" class="form-control mr-2 col-sm-6" formControlName="beginCanaryAnalysisAfterMins"/>
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="beginCanaryAnalysisAfterMins"/>
                           <span>minutes</span>
                         </div>
                       </div>
                       <div class="form-group text-muted">
                         <label>Canary Analysis Interval Mins <span data-toggle="tooltip" title="Intervals in which metric-data is fetched and analysed"><img src="../../../assets/images/help_icon.png" alt="icon" /></span></label>
                         <div class="d-flex align-items-center">
-                          <input type="text" class="form-control mr-2 col-sm-6" formControlName="canaryAnalysisIntervalMins"/>
+                          <input type="number" class="form-control mr-2 col-sm-6" formControlName="canaryAnalysisIntervalMins"/>
                           <span>minutes</span>
                         </div>
                       </div>

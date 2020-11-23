@@ -271,6 +271,7 @@ export class DeploymentVerificationComponent implements OnInit {
             );
             }
          }
+         this.prepopulateTriggerCanaryForm();
         }
 
         if (resData.serviceList != null && resData.serviceListLoading) {
@@ -380,31 +381,7 @@ initializeForms(){
     successMetricsResultScore: new FormControl(),
     baselineStartTimeMs : new FormControl(),
     canaryStartTimeMs : new FormControl()      
-  });
-
-  // this.manualTriggerForm = new FormGroup({
-  //   application: new FormControl(),
-  //   isJsonResponse: new FormControl(true),
-  //   canaryConfig : new FormControl({
-  //     canaryAnalysisConfig: new FormControl({
-  //       beginCanaryAnalysisAfterMins: new FormControl(),
-  //       canaryAnalysisIntervalMins: new FormControl(),
-  //       notificationHours: new FormArray([])
-  //     }),
-  //     canaryHealthCheckHandler: new FormControl({
-  //       minimumCanaryResultScore: new FormControl(),
-  //       minimumMetricsResultScore: new FormControl()
-  //     }),
-  //     canarySuccessCriteria: new FormControl({
-  //       canaryResultScore: new FormControl(),
-  //       successMetricsResultScore: new FormControl()
-  //     }),
-  //     combinedCanaryResultStrategy: new FormControl(),
-  //     lifetimeHours: new FormControl(),
-  //     name: new FormControl()
-  //   }),
-  //   canaryDeployments: new FormArray([])
-  // });
+  }); 
 
   this.logServiceForm = new FormGroup({
     identifiers: new FormArray([])
@@ -554,10 +531,8 @@ deleteLogService(query,index){
   }
 
   onChangeApplicationManualTrigger(applicationListIndex){
-    console.log(applicationListIndex);
     const applicationId  = this.applications[applicationListIndex - 1].applicationId;
     this.store.dispatch(DeploymentAction.fetchServicesOfApplication({applicationId : applicationId}));
-
   }
 
   // code for application dropdown display starts here
@@ -752,6 +727,8 @@ deleteLogService(query,index){
     if (this.selectedServiceId != null || this.selectedServiceId != undefined) {
       this.store.dispatch(DeploymentAction.loadServiceInformation({ canaryId: this.control.value, serviceId: item.serviceId }));
     }
+
+    
   }
 
   //code for application list display starts here
@@ -1060,5 +1037,20 @@ deleteLogService(query,index){
   showSearchFunc(){
     this.showSearch=true;
     this.applicationForm.setValue({application: ''});
+  }
+
+  prepopulateTriggerCanaryForm(){
+    this.manualTriggerForm.patchValue({
+      application : this.selectedApplicationName,
+      beginCanaryAnalysisAfterMins: this.deploymentServiceInformation['beginCanaryAnalysisAfterMins'],
+      canaryAnalysisIntervalMins : this.deploymentServiceInformation['canaryAnalysisIntervalMins'],
+      lifetimeHours: this.deploymentServiceInformation['lifetimeInHours'],
+      //minimumCanaryResultScore: new FormControl(),
+      //minimumMetricsResultScore: new FormControl(),  
+      //canaryResultScore: new FormControl(),
+      //successMetricsResultScore: new FormControl(),
+      baselineStartTimeMs : this.deploymentServiceInformation['v1StartTime'],
+      canaryStartTimeMs : this.deploymentServiceInformation['v2StartTime']
+    });
   }
 }
