@@ -169,7 +169,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.showAppDataType = appType;
     var appPresent = true
     for (let i = 0; i < this.applicationFinalData.length; i++) {
-      if (this.previouSelectedApp && this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId) {
+      if ((this.previouSelectedApp && this.previouSelectedApp.applicationId) ==  (this.applicationFinalData[i] && this.applicationFinalData[i].applicationId)) {
         appPresent = true
         break;
       }
