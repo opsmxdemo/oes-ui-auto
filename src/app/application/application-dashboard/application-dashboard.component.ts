@@ -87,7 +87,7 @@ export class ApplicationDashboardComponent implements OnInit {
           this.supportVisibility(resdata.appData);
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
-          //this.applicationFinalData = resdata.appData;
+          this.applicationFinalData = resdata.appData;
           if (this.previouSelectedApp != null) {
             this.previouSelectedApp = this.previouSelectedApp;
           } else {
