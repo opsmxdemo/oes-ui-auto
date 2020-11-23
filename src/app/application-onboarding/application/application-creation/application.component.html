@@ -337,7 +337,7 @@
                                       <div class="page_access text-right py-2 px-3">
                                         <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
                                         <button class="btn btn-primary ml-2" *ngIf="servicesForm.valid" (click)="SubmitSaporForm(i)">Save</button>
-                                        <!-- <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button> -->
+                                        <button class="btn btn-default ml-1" (click)="cancelForm()">Cancel</button>
                                         <!-- <button class="btn btn-danger ml-1" data-toggle="tooltip" data-placement="top" data-original-title="Disable and remove the feature for this service" (click)="deleteSaporForm(i)" >Delete</button> -->
                                         <button class="btn btn-danger ml-1" (click)="deleteSaporForm(i)" *ngIf="!editMode && saporFeatureSaved">Delete</button>
                                         <button class="btn btn-danger ml-1" (click)="deleteSaporForm(i)" *ngIf="editMode && isFeaturePresent[serviceId] && isFeaturePresent[serviceId]['sapor']">Delete</button>
