@@ -69,3 +69,14 @@ export class ChangeTImestamptotimePipe {
   }
 }
 
+@Pipe({
+  name: 'roundOff'
+}) 
+export class RoundOff {
+  transform(val) {
+    var ans= Math.round(val);
+    return ans
+    
+  }
+}
+
