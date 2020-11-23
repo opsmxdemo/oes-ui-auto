@@ -34,7 +34,7 @@
               <div class="data_list_title">
                 <h3>{{ application && application.applicationName ? application.applicationName: ''}} &nbsp;&nbsp;
                   <span *ngIf="application && application.activeCount > 0 "> 
-                    <a  [routerLink]="['/application/visibility',application.applicationName,application.applicationId]"  class="btn p-0 popover-hover"  data-toggle="tooltip" data-placement="top" title="Active gates : {{application.activeCount}}"> <i class="fa fa-eye" aria-hidden="true"></i></a></span>
+                    <a  [routerLink]="['/application/visibility',application.applicationName,application.applicationId]"  class="btn p-0 popover-hover"  data-toggle="tooltip" data-placement="top" title="Active gates : {{application.activeCount}}"> <i class="fa fa-eye btn-link f16" aria-hidden="true"></i></a></span>
                 </h3> 
                 <span class="datetime">{{application && application.date | date:'medium'}} </span>
               </div>

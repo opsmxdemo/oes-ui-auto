@@ -172,10 +172,12 @@ export class ApplicationDashboardComponent implements OnInit {
       if (this.previouSelectedApp && this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId) {
         appPresent = true
         break;
-      } else {
+      }
+      else {
         appPresent = false
       }
     }
+
     if (app && app.applicationId && appPresent == true) {
       this.applicationService.getServiceInfo(app.applicationId).subscribe((response: any) => {
         this.servicesInfoData = response.services;
