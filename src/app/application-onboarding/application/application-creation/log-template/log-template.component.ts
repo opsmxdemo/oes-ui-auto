@@ -60,16 +60,19 @@ editedTagId:any;
 addedTag:any;
 removeTagId:any;
 scoringAlgoData :any;
+formBuilder = new FormBuilder();
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
   ngOnChanges(changes: SimpleChanges){
     if(this.isEditMode && this.templateData != null){
       this.data = this.templateData;
-      this.selectedTab = 'logtemplate-editor';
+      this.selectedTab = 'logtemplate-form';
+      this.setFormValues();
     }else{
       this.selectedTab = 'logtemplate-form';
       this.data = null;
+      this.defineForms();
     }
   }
 
@@ -111,6 +114,9 @@ scoringAlgoData :any;
         {
 
           this.scoringAlgoData = responseData.scoringAlgoResponse;
+          if(this.isEditMode) {
+            this.logTopicsForm.get('selectScoreAlgo').setValue(this.data.scoringAlgorithm);
+          }
         }
         // if(responseData.savedTagResponse!=null)
         // {
@@ -119,6 +125,59 @@ scoringAlgoData :any;
       }
     );
 
+  }
+  setFormValues() {
+    this.defineForms();
+    this.onDataSourceSelect(this.data.monitoringProvider);
+    this.createLogForm.patchValue({
+      templateName: this.data.templateName,
+      monitoringProvider:  this.data.monitoringProvider,
+      accountName:  this.data.accountName,
+      namespace: this.data.namespace,
+      index: this.data.index,
+      kibanaIndex: this.data.kibanaIndex,
+      regExFilter: this.data.regExFilter,
+      autoBaseline: this.data.autoBaseline,
+      regExResponseKey: this.data.regExResponseKey,
+      regularExpression: this.data.regularExpression,
+      sensitivity:  this.data.sensitivity
+    });
+    let status = {
+      target: {
+        checked: this.data.regExFilter
+      }
+    }
+    this.onCheckboxChange(status);
+    this.onLogAccountSelect(this.data.accountName);
+    this.selectedDataSource = this.data.monitoringProvider;
+    // this.getLogTopics();
+    this.getTagsList();
+    // this.logTopicsForm.get('topicsList').setValue(this.data.errorTopics);
+    // this.logTopicsForm.get('topicsList').setValue(this.formBuilder.array([]));
+    this.logTopicsData = this.data.errorTopics;
+    this.logTopicsData.forEach((logTopicsData, logIndex) => {
+      (<FormArray>this.logTopicsForm.get('topicsList')).push(
+        new FormGroup({
+          string: new FormControl(logTopicsData.string),
+          topic: new FormControl(logTopicsData.topic),
+          type: new FormControl(logTopicsData.type)
+        })
+      );
+    });
+    // this.logTopicsForm.get('clusterList').setValue(this.data.tags);
+    this.logClusterData = this.data.tags;
+    this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+      (<FormArray>this.logTopicsForm.get('clusterList')).push(
+        new FormGroup({
+          id: new FormControl(''),
+          string: new FormControl(logClusterData.string),
+          tag: new FormControl(logClusterData.tag)
+        })
+      );
+    });
+    if(this.data.tags.length > 0) {
+      this.logTopicsForm.get('enableClusterTags').setValue(true);
+    }
   }
 
   // Below function is use to fetched json from json editor
@@ -223,6 +282,11 @@ onDataSourceSelect(dataSourceValue: string){
      (response) => {
      if(response.logAccountsData != null) {
          this.logAccountsList = response.logAccountsData;
+         if(this.isEditMode) {
+          this.createLogForm.patchValue({
+            accountName:  this.data.accountName
+          });
+         }
      }else{
        this.logAccountsList = [];
      }
@@ -232,6 +296,7 @@ onDataSourceSelect(dataSourceValue: string){
 // Below function is use to fetch the log topics
 
 getLogTopics(){
+  if(this.isEditMode) return;
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
  this.store.dispatch(ApplicationActions.loadClusterTags());
@@ -298,6 +363,7 @@ onClusterChange(status: boolean){
     this.logClusterData.forEach((logClusterData, logClusterIndex) => {
      (<FormArray>this.logTopicsForm.get('clusterList')).push(
       new FormGroup({
+         id: new FormControl(''),
          string: new FormControl(logClusterData.string),
          tag: new FormControl(logClusterData.tag)
        })
@@ -331,8 +397,15 @@ SubmitForm(){
    this.logTemplateData['applicationId'] = this.applicationData['applicationId'];
    this.logTemplateData['applicationName'] = this.applicationData['name'];
    this.logTemplateData['emailId'] = this.applicationData['email'];
+   
+    if(this.isEditMode) {
+     this.Submitlogdata();
+    }
+    else {
+      this.store.dispatch(ApplicationActions.saveLogTemplate({applicationId : this.applicationData['applicationId'], logTemplateData : this.logTemplateData}));  
+    }
 
-   this.store.dispatch(ApplicationActions.saveLogTemplate({applicationId : this.applicationData['applicationId'], logTemplateData : this.logTemplateData}));  
+   
    //this.store.dispatch(ApplicationActions.createdLogTemplate({logTemplateData:this.logTemplateData}))
    if(this.stepper != undefined){
      this.stepper.reset();

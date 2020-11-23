@@ -21,6 +21,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 import { Visibility } from 'src/app/models/applicationOnboarding/createApplicationModel/visibilityModel/visibility.model';
 import { AppPage } from 'e2e/src/app.po';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-application',
@@ -180,6 +181,7 @@ export class CreateApplicationComponent implements OnInit {
   saporForm: FormGroup;
   EnvironmentConfigSavedResponse: any;
   GroupPermissionConfigSavedResponse: any;
+  showLogTempPopup: boolean;
 
   constructor(public sharedService: SharedService,
     public store: Store<fromFeature.State>,
@@ -1200,6 +1202,10 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is execute after click on add template btn.
   onAddTemplate(index, type) {
+    this.showLogTempPopup = false;
+    setTimeout(() => {
+      this.showLogTempPopup = true;
+    }, 100);
     $("[data-toggle='tooltip']").tooltip('hide');
     if (type === "log") {
       this.currentLogTemplateIndex = index;
@@ -1524,7 +1530,7 @@ export class CreateApplicationComponent implements OnInit {
       if(this.editMode){
         this.store.dispatch(ApplicationActions.getTemplatesForaService({applicationId: this.applicationId, serviceId: this.serviceId}));
       }
-
+      this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));
     } else if (item === 'sapor') {
 
       this.saporForm = new FormGroup({
@@ -1892,11 +1898,18 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   onEditLogMetricTemplateClick(type){
+    this.showLogTempPopup = false;
+    this.logTemplateEditMode = false;
+    setTimeout(() => {
+      this.showLogTempPopup = false;
+    }, 100);
     this.logTemplate = this.deploymentVerificationForm.value['logTemplate'];
     this.metricTemplate = this.deploymentVerificationForm.value['metricTemplate'];
     if(type == 'log'){
       this.store.dispatch(ApplicationActions.getLogTemplateDetails({applicationId : this.applicationId, templateName: this.logTemplate}));
-      this.logTemplateEditMode = true;
+      setTimeout(() => {
+        this.logTemplateEditMode = true;
+      }, 100);
     }else if(type == 'metric'){
       this.metricTemplateEditMode = true;
       this.store.dispatch(ApplicationActions.getMetricTemplateDetails({applicationId : this.applicationId, templateName: this.metricTemplate}));
