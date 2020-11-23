@@ -182,7 +182,7 @@ export class ApplicationDashboardComponent implements OnInit {
       this.applicationService.getServiceInfo(app.applicationId).subscribe((response: any) => {
         this.servicesInfoData = response.services;
         this.servicesInfoData.forEach((ele, index) => {
-          if (ele.id) {
+          if (ele.id && appType === 'Services') {
             this.applicationService.getFeaturesConfiguredService(ele.id).subscribe((response: any) => {
               this.configuredFeature[ele.id] = response.configuredFeatures ? response.configuredFeatures : [];
               this.featureList.forEach(fea => {
