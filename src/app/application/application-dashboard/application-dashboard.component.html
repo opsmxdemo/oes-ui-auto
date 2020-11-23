@@ -106,11 +106,47 @@
 
                   </div> -->
           <!-- /#particle_chart -->
+
+          <div class="table-responsive" *ngIf="showAppDataType === 'Services'">
+            <table class="table table-pet-service mb-0">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Sapor</th>
+                  <th>Visibility</th>
+                  <th>Deployment Verification</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let service of servicesInfoData; let i=index">
+                <td>{{service.name}}</td>
+                  <td class="text-center">
+                    <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['sapor']"><b>-</b></span>
+                    <span>
+                      <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['sapor']" class="fa fa-check color-green" aria-hidden="true"></i>
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['visibility']"><b>-</b></span>
+                    <span>
+                      <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['visibility']" class="fa fa-check color-green" aria-hidden="true"></i>
+                    </span>
+                  </td> 
+                  <td class="text-center">
+                    <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['deployment_verification']"><b>-</b></span>
+                    <span>
+                      <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['deployment_verification']" class="fa fa-check color-green" aria-hidden="true"></i>
+                    </span>
+                  </td>               
+                </tr>
+              </tbody>
+            </table>
+          </div><br>
               
           <!-- /.chart_ratio -->
-          <div *ngIf="oesServiceData && oesServiceData.length === 0 &&  showAppDataType === 'Services' || oesServiceData === null && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
+          <!-- <div *ngIf="oesServiceData && oesServiceData.length === 0 &&  showAppDataType === 'Services' || oesServiceData === null && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessageSapor}}</p>
-          </div>
+          </div> -->
           <!-- <div *ngIf="showAppDataType === 'Services' && statusMessage === 'error'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessage}}</p>
           </div> -->
@@ -136,7 +172,7 @@
             </table>
           </div>
         <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0  && showAppDataType === 'Deployment Verification' || autoPilotServiceData === null && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessageAutopilot}}</p>
+            <p class="error-service-msg">No data found.</p>
           </div>
           <!-- <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
             <p class="error-service-msg">{{serviceErrorMessage}}</p>

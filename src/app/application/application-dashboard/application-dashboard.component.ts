@@ -53,6 +53,11 @@ export class ApplicationDashboardComponent implements OnInit {
   networkChartData = null;              // It is use to store network chart data fetched from api.
   serviceErrorMessageSapor: string;
   serviceErrorMessageAutopilot: string;
+  servicesInfoData: any;
+  featureList: any;
+  configuredFeature: any = {}
+  isFeaturePresent: any = {}
+  selectedFeature = [];
 
 
 
@@ -125,7 +130,7 @@ export class ApplicationDashboardComponent implements OnInit {
 
         }
         if (resdata.topologyChartData != null) {
-          this.dashboardLoading = resdata.dashboardLoading;
+        //  this.dashboardLoading = resdata.dashboardLoading;
           this.networkChartData = resdata.topologyChartData;
           // this.nodes = [...resdata.topologyChartData.nodes];
           // this.links = [...resdata.topologyChartData.edges];
@@ -135,6 +140,16 @@ export class ApplicationDashboardComponent implements OnInit {
       });
     const source = interval(this.environment.config.setApplicationInterval);
     this.subscription = source.subscribe(val => this.getApplications());
+
+    //fetching data from layout state
+    this.store.select('layout').subscribe(
+      (layoutRes) => {
+        if (layoutRes.supportedFeatures != null) {
+          this.featureList = layoutRes.supportedFeatures;
+        }
+      }
+    )
+
   }
 
   ngOnDestroy() {
@@ -164,6 +179,25 @@ export class ApplicationDashboardComponent implements OnInit {
     }
 
     if (app && app.applicationId && appPresent == true) {
+      this.applicationService.getServiceInfo(app.applicationId).subscribe((response: any) => {
+        this.servicesInfoData = response.services;
+        this.servicesInfoData.forEach((ele, index) => {
+          if (ele.id) {
+            this.applicationService.getFeaturesConfiguredService(ele.id).subscribe((response: any) => {
+              this.configuredFeature[ele.id] = response.configuredFeatures ? response.configuredFeatures : [];
+              this.featureList.forEach(fea => {
+                if(!this.isFeaturePresent[ele.id]) this.isFeaturePresent[ele.id] = {};
+                this.isFeaturePresent[ele.id][fea] = false;
+              });
+              this.configuredFeaturepresent(ele.id);
+            },
+              (error) => {
+                this.statusMessage = 'error';              //Error callback
+              });
+          } else {
+          }
+        });
+      });
       this.applicationService.getServiceList(app.applicationId).subscribe((serviceDataList: any) => {
         this.serviceData = serviceDataList;
         this.oesServiceData = serviceDataList['oesService'];
@@ -380,4 +414,21 @@ export class ApplicationDashboardComponent implements OnInit {
       }
     })
   }
+
+  //configured feature for a service
+  configuredFeaturepresent(serviceId) {
+
+      if(!this.isFeaturePresent[serviceId]) this.isFeaturePresent[serviceId] = {};
+
+      for (let j = 0; j < this.featureList.length; j++) {
+        if (this.configuredFeature[serviceId].includes(this.featureList[j].toLowerCase())) {
+          this.isFeaturePresent[serviceId][this.featureList[j].toLowerCase()] = true;
+        } else {
+          this.isFeaturePresent[serviceId][this.featureList[j].toLowerCase()] = false;
+        }
+      }
+    // }
+
+  }
+
 }
