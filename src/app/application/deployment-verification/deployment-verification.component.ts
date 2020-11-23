@@ -39,6 +39,7 @@ export class DeploymentVerificationComponent implements OnInit {
   @ViewChild('sideNav') Sidenav: MatSidenav;
   @ViewChild('focus') focused: ElementRef;
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
+  @ViewChild('manualTrigerModal') manualTrigerModal: ElementRef;
   public editorOptions: JsonEditorOptions;
   // public data: any = null;
   data = {}
@@ -371,10 +372,10 @@ serviceListDummy = {
 
 initializeForms(){
   this.manualTriggerForm = new FormGroup({
-    application: new FormControl(),
-    lifetimeHours: new FormControl(),
-    beginCanaryAnalysisAfterMins: new FormControl(),
-    canaryAnalysisIntervalMins: new FormControl(),  
+    application: new FormControl('',Validators.required),
+    lifetimeHours: new FormControl('', Validators.required),
+    beginCanaryAnalysisAfterMins: new FormControl('', Validators.required),
+    canaryAnalysisIntervalMins: new FormControl('', Validators.required),  
     minimumCanaryResultScore: new FormControl(),
     minimumMetricsResultScore: new FormControl(),  
     canaryResultScore: new FormControl(),
@@ -452,11 +453,24 @@ deleteLogService(query,index){
         data: this.manualTriggerData,
       })
     );
+    if(this.manualTrigerModal !== undefined){
+      this.manualTrigerModal.nativeElement.click();
+    }
     this.data = {};
   }
 
   submitManualTriggerForm(){
-    
+    if(this.manualTriggerForm.invalid) {
+      this.manualTriggerForm.controls.lifetimeHours.markAsUntouched();
+      this.manualTriggerForm.controls.lifetimeHours.markAsTouched();
+      this.manualTriggerForm.controls.application.markAsUntouched();
+      this.manualTriggerForm.controls.application.markAsTouched();
+      this.manualTriggerForm.controls.beginCanaryAnalysisAfterMins.markAsUntouched();
+      this.manualTriggerForm.controls.beginCanaryAnalysisAfterMins.markAsTouched();
+      this.manualTriggerForm.controls.canaryAnalysisIntervalMins.markAsUntouched();
+      this.manualTriggerForm.controls.canaryAnalysisIntervalMins.markAsTouched();
+      return;
+    }
     let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
     let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;
     
