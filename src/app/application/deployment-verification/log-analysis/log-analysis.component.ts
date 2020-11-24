@@ -513,7 +513,9 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
         if(resData.rerunResponse != null && resData.isLoadedRerunResults){
           this.store.dispatch(LogAnalysisAction.loadedRerunResults());
           if(resData.rerunResponse['status']){
-            this.selectedServiceIdFromChild.emit(this.serviceId);
+            setTimeout(() => {
+              this.selectedServiceIdFromChild.emit(this.serviceId);
+            }, 500)
             this.classifiedLogsList = [];
             this.sensitivityChanged = false;
             $(".nav-link").removeClass("active")
