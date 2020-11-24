@@ -80,3 +80,14 @@ export class RoundOff {
   }
 }
 
+@Pipe({
+  name: 'millisecondsToMins'
+}) 
+export class MillisecondsToMins {
+  transform(val) {
+   var minsVal=val/60000
+   minsVal = Math.round((minsVal + Number.EPSILON) * 10) / 10
+   return minsVal
+    
+  }
+}

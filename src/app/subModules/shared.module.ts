@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { LoadingScreenComponent } from '../loading-screen/loading-screen.component';
-import { KeysPipe, EllipsisPipe, RoundOff} from '../pipes/keys.pipe';
+import { KeysPipe, EllipsisPipe, RoundOff, MillisecondsToMins} from '../pipes/keys.pipe';
 import { LowercaseDirective } from '../directive/lowerCase.directive';
 import { CompLevelErrorListingComponent } from '../error-handling/component-error-listing/component-error-listing.component';
 import { AppErrorListingComponent } from '../error-handling/app-error-listing/app-error-listing.component';
@@ -15,7 +15,8 @@ import { AppErrorListingComponent } from '../error-handling/app-error-listing/ap
         CompLevelErrorListingComponent,
         AppErrorListingComponent,
         EllipsisPipe,
-        RoundOff
+        RoundOff,
+        MillisecondsToMins
     ],
     exports: [ 
         LoadingScreenComponent,
@@ -24,7 +25,8 @@ import { AppErrorListingComponent } from '../error-handling/app-error-listing/ap
         CompLevelErrorListingComponent,
         AppErrorListingComponent,
         EllipsisPipe,
-        RoundOff
+        RoundOff,
+        MillisecondsToMins
     ]
   })
 
