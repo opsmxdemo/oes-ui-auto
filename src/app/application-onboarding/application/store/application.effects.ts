@@ -939,6 +939,7 @@ export class ApplicationEffect {
             switchMap((action) => {
                 return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/visibility/service/' + action.serviceId + '/feature/configuration/' + action.gateId).pipe(
                     map(resdata => {
+                        this.toastr.showError('Visibility feature removed successfully!','SUCCESS');
                         return ApplicationAction.postDeleteVisibilityFeature({ deleteFeatureVisibilityMessage: resdata });
                     }),
                     catchError(errorRes => {

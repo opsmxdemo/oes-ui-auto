@@ -566,7 +566,7 @@ export class CreateApplicationComponent implements OnInit {
             this.accountsForTooltypes[this.editVisibilityAccountsIndex] = response.accountsForToolType;
             
             let visibilityArr = <FormArray>this.visibilityForm.get('visibilityConfig');
-            visibilityArr.controls[this.editVisibilityAccountsIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityAccountsIndex].visibilityToolConnectorId);
+            // visibilityArr.controls[this.editVisibilityAccountsIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityAccountsIndex].visibilityToolConnectorId);
 
             this.editVisibilityAccountsIndex++;
           }
@@ -582,7 +582,7 @@ export class CreateApplicationComponent implements OnInit {
           }else if(this.editMode){
           this.templatesForToolType[this.editVisibilityTemplateIndex] = response.templatesForToolType;
             let visibilityTemplateArr = <FormArray>this.visibilityForm.get('visibilityConfig');
-            visibilityTemplateArr.controls[this.editVisibilityTemplateIndex].get('templateName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityTemplateIndex].templateId);
+            // visibilityTemplateArr.controls[this.editVisibilityTemplateIndex].get('templateName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityTemplateIndex].templateId);
 
             this.editVisibilityTemplateIndex++;
           }
@@ -1776,6 +1776,11 @@ export class CreateApplicationComponent implements OnInit {
 
   deleteVisibilityFeature() {
     this.store.dispatch(ApplicationActions.deleteVisibilityFeature({ serviceId: this.serviceId, gateId: this.gateId }));
+    this.gateId = '';
+    this.gateForm.controls.gateName.enable();
+    this.gateForm.controls.gateName.setValue('');
+    this.gateForm.controls.gateName.setErrors(null);
+    this.gateForm.controls.gateName.setValidators([Validators.required, this.cannotContainSpace.bind(this)]);
   }
 
   closeTemplatePopup() {
