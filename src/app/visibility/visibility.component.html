@@ -315,7 +315,9 @@
                                             <span  *ngIf="selectedConnectorType == 'SONARQUBE' && eachData.data != null ">Project Key</span>
                                           </div>
                                           {{eachData.value}}</td>
-                                        <td>{{eachData.data == null ? 'No data to Display' : eachData.data | json}}</td> 
+                                        <td><div class="loader" *ngIf="loadingWheel"></div>
+                                          <div>{{(eachData.data == null && eachData.key == null && eachData.value == null) ? 'No data to Display' : eachData.data | json}}</div>                                        
+                                        </td> 
                                       </tr>
                                     </tbody>
                                   </table>
