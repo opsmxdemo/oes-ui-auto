@@ -2,6 +2,7 @@
     <!-- <td> -->
     <div class="row-data">
         <select *ngIf="data.status == 'new'" class="form-control" formControlName="connectorType"
+            [ngClass]="connectorForm.get('connectorType').invalid && connectorForm.get('connectorType').touched ? 'is-invalid':''"
             (change)="onChangeTooltype($event.target.value)">
             <option value="" [disabled]="true">Select</option>
             <option *ngFor="let tooltype of toolTypes" value="{{tooltype}}">
@@ -14,6 +15,7 @@
     <!-- Account type: {{accountsForTooltypes | json}} -->
     <div class="row-data">
         <select class="form-control" formControlName="accountName"
+            [ngClass]="connectorForm.get('accountName').invalid && connectorForm.get('accountName').touched ? 'is-invalid':''"
             (change)="onChangeAccountofTooltype($event.target.value)">
             <option value="" [disabled]="true">Select</option>
             <option *ngFor="let account of accountsForTooltypes" value="{{account.visibilityToolConnectorId}}">
@@ -26,6 +28,7 @@
     <!-- Template Tool type: {{templatesForToolType | json}} -->
     <div class="d-flex  mr-2 align-items-center position-relative row-data">
         <select class="form-control template-dropdown" formControlName="templateName"
+            [ngClass]="connectorForm.get('templateName').invalid && connectorForm.get('templateName').touched ? 'is-invalid':''"
             (change)="onChangeTemplateofTooltype($event.target.value)">
             <option value="" [disabled]="true">Select</option>
 
