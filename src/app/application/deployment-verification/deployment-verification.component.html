@@ -515,7 +515,7 @@
               <div class="rightBox m-0 position-sticky">
                 <div class="rightBox_header bg-white d-flex align-items-center">
                   <div class="btns_icon d-flex ml-auto">
-                    <!-- <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download debug data" (click)="downloadDebugData(canaryId)"><img src="../../../assets/images/download.png" alt="download" /></button> -->
+                    <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download debug data" (click)="downloadDebugData(canaryId)"><img src="../../../assets/images/download.png" alt="download" /></button>
                     <!-- <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Add"><img src="../../../assets/images/plus_icon.png" alt="plus" /></button>
                     <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><img src="../../../assets/images/edit_icon.png" alt="edit" /></button> -->
                   </div>
@@ -650,7 +650,7 @@
                       </tr>
                       <tr data-toggle="tooltip" data-placement="left" title="Analysis Duration In Minutes">
                         <td >Analysis Duration:</td>
-                        <td>{{deploymentServiceInformation ? deploymentServiceInformation['duration']: 'N/A'}}</td>
+                        <td>{{deploymentServiceInformation ? (deploymentServiceInformation['analysisDuration'] | millisecondsToMins) : 'N/A'}}</td>
                       </tr>
                       <tr>
                         <td >Lifetime Hours:</td>
@@ -703,8 +703,9 @@
                   <div class="chart_ratio mb-2 text-center d-flex   ">
                     <div class="chart_value flex-grow-1 padding10LeftRight"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Success','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
                       <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']>-1">{{serviceNameInfo['finalScore'] | roundOff}}</div>
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore']>-1"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
                       <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']<0"> - </div>
+                      <div class="cv_heighlight"   [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
+                      
                       
                     </div>
                     

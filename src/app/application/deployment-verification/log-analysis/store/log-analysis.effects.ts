@@ -106,7 +106,9 @@ fetchRerunLogsResults = createEffect(() =>
             return this.http.post(this.environment.config.endPointUrl +'autopilot/logs/updateFeedbackLogTemplate?logTemplateName=' + action.logTemplate + '&canaryId=' + action.canaryId + '&userName=' + authState.user + '&serviceId='+ action.serviceId, action.postData).pipe(                  
                 map(resdata => {  
                    if(resdata['status']){
-                    this.store.dispatch(LogAnalysisActions.reloadAfterRerun({canaryId:action.canaryId, serviceId:action.serviceId})); 
+                    setTimeout(() => {
+                        this.store.dispatch(LogAnalysisActions.reloadAfterRerun({canaryId:action.canaryId, serviceId:action.serviceId})); 
+                      }, 500) 
                     this.toastr.showSuccess(resdata['message'], 'SUCCESS')
                    }else if(!resdata['status']){
                     this.toastr.showError('Reclassification Failed. PLease try again', 'ERROR')  
