@@ -38,3 +38,9 @@ export const reloadWithCanaryId = createAction('[DeploymentVerification] ReloadW
 export const fetchServicesOfApplication = createAction('[DeploymentVerification] FetchServicesOfApplication', props<{applicationId: any}>());
 export const loadServicesOfApplication = createAction('[DeploymentVerification] LoadServicesOfApplication', props<{ servicesOfApplication: any }>());
 export const loadedServicesOfApplication = createAction('[DeploymentVerification] LoadedServicesOfApplication');
+
+export const downloadDebugData = createAction('[DeploymentVerification] DownloadDebugData', props<{canaryId: any}>());
+export const loadDownloadData = createAction('[DeploymentVerification] LoadDownloadData');
+// export const loadedServicesOfApplication = createAction('[DeploymentVerification] LoadedServicesOfApplication');
+
+

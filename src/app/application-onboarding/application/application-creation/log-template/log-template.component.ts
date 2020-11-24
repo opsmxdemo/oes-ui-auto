@@ -252,6 +252,9 @@ onDataSourceSelect(dataSourceValue: string){
       autoBaseline: new FormControl(this.createLogForm.value.autoBaseline),
       sensitivity:  new FormControl(this.logSensitivityTypes[0],Validators.required),
     });
+    this.createLogForm.get('regularExpression').valueChanges.subscribe(event => {
+      this.createLogForm.get('regularExpression').setValue(event.toLowerCase(), {emitEvent: false});
+   });
   } else if (dataSourceValue === 'kubernetes'){
     
     this.createLogForm = new FormGroup({
@@ -576,5 +579,7 @@ cannotContainSpace(control: FormControl): {
 getTagsList(){
   this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
 }
+
+
 
 }
