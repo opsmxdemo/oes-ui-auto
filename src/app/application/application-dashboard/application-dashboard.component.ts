@@ -407,7 +407,7 @@ export class ApplicationDashboardComponent implements OnInit {
       if (result.value) {
         $("[data-toggle='tooltip']").tooltip('hide');
 
-        this.store.dispatch(AppDashboardAction.deleteApplication({ applicationId: application.applicationId, index: index }));
+        this.store.dispatch(AppDashboardAction.deleteApplication({applicationName: application.applicationName, applicationId: application.applicationId, index: index }));
         this.selectedApplication(0, this.applicationFinalData[0], this.finalLabelArray[0])
       } else {
 

@@ -171,7 +171,6 @@ export class DeploymentVerificationComponent implements OnInit {
   }
 
 
-
   ngOnInit(): void {
       // fix for the scroll position from App dashboard - it was loading somewhere from the middle
         this.router.events.subscribe((evt) => {
@@ -315,6 +314,10 @@ export class DeploymentVerificationComponent implements OnInit {
           this.servicesOfApplication = resData.servicesOfApplicationId.autopilotService;
           console.log(this.servicesOfApplication);
 
+        }
+        // code related to download logs debug data
+        if(resData.downloaddebugDataResponse != null && resData.isLoadedDownloadDebug){
+          console.log(resData.downloaddebugDataResponse);
         }
       }
     );

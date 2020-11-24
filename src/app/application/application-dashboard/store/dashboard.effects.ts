@@ -77,13 +77,7 @@ export class AppDashboardEffect {
           switchMap(action => {
               return this.http.delete<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + action.applicationId).pipe(
                   map(resdata => {
-                      this.toastr.showSuccess(action.applicationId + ' is deleted successfully!!', 'SUCCESS')
-                      // return OnboardingAction.appDeletedSuccessfully({index:action.index});
-                      Swal.fire(
-                          'Deleted!',
-                          'Your file has been deleted.',
-                          'success'
-                      )
+                      this.toastr.showSuccess(action.applicationName + ' is deleted successfully!!', 'SUCCESS')
                       return DashboardActions.applicationDeleted({ index: action.index })
                   }),
                   catchError(errorRes => {
