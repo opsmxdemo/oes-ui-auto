@@ -1362,18 +1362,22 @@ export class CreateApplicationComponent implements OnInit {
   // Below funcion is use to submit sapor data
   SubmitSaporForm(serviceIndex) {
     // console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
+
+    let serviceFormar = <FormArray> this.servicesForm.controls.services;
+    let serviceObj = <FormGroup> serviceFormar.controls[serviceIndex];
+  
     const postSapor = {
       applicationId: this.applicationId,
       serviceId: this.serviceId,
       service: {
-        serviceName: this.servicesForm.value.services[serviceIndex].serviceName,
+        serviceName: serviceObj.controls.serviceName.value,
         pipelines: this.servicesForm.value.services[serviceIndex].saporConfiguration['pipelines']
       }
     }
 
     // console.log(JSON.stringify(postSapor));
 
-    if(this.editMode){
+    if(this.editMode && this.saporFinalData != null){
       this.store.dispatch(ApplicationActions.updateSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId, saporConfigData: postSapor}));
 
     }else{
