@@ -85,9 +85,39 @@ export class RoundOff {
 }) 
 export class MillisecondsToMins {
   transform(val) {
-   var minsVal=val/60000
-   minsVal = Math.round((minsVal + Number.EPSILON) * 10) / 10
-   return minsVal
-    
+   var totalSecs = (val-val%1000)/1000;
+   var Hours = (totalSecs-totalSecs%3600)/3600
+   var remMinsSecs = totalSecs%3600
+   var mins = (remMinsSecs-remMinsSecs%60)/60
+   var remSecs = remMinsSecs%60;
+   var hoursDisplay:any;
+   var minsDisplay:any;
+   var secDisplay:any;
+   if(Hours==0)
+   {
+    hoursDisplay="00"
+   }
+   else if(Hours<10){
+    hoursDisplay="0"+Hours
+   }
+   else{
+    hoursDisplay=Hours
+   }
+
+   if(mins<10){
+    minsDisplay = "0"+mins
+   }
+   else{
+     minsDisplay=mins
+   }
+   
+   if(remSecs<10){
+    secDisplay = "0"+remSecs
+   }
+   else{
+    secDisplay=remSecs
+   }
+   var final = hoursDisplay+":"+minsDisplay+":"+secDisplay
+   return final
   }
 }
