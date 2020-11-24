@@ -9,6 +9,7 @@ import {map, startWith} from 'rxjs/operators';
 import * as $ from 'jquery'; 
 import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 export interface User {
   applicationName: string;
@@ -73,6 +74,7 @@ export class VisibilityComponent implements OnInit {
   gateApprovalCallBackURL: any;                       // callback URL from Instance Details
   gateRejectionCallBackURL: any;                       // rejection URL from Instance Details
   gateStatusPending: boolean;
+  loadingWheel: boolean = false;
 
   // showApprovalHistory: boolean= false;
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder, private route: ActivatedRoute, public toastr: NotificationService,) { }
@@ -143,8 +145,9 @@ export class VisibilityComponent implements OnInit {
           
         }
         if(resData.visibilityData != null && resData.visibilityDataLoaded){
-            this.visibilityData = [];
-            this.store.dispatch(Visibility.visibilityDataLoading());
+          this.loadingWheel = false;
+          this.visibilityData = [];
+          this.store.dispatch(Visibility.visibilityDataLoading());
           if(this.selectedConnectorType === "GIT"){
           this.visibilityData = resData.visibilityData;
           console.log("GIT: ", this.visibilityData);
@@ -246,6 +249,17 @@ export class VisibilityComponent implements OnInit {
 
   onSelectingToolConnector(connectorType){    
     this.selectedConnectorType = connectorType;    
+    this.visibilityData = [
+            {
+              "data": null,
+              "key": null,
+              "value": null 
+            }
+          ]
+          this.loadingWheel = true;
+          setTimeout(() => {
+            this.loadingWheel = false;
+          }, 5000);
     this.store.dispatch(Visibility.loadVisibilityData({approvalInstanceId: this.approvalGateInstanceId, connectorType: this.selectedConnectorType}));
 
   }
