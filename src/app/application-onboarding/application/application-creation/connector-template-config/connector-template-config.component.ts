@@ -33,7 +33,7 @@ export class ConnectorTemplateConfigComponent implements OnInit {
           this.addNewConnector(data)
         });
       } else {
-        this.addNewConnector(this.newConnectorData)
+        this.addNewConnector('');
       }
       this.service.getRemainingConnectors();
     });
@@ -41,13 +41,12 @@ export class ConnectorTemplateConfigComponent implements OnInit {
 
   // Add a new Connector
   addNewConnector(data: any, fromUser = false) {
-    if(data) {
-      this.service.connectorData.push(data);
-    } else {
-      this.service.connectorData.push(Object.assign({}, this.newConnectorData));
+    if(!data) {
+      data = Object.assign({}, this.newConnectorData);
     }
+    this.service.connectorData.push(data);
     
-    this.rowEdited([this.service.connectorData.length - 1, fromUser]);
+    this.rowEdited([this.service.connectorData.length - 1, fromUser || data.status == 'new']);
     this.cd.detectChanges();
   }
 
