@@ -1067,4 +1067,9 @@ deleteLogService(query,index){
       canaryStartTimeMs : this.deploymentServiceInformation['v2StartTime']
     });
   }
+
+  // download logs data
+  downloadDebugData(id){
+    this.store.dispatch(DeploymentAction.downloadDebugData({canaryId: id}));
+  }
 }
