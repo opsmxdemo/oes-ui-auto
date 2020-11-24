@@ -29,6 +29,7 @@ export interface State {
     editTagResponse:any;
     deleteTagResponse:any;
     isloadedlogTopicsData:any;
+    stopLoadingCustomTags: any;
     
 }
 
@@ -54,6 +55,7 @@ export const initialState: State = {
     editTagResponse:null,
     deleteTagResponse:null,
     scoringAlgoResponse:null,
+    stopLoadingCustomTags: null
 }
 
 export function LogTemplateReducer(
@@ -147,14 +149,22 @@ export function LogTemplateReducer(
             (state,action) => ({
                 ...state,
                 isloadedResponseKey:false,
-                applicationId : action.applicationId
+                applicationId : action.applicationId,
+                stopLoadingCustomTags: false
             })
         ),
         on(ApplicationAction.fetchCustomTags,
             (state,action) => ({
                 ...state,
                 tags: action.tags,
-                isloadedResponseKey:true
+                isloadedResponseKey:true,
+                stopLoadingCustomTags: true
+            })
+        ),
+        on(ApplicationAction.stopLoadingCustomTags,
+            (state,action) => ({
+                ...state,
+                stopLoadingCustomTags: false
             })
         ),
         on(ApplicationAction.addCustomTags,

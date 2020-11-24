@@ -61,6 +61,7 @@ addedTag:any;
 removeTagId:any;
 scoringAlgoData :any;
 formBuilder = new FormBuilder();
+clusterTagCall: boolean;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
@@ -68,6 +69,7 @@ formBuilder = new FormBuilder();
     if(this.isEditMode && this.templateData != null){
       this.data = this.templateData;
       this.selectedTab = 'logtemplate-form';
+      this.clusterTagCall = true;
       this.setFormValues();
     }else{
       this.selectedTab = 'logtemplate-form';
@@ -106,13 +108,24 @@ formBuilder = new FormBuilder();
             this.store.dispatch(ApplicationActions.loadedDataSourceResponseKey());         
             this.responseKeys = responseData.responseKeys;          
         }
-        if(responseData.tags != null)
-        {
-          this.clusterTagList = responseData.tags
+        if(responseData.tags != null && this.clusterTagCall ){
+          this.store.dispatch(ApplicationActions.stopLoadingCustomTags());
+          this.clusterTagCall = false;
+          this.clusterTagList = responseData.tags;
+          if(this.isEditMode ){
+            this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+              (<FormArray>this.logTopicsForm.get('clusterList')).push(
+                new FormGroup({
+                  id: new FormControl(''),
+                  string: new FormControl(logClusterData.string),
+                  tag: new FormControl(logClusterData.tag)
+                })
+              );
+            });
+          }
         }
         if(responseData.scoringAlgoResponse != null)
         {
-
           this.scoringAlgoData = responseData.scoringAlgoResponse;
           if(this.isEditMode) {
             this.logTopicsForm.get('selectScoreAlgo').setValue(this.data.scoringAlgorithm);
@@ -151,7 +164,6 @@ formBuilder = new FormBuilder();
     this.onLogAccountSelect(this.data.accountName);
     this.selectedDataSource = this.data.monitoringProvider;
     // this.getLogTopics();
-    this.getTagsList();
     // this.logTopicsForm.get('topicsList').setValue(this.data.errorTopics);
     // this.logTopicsForm.get('topicsList').setValue(this.formBuilder.array([]));
     this.logTopicsData = this.data.errorTopics;
@@ -166,15 +178,22 @@ formBuilder = new FormBuilder();
     });
     // this.logTopicsForm.get('clusterList').setValue(this.data.tags);
     this.logClusterData = this.data.tags;
-    this.logClusterData.forEach((logClusterData, logClusterIndex) => {
-      (<FormArray>this.logTopicsForm.get('clusterList')).push(
-        new FormGroup({
-          id: new FormControl(''),
-          string: new FormControl(logClusterData.string),
-          tag: new FormControl(logClusterData.tag)
-        })
-      );
-    });
+    if(this.logClusterData != null && this.logClusterData != undefined){
+      this.clusterTagFlag = true;
+    }
+
+    this.getTagsList();
+    this.clusterTagCall = true;
+
+    // this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+    //   (<FormArray>this.logTopicsForm.get('clusterList')).push(
+    //     new FormGroup({
+    //       id: new FormControl(''),
+    //       string: new FormControl(logClusterData.string),
+    //       tag: new FormControl(logClusterData.tag)
+    //     })
+    //   );
+    // });
     if(this.data.tags.length > 0) {
       this.logTopicsForm.get('enableClusterTags').setValue(true);
     }
@@ -450,6 +469,7 @@ addNewClusterTag(){
   
   (<FormArray>this.logTopicsForm.get('clusterList')).push(
     new FormGroup({
+         id: new FormControl(''),
       string: new FormControl('', Validators.required),
       tag: new FormControl('', Validators.required)
     })
