@@ -703,8 +703,9 @@
                   <div class="chart_ratio mb-2 text-center d-flex   ">
                     <div class="chart_value flex-grow-1 padding10LeftRight"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Success','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
                       <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']>-1">{{serviceNameInfo['finalScore'] | roundOff}}</div>
-                      <div class="cv_heighlight"   [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
                       <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']<0"> - </div>
+                      <div class="cv_heighlight"   [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
+                      
                       
                     </div>
                     
