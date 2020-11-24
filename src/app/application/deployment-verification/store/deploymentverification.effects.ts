@@ -223,6 +223,24 @@ fetchServicesOfApplicationId = createEffect(() =>
             );
         })
     )
-)      
+)  
+
+
+// Below effect is use for fetch applications
+downloadLogsData = createEffect(() =>
+    this.actions$.pipe(
+        ofType(DeploymentActions.downloadDebugData),
+        switchMap((action) => {
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/debugLogsData?id=' + action.canaryId).pipe(
+                map(resdata => {
+                    return DeploymentActions.loadDownloadData();
+                }),
+                catchError(errorRes => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    )
+) 
 
 }

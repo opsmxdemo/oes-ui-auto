@@ -210,5 +210,18 @@ export function DeploymentdReducer(
                 isLoadedServicesOfApplication: false
             })         
         ),
+        on(DeploymentActions.downloadDebugData,
+            (state,action) => ({
+                ...state,
+                canaryId: action.canaryId,
+                isLoadedDownloadDebug: true
+            })
+        ),
+        on(DeploymentActions.loadedServicesOfApplication,
+            (state) => ({
+                ...state,
+                isLoadedDownloadDebug: false
+            })         
+        ),
     )(deploymentVerificationState,deploymentVerificationdActions);
 }

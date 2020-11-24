@@ -87,7 +87,7 @@ export class ApplicationDashboardComponent implements OnInit {
           this.supportVisibility(resdata.appData);
           this.store.dispatch(new LayoutAction.ApplicationData(this.applicationData.length));
           this.spinnerService = false;
-          //this.applicationFinalData = resdata.appData;
+          this.applicationFinalData = resdata.appData;
           if (this.previouSelectedApp != null) {
             this.previouSelectedApp = this.previouSelectedApp;
           } else {
@@ -169,7 +169,7 @@ export class ApplicationDashboardComponent implements OnInit {
     this.showAppDataType = appType;
     var appPresent = true
     for (let i = 0; i < this.applicationFinalData.length; i++) {
-      if (this.previouSelectedApp && this.previouSelectedApp.applicationId == this.applicationFinalData[i].applicationId) {
+      if ((this.previouSelectedApp && this.previouSelectedApp.applicationId) ==  (this.applicationFinalData[i] && this.applicationFinalData[i].applicationId)) {
         appPresent = true
         break;
       }

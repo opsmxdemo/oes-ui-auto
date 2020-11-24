@@ -123,16 +123,7 @@ export class CreateApplicationComponent implements OnInit {
   configuredFeature: any = {}
   isFeaturePresent: any = {}
 
-  todo = [
-    'Get to work',
-    'Pick up groceries',
-    'Go home',
-    'Fall asleep'
-  ];
-
-  done = [
-
-  ];
+ 
   selectedFeature = [];
   toolTemplateForm: FormGroup;
   toolTypeRowHoverd: any = [];
@@ -335,9 +326,6 @@ export class CreateApplicationComponent implements OnInit {
               });
             }
 
-           
-
-            
 
           
             if (this.editMode) {
@@ -471,14 +459,17 @@ export class CreateApplicationComponent implements OnInit {
           if(response.imageSourceListData != null && response.isfetchImageSourceLoaded){
             // console.log(response.imageSourceListData);
           //  this.onImageSourceSelect(response.imageSource);
+         if(response.imageSourceListData.imageSource != ''){
           this.configuredImage = response.imageSourceListData.imageSource;
+
+         }
             if(this.appData != null){
 
               this.prePopulateApplicationForm(this.appData);
            
             }
             if (response.callDockerImageDataAPI) {
-              this.onImageSourceSelect(response.imageSourceListData.imageSource);
+              this.onImageSourceSelect(this.configuredImage);
             }
           }
         }
@@ -566,7 +557,7 @@ export class CreateApplicationComponent implements OnInit {
             this.accountsForTooltypes[this.editVisibilityAccountsIndex] = response.accountsForToolType;
             
             let visibilityArr = <FormArray>this.visibilityForm.get('visibilityConfig');
-            visibilityArr.controls[this.editVisibilityAccountsIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityAccountsIndex].visibilityToolConnectorId);
+            // visibilityArr.controls[this.editVisibilityAccountsIndex].get('accountName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityAccountsIndex].visibilityToolConnectorId);
 
             this.editVisibilityAccountsIndex++;
           }
@@ -582,7 +573,7 @@ export class CreateApplicationComponent implements OnInit {
           }else if(this.editMode){
           this.templatesForToolType[this.editVisibilityTemplateIndex] = response.templatesForToolType;
             let visibilityTemplateArr = <FormArray>this.visibilityForm.get('visibilityConfig');
-            visibilityTemplateArr.controls[this.editVisibilityTemplateIndex].get('templateName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityTemplateIndex].templateId);
+            // visibilityTemplateArr.controls[this.editVisibilityTemplateIndex].get('templateName').setValue(this.configuredVisibilityToolConnectorData[this.editVisibilityTemplateIndex].templateId);
 
             this.editVisibilityTemplateIndex++;
           }
@@ -967,6 +958,7 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
   onImageSourceSelect(ImageSourceValue) {
+    this.configuredImage = ImageSourceValue;
     this.store.dispatch(ApplicationActions.loadDockerImageName({ imageSourceName: ImageSourceValue }));
   }
 
@@ -1282,21 +1274,22 @@ export class CreateApplicationComponent implements OnInit {
       this.createApplicationForm.controls.emailId.markAsTouched();
       return;
     }
+    
     this.appForm = this.createApplicationForm.value;
     if (this.createApplicationForm.value.name) {
       this.showFeatures = true;
     }
     //Below action is use to save created form in database
     if (this.editMode) {
-       this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
+       this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData:  this.createApplicationForm.value}));
        this.loadServiceForm();
     } else {
       if(this.applicationId != null){
         this.appPrimaryEdit = true;
-        this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData: this.appForm}));
+        this.store.dispatch(ApplicationActions.updateApplication({applicationId: this.applicationId,appData:  this.createApplicationForm.value}));
         this.loadServiceForm();
       }else{
-        this.store.dispatch(ApplicationActions.saveApplication({ applicationData: this.appForm }));
+        this.store.dispatch(ApplicationActions.saveApplication({ applicationData:  this.createApplicationForm.value }));
         this.loadServiceForm();
       }
      
@@ -1362,18 +1355,22 @@ export class CreateApplicationComponent implements OnInit {
   // Below funcion is use to submit sapor data
   SubmitSaporForm(serviceIndex) {
     // console.log(JSON.stringify(this.servicesForm.value.services[serviceIndex]));
+
+    let serviceFormar = <FormArray> this.servicesForm.controls.services;
+    let serviceObj = <FormGroup> serviceFormar.controls[serviceIndex];
+  
     const postSapor = {
       applicationId: this.applicationId,
       serviceId: this.serviceId,
       service: {
-        serviceName: this.servicesForm.value.services[serviceIndex].serviceName,
+        serviceName: serviceObj.controls.serviceName.value,
         pipelines: this.servicesForm.value.services[serviceIndex].saporConfiguration['pipelines']
       }
     }
 
     // console.log(JSON.stringify(postSapor));
 
-    if(this.editMode){
+    if(this.editMode && this.saporFinalData != null){
       this.store.dispatch(ApplicationActions.updateSaporConfig({ applicationId: this.applicationId, serviceId: this.serviceId, saporConfigData: postSapor}));
 
     }else{
@@ -1772,6 +1769,11 @@ export class CreateApplicationComponent implements OnInit {
 
   deleteVisibilityFeature() {
     this.store.dispatch(ApplicationActions.deleteVisibilityFeature({ serviceId: this.serviceId, gateId: this.gateId }));
+    this.gateId = '';
+    this.gateForm.controls.gateName.enable();
+    this.gateForm.controls.gateName.setValue('');
+    this.gateForm.controls.gateName.setErrors(null);
+    this.gateForm.controls.gateName.setValidators([Validators.required, this.cannotContainSpace.bind(this)]);
   }
 
   closeTemplatePopup() {
@@ -1847,7 +1849,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   loadEnvironmentsForm() {
-    // debugger
+    
     // this.environmentForm.reset();
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
@@ -1951,7 +1953,7 @@ export class CreateApplicationComponent implements OnInit {
         name: new FormControl(appData.name),
         emailId: new FormControl(appData.email, [Validators.required, Validators.email]),
         description: new FormControl(appData.description),
-        imageSource: new FormControl(this.configuredImage),
+        imageSource: new FormControl(''),
         lastUpdatedTimestamp: new FormControl(appData.lastUpdatedTimestamp)
       });
     }

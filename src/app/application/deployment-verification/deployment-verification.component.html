@@ -513,13 +513,13 @@
           <mat-drawer-container class="example-container" autosize>
             <mat-drawer #sideNav class="example-sidenav" [position]="'end'" mode="side" opened="false">
               <div class="rightBox m-0 position-sticky">
-                <!-- <div class="rightBox_header bg-white d-flex align-items-center">
+                <div class="rightBox_header bg-white d-flex align-items-center">
                   <div class="btns_icon d-flex ml-auto">
-                    <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download"><img src="../../../assets/images/download.png" alt="download" /></button>
-                    <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Add"><img src="../../../assets/images/plus_icon.png" alt="plus" /></button>
-                    <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><img src="../../../assets/images/edit_icon.png" alt="edit" /></button>
+                    <button class="btn p-0" data-toggle="tooltip" data-placement="top" title="Download debug data" (click)="downloadDebugData(canaryId)"><img src="../../../assets/images/download.png" alt="download" /></button>
+                    <!-- <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Add"><img src="../../../assets/images/plus_icon.png" alt="plus" /></button>
+                    <button class="btn p-0 ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><img src="../../../assets/images/edit_icon.png" alt="edit" /></button> -->
                   </div>
-                </div> -->
+                </div>
                 <div class="rightBox_body pt-0">
                   
                   
@@ -702,7 +702,7 @@
                 <div class="summaryToggleBtn d-flex ml20">
                   <div class="chart_ratio mb-2 text-center d-flex   ">
                     <div class="chart_value flex-grow-1 padding10LeftRight"  [ngClass]= "{'cv_high':serviceNameInfo['status'] === 'Success','cv_low':serviceNameInfo['status'] === 'Fail','cv_medium':serviceNameInfo['status'] === 'Review'}">
-                      <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']>-1">{{serviceNameInfo['finalScore']}}</div>
+                      <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']>-1">{{serviceNameInfo['finalScore'] | roundOff}}</div>
                       <div class="cv_heighlight" *ngIf="serviceNameInfo['finalScore']>-1"  [ngClass]= "{'text-danger':serviceNameInfo['status'] === 'Fail','text-success':serviceNameInfo['status'] === 'Success','text-warning':serviceNameInfo['status'] === 'Review','text-muted':serviceNameInfo['status'] === 'InProgress'}">{{serviceNameInfo['status']}}</div>                      
                       <div class="cv_heighlight"  *ngIf="serviceNameInfo['finalScore']<0"> - </div>
                       
@@ -711,7 +711,7 @@
                   </div>
                   <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Metrics Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20">
                     <div class="chart_value flex-grow-1" [ngClass]= "{'cv_high':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">{{serviceNameInfo['metricScore']}}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['metricScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['metricScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['metricScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['metricScore'] > deploymentApplicationHealth['minimumCanaryScore']}">{{serviceNameInfo['metricScore'] | roundOff}}</div>
                       <div class="cv_heighlight" *ngIf="serviceNameInfo['metricScore']<0 || serviceNameInfo['metricScore']==null"> - </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name" >Metrics</div>
@@ -740,7 +740,7 @@
                   </div>
                   <div *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" class="chart_ratio mb-2 text-center d-flex widthDetailScore ml20" >
                     <div class="chart_value padding5LeftRight  flex-grow-1" [ngClass]= "{'cv_high':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'cv_low':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'cv_medium':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}">
-                      <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}" >{{serviceNameInfo['logsScore'] }}</div>
+                      <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']>-1" [ngClass]= "{'text-danger':serviceNameInfo['logsScore'] <= deploymentApplicationHealth['minimumCanaryScore'],'text-success':serviceNameInfo['logsScore'] >= deploymentApplicationHealth['maximumCanaryScore'],'text-warning':serviceNameInfo['logsScore'] < deploymentApplicationHealth['maximumCanaryScore'] && serviceNameInfo['logsScore'] > deploymentApplicationHealth['minimumCanaryScore']}" >{{serviceNameInfo['logsScore'] | roundOff }}</div>
                       <div class="cv_heighlight" *ngIf="serviceNameInfo['logsScore']<0 || serviceNameInfo['logsScore']==null"> - </div>
                       <!-- /.cv_heighlight -->
                       <div class="cv_name">Logs</div>
