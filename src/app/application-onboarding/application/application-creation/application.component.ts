@@ -314,7 +314,6 @@ export class CreateApplicationComponent implements OnInit {
               this.prePopulateApplicationForm(this.appData);
               
               if (responseData.callDockerImageDataAPI) {
-                debugger
                 this.onImageSourceSelect(this.configuredImage);
               }
             }else{
@@ -460,7 +459,6 @@ export class CreateApplicationComponent implements OnInit {
           if(response.imageSourceListData != null && response.isfetchImageSourceLoaded){
             // console.log(response.imageSourceListData);
           //  this.onImageSourceSelect(response.imageSource);
-         debugger
          if(response.imageSourceListData.imageSource != ''){
           this.configuredImage = response.imageSourceListData.imageSource;
 
@@ -1276,7 +1274,7 @@ export class CreateApplicationComponent implements OnInit {
       this.createApplicationForm.controls.emailId.markAsTouched();
       return;
     }
-    debugger
+    
     this.appForm = this.createApplicationForm.value;
     if (this.createApplicationForm.value.name) {
       this.showFeatures = true;
@@ -1851,7 +1849,7 @@ export class CreateApplicationComponent implements OnInit {
   }
 
   loadEnvironmentsForm() {
-    // debugger
+    
     // this.environmentForm.reset();
     this.environmentForm = new FormGroup({
       environments: new FormArray([])
