@@ -600,7 +600,7 @@ deleteLogService(query,index){
       },
       "canaryDeployments": canaryDeploymentArray
     };
-    //this.submitManualTriggerData();
+    this.submitManualTriggerData();
 
   }
 
