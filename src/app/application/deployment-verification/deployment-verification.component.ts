@@ -135,7 +135,7 @@ export class DeploymentVerificationComponent implements OnInit {
   public date: moment.Moment;
   public disabled = false;
   public showSpinners = true;
-  public showSeconds = false;
+  public showSeconds = true;
   public touchUi = false;
   public enableMeridian = false;
   public minDate: moment.Moment;
@@ -310,10 +310,42 @@ export class DeploymentVerificationComponent implements OnInit {
         } else {
           this.tableIsEmpty = true;
         }
-        if (resData.servicesOfApplicationId != null && resData.isLoadedServicesOfApplication) {
+        if (resData.servicesOfApplication != null && resData.isLoadedServicesOfApplication) {
           this.store.dispatch(DeploymentAction.loadedServicesOfApplication());
-          this.servicesOfApplication = resData.servicesOfApplicationId.autopilotService;
-          console.log(this.servicesOfApplication);
+          this.servicesOfApplication = resData.servicesOfApplication.services;
+          
+          if(this.servicesOfApplication && this.servicesOfApplication.length > 0){            
+            const identifiers = this.logServiceForm.get('identifiers') as FormArray;
+            const serviceRow = identifiers.at(0) as FormGroup;    
+            serviceRow.patchValue({
+              service: this.servicesOfApplication[0].name
+            })
+            const identifiersm = this.metricServiceForm.get('identifiers') as FormArray;
+            const serviceRowm = identifiersm.at(0) as FormGroup;    
+            serviceRowm.patchValue({
+              service: this.servicesOfApplication[0].name
+            })
+            
+            identifiers.controls[0].get('service').enable();
+            identifiers.controls[0].get('baseline').enable();
+            identifiers.controls[0].get('canary').enable();
+            
+            
+            identifiersm.controls[0].get('service').enable();
+            identifiersm.controls[0].get('baseline').enable();
+            identifiersm.controls[0].get('canary').enable();
+          }else{
+            //disable identifires table when no service available
+            const identifiers = this.logServiceForm.get('identifiers') as FormArray;
+            identifiers.controls[0].get('service').disable();
+            identifiers.controls[0].get('baseline').disable();
+            identifiers.controls[0].get('canary').disable();
+            
+            const identifiersm = this.metricServiceForm.get('identifiers') as FormArray;
+            identifiersm.controls[0].get('service').disable();
+            identifiersm.controls[0].get('baseline').disable();
+            identifiersm.controls[0].get('canary').disable();
+          }
 
         }
       }
@@ -322,7 +354,7 @@ export class DeploymentVerificationComponent implements OnInit {
     this.store.select('appDashboard').subscribe(
       (resData) => {
         if(resData.appData != null){
-          console.log(resData.appData);
+          //console.log(resData.appData);
           this.applications = resData.appData;
         }
       });
@@ -372,14 +404,14 @@ serviceListDummy = {
 
 initializeForms(){
   this.manualTriggerForm = new FormGroup({
-    application: new FormControl('',Validators.required),
+    application: new FormControl('',Validators.required),    
     lifetimeHours: new FormControl('', Validators.required),
     beginCanaryAnalysisAfterMins: new FormControl('', Validators.required),
     canaryAnalysisIntervalMins: new FormControl('', Validators.required),  
     minimumCanaryResultScore: new FormControl(),
-    minimumMetricsResultScore: new FormControl(),  
+    //minimumMetricsResultScore: new FormControl(),  
     canaryResultScore: new FormControl(),
-    successMetricsResultScore: new FormControl(),
+    //successMetricsResultScore: new FormControl(),
     baselineStartTimeMs : new FormControl(),
     canaryStartTimeMs : new FormControl()      
   }); 
@@ -390,9 +422,9 @@ initializeForms(){
 
   (<FormArray>this.logServiceForm.get('identifiers')).push(
     new FormGroup({
-      service : new FormControl(),
-      baseline: new FormControl(),
-      canary: new FormControl()
+      service : new FormControl('',Validators.required),
+      baseline: new FormControl('',Validators.required),
+      canary: new FormControl('',Validators.required)
     })
   );
 
@@ -402,9 +434,9 @@ initializeForms(){
 
   (<FormArray>this.metricServiceForm.get('identifiers')).push(
     new FormGroup({
-      service : new FormControl(),
-      baseline: new FormControl(),
-      canary: new FormControl()
+      service : new FormControl('',Validators.required),
+      baseline: new FormControl('',Validators.required),
+      canary: new FormControl('',Validators.required)
     })
   );
 }
@@ -469,21 +501,55 @@ deleteLogService(query,index){
       this.manualTriggerForm.controls.beginCanaryAnalysisAfterMins.markAsTouched();
       this.manualTriggerForm.controls.canaryAnalysisIntervalMins.markAsUntouched();
       this.manualTriggerForm.controls.canaryAnalysisIntervalMins.markAsTouched();
+      this.manualTriggerForm.controls.canaryStartTimeMs.markAsUntouched();
+      this.manualTriggerForm.controls.canaryStartTimeMs.markAsTouched();
+      this.manualTriggerForm.controls.baselineStartTimeMs.markAsUntouched();
+      this.manualTriggerForm.controls.baselineStartTimeMs.markAsTouched();
+      this.manualTriggerForm.controls.minimumCanaryResultScore.markAsUntouched();
+      this.manualTriggerForm.controls.minimumCanaryResultScore.markAsTouched();
+      this.manualTriggerForm.controls.canaryResultScore.markAsUntouched();
+      this.manualTriggerForm.controls.canaryResultScore.markAsTouched();
       return;
     }
+   
+    if(this.logServiceForm.invalid){
+      var logArray1= this.logServiceForm.get('identifiers') as FormArray;
+      for(var i=0;i<logArray1.length;i++){
+        logArray1['controls'][i]['controls'].service.markAsUntouched();
+        logArray1['controls'][i]['controls'].service.markAsTouched();
+        logArray1['controls'][i]['controls'].baseline.markAsUntouched();
+        logArray1['controls'][i]['controls'].baseline.markAsTouched();
+        logArray1['controls'][i]['controls'].canary.markAsUntouched();
+        logArray1['controls'][i]['controls'].canary.markAsTouched();
+      }
+      return;
+    }
+
+    if(this.metricServiceForm.invalid){
+      var metricArray1= this.metricServiceForm.get('identifiers') as FormArray;
+      for(var i=0;i<metricArray1.length;i++){
+        metricArray1['controls'][i]['controls'].service.markAsUntouched();
+        metricArray1['controls'][i]['controls'].service.markAsTouched();
+        metricArray1['controls'][i]['controls'].baseline.markAsUntouched();
+        metricArray1['controls'][i]['controls'].baseline.markAsTouched();
+        metricArray1['controls'][i]['controls'].canary.markAsUntouched();
+        metricArray1['controls'][i]['controls'].canary.markAsTouched();
+      }
+      return;
+    }
+
     let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
     let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;
     
     var logArray= this.logServiceForm.value.identifiers;
     var logbaselineObj = {};
     for(var i=0;i<logArray.length;i++){
-      logbaselineObj[logArray[i].service] = logArray[i].baseline;
+      logbaselineObj[logArray[i].service] = logArray[i].baseline;      
     }
     var logcanaryObj = {};
     for(var i=0;i<logArray.length;i++){
-      logcanaryObj[logArray[i].service] = logArray[i].canary;
+      logcanaryObj[logArray[i].service] = logArray[i].canary;     
     }
-
     var metricArray= this.metricServiceForm.value.identifiers;
     var metricbaselineObj = {};
     for(var i=0;i<metricArray.length;i++){
@@ -519,11 +585,11 @@ deleteLogService(query,index){
         },
         "canaryHealthCheckHandler": {
           "minimumCanaryResultScore": this.manualTriggerForm.value.minimumCanaryResultScore,
-          "minimumMetricsResultScore": this.manualTriggerForm.value.minimumMetricsResultScore,
+          //"minimumMetricsResultScore": this.manualTriggerForm.value.minimumMetricsResultScore,
         },
         "canarySuccessCriteria": {
           "canaryResultScore": this.manualTriggerForm.value.canaryResultScore,
-          "successMetricsResultScore": this.manualTriggerForm.value.successMetricsResultScore,
+          //"successMetricsResultScore": this.manualTriggerForm.value.successMetricsResultScore,
         },
         "combinedCanaryResultStrategy": "AGGREGATE",
         "lifetimeHours": this.manualTriggerForm.value.lifetimeHours,
@@ -531,21 +597,21 @@ deleteLogService(query,index){
       },
       "canaryDeployments": canaryDeploymentArray
     };
-    this.submitManualTriggerData();
+    //this.submitManualTriggerData();
 
   }
 
   // Below function is execute on click of Form or Editor tab.
   onManualTriggerClickTab(event) {
     if (event.target.id === 'manualTrigger-form-tab') {
-      this.selectedManualTriggerTab = "manualTrigger-form-tab";
+      this.selectedManualTriggerTab = "manualTrigger-form-tab";      
     } else if (event.target.id === 'manualTrigger-editor-tab') {
       this.selectedManualTriggerTab = "manualTrigger-editor-tab";
     }
   }
 
   onChangeApplicationManualTrigger(applicationListIndex){
-    const applicationId  = this.applications[applicationListIndex - 1].applicationId;
+    const applicationId  = this.deployementApplications[applicationListIndex - 1].applicationId;
     this.store.dispatch(DeploymentAction.fetchServicesOfApplication({applicationId : applicationId}));
   }
 
@@ -1054,17 +1120,25 @@ deleteLogService(query,index){
   }
 
   prepopulateTriggerCanaryForm(){
-    this.manualTriggerForm.patchValue({
+    if(this.deployementApplications){
+      var applicationIndex = this.deployementApplications.findIndex(x => x.applicationName == this.selectedApplicationName); 
+      this.onChangeApplicationManualTrigger(applicationIndex+1); 
+    }
+    this.manualTriggerForm.setValue({
       application : this.selectedApplicationName,
       beginCanaryAnalysisAfterMins: this.deploymentServiceInformation['beginCanaryAnalysisAfterMins'],
       canaryAnalysisIntervalMins : this.deploymentServiceInformation['canaryAnalysisIntervalMins'],
       lifetimeHours: this.deploymentServiceInformation['lifetimeInHours'],
-      //minimumCanaryResultScore: new FormControl(),
+      minimumCanaryResultScore: this.deploymentServiceInformation['minimumCanaryResultScore'],
       //minimumMetricsResultScore: new FormControl(),  
-      //canaryResultScore: new FormControl(),
+      canaryResultScore: this.deploymentServiceInformation['canaryResultScore'],
       //successMetricsResultScore: new FormControl(),
-      baselineStartTimeMs : this.deploymentServiceInformation['v1StartTime'],
-      canaryStartTimeMs : this.deploymentServiceInformation['v2StartTime']
+      baselineStartTimeMs : new Date(this.deploymentServiceInformation['v1StartTime']),
+      canaryStartTimeMs : new Date(this.deploymentServiceInformation['v2StartTime'])
     });
+    // this.manualTriggerForm.setValue({
+    //     canaryStartTimeMs : new Date(this.deploymentServiceInformation['v2StartTime']),
+    //     baselineStartTimeMs : new Date(this.deploymentServiceInformation['v1StartTime']),
+    //   });
   }
 }

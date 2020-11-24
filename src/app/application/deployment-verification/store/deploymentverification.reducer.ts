@@ -23,7 +23,7 @@ export interface State {
     isloadedApplicationHealth:boolean;
     isloadedServiceInformation : boolean;
 
-    servicesOfApplicationId : any;    
+    servicesOfApplication : any;    
     isLoadedServicesOfApplication:boolean;
     applicationId : any;
 }
@@ -47,7 +47,7 @@ export const initialState: State = {
     isloadedApplicationHealth:false,
     isloadedServiceInformation : false,
 
-    servicesOfApplicationId : null,
+    servicesOfApplication : null,
     isLoadedServicesOfApplication:false,
     applicationId : null
 }
@@ -193,7 +193,7 @@ export function DeploymentdReducer(
         on(DeploymentActions.loadServicesOfApplication,
             (state,action) => ({
                 ...state,
-                servicesOfApplicationId: action.servicesOfApplication,
+                servicesOfApplication: action.servicesOfApplication,
                 isLoadedServicesOfApplication:true
             })
         ),
