@@ -207,11 +207,13 @@ fetchManualTriggerResults = createEffect(() =>
 )
 
 // Below effect is use for fetch applications
+//'dashboardservice/v2/applications/' + action.applicationId).pipe(
+///autopilot/api/v1/applications/{applicationId}
 fetchServicesOfApplicationId = createEffect(() =>
     this.actions$.pipe(
         ofType(DeploymentActions.fetchServicesOfApplication),
         switchMap((action) => {
-            return this.http.get(this.environment.config.endPointUrl +'dashboardservice/v2/applications/' + action.applicationId).pipe(
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/api/v1/applications/' + action.applicationId).pipe(
                 map(resdata => {
                     return DeploymentActions.loadServicesOfApplication({servicesOfApplication:resdata});
                 }),
