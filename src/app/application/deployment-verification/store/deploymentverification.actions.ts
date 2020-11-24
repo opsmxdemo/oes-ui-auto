@@ -40,7 +40,7 @@ export const loadServicesOfApplication = createAction('[DeploymentVerification] 
 export const loadedServicesOfApplication = createAction('[DeploymentVerification] LoadedServicesOfApplication');
 
 export const downloadDebugData = createAction('[DeploymentVerification] DownloadDebugData', props<{canaryId: any}>());
-export const loadDownloadData = createAction('[DeploymentVerification] LoadDownloadData');
-// export const loadedServicesOfApplication = createAction('[DeploymentVerification] LoadedServicesOfApplication');
+export const loadDownloadData = createAction('[DeploymentVerification] LoadDownloadData', props<{ debugDataResponse: any }>());
+export const loadedDebugData = createAction('[DeploymentVerification] LoadedDebugData');
 
 
