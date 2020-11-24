@@ -1,0 +1,24 @@
+<div class="table table-outline tableoutline">
+    <!-- <thead> -->
+    <div class="grid-4-columns">
+        <div class="header">Connector <i data-toggle="tooltip" data-placement="top"
+                data-original-title="Tool to gather information for informed Approvals" class="fa fa-question-circle"
+                aria-hidden="true"></i></div>
+        <div class="header">Account <i data-toggle="tooltip" data-placement="top"
+                data-original-title="Account name of the connector" class="fa fa-question-circle"
+                aria-hidden="true"></i></div>
+        <div class="header">Template <i data-toggle="tooltip" data-placement="top"
+                data-original-title="Define the specific fields of interest from connector"
+                class="fa fa-question-circle" aria-hidden="true"></i></div>
+        <div class="header text-right">
+            <a (click)="addNewConnector('', true)" data-toggle="tooltip" data-placement="top"
+                *ngIf="service.addNewConnectorAllowed && !hideVisibilityPlusIcon"
+                data-original-title="Add New Connector"><i class="fas fa-plus"></i></a></div>
+    </div>
+    <!-- </thead> -->
+    <!-- <tbody> -->
+    <div *ngFor="let connector of service.connectorData;let i=index">
+        <app-connector-template-row [index]="i" (edited)="rowEdited($event)"></app-connector-template-row>
+    </div>
+    <!-- </tbody> -->
+</div>

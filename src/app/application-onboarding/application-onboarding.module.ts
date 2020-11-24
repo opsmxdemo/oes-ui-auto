@@ -28,6 +28,10 @@ import { CreateDataSourceComponent } from './data-source/create-data-source/crea
 import { DataSourceFormsComponent } from './data-source/create-data-source/data-source-forms/data-source-forms.component';
 import { NonAdminPipe } from '../pipes/nonAdmin.pipe';
 import { ClipboardModule } from 'ngx-clipboard';
+import { ConnectorTemplateConfigComponent } from './application/application-creation/connector-template-config/connector-template-config.component';
+import { ConnectorTemplateConfigService } from './application/application-creation/connector-template-config/connector-template-config.service';
+import { ConnectorTemplateRowComponent } from './application/application-creation/connector-template-config/connector-template-row/connector-template-row.component';
+import { ConnectorTemplateComponent } from './application/application-creation/connector-template-config/connector-template/connector-template.component';
 
 
 @NgModule({
@@ -43,7 +47,10 @@ import { ClipboardModule } from 'ngx-clipboard';
       LogTemplateComponent,
       DataSourceFormsComponent,
       CreateDataSourceComponent,
-      NonAdminPipe
+      NonAdminPipe,
+      ConnectorTemplateConfigComponent,
+      ConnectorTemplateRowComponent,
+      ConnectorTemplateComponent
     ],
     imports: [
      CommonModule,
@@ -65,6 +72,7 @@ import { ClipboardModule } from 'ngx-clipboard';
      ]),
      ClipboardModule
     ],
+    providers: [ConnectorTemplateConfigService]
   })
   export class ApplicationOnboardingModule { }
   
