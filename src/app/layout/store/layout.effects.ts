@@ -147,7 +147,7 @@ export class LayoutEffect {
                             "subMenu": [
                               {
                                 "id": 26,
-                                "name": "Release Manager",
+                                "name": "Release Management",
                                 "link": "sapor",
                                 "disabled": true
                               },
