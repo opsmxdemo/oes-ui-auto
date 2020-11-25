@@ -19,6 +19,10 @@ import { SharedModule } from './shared.module';
 
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
+FusionCharts.options["license"]({
+    key: "RjD2fA-21qC3E4A1A4F4H3C7C9B6B1D4F5poiB9D2A7iC4B4A3I-8J-7jA5C5B3tpgI2D1A4tllE2B4G1A2E2B6C5A3E6D4C4ckeC8D5PF4kmA-8D2G1B6ue1C2KC1C1I-8I-7oB1E6B1B3H3E2A14A19A6C5C6D3A1G4w==",
+    creditLabel: false,
+    })
 @NgModule({
     declarations: [
         AreaChartComponent,
