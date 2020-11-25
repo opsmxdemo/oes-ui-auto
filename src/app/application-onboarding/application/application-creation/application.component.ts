@@ -1931,7 +1931,7 @@ export class CreateApplicationComponent implements OnInit {
     else if(featureName == 'visibility')
       return "Visibility";
     else if(featureName == 'sapor')
-      return "Sapor";
+      return "Release Management";
     else
       return featureName;
   }
