@@ -105,7 +105,154 @@ export class LayoutEffect {
         switchMap(() => {
             return this.http.get<Menu>(this.environment.config.endPointUrl+'dashboardservice/v2/dynamicMenu').pipe(
                 map(resData => {
-                    return new LayoutAction.SideBarFetch(resData['menu']);
+                    let response: any = {
+                        "menu": [
+                          {
+                            "id": 1,
+                            "name": "Dashboard",
+                            "link": "",
+                            "disabled": false,
+                            "subMenu": [
+                              {
+                                "id": 22,
+                                "name": "CD Dashboard",
+                                "link": "cddashboard",
+                                "disabled": false
+                              },
+                              {
+                                "id": 22,
+                                "name": "Verification Dashboard",
+                                "link": "application",
+                                "disabled": false
+                              },
+                              {
+                                "id": 23,
+                                "name": "Analytics",
+                                "link": "analytics",
+                                "disabled": true
+                              },
+                              {
+                                "id": 24,
+                                "name": "Collaboration",
+                                "link": "collaboration",
+                                "disabled": true
+                              }
+                            ]
+                          },
+                          {
+                            "id": 2,
+                            "name": "Continuous Delivery",
+                            "link": "",
+                            "disabled": false,
+                            "subMenu": [
+                              {
+                                "id": 26,
+                                "name": "Release Manager",
+                                "link": "sapor",
+                                "disabled": true
+                              },
+                              {
+                                "id": 27,
+                                "name": "Visibility and Approval",
+                                "link": "/application/visibility",
+                                "disabled": false
+                              }
+                            ]
+                          },
+                          {
+                            "id": 3,
+                            "name": "Continuous Verification",
+                            "link": "",
+                            "disabled": false,
+                            "subMenu": [
+                              {
+                                "id": 28,
+                                "name": "Build",
+                                "link": "build",
+                                "disabled": true
+                              },
+                              {
+                                "id": 29,
+                                "name": "Test",
+                                "link": "test",
+                                "disabled": true
+                              },
+                              {
+                                "id": 30,
+                                "name": "Deployment",
+                                "link": "/application/deploymentverification",
+                                "disabled": false
+                              },
+                              {
+                                "id": 31,
+                                "name": "Production",
+                                "link": "production",
+                                "disabled": true
+                              },
+                              {
+                                "id": 32,
+                                "name": "Trend Analysis",
+                                "link": "/application/trendanalysis",
+                                "disabled": false
+                              }
+                            ]
+                          },
+                          {
+                            "id": 4,
+                            "name": "Security",
+                            "link": "",
+                            "disabled": false,
+                            "subMenu": [
+                              {
+                                "id": 33,
+                                "name": "Access Management",
+                                "link": "access",
+                                "disabled": true
+                              },
+                              {
+                                "id": 34,
+                                "name": "Audit Trail",
+                                "link": "audit",
+                                "disabled": false
+                              },
+                              {
+                                "id": 35,
+                                "name": "Secret Management",
+                                "link": "secret",
+                                "disabled": true
+                              }
+                            ]
+                          },
+                          {
+                            "id": 5,
+                            "name": "Compliance",
+                            "link": "",
+                            "disabled": false,
+                            "subMenu": [
+                              {
+                                "id": 36,
+                                "name": "Policy Management",
+                                "link": "policymanagement",
+                                "disabled": false
+                              },
+                              {
+                                "id": 37,
+                                "name": "Governance",
+                                "link": "test",
+                                "disabled": true
+                              } 
+                            ]
+                          },
+                          {
+                            "id": 6,
+                            "name": "System Setup",
+                            "link": "setup",
+                            "disabled": false,
+                            "subMenu": []
+                          }
+                        ]
+                      };
+                    return new LayoutAction.SideBarFetch(response.menu);
                 }),
                 catchError(errorRes => {
                     return handleError(errorRes,1);
