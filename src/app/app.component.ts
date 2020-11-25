@@ -145,7 +145,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     // fetching current route if deploymentVerification is exist then collapse left side menu.
     setTimeout(()=>{
       if(this.router.url.includes('deploymentverification')){
-        this.addclass = true;
+        // this.addclass = true;
         this.hideTooltip=false;
       }
     },1000)

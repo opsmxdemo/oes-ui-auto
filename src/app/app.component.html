@@ -8,10 +8,6 @@
       <div class="sidebar_nav">
         <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;let i = index" >
           <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" (click)="toggleSubMenu(i, SideMenu.link)"><a><i class="{{menuIcons(SideMenu.name) ? menuIcons(SideMenu.name) + ' menu-icons' : SideMenu.link + ' icon'}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'"></i> <span>{{SideMenu.name }} 
-            <ng-template [ngIf]="SideMenu.name === 'Continuous Verification' ?true:false">
-              <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Applications">{{applicationCount}}</span>
-              <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Active gates">{{approvalGateInstanceCount}}</span>
-            </ng-template>
             </span></a>
           </li>
             <div *ngIf="showChildMenu(SideMenu, i)">
@@ -21,7 +17,12 @@
                   <i class="icon-new fa fa-line-chart" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/trendanalysis'"></i>
                   <i class="icon-new fa fa-eye" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/visibility'"></i>
                   <!-- <i class="{{subMenuclass(submenu.link)}}"></i>  -->
-                  <span>{{submenu.name}}</span></a></li>
+                  <span>{{submenu.name}}
+                    <ng-template [ngIf]="submenu.name === 'Verification Dashboard' ?true:false">
+                      <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Applications">{{applicationCount}}</span>
+                      <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Active gates">{{approvalGateInstanceCount}}</span>
+                    </ng-template>
+                  </span></a></li>
               </ul>
             </div>
         </ul>
