@@ -538,41 +538,59 @@ deleteLogService(query,index){
     }
 
 
-    let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
-    let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;
+    // let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
+    // let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;
+
+    let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs;
+    let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs;
     
     var logArray= this.logServiceForm.value.identifiers;
     var logbaselineObj = {};
     for(var i=0;i<logArray.length;i++){
-      logbaselineObj[logArray[i].service] = logArray[i].baseline;      
+      if(logArray[i].baseline != ""){
+        logbaselineObj[logArray[i].service] = logArray[i].baseline;
+      }            
     }
     var logcanaryObj = {};
     for(var i=0;i<logArray.length;i++){
-      logcanaryObj[logArray[i].service] = logArray[i].canary;     
+      if( logArray[i].canary != ""){
+        logcanaryObj[logArray[i].service] = logArray[i].canary;
+      }           
     }
     var metricArray= this.metricServiceForm.value.identifiers;
     var metricbaselineObj = {};
     for(var i=0;i<metricArray.length;i++){
-      metricbaselineObj[metricArray[i].service] = metricArray[i].baseline;
+      if(metricArray[i].baseline != ""){
+        metricbaselineObj[metricArray[i].service] = metricArray[i].baseline;
+      }      
     }
     var metriccanaryObj = {};
     for(var i=0;i<metricArray.length;i++){
-      metriccanaryObj[metricArray[i].service] = metricArray[i].canary;
+      if(metricArray[i].canary != ""){
+        metriccanaryObj[metricArray[i].service] = metricArray[i].canary;
+      }      
     }
+
     var canaryDeploymentArray = [
       {
-        "baseline": {
-          "log": logbaselineObj,
-          "metric": metricbaselineObj
-        },
+        "baseline": {},
         "baselineStartTimeMs": new Date(baselineStartTimeMs).getTime(),
         "canaryStartTimeMs": new Date(canaryStartTimeMs).getTime(),
-        "canary": {
-          "log": logcanaryObj,
-          "metric": metriccanaryObj
-        }
+        "canary": {}
       }
     ];
+
+    if( Object.keys(metricbaselineObj).length > 0 && Object.keys(metriccanaryObj).length > 0){
+      canaryDeploymentArray[0].baseline['metric'] = metricbaselineObj;
+      canaryDeploymentArray[0].canary['metric'] = metriccanaryObj;
+    }
+
+    if( Object.keys(logbaselineObj).length > 0 && Object.keys(logcanaryObj).length > 0){
+      canaryDeploymentArray[0].baseline['log'] = logbaselineObj;
+      canaryDeploymentArray[0].canary['log'] = logcanaryObj;
+    }
+
+    
     
     this.manualTriggerData =    {
       "application": this.manualTriggerForm.value.application,
