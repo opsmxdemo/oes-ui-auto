@@ -190,7 +190,14 @@ export class DeploymentVerificationComponent implements OnInit {
     this.selectedTab = '';
     this.getAllApplications();
 
-    this.store.dispatch(ApplicationDashbordAction.loadAppDashboard());
+    this.store.select('auth').subscribe(
+      (response) => {
+        if(response.authenticated){
+           this.store.dispatch(ApplicationDashbordAction.loadAppDashboard());
+        }
+      });
+
+  
     this.initializeForms();
 
     if (this.route.params['_value'].applicationName != null && this.route.params['_value'].canaryId != null) {
