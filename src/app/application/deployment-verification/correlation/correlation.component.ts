@@ -160,8 +160,13 @@ export class CorrelationComponent implements OnInit,OnChanges {
   
     
     
-    this.store.dispatch(CorrelationAction.fetchUnxepectedClusters({ canaryId: this.canaryId, serviceId: this.serviceId }));
-     this.store.dispatch(CorrelationAction.allMetrics({ canaryId: this.canaryId, serviceId: this.serviceId }));
+    if(this.analysisType=='Logs Only' || this.analysisType=='Logs and Metrics'){
+      this.store.dispatch(CorrelationAction.fetchUnxepectedClusters({ canaryId: this.canaryId, serviceId: this.serviceId }));
+    }
+
+    if(this.analysisType=='Metrics Only' || this.analysisType=='Logs and Metrics'){
+      this.store.dispatch(CorrelationAction.allMetrics({ canaryId: this.canaryId, serviceId: this.serviceId }));
+    }
     this.store.select(fromFeature.selectCorrelationState).subscribe(
       (resData) => {
         if(resData.unexpectedClusters != null)
