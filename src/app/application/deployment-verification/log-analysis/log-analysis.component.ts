@@ -802,6 +802,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
   }
   //Function to rerun logs after reclassification
   rerunLogs() {
+    $("[data-toggle='tooltip']").tooltip('hide');
     var postDataToRerun = {
       "feedbackErrorTopics": this.classifiedLogsList,
       "sensitivity": this.selectedSensitivity
@@ -956,6 +957,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
       this.onClickLogEventTab(this.eventTab);
     }
     this.classifiedLogsList = [];
+    $("[data-toggle='tooltip']").tooltip('hide');
   }
   sortByLength(arrayname:any){
     return arrayname.sort(function(a, b) {
