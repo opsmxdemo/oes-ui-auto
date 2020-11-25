@@ -62,6 +62,8 @@ removeTagId:any;
 scoringAlgoData :any;
 formBuilder = new FormBuilder();
 clusterTagCall: boolean;
+  saveOldTags: any;                                                 // Compare and redefine forms if the tags are different
+  resetValues: boolean;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
 
@@ -108,11 +110,18 @@ clusterTagCall: boolean;
             this.store.dispatch(ApplicationActions.loadedDataSourceResponseKey());         
             this.responseKeys = responseData.responseKeys;          
         }
-        if(responseData.tags != null && this.clusterTagCall ){
-          this.store.dispatch(ApplicationActions.stopLoadingCustomTags());
-          this.clusterTagCall = false;
+        if(responseData.tags != null && this.resetValues  ){
+          // && this.clusterTagCall
+          // this.store.dispatch(ApplicationActions.stopLoadingCustomTags());
+          // this.clusterTagCall = false;
           this.clusterTagList = responseData.tags;
-          if(this.isEditMode ){
+          if(this.isEditMode && this.resetValues){
+            // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
+            console.log("Edit Mode:");
+            this.setFormValues();
+            // this.saveOldTags = responseData.tags;
+            this.resetValues = false;
+
             this.logClusterData.forEach((logClusterData, logClusterIndex) => {
               (<FormArray>this.logTopicsForm.get('clusterList')).push(
                 new FormGroup({
@@ -124,6 +133,14 @@ clusterTagCall: boolean;
             });
           }
         }
+
+        // if(responseData.tags!=null && responseData.isloadedResponseKey)
+        // {
+        // //  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+        //   this.clusterTagList = responseData.tags;
+        //   console.log("savedTagResponse : ", responseData.tags);
+        // }
+
         if(responseData.scoringAlgoResponse != null)
         {
           this.scoringAlgoData = responseData.scoringAlgoResponse;
@@ -131,10 +148,6 @@ clusterTagCall: boolean;
             this.logTopicsForm.get('selectScoreAlgo').setValue(this.data.scoringAlgorithm);
           }
         }
-        // if(responseData.savedTagResponse!=null)
-        // {
-        //  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
-        // }
       }
     );
 
@@ -252,7 +265,9 @@ clusterTagCall: boolean;
  this.logSensitivityTypes = ["high","low","medium"];
 
 }
-
+enableReset(){
+  this.resetValues = true;
+}
 
 // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
 
@@ -550,7 +565,9 @@ cannotContainSpace(control: FormControl): {
         this.removeTagId = this.clusterTagList[i].id
       }
     }
+      this.resetValues = true;
     this.store.dispatch(ApplicationActions.deleteCustomTags({ applicationId: this.applicationId,tagId:this.removeTagId }));
+    // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
   }
   selectedTag(value){
     this.selectedDropDownTag = value;
@@ -571,8 +588,10 @@ cannotContainSpace(control: FormControl): {
         // this.clusterTagList[i].name = this.logTopicsForm.get('inputTags').value // remove once api is there
       }
     }
-    this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value
+    this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value;
+      this.resetValues = true;
     this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
+    // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
   }
   submitNewTag(){
     this.addedTag= this.logTopicsForm.get('inputTags').value
@@ -581,7 +600,9 @@ cannotContainSpace(control: FormControl): {
     }
     if(this.addedTag!=null)
     {
+      this.resetValues = true;
       this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
+      // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
     }
   //   this.store.select(fromFeature.selectLogTemplate).subscribe(
   //     (response) => {
