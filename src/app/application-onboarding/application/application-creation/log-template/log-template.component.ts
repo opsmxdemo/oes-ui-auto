@@ -447,6 +447,7 @@ SubmitForm(){
 
 addNewLogTopics(){
   // this.scrollLogTopics.nativeElement.scrollTop = this.scrollLogTopics.nativeElement.scrollHeight;
+  this.scrollLogTopics.nativeElement.scrollTop = 0;
   (<FormArray>this.logTopicsForm.get('topicsList')).insert(0, 
     new FormGroup({
       string: new FormControl('', Validators.required),
