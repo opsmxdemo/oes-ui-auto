@@ -146,6 +146,7 @@ this.actions$.pipe(
          switchMap((action) => {
              return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + action.applicationId + '/tags/'+action.tagId).pipe(
                  map(resdata => {
+                this.toastr.showSuccess('Deleted Successfully', 'SUCCESS');
                     this.store.dispatch(ApplicationAction.loadCustomTags({ applicationId: action.applicationId }));
                      return ApplicationAction.fetchDeleteCustomTag({deleteTagResponse : resdata });
                  }),
