@@ -122,7 +122,7 @@ export class DeploymentVerificationComponent implements OnInit {
 
   manualTriggerForm : FormGroup;
 
-  applications : any;
+  //applications : any;
   servicesOfApplication : any;
   logServiceForm: FormGroup;
   metricServiceForm : FormGroup;
@@ -189,15 +189,6 @@ export class DeploymentVerificationComponent implements OnInit {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.selectedTab = '';
     this.getAllApplications();
-
-    this.store.select('auth').subscribe(
-      (response) => {
-        if(response.authenticated){
-           this.store.dispatch(ApplicationDashbordAction.loadAppDashboard());
-        }
-      });
-
-  
     this.initializeForms();
 
     if (this.route.params['_value'].applicationName != null && this.route.params['_value'].canaryId != null) {
@@ -361,21 +352,14 @@ export class DeploymentVerificationComponent implements OnInit {
       }
     );
 
-    this.store.select('appDashboard').subscribe(
-      (resData) => {
-        if(resData.appData != null){
-          //console.log(resData.appData);
-          this.applications = resData.appData;
+    //code to get logged in username
+    this.store.select('auth').subscribe(
+      (response) => {
+        if(response.authenticated){            
+          this.username = response.user;
         }
-      });
-
-      this.store.select('auth').subscribe(
-        (response) => {
-          if(response.authenticated){            
-            this.username = response.user;
-          }
-        }
-      );
+      }
+    );
 
   }
 
@@ -1160,11 +1144,7 @@ deleteLogService(query,index){
       //successMetricsResultScore: new FormControl(),
       baselineStartTimeMs : new Date(this.deploymentServiceInformation['v1StartTime']),
       canaryStartTimeMs : new Date(this.deploymentServiceInformation['v2StartTime'])
-    });
-    // this.manualTriggerForm.setValue({
-    //     canaryStartTimeMs : new Date(this.deploymentServiceInformation['v2StartTime']),
-    //     baselineStartTimeMs : new Date(this.deploymentServiceInformation['v1StartTime']),
-    //   });
+    });    
   }
 
   // download logs data
