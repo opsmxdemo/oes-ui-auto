@@ -515,7 +515,7 @@ deleteLogService(query,index){
       return;
     }
    
-    if(this.logServiceForm.invalid){
+    if(this.logServiceForm.invalid && this.metricServiceForm.invalid){
       var logArray1= this.logServiceForm.get('identifiers') as FormArray;
       for(var i=0;i<logArray1.length;i++){
         logArray1['controls'][i]['controls'].service.markAsUntouched();
@@ -525,10 +525,6 @@ deleteLogService(query,index){
         logArray1['controls'][i]['controls'].canary.markAsUntouched();
         logArray1['controls'][i]['controls'].canary.markAsTouched();
       }
-      return;
-    }
-
-    if(this.metricServiceForm.invalid){
       var metricArray1= this.metricServiceForm.get('identifiers') as FormArray;
       for(var i=0;i<metricArray1.length;i++){
         metricArray1['controls'][i]['controls'].service.markAsUntouched();
@@ -540,6 +536,7 @@ deleteLogService(query,index){
       }
       return;
     }
+
 
     let baselineStartTimeMs = this.manualTriggerForm.value.baselineStartTimeMs._d;
     let canaryStartTimeMs = this.manualTriggerForm.value.canaryStartTimeMs._d;

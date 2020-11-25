@@ -458,7 +458,7 @@
 
         <div class="modal-footer">
           <button class="btn btn-default" data-dismiss="modal" aria-label="Close" #manualTrigerModal>Cancel</button>
-          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerForm()" [disabled]='!manualTriggerForm.valid || !logServiceForm.valid || !metricServiceForm.valid'>Trigger</button>
+          <button type="submit" class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-form-tab'" (click)="submitManualTriggerForm()" [disabled]='!manualTriggerForm.valid || ( !logServiceForm.valid && !metricServiceForm.valid )'>Trigger</button>
           <button  class="btn  btn-primary" *ngIf = "selectedManualTriggerTab === 'manualTrigger-editor-tab'" (click)="submitManualTriggerData()" data-dismiss="modal">Trigger</button>
         </div>
         <!-- /.modal-footer -->
@@ -499,7 +499,7 @@
       <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center" *ngIf="applicationExists"> 
         <h3><img src="../../../assets/images/application-icon.png" alt="" />{{selectedApplicationName}} <span  *ngIf="canaryIdExists">» {{control.value}} » {{serviceNameInfo['serviceName'] !== undefined ? serviceNameInfo['serviceName']: ''}}</span> </h3>
         <div class="page_access d-flex ml-auto">
-          <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false" [disabled]="deployementApplications?.length <= 0">Manual Trigger</button>
+          <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false" [disabled]="deployementApplications?.length <= 0 || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'IN PROGRESS'">Manual Trigger</button>
         </div>
         <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" >
           <button (click)="getReclassifiactionHistory()" class="btn btn-default" data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false">Reclassification History</button>
