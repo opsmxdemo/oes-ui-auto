@@ -81,8 +81,12 @@ export const fetchLogTopics = createAction('[Application] FetchLogTopics', props
 export const isLoadedLogTopics = createAction('[Application] IsLoadedLogTopics');
 export const loadClusterTags = createAction('[Application] LoadClusterTags');
 export const fetchClusterTags = createAction('[Application] FetchClusterTags', props<{clusterTags:[]}>());
+
+//Load Custom Tags
 export const loadCustomTags = createAction('[Application] LoadCustomTags',props<{applicationId: any}>());
 export const fetchCustomTags = createAction('[Application] FetchCustomTags', props<{tags:any}>());
+export const stopLoadingCustomTags = createAction('[Application] FetchCustomTags');
+
 export const addCustomTags = createAction('[Application] AddCustomTags',props<{applicationId: any,newtagData:any}>());
 export const savedCustomTag = createAction('[Application] SavedCustomTag', props<{savedTagResponse: any}>());
 export const editCustomTags = createAction('[Application] EditCustomTags',props<{applicationId: any,tagId:any,edittagData:any}>());
