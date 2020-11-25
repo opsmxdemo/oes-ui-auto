@@ -238,10 +238,10 @@
                              <table id="dtVerticalScrollExample"  class="table table-outline table-md" formArrayName="topicsList">
                                <thead>
                                  <tr>
-                                   <th>STRING PATTERN</th>
-                                   <th>CHARACTERIZATION TOPIC</th>
-                                   <th>TYPE</th>
-                                   <th class="text-right"><a (click)="addNewLogTopics()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Topic"><i class="fas fa-plus"></i></a></th>
+                                   <th class="stickyTopHeader">STRING PATTERN</th>
+                                   <th class="stickyTopHeader">CHARACTERIZATION TOPIC</th>
+                                   <th class="stickyTopHeader">TYPE</th>
+                                   <th class="text-right stickyTopHeader"><a (click)="addNewLogTopics()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Topic"><i class="fas fa-plus"></i></a></th>
 
                                  </tr>
                                </thead>
@@ -268,9 +268,9 @@
                                    <td width="36">
                                      <a (click)="deleteLogTopic(logTopics,i)" class="text-muted"><i style="color: red !important;" class="far fa-trash-alt"></i></a>
                                    </td>
-                                   <td *ngIf="isLast" width="36" class="text-right">
+                                   <!-- <td *ngIf="isLast" width="36" class="text-right">
                                     <a (click)="addNewLogTopics()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Topic"><i class="fas fa-plus"></i></a>
-                                   </td>
+                                   </td> -->
                                    </ng-container>
                                  </tr>
                                </tbody>
