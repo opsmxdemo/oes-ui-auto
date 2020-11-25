@@ -171,7 +171,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     event.stopPropagation();
     if (menuName === 'Deployment Verification' || menuName === 'Trend Analysis') {
       setTimeout(()=>{
-        this.addclass = true;
+       // this.addclass = true;
       },1000)
     }
   }
@@ -189,12 +189,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
       className = '';
     }
     if (this.featureList && this.featureList.includes('visibility')) {
-      if (linkName === 'Visibility') {
+      if (linkName === 'Visibility' || linkName === 'System Setup' || linkName === 'Applications') {
         className = '';
       }
     }
     if (this.featureList && this.featureList.includes('sapor')) {
-      if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard') {
+      if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard' || linkName === 'System Setup' || linkName === 'Applications' ) {
         className = '';
       }
     }
