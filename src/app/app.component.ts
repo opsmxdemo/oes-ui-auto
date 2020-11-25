@@ -16,6 +16,7 @@ import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConfigService } from './services/app-config.service';
 import { Location } from '@angular/common';
+import { faTachometerAlt, faProjectDiagram, faChartPie, faVectorSquare, faShippingFast, faTasks, faDraftingCompass, faCube, faStethoscope, faLock, faMarsStrokeH, faMask, faCompactDisc, faGavel, faStroopwafel } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -248,52 +249,52 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   menuIcons(name: any) {
-    let className = '';
+    let className: any = '';
     switch (name) {
       case 'Dashboard':
-        className = 'fas fa-tachometer-alt'
+        className = faTachometerAlt;
         break;
       case 'CD Dashboard':
-        className = 'fas fa-project-diagram'
+        className = faProjectDiagram;
         break;
       case 'Analytics':
-        className = 'fas fas fa-chart-pie'
+        className = faChartPie;
         break;
       case 'Collaboration':
-        className = 'fas fa-vector-square'
+        className = faVectorSquare;
         break;
       case 'Continuous Delivery':
-        className = 'fas fa-shipping-fast'
+        className = faShippingFast;
         break;
       case 'Release Manager':
-        className = 'fas fa-tasks'
+        className = faTasks;
         break;
       case 'Continuous Verification':
-        className = 'fas fa-drafting-compass'
+        className = faDraftingCompass;
         break;
       case 'Build':
-        className = 'fas fa-cube'
+        className = faCube;
         break;
       case 'Test':
-        className = 'fas fa-stethoscope'
+        className = faStethoscope;
         break;
       case 'Security':
-        className = 'fas fa-lock'
+        className = faLock;
         break;
       case 'Access Management':
-        className = 'fas fa-mars-stroke-h'
+        className = faMarsStrokeH;
         break;
       case 'Secret Management':
-        className = 'fas fa-mask'
+        className = faMask;
         break;
       case 'Compliance':
-        className = 'fas fa-compact-disc'
+        className = faCompactDisc;
         break;
       case 'Governance':
-        className = 'fas fa-gavel'
+        className = faGavel;
         break;
       case 'Production':
-        className = 'fas fa-gavel'
+        className = faStroopwafel;
         break;
     }
     return className;

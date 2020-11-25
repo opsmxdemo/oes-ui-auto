@@ -7,13 +7,18 @@
       </div>
       <div class="sidebar_nav">
         <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;let i = index" >
-          <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" (click)="toggleSubMenu(i, SideMenu.link)"><a><i class="{{menuIcons(SideMenu.name) ? menuIcons(SideMenu.name) + ' menu-icons' : SideMenu.link + ' icon'}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'"></i> <span>{{SideMenu.name }} 
-            </span></a>
+          <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" (click)="toggleSubMenu(i, SideMenu.link)">
+            <a>
+              <i class="{{SideMenu.link + ' icon'}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="!menuIcons(SideMenu.name)"></i> 
+              <fa-icon class="menu-icons" [icon]="menuIcons(SideMenu.name)" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="menuIcons(SideMenu.name)"></fa-icon>
+              <span>{{SideMenu.name }} </span>
+            </a>
           </li>
             <div *ngIf="showChildMenu(SideMenu, i)">
               <ul class="subnav list-unstyled m-0" *ngFor = "let submenu of SideMenu.subMenu">
                 <li class="{{submenu.disabled === true? 'disabled_menu': disabledLink(submenu.name)}} {{activeRoutes(submenu.link)}}" routerLink="{{submenu.link}}" (click)="navigateMenu($event,submenu.name)"><a>
-                  <i class="{{menuIcons(submenu.name) ? menuIcons(submenu.name) + ' submenu-icons' : subMenuclass(submenu.link) + ' icon'}}" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></i> 
+                  <i class="{{subMenuclass(submenu.link) + ' icon'}}" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="!menuIcons(submenu.name) && submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></i> 
+                  <fa-icon class="submenu-icons" [icon]="menuIcons(submenu.name)" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="menuIcons(submenu.name) && submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></fa-icon>
                   <i class="icon-new fa fa-line-chart" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/trendanalysis'"></i>
                   <i class="icon-new fa fa-eye" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/visibility'"></i>
                   <!-- <i class="{{subMenuclass(submenu.link)}}"></i>  -->
