@@ -30,9 +30,9 @@ export class CreateAccountComponent implements OnInit {
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     accountType: new FormControl('',[Validators.required]),
     namespaces: new FormControl('',[Validators.required]),
-    read: new FormControl('',[Validators.required]),
-    write: new FormControl('',[Validators.required]),
-    execute: new FormControl('',[Validators.required]),
+    read: new FormControl(''),
+    write: new FormControl(''),
+    execute: new FormControl(''),
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required])
   });

@@ -202,7 +202,7 @@
                               <!-- <button class="btn btn-default ml-2" disabled="disabled">Save</button> -->
                               <a class="text-muted ml-3 formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete Service" 
                               (click)="deleteService(i)" *ngIf ="servicesForm.get('services')['controls'].length > 1 ? true : false">
-                                <i class="fas fa-trash-alt"></i></a>
+                                <i style="color: red !important;" class="far fa-trash-alt"></i></a>
                             </div>
                               <span *ngIf="servicesForm.get('services')['controls'][i].get('serviceName').invalid && servicesForm.get('services')['controls'][i].get('serviceName').touched"
                               class="help-block">
@@ -269,7 +269,7 @@
                                   <table class="table table-bordered">
                                     <thead>
                                     <tr>
-                                      <th>SAPOR Configuration</th>
+                                      <th>Release Management Configuration</th>
                                     </tr>
                                     </thead>
                                   </table>
@@ -374,7 +374,7 @@
                                         </select>
                                         <span *ngIf="logTemplateList?.length > 0" class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditLogMetricTemplateClick('log')">
                                           <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link" >
-                                            <i class="fas fa-pencil-alt"></i>
+                                            <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
                                           </a>
                                         </span>
                                         <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Template" (click)="onAddTemplate(i,'log')">
@@ -393,7 +393,7 @@
                                         </select>
                                         <span *ngIf="metricTemplateList?.length > 0" class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Metric Template" (click)="onEditLogMetricTemplateClick('metric')">
                                           <a data-toggle="modal" data-target="#newMatricTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
-                                            <i class="fas fa-pencil-alt"></i>
+                                            <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
                                           </a>
                                         </span>
                                         <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Metric Template" (click)="onAddTemplate(i,'metric')" >
@@ -453,7 +453,7 @@
                                       <ng-container *ngIf="gateId != '' && !isEditGateEnabled">
                                         <span class="ml-2 addTemplate" data-placement="top" title="Update gate name" (click)="onClickEditOfGateName()">
                                           <a data-keyboard="false" class="btn-link">
-                                            <i class="fas fa-pencil-alt"></i>
+                                            <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
                                           </a>
                                         </span>
                                         <!-- <span>
@@ -725,7 +725,7 @@
                                 <td>
                                   <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete"
                                   (click)="removeEnvironment(i)">
-                                    <i class="mt_custom-3 fas fa-trash-alt"></i></a>
+                                    <i style="color: red !important;" class="mt_custom-3 far fa-trash-alt"></i></a>
                                 </td>
                               </ng-container>
                             </tr>
@@ -815,7 +815,7 @@
                                   <td>
                                     <a class="text-muted formarray_btn"  data-toggle="tooltip" data-placement="right" title="Delete" 
                                     (click)="removeGroup(i)">
-                                      <i class="mt_custom-3 fas fa-trash-alt"></i></a>
+                                      <i style="color: red !important;" class="mt_custom-3 far fa-trash-alt"></i></a>
                                   </td>
                                 </ng-container>
                               </tr>

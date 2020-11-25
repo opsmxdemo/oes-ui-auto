@@ -39,14 +39,14 @@
         <span class="ml-2 editTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Template"
             *ngIf="templateId" (click)="editTemplate()">
             <a class="btn-link">
-                <i class="fas fa-pencil-alt"></i>
+                <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
             </a>
         </span>
         <span class="ml-2 editTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Template"
             *ngIf="templateId" [hidden]="true">
             <a data-toggle="modal" data-target="#newTemplateForTooltype" data-backdrop="static" data-keyboard="false"
                 class="btn-link" #edittemplate>
-                <i class="fas fa-pencil-alt"></i>
+                <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
             </a>
         </span>
         <span class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Add New Template"
@@ -66,7 +66,7 @@
         <span class="ml-2 mt-1" *ngIf="!data.editMode">
             <a class="formarray_btn" data-toggle="tooltip" data-placement="top" title="Edit" *ngIf="!data.editMode"
                 (click)="editConnector()">
-                <i class="fas fa-pen"></i>
+                <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
             </a>
         </span>
         <span class="ml-2 mt-1" *ngIf="data.editMode">

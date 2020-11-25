@@ -266,7 +266,7 @@
                                   
                                    </td>
                                    <td width="36">
-                                     <a (click)="deleteLogTopic(logTopics,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                     <a (click)="deleteLogTopic(logTopics,i)" class="text-muted"><i style="color: red !important;" class="far fa-trash-alt"></i></a>
                                    </td>
                                    <td *ngIf="isLast" width="36" class="text-right">
                                     <a (click)="addNewLogTopics()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Topic"><i class="fas fa-plus"></i></a>
@@ -326,7 +326,7 @@
                           </select>
                           <span class="ml-2 " (click)="editNewTag()" data-toggle="tooltip" data-placement="top" data-original-title="Edit Tags" *ngIf="clusterTagList.length > 0"  >
                             <a data-keyboard="false" class="btn-link" >
-                              <i class="fas fa-pencil-alt"></i>
+                              <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
                             </a>
                           </span>
                           <span class="ml-2 " (click)="addNewTag()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Tags" >
@@ -336,7 +336,7 @@
                           </span>
                           <span class="ml-2 " (click)="removeTags()" data-toggle="tooltip" data-placement="top" data-original-title="Delete Tags"> 
                             <a data-keyboard="false" class="btn-link">
-                              <i class="mt_custom-3 fas fa-trash-alt"></i>
+                              <i class="mt_custom-3 far fa-trash-alt"></i>
                           </a>
                           </span>
                           
@@ -378,7 +378,7 @@
                                   </select>
                                   </td>
                                   <td width="20">
-                                    <a (click)="deleteClusterTag(clusterTags,i)" class="text-muted"><i class="fas fa-trash-alt"></i></a>
+                                    <a (click)="deleteClusterTag(clusterTags,i)" class="text-muted"><i style="color: red !important;" class="far fa-trash-alt"></i></a>
                                   </td>
                                   <td *ngIf="isLast" width="20" class="text-right">
                                     <a (click)="addNewClusterTag()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Cluster"><i class="fas fa-plus"></i></a>
