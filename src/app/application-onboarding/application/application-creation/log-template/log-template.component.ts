@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { Store } from '@ngrx/store';
-import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl, FormArray, Form } from '@angular/forms';
 import { $ } from 'jquery'
 import { CreateLogTemplate } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/logTemplate.model';
 import * as fromFeature from '../../../store/feature.reducer';
@@ -9,6 +9,7 @@ import * as ApplicationActions from '../../store/application.actions';
 import * as DataSourceActions from '../../../data-source/store/data-source.actions';
 import { Input } from '@angular/core';
 import { MatHorizontalStepper } from '@angular/material/stepper';
+import { ApplicationService } from 'src/app/services/application.service';
 
 
 @Component({
@@ -48,7 +49,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
     logCharacterization: any;
     autoDatasources: null;
     clusterTagFlag: boolean = false;
-  logClusterData: any;
+  logClusterData: any = [];
   clusterTagConfig: any;
   responseKeys : any;
   clusterTagList=[];
@@ -64,8 +65,9 @@ formBuilder = new FormBuilder();
 clusterTagCall: boolean;
   saveOldTags: any;                                                 // Compare and redefine forms if the tags are different
   resetValues: boolean;
+  logClusterDataHasValue: boolean = false;              //Setting the value to false will setFormValue once and becomes true
     
-  constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
+  constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>, private appService: ApplicationService) { }
 
   ngOnChanges(changes: SimpleChanges){
     if(this.isEditMode && this.templateData != null){
@@ -114,24 +116,24 @@ clusterTagCall: boolean;
           // && this.clusterTagCall
           // this.store.dispatch(ApplicationActions.stopLoadingCustomTags());
           // this.clusterTagCall = false;
-          this.clusterTagList = responseData.tags;
-          if(this.isEditMode && this.resetValues){
-            // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
-            console.log("Edit Mode:");
-            this.setFormValues();
-            // this.saveOldTags = responseData.tags;
-            this.resetValues = false;
+          // this.clusterTagList = responseData.tags;
+          // if(this.isEditMode && this.resetValues){
+          //   // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
+          //   console.log("Edit Mode:");
+          //   this.setFormValues();
+          //   // this.saveOldTags = responseData.tags;
+          //   this.resetValues = false;
 
-            this.logClusterData.forEach((logClusterData, logClusterIndex) => {
-              (<FormArray>this.logTopicsForm.get('clusterList')).push(
-                new FormGroup({
-                  id: new FormControl(''),
-                  string: new FormControl(logClusterData.string),
-                  tag: new FormControl(logClusterData.tag)
-                })
-              );
-            });
-          }
+          //   this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+          //     (<FormArray>this.logTopicsForm.get('clusterList')).push(
+          //       new FormGroup({
+          //         id: new FormControl(''),
+          //         string: new FormControl(logClusterData.string),
+          //         tag: new FormControl(logClusterData.tag)
+          //       })
+          //     );
+          //   });
+          // }
         }
 
         // if(responseData.tags!=null && responseData.isloadedResponseKey)
@@ -190,7 +192,12 @@ clusterTagCall: boolean;
       );
     });
     // this.logTopicsForm.get('clusterList').setValue(this.data.tags);
-    this.logClusterData = this.data.tags;
+    if(this.logClusterDataHasValue == false){
+      this.data.tags.forEach(data => {
+        this.logClusterData.push(data);
+      });
+    }
+    this.logClusterDataHasValue = true;
     if(this.logClusterData != null && this.logClusterData != undefined){
       this.clusterTagFlag = true;
     }
@@ -267,6 +274,7 @@ clusterTagCall: boolean;
 }
 enableReset(){
   this.resetValues = true;
+  this.logClusterDataHasValue = false;
 }
 
 // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
@@ -421,6 +429,7 @@ onClusterChange(status: boolean){
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
+  //  this.logClusterDataHasValue = false
    this.logForm['scoringAlgorithm'] = this.logTopicsForm.value['selectScoreAlgo']
    if(this.clusterTagFlag === true){
     this.logForm['tags'] = this.logTopicsForm.value['clusterList'];
@@ -479,17 +488,32 @@ deleteLogTopic(topic,index){
   this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
-addNewClusterTag(){
+addNewCluster(){
   //this.scroll.nativeElement. = this.scroll.nativeElement.
   this.scrollLogTags.nativeElement.scrollTop = this.scrollLogTags.nativeElement.scrollHeight;
   
-  (<FormArray>this.logTopicsForm.get('clusterList')).push(
-    new FormGroup({
-         id: new FormControl(''),
-      string: new FormControl('', Validators.required),
-      tag: new FormControl('', Validators.required)
-    })
-  );
+              this.logClusterData.push({
+                id: "",
+                string: "",
+                tag: ""
+              });
+              let index = (<FormArray>this.logTopicsForm.get('clusterList')).controls.length;
+
+                (<FormArray>this.logTopicsForm.get('clusterList')).push(
+                  new FormGroup({
+                      id: new FormControl(''),
+                    string: new FormControl('', Validators.required),
+                    tag: new FormControl('', Validators.required)
+                  })
+                );
+              let formarr: FormGroup = <FormGroup>(<FormArray>this.logTopicsForm.get('clusterList')).controls[index];
+                  console.log(formarr);
+
+                  formarr.get('tag').valueChanges.subscribe(val => {
+                    this.logClusterData[index].tag = val;
+                })
+                  
+              // formarr.get('string').valueChanges(val => {})
 }
 
 
@@ -498,6 +522,51 @@ addNewClusterTag(){
 deleteClusterTag(cluster,index){
   (<FormArray>this.logTopicsForm.get('clusterList')).removeAt(index);
   this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
+}
+
+customTagUpdate(){
+          this.appService.updateCustomTags(this.applicationId).subscribe((clusterTags: any) => {
+              // this.clusterTagList = clusterTags;
+
+          this.clusterTagList = clusterTags;
+          if(this.isEditMode ){
+            // && this.resetValues
+            // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
+            console.log("Edit Mode:");
+            // this.setFormValues();
+            const arr = <FormArray>this.logTopicsForm.controls.clusterList;
+            // arr.controls = [];
+
+            // this.saveOldTags = responseData.tags;
+            this.resetValues = false;
+            if(arr.controls.length == 0){
+              this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+                (<FormArray>this.logTopicsForm.get('clusterList')).push(
+                  new FormGroup({
+                    id: new FormControl(logClusterData.id),
+                    string: new FormControl(logClusterData.string),
+                    tag: new FormControl(logClusterData.tag)
+                  })
+                );
+              });
+
+            }else{
+              (<FormArray>this.logTopicsForm.get('clusterList')).controls.forEach((formG: any, i) => {
+                console.log(formG);
+                setTimeout(() => {
+                  formG.controls.tag.setValue(this.logClusterData[i].tag);                  
+                }, 100);
+              });
+            }
+
+            
+          }
+
+
+          },
+            (error) => {
+            }
+          );
 }
 
 //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
@@ -565,9 +634,11 @@ cannotContainSpace(control: FormControl): {
         this.removeTagId = this.clusterTagList[i].id
       }
     }
-      this.resetValues = true;
     this.store.dispatch(ApplicationActions.deleteCustomTags({ applicationId: this.applicationId,tagId:this.removeTagId }));
-    // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+    setTimeout(() => {
+      this.resetValues = true;
+    this.customTagUpdate();
+    }, 400);
   }
   selectedTag(value){
     this.selectedDropDownTag = value;
@@ -589,20 +660,30 @@ cannotContainSpace(control: FormControl): {
       }
     }
     this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value;
-      this.resetValues = true;
     this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
-    // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+    setTimeout(() => {
+      this.resetValues = true;
+    this.customTagUpdate();
+    }, 1000);
   }
   submitNewTag(){
     this.addedTag= this.logTopicsForm.get('inputTags').value
     var myjson = {
       "name":this.addedTag
     }
+
+
+
+
+
+
     if(this.addedTag!=null)
     {
-      this.resetValues = true;
       this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
-      // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+    setTimeout(() => {
+      this.resetValues = true;
+      this.customTagUpdate();
+    }, 400);
     }
   //   this.store.select(fromFeature.selectLogTemplate).subscribe(
   //     (response) => {
@@ -613,13 +694,11 @@ cannotContainSpace(control: FormControl): {
   //  });
       
   // })
-  
-    
-    
 
   }
 getTagsList(){
-  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+  this.customTagUpdate();
+  // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
 }
 
 
