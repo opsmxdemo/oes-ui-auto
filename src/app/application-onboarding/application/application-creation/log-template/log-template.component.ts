@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { Store } from '@ngrx/store';
-import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl, FormArray, Form } from '@angular/forms';
 import { $ } from 'jquery'
 import { CreateLogTemplate } from 'src/app/models/applicationOnboarding/createApplicationModel/servicesModel/logTemplate.model';
 import * as fromFeature from '../../../store/feature.reducer';
@@ -9,6 +9,7 @@ import * as ApplicationActions from '../../store/application.actions';
 import * as DataSourceActions from '../../../data-source/store/data-source.actions';
 import { Input } from '@angular/core';
 import { MatHorizontalStepper } from '@angular/material/stepper';
+import { ApplicationService } from 'src/app/services/application.service';
 
 
 @Component({
@@ -65,7 +66,7 @@ clusterTagCall: boolean;
   saveOldTags: any;                                                 // Compare and redefine forms if the tags are different
   resetValues: boolean;
     
-  constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>) { }
+  constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>, private appService: ApplicationService) { }
 
   ngOnChanges(changes: SimpleChanges){
     if(this.isEditMode && this.templateData != null){
@@ -500,6 +501,39 @@ deleteClusterTag(cluster,index){
   this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
 }
 
+customTagUpdate(){
+          this.appService.updateCustomTags(this.applicationId).subscribe((clusterTags: any) => {
+              // this.clusterTagList = clusterTags;
+
+          this.clusterTagList = clusterTags;
+          if(this.isEditMode && this.resetValues){
+            // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
+            console.log("Edit Mode:");
+            // this.setFormValues();
+            const arr = <FormArray>this.logTopicsForm.controls.clusterList;
+            arr.controls = [];
+
+            // this.saveOldTags = responseData.tags;
+            this.resetValues = false;
+
+            this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+              (<FormArray>this.logTopicsForm.get('clusterList')).push(
+                new FormGroup({
+                  id: new FormControl(''),
+                  string: new FormControl(logClusterData.string),
+                  tag: new FormControl(logClusterData.tag)
+                })
+              );
+            });
+          }
+
+
+          },
+            (error) => {
+            }
+          );
+}
+
 //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
 
 cannotContainSpace(control: FormControl): {
@@ -565,9 +599,11 @@ cannotContainSpace(control: FormControl): {
         this.removeTagId = this.clusterTagList[i].id
       }
     }
-      this.resetValues = true;
     this.store.dispatch(ApplicationActions.deleteCustomTags({ applicationId: this.applicationId,tagId:this.removeTagId }));
-    // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+    setTimeout(() => {
+      this.resetValues = true;
+    this.customTagUpdate();
+    }, 400);
   }
   selectedTag(value){
     this.selectedDropDownTag = value;
@@ -589,9 +625,11 @@ cannotContainSpace(control: FormControl): {
       }
     }
     this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value;
-      this.resetValues = true;
     this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
-    // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+    setTimeout(() => {
+      this.resetValues = true;
+    this.customTagUpdate();
+    }, 1000);
   }
   submitNewTag(){
     this.addedTag= this.logTopicsForm.get('inputTags').value
@@ -600,9 +638,11 @@ cannotContainSpace(control: FormControl): {
     }
     if(this.addedTag!=null)
     {
-      this.resetValues = true;
       this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
-      // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+    setTimeout(() => {
+      this.resetValues = true;
+      this.customTagUpdate();
+    }, 400);
     }
   //   this.store.select(fromFeature.selectLogTemplate).subscribe(
   //     (response) => {
@@ -613,13 +653,11 @@ cannotContainSpace(control: FormControl): {
   //  });
       
   // })
-  
-    
-    
 
   }
 getTagsList(){
-  this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
+  this.customTagUpdate();
+  // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
 }
 
 

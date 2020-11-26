@@ -60,6 +60,11 @@ export class ApplicationService {
             catchError(this.handleError)
         );
     }
+    updateCustomTags(applicationId){
+        return this.httpClient.get(this.endpointUrl + 'autopilot/api/v1/applications/' + applicationId + '/tags').pipe(
+            catchError(this.handleError)
+        );
+    }
     handleError(error) {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
