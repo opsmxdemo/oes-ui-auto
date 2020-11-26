@@ -16,7 +16,8 @@ import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConfigService } from './services/app-config.service';
 import { Location } from '@angular/common';
-import { faTachometerAlt, faProjectDiagram, faChartPie, faVectorSquare, faShippingFast, faTasks, faDraftingCompass, faCube, faStethoscope, faLock, faMarsStrokeH, faMask, faCompactDisc, faGavel, faStroopwafel } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faTachometerAlt, faProjectDiagram, faChartPie, faVectorSquare, faShippingFast, faTasks, faDraftingCompass, faCube, faStethoscope, faLock, faMarsStrokeH, faMask, faCompactDisc, faGavel, faStroopwafel, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +36,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
   approvalGateInstanceCount: string;
   featureList: any;
   toggleChild: any = [];
+  parentLinkName: string = '';
+  menuAPICalled: boolean;
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -80,6 +83,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
+          this.menuAPICalled = true;
 
           //Dispatching action to fetch application dashboard data from API
           this.store.dispatch(AppDashboardAction.loadAppDashboard());
@@ -107,10 +111,28 @@ export class AppComponent implements OnInit, AfterViewChecked {
       (response) => {
         if(this.isAuthenticate){
           this.Sidebar = response.menu;
-          if (this.Sidebar) {
+          if (this.Sidebar && this.menuAPICalled) {
             this.toggleChild = [];
+            this.menuAPICalled = false;
+            let activeMenu = false, index = -1;
             this.Sidebar.forEach(m => {
-              this.toggleChild.push(true);
+              activeMenu = false
+              if(m.subMenu.length > 0) {
+                m.subMenu.forEach(n => {
+                  if(!activeMenu) {
+                    let className = this.activeRoutes(n.link, m.name);
+                    activeMenu = className == 'active';
+                    index++;
+                  }
+                });
+              } else {
+                if(!activeMenu) {
+                  let className = this.activeRoutes(m.link);
+                  activeMenu = className == 'active';
+                  index++;
+                }
+              }
+              this.toggleChild.push(activeMenu);
             });
           }
           this.applicationCount = response.appliactionData;
@@ -221,7 +243,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   // Below function is returning css class active if current link is selected
-  activeRoutes(linkName){
+  activeRoutes(linkName, parentLinkName = ''){
     const currentUrl = this.router.url;
     const selectedLink = currentUrl.split('/');
     const recivedLink = linkName.split('/');
@@ -236,6 +258,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     }
 
     if(recivedLink[recivedLink.length-1] === selectedLink[selectedLink.length-subFactor]){
+      this.parentLinkName = parentLinkName;
       returnClass = 'active';
     }else{
       returnClass = '';
@@ -243,6 +266,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
     // Below logic is use to deal with setup links which is exception case
     if(linkName.includes('setup') && currentUrl.includes('setup')){
+      this.parentLinkName = parentLinkName;
       returnClass = 'active';
     }
     return returnClass;
@@ -266,7 +290,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       case 'Continuous Delivery':
         className = faShippingFast;
         break;
-      case 'Release Manager':
+      case 'Release Management':
         className = faTasks;
         break;
       case 'Continuous Verification':
@@ -295,6 +319,18 @@ export class AppComponent implements OnInit, AfterViewChecked {
         break;
       case 'Production':
         className = faStroopwafel;
+        break;
+      case 'Verification Dashboard':
+        className = faCheckSquare;
+        break;
+      case 'Visibility and Approval':
+        className = faCheckSquare;
+        break;
+      case 'Visibility and Approval':
+        className = faEye;
+        break;
+      case 'Trend Analysis':
+        className = faChartLine;
         break;
     }
     return className;
