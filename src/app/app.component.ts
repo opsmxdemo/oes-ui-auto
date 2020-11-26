@@ -16,6 +16,8 @@ import 'bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConfigService } from './services/app-config.service';
 import { Location } from '@angular/common';
+import { faChartLine, faTachometerAlt, faProjectDiagram, faChartPie, faVectorSquare, faShippingFast, faTasks, faDraftingCompass, faCube, faStethoscope, faLock, faMarsStrokeH, faMask, faCompactDisc, faGavel, faStroopwafel, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faCheckSquare } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -27,12 +29,15 @@ export class AppComponent implements OnInit, AfterViewChecked {
   addclass = false;
   isAuthenticate = false;
   apiError = false;
-  Sidebar: Menu;
+  Sidebar: any;
   applicationCount: number = 0;
   endpointUrl: string;
   hideTooltip: boolean = true;
   approvalGateInstanceCount: string;
   featureList: any;
+  toggleChild: any = [];
+  parentLinkName: string = '';
+  menuAPICalled: boolean;
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -78,6 +83,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
           //Dispatching action to fetch Sidebar Menu
           this.store.dispatch(new LayoutAction.LoadPage());
+          this.menuAPICalled = true;
 
           //Dispatching action to fetch application dashboard data from API
           this.store.dispatch(AppDashboardAction.loadAppDashboard());
@@ -105,6 +111,30 @@ export class AppComponent implements OnInit, AfterViewChecked {
       (response) => {
         if(this.isAuthenticate){
           this.Sidebar = response.menu;
+          if (this.Sidebar && this.menuAPICalled) {
+            this.toggleChild = [];
+            this.menuAPICalled = false;
+            let activeMenu = false, index = -1;
+            this.Sidebar.forEach(m => {
+              activeMenu = false
+              if(m.subMenu.length > 0) {
+                m.subMenu.forEach(n => {
+                  if(!activeMenu) {
+                    let className = this.activeRoutes(n.link, m.name);
+                    activeMenu = className == 'active';
+                    index++;
+                  }
+                });
+              } else {
+                if(!activeMenu) {
+                  let className = this.activeRoutes(m.link);
+                  activeMenu = className == 'active';
+                  index++;
+                }
+              }
+              this.toggleChild.push(activeMenu);
+            });
+          }
           this.applicationCount = response.appliactionData;
            this.featureList = response.supportedFeatures;
           this.approvalGateInstanceCount = response.approvalInstalgateCount;
@@ -138,7 +168,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
     // fetching current route if deploymentVerification is exist then collapse left side menu.
     setTimeout(()=>{
       if(this.router.url.includes('deploymentverification')){
-        this.addclass = true;
+        // this.addclass = true;
         this.hideTooltip=false;
       }
     },1000)
@@ -170,9 +200,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
   navigateMenu(event,menuName){
     event.stopPropagation();
     if (menuName === 'Deployment Verification' || menuName === 'Trend Analysis') {
-      setTimeout(()=>{
-       // this.addclass = true;
-      },1000)
+      setTimeout(() => {
+        // this.addclass = true;
+      }, 1000)
     }
   }
 
@@ -181,20 +211,24 @@ export class AppComponent implements OnInit, AfterViewChecked {
   // Below function is use ro disabled link by checking featureType 
   disabledLink(linkName) {
     let className = 'disabled_menu';
+    let deployment_verification = ['Dashboard', 'Verification Dashboard', 'Continuous Verification', 'Deployment', 'Trend Analysis', 'System Setup'];
+    let visibility = ['Dashboard', 'Verification Dashboard', 'Continuous Delivery', 'Visibility and Approval', 'System Setup'];
+    let sapor = ['Dashboard', 'Verification Dashboard', 'CD Dashboard', 'Continuous Delivery', 'Security', 'System Setup', 'Audit Trail', 'Compliance', 'Policy Management'];
+
     if (this.featureList && this.featureList.includes('deployment_verification')) {
-      if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis') {
+      if (deployment_verification.includes(linkName)) {
         className = '';
       }
-    }else{
+    } else {
       className = '';
     }
     if (this.featureList && this.featureList.includes('visibility')) {
-      if (linkName === 'Visibility' || linkName === 'System Setup' || linkName === 'Applications') {
+      if (visibility.includes(linkName)) {
         className = '';
       }
     }
     if (this.featureList && this.featureList.includes('sapor')) {
-      if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard' || linkName === 'System Setup' || linkName === 'Applications' ) {
+      if (sapor.includes(linkName)) {
         className = '';
       }
     }
@@ -209,7 +243,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
   }
 
   // Below function is returning css class active if current link is selected
-  activeRoutes(linkName){
+  activeRoutes(linkName, parentLinkName = ''){
     const currentUrl = this.router.url;
     const selectedLink = currentUrl.split('/');
     const recivedLink = linkName.split('/');
@@ -217,23 +251,101 @@ export class AppComponent implements OnInit, AfterViewChecked {
     let subFactor = 0;
 
     // Below logic is use to deal with dynamic prams present in routes
-    if(+selectedLink[selectedLink.length-1] > 0){
+    if (+selectedLink[selectedLink.length - 1] > 0) {
       subFactor = 3;
-    }else{
+    } else {
       subFactor = 1;
     }
 
     if(recivedLink[recivedLink.length-1] === selectedLink[selectedLink.length-subFactor]){
+      this.parentLinkName = parentLinkName;
       returnClass = 'active';
     }else{
       returnClass = '';
     }
-    
+
     // Below logic is use to deal with setup links which is exception case
     if(linkName.includes('setup') && currentUrl.includes('setup')){
+      this.parentLinkName = parentLinkName;
       returnClass = 'active';
     }
     return returnClass;
   }
-  
+
+  menuIcons(name: any) {
+    let className: any = '';
+    switch (name) {
+      case 'Dashboard':
+        className = faTachometerAlt;
+        break;
+      case 'CD Dashboard':
+        className = faProjectDiagram;
+        break;
+      case 'Analytics':
+        className = faChartPie;
+        break;
+      case 'Collaboration':
+        className = faVectorSquare;
+        break;
+      case 'Continuous Delivery':
+        className = faShippingFast;
+        break;
+      case 'Release Management':
+        className = faTasks;
+        break;
+      case 'Continuous Verification':
+        className = faDraftingCompass;
+        break;
+      case 'Build':
+        className = faCube;
+        break;
+      case 'Test':
+        className = faStethoscope;
+        break;
+      case 'Security':
+        className = faLock;
+        break;
+      case 'Access Management':
+        className = faMarsStrokeH;
+        break;
+      case 'Secret Management':
+        className = faMask;
+        break;
+      case 'Compliance':
+        className = faCompactDisc;
+        break;
+      case 'Governance':
+        className = faGavel;
+        break;
+      case 'Production':
+        className = faStroopwafel;
+        break;
+      case 'Verification Dashboard':
+        className = faCheckSquare;
+        break;
+      case 'Visibility and Approval':
+        className = faCheckSquare;
+        break;
+      case 'Visibility and Approval':
+        className = faEye;
+        break;
+      case 'Trend Analysis':
+        className = faChartLine;
+        break;
+    }
+    return className;
+  }
+
+  toggleSubMenu(index, link) {
+    if(link) {
+      this.router.navigate([link]);
+    } else {
+      this.toggleChild[index] = !this.toggleChild[index];
+    }
+  }
+
+  showChildMenu(SideMenu: any, i: any) {
+    return SideMenu.subMenu.length != 0 && this.toggleChild[i];
+    // return true;
+  }
 }
