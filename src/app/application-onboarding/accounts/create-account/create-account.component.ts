@@ -52,15 +52,28 @@ export class CreateAccountComponent implements OnInit {
     )
 
     if(this.sharedService.getAccountType() === 'editAcc'){
-      this.createAccountForm.patchValue({
-        name: this.sharedService.getUserData().name,
-        accountType: 'Kubernetes',
-        namespaces: this.sharedService.getUserData().namespaces,
-        read: this.sharedService.getUserData().permissions.READ,
-        write: this.sharedService.getUserData().permissions.WRITE,
-        execute: this.sharedService.getUserData().permissions.EXECUTE,
-        //file: this.sharedService.getUserData().kubeconfigFile,
-      });
+      if(this.sharedService.getUserData().permissions){
+        this.createAccountForm.patchValue({
+          name: this.sharedService.getUserData().name,
+          accountType: 'Kubernetes',
+          namespaces: this.sharedService.getUserData().namespaces,
+          read: this.sharedService.getUserData().permissions.READ,
+          write: this.sharedService.getUserData().permissions.WRITE,
+          execute: this.sharedService.getUserData().permissions.EXECUTE,
+          //file: this.sharedService.getUserData().kubeconfigFile,
+        });
+      }else{
+        this.createAccountForm.patchValue({
+          name: this.sharedService.getUserData().name,
+          accountType: 'Kubernetes',
+          namespaces: this.sharedService.getUserData().namespaces,
+          read: '',
+          write: '',
+          execute: '',
+          //file: this.sharedService.getUserData().kubeconfigFile,
+        });
+      }
+     
     }
    
   }
