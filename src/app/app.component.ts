@@ -27,12 +27,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
   addclass = false;
   isAuthenticate = false;
   apiError = false;
-  Sidebar: Menu;
+  Sidebar: any;
   applicationCount: number = 0;
   endpointUrl: string;
   hideTooltip: boolean = true;
   approvalGateInstanceCount: string;
   featureList: any;
+  toggleChild: any = [];
 
   constructor(public store: Store<fromApp.AppState>,
               private router: Router,
@@ -105,6 +106,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
       (response) => {
         if(this.isAuthenticate){
           this.Sidebar = response.menu;
+          if (this.Sidebar) {
+            this.toggleChild = [];
+            this.Sidebar.forEach(m => {
+              this.toggleChild.push(true);
+            });
+          }
           this.applicationCount = response.appliactionData;
            this.featureList = response.supportedFeatures;
           this.approvalGateInstanceCount = response.approvalInstalgateCount;
@@ -170,9 +177,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
   navigateMenu(event,menuName){
     event.stopPropagation();
     if (menuName === 'Deployment Verification' || menuName === 'Trend Analysis') {
-      setTimeout(()=>{
-       // this.addclass = true;
-      },1000)
+      setTimeout(() => {
+        // this.addclass = true;
+      }, 1000)
     }
   }
 
@@ -181,20 +188,24 @@ export class AppComponent implements OnInit, AfterViewChecked {
   // Below function is use ro disabled link by checking featureType 
   disabledLink(linkName) {
     let className = 'disabled_menu';
+    let deployment_verification = ['Dashboard', 'Verification Dashboard', 'Continuous Verification', 'Deployment', 'Trend Analysis', 'System Setup'];
+    let visibility = ['Dashboard', 'Verification Dashboard', 'Continuous Delivery', 'Visibility and Approval', 'System Setup'];
+    let sapor = ['Dashboard', 'Verification Dashboard', 'CD Dashboard', 'Continuous Delivery', 'Security', 'System Setup', 'Audit Trail', 'Compliance', 'Policy Management'];
+
     if (this.featureList && this.featureList.includes('deployment_verification')) {
-      if (linkName === 'System Setup' || linkName === 'Applications' || linkName === 'Deployment Verification' || linkName === 'Trend Analysis') {
+      if (deployment_verification.includes(linkName)) {
         className = '';
       }
-    }else{
+    } else {
       className = '';
     }
     if (this.featureList && this.featureList.includes('visibility')) {
-      if (linkName === 'Visibility' || linkName === 'System Setup' || linkName === 'Applications') {
+      if (visibility.includes(linkName)) {
         className = '';
       }
     }
     if (this.featureList && this.featureList.includes('sapor')) {
-      if (linkName === 'Security/Audit' || linkName === 'Policy Management' || linkName === 'CD Dashboard' || linkName === 'System Setup' || linkName === 'Applications' ) {
+      if (sapor.includes(linkName)) {
         className = '';
       }
     }
@@ -217,9 +228,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
     let subFactor = 0;
 
     // Below logic is use to deal with dynamic prams present in routes
-    if(+selectedLink[selectedLink.length-1] > 0){
+    if (+selectedLink[selectedLink.length - 1] > 0) {
       subFactor = 3;
-    }else{
+    } else {
       subFactor = 1;
     }
 
@@ -228,12 +239,76 @@ export class AppComponent implements OnInit, AfterViewChecked {
     }else{
       returnClass = '';
     }
-    
+
     // Below logic is use to deal with setup links which is exception case
     if(linkName.includes('setup') && currentUrl.includes('setup')){
       returnClass = 'active';
     }
     return returnClass;
   }
-  
+
+  menuIcons(name: any) {
+    let className = '';
+    switch (name) {
+      case 'Dashboard':
+        className = 'fas fa-tachometer-alt'
+        break;
+      case 'CD Dashboard':
+        className = 'fas fa-project-diagram'
+        break;
+      case 'Analytics':
+        className = 'fas fas fa-chart-pie'
+        break;
+      case 'Collaboration':
+        className = 'fas fa-vector-square'
+        break;
+      case 'Continuous Delivery':
+        className = 'fas fa-shipping-fast'
+        break;
+      case 'Release Manager':
+        className = 'fas fa-tasks'
+        break;
+      case 'Continuous Verification':
+        className = 'fas fa-drafting-compass'
+        break;
+      case 'Build':
+        className = 'fas fa-cube'
+        break;
+      case 'Test':
+        className = 'fas fa-stethoscope'
+        break;
+      case 'Security':
+        className = 'fas fa-lock'
+        break;
+      case 'Access Management':
+        className = 'fas fa-mars-stroke-h'
+        break;
+      case 'Secret Management':
+        className = 'fas fa-mask'
+        break;
+      case 'Compliance':
+        className = 'fas fa-compact-disc'
+        break;
+      case 'Governance':
+        className = 'fas fa-gavel'
+        break;
+      case 'Production':
+        className = 'fas fa-gavel'
+        break;
+    }
+    return className;
+  }
+
+  toggleSubMenu(index, link) {
+    if(link) {
+      this.router.navigate([link]);
+    } else {
+      this.toggleChild[index] = !this.toggleChild[index];
+    }
+  }
+
+  showChildMenu(SideMenu: any, i: any) {
+    return SideMenu.subMenu.length != 0 && this.toggleChild[i];
+    // return true;
+  }
 }
