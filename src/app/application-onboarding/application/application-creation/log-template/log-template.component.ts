@@ -49,7 +49,7 @@ export class LogTemplateComponent implements OnInit, OnChanges {
     logCharacterization: any;
     autoDatasources: null;
     clusterTagFlag: boolean = false;
-  logClusterData: any;
+  logClusterData: any = [];
   clusterTagConfig: any;
   responseKeys : any;
   clusterTagList=[];
@@ -65,6 +65,7 @@ formBuilder = new FormBuilder();
 clusterTagCall: boolean;
   saveOldTags: any;                                                 // Compare and redefine forms if the tags are different
   resetValues: boolean;
+  logClusterDataHasValue: boolean = false;              //Setting the value to false will setFormValue once and becomes true
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>, private appService: ApplicationService) { }
 
@@ -115,24 +116,24 @@ clusterTagCall: boolean;
           // && this.clusterTagCall
           // this.store.dispatch(ApplicationActions.stopLoadingCustomTags());
           // this.clusterTagCall = false;
-          this.clusterTagList = responseData.tags;
-          if(this.isEditMode && this.resetValues){
-            // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
-            console.log("Edit Mode:");
-            this.setFormValues();
-            // this.saveOldTags = responseData.tags;
-            this.resetValues = false;
+          // this.clusterTagList = responseData.tags;
+          // if(this.isEditMode && this.resetValues){
+          //   // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
+          //   console.log("Edit Mode:");
+          //   this.setFormValues();
+          //   // this.saveOldTags = responseData.tags;
+          //   this.resetValues = false;
 
-            this.logClusterData.forEach((logClusterData, logClusterIndex) => {
-              (<FormArray>this.logTopicsForm.get('clusterList')).push(
-                new FormGroup({
-                  id: new FormControl(''),
-                  string: new FormControl(logClusterData.string),
-                  tag: new FormControl(logClusterData.tag)
-                })
-              );
-            });
-          }
+          //   this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+          //     (<FormArray>this.logTopicsForm.get('clusterList')).push(
+          //       new FormGroup({
+          //         id: new FormControl(''),
+          //         string: new FormControl(logClusterData.string),
+          //         tag: new FormControl(logClusterData.tag)
+          //       })
+          //     );
+          //   });
+          // }
         }
 
         // if(responseData.tags!=null && responseData.isloadedResponseKey)
@@ -191,7 +192,12 @@ clusterTagCall: boolean;
       );
     });
     // this.logTopicsForm.get('clusterList').setValue(this.data.tags);
-    this.logClusterData = this.data.tags;
+    if(this.logClusterDataHasValue == false){
+      this.data.tags.forEach(data => {
+        this.logClusterData.push(data);
+      });
+    }
+    this.logClusterDataHasValue = true;
     if(this.logClusterData != null && this.logClusterData != undefined){
       this.clusterTagFlag = true;
     }
@@ -268,6 +274,7 @@ clusterTagCall: boolean;
 }
 enableReset(){
   this.resetValues = true;
+  this.logClusterDataHasValue = false;
 }
 
 // Below function is use to populate Docker Image name dropdown after selecting ImageSourceData
@@ -422,6 +429,7 @@ onClusterChange(status: boolean){
 
 SubmitForm(){
    this.logForm = this.createLogForm.value;
+  //  this.logClusterDataHasValue = false
    this.logForm['scoringAlgorithm'] = this.logTopicsForm.value['selectScoreAlgo']
    if(this.clusterTagFlag === true){
     this.logForm['tags'] = this.logTopicsForm.value['clusterList'];
@@ -480,17 +488,32 @@ deleteLogTopic(topic,index){
   this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
-addNewClusterTag(){
+addNewCluster(){
   //this.scroll.nativeElement. = this.scroll.nativeElement.
   this.scrollLogTags.nativeElement.scrollTop = this.scrollLogTags.nativeElement.scrollHeight;
   
-  (<FormArray>this.logTopicsForm.get('clusterList')).push(
-    new FormGroup({
-         id: new FormControl(''),
-      string: new FormControl('', Validators.required),
-      tag: new FormControl('', Validators.required)
-    })
-  );
+              this.logClusterData.push({
+                id: "",
+                string: "",
+                tag: ""
+              });
+              let index = (<FormArray>this.logTopicsForm.get('clusterList')).controls.length;
+
+                (<FormArray>this.logTopicsForm.get('clusterList')).push(
+                  new FormGroup({
+                      id: new FormControl(''),
+                    string: new FormControl('', Validators.required),
+                    tag: new FormControl('', Validators.required)
+                  })
+                );
+              let formarr: FormGroup = <FormGroup>(<FormArray>this.logTopicsForm.get('clusterList')).controls[index];
+                  console.log(formarr);
+
+                  formarr.get('tag').valueChanges.subscribe(val => {
+                    this.logClusterData[index].tag = val;
+                })
+                  
+              // formarr.get('string').valueChanges(val => {})
 }
 
 
@@ -506,25 +529,37 @@ customTagUpdate(){
               // this.clusterTagList = clusterTags;
 
           this.clusterTagList = clusterTags;
-          if(this.isEditMode && this.resetValues){
+          if(this.isEditMode ){
+            // && this.resetValues
             // && JSON.stringify(this.saveOldTags) != JSON.stringify(responseData.tags) 
             console.log("Edit Mode:");
             // this.setFormValues();
             const arr = <FormArray>this.logTopicsForm.controls.clusterList;
-            arr.controls = [];
+            // arr.controls = [];
 
             // this.saveOldTags = responseData.tags;
             this.resetValues = false;
+            if(arr.controls.length == 0){
+              this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+                (<FormArray>this.logTopicsForm.get('clusterList')).push(
+                  new FormGroup({
+                    id: new FormControl(logClusterData.id),
+                    string: new FormControl(logClusterData.string),
+                    tag: new FormControl(logClusterData.tag)
+                  })
+                );
+              });
 
-            this.logClusterData.forEach((logClusterData, logClusterIndex) => {
-              (<FormArray>this.logTopicsForm.get('clusterList')).push(
-                new FormGroup({
-                  id: new FormControl(''),
-                  string: new FormControl(logClusterData.string),
-                  tag: new FormControl(logClusterData.tag)
-                })
-              );
-            });
+            }else{
+              (<FormArray>this.logTopicsForm.get('clusterList')).controls.forEach((formG: any, i) => {
+                console.log(formG);
+                setTimeout(() => {
+                  formG.controls.tag.setValue(this.logClusterData[i].tag);                  
+                }, 100);
+              });
+            }
+
+            
           }
 
 
@@ -636,6 +671,12 @@ cannotContainSpace(control: FormControl): {
     var myjson = {
       "name":this.addedTag
     }
+
+
+
+
+
+
     if(this.addedTag!=null)
     {
       this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
