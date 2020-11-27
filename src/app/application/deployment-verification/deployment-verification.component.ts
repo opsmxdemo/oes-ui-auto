@@ -539,26 +539,26 @@ deleteLogService(query,index){
     var logbaselineObj = {};
     for(var i=0;i<logArray.length;i++){
       if(logArray[i].baseline != ""){
-        logbaselineObj[logArray[i].service] = logArray[i].baseline;
+        logbaselineObj[logArray[i].service] = JSON.parse(logArray[i].baseline);
       }            
     }
     var logcanaryObj = {};
     for(var i=0;i<logArray.length;i++){
       if( logArray[i].canary != ""){
-        logcanaryObj[logArray[i].service] = logArray[i].canary;
+        logcanaryObj[logArray[i].service] = JSON.parse(logArray[i].canary);
       }           
     }
     var metricArray= this.metricServiceForm.value.identifiers;
     var metricbaselineObj = {};
     for(var i=0;i<metricArray.length;i++){
       if(metricArray[i].baseline != ""){
-        metricbaselineObj[metricArray[i].service] = metricArray[i].baseline;
+        metricbaselineObj[metricArray[i].service] = JSON.parse(metricArray[i].baseline);
       }      
     }
     var metriccanaryObj = {};
     for(var i=0;i<metricArray.length;i++){
       if(metricArray[i].canary != ""){
-        metriccanaryObj[metricArray[i].service] = metricArray[i].canary;
+        metriccanaryObj[metricArray[i].service] = JSON.parse(metricArray[i].canary);
       }      
     }
 
