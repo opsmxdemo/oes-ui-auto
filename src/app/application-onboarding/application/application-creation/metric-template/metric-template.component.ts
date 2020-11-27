@@ -466,7 +466,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       "isEdit"          : this.isEditMode,
       "templateName" : this.createMetricForm.value.templateName,
       "data": {
-        "groups" : []
+        "groups" : [],
+        "isNormalize": false,
+        "percent_diff_threshold" : 'hard'
       }
     };
     let groupObj = {
