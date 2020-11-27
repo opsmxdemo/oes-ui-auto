@@ -51,22 +51,22 @@ export class CreateAccountComponent implements OnInit {
       }
     )
 
-    if(this.sharedService.getAccountType() === 'editAcc'){
-      if(this.sharedService.getUserData().permissions){
+    if(this.sharedService.type === 'editAcc'){
+      if(this.sharedService.userData.permissions){
         this.createAccountForm.patchValue({
-          name: this.sharedService.getUserData().name,
+          name: this.sharedService.userData.name,
           accountType: 'Kubernetes',
-          namespaces: this.sharedService.getUserData().namespaces,
-          read: this.sharedService.getUserData().permissions.READ,
-          write: this.sharedService.getUserData().permissions.WRITE,
-          execute: this.sharedService.getUserData().permissions.EXECUTE,
+          namespaces: this.sharedService.userData.namespaces,
+          read: this.sharedService.userData.permissions.READ,
+          write: this.sharedService.userData.permissions.WRITE,
+          execute: this.sharedService.userData.permissions.EXECUTE,
           //file: this.sharedService.getUserData().kubeconfigFile,
         });
       }else{
         this.createAccountForm.patchValue({
-          name: this.sharedService.getUserData().name,
+          name: this.sharedService.userData.name,
           accountType: 'Kubernetes',
-          namespaces: this.sharedService.getUserData().namespaces,
+          namespaces: this.sharedService.userData.namespaces,
           read: '',
           write: '',
           execute: '',
@@ -98,6 +98,24 @@ export class CreateAccountComponent implements OnInit {
     this.createAccountForm.markAllAsTouched();
     return this.createAccountForm.valid;
   }  
+
+  arr (value) {
+  //  if(value === ""){
+      return value.filter(function (item) {
+        return item !== '';
+      });
+  //  }else{
+    //  return value;
+   // }
+    //delse{
+   //   return value
+    //}
+
+    if(value === ""){
+      return value = [];
+    }
+    
+  }
   
   //Below function is use to submit whole form and send request to backend
 
@@ -107,6 +125,44 @@ export class CreateAccountComponent implements OnInit {
     this.readList = data.read;
     this.writeList = data.write;
     this.executeList = data.execute;
+
+    
+
+    if(Array.isArray(data.read)){
+
+    }else{
+      if(data.read == undefined){
+        this.readList = [];
+      }else{
+        this.readList = data.read.split(",");
+
+      }
+     
+    }
+    if(Array.isArray(data.write)){
+
+    }else{
+      if(data.write == undefined){
+        this.writeList = [];
+      }else{
+        this.writeList = data.write.split(",");
+
+      }
+    }
+    if(Array.isArray(data.execute)){
+
+    }else{
+      if(data.execute == undefined){
+        this.executeList = [];
+      }else{
+        this.executeList = data.execute.split(",");
+
+      }
+
+    }
+    
+    
+
    }else{
     this.namespacesList = data.namespaces.split(",");
     this.readList = data.read.split(",");
@@ -114,14 +170,24 @@ export class CreateAccountComponent implements OnInit {
     this.executeList = data.execute.split(",");
    }
   
+ 
     
+   if(this.readList == undefined){
+    this.readList = [];
+   }
+   if(this.executeList == undefined){
+    this.executeList = [];
+   }
+    if(this.writeList == undefined){
+    this.writeList = [];
+   }
     this.postDataForm = {
       name : data.name,
       accountType : data.accountType,
       namespaces : this.namespacesList,
-      read : this.readList,
-      write : this.writeList,
-      execute : this.executeList
+      read : this.arr(this.readList),
+      write : this.arr(this.writeList),
+      execute : this.arr(this.executeList)
       }
      
     const formData = new FormData();
