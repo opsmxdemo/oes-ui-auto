@@ -36,6 +36,7 @@ export class CreateAccountComponent implements OnInit {
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required])
   });
+  formData: FormData;
 
 
   constructor(public sharedService: SharedService,
@@ -43,6 +44,24 @@ export class CreateAccountComponent implements OnInit {
               public router: Router) { }
 
   ngOnInit(): void {
+
+    if(this.sharedService.type === 'editAcc'){
+      this.createAccountForm = new FormGroup({
+        name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+        accountType: new FormControl('',[Validators.required]),
+        namespaces: new FormControl('',[Validators.required]),
+        read: new FormControl(''),
+        write: new FormControl(''),
+        execute: new FormControl(''),
+        file: new FormControl(''),
+        fileSource: new FormControl('')
+      });
+    
+    }else{
+
+    }
+
+
     this.store.select(fromFeature.selectAccounts).subscribe(
       (response)=> {
         if(response.accountParentPage){
@@ -189,15 +208,18 @@ export class CreateAccountComponent implements OnInit {
       write : this.arr(this.writeList),
       execute : this.arr(this.executeList)
       }
-     
-    const formData = new FormData();
-    formData.append('files', this.fileContent,'kubeconfig');
 
-    if(this.sharedService.getAccountType() === 'editAcc'){
-      this.store.dispatch(AccountActions.createAccount({accountData: formData,postData: JSON.stringify(this.postDataForm)}));
-    }else{
-     this.store.dispatch(AccountActions.createAccount({accountData: formData,postData:JSON.stringify(this.postDataForm)}));
-    }
+
+      if(this.fileContent){
+        this.formData = new FormData();
+        this.formData.append('files', this.fileContent,'kubeconfig');
+        this.store.dispatch(AccountActions.createAccount({accountData: this.formData,postData:JSON.stringify(this.postDataForm)}));
+
+      }else{
+        this.sharedService.setUserData([]);
+        this.store.dispatch(AccountActions.updateDynamicAccount({updatedAccountData: this.postDataForm}));      }
+
+  
   }
 
 
