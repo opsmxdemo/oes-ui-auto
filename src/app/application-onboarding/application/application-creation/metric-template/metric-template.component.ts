@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import {FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import * as DataSourceActions from '../../../data-source/store/data-source.actions';
 import { MatHorizontalStepper } from '@angular/material/stepper';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-metric-template',
@@ -54,6 +55,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
   metricConfigForm : FormGroup;
   selectAllAPM:boolean=true;
   templateDataGroups : any;
+  apmExpand:any=false;
+  infraExpand:any=false;
 
   constructor(private _formBuilder: FormBuilder,
     public store: Store<fromFeature.State>) { }
@@ -162,6 +165,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
             if(this.INFRACookbook.data != undefined){                               
               if(this.INFRACookbook.data.groups.length > 0){
                 this.INFRACooknookGroups = this.INFRACookbook.data.groups;
+                this.INFRACooknookGroups.controls['selectAll'].setValue(true);
                 //code to remove all items from the Form before pushing
                 const control = <FormArray>this.infracookbookForm.controls['cookbooklist'];
                     for(let i = control.length-1; i >= 0; i--) {
@@ -212,6 +216,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
             if(this.APMCookbook.data != undefined){               
                 if(this.APMCookbook.data.groups.length > 0){
                   this.APMCookbookGroups = this.APMCookbook.data.groups;
+                  this.apmcookbookForm.controls['selectAll'].setValue(true);
                   //code to remove all items from the Form before pushing
                   const control = <FormArray>this.apmcookbookForm.controls['cookbooklist'];
                       for(let i = control.length-1; i >= 0; i--) {
@@ -323,6 +328,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     });
 
     this.infracookbookForm = new FormGroup({
+      selectAll:new FormControl(true),
       cookbooklist: new FormArray([
         new FormGroup({
           group : new FormControl(),
@@ -349,6 +355,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
 
     this.apmcookbookForm = new FormGroup({
+      selectAll:new FormControl(true),
       cookbooklist: new FormArray([
         new FormGroup({
           group : new FormControl(),
@@ -620,12 +627,14 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     this.infraFormGroup.reset();
 
     this.infracookbookForm = new FormGroup({
+      selectAll:new FormControl(true),
       cookbooklist: new FormArray([       
       ])
     });
 
 
     this.apmcookbookForm = new FormGroup({
+      selectAll:new FormControl(true),
       cookbooklist: new FormArray([        
       ])
     });
@@ -642,18 +651,22 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
   onselectAllAPM(event){
     var CheckedValue = event.target.checked
+    
     if(CheckedValue==true)
     {
-      for(let i=0;i<this.apmcookbookForm.value.cookbooklist.length;i++)
+      let cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray
+      for(let i=0;i<cookbookArray.length;i++)
       {
-        this.apmcookbookForm.value.cookbooklist[i].isSelectedToSave=true
-      
+        
+        cookbookArray.controls[i].get('isSelectedToSave').setValue(true);
       }
     }
-    else if(CheckedValue==false){
-      for(let i=0;i<this.apmcookbookForm.value.cookbooklist.length;i++)
+    else{
+      let cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray
+      for(let i=0;i<cookbookArray.length;i++)
       {
-        this.apmcookbookForm.value.cookbooklist[i].isSelectedToSave=false
+        
+        cookbookArray.controls[i].get('isSelectedToSave').setValue(false);
       }
     }
 
@@ -662,20 +675,68 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     
     
   }
-
-  checkboxClicked(event){
-    for(let i=0;i<this.apmcookbookForm.value.cookbooklist.length;i++)
+  
+  onselectAllInfra(event){
+    var CheckedValue = event.target.checked
+    
+    if(CheckedValue==true)
+    {
+      let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray
+      for(let i=0;i<cookbookArray.length;i++)
       {
-        if(this.apmcookbookForm.value.cookbooklist[i].isSelectedToSave==false)
+        
+        cookbookArray.controls[i].get('isSelectedToSave').setValue(true);
+      }
+    }
+    else{
+      let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray
+      for(let i=0;i<cookbookArray.length;i++)
+      {
+        
+        cookbookArray.controls[i].get('isSelectedToSave').setValue(false);
+      }
+    }
+
+    //console.log(this.apmcookbookForm.value.cookbooklist)
+
+    
+    
+  }
+  checkboxClicked(event,metricName){
+    if(metricName=="apm"){
+      let cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
+    for(let i=0;i<cookbookArray.length;i++)
+      {
+        let iteratedIsSelectedToSave = cookbookArray.controls[i].get('isSelectedToSave') as FormControl
+        if(iteratedIsSelectedToSave.value==true)
         {
-          this.selectAllAPM=false;
-          break;
+          this.apmcookbookForm.get('selectAll').setValue(true)
         }
         else{
-          this.selectAllAPM=true;
+          this.apmcookbookForm.get('selectAll').setValue(false)
+          break;
         }
       }
+    }
+    else{
+      let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
+    for(let i=0;i<cookbookArray.length;i++)
+      {
+        let iteratedIsSelectedToSave = cookbookArray.controls[i].get('isSelectedToSave') as FormControl
+        if(iteratedIsSelectedToSave.value==true)
+        {
+          this.infracookbookForm.get('selectAll').setValue(true)
+        }
+        else{
+          this.infracookbookForm.get('selectAll').setValue(false)
+          break;
+        }
+      }
+    }
+    
+    
   }
+
 
   //Function to form based edit apm infra metric template
   prepopulateApmInfraForm(){
@@ -846,6 +907,12 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
               })
             );
           })
+  }
+  expandCollapseMetric(index){
+    alert(".childMetric"+index)
+      $(".childMetric"+index).hide()
+    
+   
   }
 
 }
