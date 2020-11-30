@@ -221,8 +221,8 @@
                   </div>
                 </form>
               </mat-step>
-              <mat-step [stepControl]="logTopicsForm">
-                <form [formGroup]="logTopicsForm">
+              <mat-step [stepControl]="logTopicsTab">
+                <form [formGroup]="logTopicsTab">
                   <ng-template matStepLabel>Log Topic</ng-template>
                   <div id="step-2">
                     <div class="multisteps-form__content">                          
@@ -246,7 +246,7 @@
                                  </tr>
                                </thead>
                                <tbody>
-                                 <tr *ngFor="let logTopics of logTopicsForm.get('topicsList')['controls'];let i=index;last as isLast">
+                                 <tr *ngFor="let logTopics of logTopicsTab.get('topicsList')['controls'];let i=index;last as isLast">
                                   <ng-container [formGroupName]="i">
                                    <td>
                                      <input type="text"  class="form-control" value="{{logTopics.string}}" formControlName="string" required>
@@ -381,7 +381,7 @@
                                     <a (click)="deleteClusterTag(clusterTags,i)" class="text-muted"><i style="color: red !important;" class="far fa-trash-alt"></i></a>
                                   </td>
                                   <td *ngIf="isLast" width="20" class="text-right">
-                                    <a (click)="addNewCluster()" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Cluster"><i class="fas fa-plus"></i></a>
+                                    <a (click)="addNewCluster(true)" data-toggle="tooltip" data-placement="top" data-original-title="Add New Log Cluster"><i class="fas fa-plus"></i></a>
                                    </td>
                                   </ng-container>
                                 </tr>
