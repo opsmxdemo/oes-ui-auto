@@ -92,22 +92,22 @@
                            <form [formGroup]="apmcookbookForm">
                            <div class="form-group">
                              <label>API Selection</label>
-                             <table class="table table-outline" formArrayName="cookbooklist">
+                             <table class="table table-outline" >
                                <thead>
                                  <tr>
                                    <th>
                                      <div class="custom-control custom-checkbox">
-                                      <input type="checkbox" class="custom-control-input" id="selectAll" (change)="onselectAllAPM($event)" [disabled]="isEditMode ? 'disabled' : ''">
+                                      <input type="checkbox" class="custom-control-input" formControlName="selectAll" id="selectAll" (change)="onselectAllAPM($event)" [disabled]="isEditMode ? 'disabled' : ''">
                                       <label class="custom-control-label" for="selectAll">Select All</label>
                                      </div>
                                    </th>
                                  </tr>
                                </thead>
                                <tbody>                                
-                                <tr *ngFor="let apmgroup of apmcookbookForm.value.cookbooklist ; let i=index;" >
+                                <tr *ngFor="let apmgroup of apmcookbookForm.value.cookbooklist ; let i=index;" formArrayName="cookbooklist" >
                                   <td [formGroupName]=i>
                                     <div class="custom-control custom-checkbox" [ngClass]="isEditMode ? 'custom-disable' : ''">                                      
-                                      <input type="checkbox" (change)="checkboxClicked($event)" class="custom-control-input" formControlName="isSelectedToSave"   id={{apmgroup.group}} [disabled]="isEditMode ? 'disabled' : ''">
+                                      <input type="checkbox" (change)="checkboxClicked($event,'apm')" class="custom-control-input" formControlName="isSelectedToSave"   id={{apmgroup.group}} [disabled]="isEditMode ? 'disabled' : ''">
                                       <label class="custom-control-label" for={{apmgroup.group}}>{{apmgroup.group}}</label>
                                     </div>
                                   </td>
@@ -177,19 +177,19 @@
                        </div>
                        <!-- /.row -->
 
-                       <hr class="ml-0 mt-3 mb-3" />
+                       <hr class="ml-0 mt-3 mb-3" *ngIf ="INFRACookbook != null || INFRACookbook != undefined"  />
 
-                       <div class="row">
+                       <div class="row" *ngIf ="INFRACookbook != null || INFRACookbook != undefined">
                          <div class="col-6">
                            <form [formGroup]="infracookbookForm">
                            <div class="form-group">
                              <label>Infrastructure metric Groups</label>
-                             <table class="table table-outline" formArrayName="cookbooklist">
+                             <table class="table table-outline" >
                                <thead>
                                  <tr>
                                    <th>
                                      <div class="custom-control custom-checkbox">
-                                       <input type="checkbox" class="custom-control-input" id="in_selectAll" [disabled]="isEditMode ? 'disabled' : ''">
+                                       <input type="checkbox" class="custom-control-input" id="in_selectAll" (change)="onselectAllInfra($event)" formControlName="selectAll" [disabled]="isEditMode ? 'disabled' : ''">
                                        <label class="custom-control-label" for="in_selectAll">Select All</label>
                                      </div>
                                    </th>
@@ -199,7 +199,7 @@
                                  <tr *ngFor="let group of infracookbookForm.value.cookbooklist; let i=index">
                                    <td [formGroupName]=i>
                                      <div class="custom-control custom-checkbox" [ngClass]="isEditMode ? 'custom-disable' : ''">
-                                       <input type="checkbox" class="custom-control-input" [checked]="group.isSelectedToSave" id={{group.group}} formControlName="isSelectedToSave">
+                                       <input type="checkbox" class="custom-control-input" (change)="checkboxClicked($event,'infra')" [checked]="group.isSelectedToSave" id={{group.group}} formControlName="isSelectedToSave">
                                        <label class="custom-control-label" for={{group.group}}>{{group.group}}</label>
                                      </div>
                                    </td>
@@ -276,19 +276,20 @@
                          <div class="form-group">
                            <!-- <label>APM</label> -->
                            <div class="custom-collapse" *ngIf="this.apmcookbookForm.value.cookbooklist.length > 0">
-                            <a class="btn btn-default" data-toggle="collapse" href="#apmCollapse" role="button" aria-expanded="false" aria-controls="apmCollapse">
+                            <a class="btn btn-default"  role="button" (click)= "apmExpand = !apmExpand">
                               <i class="fas fa-caret-right"></i> APM
                             </a>
                              <form [formGroup]="apmcookbookForm">
-                            <div class="collapse" id="apmCollapse">
+                            <div id="apmCollapse" *ngIf="apmExpand">
                               <div class="collapse-child">
                                 <table class="table mb-0" formArrayName="cookbooklist">
                                   <tbody>
                                    <ng-container *ngFor="let cookbook of apmcookbookForm.value.cookbooklist; let i=index"> 
                                      <tr [formGroupName]="i">
                                        <td *ngIf="cookbook.isSelectedToSave">
-                                         <i class="fas fa-caret-down"></i> <input type="text" formControlName="group" value="{{cookbook.group}}" class="border0" readonly>
+                                         <i class="fas fa-caret-down" (click)="expandCollapseMetric(i)"></i> <input type="text" formControlName="group" value="{{cookbook.group}}" class="border0" readonly>
                                          <!-- <input type="text" class="btn btn-default" value="0" autofocus="true" formControlName="averageWeight"> -->
+                                         <div class="childMetric{{i}}">
                                          <table class="table-sm" formArrayName="metrics" >
                                            <tbody>
                                              <ng-container *ngFor="let metric of cookbook.metrics; let j=index">
@@ -335,6 +336,7 @@
                                            </ng-container>
                                            </tbody>
                                          </table>
+                                         </div>
                                        </td>
                                      </tr>
 
@@ -350,13 +352,13 @@
                            </form>
                           </div>
                            
-                           <div class="custom-collapse" *ngIf="this.infracookbookForm.value.cookbooklist.length > 0">
-                             <a class="btn btn-default" data-toggle="collapse" href="#infraCollapse" role="button" aria-expanded="false" aria-controls="infraCollapse">
-                               <i class="fas fa-caret-right"></i> INFRA
-                             </a>
-                              <form [formGroup]="infracookbookForm">
-                             <div class="collapse" id="infraCollapse">
-                               <div class="collapse-child">
+                          <div class="custom-collapse" *ngIf="this.infracookbookForm.value.cookbooklist.length > 0">
+                            <a class="btn btn-default"  role="button" (click)= "infraExpand = !infraExpand" >
+                              <i class="fas fa-caret-right"></i> INFRA
+                            </a>
+                             <form [formGroup]="infracookbookForm">
+                            <div id="infraCollapse" *ngIf = "infraExpand">
+                              <div class="collapse-child">
                                  <table class="table mb-0" formArrayName="cookbooklist">
                                    <tbody>
                                     <ng-container *ngFor="let cookbook of infracookbookForm.value.cookbooklist; let i=index"> 
