@@ -68,6 +68,9 @@ clusterTagCall: boolean;
   resetValues: boolean;
   logClusterDataHasValue: boolean = false;              //Setting the value to false will setFormValue once and becomes true
   tagPresent: boolean = false;                      // Check if the tag is present in the cluster Tag list or not
+  clusterListForm: FormGroup;
+  logTopicsTab: FormGroup;
+  skipCustomTag: boolean;
     
   constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>, private appService: ApplicationService, public toastr: NotificationService) { }
 
@@ -185,7 +188,7 @@ clusterTagCall: boolean;
     // this.logTopicsForm.get('topicsList').setValue(this.formBuilder.array([]));
     this.logTopicsData = this.data.errorTopics;
     this.logTopicsData.forEach((logTopicsData, logIndex) => {
-      (<FormArray>this.logTopicsForm.get('topicsList')).push(
+      (<FormArray>this.logTopicsTab.get('topicsList')).push(
         new FormGroup({
           string: new FormControl(logTopicsData.string),
           topic: new FormControl(logTopicsData.topic),
@@ -195,6 +198,7 @@ clusterTagCall: boolean;
     });
     // this.logTopicsForm.get('clusterList').setValue(this.data.tags);
     if(this.logClusterDataHasValue == false){
+      this.logClusterData = [];
       this.data.tags.forEach(data => {
         this.logClusterData.push(data);
       });
@@ -246,6 +250,7 @@ clusterTagCall: boolean;
    // define log form
 
    defineForms() {
+     this.skipCustomTag = false;
     this.createLogForm = new FormGroup({
      templateName: new FormControl('',[Validators.required]),
      monitoringProvider:  new FormControl(''),
@@ -262,8 +267,10 @@ clusterTagCall: boolean;
 
 
    });
+   this.logTopicsTab = new FormGroup({
+    topicsList: new FormArray([])
+   });
    this.logTopicsForm = new FormGroup({
-    topicsList: new FormArray([]),
     clusterList: new FormArray([]),
     inputTags:new FormControl(),
     selectScoreAlgo:new FormControl(),
@@ -271,7 +278,7 @@ clusterTagCall: boolean;
     clusterTagId: new FormControl(false),
     addedTags:new FormArray([]),
 
-  });
+        });
 
  this.logSensitivityTypes = ["high","low","medium"];
 
@@ -357,14 +364,16 @@ getLogTopics(){
      (response) => {
        if(response.logTopicsList != null && response.isloadedlogTopicsData) {
          this.store.dispatch(ApplicationActions.isLoadedLogTopics())
+         this.logTopicsTab = new FormGroup({
+          topicsList: new FormArray([])
+         })
         this.logTopicsForm = new FormGroup({
-          topicsList: new FormArray([]),
           addedTags: new FormArray([]),
           inputTags:new FormControl(),
           selectScoreAlgo:new FormControl(this.scoringAlgoData['defaultValue']),
           clusterList: new FormArray([]),
           clusterTagId: new FormControl(false),
-          enableClusterTags: new FormControl(),
+          enableClusterTags: new FormControl()
         });
          this.loading = response.logListLoading;
          this.logTopicsData = response.logTopicsList['logTopics'];
@@ -372,7 +381,7 @@ getLogTopics(){
         
           // Populating logtopics 
      this.logTopicsData.forEach((logTopicsData, logIndex) => {
-         (<FormArray>this.logTopicsForm.get('topicsList')).push(
+         (<FormArray>this.logTopicsTab.get('topicsList')).push(
            new FormGroup({
              string: new FormControl(logTopicsData.string),
              topic: new FormControl(logTopicsData.topic),
@@ -443,7 +452,7 @@ SubmitForm(){
    }else{
     this.logForm['tags'] = [];
    }
-   this.logForm['errorTopics'] = this.logTopicsForm.value['topicsList'];
+   this.logForm['errorTopics'] = this.logTopicsTab.value['topicsList'];
    this.logTemplateData = this.logForm;
 
    // Action to create the log template 
@@ -468,6 +477,7 @@ SubmitForm(){
    this.createLogForm.value['autoBaseline'] = false;
    this.createLogForm.value['regExFilter'] = false;
     this.createLogForm.reset();
+    this.logTopicsTab.reset();
     this.logTopicsForm.reset();
     this.selectedDataSource =  null;
     this.editTagInput=false;
@@ -479,7 +489,7 @@ SubmitForm(){
 addNewLogTopics(){
   // this.scrollLogTopics.nativeElement.scrollTop = this.scrollLogTopics.nativeElement.scrollHeight;
   this.scrollLogTopics.nativeElement.scrollTop = 0;
-  (<FormArray>this.logTopicsForm.get('topicsList')).insert(0, 
+  (<FormArray>this.logTopicsTab.get('topicsList')).insert(0, 
     new FormGroup({
       string: new FormControl('', Validators.required),
       topic: new FormControl('', Validators.required),
@@ -495,15 +505,19 @@ deleteLogTopic(topic,index){
   //this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
-addNewCluster(){
+addNewCluster(click = false){
   //this.scroll.nativeElement. = this.scroll.nativeElement.
+  
   this.scrollLogTags.nativeElement.scrollTop = this.scrollLogTags.nativeElement.scrollHeight;
   
-              this.logClusterData.push({
-                id: "",
-                string: "",
-                tag: ""
-              });
+              if(click){
+                    this.logClusterData.push({
+                      id: "",
+                      string: "",
+                      tag: ""
+                    });
+
+              }
               let index = (<FormArray>this.logTopicsForm.get('clusterList')).controls.length;
 
                 (<FormArray>this.logTopicsForm.get('clusterList')).push(
@@ -519,6 +533,9 @@ addNewCluster(){
                   formarr.get('tag').valueChanges.subscribe(val => {
                     this.logClusterData[index].tag = val;
                 })
+                  formarr.get('string').valueChanges.subscribe(val => {
+                    this.logClusterData[index].string = val;
+                })
                   
               // formarr.get('string').valueChanges(val => {})
 }
@@ -528,7 +545,8 @@ addNewCluster(){
 
 deleteClusterTag(cluster,index){
   (<FormArray>this.logTopicsForm.get('clusterList')).removeAt(index);
-  //this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
+  this.logClusterData.splice(index,1);
+  // this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
 }
 
 customTagUpdate(){
@@ -548,6 +566,7 @@ customTagUpdate(){
             this.resetValues = false;
             if(arr.controls.length == 0){
               this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+                
                 (<FormArray>this.logTopicsForm.get('clusterList')).push(
                   new FormGroup({
                     id: new FormControl(logClusterData.id),
@@ -558,9 +577,12 @@ customTagUpdate(){
               });
 
             }else{
+                console.log("else: ", this.logClusterData);
+                console.log("logtopics: ", this.logTopicsForm.get('clusterList'));
               (<FormArray>this.logTopicsForm.get('clusterList')).controls.forEach((formG: any, i) => {
                 console.log(formG);
                 setTimeout(() => {
+                  formG.controls.string.setValue(this.logClusterData[i].string); 
                   formG.controls.tag.setValue(this.logClusterData[i].tag);                  
                 }, 100);
               });
@@ -726,6 +748,10 @@ cannotContainSpace(control: FormControl): {
 
   }
 getTagsList(){
+  if(this.skipCustomTag){
+    return;
+  }
+  this.skipCustomTag = true;
   this.customTagUpdate();
   // this.store.dispatch(ApplicationActions.loadCustomTags({ applicationId: this.applicationId }));
 }
