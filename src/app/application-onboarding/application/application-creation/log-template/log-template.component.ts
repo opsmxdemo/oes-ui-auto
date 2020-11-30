@@ -346,7 +346,9 @@ getLogTopics(){
   if(this.isEditMode) return;
  this.store.dispatch(ApplicationActions.loadLogTopics());
  this.store.dispatch(ApplicationActions.loadSupportingDatasources());
- this.store.dispatch(ApplicationActions.loadClusterTags());
+ //Removing the loadClusterTags as we are getting the cluster tags and errorTopics in the logTemplates api
+//  http://oes-master-gate.engineering.opsmx.net/autopilot/api/v1/applications/14/logTemplates
+//  this.store.dispatch(ApplicationActions.loadClusterTags());
  
  //fetching data from state
  this.store.select(fromFeature.selectLogTemplate).subscribe(
