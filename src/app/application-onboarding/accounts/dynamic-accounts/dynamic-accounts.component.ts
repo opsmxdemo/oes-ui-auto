@@ -142,7 +142,6 @@ export class DynamicAccountsComponent implements OnInit {
     $("[data-toggle='tooltip']").tooltip('hide');
     this.sharedAccountData.setUserData([]);
     this.sharedAccountData.setAccountType('');
-    debugger
     this.store.dispatch(AccountsActions.loadAccount({page:'/setup/accounts'}));
   }
 

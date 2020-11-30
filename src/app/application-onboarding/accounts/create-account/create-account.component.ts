@@ -211,28 +211,14 @@ export class CreateAccountComponent implements OnInit {
 
 
       if(this.fileContent){
-        alert('file');
         this.formData = new FormData();
         this.formData.append('files', this.fileContent,'kubeconfig');
         this.store.dispatch(AccountActions.createAccount({accountData: this.formData,postData:JSON.stringify(this.postDataForm)}));
-
       }else{
-        alert('empty');
         this.sharedService.setUserData([]);
         this.store.dispatch(AccountActions.updateDynamicAccount({updatedAccountData: this.postDataForm}));      }
 
-    
-  //   this.store.dispatch(AccountActions.updateDynamicAccount({updatedAccountData: this.postDataForm}));
-
-
-    // if(this.sharedService.getAccountType() === 'editAcc'){
-    //   this.sharedService.setUserData([]);
-    //   this.store.dispatch(AccountActions.updateDynamicAccount({updatedAccountData: this.postDataForm}));
-    // }else{
-    //  this.store.dispatch(AccountActions.createAccount({accountData: this.formData,postData:JSON.stringify(this.postDataForm)}));
-    // }
   }
-
 
 
   // Below function is use to redirect to parent page after click on cancel btn
