@@ -273,7 +273,13 @@
             </div>
           </div>
         </div>
-        <h3 *ngIf="logAnalysisData?.clusters?.length == 0">No Errors found</h3>
+        <div *ngIf="logAnalysisData?.clusters?.length == 0" [ngStyle]="{'font-size': '16px', 'font-weight': 'bold' }">
+          <p *ngIf="eventTab == 'unexpected'">No Errors found</p>
+          <p  *ngIf="eventTab == 'expected'">No common events found</p>
+          <p  *ngIf="eventTab == 'baseline'">No unique events </p>
+          <p  *ngIf="eventTab == 'ignored'">No ignored events from new release</p>
+          <!-- For all tabs its not belong to any of the above event tabs -->
+          <p  *ngIf="eventTab != 'unexpected' && eventTab != 'expected' && eventTab != 'baseline' && eventTab != 'ignored' ">No events to display</p></div>
       </div>
     </div>
   </div>
