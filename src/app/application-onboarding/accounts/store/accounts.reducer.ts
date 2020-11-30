@@ -6,14 +6,18 @@ export interface State {
     accountList: any;
     accountParentPage: string;
     accountDeleted: boolean;
-    errorMessage: string
+    errorMessage: string;
+    isDynamicAccountLoaded: boolean;
+    accountListData: any;
 }
 
 export const initialState: State = {
     errorMessage: null,
     accountList: null,
     accountParentPage: null,
-    accountDeleted: false
+    accountDeleted: false,
+    isDynamicAccountLoaded: false,
+    accountListData: null,
 }
 
 export function AccountsReducer(
@@ -52,5 +56,27 @@ export function AccountsReducer(
                 errorMessage:action.errorMessage
             })
         ),
+
+        on(AccountsAction.updateDynamicAccount,
+            (state,action) => ({
+                ...state,
+                accountListData:action.updatedAccountData,
+                isDynamicAccountLoaded: false
+            })
+        ),
+        on(AccountsAction.postUpdateDynamicAccount,
+            (state,action) => ({
+                ...state,
+                accountListData:action.dynamicAccountListData,
+                isDynamicAccountLoaded: true
+            })
+        ),
+        on(AccountsAction.isDynamicAccountUpdated,
+            (state,action) => ({
+                ...state,
+                isDynamicAccountLoaded: false
+            })
+        ),
+
     )(accountsState,accountsAction);
 }
