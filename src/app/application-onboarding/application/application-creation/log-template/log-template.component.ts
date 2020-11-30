@@ -216,9 +216,11 @@ clusterTagCall: boolean;
     //     })
     //   );
     // });
-    if(this.data.tags.length > 0) {
-      this.logTopicsForm.get('enableClusterTags').setValue(true);
-    }
+    if(this.data.tags != undefined && this.data.tags != null && this.data.tags != ''){
+      if(this.data.tags.length > 0) {
+        this.logTopicsForm.get('enableClusterTags').setValue(true);
+      }
+    }    
   }
 
   // Below function is use to fetched json from json editor
@@ -408,17 +410,18 @@ onClusterChange(status: boolean){
   if(status === true){
     this.store.select(fromFeature.selectLogTemplate).subscribe(
       (response) => {
-          
-    this.logClusterData.forEach((logClusterData, logClusterIndex) => {
-     (<FormArray>this.logTopicsForm.get('clusterList')).push(
-      new FormGroup({
-         id: new FormControl(''),
-         string: new FormControl(logClusterData.string),
-         tag: new FormControl(logClusterData.tag)
-       })
-     );
-  });
-    
+     
+    if(this.logClusterData != undefined){
+      this.logClusterData.forEach((logClusterData, logClusterIndex) => {
+        (<FormArray>this.logTopicsForm.get('clusterList')).push(
+         new FormGroup({
+            id: new FormControl(''),
+            string: new FormControl(logClusterData.string),
+            tag: new FormControl(logClusterData.tag)
+          })
+        );
+     });
+    }
   })   
   }
   else{
@@ -489,7 +492,7 @@ addNewLogTopics(){
 
 deleteLogTopic(topic,index){
   (<FormArray>this.logTopicsForm.get('topicsList')).removeAt(index);
-  this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
+  //this.logTopicsForm.get('topicsList')['controls'].splice(index, 1);
 }
 
 addNewCluster(){
@@ -525,7 +528,7 @@ addNewCluster(){
 
 deleteClusterTag(cluster,index){
   (<FormArray>this.logTopicsForm.get('clusterList')).removeAt(index);
-  this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
+  //this.logTopicsForm.get('clusterList')['controls'].splice(index,1);
 }
 
 customTagUpdate(){
