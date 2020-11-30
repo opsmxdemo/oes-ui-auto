@@ -10,6 +10,7 @@ import * as DataSourceActions from '../../../data-source/store/data-source.actio
 import { Input } from '@angular/core';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { ApplicationService } from 'src/app/services/application.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 
 @Component({
@@ -66,8 +67,9 @@ clusterTagCall: boolean;
   saveOldTags: any;                                                 // Compare and redefine forms if the tags are different
   resetValues: boolean;
   logClusterDataHasValue: boolean = false;              //Setting the value to false will setFormValue once and becomes true
+  tagPresent: boolean = false;                      // Check if the tag is present in the cluster Tag list or not
     
-  constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>, private appService: ApplicationService) { }
+  constructor(private _formBuilder: FormBuilder,public store: Store<fromFeature.State>, private appService: ApplicationService, public toastr: NotificationService) { }
 
   ngOnChanges(changes: SimpleChanges){
     if(this.isEditMode && this.templateData != null){
@@ -638,7 +640,7 @@ cannotContainSpace(control: FormControl): {
     setTimeout(() => {
       this.resetValues = true;
     this.customTagUpdate();
-    }, 400);
+    }, 1000);
   }
   selectedTag(value){
     this.selectedDropDownTag = value;
@@ -647,6 +649,7 @@ cannotContainSpace(control: FormControl): {
    });
   }
   submitEditedTag(){
+    this.addTagInput=false;
     for(let i=0;i<this.clusterTagList.length;i++)
     {
       if(this.clusterTagList[i].name==this.selectedDropDownTag)
@@ -659,31 +662,52 @@ cannotContainSpace(control: FormControl): {
         // this.clusterTagList[i].name = this.logTopicsForm.get('inputTags').value // remove once api is there
       }
     }
-    this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value;
-    this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
-    setTimeout(() => {
-      this.resetValues = true;
-    this.customTagUpdate();
-    }, 1000);
+
+      this.tagPresent = false;
+      //Below is the code to check the duplicate names and call API
+      this.clusterTagList.forEach(items => {
+        if(new RegExp('^' + items.name + '$', 'i').test(this.logTopicsForm.get('inputTags').value)){  //Regular expression is used to check case insensitive comparision
+          this.toastr.showError(this.logTopicsForm.get('inputTags').value + ' is already present in the Tag list', 'DUPLICATE');
+          this.tagPresent = true;
+          return;
+        }
+      })
+      if(!this.tagPresent){
+        this.editTagInput=false;
+        this.selectedDropDownTag = this.logTopicsForm.get('inputTags').value;
+        this.store.dispatch(ApplicationActions.editCustomTags({ applicationId: this.applicationId,tagId:this.editedTagId,edittagData:myjson  }));
+        setTimeout(() => {
+          this.resetValues = true;
+        this.customTagUpdate();
+        }, 1000);
+      }
   }
   submitNewTag(){
+    this.editTagInput=false;
     this.addedTag= this.logTopicsForm.get('inputTags').value
     var myjson = {
       "name":this.addedTag
     }
 
-
-
-
-
-
     if(this.addedTag!=null)
     {
-      this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
-    setTimeout(() => {
-      this.resetValues = true;
-      this.customTagUpdate();
-    }, 400);
+      this.tagPresent = false;
+      //Below is the code to check the duplicate names and call API
+      this.clusterTagList.forEach(items => {
+        if(new RegExp('^' + items.name + '$', 'i').test(this.addedTag)){  //Regular expression is used to check case insensitive comparision
+          this.toastr.showError(this.addedTag + ' is already present in the Tag list', 'DUPLICATE');
+          this.tagPresent = true;
+          return;
+        }
+      })
+      if(!this.tagPresent){
+        this.addTagInput=false;
+        this.store.dispatch(ApplicationActions.addCustomTags({ applicationId: this.applicationId ,newtagData:myjson  }));  
+        setTimeout(() => {
+          this.resetValues = true;
+          this.customTagUpdate();
+        }, 1000);
+      }
     }
   //   this.store.select(fromFeature.selectLogTemplate).subscribe(
   //     (response) => {
