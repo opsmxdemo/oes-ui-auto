@@ -21,8 +21,11 @@
 
                 <div class="graph-controls d-flex">
                   <div class="mr-3">
-                    <select class="form-control">
-                      <option>Last 7 Days</option>
+                    <select class="form-control" (change)="filterUpdated($event)" >
+                      <option value="1D">Last 1 Day</option>
+                      <option value="7D">Last 7 Days</option>
+                      <option value="1M">Last 1 Month</option>
+                      <option value="6M">Last 6 Months</option>
                     </select>
                   </div>
 
@@ -51,7 +54,7 @@
                   <app-loading-screen></app-loading-screen>
                 </div>
                 <div *ngIf="!mainChartLoading">
-                  <app-area-chart [dataSource]="mainChartData.dataSource" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-area-chart>
+                  <app-area-chart [dataSource]="finalHealthChartData" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-area-chart>
                 </div>
               </div>
               <!-- /.graph-body -->
@@ -66,7 +69,8 @@
         <!-- #################### widget charts codes start ############################ -->
 
         <div class="col-sm-4 px-1 mb-2 cdDashboard" *ngFor="let widget of widgetRawData;let widgetindex=index">
-          <div class="card border-0">
+          <div class="card border-0" *ngIf="widget.name != 'Health Status' && widget.name != 'Automated Verification' && widget.name != 'Manual Judgement Time' 
+          && widget.name != 'Rollback Services'">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
                 <div class="graph-title">
