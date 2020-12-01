@@ -56,7 +56,7 @@
                     <tr *ngFor="let accountsData of currentPage | filter:searchData; let i=index">
                       <td>{{accountsData.name}}</td>
                       <td>Kubernetes</td>
-                      <td>{{accountsData.namespaces[0]}}</td>
+                      <td>{{accountsData.namespaces}}</td>
 
                       <td>
                         <span *ngIf="accountsData.permissions && accountsData.permissions.READ">
