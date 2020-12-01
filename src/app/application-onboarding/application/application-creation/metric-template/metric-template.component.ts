@@ -915,4 +915,18 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
    
   }
 
+  removeMetric(metricClass,i,j){
+    if(metricClass=='apm'){
+      let cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
+      let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
+      metricArray.removeAt(j);
+    }
+    else if(metricClass=='infra')
+    {
+      let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
+      let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
+      metricArray.removeAt(j);
+    }
+  }
+
 }
