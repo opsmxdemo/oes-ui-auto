@@ -146,6 +146,17 @@ export class CreateAccountComponent implements OnInit {
     this.executeList = data.execute;
 
     
+    if(Array.isArray(data.namespaces)){
+
+    }else{
+      if(data.namespaces == undefined){
+        this.namespacesList = [];
+      }else{
+        this.namespacesList = data.namespaces.split(",");
+
+      }
+     
+    }
 
     if(Array.isArray(data.read)){
 
