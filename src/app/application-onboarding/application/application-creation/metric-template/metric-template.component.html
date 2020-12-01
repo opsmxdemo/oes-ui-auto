@@ -284,27 +284,28 @@
                               <div class="collapse-child">
                                 <table class="table mb-0" formArrayName="cookbooklist">
                                   <tbody>
-                                   <ng-container *ngFor="let cookbook of apmcookbookForm.value.cookbooklist; let i=index"> 
+                                   <ng-container *ngFor="let cookbook of apmcookbookForm.get('cookbooklist')['controls']; let i=index">  
                                      <tr [formGroupName]="i">
-                                       <td *ngIf="cookbook.isSelectedToSave">
+                                       <td *ngIf="cookbook.get('isSelectedToSave').value">
                                          <i class="fas fa-caret-down" (click)="expandCollapseMetric(i)"></i> <input type="text" formControlName="group" value="{{cookbook.group}}" class="border0" readonly>
                                          <!-- <input type="text" class="btn btn-default" value="0" autofocus="true" formControlName="averageWeight"> -->
-                                         <div class="childMetric{{i}}">
+                                         <div >
                                          <table class="table-sm" formArrayName="metrics" >
                                            <tbody>
-                                             <ng-container *ngFor="let metric of cookbook.metrics; let j=index">
+                                             <ng-container *ngFor="let metric of cookbook.get('metrics')['controls']; let j=index">
                                              <tr [formGroupName]="j" >
                                                <td>
                                                  <input type="text" value="{{metric.name}}" formControlName="name">
                                                </td>
                                                <td>
+                                                
                                                  <select formControlName="aggregator">
-                                                   <option value="{{metric.aggregator}}">{{metric.aggregator}}</option>
+                                                   <option value="{{metric.value.aggregator}}">{{metric.value.aggregator}}</option>
                                                  </select>
                                                </td>
                                                <td>
                                                  <select formControlName="displayUnit">
-                                                   <option value="{{metric.displayUnit}}">{{metric.displayUnit}}</option>
+                                                   <option value="{{metric.value.displayUnit}}">{{metric.value.displayUnit}}</option>
                                                  </select>
                                                </td>
                                                <td>
@@ -330,7 +331,7 @@
                                                 </div>
                                               </td>
                                                <td>
-                                                 <!-- <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="far fa-trash-alt"></i></a> -->
+                                                <i class="far fa-trash-alt" (click)="removeMetric('apm',i,j)" style="cursor: pointer;"></i>
                                                </td>
                                              </tr>
                                            </ng-container>
@@ -361,21 +362,21 @@
                               <div class="collapse-child">
                                  <table class="table mb-0" formArrayName="cookbooklist">
                                    <tbody>
-                                    <ng-container *ngFor="let cookbook of infracookbookForm.value.cookbooklist; let i=index"> 
+                                    <ng-container *ngFor="let cookbook of infracookbookForm.get('cookbooklist')['controls']; let i=index"> 
                                       <tr [formGroupName]="i">
-                                        <td *ngIf="cookbook.isSelectedToSave">
+                                        <td *ngIf="cookbook.get('isSelectedToSave').value">
                                           <i class="fas fa-caret-down"></i> <input type="text" formControlName="group" value="{{cookbook.group}}">
                                           <!-- <input type="text" class="btn btn-default" value="0" autofocus="true" formControlName="averageWeight"> -->
                                           <table class="table-sm" formArrayName="metrics" >
                                             <tbody>
-                                              <ng-container *ngFor="let metric of cookbook.metrics; let j=index">
+                                              <ng-container *ngFor="let metric of cookbook.get('metrics')['controls']; let j=index">
                                               <tr [formGroupName]="j" >
                                                 <td>
                                                   <input type="text" value="{{metric.name}}" formControlName="name">
                                                 </td>
                                                 <td>
                                                   <select formControlName="aggregator">
-                                                    <option value="{{metric.aggregator}}">{{metric.aggregator}}</option>
+                                                    <option value="{{metric.value.aggregator}}">{{metric.value.aggregator}}</option>
                                                   </select>
                                                 </td>
                                                 <!-- <td>
@@ -406,7 +407,7 @@
                                                   </div>
                                                 </td>
                                                 <td>
-                                                  <!-- <a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="far fa-trash-alt"></i></a> -->
+                                                  <i class="far fa-trash-alt" (click)="removeMetric('infra',i,j)" style="cursor: pointer;"></i>
                                                 </td>
                                               </tr>
                                             </ng-container>
