@@ -1,4 +1,4 @@
 {
     "endPointUrl":"http://oes-visibility-gate.engineering.opsmx.net/",
-    "setApplicationInterval": 16000
+    "setApplicationInterval": 300000
 }
