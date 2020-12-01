@@ -909,7 +909,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
           })
   }
   expandCollapseMetric(index){
-    alert(".childMetric"+index)
+    
       $(".childMetric"+index).hide()
     
    
