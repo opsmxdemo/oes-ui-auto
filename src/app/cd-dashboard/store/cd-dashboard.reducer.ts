@@ -67,7 +67,8 @@ export function CdDashboardReducer(
                 subChartData: state.subChartData.map(
                     (subchartData,index) => index === action.index ? {} : subchartData
                 ),
-                subDataFetched:true
+                subDataFetched:true,
+                currentIndex: action.index
             })
         ),
         on(CdDashboardActions.fetchSubChartData,
@@ -79,7 +80,8 @@ export function CdDashboardReducer(
                 ),
                 subChartData: state.subChartData.map(
                     (subchartData,index) => index === action.index ? action.subChartData : subchartData
-                )
+                ),
+                currentIndex: action.index
             })
         )
         

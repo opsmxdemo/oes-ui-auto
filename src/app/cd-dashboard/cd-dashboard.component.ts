@@ -37,7 +37,10 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
   ngAfterViewInit(){
     setTimeout(() =>{
       this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 260];
-      this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+      if(this.subGraph.first && this.subGraph.first.nativeElement) {
+        this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+      }
+      
     },500)
   }
 
@@ -73,7 +76,10 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
         setTimeout(() =>{
           // Below we are setting initial width of graph
           this.mainChartSize = [this.areaGraph.nativeElement.offsetWidth, 260];
-          this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+          if(this.subGraph.first && this.subGraph.first.nativeElement) {
+            this.widgetChartSize = [this.subGraph.first.nativeElement.offsetWidth, 260]
+          }
+          
         },500)
       }
     }
@@ -99,10 +105,18 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
   }
 
   // Below function is use to dispatch action to fetch subcharts data
-  fetchedChartData(allowExecution){
+  fetchedChartData(allowExecution, fromDate: any = '', toDate: any = ''){
+    let date = new Date();
+    if(!toDate) {
+      toDate = date.getTime();
+    }
+    if(!fromDate) {
+      fromDate = date.setDate(date.getDate() - 7);
+      // fromDate = fromDate.getTime();
+    }
     if(allowExecution && this.widgetChartLoading !== null){
       this.widgetRawData.forEach((subChart,index) => {
-        this.store.dispatch(CdDashboardAction.loadSubChartData({subChartId:subChart.id,index}));
+        this.store.dispatch(CdDashboardAction.loadSubChartData({subChartId:subChart.id,index,fromDate: fromDate, toDate: toDate}));
       })
     }
   }
@@ -120,6 +134,35 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
       returnVal = !returnVal;
     }
     return returnVal;
+  }
+
+  filterUpdated(event: any) {
+    let filter = event.target.value;
+    var date = new Date();
+    let toDate = date.getTime(), fromDate;
+    switch(filter) {
+      case '1D': 
+        date.setDate(date.getDate() - 1);
+        // fromDate = date.getTime();
+        console.log(date);
+        break;
+      case '7D': 
+        date.setDate(date.getDate() - 7);
+        // fromDate = date.getTime();
+        console.log(date);
+        break;
+      case '1M': 
+        date.setMonth(date.getMonth() - 1);
+        // fromDate = date.getTime();
+        console.log(date);
+        break;
+      case '6M': 
+        date.setMonth(date.getMonth() - 6);
+        // fromDate = date.getTime();
+        console.log(date);
+        break;
+    }
+    this.fetchedChartData(true, fromDate, toDate);
   }
 
 }

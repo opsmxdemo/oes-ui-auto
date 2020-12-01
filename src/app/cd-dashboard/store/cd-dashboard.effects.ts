@@ -60,7 +60,7 @@ export class CdDashboardEffect {
         this.actions$.pipe(
             ofType(CdDashboardAction.loadCdDashboard),
             switchMap(() => {
-                return this.http.get(this.environment.config.endPointUrl + 'oes/dashboard/widgetRawData').pipe(
+                return this.http.get(this.environment.config.endPointUrl + 'oes/cddashboard/widgetRawData').pipe(
                     map(resdata => {
                         return CdDashboardAction.fetchSubChartRawData({widgetRawData:resdata});
                     }),
@@ -77,9 +77,13 @@ export class CdDashboardEffect {
         this.actions$.pipe(
             ofType(CdDashboardAction.loadSubChartData),
             mergeMap( action => {
-                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/dashboard/widgetChartData?chartId='+action.subChartId+'&startTime=1495507760000&endTime=1595507892431').pipe(
+                return this.http.get<any>(this.environment.config.endPointUrl + 'oes/cddashboard/widgetChartData?chartId='+action.subChartId+'&startTime='+ action.fromDate +'&endTime='+ action.toDate).pipe(
                     map(resdata => {
-                        return CdDashboardAction.fetchSubChartData({subChartData:resdata,index:action.index})
+                        if(action.subChartId == 9) {
+                            return CdDashboardAction.fetchHealthChartData({mainChartData:resdata});
+                        } else {
+                            return CdDashboardAction.fetchSubChartData({subChartData:resdata,index:action.index})
+                        } 
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);

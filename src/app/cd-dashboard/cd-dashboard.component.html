@@ -21,8 +21,11 @@
 
                 <div class="graph-controls d-flex">
                   <div class="mr-3">
-                    <select class="form-control">
-                      <option>Last 7 Days</option>
+                    <select class="form-control" (change)="filterUpdated($event)" >
+                      <option value="1D">Last 1 Day</option>
+                      <option value="7D">Last 7 Days</option>
+                      <option value="1M">Last 1 Month</option>
+                      <option value="6M">Last 6 Months</option>
                     </select>
                   </div>
 
@@ -139,7 +142,7 @@
 
         <!-- #################### Add widget charts codes start ############################ -->
 
-        <div class="col-sm-4 px-1 mb-2 cdDashboard">
+        <!-- <div class="col-sm-4 px-1 mb-2 cdDashboard">
           <div class="card border-0">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
@@ -173,7 +176,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- #################### Add widget charts codes end ############################ -->
