@@ -54,7 +54,7 @@
                   <app-loading-screen></app-loading-screen>
                 </div>
                 <div *ngIf="!mainChartLoading">
-                  <app-area-chart [dataSource]="finalHealthChartData" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-area-chart>
+                  <app-stacked-area-chart [dataSource]="finalHealthChartData" [view]="mainChartSize" [chartProperty]="mainChartData.chartProperty"></app-stacked-area-chart>
                 </div>
               </div>
               <!-- /.graph-body -->
@@ -117,10 +117,26 @@
                       <app-pie-chart *ngSwitchCase="pieChart" [dataSource]="widgetChartsData[widgetindex]['DataSource']"
                         [view]="widgetChartSize" [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
                       </app-pie-chart>
-                      <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart"
+                      <div *ngIf="widgetindex != 4 && widgetindex != 3">
+                      <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" 
                         [dataSource]="widgetChartsData[widgetindex]['DataSource']" [view]="widgetChartSize"
                         [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
-
+                        </div>
+                      <!-- {{chart3 | json}} -->
+                      <div *ngIf="chart3.length>1 && widgetindex === 3">
+                        <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" 
+                        [dataSource]="chart3" [view]="widgetChartSize"
+                        [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
+                        </div>
+                      <div *ngIf="chart4.length>1 && widgetindex === 4">
+                      <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" 
+                      [dataSource]="chart3" [view]="widgetChartSize"
+                      [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
+                      </div>
+                   
+                      
+                        <!-- <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" [dataSource]="chart3" [view]="widgetChartSize"
+                        [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart> -->
                       <!-- default switch case -->
                       <div class="type-not-exist" *ngSwitchDefault>
                         <i class="fa fa-area-chart" aria-hidden="true"></i>
