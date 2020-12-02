@@ -35,18 +35,18 @@ export class HorizontalBarChartComponent implements OnInit {
   onDeactivate(data): void {}
 
   ngOnInit(){
-    this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : false;
-    this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
-    this.showXAxis = this.chartProperty.showXAxis !== undefined ? this.chartProperty.showXAxis : true;
-    this.showYAxis = this.chartProperty.showYAxis !== undefined ? this.chartProperty.showYAxis : true;
-    this.showYAxisLabel = this.chartProperty.showYAxisLabel !== undefined ? this.chartProperty.showYAxisLabel : true;
-    this.showXAxisLabel = this.chartProperty.showXAxisLabel !== undefined ? this.chartProperty.showXAxisLabel : true;
-    this.xAxisLabel = this.chartProperty.xAxisLabel !== undefined ? this.chartProperty.xAxisLabel : "";
-    this.yAxisLabel = this.chartProperty.yAxisLabel !== undefined ? this.chartProperty.yAxisLabel : "";
-    this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
-    this.maxYAxisTickLength = this.chartProperty.maxYAxisTickLength !== undefined ? this.chartProperty.maxYAxisTickLength : 10;
-    this.maxXAxisTickLength = this.chartProperty.maxXAxisTickLength !== undefined ? this.chartProperty.maxXAxisTickLength : 8;
-    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798']};
+    this.showLegend         = this.chartProperty.showLegend || false;
+    this.animations         = this.chartProperty.animations || true;
+    this.showXAxis          = this.chartProperty.showXAxis || true;
+    this.showYAxis          = this.chartProperty.showYAxis || true;
+    this.showYAxisLabel     = this.chartProperty.showYAxisLabel || true;
+    this.showXAxisLabel     = this.chartProperty.showXAxisLabel || true;
+    this.xAxisLabel         = this.chartProperty.xAxisLabel || "";
+    this.yAxisLabel         = this.chartProperty.yAxisLabel || "";
+    this.gradient           = this.chartProperty.gradient || true;
+    this.maxYAxisTickLength = this.chartProperty.maxYAxisTickLength || 10;
+    this.maxXAxisTickLength = this.chartProperty.maxXAxisTickLength || 8;
+    this.colorScheme        = this.chartProperty.colorScheme || {domain: ['#33b3f1','#f29798']};
   }
 
 }
