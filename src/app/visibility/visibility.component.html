@@ -304,7 +304,7 @@
                                       </tr>
                                     </thead> -->
                                     <tbody>
-                                      <tr *ngFor="let eachData of visibilityData"> 
+                                      <tr *ngFor="let eachData of visibilityData; let i=index"> 
                                         <!-- <td>{{eachData.key}}</td> -->
                                         <td class="tcFirstColumn">
                                           <div>
@@ -315,9 +315,16 @@
                                             <span  *ngIf="selectedConnectorType == 'SONARQUBE' && eachData.data != null ">Project Key</span>
                                           </div>
                                           {{eachData.value}}</td>
-                                        <td><div class="loader" *ngIf="loadingWheel"></div>
-                                          <div>{{(eachData.data == null && eachData.key == null && eachData.value == null) ? 'No data to Display' : eachData.data | json}}</div>                                        
+                                        <td>            
+                                          <div class="loader" *ngIf="loadingWheel"></div>
+                                          <div class="remove-ellipsis" [ngClass]="{'remove-ellipsis': showFullData[i], 'block-ellipsis': !showFullData[i]}"> <pre>
+                                            {{(eachData.data == null && eachData.key == null && eachData.value == null) ? 'No data to Display' : eachData.data | json}}</pre>
+                                        </div>                                        
                                         </td> 
+                                        <td>
+                                          <button (click)="showFullData[i] = true" *ngIf="!showFullData[i]">Show More</button>
+                                          <button (click)="showFullData[i] = false" *ngIf="showFullData[i]">Show Less</button>
+                                        </td>
                                       </tr>
                                     </tbody>
                                   </table>

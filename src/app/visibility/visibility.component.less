@@ -127,3 +127,32 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+.block-ellipsis {
+  display: block;
+  display: -webkit-box;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: 14px;
+    height: 60px !important;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.remove-ellipsis{
+  display: block;
+  display: -webkit-box;
+  max-width: 100%;
+  margin: 0 auto;
+  font-size: 14px;
+  overflow: visible;
+  text-overflow: unset;
+
+}
+pre{
+    font-family: unset !important;
+    font-size: 14px;
+	line-height: 1.5;
+	overflow: unset;
+    font-weight: normal;
+}
