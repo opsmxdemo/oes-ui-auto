@@ -75,6 +75,7 @@ export class VisibilityComponent implements OnInit {
   gateRejectionCallBackURL: any;                       // rejection URL from Instance Details
   gateStatusPending: boolean;
   loadingWheel: boolean = false;
+  showFullData: any = [];
 
   // showApprovalHistory: boolean= false;
   constructor(public store: Store<fromApp.AppState>, private fb: FormBuilder, private route: ActivatedRoute, public toastr: NotificationService,) { }
@@ -154,7 +155,12 @@ export class VisibilityComponent implements OnInit {
           
           }else if (this.selectedConnectorType === "JIRA"){
           this.visibilityData = resData.visibilityData;
+          // this.visibilityData['data'] = JSON.stringify(this.visibilityData['data'], undefined, 4);
           console.log("JIRA: ", this.visibilityData);
+          this.visibilityData.forEach(items => {
+            this.showFullData[items] = false;
+          })
+          
           
           }else if (this.selectedConnectorType === "AUTOPILOT"){
           this.visibilityData = resData.visibilityData;
@@ -283,6 +289,9 @@ export class VisibilityComponent implements OnInit {
   getApprovalHistory(){
     // this.showApprovalHistory = true;
   }
+  getKeyByValue(object) {
+      return console.log( Object.keys(object)[0]);
+}
 
   // code below to initiate the approval
   initiateApproval(){
