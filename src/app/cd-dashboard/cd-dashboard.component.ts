@@ -35,6 +35,7 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
   checkSeriesLength: boolean;
   chart4: any[];
   chart5: any[];
+  selectedValue = '7D';
   
 
   constructor( public store: Store<fromApp.AppState>,
@@ -56,42 +57,66 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
     //resetting sidebarVisible value in state
     this.store.dispatch(new LayoutAction.SideBarToggle(''));
 
+  
+
     // Below logic is use to fetch data from Cd-dashboard state
     this.store.select('cdDashboard').subscribe(
       (dashboardData) => {
         this.mainChartLoading = dashboardData.mainChartLoading;
         if (dashboardData.healthChartData !== null) {
           this.mainChartData = dashboardData.healthChartData;
-          
           if(this.mainChartData != null){
                   this.finalHealthChartData = [];
                   this.healthChartCounter = 0; 
-                //  this.mainChartData.forEach((datsource,dindex) => {
                   this.mainChartData.DataSource.forEach((eachItem,index) => {
                     this.healthSeriesValue = [];
                     if (eachItem['series'].length > 0) {
                       this.checkSeriesLength = true;
                       eachItem['series'].forEach(eachValue => {
-                        this.healthSeriesValue.push({
-                          "name": new Date(eachValue.name), "value": eachValue.value,
-                          });
+                        if(eachValue.name != undefined){
+                          this.healthSeriesValue.push({
+                            "name": new Date(eachValue.name), "value": eachValue.value,
+                            });
+                        }
                       });
+                      if(eachItem.name != undefined){
+                        this.finalHealthChartData[index] = {
+                          "name": eachItem.name,
+                          "series": this.healthSeriesValue
+                          
+                        }
+                      }
+                     
+                      index++;
+                    }else{
                       this.finalHealthChartData[index] = {
                         "name": eachItem.name,
-                        "series": this.healthSeriesValue
+                        "series": []
                         
                       }
-                      index++;
                     }
                   })
               //  })
                 }
+               // this.finalHealthChartData = this.finalHealthChartData.filter(item => item);
                 console.log(this.finalHealthChartData);
+
         }
         if (dashboardData.widgetRawData !== null) {
           this.widgetRawData = dashboardData.widgetRawData;
           this.widgetChartLoading = dashboardData.subChartLoading;
           this.widgetChartsData = dashboardData.subChartData;
+
+          // if(this.widgetChartsData != null && this.widgetChartsData[4].type === 'horizontal-bar-chart'){
+          //   console.log(this.widgetChartsData[4]);
+          //   this.widgetChartsData[4].DataSource.forEach(element => {
+          //   element.value = element.value/1000;
+          // });
+
+          // }
+          
+
+
           this.createInitialData();
           this.fetchedChartData(!dashboardData.subDataFetched);
         }
@@ -138,6 +163,8 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
 
   // Below function is use to dispatch action to fetch subcharts data
   fetchedChartData(allowExecution, fromDate: any = '', toDate: any = ''){
+    console.log(fromDate);
+    console.log(toDate);
     let date = new Date();
     if(!toDate) {
       toDate = date.getTime();
@@ -180,22 +207,22 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit{
     switch(filter) {
       case '1D': 
         date.setDate(date.getDate() - 1);
-        // fromDate = date.getTime();
+        fromDate = date.getTime();
         console.log(date);
         break;
       case '7D': 
         date.setDate(date.getDate() - 7);
-        // fromDate = date.getTime();
+        fromDate = date.getTime();
         console.log(date);
         break;
       case '1M': 
         date.setMonth(date.getMonth() - 1);
-        // fromDate = date.getTime();
+         fromDate = date.getTime();
         console.log(date);
         break;
       case '6M': 
         date.setMonth(date.getMonth() - 6);
-        // fromDate = date.getTime();
+         fromDate = date.getTime();
         console.log(date);
         break;
     }
