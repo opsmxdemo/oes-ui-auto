@@ -231,9 +231,9 @@ downloadLogsData = createEffect(() =>
     this.actions$.pipe(
         ofType(DeploymentActions.downloadDebugData),
         switchMap((action) => {
-            return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/debugLogsData?id=' + action.canaryId).pipe(
-                map(resdata => {
-                    location.href = this.environment.config.endPointUrl +'autopilot/canaries/debugLogsData?id=' + action.canaryId; 
+            return this.http.get(this.environment.config.endPointUrl +'autopilot/canaries/debugLogsData?id=' + action.canaryId, {responseType: 'arraybuffer'}).pipe(
+                map(resdata => {                    
+                    // location.href = this.environment.config.endPointUrl +'autopilot/canaries/debugLogsData?id=' + action.canaryId; 
                     return DeploymentActions.loadDownloadData({debugDataResponse:resdata});
                 }),
                 catchError(errorRes => {

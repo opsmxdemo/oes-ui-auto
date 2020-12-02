@@ -27,7 +27,7 @@ export interface State {
     isLoadedServicesOfApplication:boolean;
     isLoadedDownloadDebug: boolean;
     applicationId : any;
-    downloaddebugDataResponse: any;
+    debugDataResponse: any;
 }
 
 export const initialState: State = {
@@ -53,7 +53,7 @@ export const initialState: State = {
     isLoadedServicesOfApplication:false,
     isLoadedDownloadDebug:false,
     applicationId : null,
-    downloaddebugDataResponse: null,
+    debugDataResponse: null,
 }
 
 export function DeploymentdReducer(
@@ -224,7 +224,7 @@ export function DeploymentdReducer(
         on(DeploymentActions.loadDownloadData,
             (state,action) => ({
                 ...state,
-                downloaddebugDataResponse: action.debugDataResponse,
+                debugDataResponse: action.debugDataResponse,
                 isLoadedDownloadDebug: false
             })         
         ),

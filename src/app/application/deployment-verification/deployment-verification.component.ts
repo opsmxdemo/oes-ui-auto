@@ -346,8 +346,13 @@ export class DeploymentVerificationComponent implements OnInit {
 
         }
         // code related to download logs debug data
-        if(resData.downloaddebugDataResponse != null && resData.isLoadedDownloadDebug){
-          console.log(resData.downloaddebugDataResponse);
+        if(resData.debugDataResponse != null ){
+          const blob = new Blob([resData.debugDataResponse], {
+            type: 'application/zip'
+          });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+          console.log(resData.debugDataResponse);
         }
       }
     );
