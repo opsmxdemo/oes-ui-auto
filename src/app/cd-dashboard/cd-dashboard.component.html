@@ -21,7 +21,7 @@
 
                 <div class="graph-controls d-flex">
                   <div class="mr-3">
-                    <select class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event)" >
+                    <select class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value)" >
                       <option value="1D">Last 1 Day</option>
                       <option value="7D">Last 7 Days</option>
                       <option value="1M">Last 1 Month</option>

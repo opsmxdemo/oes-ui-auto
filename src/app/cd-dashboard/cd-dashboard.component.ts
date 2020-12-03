@@ -104,11 +104,6 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.widgetChartLoading = dashboardData.subChartLoading;
           this.widgetChartsData = dashboardData.subChartData;
 
-          // if(this.widgetChartsData[3].DataSource.length > 0){
-          //   debugger
-          //   this.dateConversionData(this.widgetChartsData[3].DataSource,3)
-          // }
-          // this.dateConversionData(this.widgetChartsData);
           this.createInitialData();
           this.fetchedChartData(!dashboardData.subDataFetched);
         }
@@ -117,7 +112,7 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     );
-
+   this.filterUpdated(this.selectedValue);
 
   }
 
@@ -192,7 +187,7 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   filterUpdated(event: any) {
-    let filter = event.target.value;
+    let filter = event;
     var date = new Date();
     let toDate = date.getTime(), fromDate;
     switch (filter) {
