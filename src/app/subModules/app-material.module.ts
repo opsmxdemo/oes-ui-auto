@@ -12,6 +12,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatStepperModule} from '@angular/material/stepper';
+import {MatDialogModule} from '@angular/material/dialog';
+
 
 @NgModule({
     exports: [
@@ -28,7 +30,8 @@ import {MatStepperModule} from '@angular/material/stepper';
       MatTableModule,
       MatAutocompleteModule,
       MatSidenavModule,
-      MatStepperModule
+      MatStepperModule,
+      MatDialogModule
     ]
   })
 export class AppMaterialModule { }
