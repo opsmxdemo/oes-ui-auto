@@ -35,6 +35,7 @@ import { TrendAnalysisComponent } from './application/trend-analysis/trend-analy
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { VisibilityComponent } from './visibility/visibility.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
@@ -86,6 +87,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     }),
     //please keep below WildcardRoutingModule always in last position.
     WildcardRoutingModule,
+    NgxJsonViewerModule,
     FontAwesomeModule
   ],
   providers: [

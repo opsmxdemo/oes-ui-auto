@@ -315,8 +315,15 @@
                                             <span  *ngIf="selectedConnectorType == 'SONARQUBE' && eachData.data != null ">Project Key</span>
                                           </div>
                                           {{eachData.value}}</td>
-                                        <td><div class="loader" *ngIf="loadingWheel"></div>
-                                          <div>{{(eachData.data == null && eachData.key == null && eachData.value == null) ? 'No data to Display' : eachData.data | json}}</div>                                        
+                                        <td>            
+                                          <div class="loader" *ngIf="loadingWheel"></div>
+                                          <!-- class="remove-ellipsis" [ngClass]="{'remove-ellipsis': showFullData[i], 'block-ellipsis': !showFullData[i]}" -->
+                                          <div *ngIf="eachData.data == null && eachData.key == null && eachData.value == null"> 
+                                            No data to Display
+                                          </div>
+                                          <div *ngIf="eachData.data != null && eachData.key != null && eachData.value != null">
+                                            <ngx-json-viewer class="jsonViewer" [json]="eachData.data"  [expanded]="false" ></ngx-json-viewer>                                        
+                                          </div>                                        
                                         </td> 
                                       </tr>
                                     </tbody>
