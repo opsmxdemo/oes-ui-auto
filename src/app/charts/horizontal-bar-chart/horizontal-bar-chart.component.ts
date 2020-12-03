@@ -43,7 +43,7 @@ export class HorizontalBarChartComponent implements OnInit {
     this.showXAxisLabel     = this.chartProperty.showXAxisLabel || true;
     this.xAxisLabel         = this.chartProperty.xAxisLabel || "";
     this.yAxisLabel         = this.chartProperty.yAxisLabel || "";
-    this.gradient           = this.chartProperty.gradient || false;
+    this.gradient           = false;
     this.maxYAxisTickLength = this.chartProperty.maxYAxisTickLength || 10;
     this.maxXAxisTickLength = this.chartProperty.maxXAxisTickLength || 8;
     this.colorScheme        = this.chartProperty.colorScheme || {domain: ['#b1d38b','#f29798']};
