@@ -22,6 +22,9 @@ import { Visibility } from 'src/app/models/applicationOnboarding/createApplicati
 import { AppPage } from 'e2e/src/app.po';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { ThrowStmt } from '@angular/compiler';
+import { MatDialog } from '@angular/material/dialog'; 
+import { LogTemplateConfigComponent } from '../application-creation/log-template-config/log-template-config.component';
+
 
 @Component({
   selector: 'app-application',
@@ -181,7 +184,8 @@ export class CreateApplicationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private render: Renderer2,
     private eleRef: ElementRef, 
-    private environment: AppConfigService) { }
+    private environment: AppConfigService,
+    public dialog: MatDialog) { }
 
   ngOnInit() {
     this.defineAllForms();
@@ -1959,5 +1963,12 @@ export class CreateApplicationComponent implements OnInit {
     }
 
    
+  }
+
+  onClickLogTemplate(){
+    const dialogRef = this.dialog.open(LogTemplateConfigComponent,{
+      height: '600px',
+      width: '800px',
+    });   
   }
 }
