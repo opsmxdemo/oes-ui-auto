@@ -40,7 +40,7 @@ export class StackedAreaChartComponent implements OnInit {
     this.xAxisLabel = this.chartProperty.xAxisLabel !== undefined ? this.chartProperty.xAxisLabel : "";
     this.yAxisLabel = this.chartProperty.yAxisLabel !== undefined ? this.chartProperty.yAxisLabel : "";
     this.timeline = this.chartProperty.timeline !== undefined ? this.chartProperty.timeline : false;
-    this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
+    this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : false;
     // this.autoScale = this.chartProperty.autoScale !== undefined ? this.chartProperty.autoScale : true;
     this.legendPosition = this.chartProperty.legendPosition !== undefined ? this.chartProperty.legendPosition : "below";
     this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : { domain: ['#b1d38b', '#f29798', '#fed856', '#c2c2c2'] };
