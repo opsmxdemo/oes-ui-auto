@@ -1969,6 +1969,10 @@ export class CreateApplicationComponent implements OnInit {
     const dialogRef = this.dialog.open(LogTemplateConfigComponent,{
       height: '600px',
       width: '800px',
-    });   
+      data: {
+        templateName: this.deploymentVerificationForm.value['logTemplate'],
+        applicationId: this.applicationId
+      }
+    });
   }
 }

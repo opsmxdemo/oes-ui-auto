@@ -10,6 +10,7 @@ export class LogTopicsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
 }
