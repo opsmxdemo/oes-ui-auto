@@ -36,7 +36,7 @@ export class PieChartComponent implements OnInit {
     this.isDoughnut = this.chartProperty.isDoughnut !== undefined ? this.chartProperty.isDoughnut : false;
     this.showLabels = this.chartProperty.showLabels !== undefined ? this.chartProperty.showLabels : true;
     this.legendPosition = this.chartProperty.legendPosition !== undefined ? this.chartProperty.legendPosition : "below";
-    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798',"#fed856"]};
+    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#b1d38b','#f29798',"#fed856"]};
   }
 
 }

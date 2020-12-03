@@ -33,7 +33,7 @@ export class StacketHorizontalBarChartComponent implements OnInit {
   ngOnInit(){
     this.showLegend = this.chartProperty.showLegend !== undefined ? this.chartProperty.showLegend : false;
     this.animations = this.chartProperty.animations !== undefined ? this.chartProperty.animations : true;
-    this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : true;
+    this.gradient = this.chartProperty.gradient !== undefined ? this.chartProperty.gradient : false;
     this.showXAxis = this.chartProperty.showXAxis !== undefined ? this.chartProperty.showXAxis : true;
     this.showYAxis = this.chartProperty.showYAxis !== undefined ? this.chartProperty.showYAxis : true;
     this.showYAxisLabel = this.chartProperty.showYAxisLabel !== undefined ? this.chartProperty.showYAxisLabel : true;
@@ -41,7 +41,7 @@ export class StacketHorizontalBarChartComponent implements OnInit {
     this.xAxisLabel = this.chartProperty.xAxisLabel !== undefined ? this.chartProperty.xAxisLabel : "";
     this.yAxisLabel = this.chartProperty.yAxisLabel !== undefined ? this.chartProperty.yAxisLabel : "";
     this.legendPosition = this.chartProperty.legendPosition !== undefined ? this.chartProperty.legendPosition : "below";
-    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#33b3f1','#f29798',"#fed856"]};
+    this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#b1d38b','#f29798',"#fed856"]};
   }
 
   onSelect(event) {}
