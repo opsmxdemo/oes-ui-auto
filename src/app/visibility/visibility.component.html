@@ -317,14 +317,18 @@
                                           {{eachData.value}}</td>
                                         <td>            
                                           <div class="loader" *ngIf="loadingWheel"></div>
-                                          <div class="remove-ellipsis" [ngClass]="{'remove-ellipsis': showFullData[i], 'block-ellipsis': !showFullData[i]}"> <pre>
-                                            {{(eachData.data == null && eachData.key == null && eachData.value == null) ? 'No data to Display' : eachData.data | json}}</pre>
-                                        </div>                                        
+                                          <!-- class="remove-ellipsis" [ngClass]="{'remove-ellipsis': showFullData[i], 'block-ellipsis': !showFullData[i]}" -->
+                                          <div *ngIf="eachData.data == null && eachData.key == null && eachData.value == null"> 
+                                            No data to Display
+                                          </div>
+                                          <div *ngIf="eachData.data != null && eachData.key != null && eachData.value != null">
+                                            <ngx-json-viewer class="jsonViewer" [json]="eachData.data"  [expanded]="false" ></ngx-json-viewer>                                        
+                                          </div>                                        
                                         </td> 
-                                        <td>
+                                        <!-- <td>
                                           <button (click)="showFullData[i] = true" *ngIf="!showFullData[i]">Show More</button>
                                           <button (click)="showFullData[i] = false" *ngIf="showFullData[i]">Show Less</button>
-                                        </td>
+                                        </td> -->
                                       </tr>
                                     </tbody>
                                   </table>
