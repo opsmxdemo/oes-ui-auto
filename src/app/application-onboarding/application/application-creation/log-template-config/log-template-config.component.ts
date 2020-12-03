@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LogTemplateConfigService } from './log-template-config.service';
 
 @Component({
   selector: 'app-log-template-config',
@@ -11,9 +13,12 @@ export class LogTemplateConfigComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {}
+  constructor(private _formBuilder: FormBuilder, private dialogRef: MatDialogRef<LogTemplateConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public service: LogTemplateConfigService) {}
 
   ngOnInit() {
+
+    this.service.init(this.data.applicationId, this.data.templateName).subscribe((resp: any) => {})
+
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required]
     });
@@ -22,4 +27,8 @@ export class LogTemplateConfigComponent implements OnInit {
     });
   }
 
+}
+export interface DialogData {
+  applicationId: any;
+  templateName: any;
 }
