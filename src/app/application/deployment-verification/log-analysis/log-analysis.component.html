@@ -180,8 +180,8 @@
                     {{tag.name}}
                   </option> 
                 </select>
-                <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown"></i>
-                <span class="badge badge-info comment-badge clickable" *ngIf="log.id == selectedClusterInfo?.id" [innerHTML]='tagCommentNotificationMessage' id="clustertagComment" data-toggle="dropdown"  data-placement="top" title="{{log.clusterTagInfo.comments}}"></span>
+                <i class="far fa-comment-alt ml-2 text-primary clickable" aria-hidden="true" id="clustertagComment" data-toggle="dropdown" data-placement="top" title="{{log.clusterTagInfo.comments}}"></i>
+                <span class="badge badge-info comment-badge clickable" *ngIf="log.id == selectedClusterInfo?.id" [innerHTML]='tagCommentNotificationMessage' id="clustertagComment" data-toggle="dropdown"  ></span>
                 <div class="dropdown-menu px-3 py-2 dropdown-shadow dropdown-reason dropdown-menu-right" aria-labelledby="clustertagComment">
                   <div class="dropdown_header d-flex align-items-center justify-content-between mb-2">
                     <span>Logs cluster tag</span>

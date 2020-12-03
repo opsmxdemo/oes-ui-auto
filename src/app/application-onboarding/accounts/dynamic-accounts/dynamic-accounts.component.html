@@ -4,36 +4,37 @@
       <div class="col-sm-12 d-flex flex-column">
         <div class="h-100 d-flex flex-column">
           <div class="tab-content h-100 p-3 flex-grow-1">
-              <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
-                  <div class="page_access text-right p-3">
-                    <button class="btn btn-default" (click)="createAccount()">New Account</button>
-                  </div>
-                  <!-- /.page_access ml-auto -->
-                  <div class="gray-strip">
-    
-                  </div>
-                  <!-- /.gray-strip -->
-                  <div class="d-flex w-100 h-100">
-                    <div class="no_content m-auto">
-                      <img src="../../../assets/images//blank-123.png" class="hr-image" alt="blank" />
-                      <p><strong>Create New Account</strong></p>
-                      <!-- <p>Use application for continuous verification and production monitoring <br><small>(To create
+            <div *ngIf="tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
+              <div class="page_access text-right p-3">
+                <button class="btn btn-default" (click)="createAccount()">New Account</button>
+              </div>
+              <!-- /.page_access ml-auto -->
+              <div class="gray-strip">
+
+              </div>
+              <!-- /.gray-strip -->
+              <div class="d-flex w-100 h-100">
+                <div class="no_content m-auto">
+                  <img src="../../../assets/images//blank-123.png" class="hr-image" alt="blank" />
+                  <p><strong>Create New Account</strong></p>
+                  <!-- <p>Use application for continuous verification and production monitoring <br><small>(To create
                           application, add at least 1 Cloud service and 1 Data source)</small></p> -->
-                    </div>
-                    <!-- /.no_content -->
-                  </div>
                 </div>
+                <!-- /.no_content -->
+              </div>
+            </div>
             <div *ngIf="!tableIsEmpty" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
               <div class="page_access d-flex text-right p-3">
-                  <div class="mr-auto">
-                      <div class="input-group input-group_search">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                        </div>
-                        <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
-                        <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
-                      </div>
+                <div class="mr-auto">
+                  <div class="input-group input-group_search">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                     </div>
+                    <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
+                    <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List"
+                      class="refresh-icon fa refreshList">&#xf021;</i>
+                  </div>
+                </div>
                 <button class="btn btn-default" (click)="createAccount()">New Account</button>
               </div>
               <!-- /.page_access ml-auto -->
@@ -52,21 +53,38 @@
                     </tr>
                   </thead>
                   <tbody>
-                      <tr *ngFor="let accountsData of currentPage | filter:searchData; let i=index">
-                        <td>{{accountsData.name}}</td>
-                        <td>Kubernetes</td>
-                        <td>{{accountsData.namespaces}}</td>
-                        <td *ngIf="accountsData.permissions.READ == undefined"> </td>
-                        <td *ngIf="accountsData.permissions.WRITE == undefined"> </td>
-                        <td *ngIf="accountsData.permissions.EXECUTE == undefined"> </td>
-                        <td *ngIf="accountsData.permissions.READ != undefined">{{accountsData.permissions.READ.toString()}}</td>
-                        <td *ngIf="accountsData.permissions.WRITE != undefined">{{accountsData.permissions.WRITE.toString()}}</td>
-                        <td *ngIf="accountsData.permissions.EXECUTE != undefined">{{accountsData.permissions.EXECUTE.toString()}}</td>
-                        <td>
-                          <a (click)="editAccount(accountsData,'editAcc')"   class="text-muted ml-2" data-toggle="tooltip" data-placement="top" title="Edit"><i style="color:#4797de !important;" class="fas fa-pencil-alt"></i></a>
-                          <a (click)="deleteAccount(accountsData,i)" class="text-muted ml-2" data-toggle="tooltip"  data-placement="top" title="Delete"><i style="color: red;" class="far fa-trash-alt"></i></a>
-                        </td>
-                      </tr>
+                    <tr *ngFor="let accountsData of currentPage | filter:searchData; let i=index">
+                      <td>{{accountsData.name}}</td>
+                      <td>Kubernetes</td>
+                      <td>{{accountsData.namespaces[0]}}</td>
+
+                      <td>
+                        <span *ngIf="accountsData.permissions && accountsData.permissions.READ">
+                          {{accountsData.permissions.READ.toString()}}
+                        </span>
+
+                      </td>
+                      <td>
+                        <span *ngIf="accountsData.permissions && accountsData.permissions.WRITE">
+                          {{accountsData.permissions.WRITE.toString()}}
+                        </span>
+
+                      </td>
+                      <td>
+                        <span *ngIf="accountsData.permissions && accountsData.permissions.EXECUTE">
+                          {{accountsData.permissions.EXECUTE.toString()}}
+                        </span>
+                      </td>
+
+
+                      <td>
+                        <a (click)="editAccount(accountsData,'editAcc')" class="text-muted ml-2" data-toggle="tooltip"
+                          data-placement="top" title="Edit"><i style="color:#4797de !important;"
+                            class="fas fa-pencil-alt"></i></a>
+                        <a (click)="deleteAccount(accountsData,i)" class="text-muted ml-2" data-toggle="tooltip"
+                          data-placement="top" title="Delete"><i style="color: red;" class="far fa-trash-alt"></i></a>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
                 <div class="table-footer gray-strip px-3 py-2">
@@ -80,7 +98,8 @@
 
                     </select>
                     <span class="ml-3 mr-2">Showing {{page.startingPoint+1}} to
-                      {{page.endPoint < accountListLength-1?page.endPoint:accountListLength}} of {{accountListLength}}</span>
+                      {{page.endPoint < accountListLength-1?page.endPoint:accountListLength}} of
+                      {{accountListLength}}</span>
                     <!-- <input type="text" class="form-control mr-2" />
                     <button class="btn btn-primary">Go</button> -->
 

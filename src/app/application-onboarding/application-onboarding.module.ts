@@ -32,6 +32,12 @@ import { ConnectorTemplateConfigComponent } from './application/application-crea
 import { ConnectorTemplateConfigService } from './application/application-creation/connector-template-config/connector-template-config.service';
 import { ConnectorTemplateRowComponent } from './application/application-creation/connector-template-config/connector-template-row/connector-template-row.component';
 import { ConnectorTemplateComponent } from './application/application-creation/connector-template-config/connector-template/connector-template.component';
+import { LogTemplateConfigComponent } from './application/application-creation/log-template-config/log-template-config.component';
+import { LogTemplateFormComponent } from './application/application-creation/log-template-config/log-template-form/log-template-form.component';
+import { LogTemplateEditorComponent } from './application/application-creation/log-template-config/log-template-editor/log-template-editor.component';
+import { LogProviderComponent } from './application/application-creation/log-template-config/log-provider/log-provider.component';
+import { LogTopicsComponent } from './application/application-creation/log-template-config/log-topics/log-topics.component';
+import { LogTagsComponent } from './application/application-creation/log-template-config/log-tags/log-tags.component';
 
 
 @NgModule({
@@ -50,7 +56,13 @@ import { ConnectorTemplateComponent } from './application/application-creation/c
       NonAdminPipe,
       ConnectorTemplateConfigComponent,
       ConnectorTemplateRowComponent,
-      ConnectorTemplateComponent
+      ConnectorTemplateComponent,
+      LogTemplateConfigComponent,
+      LogTemplateFormComponent,
+      LogTemplateEditorComponent,
+      LogProviderComponent,
+      LogTopicsComponent,
+      LogTagsComponent
     ],
     imports: [
      CommonModule,
