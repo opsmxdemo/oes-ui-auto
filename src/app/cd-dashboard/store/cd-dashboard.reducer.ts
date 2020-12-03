@@ -32,6 +32,12 @@ export function CdDashboardReducer(
                 mainChartLoading:true
             })
         ),
+        on(CdDashboardActions.loadHealthChartData,
+            state => ({
+                ...state,
+                mainChartLoading:true
+            })
+        ),
         on(CdDashboardActions.fetchHealthChartData,
             (state, action) => ({
                 ...state,

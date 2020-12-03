@@ -121,7 +121,7 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  @HostListener('window:mousemove', ['$event'])
+ //@HostListener('window:mousemove', ['$event'])
   @HostListener('window:click', ['$event'])
   handleClick() {
     if (this.areaGraph !== undefined && this.subGraph !== undefined) {
