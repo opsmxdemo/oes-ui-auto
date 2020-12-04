@@ -118,12 +118,12 @@
                                 <div class="p-3">
                                     <form [formGroup]="toolTemplateForm">
                                         <div class="form-group">
-                                            <label>Tool Type1:</label>
+                                            <label>Tool Type:</label>
                                             <input type="text" appLowercase class="form-control"
                                                 formControlName="toolType" [readonly]="true">
                                         </div>
                                         <div class="form-group">
-                                            <label>Name1:</label>
+                                            <label>Name:</label>
                                             <input type="text" class="form-control" formControlName="name"
                                                 [ngClass]="toolTemplateForm.get('name').invalid && toolTemplateForm.get('name').touched ? 'is-invalid':''">
                                             <span
