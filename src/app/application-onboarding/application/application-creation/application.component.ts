@@ -322,7 +322,7 @@ export class CreateApplicationComponent implements OnInit {
               }
             }else{
               this.createApplicationForm = new FormGroup({
-                name: new FormControl(this.appData.name),
+                name: new FormControl(this.appData.name, [Validators.required, this.cannotContainSpace.bind(this),this.valitateApplicationName.bind(this)]),
                 emailId: new FormControl(this.appData.email, [Validators.required, Validators.email]),
                 description: new FormControl(this.appData.description),
                 imageSource: new FormControl(''),
@@ -812,27 +812,28 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
   valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
-   if(this.applicationId){
-
-   }else{
-    const promise = new Promise<any>((resolve, reject) => {
-      this.sharedService.validateApplicationName(control.value, 'name').subscribe(
-        (response) => {
-          if (response['nameExists'] === true) {
-            this.createApplicationForm.get('name').setErrors({ 'nameExists': true });
-          } else {
-            this.createApplicationForm.get('name').setErrors(null);
-          }
-        },
-        (error) => {
-          resolve(null);
-        }
-      )
-    });
-    return promise;
-   }
-     
+    if(control.value != null && control.value != undefined && control.value!=""){
+      let validateapp = this.cannotContainSpace(control)
+      if(validateapp==null){
+        const promise = new Promise<any>((resolve, reject) => {
+          this.sharedService.validateApplicationName(control.value, 'name').subscribe(
+            (response) => {
+              if (response['nameExists'] === true) {
+                this.createApplicationForm.get('name').setErrors({ 'nameExists': true });
+              } else {
+                this.createApplicationForm.get('name').setErrors(null);
+              }
+            },
+            (error) => {
+              resolve(null);
+            }
+          )
+        });
+        return promise;
+      }
     }
+   }
+  
   
 
 
@@ -897,7 +898,7 @@ export class CreateApplicationComponent implements OnInit {
 
   // Below function is custom valiadator which is use to validate userGroup name is already selected or not. If already exist then it will return error
   usergroupExist(control: FormControl): { [s: string]: boolean } {
-    if (control.value !== null) {
+    if (control.value !== null && control.value != undefined && control.value!="") {
       let counter = 0;
       if (+control.value > 0 && typeof (control.value) !== 'number') {
         this.groupPermissionForm.value.userGroups.forEach(groupName => {

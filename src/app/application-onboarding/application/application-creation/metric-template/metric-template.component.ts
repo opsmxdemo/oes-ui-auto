@@ -165,7 +165,7 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
             if(this.INFRACookbook.data != undefined){                               
               if(this.INFRACookbook.data.groups.length > 0){
                 this.INFRACooknookGroups = this.INFRACookbook.data.groups;
-                this.INFRACooknookGroups.controls['selectAll'].setValue(true);
+                
                 //code to remove all items from the Form before pushing
                 const control = <FormArray>this.infracookbookForm.controls['cookbooklist'];
                     for(let i = control.length-1; i >= 0; i--) {
@@ -926,6 +926,30 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
       let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
       let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
       metricArray.removeAt(j);
+    }
+  }
+
+  checkboxCriticalClicked(i,j,metricName,event){
+    if(metricName=='infra'){
+      let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
+      let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
+      metricArray.controls[j].get('critical').setValue(event.target.checked);
+    }
+    else if(metricName=='apm'){
+      let cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
+      let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
+      metricArray.controls[j].get('critical').setValue(event.target.checked);
+    }
+  }
+  checkboxWatchlistClicked(i,j,metricName,event){
+    if(metricName=='infra'){
+      let cookbookArray = this.infracookbookForm.get('cookbooklist') as FormArray;
+      let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
+      metricArray.controls[j].get('watchlist').setValue(event.target.checked);
+    }else if(metricName=='apm'){
+      let cookbookArray = this.apmcookbookForm.get('cookbooklist') as FormArray;
+      let metricArray = cookbookArray.controls[i].get('metrics') as FormArray;
+      metricArray.controls[j].get('watchlist').setValue(event.target.checked);
     }
   }
 
