@@ -19,6 +19,12 @@ export class ApplicationService {
     //         catchError(this.handleError)
     //     );
     // }
+    checkIfUserIsAdmin(userName){
+        return this.httpClient.get(this.endpointUrl + 'platformservice/v1/users/'+ userName +'/isadmin').pipe(
+            catchError(this.handleError)
+        )
+    }
+
     getActiveGateCount(applicationId){
         return this.httpClient.get(this.endpointUrl + 'visibilityservice/v1/applications/'+applicationId +'/approvalGateInstances/activeCount').pipe(
             catchError(this.handleError)
