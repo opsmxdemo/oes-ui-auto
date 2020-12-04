@@ -2,10 +2,12 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as fromFeature from '../store/feature.reducer';
 import * as DataSourceActions from '../data-source/store/data-source.actions';
 import { Store } from '@ngrx/store';
+import * as AuthAction from 'src/app/auth/store/auth.actions';
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import { SharedService } from 'src/app/services/shared.service';
 import Swal from 'sweetalert2';
+import { ApplicationService } from 'src/app/services/application.service';
 
 //import { } from '@ng-bo'
 
@@ -36,13 +38,27 @@ export class DataSourceComponent implements OnInit {
   loading = false;                                                                     // It is use to show loaging screen if api is called.
   editMode = false;                                                                    // It is use to suggest whwther user is edit or create mode.
   accountData = null;                                                                  // It is use to store value of datasource need to be edited.
+  isUserAdmin: boolean; // check if the user is admin or not - to enable and disable fields
+   authUserDetails: any;  // Required to get the details of the User details from login
 
 
   constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
-    public sharedAccountData: SharedService) { }
+    public sharedAccountData: SharedService, private appService: ApplicationService) { }
 
   ngOnInit(){
-    this.editMode = false
+
+    //Dispatching action for login functionality
+    this.store.dispatch(new AuthAction.LoginStart());
+
+    this.store.select('auth').subscribe(
+      (response) => {
+        this.authUserDetails = response;
+        if(this.authUserDetails.user != undefined && this.authUserDetails.user != null){
+          this.checkIfUserIsAdmin();
+        }
+      });
+
+    this.editMode = false;
    
     // fetching data from state
     this.store.select(fromFeature.selectDataSource).subscribe(
@@ -234,6 +250,14 @@ export class DataSourceComponent implements OnInit {
 
   closeForm(){
     this.accountData = 'dummy';
+  }
+
+  //Below function it to get the details of the user from the API and enable or disable Data Source creation based on the Admin privileges
+  checkIfUserIsAdmin(){
+          this.appService.checkIfUserIsAdmin(this.authUserDetails.user).subscribe((userDetail: any) => {
+          this.isUserAdmin = this.authUserDetails.user;
+          
+          });
   }
   
 }

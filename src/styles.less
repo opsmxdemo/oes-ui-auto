@@ -147,7 +147,7 @@ span{
 	min-width: 100%;
 }
 .content_section{
-	margin-left: 260px;
+	margin-left: 310px;
 	transition: margin-left linear 0.5s;
 }
 .view_in .content_section{
@@ -466,7 +466,7 @@ span{
 	left: 0;
 	color: #789;
 	height: 100%;
-	width: 260px;
+	width: 310px;
 	z-index: 1001;
 	position: fixed;
 	background: #2f4151;
@@ -511,7 +511,7 @@ span{
 	position: absolute;
 	bottom: 0px;
 	height: 1px;
-	background: #789;
+	// background: #789;
 	content: "";
 	left: 25px;
 	right: 15px;
@@ -524,8 +524,9 @@ span{
 	font-size: 14px;
 	font-weight: 400;
 	text-decoration: none;
-	padding: 5px 15px 5px 25px;
+	padding: 5px 15px 5px 10px;
 	border-left: 2px transparent solid;
+	border-bottom: 1px solid rgb(61 77 92);
 }
 
 /* Disable Selection Highlighting */
@@ -2128,4 +2129,7 @@ td .table-sm input, td .table-sm select, td .table-sm{
 	}
 	.mandatory {
 		color: red;
+	}
+	.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+		background-color: #259bf3 !important;
 	}

@@ -82,28 +82,23 @@ export class AccountsEffect {
         )
     )
 
-    // Below effect is use for update account 
-    onsavedUpdateAccountData = createEffect(() =>
-        this.actions$.pipe(
-            ofType(AccountsAction.updateAccount),
-            switchMap(action => {
-                const params = new HttpParams()
-                .set('postData', action.postData)
-                return this.http.put<CreateAccount>(this.environment.config.endPointUrl+ 'oes/accountsConfig/addOrUpdateDynamicAccount', action.accountData,{ params: params }).pipe(
-                    map(resdata => {
-                       // this.router.navigate([]);
-                        return AccountsAction.accountDataSaved();
-                    }),
-                    catchError(errorRes => {
-                      //  this.toastr.showError('Server Error !!','ERROR')
-                        this.toastr.showError('Error', errorRes);
-                        return handleError(errorRes);
-                    })
-                );
-            })
-        )
-    )
+    updateAppAccount = createEffect(() =>
+    this.actions$.pipe(
+        ofType(AccountsAction.updateDynamicAccount),
+        switchMap((action) => {                
+            return this.http.put<any>(this.environment.config.endPointUrl + 'oes/accountsConfig/addOrUpdateDynamicAccount', action.updatedAccountData).pipe(
+                map(resdata => {
+                 this.toastr.showSuccess("updated Successfully","Success");
+                    return AccountsAction.postUpdateDynamicAccount({dynamicAccountListData: resdata});
+                }),
+                catchError(errorRes => {
+                    return handleError(errorRes);
+                })
+            );
+        })
+    ))
 
+  
      // Below effect is use for fetch data related to Accounts List page
      fetchAccountListData = createEffect(() =>
      this.actions$.pipe(

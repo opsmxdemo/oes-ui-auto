@@ -302,6 +302,7 @@
                                           <div *ngIf="loadingWheel">Fetching Data... <i class="fas fa-circle-notch fa-spin"></i></div>
                                           <!-- class="remove-ellipsis" [ngClass]="{'remove-ellipsis': showFullData[i], 'block-ellipsis': !showFullData[i]}" -->
                                           <div *ngIf="eachData.data == null && eachData.key == null && eachData.value == null && !loadingWheel"> 
+
                                             No data to Display
                                           </div>
                                           <div *ngIf="eachData.data != null && eachData.key != null && eachData.value != null">
