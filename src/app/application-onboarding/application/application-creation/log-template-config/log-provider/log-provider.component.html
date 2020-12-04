@@ -1,1 +1,51 @@
-<p>log-provider works!</p>
+<form [formGroup]="formGroup">    
+    <opsmx-input [params]="templateNameParams" (onChange)="onChange($event)"></opsmx-input>
+    <div class="text-divider">
+        <h4>Logs Monitoring </h4>
+    </div>
+    <opsmx-select [params]="logProviderParams" (onChange)="onChange($event)"></opsmx-select>
+    <!--kubernetes-->
+    <opsmx-input [params]="namespaceParams" (onChange)="onChange($event)"></opsmx-input>
+    <!--kubernetes-->
+
+    <!-- other than kubernetes -->
+    <opsmx-select [params]="logAccountParams" (onChange)="onChange($event)"></opsmx-select>
+    <!-- other than kubernetes -->
+
+    <!-- elastic search-->
+    <div>
+      <div class="text-divider">
+        <h4>Elastic Configuration</h4>
+      </div>
+      <opsmx-input [params]="indexPatternParams" (onChange)="onChange($event)"></opsmx-input>
+      <opsmx-input [params]="kibanaIndexParams" (onChange)="onChange($event)"></opsmx-input>
+
+      
+      <mat-slide-toggle 
+      class="example-margin mt-3"
+      [color]="color"
+      [checked]="checked"
+      [disabled]="disabled">
+      Custom regular expression filter Required
+      </mat-slide-toggle>
+
+      <opsmx-input [params]="regularExpressionParams" (onChange)="onChange($event)"></opsmx-input>
+      <opsmx-select [params]="responseKeyParams" (onChange)="onChange($event)"></opsmx-select>
+      
+      <hr class="ml-0 mt-3 mb-3" />
+      
+      <div>
+        <mat-slide-toggle 
+      class="example-margin mt-3"
+      [color]="color"
+      [checked]="checked"
+      [disabled]="disabled">
+      Autobaseline
+      </mat-slide-toggle>
+      <opsmx-helptext [params]="autoBaseHelpParams"></opsmx-helptext>
+      </div>
+      
+      <opsmx-select [params]="senstivityParams" (onChange)="onChange($event)"></opsmx-select>
+    <!-- elastic search--> 
+    </div>
+</form>

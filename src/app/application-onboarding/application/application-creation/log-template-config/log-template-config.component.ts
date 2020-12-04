@@ -14,7 +14,7 @@ export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
 
   firstFormGroup: FormGroup;
   loadLogTopicsComponent: boolean;
-  formObj: FormGroup;
+  formObj: FormGroup = new FormGroup({});
 
   constructor(private _formBuilder: FormBuilder, private dialogRef: MatDialogRef<LogTemplateConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public service: LogTemplateConfigService) {
     super();
