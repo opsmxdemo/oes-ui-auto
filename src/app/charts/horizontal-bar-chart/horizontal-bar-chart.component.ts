@@ -25,6 +25,7 @@ export class HorizontalBarChartComponent implements OnInit {
   maxYAxisTickLength: number;
   maxXAxisTickLength: number;
   colorScheme;
+  timeExists: boolean;
 
   constructor() {}
 
@@ -47,6 +48,7 @@ export class HorizontalBarChartComponent implements OnInit {
     this.maxYAxisTickLength = this.chartProperty.maxYAxisTickLength || 10;
     this.maxXAxisTickLength = this.chartProperty.maxXAxisTickLength || 8;
     this.colorScheme        = this.chartProperty.colorScheme || {domain: ['#b1d38b','#f29798']};
+    this.timeExists = false;
   }
 
 }

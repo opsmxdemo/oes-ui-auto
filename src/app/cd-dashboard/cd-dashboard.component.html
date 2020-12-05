@@ -1,4 +1,7 @@
-<div class="main_content p-0">
+<div class="main_content">
+  <div class="page_title d-flex align-items-center">
+    <h2>Deployment Dashboard </h2>
+  </div>
   <div class="page-content">
     <div class="h-100 p-4 d-flex flex-column">
       <div class="row no-gutters">
@@ -11,7 +14,7 @@
               <div class="graph-header d-flex align-items-center justify-content-between">
                 <div class="graph-title">
                   <img src="../../assets/images/drag-dots.png" alt="dots" />
-                  Health Status
+                  Deployments
                 </div>
                 <!-- /.graph-title -->
                 <!-- <div class="graph-data">
@@ -21,13 +24,15 @@
 
                 <div class="graph-controls d-flex">
                   <div class="mr-3">
-                    <select class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value)" >
+                    <select class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value,'healthchart')" >
                       <option value="1D">Last 1 Day</option>
                       <option value="7D">Last 7 Days</option>
                       <option value="1M">Last 1 Month</option>
                       <option value="6M">Last 6 Months</option>
                     </select>
                   </div>
+              
+             
 
                   <div class="dropdown dropdown-icon-remove">
                     <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -68,9 +73,61 @@
 
         <!-- #################### widget charts codes start ############################ -->
 
+        <div class="col-sm-12 px-1 mb-2">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="graph-header d-flex align-items-center justify-content-between">
+                <div class="graph-title">
+                  <img src="../../assets/images/drag-dots.png" alt="dots" />
+                  <!-- Health Status -->
+                </div>
+
+                <div class="graph-controls d-flex">
+                  <!-- <div class="mr-3"> 
+                    <div class="form-group">
+                      <mat-form-field >
+                        <mat-select class="form-control"  [formControl]="widgetsList" multiple>
+                          <mat-option *ngFor="let widget of widgetRawData" [value]="widget.name">{{widget.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div> -->
+                  <div class="mr-3">
+                    <select class="form-control" [(ngModel)]="subChartselectedValue" (change)="subChartfilterUpdated($event.target.value,'subchart')" >
+                      <option value="1D">Last 1 Day</option>
+                      <option value="7D">Last 7 Days</option>
+                      <option value="1M">Last 1 Month</option>
+                      <option value="6M">Last 6 Months</option>
+                    </select>
+                  </div>
+
+                  <div class="dropdown dropdown-icon-remove">
+                    <button class="btn btn-default px-2 dropdown-toggle" type="button" id="dropdownMenuButton"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                      <!-- <a class="dropdown-item" href="#">Hide labels</a>
+                      <div class="dropdown-divider"></div> -->
+                      <a class="dropdown-item" href="#">Add widget</a>
+                   
+                    </div>
+                  </div>
+
+                  <!-- <div class="mr-3">
+                    <select class="form-control" name ="range" id="range" [(ngModel)]="selectedRange">
+                      <option *ngFor="let containers of countRangeList" [value]="containers.range">{{containers.range}}</option>
+                    </select>
+                  </div> -->
+                </div>
+          </div>
+        </div>
+        </div>
+        </div>
+
         <div class="col-sm-4 px-1 mb-2 cdDashboard" *ngFor="let widget of widgetRawData;let widgetindex=index">
-          <div class="card border-0" *ngIf="widget.name != 'Health Status' && widget.name != 'Automated Verification' && widget.name != 'Manual Judgement Time' 
-          && widget.name != 'Rollback Services'">
+          
+          <div class="card border-0" *ngIf="widget.name != 'Deployments' && widgetindex != 8 && widgetindex != 7">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
                 <div class="graph-title">
@@ -114,30 +171,18 @@
                         [dataSource]="widgetChartsData[widgetindex]['DataSource']" [view]="widgetChartSize"
                         [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
                       </app-stacket-horizontal-bar-chart>
+                      <div>
                       <app-pie-chart *ngSwitchCase="pieChart" [dataSource]="widgetChartsData[widgetindex]['DataSource']"
                         [view]="widgetChartSize" [chartProperty]="widgetChartsData[widgetindex]['chartProperty']">
                       </app-pie-chart>
-                      <div *ngIf="widgetindex != 4 && widgetindex != 3">
+                      </div>
+                      <div>
+                        <div>
                       <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" 
                         [dataSource]="widgetChartsData[widgetindex]['DataSource']" [view]="widgetChartSize"
                         [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
                         </div>
-                      <!-- {{chart3 | json}} -->
-                      <div *ngIf="chart3.length>1 && widgetindex === 3">
-                        <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" 
-                        [dataSource]="chart3" [view]="widgetChartSize"
-                        [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
-                        </div>
-                      <div *ngIf="chart4.length>1 && widgetindex === 4">
-                      <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" 
-                      [dataSource]="chart3" [view]="widgetChartSize"
-                      [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart>
                       </div>
-                   
-                      
-                        <!-- <app-horizontal-bar-chart *ngSwitchCase="HorizontalBarChart" [dataSource]="chart3" [view]="widgetChartSize"
-                        [chartProperty]="widgetChartsData[widgetindex]['chartProperty']"></app-horizontal-bar-chart> -->
-                      <!-- default switch case -->
                       <div class="type-not-exist" *ngSwitchDefault>
                         <i class="fa fa-area-chart" aria-hidden="true"></i>
                         <i class="fa fa-bar-chart" aria-hidden="true"></i>

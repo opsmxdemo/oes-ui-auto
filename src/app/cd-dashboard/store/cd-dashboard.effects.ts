@@ -79,11 +79,12 @@ export class CdDashboardEffect {
             mergeMap( action => {
                 return this.http.get<any>(this.environment.config.endPointUrl + 'oes/cddashboard/widgetChartData?chartId='+action.subChartId+'&startTime='+ action.fromDate +'&endTime='+ action.toDate).pipe(
                     map(resdata => {
-                        if(action.subChartId == 9) {
-                            return CdDashboardAction.fetchHealthChartData({mainChartData:resdata});
-                        } else {
+                        //if(action.subChartId == 9) {
+                          //  return CdDashboardAction.fetchHealthChartData({mainChartData:resdata});
+                       // } else {
+                           if(action.subChartId != 9){
                             return CdDashboardAction.fetchSubChartData({subChartData:resdata,index:action.index})
-                        } 
+                     } 
                     }),
                     catchError(errorRes => {
                         return handleError(errorRes);

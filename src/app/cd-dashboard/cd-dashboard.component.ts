@@ -3,6 +3,7 @@ import * as LayoutAction from '../layout/store/layout.actions';
 import * as CdDashboardAction from './store/cd-dashboard.actions';
 import * as fromApp from '../store/app.reducer';
 import { Store } from '@ngrx/store';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-cd-dashboard',
   templateUrl: './cd-dashboard.component.html',
@@ -36,9 +37,42 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   chart4: any[];
   chart5: any[];
   selectedValue = '7D';
+  subChartselectedValue = '7D';
+  widgetsList = new FormControl();
+ // toppingList: string[] = [];
+ toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+
   chart3: any;
+ // countRangeList: { range: string; from: number; to: number; }[];
+  status: string[];
+  selectedRange = 3;
 
+     //filter for bar selection
+  countRangeList = [ {
+      range : "3",
+      from : 0,
+      to : 3
+    }, {
+      range : "6",
+      from : 0,
+      to : 6
+    }, {
+      range : "10",
+      from : 0,
+      to : 10
+    }, {
+      range : "20",
+      from : 0,
+      to : 20
+    }, {
+      range : "ALL",
+      from : 0,
+      to : 0
+    } ];
 
+  peepsSelect:any
+ 
   constructor(public store: Store<fromApp.AppState>,
     public cdr: ChangeDetectorRef) { }
 
@@ -105,14 +139,20 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.widgetChartsData = dashboardData.subChartData;
 
           this.createInitialData();
-          this.fetchedChartData(!dashboardData.subDataFetched);
+          this.fetchedChartData(!dashboardData.subDataFetched,'','','');
         }
         if (dashboardData.subDataFetched) {
-          this.dateConversionData(this.widgetChartsData);
+         // this.dateConversionData(this.widgetChartsData);
         }
       }
     );
-   this.filterUpdated(this.selectedValue);
+   this.filterUpdated(this.selectedValue,'healthchart');
+   this.subChartfilterUpdated(this.subChartselectedValue,'subchart');
+   this.status = ['Select Status', 'All', 'Unpaid and sent', 'Unpaid with due date', 'Paid', 'Open', 'Overdue'];
+
+
+
+
 
   }
 
@@ -152,7 +192,7 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Below function is use to dispatch action to fetch subcharts data
-  fetchedChartData(allowExecution, fromDate: any = '', toDate: any = '') {
+  fetchedChartData(allowExecution, fromDate: any = '', toDate: any = '', chartType: string) {
     let date = new Date();
     if (!toDate) {
       toDate = date.getTime();
@@ -161,14 +201,22 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       fromDate = date.setDate(date.getDate() - 7);
       // fromDate = fromDate.getTime();
     }
-    if (allowExecution && this.widgetChartLoading !== null) {
-      this.widgetRawData.forEach((subChart, index) => {
-        this.store.dispatch(CdDashboardAction.loadSubChartData({ subChartId: subChart.id, index, fromDate: fromDate, toDate: toDate }));
-      })
-    }
+
+    if(chartType === 'healthchart'){ 
     if (allowExecution && this.widgetChartLoading !== null) {
       this.store.dispatch(CdDashboardAction.loadHealthChartData({ subChartId: 9, fromDate: fromDate, toDate: toDate }));
+      }
+    }else{
+      if (allowExecution && this.widgetChartLoading !== null) {
+        this.widgetRawData.forEach((subChart, index) => {
+          if(subChart.id != 9){
+            this.store.dispatch(CdDashboardAction.loadSubChartData({ subChartId: subChart.id, index, fromDate: fromDate, toDate: toDate }));
+  
+          }
+        })
+      }
     }
+
   }
 
   // Below function is use to reture true if subgraph data exist
@@ -186,7 +234,7 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     return returnVal;
   }
 
-  filterUpdated(event: any) {
+  filterUpdated(event: any,type:string) {
     let filter = event;
     var date = new Date();
     let toDate = date.getTime(), fromDate;
@@ -208,30 +256,39 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         fromDate = date.getTime();
         break;
     }
-    this.fetchedChartData(true, fromDate, toDate);
+    this.fetchedChartData(true, fromDate, toDate,type);
   }
 
-  dateConversionData(data) {
-    this.chart3 = [];
-    this.chart4 = [];
-    if (data[4].DataSource != undefined) {
-      data[4].DataSource.forEach(element => {
-        this.chart4.push({
-          "name": element.name,
-          "value": Math.round(Number(element.value) / (60000)),
-        })
-      });
+  // filter for subchart
+  subChartfilterUpdated(event: any,type:string) {
+    let filter = event;
+    var date = new Date();
+    let toDate = date.getTime(), fromDate;
+    switch (filter) {
+      case '1D':
+        date.setDate(date.getDate() - 1);
+        fromDate = date.getTime();
+        break;
+      case '7D':
+        date.setDate(date.getDate() - 7);
+        fromDate = date.getTime();
+        break;
+      case '1M':
+        date.setMonth(date.getMonth() - 1);
+        fromDate = date.getTime();
+        break;
+      case '6M':
+        date.setMonth(date.getMonth() - 6);
+        fromDate = date.getTime();
+        break;
     }
+    this.fetchedChartData(true, fromDate, toDate,type);
+  }
 
-    if (data[3].DataSource != undefined) {
-      data[3].DataSource.forEach(element => {
-        this.chart3.push({
-          "name": element.name,
-          "value": Math.round(Number(element.value) / (60000)),
-        })
-      });
-    }
+  applyCountRangeInChart(){
 
   }
+
+  
 
 }
