@@ -1,0 +1,14 @@
+<div class="form-group" [hidden]="params.hidden">
+    <label *ngIf="params.label">
+        {{params.label}}
+        <span *ngIf="params.required" class="control-required-indicator">*</span>
+    </label>    
+    <select [id]="params.id || ''"  (change)="changeEvent($event)" class="form-control" [formControl]="params.formControl" [disabled]="params.disabled" >
+        <option value="">Select</option>
+        <option *ngFor="let option of params.options;let i=index" [value]="option.value">{{option.name}}</option>
+        <option value="+" *ngIf="params.addOption">{{params.addOptionLabel}}</option>
+    </select>
+</div>
+
+
+

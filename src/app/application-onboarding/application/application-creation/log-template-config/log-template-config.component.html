@@ -18,7 +18,7 @@
             <mat-step [stepControl]="logTopicsForm">
               <form [formGroup]="logTopicsForm">
                 <ng-template matStepLabel>Log Topics</ng-template>
-                <div *ngIf="loadLogTopicsComponent">
+                <div *ngIf="loadChildComponents">
                   <app-log-topics></app-log-topics>
                 </div>
                 <br><br>
@@ -33,7 +33,9 @@
             </mat-step>
             <mat-step>
               <ng-template matStepLabel>Log Tags</ng-template>
-              <app-log-tags></app-log-tags>
+              <div *ngIf="loadChildComponents">
+                <app-log-tags></app-log-tags>
+              </div>
               <br><br>
               <div class="float-left">
                 <button mat-button  (click)="close()" class="btn btn-secondary default-border">Close</button>
