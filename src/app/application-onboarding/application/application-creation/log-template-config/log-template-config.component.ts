@@ -11,8 +11,8 @@ import { LogTopicsService } from './log-topics/log-topics.service';
   styleUrls: ['./log-template-config.component.less']
 })
 export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
-
-  firstFormGroup: FormGroup;
+  
+  loadLogTopicsComponent: boolean;
   loadChildComponents: boolean;
   formObj: FormGroup = new FormGroup({});
 
@@ -22,7 +22,7 @@ export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
 
   ngOnInit() {
 
-    this.formObj.addControl('logProvider', LogTemplateConfigService.LogTopicsForm); // Use log provider static form
+    this.formObj.addControl('logProvider', LogTemplateConfigService.logProviderForm); // Use log provider static form
     this.formObj.addControl('logTopics', LogTemplateConfigService.LogTopicsForm);
     this.formObj.addControl('logTags', LogTemplateConfigService.LogTopicsForm); // Use log tag static form
 
@@ -32,9 +32,6 @@ export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
       this.loadChildComponents = true;
     });
 
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
   }
 
   close() {
@@ -43,6 +40,10 @@ export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
 
   get logTopicsForm() {
     return LogTemplateConfigService.LogTopicsForm;
+  }
+
+  get logProviderForm() {
+    return LogTemplateConfigService.logProviderForm;
   }
 
   formValid() {

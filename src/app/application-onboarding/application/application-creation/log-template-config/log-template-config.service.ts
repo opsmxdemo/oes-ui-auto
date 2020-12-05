@@ -19,8 +19,10 @@ export class LogTemplateConfigService {
   public static errorTopicsList: any = [];
   public static tagList: any = [];
   public static LogTopicsForm: FormArray = new FormArray([]);
+  public static dataScourceList : any = [];
+  public static logTemplateData : any;
+  public static logProviderForm : FormGroup = new FormGroup({});
   public static LogTagsForm: FormGroup;
-  static logTemplateData: any;
   
 
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) { }
@@ -30,17 +32,20 @@ export class LogTemplateConfigService {
     LogTemplateConfigService.applicationId = applicationId;
     LogTemplateConfigService.templateName = templateName;
 
+
     if (LogTemplateConfigService.templateName) {
-      return forkJoin([this.getTemplateDetails(), this.getDefaultLogTemplate()]).pipe(
+      return forkJoin([this.getTemplateDetails(), this.getDefaultLogTemplate(), this.getDataSourceList()]).pipe(
         map((resp: any) => {
           this.templateData(resp[0]);
-          this.errorTopics(resp[1])
+          this.errorTopics(resp[1]);
+          this.dataScources(resp[2]);
           return resp;
         }));
     } else {
-      return forkJoin([this.getDefaultLogTemplate()]).pipe(
+      return forkJoin([this.getDefaultLogTemplate(),this.getDataSourceList()]).pipe(
         map((resp: any) => {
           this.errorTopics(resp[0]);
+          LogTemplateConfigService.logTemplateData = undefined;
           return resp;
         })
       )
@@ -48,6 +53,7 @@ export class LogTemplateConfigService {
   }
 
   templateData(resp) {
+    LogTemplateConfigService.logTemplateData = resp;
     LogTemplateConfigService.errorTopicsList = resp.errorTopics;
     LogTemplateConfigService.tagList = resp.tags || false;
   }
@@ -57,6 +63,10 @@ export class LogTemplateConfigService {
       LogTemplateConfigService.errorTopicsList = resp.logTopics
     }
     LogTemplateConfigService.topicsList = resp.topics;
+  }
+
+  dataScources(resp) {
+    LogTemplateConfigService.dataScourceList = resp.dataScourceList;
   }
 
   // defaultErrorTopics(resp) {
@@ -70,5 +80,9 @@ export class LogTemplateConfigService {
 
   getDefaultLogTemplate() {
     return this.http.get<any>(this.environment.config.endPointUrl + `autopilot/api/v1/defaultLogTemplate`);
+  }
+
+  getDataSourceList() {
+    return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials');
   }
 }
