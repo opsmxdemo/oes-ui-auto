@@ -13,6 +13,7 @@ import { LogTopicsService } from './log-topics/log-topics.service';
 export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
   
   loadLogTopicsComponent: boolean;
+  loadChildComponents: boolean;
   formObj: FormGroup = new FormGroup({});
 
   constructor(private _formBuilder: FormBuilder, private dialogRef: MatDialogRef<LogTemplateConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public service: LogTemplateConfigService) {
@@ -28,7 +29,7 @@ export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
     this.service.init(this.data.applicationId, this.data.templateName)
     .subscribe((resp: any) => {
       console.log('sfdas');
-      this.loadLogTopicsComponent = true;
+      this.loadChildComponents = true;
     });
 
   }

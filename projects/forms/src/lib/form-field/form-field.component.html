@@ -1,0 +1,8 @@
+
+<div [ngSwitch]="params.field">
+    <opsmx-input *ngSwitchCase="'input'" [params]="params" (onChange)="changeEvent($event)" (onClick)="clickEvent($event)" (onBlur)="blurEvent($event)"
+        (onFocus)="focusEvent($event)" (onKeyUp)="keyUpEvent($event)" (onKeyPress)="keyPressEvent($event)"
+        (onKeyDown)="keyDownEvent($event)"></opsmx-input>
+    <opsmx-select *ngSwitchCase="'select'" [params]="params" (onChange)="changeEvent($event)"></opsmx-select>
+    
+</div>

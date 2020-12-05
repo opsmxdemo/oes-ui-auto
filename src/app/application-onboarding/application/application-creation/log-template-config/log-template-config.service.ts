@@ -17,10 +17,13 @@ export class LogTemplateConfigService {
   public static defaultLogTopicsList : any = [];
   public static topicsList: any = [];
   public static errorTopicsList: any = [];
+  public static tagList: any = [];
   public static LogTopicsForm: FormArray = new FormArray([]);
   public static dataScourceList : any = [];
   public static logTemplateData : any;
   public static logProviderForm : FormGroup = new FormGroup({});
+  public static LogTagsForm: FormGroup;
+  
 
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) { }
 
@@ -52,6 +55,7 @@ export class LogTemplateConfigService {
   templateData(resp) {
     LogTemplateConfigService.logTemplateData = resp;
     LogTemplateConfigService.errorTopicsList = resp.errorTopics;
+    LogTemplateConfigService.tagList = resp.tags || false;
   }
 
   errorTopics(resp) {

@@ -1,1 +1,11 @@
-<p>log-tags works!</p>
+<!-- <form [formGroup]="logTagForms"> -->
+<opsmx-select *ngIf="tagFormFlag" [params]="service.scoringAlgoParams" (onChange)="onChange($event)"></opsmx-select>
+
+<div class="text-divider">
+    <h4>Cluster Tag</h4>
+</div>
+
+<mat-slide-toggle [color]="color" [(ngModel)]="clusterTagEnabled" [disabled]="disabled" (change)="enableClusterTag()">
+    Enable Cluster Tag
+</mat-slide-toggle>
+<!-- </form> -->
