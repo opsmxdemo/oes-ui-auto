@@ -24,6 +24,8 @@ export class StacketHorizontalBarChartComponent implements OnInit {
   legendPosition: string;
   animations: boolean;
   colorScheme;
+  arr1: any[];
+  stackedFinalData: any;
   
 
   constructor() {
@@ -42,8 +44,20 @@ export class StacketHorizontalBarChartComponent implements OnInit {
     this.yAxisLabel = this.chartProperty.yAxisLabel !== undefined ? this.chartProperty.yAxisLabel : "";
     this.legendPosition = this.chartProperty.legendPosition !== undefined ? this.chartProperty.legendPosition : "below";
     this.colorScheme = this.chartProperty.colorScheme !== undefined ? this.chartProperty.colorScheme : {domain: ['#b1d38b','#f29798',"#fed856"]};
+
+
+    this.arr1 = [];
+    this.arr1.push(...this.dataSource);
+    console.log(this.arr1);
+    this.convert(this.arr1);
   }
 
   onSelect(event) {}
+
+  convert(d){
+    d.splice(5,d.length-5);
+    console.log(d);
+    this.stackedFinalData = d;
+  }
 
 }
