@@ -13,6 +13,7 @@ export class OpsMxFormGridComponent extends EmitUserEvents implements OnInit, On
   @Input() header: FormGrid;
   @Input() formArrayObj: FormArray;
   @Input() height: string;
+  @Input() id: string;
 
   @Output() addRow = new EventEmitter();
   @Output() deleteRow = new EventEmitter();

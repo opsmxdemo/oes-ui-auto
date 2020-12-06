@@ -6,7 +6,6 @@
                 <ng-template matStepLabel>Log Provider</ng-template>
                 <app-log-provider></app-log-provider>
                 <br>
-                <br>
                 <div class="float-left">
                   <button mat-button (click)="close()" class="btn btn-secondary default-border">Close</button>
                 </div>
@@ -21,7 +20,7 @@
                 <div *ngIf="loadChildComponents">
                   <app-log-topics></app-log-topics>
                 </div>
-                <br><br>
+                <br>
                 <div class="float-left">
                   <button  (click)="close()" mat-button matStepperNext class="btn btn-secondary default-border">Close</button>
                 </div>
@@ -36,7 +35,7 @@
               <div *ngIf="loadChildComponents">
                 <app-log-tags></app-log-tags>
               </div>
-              <br><br>
+              <br>
               <div class="float-left">
                 <button mat-button  (click)="close()" class="btn btn-secondary default-border">Close</button>
               </div>

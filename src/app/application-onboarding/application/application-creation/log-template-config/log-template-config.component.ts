@@ -10,21 +10,21 @@ import { LogTopicsService } from './log-topics/log-topics.service';
   templateUrl: './log-template-config.component.html',
   styleUrls: ['./log-template-config.component.less']
 })
-export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
+export class LogTemplateConfigComponent implements OnInit {
   
   loadLogTopicsComponent: boolean;
   loadChildComponents: boolean;
   formObj: FormGroup = new FormGroup({});
 
   constructor(private _formBuilder: FormBuilder, private dialogRef: MatDialogRef<LogTemplateConfigComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public service: LogTemplateConfigService) {
-    super();
+    // super();
   }
 
   ngOnInit() {
 
-    this.formObj.addControl('logProvider', LogTemplateConfigService.logProviderForm); // Use log provider static form
-    this.formObj.addControl('logTopics', LogTemplateConfigService.LogTopicsForm);
-    this.formObj.addControl('logTags', LogTemplateConfigService.LogTopicsForm); // Use log tag static form
+    // this.formObj.addControl('logProvider', LogTemplateConfigService.logProviderForm); // Use log provider static form
+    // this.formObj.addControl('logTopics', LogTemplateConfigService.LogTopicsForm);
+    // this.formObj.addControl('logTags', LogTemplateConfigService.LogTopicsForm); // Use log tag static form
 
     this.service.init(this.data.applicationId, this.data.templateName)
     .subscribe((resp: any) => {
@@ -53,6 +53,10 @@ export class LogTemplateConfigComponent extends OpsMxForms implements OnInit {
 
   formInvalid() {
     
+  }
+
+  submit() {
+    this.service.submit();
   }
 
 }

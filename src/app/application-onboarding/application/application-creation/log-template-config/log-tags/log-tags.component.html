@@ -1,11 +1,58 @@
 <!-- <form [formGroup]="logTagForms"> -->
-<opsmx-select *ngIf="tagFormFlag" [params]="service.scoringAlgoParams" (onChange)="onChange($event)"></opsmx-select>
+<div style="width: 200px;">
+    <opsmx-select *ngIf="tagFormFlag" [params]="service.scoringAlgoParams" (onChange)="onChange($event)"></opsmx-select>
+</div>
+
 
 <div class="text-divider">
     <h4>Cluster Tag</h4>
 </div>
 
-<mat-slide-toggle [color]="color" [(ngModel)]="clusterTagEnabled" [disabled]="disabled" (change)="enableClusterTag()">
+<mat-slide-toggle [color]="color" [(ngModel)]="service.clusterTagEnabled" [disabled]="disabled"
+    (change)="enableClusterTag($event)">
     Enable Cluster Tag
 </mat-slide-toggle>
+
+<div *ngIf="service.clusterTagEnabled" style="margin-top: 15px;">
+    <div style="height: 45px;margin-bottom: 15px;">
+        <div class="float-left" style="width: 150px;">
+            <opsmx-select *ngIf="tagFormFlag" [params]="service.clusterTagsListParams"
+                (changed)="onChangeCusterTag($event)">
+            </opsmx-select>
+        </div>
+        <div class="float-left" style="margin-left: 10px;line-height: 35px;">
+            <span class="ml-2 " (click)="editNewTag()" title="Edit Tags" *ngIf="service.tagList.length > 0">
+                <a class="btn-link">
+                    <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
+                </a>
+            </span>
+            <span class="ml-2 " (click)="addNewTag()" title="Add New Tags">
+                <a class="btn-link">
+                    <i class="fas fa-plus"></i>
+                </a>
+            </span>
+            <span class="ml-2 " (click)="removeTags()" title="Delete Tags">
+                <a class="btn-link">
+                    <i class="mt_custom-3 far fa-trash-alt"></i>
+                </a>
+            </span>
+        </div>
+        <div class="float-left" style="margin-left: 10px;">
+            <opsmx-input *ngIf="addEditClusterTagInput" [params]="service.inputClusterTagParams"
+                (onChange)="onChange($event)">
+            </opsmx-input>
+        </div>
+        <div class="float-left" style="margin-left: 10px;">
+            <opsmx-button *ngIf="addEditClusterTagInput" [params]="service.saveTagButtonParams" (onClick)="submit()">
+            </opsmx-button>
+        </div>
+        <div class="float-left" style="margin-left: 10px;">
+            <opsmx-button *ngIf="addEditClusterTagInput" [params]="service.cancelSaveTagButtonParams"
+                (onClick)="canceSaveTagClick()"></opsmx-button>
+        </div>
+    </div>
+    <opsmx-form-grid *ngIf="service.reloadFormGrid" [id]="clusterTag" [height]="'260px'"
+        [header]="service.formGridHeaders" [formArrayObj]="loadTagsFormGridForm" (onChange)="onChangeOption($event)"
+        (addRow)="addRowGrid($event)" (deleteRow)="deleteRow($event)"></opsmx-form-grid>
+</div>
 <!-- </form> -->

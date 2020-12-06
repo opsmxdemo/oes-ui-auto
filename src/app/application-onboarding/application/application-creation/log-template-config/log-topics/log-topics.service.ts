@@ -36,7 +36,7 @@ export class LogTopicsService extends LogTemplateConfigService {
       let rowField = [];
       LogTemplateConfigService.LogTopicsForm.controls.push(new FormGroup({
         string: new FormControl(topic.string, [Validators.required]),
-        chType: new FormControl(topic.topic, [Validators.required]),
+        topic: new FormControl(topic.topic, [Validators.required]),
         type: new FormControl({value: topic.type, disabled: true}, [Validators.required])
       }));
     });
@@ -111,8 +111,8 @@ export class LogTopicsService extends LogTemplateConfigService {
   addRow() {
     LogTemplateConfigService.LogTopicsForm.controls.splice(0, 0, new FormGroup({
       string: new FormControl('', [Validators.required]),
-      chType: new FormControl('', [Validators.required]),
-      type: new FormControl('custom', [Validators.required])
+      topic: new FormControl('', [Validators.required]),
+      type: new FormControl({value: 'custom', disabled: true}, [Validators.required])
     }));
   }
 

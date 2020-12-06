@@ -15,8 +15,8 @@
             </div>
         </div>
     </div>
-    <div id="fromGridRowContainer" [ngStyle]="{'height': height, 'overflow': 'auto', 'padding': '5px 0px'}">
-        <div *ngFor="let control of formArrayObj.controls;let i=index" id="formGridRow{{i}}" class="form-grid-row">
+    <div id="fromGridRowContainer" [ngStyle]="{'max-height': height, 'overflow': 'auto', 'padding': '5px 0px'}">
+        <div *ngFor="let control of formArrayObj.controls;let i=index" id="formGridRow{{i + id}}" class="form-grid-row">
             <opsmx-form-grid-row [rowFieldTypes]="rowFieldTypes[i]" [gridTemplateColumns]="gridTemplateColumns"
                 [index]='i' [formGroupObj]="control" (onChange)="changeEvent($event)" (onClick)="clickEvent($event)"
                 (onBlur)="blurEvent($event)" (onFocus)="focusEvent($event)" [rowDeleteFlag]="header.deleteRow"

@@ -2,7 +2,7 @@ import { EventEmitter, Output } from '@angular/core';
 
 export class EmitUserEvents {
 
-    @Output() onChange = new EventEmitter();
+    @Output() changed = new EventEmitter();
     @Output() onClick = new EventEmitter();
     @Output() onBlur = new EventEmitter();
     @Output() onFocus = new EventEmitter();
@@ -14,7 +14,7 @@ export class EmitUserEvents {
 
     changeEvent(event: any) {
         let data = this.fieldOptions ? {event: event, fieldOptions: this.fieldOptions} : event;
-        this.onChange.emit(data);
+        this.changed.emit(data);
     }
 
     clickEvent(event: any) {

@@ -9,7 +9,7 @@ export class OpsMxSelectComponent implements OnInit {
 
   @Input() params: any = {};
 
-  @Output() onChange = new EventEmitter();
+  @Output() changed = new EventEmitter();
 
   id: any = '';
 
@@ -20,7 +20,7 @@ export class OpsMxSelectComponent implements OnInit {
   }
 
   changeEvent(event:any) {
-    this.onChange.emit(event);
+    this.changed.emit(event);
   }
 
 }

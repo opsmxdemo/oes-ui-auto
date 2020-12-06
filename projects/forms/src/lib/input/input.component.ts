@@ -10,7 +10,7 @@ export class OpsMxInputComponent extends EmitUserEvents implements OnInit {
 
   @Input() params: any = {};
 
-  @Output() onChange = new EventEmitter();
+  @Output() changed = new EventEmitter();
   @Output() onClick = new EventEmitter();
   @Output() onBlur = new EventEmitter();
   @Output() onFocus = new EventEmitter();

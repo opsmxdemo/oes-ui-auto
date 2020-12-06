@@ -31,7 +31,8 @@ export class LogTemplateConfigService {
 
     LogTemplateConfigService.applicationId = applicationId;
     LogTemplateConfigService.templateName = templateName;
-
+    LogTemplateConfigService.LogTopicsForm = new FormArray([]);
+    LogTemplateConfigService.LogTagsForm = new FormGroup({});
 
     if (LogTemplateConfigService.templateName) {
       return forkJoin([this.getTemplateDetails(), this.getDefaultLogTemplate(), this.getDataSourceList()]).pipe(
@@ -84,5 +85,9 @@ export class LogTemplateConfigService {
 
   getDataSourceList() {
     return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials');
+  }
+
+  submit() {
+    // prepare the post and put object for saving a template
   }
 }

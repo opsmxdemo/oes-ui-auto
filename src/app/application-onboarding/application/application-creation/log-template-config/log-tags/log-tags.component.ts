@@ -10,15 +10,19 @@ import { LogTagService } from './log-tag.service';
   templateUrl: './log-tags.component.html',
   styleUrls: ['./log-tags.component.less']
 })
-export class LogTagsComponent implements OnInit {
+export class LogTagsComponent extends OpsMxForms implements OnInit {
 
   tagFormFlag = false;
   color: ThemePalette = 'primary';
   clusterTagEnabled = false;
   checked = false;
   disabled = false;
+  addEditClusterTagInput: boolean;
+  formObj: FormGroup;
+  currentTag: any = {};
 
   constructor(public service: LogTagService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -35,9 +39,85 @@ export class LogTagsComponent implements OnInit {
 
   }
 
-  enableClusterTag() {
+  onChangeCusterTag(event: any) {
+    this.currentTag = this.service.tagList.find(tag => tag.name == event.target.value);
+    console.log(this.currentTag);
+  }
+
+  enableClusterTag(event: any) {
     console.log(event);
-    console.log(this.clusterTagEnabled)
+    // console.log(this.clusterTagEnabled)
+    this.service.reloadFormGrid = this.service.clusterTagEnabled;
+  }
+
+  addNewTag() {
+    this.formObj = this.service.tagForm;
+    this.formObj.reset();
+    this.addEditClusterTagInput = true;
+  }
+
+  editNewTag() {
+    this.formObj = this.service.tagForm;
+    this.formObj.setValue({
+      id: this.currentTag.id,
+      name: this.currentTag.name
+    });
+    this.addEditClusterTagInput = true;
+  }
+
+  removeTags() {
+
+  }
+
+  saveTagClick() {
+    this.service.saveClusterTagName().subscribe((resp: any) => {
+      this.service.tagForm.reset();
+      this.addEditClusterTagInput = false;
+      this.service.getTags().subscribe();
+    });
+  }
+
+  updateTagClick() {
+    this.service.updateClusterTagName().subscribe((resp: any) => {
+      this.service.getTags().subscribe(resp => {
+        this.service.updateFormArrayVal(this.currentTag);
+        this.service.tagForm.reset();
+        this.addEditClusterTagInput = false;
+      });
+    });
+  }
+
+  canceSaveTagClick(canceSaveTagClick) {
+    this.service.tagForm.reset();
+    this.addEditClusterTagInput = false;
+  }
+
+  get loadTagsFormGridForm() {
+    return LogTemplateConfigService.LogTagsForm.get('tags');
+  }
+
+  onChangeOption(event) {
+
+  }
+
+  addRowGrid(event) {
+    this.service.addFormRow();
+  }
+
+  deleteRow(event) {
+
+  }
+
+  formValid() {
+    if(this.formObj.get('id').value) {
+      this.updateTagClick();
+    } else {
+      this.saveTagClick();
+    }
+  }
+
+  formInvalid() {
+
   }
 
 }
