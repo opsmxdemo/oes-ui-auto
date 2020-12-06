@@ -1,19 +1,19 @@
-<form [formGroup]="logProviderForm" *ngIf="isProviderParamsLoaded">    
-    <opsmx-input [params]="logProviderService.templateNameParams" (onChange)="onChange($event)"></opsmx-input>
+<form [formGroup]="logProviderForm" *ngIf="logProviderService.isProviderParamsLoaded">    
+    <opsmx-input [params]="logProviderService.templateNameParams"></opsmx-input>
     <div class="text-divider">
         <h4>Logs Monitoring </h4>
     </div>
-    <opsmx-select [params]="logProviderService.logProviderParams" (onChange)="onChange($event)"></opsmx-select>
+    <opsmx-select [params]="logProviderService.logProviderParams" (changed)="onChangeProvider($event)"></opsmx-select>
     <!--kubernetes-->
-    <opsmx-input [params]="logProviderService.namespaceParams" (onChange)="onChange($event)"></opsmx-input>
+    <opsmx-input [params]="logProviderService.namespaceParams" (onChange)="onChange($event)" *ngIf="logProviderService.logProviderParams.formControl.value == 'kubernetes'"></opsmx-input>
     <!--kubernetes-->
 
     <!-- other than kubernetes -->
-    <opsmx-select [params]="logProviderService.logAccountParams" (onChange)="onChange($event)"></opsmx-select>
+    <opsmx-select [params]="logProviderService.logAccountParams" (onChange)="onChange($event)" *ngIf="logProviderService.logProviderParams.formControl.value != 'kubernetes'"></opsmx-select>
     <!-- other than kubernetes -->
 
     <!-- elastic search-->
-    <div>
+    <div *ngIf="logProviderService.logProviderParams.formControl.value == 'elasticsearch'">
       <div class="text-divider">
         <h4>Elastic Configuration</h4>
       </div>

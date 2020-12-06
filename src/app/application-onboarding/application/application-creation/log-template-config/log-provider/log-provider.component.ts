@@ -10,21 +10,25 @@ import { LogTemplateConfigService } from '../log-template-config.service'
   styleUrls: ['./log-provider.component.less'],
   providers :[LogProviderService]
 })
-export class LogProviderComponent extends OpsMxForms implements OnInit {
+export class LogProviderComponent implements OnInit {
 
   formObj: FormGroup = new FormGroup({});
-  isProviderParamsLoaded = false;
+  //isProviderParamsLoaded = false;
+  selectedDataSource :any;
   
   constructor(public logProviderService: LogProviderService) {
-    super();
+    //super();
   }
 
   ngOnInit(): void {
-    this.logProviderService.initProviderComponent(); 
+    this.logProviderService.initProviderComponent();
+    // this.logProviderService.getDataScources().subscribe(resp => {
+    //   this.isProviderParamsLoaded = true;
+    // });
     this.logProviderService.$logTemplateDataLoaded.subscribe(loaded => {
       if(loaded) {
-        this.formObj.addControl('logProvider', LogTemplateConfigService.logProviderForm);
-        this.isProviderParamsLoaded = true;
+        //LogTemplateConfigService.logProviderForm.addControl('logProvider', LogTemplateConfigService.logProviderForm);
+        //this.isProviderParamsLoaded = true;
       } else {
         setTimeout(() => {
           this.logProviderService.initProviderComponent();
@@ -37,6 +41,17 @@ export class LogProviderComponent extends OpsMxForms implements OnInit {
   onChange(event) {
     console.log(event);
   }
+
+  onChangeProvider(event: any) {
+    console.log(event);
+    this.selectedDataSource = event.target.value;
+    //api to get response key based on account name
+    //return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/logs/getDataSourceResponseKeys?accountName='+action.accountName)
+    
+    //api to get list of accounts
+    //return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+action.monitoringSourceName)
+  }
+
 
   formValid(){
 
