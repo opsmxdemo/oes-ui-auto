@@ -19,7 +19,6 @@ export class LogTemplateConfigService {
   public static errorTopicsList: any = [];
   public static tagList: any = [];
   public static LogTopicsForm: FormArray = new FormArray([]);
-  public static dataScourceList : any = [];
   public static logTemplateData : any;
   public static logProviderForm : FormGroup = new FormGroup({});
   public static LogTagsForm: FormGroup;
@@ -34,15 +33,14 @@ export class LogTemplateConfigService {
 
 
     if (LogTemplateConfigService.templateName) {
-      return forkJoin([this.getTemplateDetails(), this.getDefaultLogTemplate(), this.getDataSourceList()]).pipe(
+      return forkJoin([this.getTemplateDetails(), this.getDefaultLogTemplate()]).pipe(
         map((resp: any) => {
           this.templateData(resp[0]);
-          this.errorTopics(resp[1]);
-          this.dataScources(resp[2]);
+          this.errorTopics(resp[1]);          
           return resp;
         }));
     } else {
-      return forkJoin([this.getDefaultLogTemplate(),this.getDataSourceList()]).pipe(
+      return forkJoin([this.getDefaultLogTemplate()]).pipe(
         map((resp: any) => {
           this.errorTopics(resp[0]);
           LogTemplateConfigService.logTemplateData = undefined;
@@ -63,11 +61,7 @@ export class LogTemplateConfigService {
       LogTemplateConfigService.errorTopicsList = resp.logTopics
     }
     LogTemplateConfigService.topicsList = resp.topics;
-  }
-
-  dataScources(resp) {
-    LogTemplateConfigService.dataScourceList = resp.dataScourceList;
-  }
+  }  
 
   // defaultErrorTopics(resp) {
   //   this.defaultLogTopicsList = resp.logTopics
@@ -82,7 +76,4 @@ export class LogTemplateConfigService {
     return this.http.get<any>(this.environment.config.endPointUrl + `autopilot/api/v1/defaultLogTemplate`);
   }
 
-  getDataSourceList() {
-    return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials');
-  }
 }

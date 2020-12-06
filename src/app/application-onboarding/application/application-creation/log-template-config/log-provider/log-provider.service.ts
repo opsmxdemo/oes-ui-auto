@@ -37,26 +37,51 @@ export class LogProviderService extends LogTemplateConfigService {
   autoBaseLinedisabled = false;
   regExpFilterChecked = false;
   regExpFilterDisabled = false;
+  logSensitivityTypes = [
+    { value : "high",name : "high"},
+    { value : "medium",name : "medium"},
+    { value : "low",name : "low"}
+  ];
+  logDataSources = [];
+  isProviderParamsLoaded: boolean;
 
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) {
     super(http,router,toastr,environment);
   }
 
-  initProviderComponent(){ 
+  initProviderComponent(){        
     if(LogTemplateConfigService.logTemplateData != undefined) {
-      this.defineLogProviderForm(); 
-      this.initParamtersForComponents();    
+      this.defineLogProviderForm();
+      this.getDataScources().subscribe(resp => {
+        setTimeout(() => {
+          this.isProviderParamsLoaded = true;
+        }, 100);        
+      });        
       this.$logTemplateDataLoaded.next(true);
     } else {
       this.$logTemplateDataLoaded.next(false);
     }
   }
 
+  getDataScources() {
+    return forkJoin([this.getDataSourceList()]).pipe(
+      map((resp: any) => { 
+        let datasoucesList = resp[0].autopilotDataSources.filter(i => i.usage.includes('log'));
+         datasoucesList.forEach(element => {
+           let obj = { "value" : element.datasourceType, "name":element.displayName};
+           this.logDataSources.push(obj);           
+         });  
+         this.initParamtersForComponents();      
+        return resp;
+      })
+    )
+  }
+
   defineLogProviderForm() {
     console.log("define log provider");
     console.log(LogTemplateConfigService.logTemplateData);
     console.log(LogTemplateConfigService.logProviderForm);
-    this.formObj = new FormGroup({
+    LogTemplateConfigService.logProviderForm = new FormGroup({
       templateName : new FormControl(LogTemplateConfigService.logTemplateData.templateName),
       logProvider: new FormControl(LogTemplateConfigService.logTemplateData.monitoringProvider),
       logaccount : new FormControl(LogTemplateConfigService.logTemplateData.accountName),
@@ -76,16 +101,11 @@ export class LogProviderService extends LogTemplateConfigService {
     this.logProviderParams = {
       label: 'Provider',
       disabled: true,
-      formControl: this.formObj.get('logProvider'),
+      formControl: LogTemplateConfigService.logProviderForm.get('logProvider'),
       hidden: false,
       id: 'select-logProvider',
       required : true,
-      options : [
-        { value : "value1",name : "name1"},
-        { value : "value2",name : "name2"},
-        { value : "value3",name : "name3"},
-        { value : "value4",name : "name4"},
-      ],
+      options : this.logDataSources,
       addOption : false,
       addOptionLabel : "",
       margin : "10px 0px"
@@ -94,7 +114,7 @@ export class LogProviderService extends LogTemplateConfigService {
     this.logAccountParams = {
       label: 'Log Account',
       disabled: false,
-      formControl: this.formObj.get('logaccount'),
+      formControl: LogTemplateConfigService.logProviderForm.get('logaccount'),
       hidden: false,
       id: 'select-logAccount',
       required : false,
@@ -109,8 +129,8 @@ export class LogProviderService extends LogTemplateConfigService {
       margin : "10px 0px"
     };
 
-    this.formObj.get('logProvider').setValue("value1"); 
-
+    LogTemplateConfigService.logProviderForm.get('logProvider').setValue(LogTemplateConfigService.logTemplateData.monitoringProvider); 
+    //LogTemplateConfigService.logProviderForm.controls.logProvider.disable();
 
     this.autoBaseHelpParams = {
       title : "ML based learning of the baseline from historic analysis"
@@ -119,18 +139,19 @@ export class LogProviderService extends LogTemplateConfigService {
     this.templateNameParams = {
       label: "Log Template Name",
       type: 'text',
-      formControl: this.formObj.get('templateName'),
+      formControl: LogTemplateConfigService.logProviderForm.get('templateName'),
       hidden: false,
       id: 'input-templateName',
       required: true,
       placeholder: "Log Template Name",
       margin : "10px 0px"
     };
+    LogTemplateConfigService.logProviderForm.controls.templateName.disable();
 
     this.namespaceParams = {
       label: "Namespace",
       type: 'text',
-      formControl: this.formObj.get('namespace'),
+      formControl: LogTemplateConfigService.logProviderForm.get('namespace'),
       hidden: false,
       id: 'input-namespace',
       required: false,
@@ -141,7 +162,7 @@ export class LogProviderService extends LogTemplateConfigService {
     this.indexPatternParams = {
       label: "Index Pattern",
       type: 'text',
-      formControl: this.formObj.get('indexPattern'),
+      formControl: LogTemplateConfigService.logProviderForm.get('indexPattern'),
       hidden: false,
       id: 'input-indexpattern',
       required: false,
@@ -152,7 +173,7 @@ export class LogProviderService extends LogTemplateConfigService {
     this.kibanaIndexParams = {
       label: "Kibana Default Index",
       type: 'text',
-      formControl: this.formObj.get('kibanaIndex'),
+      formControl: LogTemplateConfigService.logProviderForm.get('kibanaIndex'),
       hidden: false,
       id: 'input-kibanaindex',
       required: false,
@@ -163,7 +184,7 @@ export class LogProviderService extends LogTemplateConfigService {
     this.regularExpressionParams = {
       label: "Regular Expression",
       type: 'text',
-      formControl: this.formObj.get('regularExpression'),
+      formControl: LogTemplateConfigService.logProviderForm.get('regularExpression'),
       hidden: false,
       id: 'input-regularExpression',
       required: false,
@@ -174,7 +195,7 @@ export class LogProviderService extends LogTemplateConfigService {
     this.responseKeyParams = {
       label: 'Response Key',
       disabled: false,
-      formControl: this.formObj.get('responsekey'),
+      formControl: LogTemplateConfigService.logProviderForm.get('responsekey'),
       hidden: false,
       id: 'select-responsekey',
       required : false,
@@ -192,16 +213,11 @@ export class LogProviderService extends LogTemplateConfigService {
     this.senstivityParams = {
       label: 'Level of Sensitivity',
       disabled: false,
-      formControl: this.formObj.get('sensitivity'),
+      formControl: LogTemplateConfigService.logProviderForm.get('sensitivity'),
       hidden: false,
       id: 'select-sensitivity',
       required : false,
-      options : [
-        { value : "value1",name : "name1"},
-        { value : "value2",name : "name2"},
-        { value : "value3",name : "name3"},
-        { value : "value4",name : "name4"},
-      ],
+      options : this.logSensitivityTypes,
       addOption : false,
       addOptionLabel : "",
       margin : "10px 0px"
@@ -212,6 +228,12 @@ export class LogProviderService extends LogTemplateConfigService {
     this.regExpFilterChecked = LogTemplateConfigService.logTemplateData.regExFilter;
     this.regExpFilterDisabled = false;
   }
+
+  getDataSourceList() {
+    return this.http.get<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/datasources');
+  }
+
+ 
 
 
 }
