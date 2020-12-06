@@ -17,8 +17,42 @@ export class LogTagService extends LogTemplateConfigService {
   tagList: any = [];
   saveTagList: any = [];
   scoringAlgorithmsList: any;
+  clusterTagsList: any;
   defaultAlgo: any;
   scoringAlgoParams: any;
+  clusterTagsListParams: any;
+  tagForm: FormGroup = new FormGroup({
+    name: new FormControl(''),
+    id: new FormControl('')
+  })
+  inputClusterTagParams: any = {
+    label: "",
+    type: 'text',
+    formControl: this.tagForm.get('name'),
+    hidden: false,
+    id: 'input-tagName',
+    required: true,
+    placeholder: "Tag Name",
+    margin: "10px 0px"
+  };
+  saveTagButtonParams: any = {
+    text: "Save Tag",
+    type: 'button',
+    hidden: false,
+    id: 'savebutton-tagName',
+    color: 'blue'
+  };
+  cancelSaveTagButtonParams: any = {
+    text: "Cancel",
+    type: 'button',
+    hidden: false,
+    id: 'savebutton-tagName',
+    color: 'blue'
+  };
+  formGridHeaders: any = {};
+  reloadFormGrid: boolean;
+  clusterTagsListOptions: any = [];
+  clusterTagEnabled: boolean;
 
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) {
     super(http, router, toastr, environment);
@@ -33,12 +67,7 @@ export class LogTagService extends LogTemplateConfigService {
   }
 
   getScoringTagsList() {
-    return forkJoin([this.getScoringAlgorithms(), this.getTags()]).pipe(map((resp: any) => {
-      this.tagList = resp[1];
-      this.scoringAlgorithmsList = resp[0].algorithms;
-      this.defaultAlgo = resp[0].defaultValue
-      this.prepareScoringAlgoControlParams();
-    }));
+    return forkJoin([this.getScoringAlgorithms(), this.getTags()]);
   }
 
   prepareScoringAlgoControlParams() {
@@ -56,18 +85,41 @@ export class LogTagService extends LogTemplateConfigService {
       disabled: false,
       formControl: LogTemplateConfigService.LogTagsForm.get('scoringAlgorithm'),
       hidden: false,
-      id: 'select-logProvider',
-      required : true,
-      options : scoringAlgorithmsList,
-      addOption : false,
-      addOptionLabel : "",
-      margin : "10px 0px"
+      id: 'select-scroingAlgo',
+      required: false,
+      options: scoringAlgorithmsList,
+      addOption: false,
+      addOptionLabel: "",
+      margin: "10px 0px"
+    }
+  }
+
+  prepareTagListControlParams() {
+    this.clusterTagsListOptions = [];
+    this.tagList.forEach(tag => {
+      this.clusterTagsListOptions.push({
+        name: tag.name,
+        value: tag.name
+      })
+    });
+    this.clusterTagsListParams = {
+      label: '',
+      disabled: false,
+      formControl: LogTemplateConfigService.LogTagsForm.get('clusterTagList'),
+      hidden: false,
+      id: 'select-taglist',
+      required: false,
+      options: this.clusterTagsListOptions,
+      addOption: false,
+      addOptionLabel: "",
+      margin: "10px 0px"
     }
   }
 
   getTemplateTags() {
     if (LogTemplateConfigService.tagList && LogTemplateConfigService.tagList.length > 0) {
       this.saveTagList = LogTemplateConfigService.tagList;
+      this.clusterTagEnabled = true;
       this.defineTagFormArray();
       return;
     }
@@ -77,6 +129,7 @@ export class LogTagService extends LogTemplateConfigService {
       }, 10);
     } else {
       this.saveTagList = [];
+      this.clusterTagEnabled = false;
       this.defineTagFormArray();
     }
   }
@@ -84,9 +137,8 @@ export class LogTagService extends LogTemplateConfigService {
   defineLogTagForm() {
     LogTemplateConfigService.LogTagsForm = new FormGroup({
       'scoringAlgorithm': new FormControl(''),
-      'enableClusterTag': new FormControl(false),
       'clusterTagList': new FormControl('')
-    })
+    });
   }
 
   defineTagFormArray() {
@@ -94,20 +146,96 @@ export class LogTagService extends LogTemplateConfigService {
     if (this.saveTagList.length > 0) {
       this.saveTagList.forEach(tag => {
         (<FormArray>LogTemplateConfigService.LogTagsForm.get('tags')).controls.push(new FormGroup({
-          'id': new FormControl(tag.id),
           'string': new FormControl(tag.string, [Validators.required]),
-          'tag': new FormControl(tag.tag, [Validators.required])
-          // 'dummyString': new FormControl(tag.string)
+          'tag': new FormControl(tag.tag, [Validators.required]),
+          'id': new FormControl(tag.id)
         }));
       });
     }
   }
 
   getScoringAlgorithms() {
-    return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/scoring-algorithms');
+    return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/scoring-algorithms').pipe(map((resp: any) => {
+      this.scoringAlgorithmsList = resp.algorithms;
+      this.defaultAlgo = resp.defaultValue
+      this.prepareScoringAlgoControlParams();
+      return resp;
+    }));
   }
 
   getTags() {
-    return this.http.get<any>(this.environment.config.endPointUrl + `autopilot/api/v1/applications/${LogTemplateConfigService.applicationId}/tags`);
+    return this.http.get<any>(this.environment.config.endPointUrl + `autopilot/api/v1/applications/${LogTemplateConfigService.applicationId}/tags`).pipe(map((resp: any) => {
+      this.tagList = resp;
+      this.prepareTagListControlParams();
+      this.setColHeaders();
+      return resp;
+    }));
+  }
+
+  setColHeaders() {
+    let col1Header = {
+      headerName: 'Cluster Tag String',
+      fieldOptions: {
+        field: 'input',
+        label: '',
+        type: 'text',
+        hidden: false,
+        id: 'string',
+        required: false,
+        placeholder: '',
+        disabled: false
+      },
+      tooltip: '',
+      width: 70
+    };
+
+    let col2Header = {
+      headerName: 'Cluster Tag',
+      fieldOptions: {
+        field: 'select',
+        label: '',
+        disabled: false,
+        hidden: false,
+        id: 'tag',
+        required: false,
+        options: this.clusterTagsListOptions,
+        addOption: false,
+        addOptionLabel: ""
+      },
+      tooltip: '',
+      width: 25
+    };
+
+    this.formGridHeaders.formGridHeader = [col1Header, col2Header];
+    this.formGridHeaders.addRow = true;
+    this.formGridHeaders.deleteRow = true;
+    this.reloadFormGrid = false;
+    setTimeout(() => {
+      this.reloadFormGrid = true;
+    }, 100);
+  }
+
+  saveClusterTagName() {
+    let tagDetails = this.tagForm.value;
+    return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/tags', tagDetails);
+  }
+
+  updateClusterTagName() {
+    let tagId = this.tagForm.get('id').value;
+    let tagDetails = this.tagForm.value;
+    return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+LogTemplateConfigService.applicationId+'/tags/' + tagId, tagDetails);
+  }
+
+  addFormRow() {
+    (<FormArray>LogTemplateConfigService.LogTagsForm.get('tags')).controls.splice(0, 0, new FormGroup({
+      'string': new FormControl('', [Validators.required]),
+      'tag': new FormControl('', [Validators.required]),
+      'id': new FormControl('')
+    }));
+  }
+
+  updateFormArrayVal(tagData) {
+    let control = (<FormArray>LogTemplateConfigService.LogTagsForm.get('tags')).controls.find(control => control.get('tag').value == tagData.name);
+    control.get('tag').setValue(this.tagForm.controls.name.value);
   }
 }
