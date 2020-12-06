@@ -20,7 +20,7 @@ export class LogTopicsService extends LogTemplateConfigService {
   }
 
   initTopics() {
-    if(LogTemplateConfigService.errorTopicsList.length > 0 && LogTemplateConfigService.topicsList.length) {
+    if(LogTemplateConfigService.errorTopicsList && LogTemplateConfigService.errorTopicsList.length > 0 && LogTemplateConfigService.topicsList.length) {
       this.defineLogTopicsForm();
       this.formatTopics();
       this.setColHeaders();

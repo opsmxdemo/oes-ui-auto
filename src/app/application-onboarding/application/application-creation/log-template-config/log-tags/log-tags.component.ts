@@ -47,7 +47,12 @@ export class LogTagsComponent extends OpsMxForms implements OnInit {
   enableClusterTag(event: any) {
     console.log(event);
     // console.log(this.clusterTagEnabled)
-    this.service.reloadFormGrid = this.service.clusterTagEnabled;
+    // this.service.reloadFormGrid = this.service.clusterTagEnabled;
+    if(this.service.clusterTagEnabled && this.service.clusterTagsListOptions.length > 0) {
+      this.service.reloadFormGrid = this.service.clusterTagEnabled;
+    } else {
+      this.service.getTags().subscribe();
+    }
   }
 
   addNewTag() {
@@ -87,7 +92,7 @@ export class LogTagsComponent extends OpsMxForms implements OnInit {
     });
   }
 
-  canceSaveTagClick(canceSaveTagClick) {
+  canceSaveTagClick() {
     this.service.tagForm.reset();
     this.addEditClusterTagInput = false;
   }

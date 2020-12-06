@@ -44,6 +44,10 @@ export class LogProviderService extends LogTemplateConfigService {
   ];
   logDataSources = [];
   isProviderParamsLoaded: boolean;
+  listAccounts: any = [];
+  listResponseKeys: any = [];
+  reloadAccount: boolean;
+  reloadResponseKey: boolean;
 
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) {
     super(http,router,toastr,environment);
@@ -130,6 +134,7 @@ export class LogProviderService extends LogTemplateConfigService {
     };
 
     LogTemplateConfigService.logProviderForm.get('logProvider').setValue(LogTemplateConfigService.logTemplateData.monitoringProvider); 
+    this.getAccountForProvdier().subscribe();
     //LogTemplateConfigService.logProviderForm.controls.logProvider.disable();
 
     this.autoBaseHelpParams = {
@@ -145,8 +150,7 @@ export class LogProviderService extends LogTemplateConfigService {
       required: true,
       placeholder: "Log Template Name",
       margin : "10px 0px"
-    };
-    LogTemplateConfigService.logProviderForm.controls.templateName.disable();
+    };   
 
     this.namespaceParams = {
       label: "Namespace",
@@ -227,13 +231,102 @@ export class LogProviderService extends LogTemplateConfigService {
     this.autoBaseLinedisabled = true;
     this.regExpFilterChecked = LogTemplateConfigService.logTemplateData.regExFilter;
     this.regExpFilterDisabled = false;
+
+    if(this.getEditStatus()) {
+      LogTemplateConfigService.logProviderForm.controls.templateName.disable();
+      LogTemplateConfigService.logProviderForm.get('logProvider').disable();
+      LogTemplateConfigService.logProviderForm.get('logaccount').disable();
+    }
   }
 
   getDataSourceList() {
     return this.http.get<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/datasources');
   }
 
- 
+  getAccountForProvdier() {
+    //api to get list of accounts
+    return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/credentials?datasourceType='+LogTemplateConfigService.logProviderForm.get('logProvider').value).pipe(map(resp => {
+      this.loadAccounts(resp);
+    }));
+  }
 
+  getResponseForElastic() {
+    return this.http.get<any>(this.environment.config.endPointUrl + 'autopilot/logs/getDataSourceResponseKeys?accountName='+LogTemplateConfigService.logProviderForm.get('logaccount').value).pipe(map(resp => {
+      this.loadResponseKey(resp);
+    }));
+  }
+
+  loadAccounts(list: any) {
+    let accountsDropdown = [];
+    list.forEach(acc => {
+      accountsDropdown.push({
+        name: acc.name,
+        value: acc.name
+      })
+    });
+    this.listAccounts = accountsDropdown;
+
+    this.logAccountParams = {
+      label: 'Log Account',
+      disabled: false,
+      formControl: LogTemplateConfigService.logProviderForm.get('logaccount'),
+      hidden: false,
+      id: 'select-logAccount',
+      required : false,
+      options : accountsDropdown,
+      addOption : false,
+      addOptionLabel : "",
+      margin : "10px 0px"
+    };
+    this.reloadAccount = false;
+    setTimeout(() => {
+      this.reloadAccount = true;
+    }, 100);
+
+    LogTemplateConfigService.logProviderForm.get('logaccount').setValue(LogTemplateConfigService.logTemplateData.accountName); 
+    if(LogTemplateConfigService.logTemplateData.monitoringProvider == 'elasticsearch') {
+      this.getResponseForElastic().subscribe();
+    }
+    
+    // LogTemplateConfigService.logProviderForm.controls.logaccount.disable();
+
+  }
+
+  loadResponseKey(list: any) {
+    let resposeKey = [];
+    list.forEach(name => {
+      resposeKey.push({
+        name: name,
+        value: name
+      })
+    });
+    this.listResponseKeys = resposeKey;
+
+    this.responseKeyParams = {
+      label: 'Response Key',
+      disabled: false,
+      formControl: LogTemplateConfigService.logProviderForm.get('responsekey'),
+      hidden: false,
+      id: 'select-responsekey',
+      required : false,
+      options : resposeKey,
+      addOption : false,
+      addOptionLabel : "",
+      margin : "10px 0px"
+    };
+    this.reloadResponseKey = false;
+    setTimeout(() => {
+      this.reloadResponseKey = true;
+    }, 100);
+    LogTemplateConfigService.logProviderForm.get('responsekey').setValue(LogTemplateConfigService.logTemplateData.regExResponseKey); 
+  }
+
+  getEditStatus() {
+    return LogTemplateConfigService.editMode;
+  }
+
+  setAutoBaseLIne() {
+    LogTemplateConfigService.logProviderForm.get('autoBaseline').setValue(this.autoBaselinechecked);
+  }
 
 }

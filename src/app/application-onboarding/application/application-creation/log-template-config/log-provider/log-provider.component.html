@@ -1,51 +1,50 @@
-<form [formGroup]="logProviderForm" *ngIf="logProviderService.isProviderParamsLoaded">    
-    <opsmx-input [params]="logProviderService.templateNameParams"></opsmx-input>
+<div *ngIf="logProviderService.isProviderParamsLoaded">
+  <opsmx-input [params]="logProviderService.templateNameParams"></opsmx-input>
+  <div class="text-divider">
+    <h4>Logs Monitoring </h4>
+  </div>
+  <opsmx-select [params]="logProviderService.logProviderParams" (changed)="onChangeProvider($event)"></opsmx-select>
+  <!--kubernetes-->
+  <opsmx-input [params]="logProviderService.namespaceParams" (onChange)="onChange($event)"
+    *ngIf="logProviderService.logProviderParams.formControl.value == 'kubernetes'"></opsmx-input>
+  <!--kubernetes-->
+
+  <!-- other than kubernetes -->
+  <opsmx-select [params]="logProviderService.logAccountParams" (onChange)="onChangeAccounts($event)"
+    *ngIf="logProviderService.logProviderParams.formControl.value != 'kubernetes' && logProviderService.reloadAccount">
+  </opsmx-select>
+  <!-- other than kubernetes -->
+
+  <!-- elastic search-->
+  <div *ngIf="logProviderService.logProviderParams.formControl.value == 'elasticsearch'">
     <div class="text-divider">
-        <h4>Logs Monitoring </h4>
+      <h4>Elastic Configuration</h4>
     </div>
-    <opsmx-select [params]="logProviderService.logProviderParams" (changed)="onChangeProvider($event)"></opsmx-select>
-    <!--kubernetes-->
-    <opsmx-input [params]="logProviderService.namespaceParams" (onChange)="onChange($event)" *ngIf="logProviderService.logProviderParams.formControl.value == 'kubernetes'"></opsmx-input>
-    <!--kubernetes-->
+    <opsmx-input [params]="logProviderService.indexPatternParams" (onChange)="onChange($event)"></opsmx-input>
+    <opsmx-input [params]="logProviderService.kibanaIndexParams" (onChange)="onChange($event)"></opsmx-input>
 
-    <!-- other than kubernetes -->
-    <opsmx-select [params]="logProviderService.logAccountParams" (onChange)="onChange($event)" *ngIf="logProviderService.logProviderParams.formControl.value != 'kubernetes'"></opsmx-select>
-    <!-- other than kubernetes -->
 
-    <!-- elastic search-->
-    <div *ngIf="logProviderService.logProviderParams.formControl.value == 'elasticsearch'">
-      <div class="text-divider">
-        <h4>Elastic Configuration</h4>
-      </div>
-      <opsmx-input [params]="logProviderService.indexPatternParams" (onChange)="onChange($event)"></opsmx-input>
-      <opsmx-input [params]="logProviderService.kibanaIndexParams" (onChange)="onChange($event)"></opsmx-input>
-
-      
-      <mat-slide-toggle 
-      class="example-margin mt-3"
-      [color]="logProviderService.color"
-      [checked]="logProviderService.regExpFilterChecked"
-      [disabled]="logProviderService.regExpFilterDisabled">
+    <mat-slide-toggle class="example-margin mt-3" [color]="logProviderService.color" (change)="enableRegExp($event)"
+      [(ngModel)]="logProviderService.regExpFilterChecked" [disabled]="logProviderService.regExpFilterDisabled">
       Custom regular expression filter Required
-      </mat-slide-toggle>
+    </mat-slide-toggle>
 
+    <div *ngIf="logProviderService.regExpFilterChecked">
       <opsmx-input [params]="logProviderService.regularExpressionParams" (onChange)="onChange($event)"></opsmx-input>
-      <opsmx-select [params]="logProviderService.responseKeyParams" (onChange)="onChange($event)"></opsmx-select>
-      
-      <hr class="ml-0 mt-3 mb-3" />
-      
-      <div>
-        <mat-slide-toggle 
-      class="example-margin mt-3"
-      [color]="logProviderService.color"
-      [checked]="logProviderService.autoBaselinechecked"
-      [disabled]="logProviderService.autoBaseLinedisabled">
-      Autobaseline
-      </mat-slide-toggle>
-      <opsmx-helptext [params]="logProviderService.autoBaseHelpParams"></opsmx-helptext>
-      </div>
-      
-      <opsmx-select [params]="logProviderService.senstivityParams" (onChange)="onChange($event)"></opsmx-select>
-    <!-- elastic search--> 
+      <opsmx-select *ngIf="logProviderService.reloadResponseKey" [params]="logProviderService.responseKeyParams"
+        (onChange)="onChange($event)"></opsmx-select>
     </div>
-</form>
+    <!-- elastic search-->
+  </div>
+  <hr class="ml-0 mt-3 mb-3" />
+
+  <div>
+    <mat-slide-toggle class="example-margin mt-3" [color]="logProviderService.color"
+      [(ngModel)]="logProviderService.autoBaselinechecked" [disabled]="logProviderService.autoBaseLinedisabled">
+      Autobaseline
+    </mat-slide-toggle>
+    <opsmx-helptext [params]="logProviderService.autoBaseHelpParams"></opsmx-helptext>
+  </div>
+
+  <opsmx-select [params]="logProviderService.senstivityParams" (onChange)="onChange($event)"></opsmx-select>
+</div>

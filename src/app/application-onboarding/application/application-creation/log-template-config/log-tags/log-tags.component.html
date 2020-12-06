@@ -51,7 +51,7 @@
                 (onClick)="canceSaveTagClick()"></opsmx-button>
         </div>
     </div>
-    <opsmx-form-grid *ngIf="service.reloadFormGrid" [id]="clusterTag" [height]="'260px'"
+    <opsmx-form-grid *ngIf="service.reloadFormGrid" [id]="'clusterTag'" [height]="'260px'"
         [header]="service.formGridHeaders" [formArrayObj]="loadTagsFormGridForm" (onChange)="onChangeOption($event)"
         (addRow)="addRowGrid($event)" (deleteRow)="deleteRow($event)"></opsmx-form-grid>
 </div>

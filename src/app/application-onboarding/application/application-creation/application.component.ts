@@ -1965,13 +1965,14 @@ export class CreateApplicationComponent implements OnInit {
    
   }
 
-  onClickLogTemplate(){
+  onClickLogTemplate(add = false){
+    
     const dialogRef = this.dialog.open(LogTemplateConfigComponent,{
       height: '605px',
       width: '1000px',
       disableClose: true,
       data: {
-        templateName: this.deploymentVerificationForm.value['logTemplate'],
+        templateName: add ? '' : this.deploymentVerificationForm.value['logTemplate'],
         applicationId: this.applicationId
       }
     });
