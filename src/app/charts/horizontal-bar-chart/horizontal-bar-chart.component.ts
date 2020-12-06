@@ -27,6 +27,8 @@ export class HorizontalBarChartComponent implements OnInit {
   colorScheme;
   timeExists: boolean;
   roundEdgesType: boolean
+  arr:any;
+  finalArrayData: any;
 
   constructor() {}
 
@@ -51,6 +53,26 @@ export class HorizontalBarChartComponent implements OnInit {
     this.colorScheme        = this.chartProperty.colorScheme || {domain: ['#b1d38b','#f29798']};
     this.timeExists = false;
     this.roundEdgesType = false;
+   // this.dataSource.length = 3;
+    this.arr = [];
+   this.arr.push(...this.dataSource);
+   console.log(this.arr.length);
+  // alert(this.dataSource.length);
+    //console.log(this.dataSource.splice(5,2));
+//const d =  this.dataSource;
+// const index: number = this.myArray.indexOf(value);
+// this.myArray.splice(index, 1);
+
+this.convert(this.arr);
+
+
+  }
+
+  convert(d){
+
+    d.splice(5,d.length-5);
+    console.log(d);
+    this.finalArrayData = d;
   }
 
 }

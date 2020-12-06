@@ -136,8 +136,11 @@ export class CdDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         if (dashboardData.widgetRawData !== null) {
           this.widgetRawData = dashboardData.widgetRawData;
           this.widgetChartLoading = dashboardData.subChartLoading;
+        
           this.widgetChartsData = dashboardData.subChartData;
-
+         // if(this.widgetChartsData.length === 9){
+        //    this.widgetChartsData[0].DataSource.length = 5;
+       
           this.createInitialData();
           this.fetchedChartData(!dashboardData.subDataFetched,'','','');
         }
