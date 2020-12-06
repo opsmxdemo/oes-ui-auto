@@ -12,7 +12,7 @@
           <div class="card border-0">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
-                <div class="graph-title">
+                <div class="graph-title" style="color: #212529;">
                   <img src="../../assets/images/drag-dots.png" alt="dots" />
                   Deployments
                 </div>
@@ -24,7 +24,7 @@
 
                 <div class="graph-controls d-flex">
                   <div class="mr-3">
-                    <select class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value,'healthchart')" >
+                    <select style="color: #212529;" class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value,'healthchart')" >
                       <option value="1D">Last 1 Day</option>
                       <option value="7D">Last 7 Days</option>
                       <option value="1M">Last 1 Month</option>
@@ -93,7 +93,7 @@
                     </div>
                   </div> -->
                   <div class="mr-3">
-                    <select class="form-control" [(ngModel)]="subChartselectedValue" (change)="subChartfilterUpdated($event.target.value,'subchart')" >
+                    <select style="color: #212529 !important;" class="form-control" [(ngModel)]="subChartselectedValue" (change)="subChartfilterUpdated($event.target.value,'subchart')" >
                       <option value="1D">Last 1 Day</option>
                       <option value="7D">Last 7 Days</option>
                       <option value="1M">Last 1 Month</option>
@@ -130,7 +130,7 @@
           <div class="card border-0" *ngIf="widget.name != 'Deployments' && widgetindex != 8 && widgetindex != 7 && widgetindex != 6 && widgetindex != 5">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
-                <div class="graph-title">
+                <div class="graph-title" style="color: #212529">
                   <img src="../../assets/images/drag-dots.png" alt="dots" />
                   {{widget.name}}
                 </div>
