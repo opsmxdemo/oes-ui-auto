@@ -1,0 +1,11 @@
+<div class="grid-columns form-grid-row" [ngStyle]="{'grid-template-columns': gridTemplateColumns}">
+    <div class="header" *ngFor="let field of rowFieldTypes; let i = index">
+        <opsmx-form-field [params]="field" [index]="index" (onChange)="changeEvent($event)" (onClick)="clickEvent($event)" (onBlur)="blurEvent($event)"
+        (onFocus)="focusEvent($event)" (onKeyUp)="keyUpEvent($event)" (onKeyPress)="keyPressEvent($event)"></opsmx-form-field>
+    </div>
+    <div class="header text-right form-grid-icon">
+        <a (click)="rowDelete()" data-toggle="tooltip" data-placement="top" *ngIf="rowDeleteFlag" data-original-title="Delete row" style="color: red;">
+            <i class="far fa-trash-alt"></i>
+        </a>
+    </div>
+</div>
