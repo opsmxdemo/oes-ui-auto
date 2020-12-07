@@ -49,7 +49,9 @@
           </mat-horizontal-stepper>
     </mat-tab>
     <mat-tab label="Editor">
+      <div style="height: 510px;overflow: auto;">
         <app-log-template-editor></app-log-template-editor>
+      </div>
         <br>
         <div class="float-left">
           <button mat-button  (click)="close()" class="btn btn-secondary default-border">Close</button>
