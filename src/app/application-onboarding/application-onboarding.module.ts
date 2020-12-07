@@ -38,6 +38,7 @@ import { LogTemplateEditorComponent } from './application/application-creation/l
 import { LogProviderComponent } from './application/application-creation/log-template-config/log-provider/log-provider.component';
 import { LogTopicsComponent } from './application/application-creation/log-template-config/log-topics/log-topics.component';
 import { LogTagsComponent } from './application/application-creation/log-template-config/log-tags/log-tags.component';
+import { OpsMxFormsModule } from 'projects/forms/src';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { LogTagsComponent } from './application/application-creation/log-templat
       LogTemplateEffect,
       MetricTemplateEffect
      ]),
-     ClipboardModule
+     ClipboardModule,
+     OpsMxFormsModule
     ],
     providers: [ConnectorTemplateConfigService]
   })

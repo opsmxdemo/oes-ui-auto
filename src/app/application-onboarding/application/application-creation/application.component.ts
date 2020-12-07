@@ -1966,14 +1966,22 @@ export class CreateApplicationComponent implements OnInit {
    
   }
 
-  onClickLogTemplate(){
+  onClickLogTemplate(add = false){
+    
     const dialogRef = this.dialog.open(LogTemplateConfigComponent,{
-      height: '600px',
-      width: '800px',
+      height: '605px',
+      width: '1000px',
+      disableClose: true,
       data: {
-        templateName: this.deploymentVerificationForm.value['logTemplate'],
-        applicationId: this.applicationId
+        templateName: add ? '' : this.deploymentVerificationForm.value['logTemplate'],
+        applicationId: this.applicationId,
+        applicationName: this.selectedApplicationData.name,
+        emailId: this.selectedApplicationData.email
       }
+    });
+    dialogRef.afterClosed().subscribe(data => {
+      this.logTemplate = data.templateName;
+      this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));
     });
   }
 }

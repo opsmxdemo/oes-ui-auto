@@ -37,6 +37,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { VisibilityComponent } from './visibility/visibility.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { OpsMxFormsModule } from 'projects/forms/src';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -88,7 +89,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     //please keep below WildcardRoutingModule always in last position.
     WildcardRoutingModule,
     FontAwesomeModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    OpsMxFormsModule
   ],
   providers: [
     AppConfigService,
