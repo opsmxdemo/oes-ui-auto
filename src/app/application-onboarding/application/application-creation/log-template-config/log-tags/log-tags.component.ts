@@ -10,6 +10,7 @@ import { LogTagService } from './log-tag.service';
   templateUrl: './log-tags.component.html',
   styleUrls: ['./log-tags.component.less']
 })
+
 export class LogTagsComponent extends OpsMxForms implements OnInit {
 
   tagFormFlag = false;
@@ -122,7 +123,6 @@ export class LogTagsComponent extends OpsMxForms implements OnInit {
   }
 
   formInvalid() {
-
   }
 
 }

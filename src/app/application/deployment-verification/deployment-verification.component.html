@@ -673,10 +673,9 @@
                         <td>{{deploymentServiceInformation && deploymentServiceInformation['regExResponseKey'] != "" ? deploymentServiceInformation['regExResponseKey']: 'N/A'}} </td>
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">
-                        <td >Algorithm:</td>
+                        <td >Scoring Algorithm:</td>
                         <ng-container *ngIf="deploymentServiceInformation">
-                          <td *ngIf="deploymentServiceInformation['algorithm']==='spell'">{{deploymentServiceInformation['algorithm']==='spell' ? 'LCS' : 'N/A'}}</td>
-                          <td *ngIf="deploymentServiceInformation['algorithm']==='perl'">{{deploymentServiceInformation['algorithm']==='perl' ? 'Threshold' : 'N/A'}}</td>
+                          <td>{{deploymentServiceInformation && deploymentServiceInformation['scoringAlgorithm'] != "" ? deploymentServiceInformation['scoringAlgorithm']: 'N/A'}} </td>
                         </ng-container>
                       </tr>
                       <tr *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'">

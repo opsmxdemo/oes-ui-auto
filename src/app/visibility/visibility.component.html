@@ -19,6 +19,9 @@
                 </form>
             </div>
             <!-- /.leftBox_header -->
+            <div style="font-size: 20px; text-align: center;" *ngIf="serviceList == undefined">
+              <i class="fas fa-circle-notch fa-spin"></i>
+            </div>
 
             <div class="service-list">
               <div class="table table-sm table-avenir table-no-bordered table-no-dots " *ngIf="serviceList != undefined">
@@ -85,6 +88,11 @@
         <!-- /.leftBox w-250 -->
 
 
+        <div class="page-content flex-grow-1 bg-white pt-4 pl-4" *ngIf="selectedService == undefined">
+            <div style="font-size: 20px; text-align: center;">
+              <i class="fas fa-circle-notch fa-spin"></i>
+            </div>
+        </div>
       
 
         <div class="page-content flex-grow-1 bg-white pt-4 pl-4" *ngIf="selectedService != undefined">
@@ -137,31 +145,25 @@
                                 </div>
 
                                 <!-- Grid row -->
-                                <div class="form-group row" *ngIf="approvalWaitingStatus && !gateStatusPending" >
+                                <div class="form-group " *ngIf="approvalWaitingStatus && !gateStatusPending" >
                                     <!-- Default input -->
-                                    <label class="col-sm-1 col-form-label">Comments:</label>
-                                    <div class="col-sm-8">
+                                    <div class="row">
+                                    <div class="col-sm-8" style="max-width: 700px;">
+                                    <label class="col-form-label">Comments:</label>
                                         <!-- <textarea class="form-control" rows="3" formControlName="comments"></textarea> -->
                                         <textarea class="form-control" rows="3" name="approvalGateComment" #approvalGateComment="ngModel" ngModel ></textarea>
 
                                     </div>
 
-                                    <!-- <label class="col-sm-1 col-form-label">Activated:</label>
-                                    <div class="col-sm-8">
-                                        
+                                    <div class="col-sm-2 mr-2 alignCommentBtn">
+                                      <button type="button" class="btn  btn-success align-bottom mr-2" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button>
+                                      <button type="button"class="btn btn-danger align-bottom" (click)="approvalGateReview('reject', approvalGateComment)">Reject</button>
+                                    </div> 
                                     </div>
-
-                                    <label class="col-sm-1 col-form-label">Reviewed:</label>
-                                    <div class="col-sm-8">
-                                         </div> -->
-
-                                    <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
-                                            class="btn btn-success align-bottom" style="color: #fff;" (click)="approvalGateReview('approve', approvalGateComment)">Approve</button></div>
-                                            
-                                    <div class="col-sm-1 mr-2 alignCommentBtn"><button type="button"
-                                            class="btn btn-danger align-bottom" (click)="approvalGateReview('reject', approvalGateComment)">Reject</button></div>
-                                    <div class="p-3"><label class="pr-2" >Activated Time: </label>
-                                        <span>{{gateActivatedTime | date: "MMM dd, yyyy HH:mm"}}</span>
+                                    <div class="row">
+                                      <div class="p-3"><label class="pr-2" >Activated Time: </label>
+                                          <span>{{gateActivatedTime | date: "MMM dd, yyyy HH:mm"}}</span>
+                                      </div>
                                     </div>
                                 </div>
 
@@ -213,33 +215,12 @@
                                     
                                   </div>
                                 <!-- Grid row -->
-
+<!-- 
 
                                 <div class="pull-right">
-                                </div>
+                                </div> -->
                                 
                      
-                        <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-                  <form [formGroup]="secondFormGroup">
-                    <mat-form-field>
-                      <mat-label>Address</mat-label>
-                      <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                             required>
-                    </mat-form-field>
-                    <div>
-                      <button mat-button matStepperPrevious>Back</button>
-                      <button mat-button matStepperNext>Next</button>
-                    </div>
-                  </form>
-                </mat-step> -->
-                        <!-- <mat-step>
-                  <ng-template matStepLabel>Done</ng-template>
-                  <p>You are now done.</p>
-                  <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button (click)="stepper.reset()">Reset</button>
-                  </div>
-                </mat-step> -->
                 </div>
                 <!-- <div class="pull-right" *ngIf="!showApprovalHistory">
                     <a style="padding-right: 20px;" class="showElementHover" (click)="getApprovalHistory()">Approval History</a>
@@ -248,6 +229,8 @@
            
             <!-- </div> -->
             <!-- /.page-content -->
+
+            <div class="content__inner" >
             <div  class="row no-gutters" *ngIf="!gateStatusPending">
                 <div class="col-sm-12 d-flex flex-column">
                     <div class="pt-1">
@@ -315,8 +298,16 @@
                                             <span  *ngIf="selectedConnectorType == 'SONARQUBE' && eachData.data != null ">Project Key</span>
                                           </div>
                                           {{eachData.value}}</td>
-                                        <td><div class="loader" *ngIf="loadingWheel"></div>
-                                          <div>{{(eachData.data == null && eachData.key == null && eachData.value == null) ? 'No data to Display' : eachData.data | json}}</div>                                        
+                                        <td>           
+                                          <div *ngIf="loadingWheel">Fetching Data... <i class="fas fa-circle-notch fa-spin"></i></div>
+                                          <!-- class="remove-ellipsis" [ngClass]="{'remove-ellipsis': showFullData[i], 'block-ellipsis': !showFullData[i]}" -->
+                                          <div *ngIf="eachData.data == null && eachData.key == null && eachData.value == null && !loadingWheel"> 
+
+                                            No data to Display
+                                          </div>
+                                          <div *ngIf="eachData.data != null && eachData.key != null && eachData.value != null">
+                                            <ngx-json-viewer class="jsonViewer" [json]="eachData.data"  [expanded]="false" ></ngx-json-viewer>                                        
+                                          </div>                                        
                                         </td> 
                                       </tr>
                                     </tbody>
@@ -332,6 +323,7 @@
                     <!-- /.bottom_btns -->
                 </div>
                 <!-- /.col-sm-8 -->
+            </div>
             </div>
 
             <!-- <div *ngIf="showApprovalHistory" class="tab-content h-100 p-3 flex-grow-1">

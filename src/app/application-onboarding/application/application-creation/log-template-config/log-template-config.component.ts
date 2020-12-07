@@ -68,6 +68,7 @@ export class LogTemplateConfigComponent implements OnInit {
   }
 
 }
+
 export interface DialogData {
   applicationId: any;
   templateName: any;

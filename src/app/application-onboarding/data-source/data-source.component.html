@@ -6,7 +6,7 @@
             <div class="tab-content h-100 p-3 flex-grow-1">
                 <div *ngIf="tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access text-right p-3">
-                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()">New Data Source</button>
+                    <button class="btn btn-default" data-toggle="modal"  data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()" [disabled] = "!isUserAdmin">New Data Source</button>
                   </div>
                   <!-- /.page_access ml-auto -->
                   <div class="gray-strip"></div>
@@ -31,7 +31,7 @@
                             <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
                           </div>
                         </div>
-                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()">New Data Source</button>
+                        <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()" [disabled] = "!isUserAdmin">New Data Source</button>
                       </div>
                   <!-- /.page_access ml-auto -->
                   <div class="table-content">

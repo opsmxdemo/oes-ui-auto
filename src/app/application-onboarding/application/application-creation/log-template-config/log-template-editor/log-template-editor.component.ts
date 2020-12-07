@@ -10,6 +10,7 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 @Component({
   selector: 'app-log-template-editor',
   templateUrl: './log-template-editor.component.html',
+
   styleUrls: ['./log-template-editor.component.less'],
   providers: [LogTemplateEditorService]
 })

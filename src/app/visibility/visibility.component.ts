@@ -117,7 +117,6 @@ export class VisibilityComponent implements OnInit {
           this.showToolConnectorSection = false;                    // Initially do not display the tool connectors until the data is present
           this.store.dispatch(Visibility.stopLoadingConnectors());   
           this.toolConnectors = Object.assign([], resData.toolConnectors); 
-          console.log("Tool : ", this.toolConnectors);
           
           this.toolConnectors.sort(function(a, b) {
               var typeA = a.connectorType.toUpperCase();
@@ -150,23 +149,21 @@ export class VisibilityComponent implements OnInit {
           this.store.dispatch(Visibility.visibilityDataLoading());
           if(this.selectedConnectorType === "GIT"){
           this.visibilityData = resData.visibilityData;
-          console.log("GIT: ", this.visibilityData);
           
           }else if (this.selectedConnectorType === "JIRA"){
           this.visibilityData = resData.visibilityData;
-          console.log("JIRA: ", this.visibilityData);
+          // this.visibilityData['data'] = JSON.stringify(this.visibilityData['data'], undefined, 4);
+          
+          
           
           }else if (this.selectedConnectorType === "AUTOPILOT"){
           this.visibilityData = resData.visibilityData;
-          console.log("AUTOPILOT: ", this.visibilityData);
           
           }else if (this.selectedConnectorType === "SONARQUBE"){
           this.visibilityData = resData.visibilityData;
-          console.log("SONARQUBE: ", this.visibilityData);
           
           }else if (this.selectedConnectorType === "JENKINS"){
           this.visibilityData = resData.visibilityData;
-          console.log("JENKINS: ", this.visibilityData);
           
           }
         } 

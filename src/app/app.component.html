@@ -6,29 +6,41 @@
         <div class="menu_toggle" (click)="toggleNavbar()"><i class="fa fa-bars"></i></div>
       </div>
       <div class="sidebar_nav">
-        <ul class="list-unstyled m-0" *ngFor="let SideMenu of Sidebar;" >
-          <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}}" routerLink="{{SideMenu.link}}"><a><i class="icon {{SideMenu.link}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'"></i> <span>{{SideMenu.name }} 
-            <ng-template [ngIf]="SideMenu.name === 'Applications' ?true:false">
-              <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Applications">{{applicationCount}}</span>
-              <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Active gates">{{approvalGateInstanceCount}}</span>
-            </ng-template>
-            </span></a>
+        <ul class="list-unstyled m-0 menu-header" *ngFor="let SideMenu of Sidebar;let i = index" >
+          <li class="{{SideMenu.disabled === true? 'disabled_menu': disabledLink(SideMenu.name)}} {{activeRoutes(SideMenu.link)}} {{parentLinkName == SideMenu.name && !showChildMenu(SideMenu, i) ? 'active' : ''}}" (click)="toggleSubMenu(i, SideMenu.link)">
+            <a>
+              <i class="{{SideMenu.link + ' icon'}}" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="!menuIcons(SideMenu.name)"></i> 
+              <fa-icon class="menu-icons" [icon]="menuIcons(SideMenu.name)" matTooltip="{{SideMenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="menuIcons(SideMenu.name)"></fa-icon>
+              <span>{{SideMenu.name }} </span>
+              <span class="float-right" *ngIf="SideMenu.subMenu.length > 0">
+                <i class="fas fa-caret-up" matTooltip="Collapse {{SideMenu.name}}" [matTooltipPosition]="'right'" *ngIf="showChildMenu(SideMenu, i)"></i>
+                <i class="fas fa-caret-down" matTooltip="Expand {{SideMenu.name}}" [matTooltipPosition]="'right'" *ngIf="!showChildMenu(SideMenu, i)"></i>
+                <!-- <fa-icon class="" [icon]="upArrow"></fa-icon>
+                <fa-icon class="" [icon]="downArrow"></fa-icon> -->
+              </span>
+            </a>
           </li>
-            <ng-template [ngIf]="SideMenu.subMenu.length === 0 ?false:true">
+            <div *ngIf="showChildMenu(SideMenu, i)">
               <ul class="subnav list-unstyled m-0" *ngFor = "let submenu of SideMenu.subMenu">
-                <li class="{{submenu.disabled === true? 'disabled_menu': disabledLink(submenu.name)}} {{activeRoutes(submenu.link)}}" routerLink="{{submenu.link}}" (click)="navigateMenu($event,submenu.name)"><a>
-                  <i class="icon {{subMenuclass(submenu.link)}}" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></i> 
+                <li class="{{submenu.disabled === true? 'disabled_menu': disabledLink(submenu.name)}} {{activeRoutes(submenu.link, SideMenu.name)}}" routerLink="{{submenu.link}}" (click)="navigateMenu($event,submenu.name)"><a>
+                  <i class="{{subMenuclass(submenu.link) + ' icon'}}" title="{{submenu.link}}"  *ngIf="!menuIcons(submenu.name) && submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></i> 
+                  <fa-icon class="submenu-icons" [icon]="menuIcons(submenu.name)" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="menuIcons(submenu.name) && submenu.link != '/application/visibility' && submenu.link != '/application/trendanalysis'"></fa-icon>
                   <i class="icon-new fa fa-line-chart" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/trendanalysis'"></i>
                   <i class="icon-new fa fa-eye" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/visibility'"></i>
                   <!-- <i class="{{subMenuclass(submenu.link)}}"></i>  -->
-                  <span>{{submenu.name}}</span></a></li>
+                  <span>{{submenu.name}}
+                    <ng-template [ngIf]="submenu.name === 'Verification Dashboard' ?true:false">
+                      <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Applications">{{applicationCount}}</span>
+                      <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Active gates">{{approvalGateInstanceCount}}</span>
+                    </ng-template>
+                  </span></a></li>
               </ul>
-            </ng-template>
+            </div>
         </ul>
       </div>
       <a class="sidebar_bottom d-flex align-items-center justify-content-between">
         <span>Help</span>
-        <i class="fa fa-angle-down"></i>
+        <i class="fas fa-caret-down"></i>
       </a>
     </div>
     <div class=" {{isAuthenticate == true ? 'content_section' : 'col-md-12 col-sm-12 col-lg-12 col-xs-12'}}">
