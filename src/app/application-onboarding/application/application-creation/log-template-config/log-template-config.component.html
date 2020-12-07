@@ -1,10 +1,12 @@
 <mat-tab-group>
     <mat-tab label="Log Template">
-        <mat-horizontal-stepper labelPosition="bottom" #stepper>
+        <mat-horizontal-stepper #stepper>
             <mat-step [stepControl]="logProviderForm">
               <form [formGroup]="logProviderForm">
                 <ng-template matStepLabel>Log Provider</ng-template>
-                <app-log-provider></app-log-provider>
+                <div style="height: 440px;overflow: auto;">
+                  <app-log-provider></app-log-provider>
+                </div>
                 <br>
                 <div class="float-left">
                   <button mat-button (click)="close()" class="btn btn-secondary default-border">Close</button>
@@ -17,7 +19,7 @@
             <mat-step [stepControl]="logTopicsForm">
               <form [formGroup]="logTopicsForm">
                 <ng-template matStepLabel>Log Topics</ng-template>
-                <div *ngIf="loadChildComponents">
+                <div *ngIf="loadChildComponents" style="height: 440px;overflow: auto;">
                   <app-log-topics></app-log-topics>
                 </div>
                 <br>
@@ -32,7 +34,7 @@
             </mat-step>
             <mat-step>
               <ng-template matStepLabel>Log Tags</ng-template>
-              <div *ngIf="loadChildComponents">
+              <div *ngIf="loadChildComponents" style="height: 440px;overflow: auto;">
                 <app-log-tags></app-log-tags>
               </div>
               <br>

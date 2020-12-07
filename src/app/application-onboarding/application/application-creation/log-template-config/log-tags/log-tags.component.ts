@@ -92,10 +92,10 @@ export class LogTagsComponent extends OpsMxForms implements OnInit {
 
   updateTagClick() {
     this.service.updateClusterTagName().subscribe((resp: any) => {
+      this.service.tagForm.reset();
+      this.addEditClusterTagInput = false;
       this.service.getTags().subscribe(resp => {
         this.service.updateFormArrayVal(this.currentTag);
-        this.service.tagForm.reset();
-        this.addEditClusterTagInput = false;       
       });
     });
   }

@@ -32,7 +32,7 @@
                 </a>
             </span>
             <span class="ml-2 " (click)="removeTags()" title="Delete Tags">
-                <a class="btn-link">
+                <a class="btn-link" style="color: red;">
                     <i class="mt_custom-3 far fa-trash-alt"></i>
                 </a>
             </span>
@@ -51,7 +51,7 @@
                 (onClick)="canceSaveTagClick()"></opsmx-button>
         </div>
     </div>
-    <opsmx-form-grid *ngIf="service.reloadFormGrid" [id]="'clusterTag'" [height]="'260px'"
+    <opsmx-form-grid *ngIf="service.reloadFormGrid" [id]="'clusterTag'" [height]="'170px'"
         [header]="service.formGridHeaders" [formArrayObj]="loadTagsFormGridForm" (onChange)="onChangeOption($event)"
         (addRow)="addRowGrid($event)" (deleteRow)="deleteRow($event)"></opsmx-form-grid>
 </div>
