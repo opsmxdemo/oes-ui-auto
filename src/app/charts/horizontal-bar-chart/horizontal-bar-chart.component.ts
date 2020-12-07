@@ -30,6 +30,7 @@ export class HorizontalBarChartComponent implements OnInit {
   arr:any;
   finalArrayData: any;
   xAxisTickFormatting: any;
+  barMaxWidth: number;
   constructor() {}
 
   onSelect(data): void {}
@@ -53,6 +54,7 @@ export class HorizontalBarChartComponent implements OnInit {
     this.colorScheme        = this.chartProperty.colorScheme || {domain: ['#b1d38b','#f29798']};
     this.timeExists = false;
     this.roundEdgesType = false;
+    this.barMaxWidth = 3;
     this.xAxisTickFormatting = 
     
    // this.dataSource.length = 3;
