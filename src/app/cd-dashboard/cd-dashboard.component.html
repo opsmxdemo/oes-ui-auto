@@ -24,7 +24,7 @@
 
                 <div class="graph-controls d-flex">
                   <div class="mr-3">
-                    <select style="color: #212529;" class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value,'healthchart')" >
+                    <select style="color: #212529 !important;" class="form-control" [(ngModel)]="selectedValue" (change)="filterUpdated($event.target.value,'healthchart')" >
                       <option value="1D">Last 1 Day</option>
                       <option value="7D">Last 7 Days</option>
                       <option value="1M">Last 1 Month</option>
@@ -77,7 +77,7 @@
           <div class="card border-0">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
-                <div class="graph-title">
+                <div class="graph-title" style="color: #212529 !important;">
                   <img src="../../assets/images/drag-dots.png" alt="dots" />
                   <!-- Health Status -->
                 </div>
@@ -127,7 +127,7 @@
 
         <div class="col-sm-4 px-1 mb-2 cdDashboard" *ngFor="let widget of widgetRawData;let widgetindex=index">
           
-          <div class="card border-0" *ngIf="widget.name != 'Deployments' && widgetindex != 8 && widgetindex != 7 && widgetindex != 6 && widgetindex != 5">
+          <div class="card border-0" *ngIf="widget.name != 'Deployments' && widgetindex != 8 && widgetindex != 7 && widgetindex != 6">
             <div class="card-body">
               <div class="graph-header d-flex align-items-center justify-content-between">
                 <div class="graph-title" style="color: #212529">
@@ -238,8 +238,8 @@
               </div>
             </div>
           </div>
-        </div> -->
-      </div>
+        </div>
+      </div> -->
 
       <!-- #################### Add widget charts codes end ############################ -->
 

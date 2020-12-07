@@ -60,4 +60,12 @@ export class StacketHorizontalBarChartComponent implements OnInit {
     this.stackedFinalData = d;
   }
 
+  axisFormat(val) {
+    if (val % 1 === 0) {
+      return val.toLocaleString();
+    } else {
+      return '';
+    }
+  }
+
 }
