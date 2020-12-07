@@ -13,6 +13,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {MatDialogModule} from '@angular/material/dialog';
       MatAutocompleteModule,
       MatSidenavModule,
       MatStepperModule,
-      MatDialogModule
+      MatDialogModule,
+      MatSlideToggleModule
     ]
   })
 export class AppMaterialModule { }
