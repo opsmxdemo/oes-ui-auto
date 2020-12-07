@@ -71,7 +71,15 @@ export class LogTagsComponent extends OpsMxForms implements OnInit {
   }
 
   removeTags() {
-
+    this.formObj = this.service.tagForm;
+    this.formObj.setValue({
+      id: this.currentTag.id,
+      name: this.currentTag.name
+    });
+    this.service.deleteClusterTag().subscribe((resp: any) => {
+      this.service.tagForm.reset();
+      this.service.getTags().subscribe();
+    });
   }
 
   saveTagClick() {
@@ -87,7 +95,7 @@ export class LogTagsComponent extends OpsMxForms implements OnInit {
       this.service.getTags().subscribe(resp => {
         this.service.updateFormArrayVal(this.currentTag);
         this.service.tagForm.reset();
-        this.addEditClusterTagInput = false;
+        this.addEditClusterTagInput = false;       
       });
     });
   }
