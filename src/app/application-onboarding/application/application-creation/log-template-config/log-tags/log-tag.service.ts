@@ -235,4 +235,9 @@ export class LogTagService extends LogTemplateConfigService {
     let control = (<FormArray>LogTemplateConfigService.LogTagsForm.get('tags')).controls.find(control => control.get('tag').value == tagData.name);
     control.get('tag').setValue(this.tagForm.controls.name.value);
   }
+
+  deleteClusterTag() {
+    let tagDetails = this.tagForm.value;
+    return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/tags/'+ tagDetails.id);    
+  }
 }
