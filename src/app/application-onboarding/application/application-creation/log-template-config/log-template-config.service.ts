@@ -129,11 +129,16 @@ export class LogTemplateConfigService {
       "applicationName": LogTemplateConfigService.applicationName,
       "emailId": LogTemplateConfigService.emailId
     }
+    LogTemplateConfigService.templateName = LogTemplateConfigService.logProviderForm.get('templateName').value;
     console.log(putObj);
     if (LogTemplateConfigService.editMode) {
-      this.updateTemplate(putObj).subscribe();
+      return this.updateTemplate(putObj).pipe(map(resp => {
+
+      }));
     } else {
-      this.createTemplate(putObj).subscribe();
+      return this.createTemplate(putObj).pipe(map(resp=> {
+
+      }));
     }
   }
 
@@ -143,5 +148,18 @@ export class LogTemplateConfigService {
 
   updateTemplate(data) {
     return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/logTemplates/' + data.templateName, data);
+  }
+
+  submitJson() {
+    LogTemplateConfigService.templateName = LogTemplateConfigService.logTemplateData.templateName;
+    if (LogTemplateConfigService.editMode) {
+      return this.updateTemplate(LogTemplateConfigService.logTemplateData).pipe(map(resp => {
+
+      }));
+    } else {
+      return this.createTemplate(LogTemplateConfigService.logTemplateData).pipe(map(resp=> {
+
+      }));
+    }
   }
 }

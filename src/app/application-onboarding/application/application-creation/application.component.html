@@ -372,7 +372,7 @@
                                           <option value="" [disabled]="true">Select</option>
                                           <option *ngFor="let logTemplate of logTemplateList" value="{{logTemplate}}">{{logTemplate}}</option>
                                         </select>
-                                        <span *ngIf="logTemplateList?.length > 0" class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditLogMetricTemplateClick('log')">
+                                        <!-- <span *ngIf="logTemplateList?.length > 0" class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template" (click)="onEditLogMetricTemplateClick('log')">
                                           <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link" >
                                             <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>
                                           </a>
@@ -381,7 +381,7 @@
                                           <a data-toggle="modal" data-target="#newLogTemplate" data-backdrop="static" data-keyboard="false" class="btn-link">
                                             <i class="fas fa-plus"></i>
                                           </a>
-                                        </span>
+                                        </span> -->
                                         <span *ngIf="logTemplateList?.length > 0" class="ml-2 addTemplate" data-toggle="tooltip" data-placement="top" data-original-title="Edit Log Template">
                                           <a class="btn-link" (click)="onClickLogTemplate()">
                                             <i style="color:#4797de !important;" class="fas fa-pencil-alt"></i>

@@ -35,7 +35,7 @@ export class LogTemplateConfigComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close({templateName: LogTemplateConfigService.templateName});
   }
 
   get logTopicsForm() {
@@ -56,7 +56,15 @@ export class LogTemplateConfigComponent implements OnInit {
   }
 
   submit() {
-    this.service.submit();
+    this.service.submit().subscribe(resp => {
+      this.close();
+    });
+  }
+
+  submitJson() {
+    this.service.submitJson().subscribe(resp => {
+      this.close();
+    });
   }
 
 }

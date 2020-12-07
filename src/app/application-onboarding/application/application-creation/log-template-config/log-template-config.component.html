@@ -48,5 +48,12 @@
     </mat-tab>
     <mat-tab label="Editor">
         <app-log-template-editor></app-log-template-editor>
+        <br>
+        <div class="float-left">
+          <button mat-button  (click)="close()" class="btn btn-secondary default-border">Close</button>
+        </div>
+        <div class="float-right">
+          <button mat-button (click)="submitJson()" class="btn btn-primary">Submit</button>
+        </div>
     </mat-tab>
 </mat-tab-group>

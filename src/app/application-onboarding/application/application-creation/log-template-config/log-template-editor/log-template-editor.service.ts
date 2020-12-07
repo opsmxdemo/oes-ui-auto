@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { map, subscribeOn } from 'rxjs/operators';
@@ -14,11 +14,23 @@ import {ThemePalette} from '@angular/material/core';
 })
 export class LogTemplateEditorService extends LogTemplateConfigService {
 
-  
+  $dataReceived = new BehaviorSubject(false);
+
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) {
     super(http,router,toastr,environment);
   }
 
-  
+  initEditService() {
+    if(LogTemplateConfigService.logTemplateData != undefined) {
+      this.templateData = LogTemplateConfigService.logTemplateData;
+      this.$dataReceived.next(true);
+    } else {
+      this.$dataReceived.next(false);
+    }
+  }
+
+  updateJson(json) {
+    LogTemplateConfigService.logTemplateData = json;
+  }
   
 }

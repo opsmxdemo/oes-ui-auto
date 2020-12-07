@@ -1978,5 +1978,9 @@ export class CreateApplicationComponent implements OnInit {
         emailId: this.selectedApplicationData.email
       }
     });
+    dialogRef.afterClosed().subscribe(data => {
+      this.logTemplate = data.templateName;
+      this.store.dispatch(ApplicationActions.getLogTemplateforaApplication({applicationId : this.applicationId}));
+    });
   }
 }

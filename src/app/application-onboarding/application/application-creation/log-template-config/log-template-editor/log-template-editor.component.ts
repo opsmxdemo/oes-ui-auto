@@ -1,4 +1,4 @@
-import { Component, OnInit ,ViewChild, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { LogTemplateEditorService } from './log-template-editor.service';
 import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { LogTemplateConfigService } from '../log-template-config.service';
@@ -11,35 +11,44 @@ import { AppConfigService } from 'src/app/services/app-config.service';
   selector: 'app-log-template-editor',
   templateUrl: './log-template-editor.component.html',
   styleUrls: ['./log-template-editor.component.less'],
-  providers : [LogTemplateEditorService]
+  providers: [LogTemplateEditorService]
 })
-export class LogTemplateEditorComponent extends LogTemplateConfigService implements OnInit {
+export class LogTemplateEditorComponent implements OnInit {
 
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
 
   public editorOptions: JsonEditorOptions;
   public data: any = null;
-  logTemplateData : any;
+  logTemplateData: any;
 
-  
+  constructor(public service: LogTemplateEditorService) {}
 
-  constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) {
-    super(http,router,toastr,environment);
+  ngOnChanges(changes: SimpleChanges) {
+    // this.data = LogTemplateConfigService.logTemplateData;
   }
 
-  ngOnChanges(changes: SimpleChanges){
-    this.data=LogTemplateConfigService.logTemplateData;
-  }
-
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.editorOptions = new JsonEditorOptions()
     this.editorOptions.mode = 'code';
     this.editorOptions.modes = ['code', 'text', 'tree', 'view'];
+
+    this.service.initEditService();
+
+    this.service.$dataReceived.subscribe(flag => {
+      if(flag) {
+        this.data = this.service.templateData;
+      } else {
+        setTimeout(() => {
+          this.service.initEditService();
+        }, 100);
+      }
+    })
   }
 
   // Below function is use to fetched json from json editor
-  showJson(event = null){
+  showJson(event = null) {
     this.logTemplateData = this.editor.get();
+    this.service.updateJson(this.logTemplateData);
   }
 
 }
