@@ -13,7 +13,7 @@ import { LogTagService } from './log-tag.service';
 export class LogTagsComponent extends OpsMxForms implements OnInit {
 
   tagFormFlag = false;
-  color: ThemePalette = 'primary';
+  color: ThemePalette = 'accent';
   clusterTagEnabled = false;
   checked = false;
   disabled = false;
