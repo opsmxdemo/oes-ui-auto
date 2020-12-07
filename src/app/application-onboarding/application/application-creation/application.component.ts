@@ -812,7 +812,7 @@ export class CreateApplicationComponent implements OnInit {
 
   //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
   valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
-    if(control.value != null && control.value != undefined && control.value!=""){
+    if(control.value != null && control.value != undefined && control.value!="" && !this.editMode){
       let validateapp = this.cannotContainSpace(control)
       if(validateapp==null){
         const promise = new Promise<any>((resolve, reject) => {

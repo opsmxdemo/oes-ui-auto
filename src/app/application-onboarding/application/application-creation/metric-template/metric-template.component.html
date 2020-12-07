@@ -26,7 +26,7 @@
                        <div class="col-6">
                          <div class="form-group">
                            <label>Metric Template Name</label>
-                           <input type="text" class="form-control" autofocus="true" formControlName="templateName" [ngClass]="apmFormGroup.get('templateName').invalid && apmFormGroup.get('templateName').touched ? 'is-invalid':''"/>
+                           <input type="text" class="form-control" autofocus="true" formControlName="templateName" [ngClass]="apmFormGroup.get('templateName').invalid && apmFormGroup.get('templateName').touched ? 'is-invalid':''" [readonly] = "isEditMode"/>
                            <span *ngIf="apmFormGroup.get('templateName').invalid && apmFormGroup.get('templateName').touched" class="invalid-feedback"></span>
                          </div>
                          <!-- /.form-group -->
@@ -43,7 +43,7 @@
                        <div class="col-6">
                          <div class="form-group">
                            <label>APM Monitoring Provider</label>
-                           <select class="form-control" (change)="onChangeDatasource($event.target.value,'apm')" formControlName="apmProvider">
+                           <select class="form-control" [attr.disabled]="isEditMode ? '' : null" (change)="onChangeDatasource($event.target.value,'apm')" formControlName="apmProvider">
                             <option value="" [disabled]="true">Select</option>
                             <ng-container *ngFor="let datasource of autoDatasources; let i=index">
                             <option *ngIf="datasource.metricTypes[0] == 'apm' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
@@ -60,7 +60,7 @@
 
                          <div class="form-group">
                           <label>Select {{selectedAPMDataSource}} Accounts</label>
-                          <select class="form-control" (change)="onChangeDSAccount($event.target.value,'apm')" formControlName="apmProviderAccount">
+                          <select class="form-control" [attr.disabled]="isEditMode ? '' : null" (change)="onChangeDSAccount($event.target.value,'apm')" formControlName="apmProviderAccount">
                             <option value="" [disabled]="true">Select</option>                               
                               <option *ngFor="let dsaccount of APMDSAccounts; let i=index" value="{{dsaccount.name}}" >
                                 {{dsaccount.name}}</option>                                      
@@ -70,7 +70,7 @@
 
                          <div class="form-group">
                            <label>Select {{selectedAPMDataSource}} Application</label>
-                           <select class="form-control" (change)="onChangeAccountForDS($event.target.value,'apm')" formControlName="apmApplication">
+                           <select class="form-control" [attr.disabled]="isEditMode ? '' : null" (change)="onChangeAccountForDS($event.target.value,'apm')" formControlName="apmApplication">
                             <option value="" [disabled]="true">Select</option> 
                             <!-- <ng-container *ngFor="let dsapplication of APMApplicationForAccounts"> -->
                             <option *ngFor="let dsapplication of APMApplicationForAccounts" value="{{dsapplication}}" >
@@ -147,7 +147,7 @@
                        <div class="col-6">
                          <div class="form-group">
                            <label>INFRA Monitoring Provider <span data-toggle="tooltip" data-placement="right" title="Select Infrastructure monitoring provider"><img src="assets/images/help_icon.png" alt="icon" /></span></label>                            
-                           <select class="form-control" (change)="onChangeDatasource($event.target.value,'infra')" formControlName="infraProvider">
+                           <select class="form-control" [attr.disabled]="isEditMode ? '' : null" (change)="onChangeDatasource($event.target.value,'infra')" formControlName="infraProvider">
                             <option value="" [disabled]="true">Select</option>
                             <ng-container *ngFor="let datasource of autoDatasources">
                             <option *ngIf="datasource.metricTypes[0] == 'infra' || datasource.metricTypes[0] != undefined" value="{{datasource.datasourceType}}" >
@@ -163,7 +163,7 @@
                          <!-- /.form-group -->
                          <div class="form-group">
                            <label>Infrastructure Account <span data-toggle="tooltip" data-placement="right" title="Infrastructure accounts"><img src="assets/images/help_icon.png" alt="icon" /></span></label>                             
-                          <select class="form-control" (change)="onChangeDSAccount($event.target.value,'infra')" formControlName="applicationName">
+                          <select class="form-control" [attr.disabled]="isEditMode ? '' : null" (change)="onChangeDSAccount($event.target.value,'infra')" formControlName="applicationName">
                             <option value="" [disabled]="true">Select</option> 
                             <ng-container *ngFor="let dsaccountinfra of InfraDSAccounts">
                               <option value="{{dsaccountinfra.name}}" >
@@ -189,7 +189,7 @@
                                <tr>
                                  <th>
                                    <div class="custom-control custom-checkbox">
-                                     <input type="checkbox" class="custom-control-input" id="in_selectAll" (change)="onselectAllInfra($event)" formControlName="selectAll" [disabled]="isEditMode ? 'disabled' : ''">
+                                     <input type="checkbox"  class="custom-control-input" id="in_selectAll" (change)="onselectAllInfra($event)" formControlName="selectAll" [disabled]="isEditMode ? 'disabled' : ''">
                                      <label class="custom-control-label" for="in_selectAll">Select All</label>
                                    </div>
                                  </th>
@@ -239,7 +239,7 @@
                         <div class="d-flex mt-3 text-muted align-items-center">
                           <span>No</span>
                           <div class="custom-control custom-switch ml-2 mr-1">
-                            <input type="checkbox" class="custom-control-input" id="normalization" formControlName="isNormalize">
+                            <input type="checkbox" class="custom-control-input" id="normalization" formControlName="isNormalize" [attr.disabled]="isEditMode ? '' : null">
                             <label class="custom-control-label" for="normalization"></label>
                           </div>
                           <span>Yes</span>
@@ -255,7 +255,7 @@
                         <div class="d-flex mt-3 text-muted align-items-center">
                           <span>Hard</span>
                           <div class="custom-control custom-switch ml-2 mr-1">
-                            <input type="checkbox" class="custom-control-input" checked id="threshold" formControlName="threshold">
+                            <input type="checkbox" class="custom-control-input" checked id="threshold" formControlName="threshold" [attr.disabled]="isEditMode ? '' : null">
                             <label class="custom-control-label" for="threshold"></label>
                           </div>
                           <span>Easy</span>
