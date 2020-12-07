@@ -32,8 +32,7 @@ export class LogTagService extends LogTemplateConfigService {
     hidden: false,
     id: 'input-tagName',
     required: true,
-    placeholder: "Tag Name",
-    margin: "10px 0px"
+    placeholder: "Tag Name"
   };
   saveTagButtonParams: any = {
     text: "Save Tag",
@@ -89,8 +88,7 @@ export class LogTagService extends LogTemplateConfigService {
       required: false,
       options: scoringAlgorithmsList,
       addOption: false,
-      addOptionLabel: "",
-      margin: "10px 0px"
+      addOptionLabel: ""
     }
   }
 
@@ -111,8 +109,7 @@ export class LogTagService extends LogTemplateConfigService {
       required: false,
       options: this.clusterTagsListOptions,
       addOption: false,
-      addOptionLabel: "",
-      margin: "10px 0px"
+      addOptionLabel: ""
     }
   }
 

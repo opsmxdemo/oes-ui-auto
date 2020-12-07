@@ -26,7 +26,7 @@ export class LogTemplateConfigComponent implements OnInit {
     // this.formObj.addControl('logTopics', LogTemplateConfigService.LogTopicsForm);
     // this.formObj.addControl('logTags', LogTemplateConfigService.LogTopicsForm); // Use log tag static form
 
-    this.service.init(this.data.applicationId, this.data.templateName)
+    this.service.init(this.data)
     .subscribe((resp: any) => {
       console.log('sfdas');
       this.loadChildComponents = true;

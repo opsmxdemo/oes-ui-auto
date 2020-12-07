@@ -23,16 +23,22 @@ export class LogTemplateConfigService {
   public static logProviderForm: FormGroup = new FormGroup({});
   public static LogTagsForm: FormGroup;
   public static editMode: boolean;
+  static applicationName: any = '';
+  static emailId: any = '';
 
 
   constructor(public http: HttpClient, public router: Router, public toastr: NotificationService, public environment: AppConfigService) { }
 
-  init(applicationId, templateName) {
+  init(appData) {
 
-    LogTemplateConfigService.applicationId = applicationId;
-    LogTemplateConfigService.templateName = templateName;
+    LogTemplateConfigService.applicationId = appData.applicationId;
+    LogTemplateConfigService.templateName = appData.templateName;
+    LogTemplateConfigService.applicationName = appData.applicationName;
+    LogTemplateConfigService.emailId = appData.emailId;
     LogTemplateConfigService.LogTopicsForm = new FormArray([]);
     LogTemplateConfigService.LogTagsForm = new FormGroup({});
+    LogTemplateConfigService.logProviderForm = new FormGroup({});
+    LogTemplateConfigService.logTemplateData = undefined;
 
     if (LogTemplateConfigService.templateName) {
       LogTemplateConfigService.editMode = true;
@@ -110,6 +116,7 @@ export class LogTemplateConfigService {
       "scoringAlgorithm": LogTemplateConfigService.LogTagsForm.get('scoringAlgorithm').value,
       "accountName": LogTemplateConfigService.logProviderForm.get('logaccount').value,
       "index": LogTemplateConfigService.logProviderForm.get('indexPattern').value,
+      'namespace': LogTemplateConfigService.logProviderForm.get('namespace').value,
       "kibanaIndex": LogTemplateConfigService.logProviderForm.get('kibanaIndex').value,
       "regExFilter": LogTemplateConfigService.logProviderForm.get('regExFilter').value,
       "regExResponseKey": LogTemplateConfigService.logProviderForm.get('responsekey').value,
@@ -119,8 +126,8 @@ export class LogTemplateConfigService {
       "tags": (<FormArray>LogTemplateConfigService.LogTagsForm.get('tags')).getRawValue(),
       "errorTopics": LogTemplateConfigService.LogTopicsForm.getRawValue(),
       "applicationId": LogTemplateConfigService.applicationId,
-      "applicationName": "rmanager",
-      "emailId": "vasantha@opsmx.io"
+      "applicationName": LogTemplateConfigService.applicationName,
+      "emailId": LogTemplateConfigService.emailId
     }
     console.log(putObj);
     if (LogTemplateConfigService.editMode) {

@@ -98,6 +98,7 @@ export class LogProviderService extends LogTemplateConfigService {
       regExFilter : new FormControl(LogTemplateConfigService.logTemplateData.regExFilter),
       autoBaseline : new FormControl(LogTemplateConfigService.logTemplateData.autoBaseline)
     });
+    this.regExpFilterChecked = LogTemplateConfigService.logTemplateData.regExFilter;
   }
 
   
@@ -228,7 +229,9 @@ export class LogProviderService extends LogTemplateConfigService {
     };
 
     this.autoBaselinechecked = LogTemplateConfigService.logTemplateData.autoBaseline
-    this.autoBaseLinedisabled = true;
+
+    this.autoBaseLinedisabled = this.getEditStatus();
+    
     this.regExpFilterChecked = LogTemplateConfigService.logTemplateData.regExFilter;
     this.regExpFilterDisabled = false;
 
@@ -327,6 +330,10 @@ export class LogProviderService extends LogTemplateConfigService {
 
   setAutoBaseLIne() {
     LogTemplateConfigService.logProviderForm.get('autoBaseline').setValue(this.autoBaselinechecked);
+  }
+
+  setRegExp() {
+    LogTemplateConfigService.logProviderForm.get('regExFilter').setValue(this.regExpFilterChecked);
   }
 
 }

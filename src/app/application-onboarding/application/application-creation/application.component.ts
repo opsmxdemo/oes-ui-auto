@@ -1973,7 +1973,9 @@ export class CreateApplicationComponent implements OnInit {
       disableClose: true,
       data: {
         templateName: add ? '' : this.deploymentVerificationForm.value['logTemplate'],
-        applicationId: this.applicationId
+        applicationId: this.applicationId,
+        applicationName: this.selectedApplicationData.name,
+        emailId: this.selectedApplicationData.email
       }
     });
   }

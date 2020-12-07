@@ -79,6 +79,11 @@ export class LogProviderComponent implements OnInit {
   }
 
   enableRegExp(event) {
+    this.logProviderService.setRegExp();
+    // this.logProviderService.setAutoBaseLIne();
+  }
+
+  enableAutoBase(event) {
     this.logProviderService.setAutoBaseLIne();
   }
 
