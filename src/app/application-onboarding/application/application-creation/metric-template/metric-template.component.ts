@@ -646,7 +646,9 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
 
     if(this.stepper != undefined){
       this.stepper.reset();
-    }   
+    } 
+    
+    
   }
 
   onselectAllAPM(event){
@@ -756,16 +758,8 @@ export class MetricTemplateComponent implements OnInit, OnChanges{
     });
     //code to disable the non editable values
 
-    this.apmFormGroup.controls.templateName.disable();
-    this.apmFormGroup.controls.apmProvider.disable();
-    this.apmFormGroup.controls.apmApplication.disable();
-    this.apmFormGroup.controls.apmProviderAccount.disable();
+   
 
-    this.infraFormGroup.controls.infraProvider.disable();
-    this.infraFormGroup.controls.applicationName.disable();
-
-    this.metricConfigForm.controls.isNormalize.disable();
-    this.metricConfigForm.controls.threshold.disable();
 
     //this.apmcookbookForm.controls.cookbooklist.disable();
     //this.infracookbookForm.controls.cookbooklist.disable();
