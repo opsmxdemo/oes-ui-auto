@@ -61,7 +61,7 @@ export class DataSourceFormsComponent implements OnInit, OnChanges {
 
   // Below funcion is to cancel the form
   cancelDatasourceForm(){
-    this.dynamicForm.reset();
+    // this.dynamicForm.reset();
   }
 
 }
