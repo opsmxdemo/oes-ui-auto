@@ -1,5 +1,5 @@
 <div class="form-group" [hidden]="params.hidden" [ngStyle]="{'margin':params.margin || '0px'}">
-    <label *ngIf="params.label">
+    <label *ngIf="params.label" class="control-label">
         {{params.label}}
         <span *ngIf="params.required" class="control-required-indicator">*</span>
     </label>    

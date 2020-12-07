@@ -1969,15 +1969,16 @@ export class CreateApplicationComponent implements OnInit {
   onClickLogTemplate(add = false){
     
     const dialogRef = this.dialog.open(LogTemplateConfigComponent,{
-      height: '605px',
-      width: '1000px',
+      height: '650px',
+      width: '900px',
       disableClose: true,
       data: {
         templateName: add ? '' : this.deploymentVerificationForm.value['logTemplate'],
         applicationId: this.applicationId,
         applicationName: this.selectedApplicationData.name,
         emailId: this.selectedApplicationData.email
-      }
+      },
+      panelClass: 'standard-popup'
     });
     dialogRef.afterClosed().subscribe(data => {
       this.logTemplate = data.templateName;
