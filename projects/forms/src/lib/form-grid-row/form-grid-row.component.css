@@ -1,0 +1,28 @@
+.grid-columns {
+    display: grid;
+}
+.row-data {
+    font-size: 13px;
+    padding: 10px;
+}
+.row-data > select {
+    height: 29px;
+    padding: 0px 10px;
+}
+.row-data > span {
+    padding: 0px 2px;
+}
+.editTemplate {
+	position: absolute;
+    right: 25px;
+}
+.header {
+    font-size: 13px;
+    padding: 10px;
+}
+.form-grid-row {
+    /* border-bottom: 1px solid rgba(0,0,0,.2); */
+}
+.form-grid-icon {
+    line-height: 32px;
+}

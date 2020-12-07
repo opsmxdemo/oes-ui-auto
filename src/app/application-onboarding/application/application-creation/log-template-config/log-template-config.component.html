@@ -1,0 +1,59 @@
+<mat-tab-group>
+    <mat-tab label="Log Template">
+        <mat-horizontal-stepper labelPosition="bottom" #stepper>
+            <mat-step [stepControl]="logProviderForm">
+              <form [formGroup]="logProviderForm">
+                <ng-template matStepLabel>Log Provider</ng-template>
+                <app-log-provider></app-log-provider>
+                <br>
+                <div class="float-left">
+                  <button mat-button (click)="close()" class="btn btn-secondary default-border">Close</button>
+                </div>
+                <div class="float-right">
+                  <button mat-button matStepperNext class="btn btn-primary">Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step [stepControl]="logTopicsForm">
+              <form [formGroup]="logTopicsForm">
+                <ng-template matStepLabel>Log Topics</ng-template>
+                <div *ngIf="loadChildComponents">
+                  <app-log-topics></app-log-topics>
+                </div>
+                <br>
+                <div class="float-left">
+                  <button  (click)="close()" mat-button matStepperNext class="btn btn-secondary default-border">Close</button>
+                </div>
+                <div class="float-right">
+                  <button mat-button matStepperPrevious class="btn btn-default default-border">Back</button>&nbsp;&nbsp;&nbsp;
+                  <button mat-button matStepperNext class="btn btn-primary">Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel>Log Tags</ng-template>
+              <div *ngIf="loadChildComponents">
+                <app-log-tags></app-log-tags>
+              </div>
+              <br>
+              <div class="float-left">
+                <button mat-button  (click)="close()" class="btn btn-secondary default-border">Close</button>
+              </div>
+              <div class="float-right">
+                <button mat-button matStepperPrevious class="btn btn-secondary default-border">Back</button>&nbsp;&nbsp;&nbsp;
+                <button mat-button (click)="submit()" class="btn btn-primary">Submit</button>
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>
+    </mat-tab>
+    <mat-tab label="Editor">
+        <app-log-template-editor></app-log-template-editor>
+        <br>
+        <div class="float-left">
+          <button mat-button  (click)="close()" class="btn btn-secondary default-border">Close</button>
+        </div>
+        <div class="float-right">
+          <button mat-button (click)="submitJson()" class="btn btn-primary">Submit</button>
+        </div>
+    </mat-tab>
+</mat-tab-group>

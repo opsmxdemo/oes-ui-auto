@@ -35,6 +35,9 @@ import { TrendAnalysisComponent } from './application/trend-analysis/trend-analy
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { VisibilityComponent } from './visibility/visibility.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { OpsMxFormsModule } from 'projects/forms/src';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -84,7 +87,10 @@ const appInitializerFn = (appConfig: AppConfigService) => {
       preventDuplicates: true,
     }),
     //please keep below WildcardRoutingModule always in last position.
-    WildcardRoutingModule
+    WildcardRoutingModule,
+    FontAwesomeModule,
+    NgxJsonViewerModule,
+    OpsMxFormsModule
   ],
   providers: [
     AppConfigService,
