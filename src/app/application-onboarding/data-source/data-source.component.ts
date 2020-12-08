@@ -255,7 +255,7 @@ export class DataSourceComponent implements OnInit {
   //Below function it to get the details of the user from the API and enable or disable Data Source creation based on the Admin privileges
   checkIfUserIsAdmin(){
           this.appService.checkIfUserIsAdmin(this.authUserDetails.user).subscribe((userDetail: any) => {
-          this.isUserAdmin = this.authUserDetails.user;
+          this.isUserAdmin = userDetail.admin;
           
           });
   }
