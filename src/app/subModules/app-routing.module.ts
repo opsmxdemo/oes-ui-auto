@@ -10,6 +10,7 @@ import { ApplicationComponent } from '../application/application.component';
 import { CdDashboardComponent } from '../cd-dashboard/cd-dashboard.component';
 import { AppErrorListingComponent } from '../error-handling/app-error-listing/app-error-listing.component';
 import { VisibilityComponent } from '../visibility/visibility.component';
+import { SpinnakerComponent } from '../spinnaker/spinnaker.component';
 
 const routes: Routes = [
   
@@ -26,6 +27,7 @@ const routes: Routes = [
   {path:'cddashboard', component:CdDashboardComponent},
   {path:'audit', component:AuditComponent},
   {path:'policymanagement', component:PolicyManagementComponent},
+  {path:'spinnaker', component:SpinnakerComponent},
   {path:'error', component:AppErrorListingComponent}
 ];
 

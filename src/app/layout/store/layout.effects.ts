@@ -156,6 +156,12 @@ export class LayoutEffect {
                                 "name": "Visibility and Approval",
                                 "link": "/application/visibility",
                                 "disabled": false
+                              },
+                              {
+                                "id": 28,
+                                "name": "Spinnaker",
+                                "link": "/spinnaker",
+                                "disabled": false
                               }
                             ]
                           },
