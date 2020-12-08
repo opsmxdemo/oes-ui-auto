@@ -38,6 +38,7 @@ import { VisibilityComponent } from './visibility/visibility.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { OpsMxFormsModule } from 'projects/forms/src/public-api';
+import { SpinnakerComponent } from './spinnaker/spinnaker.component';
 
 // Below function is use to fetch endpointUrl from file present in assets/config location.
 const appInitializerFn = (appConfig: AppConfigService) => {
@@ -60,7 +61,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HasChildComponent,
     CdDashboardComponent,
     TrendAnalysisComponent,
-    VisibilityComponent
+    VisibilityComponent,
+    SpinnakerComponent
   ],
   imports: [
     BrowserModule,
