@@ -111,24 +111,78 @@
                     <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
                 {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
               </button> -->
-                    <!-- <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
-                        <mat-step [stepControl]="firstFormGroup">
-                            <form>
+                    <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
 
-                            </form>
-                         
+                        <mat-step>
+                          <!-- <ng-template matStepperIcon="edit">
+                            <span [ngClass]= "{'text-danger':gateStatus === 'rejected','text-success':gateStatus === 'approved','text-activated':gateStatus === 'activated','text-waiting':gateStatus === 'pending'}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-minus-circle':gateStatus === 'rejected','fa-check-circle':gateStatus === 'approved','fa-unlock':gateStatus === 'activated','fa-spinner':gateStatus === 'pending'}"></i>
+                            </span>
+                          </ng-template> -->
+                          <ng-template matStepLabel>
+                            <span>{{selectedService.approvalGateName}}</span>&nbsp;
+                            <span [ngClass]= "{'text-danger':gateStatus === 'rejected','text-success':gateStatus === 'approved','text-activated':gateStatus === 'activated','text-waiting':gateStatus === 'pending'}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-minus-circle':gateStatus === 'rejected','fa-check-circle':gateStatus === 'approved','fa-unlock':gateStatus === 'activated','fa-spinner':gateStatus === 'pending'}"></i>
+                            </span>
+                          </ng-template>
                         </mat-step>
-
-                    </mat-horizontal-stepper> -->
+                        <mat-step>
+                          <!-- <ng-template matStepperIcon="edit">
+                            <span [ngClass]= "{'text-activated':true}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-spinner':true}"></i>
+                            </span>
+                          </ng-template> -->
+                          <ng-template matStepLabel>
+                            <span>Gate 1</span>&nbsp;
+                            <span [ngClass]= "{'text-activated':true}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-unlock':true}"></i>
+                            </span>
+                          </ng-template>
+                        </mat-step>
+                        <mat-step>
+                          <!-- <ng-template matStepperIcon="edit">
+                            <span [ngClass]= "{'text-success':true}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-spinner':true}"></i>
+                            </span>
+                          </ng-template> -->
+                          <ng-template matStepLabel>
+                            <span>Gate 2</span>&nbsp;
+                            <span [ngClass]= "{'text-success':true}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-check-circle':true}"></i>
+                            </span>
+                          </ng-template>
+                        </mat-step>
+                        <mat-step>
+                          <!-- <ng-template matStepperIcon="edit">
+                            <span [ngClass]= "{'text-waiting':true}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-spinner':true}"></i>
+                            </span>
+                          </ng-template> -->
+                          <ng-template matStepLabel>
+                            <span>Gate 3</span>&nbsp;
+                            <span [ngClass]= "{'text-waiting':true}"
+                                  [title]="gateStatus">
+                              <i class="fas" [ngClass]= "{'fa-spinner':true}"></i>
+                            </span>
+                          </ng-template>
+                        </mat-step>
+                    </mat-horizontal-stepper>
                     
-                    <blockquote class="blockquote">
+                    <!-- <blockquote class="blockquote">
                       <p class="mb-0">{{selectedService.approvalGateName}} 
                         <span [ngClass]= "{'text-danger':gateStatus === 'rejected','text-success':gateStatus === 'approved','text-activated':gateStatus === 'activated','text-waiting':gateStatus === 'pending'}"
                               [title]="gateStatus">
                           <i class="fas" [ngClass]= "{'fa-minus-circle':gateStatus === 'rejected','fa-check-circle':gateStatus === 'approved','fa-unlock':gateStatus === 'activated','fa-spinner':gateStatus === 'pending'}"></i>
                         </span>
                       </p>
-                    </blockquote>
+                    </blockquote> -->
                     <hr class="my-4">
                                 <!-- <ng-template matStepLabel>{{selectedService.approvalGateName}}</ng-template> -->
                                 <!-- <mat-form-field>

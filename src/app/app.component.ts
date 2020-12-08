@@ -232,6 +232,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
         className = '';
       }
     }
+    
+    if(linkName == 'Spinnaker') {
+      className = '';
+    }
     return className;
   }
 
