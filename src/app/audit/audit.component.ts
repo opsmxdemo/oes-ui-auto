@@ -100,6 +100,30 @@ export class AuditComponent implements OnInit{
   cancelledPipelineRunsCount: number;
   totalPipelineRunsCount: number;
   date = 'Select date range';
+  dateRangeParams: any;
+  dateRangeList = [{
+    "name": 'Last 1 Day',
+    "value": "1D"
+  },
+  {
+    "name": 'Last 7 Days',
+    "value": "7D"
+  },
+  {
+    "name": 'Last 1 Month',
+    "value": "1M"
+  },
+  {
+    "name": 'Last 6 Months',
+    "value": "6M"
+  },
+  {
+    "name": 'All Time',
+    "value": "All"
+  }
+]
+
+
 
 
   constructor(public store: Store<fromApp.AppState>,
@@ -120,6 +144,20 @@ export class AuditComponent implements OnInit{
       itemsShowLimit: 2,
       allowSearchFilter:true,
       minWidth:180
+    };
+
+    // common dropdown component code goes here
+    this.dateRangeParams = {
+      label: '',
+      disabled: false,
+      formControl: new FormControl(this.selectedValue),
+      hidden: false,
+      id: 'select-audit-date-ragne',
+      required : false,
+      options : this.dateRangeList,
+      addOption : false,
+      addOptionLabel : "",
+      margin : "0px 0px"
     };
 
     // Below is reactive form defining for save filter functionality
@@ -783,8 +821,13 @@ export class AuditComponent implements OnInit{
         date.setMonth(date.getMonth() - 6);
         fromDate = date.getTime();
         break;
+        case 'All':
+          //date.setMonth(date.getMonth() - 6);
+          fromDate = null;
+          break;
     }
     //this.fetchedChartData(true, fromDate, toDate,type);
+    console.log(new Date(fromDate), new Date(toDate));
     this.filterDate(fromDate, toDate);
 
   }

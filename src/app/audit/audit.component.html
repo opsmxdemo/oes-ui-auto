@@ -196,152 +196,17 @@
   
                   <div class="ml-auto d-flex">
                     <div class="form-group mb-2">
-                      <div class="form-group ml-sm-2 mr-3">
-                        <div class="dropdown">
-                          <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{date}}
-                          </button>
-                          <form (submit)="dateForm(dForm.value)" #dForm="ngForm">
-                            <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton"
-                              (click)="dateDropdown($event)" style="left: 260px !important;">
-                              <div class="d-flex">
-                                <div>
-                                  <h4>Date/Time Range</h4>
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" id="last-hours-range" name="customRadio"
-                                      (change)="dateForm(dForm.value)" class="custom-control-input" value="last24Hour"
-                                      ngModel>
-                                    <label class="custom-control-label" for="last-hours-range">Last 1 Day</label>
-                                  </div>
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" id="last-week-range" name="customRadio"
-                                      (change)="dateForm(dForm.value)" class="custom-control-input" value="lastWeek"
-                                      ngModel>
-                                    <label class="custom-control-label" for="last-week-range">Last 7 Days</label>
-                                  </div>
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" id="last-month-range" name="customRadio"
-                                      (change)="dateForm(dForm.value)" class="custom-control-input" value="lastMonth"
-                                      ngModel>
-                                    <label class="custom-control-label" for="last-month-range">Last 1 Month</label>
-                                  </div>
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" id="last-6month-range" name="customRadio"
-                                      (change)="dateForm(dForm.value)" class="custom-control-input" value="last6Months"
-                                      ngModel>
-                                    <label class="custom-control-label" for="last-6month-range">Last 6 Months</label>
-                                  </div>
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" id="all-time-range" name="customRadio"
-                                      (change)="dateForm(dForm.value)" class="custom-control-input" value="allTime" ngModel>
-                                    <label class="custom-control-label" for="all-time-range">All Time</label>
-                                  </div>
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" id="custom-range" name="customRadio"
-                                      (change)="dateForm(dForm.value)" class="custom-control-input" value="custom" ngModel>
-                                    <label class="custom-control-label" for="custom-range">Custom</label>
-                                  </div>
-                                </div>
-                                <div class=" {{disableDatepicker === true?'div-disabled':''}}">
-                                  <div class="datepickerDiv">
-                                    <h4>Date Range</h4>
-                                    <span class="code" *ngIf="inlineRange">
-                                      {{ inlineRange.begin | date }} to
-                                      {{ inlineRange.end | date }}
-                                    </span>
-                                    <span class="code" *ngIf="!inlineRange">
-                                      Select date range
-                                    </span>
-                                  </div>
-                                  <div class="inlineCalendarContainer" (click)="datepicker($event)">
-                                    <sat-calendar [rangeMode]="true" (dateRangesChange)="inlineRangeChange($event)">
-                                    </sat-calendar>
-                                  </div>
-                                </div>
-                                <div class="{{disableDatepicker === true?'div-disabled':''}}">
-                                  <h4>From</h4>
-                                  <div class="form-inline">
-                                    <div class="form-group">
-                                      <select class="form-control" name="firstdayHours" id="firstdayHours" ngModel>
-                                        <option value="">00</option>
-                                        <option *ngFor="let time of timerHour;let i = index" value="{{i+1}}" selected>
-                                          {{time}}
-                                        </option>
-                                        <option value="11">11</option>
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                    <div class="form-group">:</div>
-                                    <div class="form-group">
-                                      <select class="form-control" name="firstdayMinutes" id="firstdayMinutes" ngModel>
-                                        <option value="">00</option>
-                                        <option *ngFor="let time of timerMinute;let i = index" value="{{i+1}}">{{time}}
-                                        </option>
-                                        <option value="59">59</option>
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                    <div class="form-group">
-                                      <select class="form-control" name="firstdayMeridiem" id="firstdayMeridiem" ngModel>
-                                        <option value="">AM</option>
-                                        <option value="PM">PM</option>
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                  </div>
-                                  <!-- /.form-inline -->
-    
-                                  <div class="mt-3">
-                                    <h4>To</h4>
-                                    <div class="form-inline">
-                                      <div class="form-group">
-                                        <select class="form-control" name="lastdayHours" id="lastdayHours" ngModel>
-                                          <option value="00">00</option>
-                                          <option *ngFor="let time of timerHour;let i = index" value="{{i+1}}" selected>
-                                            {{time}}</option>
-                                          <option value="">11</option>
-                                        </select>
-                                      </div>
-                                      <!-- /.form-group -->
-                                      <div class="form-group">:</div>
-                                      <div class="form-group">
-                                        <select class="form-control" name="lastdayMinutes" id="lastdayMinutes" ngModel>
-                                          <option value="00">00</option>
-                                          <option *ngFor="let time of timerMinute;let i = index" value="{{i}}">{{time}}
-                                          </option>
-                                          <option value="">59</option>
-                                        </select>
-                                      </div>
-                                      <!-- /.form-group -->
-                                      <div class="form-group">
-                                        <select class="form-control" name="lastdayMeridiem" id="lastdayMeridiem" ngModel>
-                                          <option value="AM">AM</option>
-                                          <option value="">PM</option>
-                                        </select>
-                                      </div>
-                                      <!-- /.form-group -->
-                                    </div>
-                                    <!-- /.form-inline -->
-                                  </div>
-                                  <div class="mt-5">
-                                    <button class="btn btn-block btn-clear mb-1">Clear</button>
-                                    <button class="btn btn-block btn-primary" id="applybtn" type="submit">Apply</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                      <!-- <div class="mr-3">
-                        <select style="color: #212529 !important;" class="form-control" [(ngModel)]="selectedValue" (change)="filterDateAudit($event.target.value)" >
+                     
+                      <div class="mr-3">
+                        <!-- <select class="form-control" [(ngModel)]="selectedValue" (change)="filterDateAudit($event.target.value)" >
                           <option value="1D">Last 1 Day</option>
                           <option value="7D">Last 7 Days</option>
                           <option value="1M">Last 1 Month</option>
                           <option value="6M">Last 6 Months</option>
-                        </select>
-                      </div> -->
+                          <option value="All">All Time</option>
+                        </select> -->
+                        <opsmx-select [params]="dateRangeParams" (changed)="filterDateAudit($event.target.value)"></opsmx-select>
+                      </div>
                       <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="left"
                         title="Show/Hide Columns">
                         <button class="btn btn-default dropdown-toggle" type="button" #CustomColumn data-toggle="dropdown"
