@@ -41,6 +41,17 @@ import { LogTagsComponent } from './application/application-creation/log-templat
 import { LogTemplateConfigService } from './application/application-creation/log-template-config/log-template-config.service';
 import { LogTopicsService } from './application/application-creation/log-template-config/log-topics/log-topics.service';
 import { OpsMxFormsModule } from 'projects/forms/src';
+import { ApplicationSetupComponent } from './application/application-setup/application-setup.component';
+import { ApplicationRoadMapComponent } from './application/application-setup/application-road-map/application-road-map.component';
+import { ApplicationDetailsComponent } from './application/application-setup/application-details/application-details.component';
+import { DevelopmentVerificationConfigComponent } from './application/application-setup/development-verification-config/development-verification-config.component';
+import { MetricTemplateConfigComponent } from './application/application-setup/metric-template-config/metric-template-config.component';
+import { VisibilityConfigComponent } from './application/application-setup/visibility-config/visibility-config.component';
+import { ReleaseManagementConfigComponent } from './application/application-setup/release-management-config/release-management-config.component';
+import { AddEnvironmentComponent } from './application/application-setup/add-environment/add-environment.component';
+import { GroupPermissionComponent } from './application/application-setup/group-permission/group-permission.component';
+import { ApplicationServiceComponent } from './application/application-setup/application-service/application-service.component';
+import { ServiceFeaturesComponent } from './application/application-setup/service-features/service-features.component';
 
 
 @NgModule({
@@ -65,8 +76,18 @@ import { OpsMxFormsModule } from 'projects/forms/src';
       LogTemplateEditorComponent,
       LogProviderComponent,
       LogTopicsComponent,
-      LogTagsComponent
-    ],
+      LogTagsComponent,
+      ApplicationSetupComponent,
+      ApplicationRoadMapComponent,
+      ApplicationDetailsComponent,
+      DevelopmentVerificationConfigComponent,
+      MetricTemplateConfigComponent,
+      VisibilityConfigComponent,
+      ReleaseManagementConfigComponent,
+      AddEnvironmentComponent,
+      GroupPermissionComponent,
+      ApplicationServiceComponent,
+      ServiceFeaturesComponent   ],
     imports: [
      CommonModule,
      ReactiveFormsModule,
