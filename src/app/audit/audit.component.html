@@ -2,6 +2,10 @@
   <div class="page-content flex-grow-1 {{cursorWaiting === true ?'pagewait':''}}">
     <ul class="nav pt-2 bg-white tab-lined nav-tabs" id="myTab" role="tablist" (click)="onChangeTab($event)">
       <li class="nav-item">
+        <a class="nav-link" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
+          aria-selected="false">Pipeline Execution</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link active" id="Pipeline" data-toggle="tab" role="tab" aria-controls="Pipeline"
           aria-selected="true">Pipeline</a>
       </li>
@@ -9,10 +13,7 @@
         <a class="nav-link" id="Policy" data-toggle="tab" role="tab" aria-controls="Policy"
           aria-selected="false">Policy Audit</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
-          aria-selected="false">Pipeline Execution</a>
-      </li>
+    
      
     </ul>
     <div class="audit-info px-3 d-flex bg-white" *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
