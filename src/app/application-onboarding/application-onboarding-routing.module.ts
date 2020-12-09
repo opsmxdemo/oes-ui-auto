@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ApplicationOnboardingComponent } from './application-onboarding.component';
 import { AppliactionListComponent } from './application/appliaction-list/appliaction-list.component';
 import { CreateApplicationComponent } from './application/application-creation/application.component';
+import { ApplicationSetupComponent } from './application/application-setup/application-setup.component';
 import { DataSourceComponent } from './data-source/data-source.component';
 import { CloudServicesComponent } from './cloud-services/cloud-services.component';
 import { DynamicAccountsComponent } from './accounts/dynamic-accounts/dynamic-accounts.component';
@@ -13,7 +14,8 @@ const applicationOnboardingRoutes: Routes = [
         // child component of Setup i.e,ApplicationOnboardingComponent.
         {path: '', redirectTo:'/setup/applications',pathMatch:'full'},
         {path: 'applications' , component: AppliactionListComponent},
-        {path: 'newApplication' , component: CreateApplicationComponent},
+        // {path: 'newApplication' , component: CreateApplicationComponent},
+        {path: 'newApplication' , component: ApplicationSetupComponent},
         {path: 'datasource' , component: DataSourceComponent},
         {path: 'cloudservices' , component: CloudServicesComponent},
         {path: 'accounts' , component: DynamicAccountsComponent},
