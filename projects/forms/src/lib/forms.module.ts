@@ -8,6 +8,10 @@ import { OpsMxHelptextComponent } from './helptext/helptext.component';
 import { OpsMxFormFieldComponent } from './form-field/form-field.component';
 import { OpsMxFormGridRowComponent } from './form-grid-row/form-grid-row.component';
 import { OpsMxFormGridComponent } from './form-grid/form-grid.component';
+import { OpsMxSearchComponent } from './search/search.component';
+import { FormsModule } from '@angular/forms';
+import { OpsMxIconsCommonComponentComponent } from './icons-common-component/icons-common-component.component';
+
 
 
 
@@ -19,18 +23,23 @@ import { OpsMxFormGridComponent } from './form-grid/form-grid.component';
     OpsMxHelptextComponent,
     OpsMxFormGridComponent,
     OpsMxFormGridRowComponent,
-    OpsMxFormFieldComponent
+    OpsMxFormFieldComponent,
+    OpsMxSearchComponent,
+    OpsMxIconsCommonComponentComponent
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [
     OpsMxInputComponent, 
     OpsMxButtonComponent,
     OpsMxSelectComponent,
     OpsMxHelptextComponent,
-    OpsMxFormGridComponent
+    OpsMxFormGridComponent,
+    OpsMxSearchComponent,
+    OpsMxIconsCommonComponentComponent
   ]
 })
 export class OpsMxFormsModule { }
