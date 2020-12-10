@@ -101,6 +101,7 @@ export class AuditComponent implements OnInit{
   totalPipelineRunsCount: number = 0;                                                  // Variable to display total pipelines count
   date = 'Select date range';                                                          
   dateRangeParams: any;
+  searchParams: any;
   dateRangeList = [{
     "name": 'Last 1 Day',
     "value": "1D"
@@ -143,6 +144,8 @@ export class AuditComponent implements OnInit{
       allowSearchFilter:true,
       minWidth:180
     };
+
+  
 
     // common dropdown component code goes here
     this.dateRangeParams = {
@@ -188,6 +191,12 @@ export class AuditComponent implements OnInit{
           this.currentTableHeader = this.tableData['headers'];
           this.filtersData = this.tableData['filters'];
           this.currentTabData = this.tableData;
+            // common search component code goes here
+    this.searchParams = {
+      optionsList: this.tableData['results'],
+      keys: []
+      
+    }
           this.createHeaders(this.tableData['headerOrder']);
           this.savedFilters = this.tableData['savedFilters']['filters']
           if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
@@ -259,6 +268,7 @@ export class AuditComponent implements OnInit{
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = responseData.allRunningPipelineData['results'].length;
+            this.searchData = this.tableData['results'];
             this.totalPipelineRunsCount = this.pipelineCountValue;
             this.relatedApi = 'pipeline';
             this.successfulPipelineRuns = [];
@@ -651,7 +661,7 @@ export class AuditComponent implements OnInit{
 
     // checking startTime is exist in table or not for search
     this.currentHeaderKeys.forEach(el=>{
-      if(el.includes('StartTime') || el.includes('updateTimestamp')){
+      if(el.includes('StartTime') || el.includes('updateTimestamp') || el.includes('createdTimestamp')){
         searchArr.push('true');
       }else{
         searchArr.push('false');
@@ -823,5 +833,10 @@ export class AuditComponent implements OnInit{
  
     this.filterDate(fromDate, toDate);
 
+  }
+
+  // code for search items
+  getSerchItem(value){
+    this.searchData = value;
   }
 }
