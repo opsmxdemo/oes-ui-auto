@@ -1,7 +1,7 @@
 <mat-tab-group>
   <mat-tab label="Logs Reclassification History">
     <div>
-      <div style="height: 440px;overflow: auto;">
+      <div style="height: 530px;overflow: auto;">
           <div *ngIf="reclassificationHistory != null">
               <div *ngFor='let feedbackHistory of reclassificationHistory?.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
               <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>
@@ -12,10 +12,10 @@
           <div *ngIf="reclassificationHistory?.feedbackHistory == null || reclassificationHistory?.feedbackHistory.length <= 0">
               No Data Present
           </div>        
-      </div>
-      <div class="float-left">
-          <opsmx-button [params]="closeButtonParams" (click)="close()" ></opsmx-button>
-      </div>
+      </div>      
   </div>
-  </mat-tab> 
+  <div class="float-left">
+    <opsmx-button [params]="closeButtonParams" (click)="close()" ></opsmx-button>
+ </div>
+  </mat-tab>   
 </mat-tab-group>

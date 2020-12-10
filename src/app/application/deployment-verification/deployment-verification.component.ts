@@ -725,10 +725,9 @@ deleteLogService(query,index){
   incrementCanaryRun(max: any) {
     this.defaultServiceId = false;
     this.canaries.sort();
-    this.canaryList = this.canaries;
-    this.canaryId = Number(this.canaryList[index + 1]);
+    this.canaryList = this.canaries;    
     var length = this.canaryList.length;
-    var index = this.canaryList.findIndex(cid => cid == max);
+    var index = this.canaryList.findIndex(cid => cid == max);   
     if (index === length - 1) {
       this.decrementDisable = false;
       this.incredementDisable = true;
@@ -740,7 +739,7 @@ deleteLogService(query,index){
     if (index != -1) {
       if (index === length - 1) {
         this.incredementDisable = true;
-
+        this.canaryId = Number(this.canaryList[index]);
       } else {
         if (this.route.params['_value'].canaryId != null) {
           this.control.setValue(this.canaryList[index + 1]);
@@ -750,7 +749,9 @@ deleteLogService(query,index){
           this.control.setValue(this.canaryList[index + 1]);
         }
         this.getApplicationHelathAndServiceDetails(Number(this.canaryList[index + 1]));
+        this.canaryId = Number(this.canaryList[index + 1]);
       }
+      
     }
   }
 
@@ -760,10 +761,9 @@ deleteLogService(query,index){
     this.defaultServiceId = false;
     this.incredementDisable = false;
     this.canaries.sort();
-    this.canaryList = this.canaries;
-    this.canaryId = Number(this.canaryList[index + 1]);
+    this.canaryList = this.canaries;    
     var length = this.canaryList.length;
-    var index = this.canaryList.findIndex(cid => cid == min);
+    var index = this.canaryList.findIndex(cid => cid == min);    
     if (index === 0) {
       this.decrementDisable = true;
       this.incredementDisable = false;
@@ -779,11 +779,12 @@ deleteLogService(query,index){
         this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: this.canaryList[index - 1] }));
         this.control.setValue(this.canaryList[index - 1]);
       }
-
       this.getApplicationHelathAndServiceDetails(Number(this.canaryList[index - 1]));
+      this.canaryId = Number(this.canaryList[index - 1]);
 
     } else if (index === 0) {
       this.control.setValue(this.canaryList[index]);
+      this.canaryId = Number(this.canaryList[index]);
     }
   }
 
