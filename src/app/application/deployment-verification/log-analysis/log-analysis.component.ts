@@ -677,7 +677,19 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     }      
     this.classifiedLogsList.push(feedbackErrorTopicsList);
   }
-  
+
+  onClickFeedbackComment(log){
+    this.selectedClusterInfo = log;
+    //code checking already comment given
+    if(this.classifiedLogsList.length > 0){
+      //getting the comment given already from the list
+      var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
+      this.comments = this.classifiedLogsList[idValue].feedbackComment;
+    }else{
+      this.comments = "";
+    }
+        
+  };  
 
   saveCriticalityComments() {
     var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.id && x.type === "topic");
@@ -687,7 +699,7 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
 
 //function to  update cluster Comments
   saveClusterTagComments() {
-    var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.logId && x.type === "topic");
+    var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.logId && x.type === "tag");
     this.classifiedLogsList[idValue].comment = this.clusterComments;
     this.clusterComments = ""
   };
@@ -724,6 +736,18 @@ export class LogAnalysisComponent implements OnChanges, AfterViewInit {
     }
     this.classifiedLogsList.push(clusterTagChangeObj);
 
+  };
+
+  onClickClusterTagComment(log){
+    this.selectedClusterInfo = log;
+    //code checking already comment given
+    if(this.classifiedLogsList.length > 0){
+      //getting the comment given already from the list
+      var idValue = this.classifiedLogsList.findIndex(x => x.logId === this.selectedClusterInfo.logId && x.type === "tag");
+      this.clusterComments = this.classifiedLogsList[idValue].comment;      
+    }else{
+      this.clusterComments = ""
+    }
   };
 
   onClickLogEventTab(eventTab) {
