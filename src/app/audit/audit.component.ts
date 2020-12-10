@@ -83,7 +83,7 @@ export class AuditComponent implements OnInit{
   filtersData: any;                                                                    // It is use to store filter data of current table.
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
-  relatedApi: string = 'pipelineconfig';                                               // It is use to store value of which api should call on click of apply filter.
+  relatedApi: string = 'pipeline';                                               // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
   savedFilters: any = null;                                                            // It is use to store value of saved filters exist in particular table.
   selectedSaveFilter:string = '';                                                      // It is use to store selected filter value in it.
@@ -91,15 +91,15 @@ export class AuditComponent implements OnInit{
   treeView_rowanimation = 'collapsed';                                                 // It is use to store value of animation state to represent animation in tree view
   treeView_currentKey = '';                                                            // It is use to store value of currenttab key value of treeView. 
   selectedValue = '6M';                                                                // It is use to populate default selection of date
-  successfulPipelineRuns = [];
-  failedPipelineRuns = [];
-  cancelledPipelineRuns = [];
-  allPipelineRuns = [];
-  failedPipelineRunsCount: number;
-  successfulPipelineRunsCount: number;
-  cancelledPipelineRunsCount: number;
-  totalPipelineRunsCount: number;
-  date = 'Select date range';
+  successfulPipelineRuns = [];                                                         // It is use to successful pipeline runs
+  failedPipelineRuns = [];                                                             // It is use to failed pipeline runs
+  cancelledPipelineRuns = [];                                                          // It is use to caceled pipeline runs
+  allPipelineRuns = [];                                                                // It is use to all pipeline runs
+  failedPipelineRunsCount: number = 0;                                                 // Variable to display failed pipelines
+  successfulPipelineRunsCount: number = 0;                                             // Variable to display successful pipelines
+  cancelledPipelineRunsCount: number = 0;                                              // Variable to display cancelled pipelines
+  totalPipelineRunsCount: number = 0;                                                  // Variable to display total pipelines count
+  date = 'Select date range';                                                          
   dateRangeParams: any;
   dateRangeList = [{
     "name": 'Last 1 Day',
@@ -792,12 +792,8 @@ export class AuditComponent implements OnInit{
 
   //################### pagination logic ends #############################filterDateAudit
 
+  // code for date filter
 
-
-  // Code for date filter
-  // filterDateAudit(value){
-  //   console.log(value);
-  // }
   filterDateAudit(event: any) {
     let filter = event;
     var date = new Date();
@@ -824,8 +820,7 @@ export class AuditComponent implements OnInit{
           fromDate = null;
           break;
     }
-    //this.fetchedChartData(true, fromDate, toDate,type);
-    console.log(new Date(fromDate), new Date(toDate));
+ 
     this.filterDate(fromDate, toDate);
 
   }
