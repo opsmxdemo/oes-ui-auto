@@ -2,75 +2,97 @@
   <div class="page-content flex-grow-1 {{cursorWaiting === true ?'pagewait':''}}">
     <ul class="nav pt-2 bg-white tab-lined nav-tabs" id="myTab" role="tablist" (click)="onChangeTab($event)">
       <li class="nav-item">
-        <a class="nav-link" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
+        <a class="nav-link active" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
           aria-selected="false">Pipeline Execution</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" id="Pipeline" data-toggle="tab" role="tab" aria-controls="Pipeline"
+        <a class="nav-link" id="Pipeline" data-toggle="tab" role="tab" aria-controls="Pipeline"
           aria-selected="true">Pipeline</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="Policy" data-toggle="tab" role="tab" aria-controls="Policy"
-          aria-selected="false">Policy Audit</a>
+        <a class="nav-link" id="Policy" data-toggle="tab" role="tab" aria-controls="Policy" aria-selected="false">Policy
+          Audit</a>
       </li>
-    
-     
     </ul>
-    <div class="audit-info px-3 d-flex bg-white" *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
-      <!-- <div>
-        <h4>{{pipelineCountValue}}</h4>
-        <span class="text-muted">{{pipelineCountName}}</span>
-      </div> -->
-      <div class="col-2">
-        <div class="chart_ratio mb-3 text-center d-flex">
-          <div class="chart_value cv_normal flex-grow-1">
-            <div class="cv_heighlight">{{totalPipelineRunsCount}}</div>
-            <div class="cv_name">Pipeline Runs</div>
+
+    <!-- code for displaying the pipeline overallinfo starts here -->
+
+    <div class="pt-3 col-12"
+      *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
+      <div class="summary-list bg-white">
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Pipeline Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{totalPipelineRunsCount}}</h3>
           </div>
         </div>
-      </div>
-      <div class="col-2">
-        <div class="chart_ratio mb-3 text-center d-flex">
-          <div class="chart_value cv_high flex-grow-1">
-            <div class="cv_heighlight">{{successfulPipelineRunsCount}}</div>
-            <div class="cv_name">Successful Runs</div>
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Successful Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{successfulPipelineRunsCount}}</h3>
           </div>
         </div>
-      </div>
-      <div class="col-2">
-        <div class="chart_ratio mb-3 text-center d-flex">
-          <div class="chart_value cv_low flex-grow-1">
-            <div class="cv_heighlight">{{failedPipelineRunsCount}}</div>
-            <div class="cv_name">Failed Runs</div>
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Failed Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{failedPipelineRunsCount}}</h3>
           </div>
         </div>
-      </div>
-      <div class="col-2">
-        <div class="chart_ratio mb-3 text-center d-flex">
-          <div class="chart_value cv_medium flex-grow-1">
-            <div class="cv_heighlight">{{cancelledPipelineRunsCount}}</div>
-            <div class="cv_name">Canceled Runs</div>
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Canceled Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{cancelledPipelineRunsCount}}</h3>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- code for displaying the pipeline overallinfo -->
-    <div class="audit-info px-3 d-flex bg-white" *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipelineconfig'">
-      <!-- <div>
-        <h4>{{pipelineCountValue}}</h4>
-        <span class="text-muted">{{pipelineCountName}}</span>
-      </div> -->
-      <div class="col-2">
-        <div class="chart_ratio mb-3 text-center d-flex">
-          <div class="chart_value cv_normal flex-grow-1">
-            <div class="cv_heighlight">{{pipelineCountValue}}</div>
-            <div class="cv_name">{{pipelineCountName}}</div>
+    <!-- code for displaying the pipeline overallinfo ends here -->
+
+
+    <!-- code for displaying the pipeline config overallinfo starts here -->
+
+    <div class="pt-3 col-12"
+      *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipelineconfig'">
+      <div class="summary-list bg-white">
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>{{pipelineCountName}}</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{pipelineCountValue}}</h3>
           </div>
         </div>
       </div>
     </div>
-    <!-- /.page_title d-flex -->
+
+    <!-- code for displaying the pipeline config overallinfo ends here -->
+
+        <!-- code for displaying the policy audi overallinfo starts here -->
+
+        <div class="pt-3 col-12"
+        *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'policies'">
+        <div class="summary-list bg-white">
+          <div class="summary-item">
+            <div class="pull-left">
+              <h4>{{pipelineCountName}}</h4>
+            </div>
+            <div class="pull-right">
+              <h3>{{pipelineCountValue}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- code for displaying the policy audit overallinfo ends here -->
 
     <div class="p-3">
       <div class="row no-gutters">
@@ -87,7 +109,7 @@
                         <option *ngFor="let filter of savedFilters" value="{{filter}}">{{filter}}</option>
                       </select>
                     </div>
-                    
+
                     <div class="form-group ml-sm-2 mb-2">
                       <div class="form-group">
                         <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
@@ -99,7 +121,8 @@
                           <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
                             aria-labelledby="addMoreFilters">
                             <form #filtersShowHide="ngForm">
-                              <div class="custom-control custom-checkbox" *ngFor="let filter of filtersData; let i=index">
+                              <div class="custom-control custom-checkbox"
+                                *ngFor="let filter of filtersData; let i=index">
                                 <input type="checkbox" class="custom-control-input" (change)="showHideFilters($event,i)"
                                   [checked]="showHideFilter[i]" id="showHide{{i}}">
                                 <label class="custom-control-label"
@@ -142,7 +165,8 @@
                                       class="invalid-feedback">
                                       <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is
                                         required</span>
-                                      <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter already
+                                      <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter
+                                        already
                                         exists with same name. Please choose a unique filter name</span>
                                     </span>
                                   </div>
@@ -194,24 +218,17 @@
                   <button type="submit" class="btn btn-default mb-2 ml-sm-2" *ngIf="selectedSaveFilter !== ''"
                     (click)="resetFilters()" data-toggle="tooltip" data-placement="top" title="Clear filter"><i
                       class="fa fa-redo"></i> &nbsp;Clear</button>
-  
+
                   <div class="ml-auto d-flex">
                     <div class="form-group mb-2">
-                     
                       <div class="mr-3">
-                        <!-- <select class="form-control" [(ngModel)]="selectedValue" (change)="filterDateAudit($event.target.value)" >
-                          <option value="1D">Last 1 Day</option>
-                          <option value="7D">Last 7 Days</option>
-                          <option value="1M">Last 1 Month</option>
-                          <option value="6M">Last 6 Months</option>
-                          <option value="All">All Time</option>
-                        </select> -->
-                        <opsmx-select [params]="dateRangeParams" (changed)="filterDateAudit($event.target.value)"></opsmx-select>
+                        <opsmx-select [params]="dateRangeParams" (changed)="filterDateAudit($event.target.value)">
+                        </opsmx-select>
                       </div>
                       <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="left"
                         title="Show/Hide Columns">
-                        <button class="btn btn-default dropdown-toggle" type="button" #CustomColumn data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" type="button" #CustomColumn
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <i class="fas fa-icon-rotate fa-bars"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
@@ -240,7 +257,8 @@
                 <div class="toolpills">
                   <form #filterForm="ngForm" class="filterForm">
                     <ng-container *ngFor="let filter of filtersData;let i = index">
-                      <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]" data-toggle="tooltip" data-placement="top" title="{{currentTableHeader[filter.name]}}">
+                      <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]" data-toggle="tooltip"
+                        data-placement="top" title="{{currentTableHeader[filter.name]}}">
                         <ng-multiselect-dropdown [placeholder]="currentTableHeader[filter.name]"
                           name="{{filtersData[i].name}}" [data]="filter.items" [settings]="dropdownSettings"
                           (onSelect)="onItemSelect($event,filter)" [(ngModel)]="selectedFilters[i]"
@@ -251,9 +269,9 @@
                     </ng-container>
                   </form>
                 </div>
-  
+
                 <!-- /.toolpills -->
-  
+
               </div>
               <!-- /.card-heading -->
               <div class="card-body p-0">
@@ -262,8 +280,8 @@
                     <thead>
                       <tr class="nestedrow">
                         <ng-container *ngFor="let key of currentHeaderKeys; let i=index">
-                          <th *ngIf="showColumn[i] === 'true'"><i
-                              class="fa fa-caret-right showCarret" *ngIf = "i === 0"></i>{{currentTableHeader[key]}}</th>
+                          <th *ngIf="showColumn[i] === 'true'"><i class="fa fa-caret-right showCarret"
+                              *ngIf="i === 0"></i>{{currentTableHeader[key]}}</th>
                         </ng-container>
                       </tr>
                     </thead>
@@ -276,8 +294,9 @@
                               <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
                               <ng-template #elseBlock><span
                                   class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}"><i *ngIf="j === 0"
-                                    class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}" 
-                                    id="treeview{{i}}" (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])" 
+                                    class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}"
+                                    id="treeview{{i}}"
+                                    (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])"
                                     style="transition: transform 400ms ease-in-out;"></i>{{pageData[dataKey]}}</span>
                               </ng-template>
                             </td>
@@ -285,7 +304,7 @@
                         </tr>
                         <tr class="nested_tr">
                           <ng-container *ngIf="treeView[i]">
-                            <td [attr.colspan]="currentHeaderKeys.length"  class="inner-table" >
+                            <td [attr.colspan]="currentHeaderKeys.length" class="inner-table">
                               <div [@expandableRow]="treeView_rowanimation">
                                 <app-tree-view></app-tree-view>
                               </div>
@@ -308,7 +327,7 @@
                     <option value="15">15</option>
                     <option value="20">20</option>
                     <option value="25">25</option>
-  
+
                   </select>
                   <span class="ml-3 mr-2">Showing {{currentDatalength>0?page.startingPoint+1:0}} to
                     {{page.endPoint < currentDatalength && page.endPoint > page.startingPoint ? page.endPoint:currentDatalength}}
@@ -316,7 +335,7 @@
                     {{currentDatalength}}</span>
                   <!-- <input type="text" class="form-control mr-2" />
                   <button class="btn btn-primary">Go</button> -->
-  
+
                   <ul class="pagination ml-auto mb-0">
                     <li class="page-item" (click)="pagePrev()" class="{{page.startingPoint === 0?'disabledbtn':''}}"><a
                         class="page-link">Previous</a></li>
@@ -331,7 +350,8 @@
                                ((page.currentPage+2)*page.pageSize< currentDatalength? true : ((page.currentPage+2)*page.pageSize)-currentDatalength < page.pageSize? true : false) ? true : false"
                       (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a></li>
                     <li class="page-item" (click)="pageNext()"
-                      class="{{page.endPoint === currentDatalength?'disabledbtn':''}}"><a class="page-link">Next</a></li>
+                      class="{{page.endPoint === currentDatalength?'disabledbtn':''}}"><a class="page-link">Next</a>
+                    </li>
                   </ul>
                 </div>
                 <!-- /.per_page -->
@@ -339,13 +359,17 @@
               <!-- /.card-footer -->
             </div>
             <div class="card" *ngIf="currentTabData !== null && currentTabData['results'].length == 0">
-              <app-component-error-listing class="emptyTableError" [errorString]="'Data is being retrieved. Please try refreshing after sometime.'"></app-component-error-listing>
+              <app-component-error-listing class="emptyTableError"
+                [errorString]="'Data is being retrieved. Please try refreshing after sometime.'">
+              </app-component-error-listing>
             </div>
             <div class="card" *ngIf="currentTabData === null">
-              <app-component-error-listing class="emptyTableError" [errorString]="'Selected tab data does not exist in database. If you are sure that these are there, please refresh the page after sometime.'"></app-component-error-listing>
+              <app-component-error-listing class="emptyTableError"
+                [errorString]="'Selected tab data does not exist in database. If you are sure that these are there, please refresh the page after sometime.'">
+              </app-component-error-listing>
             </div>
           </ng-container>
-         
+
           <div class="card" *ngIf="auditLoading">
             <app-loading-screen></app-loading-screen>
           </div>
