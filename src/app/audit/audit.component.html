@@ -19,7 +19,7 @@
 
     <div class="pt-3 col-12"
       *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
-      <div class="summary-list bg-white">
+      <div class="summary-list">
         <div class="summary-item">
           <div class="pull-left">
             <h4>Pipeline Runs</h4>
@@ -62,7 +62,7 @@
 
     <div class="pt-3 col-12"
       *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipelineconfig'">
-      <div class="summary-list bg-white">
+      <div class="summary-list">
         <div class="summary-item">
           <div class="pull-left">
             <h4>{{pipelineCountName}}</h4>
@@ -80,7 +80,7 @@
 
         <div class="pt-3 col-12"
         *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'policies'">
-        <div class="summary-list bg-white">
+        <div class="summary-list">
           <div class="summary-item">
             <div class="pull-left">
               <h4>{{pipelineCountName}}</h4>
