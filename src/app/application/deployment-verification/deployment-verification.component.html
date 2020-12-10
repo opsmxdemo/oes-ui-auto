@@ -466,34 +466,6 @@
     </div>
   </div>
 
-    <div class="modal bd-example-modal-lg fade " id="reclassificationHistory" tabindex="-1" role="dialog" aria-labelledby="reclassificationHistory" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-width" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Logs Reclassification History</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <div style="min-height: 400px;" class="modal-body">
-            <div *ngIf="reclassificationHistory != null">
-            <div *ngFor='let feedbackHistory of reclassificationHistory.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
-              <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>
-              <div style="padding-top:10px ; padding: 3px;" >ReClassified From <span [ngClass]="{'text-danger':feedbackHistory.existingTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.existingTopic == 'ERROR','text-warning':feedbackHistory.existingTopic == 'WARN','text-muted':feedbackHistory.existingTopic=='IGNORE'}" *ngIf = "feedbackHistory.existingTopic!='INFO'">{{feedbackHistory.existingTopic}}</span><span *ngIf = "feedbackHistory.existingTopic=='INFO'" class="text-muted">IGNORE</span> To <span [ngClass]="{'text-danger':feedbackHistory.newTopic == 'CRITICAL ERROR', 'text-error':feedbackHistory.newTopic == 'ERROR','text-warning':feedbackHistory.newTopic == 'WARN','text-muted':feedbackHistory.newTopic=='IGNORE'}">{{feedbackHistory.newTopic}}</span></div>
-              <div style="padding-top:10px ; padding: 3px;"><span>{{feedbackHistory.timestamp | changeTImestamptotime}}</span> Comments : {{feedbackHistory.feedbackComment}}</div>
-            </div>
-            </div>
-            <div *ngIf="reclassificationHistory == null">
-                No Data Present
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-default" data-dismiss="modal" aria-label="Close">OK</button>
-          </div>
-          <!-- /.modal-footer -->
-        </div>
-      </div>
-    </div>
 
     <div class="page-content flex-grow-1">
       <div class="page_title page_title_inner title_icon px-3 d-flex align-items-center" *ngIf="applicationExists"> 
@@ -501,8 +473,8 @@
         <div class="page_access d-flex ml-auto">
           <button class="btn btn-default" data-toggle="modal" data-target="#manualTrigger" data-backdrop="static" data-keyboard="false" [disabled]="deployementApplications?.length <= 0 || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'INPROGRESS' || deploymentApplicationHealth['applicationHealthStatus']?.toUpperCase() === 'IN PROGRESS'">Manual Trigger</button>
         </div>
-        <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" >
-          <button (click)="getReclassifiactionHistory()" class="btn btn-default" data-toggle="modal" data-target="#reclassificationHistory" data-backdrop="static" data-keyboard="false">Reclassification History</button>
+        <div class="page_access d-flex ml20" *ngIf="deploymentApplicationHealth['analysisType'] === 'Logs Only' || deploymentApplicationHealth['analysisType'] === 'Logs and Metrics'" >          
+          <opsmx-button [params]="reclassificationButtonParams" (click)="getReclassifiactionHistory()"></opsmx-button>          
         </div>
         <!-- /.page_access ml-auto -->
       </div>

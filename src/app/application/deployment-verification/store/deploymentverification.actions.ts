@@ -32,6 +32,7 @@ export const fetchManualTriggerResults = createAction('[DeploymentVerification] 
 
 export const fetchReclassificationHistoryData = createAction('[DeploymentVerification] FetchReclassificationHistoryData', props<{logTemplateName: any,canaryId:any,serviceId:any}>());
 export const loadReclassificationHistoryData = createAction('[DeploymentVerification] loadReclassificationHistoryData', props<{reclassificationHistoryResults:any}>());
+export const loadedReclassificationHistoryData = createAction('[DeploymentVerification] LoadedReclassificationHistoryData');
 
 export const reloadWithCanaryId = createAction('[DeploymentVerification] ReloadWithCanaryId', props<{canaryId: any,serviceId: any}>());
 

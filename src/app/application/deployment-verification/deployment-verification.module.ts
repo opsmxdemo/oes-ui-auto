@@ -34,6 +34,8 @@ import { CorrelationformdetailsComponent } from './correlation/correlationform/c
 import { CorrelationEffect } from './correlation/store/correlation.effects';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { ReclassificationHistoryComponent } from './reclassification-history/reclassification-history.component';
+import { OpsMxFormsModule } from 'projects/forms/src';
 
 
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme);
@@ -54,6 +56,7 @@ FusionCharts.options["license"]({
         CorrelationComponent,
         CorrelationformComponent,
         CorrelationformdetailsComponent,
+        ReclassificationHistoryComponent,
     ],
     imports: [
      CommonModule,
@@ -80,7 +83,8 @@ FusionCharts.options["license"]({
      NgxMatDatetimePickerModule,
      NgxMatTimepickerModule,
      NgxMatNativeDateModule, 
-     NgxMatMomentModule 
+     NgxMatMomentModule,
+     OpsMxFormsModule 
     ],
   })
   export class DeploymentVerificationModule { }
