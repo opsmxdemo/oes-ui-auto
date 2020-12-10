@@ -21,6 +21,8 @@ import Swal from 'sweetalert2';
 import { AnyTxtRecord } from 'dns';
 import * as moment from 'moment';
 import { ThemePalette } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog'; 
+import {ReclassificationHistoryComponent} from './reclassification-history/reclassification-history.component';
 
 export interface User {
   applicationName: string;
@@ -150,11 +152,13 @@ export class DeploymentVerificationComponent implements OnInit {
   public stepHours = [1, 2, 3, 4, 5];
   public stepMinutes = [1, 5, 10, 15, 20, 25];
   public stepSeconds = [1, 5, 10, 15, 20, 25];
+
+  reclassificationButtonParams : any;
   // App form end
 
   constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromFeature.State>,
     public autopilotService: AutopiloService, public notifications: NotificationService, public appStore: Store<fromApp.AppState>,
-    private fb: FormBuilder, private router: Router,private zone: NgZone) {
+    private fb: FormBuilder, private router: Router,private zone: NgZone, public dialog: MatDialog) {
   }
 
   // Below function is use to capture events occur in matric analysis component and make responsive to table.
@@ -220,10 +224,7 @@ export class DeploymentVerificationComponent implements OnInit {
     // Below code get the feature data from state
 
     this.store.select(fromFeature.selectDeploymentVerificationState).subscribe(
-      (resData) => {
-        if (resData.reclassificationHistoryResults != null) {
-          this.reclassificationHistory = resData.reclassificationHistoryResults
-        }
+      (resData) => {        
         if (resData.manualTriggerResponse != null) {
           this.manualTriggerLatestRun = resData['canaryId'];
           this.control.setValue(resData['canaryId']);
@@ -360,6 +361,13 @@ export class DeploymentVerificationComponent implements OnInit {
         }
       }
     );
+
+    this.reclassificationButtonParams ={
+      type: 'button',
+      text: 'Reclassification History',
+      color: '',
+      disabled : false 
+    };
 
   }
 
@@ -718,6 +726,7 @@ deleteLogService(query,index){
     this.defaultServiceId = false;
     this.canaries.sort();
     this.canaryList = this.canaries;
+    this.canaryId = Number(this.canaryList[index + 1]);
     var length = this.canaryList.length;
     var index = this.canaryList.findIndex(cid => cid == max);
     if (index === length - 1) {
@@ -752,6 +761,7 @@ deleteLogService(query,index){
     this.incredementDisable = false;
     this.canaries.sort();
     this.canaryList = this.canaries;
+    this.canaryId = Number(this.canaryList[index + 1]);
     var length = this.canaryList.length;
     var index = this.canaryList.findIndex(cid => cid == min);
     if (index === 0) {
@@ -1105,9 +1115,15 @@ deleteLogService(query,index){
     return difference;
   }
 
-  // for getting reclassification history data
+  // code to load modal popup for reclassification history
   getReclassifiactionHistory() {
-    this.store.dispatch(DeploymentAction.fetchReclassificationHistoryData({ logTemplateName: this.deploymentServiceInformation['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId }));
+    const dialogRef = this.dialog.open(ReclassificationHistoryComponent,{
+      height: '650px',
+      width: '900px',
+      disableClose: true,
+      data: { logTemplateName: this.deploymentServiceInformation['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId },
+      panelClass: 'standard-popup'
+    });    
   }
 
   //function executes when a rerun happen from log-analysis component

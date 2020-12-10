@@ -28,6 +28,7 @@ export interface State {
     isLoadedDownloadDebug: boolean;
     applicationId : any;
     downloaddebugDataResponse: any;
+    isReclassificationDataLoaded : boolean;
 }
 
 export const initialState: State = {
@@ -54,6 +55,7 @@ export const initialState: State = {
     isLoadedDownloadDebug:false,
     applicationId : null,
     downloaddebugDataResponse: null,
+    isReclassificationDataLoaded : false
 }
 
 export function DeploymentdReducer(
@@ -187,11 +189,26 @@ export function DeploymentdReducer(
                 deployementLoading: false
             })
         ),
+        on(DeploymentActions.fetchReclassificationHistoryData,
+            (state, action) => ({
+                ...state,
+                isReclassificationDataLoaded:false,
+                canaryId : action.canaryId,
+                logTemplate : action.logTemplateName,
+                serviceId :action.serviceId
+            })
+        ),
         on(DeploymentActions.loadReclassificationHistoryData,
             (state, action) => ({
                 ...state,
                 reclassificationHistoryResults:action.reclassificationHistoryResults,
-                deployementLoading: false
+                isReclassificationDataLoaded: true
+            })
+        ),
+        on(DeploymentActions.loadedReclassificationHistoryData,
+            (state, action) => ({
+                ...state,                
+                isReclassificationDataLoaded: false
             })
         ),
         on(DeploymentActions.loadServicesOfApplication,
