@@ -13,6 +13,8 @@ import * as $ from 'jquery';
 import Swal from 'sweetalert2';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { arraysAreNotAllowedMsg } from '@ngrx/store/src/models';
+import { NumericLiteral } from 'typescript';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-application-dashboard',
@@ -58,6 +60,8 @@ export class ApplicationDashboardComponent implements OnInit {
   configuredFeature: any = {}
   isFeaturePresent: any = {}
   selectedFeature = [];
+  serviceSidebar: boolean;
+  releaseSidebar: boolean;
 
 
 
@@ -67,7 +71,8 @@ export class ApplicationDashboardComponent implements OnInit {
     private notifications: NotificationService,
     public store: Store<fromApp.AppState>,
     public applicationFeatureStore: Store<fromApplicationFeature.State>,
-    private environment: AppConfigService) { }
+    private environment: AppConfigService,
+    private router: Router) { }
 
   scrollToActiveClass(): void {
     var $container = $("html,body");
@@ -345,10 +350,16 @@ export class ApplicationDashboardComponent implements OnInit {
     this.finalSelectedTabNumber = index;
     if (labelType === 'Services') {
       this.selectedApplication(this.finalSelectedTabNumber, app, this.showAppDataType);
+      setTimeout(() => {
+        this.serviceSidebar = true;
+      }, 200);
       //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
       this.subscription.unsubscribe();
       this.getReleases(labelType, app, subIndex, event);
+      setTimeout(() => {
+        this.releaseSidebar = true;
+      }, 200);
 
       // this.selectedApplication(index, app);
     } else if (labelType === 'Deployment Verification') {
@@ -429,6 +440,145 @@ export class ApplicationDashboardComponent implements OnInit {
       }
     // }
 
+  }
+
+  routeToDV(envir: any, index: number) {
+    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+    let url = '';
+    switch (envir) {
+      case 'prod':
+        if(length >= 3) {
+          url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[0].canaryId}`
+        }
+        break;
+      case 'staging':
+        if(length >= 2) {
+          url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[1].canaryId}`
+        }
+        break;
+      case 'qa':
+        if(length == 1) {
+          url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[0].canaryId}`
+        }
+        if(length == 2) {
+          url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[1].canaryId}`
+        }
+        if(length >= 3) {
+          url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[2].canaryId}`
+        }
+        break;
+    }
+    this.router.navigate([url]);
+  }
+
+  getScoreOfCanary(envir, index) {
+    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+    let val = '-';
+    switch (envir) {
+      case 'prod':
+        if(length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        break;
+      case 'staging':
+        if(length >= 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        break;
+      case 'qa':
+        if(length == 1) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        if(length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        if(length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[2].finalScore;
+        }
+        break;
+    }
+    return val;
+  }
+
+  setBackground(envir, index) {
+    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+    let val = '-';
+    switch (envir) {
+      case 'prod':
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        break;
+      case 'staging':
+        if (length >= 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        break;
+      case 'qa':
+        if (length == 1) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        if (length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[2].finalScore;
+        }
+        break;
+    }
+    if (+val == 0 || val != '-') {
+      if (+val <= 60) {
+        return '#cb5347';
+      } else if (+val <= 80) {
+        return '#f2b017'
+      } else if (+val > 80) {
+        return '#4fa845';
+      }
+    } else  {
+      return '';
+    }
+    
+  }
+
+  setColor(envir, index) {
+    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+    let val = '-';
+    switch (envir) {
+      case 'prod':
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        break;
+      case 'staging':
+        if (length >= 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        break;
+      case 'qa':
+        if (length == 1) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        if (length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[2].finalScore;
+        }
+        break;
+    }
+    if (+val == 0 || val != '-') {
+      return 'white';
+    } else  {
+      return '';
+    }
+    
+  }
+
+  hideSidebar() {
+    setTimeout(() => {
+      this.serviceSidebar = false;
+      this.releaseSidebar = false;
+    }, 200);
   }
 
 }
