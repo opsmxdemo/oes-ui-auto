@@ -111,6 +111,7 @@
                     <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
                 {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
               </button> -->
+              <div style="width: 100%; overflow-x: auto;">
                     <mat-horizontal-stepper [labelPosition]="'bottom'" [linear]="isLinear" #stepper>
 
                         <mat-step>
@@ -174,7 +175,7 @@
                           </ng-template>
                         </mat-step>
                     </mat-horizontal-stepper>
-                    
+                  </div>
                     <!-- <blockquote class="blockquote">
                       <p class="mb-0">{{selectedService.approvalGateName}} 
                         <span [ngClass]= "{'text-danger':gateStatus === 'rejected','text-success':gateStatus === 'approved','text-activated':gateStatus === 'activated','text-waiting':gateStatus === 'pending'}"

@@ -23,13 +23,7 @@
                 <div *ngIf="!tableIsEmpty && !loading" class="tab-pane d-flex flex-column bg-white h-100 fade show active">
                   <div class="page_access d-flex text-right p-3">
                       <div class="mr-auto">
-                          <div class="input-group input-group_search">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
-                            </div>
-                            <input type="text" class="form-control" [(ngModel)]="searchData" (keyup)="onSearch()" />
-                            <i (click)="refreshList()" data-toggle="tooltip" data-placement="top" title="Refresh List" class="refresh-icon fa refreshList">&#xf021;</i>
-                          </div>
+                        <opsmx-search [searchBoxParams]="searchBoxParams" (filteredList)="getFilteredList($event)"></opsmx-search>
                         </div>
                         <button class="btn btn-default"  data-toggle="modal" data-target="#dataSource" data-backdrop="static" data-keyboard="false" (click)="createDatasource()" [disabled] = "!isUserAdmin">New Data Source</button>
                       </div>
