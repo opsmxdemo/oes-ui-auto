@@ -7,6 +7,7 @@ import { ApplicationList } from '../../../models/applicationOnboarding/applicati
 import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import Swal from 'sweetalert2'
+import {ApplicationListService} from './application-list.service'
 
 @Component({
   selector: 'app-appliaction-list',
@@ -31,7 +32,7 @@ export class AppliactionListComponent implements OnInit {
   loading = false;                                                                     // It is use to show and hide loading screen
 
   constructor(public store: Store<fromFeature.State>,
-              public toastr: NotificationService) { }
+              public toastr: NotificationService, private appListService: ApplicationListService ) { }
   
   ngOnInit(): void {
 
@@ -73,6 +74,7 @@ export class AppliactionListComponent implements OnInit {
   // Below function is use to redirect to create application page
   createApplication() {
     this.store.dispatch(ApplicationActions.loadApp({page:'/setup/applications'}));
+    this.appListService.editMode = false;
   }
 
   //Below function is used to implement pagination
@@ -167,10 +169,17 @@ export class AppliactionListComponent implements OnInit {
   }
 
   // Below function is use for edit application
+  // editApplication(appData){
+    // $("[data-toggle='tooltip']").tooltip('hide');
+    // this.store.dispatch(ApplicationActions.getImageSource({ applicationId: appData.applicationId }));
+  // }
+
   editApplication(appData){
-    $("[data-toggle='tooltip']").tooltip('hide');
-    this.store.dispatch(ApplicationActions.getImageSource({ applicationId: appData.applicationId }));
-    this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: appData.name,page:'/setup/applications',applicationId:appData.applicationId}));
+    // this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: appData.name,page:'/setup/applications',applicationId:appData.applicationId}));
+    this.appListService.editMode = true;
+    this.appListService.applicationId = appData.applicationId;
+    this.appListService.applicationName = appData.name;
   }
+
 
 }

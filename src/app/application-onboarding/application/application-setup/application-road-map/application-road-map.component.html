@@ -1,1 +1,58 @@
- <p>Road map details will appear here!</p>
+
+  <div class="col-sm-3">
+          <div class="sidebar-tree">
+               <!-- {{createApplicationForm.invalid == false ?'tree-active':''}} -->
+            <ul class="tree-inset list-unstyled tree-active" (click)="appRoadMapService.loadApplicationForm()">
+              <li class="ti-title showElementHover">
+                  <!-- {{createApplicationForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}} -->
+                <i  class="fas fa-check-circle"></i>
+                <span>Application Details</span>
+              </li>
+              <li class="ti-item showElementHover" (click)="appRoadMapService.loadApplicationForm()">
+                  <!-- {{createApplicationForm.value.name !== ''?'fas fa-check-circle':'far fa-dot-circle'}} -->
+                <i class="fas fa-check-circle"></i>
+                <span>Application Name :</span>
+                <!-- {{createApplicationForm.value.name}} -->
+                <strong>Name</strong>
+              </li>
+              <br>
+              <br>
+            </ul>
+            <!-- /.tree-inset -->
+            <!-- <ul class="tree-inset  list-unstyled {{servicesForm.invalid == false ?'tree-active':''}}">
+              <li class="ti-title showElementHover" (click)="loadServiceForm()">
+                <i class="{{servicesForm.invalid == false ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <span data-toggle="tooltip" data-placement="top" data-original-title="One of the logical entity of the application">Services</span>
+              </li>             
+              <ng-container *ngFor="let serviceArr of servicesForm.getRawValue().services; let i = index">
+              <li class="ti-item">
+                <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span *ngIf="!editMode">Service name</span>
+                <strong (click)="editServiceClick(serviceArr, i)" style="cursor: pointer;">{{serviceArr.serviceName}}</strong>
+              </li>
+            </ng-container>
+              <br>
+              <br>
+            </ul> -->
+
+             <!-- /.tree-inset -->
+         
+            <!-- <ul class="tree-inset list-unstyled {{environmentForm.invalid == true ?'tree-active':''}}">
+            <li class="ti-title showElementHover" (click)="loadEnvironmentsForm()">
+              <i class="{{environmentForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+              <span data-toggle="tooltip" data-placement="top" data-original-title="Environmental values for the CICD pipeline">Environments</span>
+            </li>
+          </ul> -->
+            <!-- /.tree-inset -->
+            <!-- <ul class="tree-inset list-unstyled {{groupPermissionForm.invalid == true ?'tree-active':''}}">
+              <li class="ti-title showElementHover" (click)="loadGroupPermissionForm()">
+                <i  class="{{groupPermissionForm.invalid == true ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>
+                <span data-toggle="tooltip" data-placement="top" data-original-title="Authorisation definition for this application">Group Permissions</span>
+              </li>
+            </ul> -->
+         
+          
+            <!-- /.tree-inset -->
+          </div>
+          <!-- /.sidebar-tree -->
+        </div>

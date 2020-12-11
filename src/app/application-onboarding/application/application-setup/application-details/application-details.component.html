@@ -3,10 +3,10 @@
                    <!-- [formGroup]="createApplicationForm" -->
                 <form>
                   <div class="form-group">
-                        <opsmx-input [params]="applicationNameParams" ></opsmx-input>
-                        <opsmx-input [params]="applicationDescriptionParams" ></opsmx-input>
-                        <opsmx-input [params]="applicationEmailParams" ></opsmx-input>
-                        <opsmx-select [params]="imageSourceParams" ></opsmx-select>
+                        <opsmx-input [params]="appDetailService.applicationNameParams" ></opsmx-input>
+                        <opsmx-input [params]="appDetailService.applicationDescriptionParams" ></opsmx-input>
+                        <opsmx-input [params]="appDetailService.applicationEmailParams" ></opsmx-input>
+                        <opsmx-select [params]="appDetailService.imageSourceParams" ></opsmx-select>
                         <!-- <input type="text" appLowercase tooltip="test"  tooltip-trigger="focus" tooltip-placement="right" class="form-control" [readonly]="editMode || applicationId" formControlName="name"  [ngClass]="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched ? 'is-invalid':''">
                         <span *ngIf="createApplicationForm.get('name').invalid && createApplicationForm.get('name').touched"
                       class="invalid-feedback">
@@ -28,7 +28,7 @@
                     <!-- <button class="btn btn-primary ml-2" >Update & Next</button> -->
                     <!-- *ngIf="!editMode"  [disabled]="createApplicationForm.invalid" -->
                      <!-- (onClick)="canceSaveTagClick()" -->
-                    <opsmx-button  [params]="applicationDetailsUpdateParams"></opsmx-button>
+                    <opsmx-button  [params]="appDetailService.applicationDetailsUpdateParams"></opsmx-button>
                     <!-- (click)="SubmitApplicationForm()" -->
                     <button class="btn btn-default ml-1">Cancel</button>
                     <!--  (click)="cancelForm()" -->
