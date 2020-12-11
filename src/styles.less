@@ -288,6 +288,14 @@ span{
 .chart_value{
 	padding-top: 15px;
 }
+.cv_normal{
+	background: #c3d3e1;
+	color: #322728;
+}
+.cv_normal .cv_heighlight{
+	color: #526e86;
+	padding-bottom: 5px;
+}
 .cv_low{
 	background: #ffcfd2;
 	color: #322728;
@@ -298,22 +306,26 @@ span{
 }
 .cv_medium{
 	background: #fbe399;
-	color: #917c3e
+	color: #233123
 }
 .cv_low .cv_heighlight{
 	color: #d90000;
+	padding-bottom: 5px;
 }
 .cv_alert{
 	color: #005320;
 }
 .cv_alert .cv_heighlight{
 	color: #00a025;
+	padding-bottom: 5px;
 }
 .cv_high .cv_heighlight{
 	color: #00a025;
+	padding-bottom: 5px;
 }
 .cv_medium .cv_heighlight{
-	color: #ffc107;
+	color: #bc8f0a;
+	padding-bottom: 5px;
 }
 .cv_heighlight{
 	font-weight: 700;
@@ -2152,3 +2164,38 @@ td .table-sm input, td .table-sm select, td .table-sm{
 	.log-template-json-editor .ace-jsoneditor.ace_editor {
 		min-height: 443px !important;
 	}
+
+	// code for display summary execution boxes
+
+	.summary-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		padding-top: 1px;
+		padding-left: 1px;
+		box-sizing: border-box;
+		margin: auto;
+		// box-shadow: inset 0 0 0 1px #00000020;
+	  }
+	  
+	  .summary-item {
+		width: calc(25% + 1px);
+		margin-top: -1px;
+		margin-left: -1px;
+		padding: 30px;
+		border-left: 1px solid #00000020;
+		border-right: 1px solid #00000020;
+		box-sizing: border-box;
+		transition: all 0.2s;
+		box-sizing: border-box;
+		background-color: #fff!important;
+	  }
+	  
+	  .summary-item:hover {
+		border-color: transparent;
+		box-shadow: 0 0 15px -2px #00000020;
+	  }
+	  .summary-item > div h4{
+		font-weight: 400;
+	  }
+	  

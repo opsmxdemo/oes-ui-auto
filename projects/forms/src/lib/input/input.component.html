@@ -3,10 +3,16 @@
         {{params.label}}
         <span *ngIf="params.required" class="control-required-indicator">*</span>
     </label>
-    <input [type]="params.type" [id]="params.id || ''" class="form-control" [formControl]="params.formControl"
+    <input *ngIf="params.type != 'textArea'" [type]="params.type" [id]="params.id || ''" class="form-control" [formControl]="params.formControl"
         [class.is-invalid]="isInValid()" [placeholder]="params.placeholder || ''" (change)="changeEvent($event)"
         (click)="clickEvent($event)" (blur)="blurEvent($event)" (focus)="focusEvent($event)"
         (keyup)="keyUpEvent($event)" (keypress)="keyPressEvent($event)" (keydown)="keyDownEvent($event)">
+
+    <textarea *ngIf="params.type == 'textArea'" [id]="params.id || ''" class="form-control" [formControl]="params.formControl"
+    [class.is-invalid]="isInValid()" [placeholder]="params.placeholder || ''" (change)="changeEvent($event)"
+    (click)="clickEvent($event)" (blur)="blurEvent($event)" (focus)="focusEvent($event)"
+    (keyup)="keyUpEvent($event)" (keypress)="keyPressEvent($event)" (keydown)="keyDownEvent($event)"></textarea> 
+      
     <div *ngIf="isInValid()" class="invalid-feedback">
         <span *ngFor="let msg of params.errorMessages; let i = index;">{{msg}}</span>
     </div>

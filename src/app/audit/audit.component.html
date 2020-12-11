@@ -2,25 +2,97 @@
   <div class="page-content flex-grow-1 {{cursorWaiting === true ?'pagewait':''}}">
     <ul class="nav pt-2 bg-white tab-lined nav-tabs" id="myTab" role="tablist" (click)="onChangeTab($event)">
       <li class="nav-item">
-        <a class="nav-link active" id="Pipeline" data-toggle="tab" role="tab" aria-controls="Pipeline"
-          aria-selected="true">Pipeline</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
+        <a class="nav-link active" id="allPipeline" data-toggle="tab" role="tab" aria-controls="allPipeline"
           aria-selected="false">Pipeline Execution</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="Policy" data-toggle="tab" role="tab" aria-controls="Policy"
-          aria-selected="false">Policy Audit</a>
+        <a class="nav-link" id="Pipeline" data-toggle="tab" role="tab" aria-controls="Pipeline"
+          aria-selected="true">Pipeline</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="Policy" data-toggle="tab" role="tab" aria-controls="Policy" aria-selected="false">Policy
+          Audit</a>
       </li>
     </ul>
-    <div class="audit-info px-3 d-flex bg-white" *ngIf="currentTabData !== null && currentTabData['results'].length > 0">
-      <div>
-        <h4>{{pipelineCountValue}}</h4>
-        <span class="text-muted">{{pipelineCountName}}</span>
+
+    <!-- code for displaying the pipeline overallinfo starts here -->
+
+    <div class="pt-3 col-12"
+      *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
+      <div class="summary-list">
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Pipeline Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{totalPipelineRunsCount}}</h3>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Successful Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{successfulPipelineRunsCount}}</h3>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Failed Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{failedPipelineRunsCount}}</h3>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>Canceled Runs</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{cancelledPipelineRunsCount}}</h3>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- /.page_title d-flex -->
+
+    <!-- code for displaying the pipeline overallinfo ends here -->
+
+
+    <!-- code for displaying the pipeline config overallinfo starts here -->
+
+    <div class="pt-3 col-12"
+      *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipelineconfig'">
+      <div class="summary-list">
+        <div class="summary-item">
+          <div class="pull-left">
+            <h4>{{pipelineCountName}}</h4>
+          </div>
+          <div class="pull-right">
+            <h3>{{pipelineCountValue}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- code for displaying the pipeline config overallinfo ends here -->
+
+        <!-- code for displaying the policy audi overallinfo starts here -->
+
+        <div class="pt-3 col-12"
+        *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'policies'">
+        <div class="summary-list">
+          <div class="summary-item">
+            <div class="pull-left">
+              <h4>{{pipelineCountName}}</h4>
+            </div>
+            <div class="pull-right">
+              <h3>{{pipelineCountValue}}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- code for displaying the policy audit overallinfo ends here -->
 
     <div class="p-3">
       <div class="row no-gutters">
@@ -37,138 +109,7 @@
                         <option *ngFor="let filter of savedFilters" value="{{filter}}">{{filter}}</option>
                       </select>
                     </div>
-                    <div class="form-group ml-sm-2 mb-2">
-                      <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" #datedropdownbtn
-                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Select date range
-                        </button>
-                        <form (submit)="dateForm(dForm.value)" #dForm="ngForm">
-                          <div class="dropdown-menu dropdown-menu-picker" aria-labelledby="dropdownMenuButton"
-                            (click)="dateDropdown($event)">
-                            <div class="d-flex">
-                              <div>
-                                <h4>Date/Time Range</h4>
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" id="all-time-range" name="customRadio"
-                                    (change)="dateForm(dForm.value)" class="custom-control-input" value="allTime" ngModel>
-                                  <label class="custom-control-label" for="all-time-range">All Time</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" id="last-month-range" name="customRadio"
-                                    (change)="dateForm(dForm.value)" class="custom-control-input" value="lastMonth"
-                                    ngModel>
-                                  <label class="custom-control-label" for="last-month-range">Last Month</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" id="last-week-range" name="customRadio"
-                                    (change)="dateForm(dForm.value)" class="custom-control-input" value="lastWeek"
-                                    ngModel>
-                                  <label class="custom-control-label" for="last-week-range">Last week</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" id="last-hours-range" name="customRadio"
-                                    (change)="dateForm(dForm.value)" class="custom-control-input" value="last24Hour"
-                                    ngModel>
-                                  <label class="custom-control-label" for="last-hours-range">Last 24 Hours</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" id="custom-range" name="customRadio"
-                                    (change)="dateForm(dForm.value)" class="custom-control-input" value="custom" ngModel>
-                                  <label class="custom-control-label" for="custom-range">Custom</label>
-                                </div>
-                              </div>
-                              <div class=" {{disableDatepicker === true?'div-disabled':''}}">
-                                <div class="datepickerDiv">
-                                  <h4>Date Range</h4>
-                                  <span class="code" *ngIf="inlineRange">
-                                    {{ inlineRange.begin | date }} to
-                                    {{ inlineRange.end | date }}
-                                  </span>
-                                  <span class="code" *ngIf="!inlineRange">
-                                    Select date range
-                                  </span>
-                                </div>
-                                <div class="inlineCalendarContainer" (click)="datepicker($event)">
-                                  <sat-calendar [rangeMode]="true" (dateRangesChange)="inlineRangeChange($event)">
-                                  </sat-calendar>
-                                </div>
-                              </div>
-                              <div class="{{disableDatepicker === true?'div-disabled':''}}">
-                                <h4>From</h4>
-                                <div class="form-inline">
-                                  <div class="form-group">
-                                    <select class="form-control" name="firstdayHours" id="firstdayHours" ngModel>
-                                      <option value="">00</option>
-                                      <option *ngFor="let time of timerHour;let i = index" value="{{i+1}}" selected>
-                                        {{time}}
-                                      </option>
-                                      <option value="11">11</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                  <div class="form-group">:</div>
-                                  <div class="form-group">
-                                    <select class="form-control" name="firstdayMinutes" id="firstdayMinutes" ngModel>
-                                      <option value="">00</option>
-                                      <option *ngFor="let time of timerMinute;let i = index" value="{{i+1}}">{{time}}
-                                      </option>
-                                      <option value="59">59</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                  <div class="form-group">
-                                    <select class="form-control" name="firstdayMeridiem" id="firstdayMeridiem" ngModel>
-                                      <option value="">AM</option>
-                                      <option value="PM">PM</option>
-                                    </select>
-                                  </div>
-                                  <!-- /.form-group -->
-                                </div>
-                                <!-- /.form-inline -->
-  
-                                <div class="mt-3">
-                                  <h4>To</h4>
-                                  <div class="form-inline">
-                                    <div class="form-group">
-                                      <select class="form-control" name="lastdayHours" id="lastdayHours" ngModel>
-                                        <option value="00">00</option>
-                                        <option *ngFor="let time of timerHour;let i = index" value="{{i+1}}" selected>
-                                          {{time}}</option>
-                                        <option value="">11</option>
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                    <div class="form-group">:</div>
-                                    <div class="form-group">
-                                      <select class="form-control" name="lastdayMinutes" id="lastdayMinutes" ngModel>
-                                        <option value="00">00</option>
-                                        <option *ngFor="let time of timerMinute;let i = index" value="{{i}}">{{time}}
-                                        </option>
-                                        <option value="">59</option>
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                    <div class="form-group">
-                                      <select class="form-control" name="lastdayMeridiem" id="lastdayMeridiem" ngModel>
-                                        <option value="AM">AM</option>
-                                        <option value="">PM</option>
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                  </div>
-                                  <!-- /.form-inline -->
-                                </div>
-                                <div class="mt-5">
-                                  <button class="btn btn-block btn-clear mb-1">Clear</button>
-                                  <button class="btn btn-block btn-primary" id="applybtn" type="submit">Apply</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+
                     <div class="form-group ml-sm-2 mb-2">
                       <div class="form-group">
                         <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
@@ -180,7 +121,8 @@
                           <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
                             aria-labelledby="addMoreFilters">
                             <form #filtersShowHide="ngForm">
-                              <div class="custom-control custom-checkbox" *ngFor="let filter of filtersData; let i=index">
+                              <div class="custom-control custom-checkbox"
+                                *ngFor="let filter of filtersData; let i=index">
                                 <input type="checkbox" class="custom-control-input" (change)="showHideFilters($event,i)"
                                   [checked]="showHideFilter[i]" id="showHide{{i}}">
                                 <label class="custom-control-label"
@@ -223,7 +165,8 @@
                                       class="invalid-feedback">
                                       <span *ngIf="saveFilterForm.get('filterName').errors['required']">Filter Name is
                                         required</span>
-                                      <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter already
+                                      <span *ngIf="saveFilterForm.get('filterName').errors['filterExist']">Filter
+                                        already
                                         exists with same name. Please choose a unique filter name</span>
                                     </span>
                                   </div>
@@ -254,13 +197,15 @@
                   <ng-container *ngIf="!advanSearchMode">
                     <div class="form-group mx-sm-2 mb-2">
                       <div class="form-group">
-                        <div class="input-group input-group_search">
+                        <!-- <div class="input-group input-group_search">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                           </div>
                           <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData"
                             (keyup)="onSearch()">
-                        </div>
+                        </div> -->
+                        <opsmx-search *ngIf="currentDatalength>0" [searchBoxParams]="searchParams" (filteredList)="getSerchItem($event)">
+                        </opsmx-search>
                       </div>
                     </div>
                   </ng-container>
@@ -275,13 +220,17 @@
                   <button type="submit" class="btn btn-default mb-2 ml-sm-2" *ngIf="selectedSaveFilter !== ''"
                     (click)="resetFilters()" data-toggle="tooltip" data-placement="top" title="Clear filter"><i
                       class="fa fa-redo"></i> &nbsp;Clear</button>
-  
+
                   <div class="ml-auto d-flex">
                     <div class="form-group mb-2">
-                      <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="top"
+                      <div class="mr-3">
+                        <opsmx-select [params]="dateRangeParams" (changed)="filterDateAudit($event.target.value)">
+                        </opsmx-select>
+                      </div>
+                      <div class="dropdown dropdown-icon-remove" data-toggle="tooltip" data-placement="left"
                         title="Show/Hide Columns">
-                        <button class="btn btn-default dropdown-toggle" type="button" #CustomColumn data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" type="button" #CustomColumn
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <i class="fas fa-icon-rotate fa-bars"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-filter dropdown-filter dropdown-menu-right"
@@ -310,7 +259,8 @@
                 <div class="toolpills">
                   <form #filterForm="ngForm" class="filterForm">
                     <ng-container *ngFor="let filter of filtersData;let i = index">
-                      <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]" data-toggle="tooltip" data-placement="top" title="{{currentTableHeader[filter.name]}}">
+                      <div class="form-group ml-sm-2 mb-2 btn" *ngIf="showHideFilter[i]" data-toggle="tooltip"
+                        data-placement="top" title="{{currentTableHeader[filter.name]}}">
                         <ng-multiselect-dropdown [placeholder]="currentTableHeader[filter.name]"
                           name="{{filtersData[i].name}}" [data]="filter.items" [settings]="dropdownSettings"
                           (onSelect)="onItemSelect($event,filter)" [(ngModel)]="selectedFilters[i]"
@@ -321,9 +271,9 @@
                     </ng-container>
                   </form>
                 </div>
-  
+
                 <!-- /.toolpills -->
-  
+
               </div>
               <!-- /.card-heading -->
               <div class="card-body p-0">
@@ -332,8 +282,8 @@
                     <thead>
                       <tr class="nestedrow">
                         <ng-container *ngFor="let key of currentHeaderKeys; let i=index">
-                          <th *ngIf="showColumn[i] === 'true'"><i
-                              class="fa fa-caret-right showCarret" *ngIf = "i === 0"></i>{{currentTableHeader[key]}}</th>
+                          <th *ngIf="showColumn[i] === 'true'"><i class="fa fa-caret-right showCarret"
+                              *ngIf="i === 0"></i>{{currentTableHeader[key]}}</th>
                         </ng-container>
                       </tr>
                     </thead>
@@ -346,8 +296,9 @@
                               <ng-template #thenBlock><span>{{+pageData[dataKey] | date:'medium'}}</span></ng-template>
                               <ng-template #elseBlock><span
                                   class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}"><i *ngIf="j === 0"
-                                    class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}" 
-                                    id="treeview{{i}}" (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])" 
+                                    class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}"
+                                    id="treeview{{i}}"
+                                    (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])"
                                     style="transition: transform 400ms ease-in-out;"></i>{{pageData[dataKey]}}</span>
                               </ng-template>
                             </td>
@@ -355,7 +306,7 @@
                         </tr>
                         <tr class="nested_tr">
                           <ng-container *ngIf="treeView[i]">
-                            <td [attr.colspan]="currentHeaderKeys.length"  class="inner-table" >
+                            <td [attr.colspan]="currentHeaderKeys.length" class="inner-table">
                               <div [@expandableRow]="treeView_rowanimation">
                                 <app-tree-view></app-tree-view>
                               </div>
@@ -378,7 +329,7 @@
                     <option value="15">15</option>
                     <option value="20">20</option>
                     <option value="25">25</option>
-  
+
                   </select>
                   <span class="ml-3 mr-2">Showing {{currentDatalength>0?page.startingPoint+1:0}} to
                     {{page.endPoint < currentDatalength && page.endPoint > page.startingPoint ? page.endPoint:currentDatalength}}
@@ -386,7 +337,7 @@
                     {{currentDatalength}}</span>
                   <!-- <input type="text" class="form-control mr-2" />
                   <button class="btn btn-primary">Go</button> -->
-  
+
                   <ul class="pagination ml-auto mb-0">
                     <li class="page-item" (click)="pagePrev()" class="{{page.startingPoint === 0?'disabledbtn':''}}"><a
                         class="page-link">Previous</a></li>
@@ -401,7 +352,8 @@
                                ((page.currentPage+2)*page.pageSize< currentDatalength? true : ((page.currentPage+2)*page.pageSize)-currentDatalength < page.pageSize? true : false) ? true : false"
                       (click)=showPage(page.currentPage+2)><a class="page-link">{{page.currentPage+2}}</a></li>
                     <li class="page-item" (click)="pageNext()"
-                      class="{{page.endPoint === currentDatalength?'disabledbtn':''}}"><a class="page-link">Next</a></li>
+                      class="{{page.endPoint === currentDatalength?'disabledbtn':''}}"><a class="page-link">Next</a>
+                    </li>
                   </ul>
                 </div>
                 <!-- /.per_page -->
@@ -409,13 +361,17 @@
               <!-- /.card-footer -->
             </div>
             <div class="card" *ngIf="currentTabData !== null && currentTabData['results'].length == 0">
-              <app-component-error-listing class="emptyTableError" [errorString]="'Data is being retrieved. Please try refreshing after sometime.'"></app-component-error-listing>
+              <app-component-error-listing class="emptyTableError"
+                [errorString]="'Data is being retrieved. Please try refreshing after sometime.'">
+              </app-component-error-listing>
             </div>
             <div class="card" *ngIf="currentTabData === null">
-              <app-component-error-listing class="emptyTableError" [errorString]="'Selected tab data does not exist in database. If you are sure that these are there, please refresh the page after sometime.'"></app-component-error-listing>
+              <app-component-error-listing class="emptyTableError"
+                [errorString]="'Selected tab data does not exist in database. If you are sure that these are there, please refresh the page after sometime.'">
+              </app-component-error-listing>
             </div>
           </ng-container>
-         
+
           <div class="card" *ngIf="auditLoading">
             <app-loading-screen></app-loading-screen>
           </div>

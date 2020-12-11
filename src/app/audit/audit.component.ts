@@ -83,14 +83,47 @@ export class AuditComponent implements OnInit{
   filtersData: any;                                                                    // It is use to store filter data of current table.
   selectedFilters = [];                                                                // It is use to store selected filter data
   showHideFilter = [];                                                                 // It is use to show and hide filter dropdown option .
-  relatedApi: string = 'pipelineconfig';                                               // It is use to store value of which api should call on click of apply filter.
+  relatedApi: string = 'pipeline';                                               // It is use to store value of which api should call on click of apply filter.
   saveFilterForm: FormGroup;                                                           // It is use to store name of filter which user want to save and used it in future
   savedFilters: any = null;                                                            // It is use to store value of saved filters exist in particular table.
   selectedSaveFilter:string = '';                                                      // It is use to store selected filter value in it.
   treeView = [];                                                                       // It is use to store array to hide or show tree view row.
   treeView_rowanimation = 'collapsed';                                                 // It is use to store value of animation state to represent animation in tree view
   treeView_currentKey = '';                                                            // It is use to store value of currenttab key value of treeView. 
-  
+  selectedValue = '6M';                                                                // It is use to populate default selection of date
+  successfulPipelineRuns = [];                                                         // It is use to successful pipeline runs
+  failedPipelineRuns = [];                                                             // It is use to failed pipeline runs
+  cancelledPipelineRuns = [];                                                          // It is use to caceled pipeline runs
+  allPipelineRuns = [];                                                                // It is use to all pipeline runs
+  failedPipelineRunsCount: number = 0;                                                 // Variable to display failed pipelines
+  successfulPipelineRunsCount: number = 0;                                             // Variable to display successful pipelines
+  cancelledPipelineRunsCount: number = 0;                                              // Variable to display cancelled pipelines
+  totalPipelineRunsCount: number = 0;                                                  // Variable to display total pipelines count
+  date = 'Select date range';                                                          
+  dateRangeParams: any;
+  searchParams: any;
+  dateRangeList = [{
+    "name": 'Last 1 Day',
+    "value": "1D"
+  },
+  {
+    "name": 'Last 7 Days',
+    "value": "7D"
+  },
+  {
+    "name": 'Last 1 Month',
+    "value": "1M"
+  },
+  {
+    "name": 'Last 6 Months',
+    "value": "6M"
+  },
+  {
+    "name": 'All Time',
+    "value": "All"
+  }
+]
+
 
   constructor(public store: Store<fromApp.AppState>,
               public notification: NotificationService,
@@ -110,6 +143,22 @@ export class AuditComponent implements OnInit{
       itemsShowLimit: 2,
       allowSearchFilter:true,
       minWidth:180
+    };
+
+  
+
+    // common dropdown component code goes here
+    this.dateRangeParams = {
+      label: '',
+      disabled: false,
+      formControl: new FormControl(this.selectedValue),
+      hidden: false,
+      id: 'select-audit-date-ragne',
+      required : false,
+      options : this.dateRangeList,
+      addOption : false,
+      addOptionLabel : "",
+      margin : "0px 0px"
     };
 
     // Below is reactive form defining for save filter functionality
@@ -142,6 +191,8 @@ export class AuditComponent implements OnInit{
           this.currentTableHeader = this.tableData['headers'];
           this.filtersData = this.tableData['filters'];
           this.currentTabData = this.tableData;
+            // common search component code goes here
+   
           this.createHeaders(this.tableData['headerOrder']);
           this.savedFilters = this.tableData['savedFilters']['filters']
           if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
@@ -155,8 +206,15 @@ export class AuditComponent implements OnInit{
           if(!auditData.treeViewMode){
             this.renderPage();
           }
+       
           // hide tooltip if visible
           $("[data-toggle='tooltip']").tooltip('hide');
+        }
+        if(auditData.pipelineCount != null){
+          // this.failedPipelineRunsCount = auditData.pipelineCount.totalFailedPipelinesCount;
+          // this.successfulPipelineRunsCount = auditData.pipelineCount.totalSuccessfulPipelinesCount;
+          // this.cancelledPipelineRunsCount = auditData.pipelineCount.totalCanceledPipelinesCount;
+          // this.totalPipelineRunsCount = auditData.pipelineCount.totalPipelinesRunCount;
         }
       }
     )
@@ -205,8 +263,26 @@ export class AuditComponent implements OnInit{
           case 'allPipeline':
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
-            this.pipelineCountValue = responseData.allRunningPipelineData['results'].length;;
+            this.pipelineCountValue = responseData.allRunningPipelineData['results'].length;
+           // this.searchData = this.tableData['results'];
+            this.totalPipelineRunsCount = this.pipelineCountValue;
             this.relatedApi = 'pipeline';
+            this.successfulPipelineRuns = [];
+            this.failedPipelineRuns = [];
+            this.cancelledPipelineRuns = [];
+            //this.allPipelineRuns
+            responseData.allRunningPipelineData.results.forEach(element => {
+              if(element.status === 'SUCCEEDED'){
+                this.successfulPipelineRuns.push(element);
+                this.successfulPipelineRunsCount = this.successfulPipelineRuns.length;
+              }else if(element.status == 'TERMINAL'){
+                this.failedPipelineRuns.push(element);
+                this.failedPipelineRunsCount = this.failedPipelineRuns.length;
+              }else if(element.status == 'CANCELED'){
+                this.cancelledPipelineRuns.push(element);
+                this.cancelledPipelineRunsCount = this.cancelledPipelineRuns.length;
+              }
+            });
             break;
           case 'Pipeline':
             this.currentTabData = responseData.allPipelineData;
@@ -256,6 +332,9 @@ export class AuditComponent implements OnInit{
       pageSize: 15,
       currentPage: 1,
       pageNo: 1,
+    }
+    if(this.currentDatalength != 0){
+      this.filterDateAudit(this.selectedValue)
     }
     this.renderPage();
     this.advanSearchMode = false;
@@ -468,7 +547,7 @@ export class AuditComponent implements OnInit{
 
   // Below function is use to hide datedropdown popup on click of apply and predefine selection. i.e, previous month etc.
   dateDropdown(event) {
-    if (event.target.id === 'applybtn' || event.target.id === 'all-time-range' || event.target.id === 'last-month-range' || event.target.id === 'last-week-range' || event.target.id === 'last-hours-range') {
+    if (event.target.id === 'applybtn' || event.target.id === 'all-time-range' || event.target.id === 'last-6month-range' || event.target.id === 'last-month-range' || event.target.id === 'last-week-range' || event.target.id === 'last-hours-range') {
       this.datedropdownbtn.nativeElement.dispatchEvent(new Event('click'));
     }
   }
@@ -486,6 +565,16 @@ export class AuditComponent implements OnInit{
         lastday = todayDate;
         this.disableDatepicker = true;
         break;
+        case 'last6Months':
+          firstDay = new Date(todayDate.getFullYear(), todayDate.getMonth() - 6, 1);
+          firstDay = new Date(firstDay.setHours(0));
+          firstDay = new Date(firstDay.setMinutes(0));
+          lastday = new Date(todayDate.getFullYear(), todayDate.getMonth(), 0);
+          lastday = new Date(lastday.setHours(23));
+          lastday = new Date(lastday.setMinutes(59));
+          this.disableDatepicker = true;
+          this.date = 'Last 6 Months';
+          break;
       case 'lastMonth':
         firstDay = new Date(todayDate.getFullYear(), todayDate.getMonth() - 1, 1);
         firstDay = new Date(firstDay.setHours(0));
@@ -494,6 +583,7 @@ export class AuditComponent implements OnInit{
         lastday = new Date(lastday.setHours(23));
         lastday = new Date(lastday.setMinutes(59));
         this.disableDatepicker = true;
+        this.date = 'Last 1 Month';
         break;
       case 'lastWeek':
         firstDay = new Date((todayDate.setDate(todayDate.getDate() - todayDate.getDay() - 6)));
@@ -502,12 +592,14 @@ export class AuditComponent implements OnInit{
         lastday = new Date(todayDate.setDate(todayDate.getDate() - todayDate.getDay() + 7));
         lastday = new Date(lastday.setHours(23));
         lastday = new Date(lastday.setMinutes(59));
+        this.date = 'Last 7 Days';
         this.disableDatepicker = true;
         break;
       case 'last24Hour':
         firstDay = new Date(todayDate.setHours(todayDate.getHours() - 24));
         lastday = new Date();
         this.disableDatepicker = true;
+        this.date = 'Last 1 Day';
         break;
       case 'custom':
         this.disableDatepicker = false;
@@ -555,13 +647,17 @@ export class AuditComponent implements OnInit{
 
   // Below function is use to filter data on basis of selected date in dateSelection popup.
   filterDate(firstDay, lastday) {
+    
+    firstDay = new Date(firstDay);
+    lastday = new Date(lastday);
+    
     this.currentTableContent = this.currentTabData['results'];
     this.currentDatalength = this.currentTableContent.length;
     let searchArr = [];
 
     // checking startTime is exist in table or not for search
     this.currentHeaderKeys.forEach(el=>{
-      if(el.includes('StartTime')){
+      if(el.includes('StartTime') || el.includes('updateTimestamp') || el.includes('createdTimestamp')){
         searchArr.push('true');
       }else{
         searchArr.push('false');
@@ -640,6 +736,11 @@ export class AuditComponent implements OnInit{
         this.treeView.push(false);
       })
     }
+    this.searchParams = {
+      optionsList: this.currentPage,
+      keys: []
+      
+    }
   }
 
   // Below function is execute on change of perPage dropdown value
@@ -700,5 +801,43 @@ export class AuditComponent implements OnInit{
     this.renderPage();
   }
 
-  //################### pagination logic ends #############################
+  //################### pagination logic ends #############################filterDateAudit
+
+  // code for date filter
+
+  filterDateAudit(event: any) {
+    let filter = event;
+    var date = new Date();
+    let toDate = date.getTime(), fromDate;
+    switch (filter) {
+      case '1D':
+        date.setDate(date.getDate() - 1);
+        fromDate = date.getTime();
+        break;
+      case '7D':
+        date.setDate(date.getDate() - 7);
+        fromDate = date.getTime();
+        break;
+      case '1M':
+        date.setMonth(date.getMonth() - 1);
+        fromDate = date.getTime();
+        break;
+      case '6M':
+        date.setMonth(date.getMonth() - 6);
+        fromDate = date.getTime();
+        break;
+        case 'All':
+          //date.setMonth(date.getMonth() - 6);
+          fromDate = null;
+          break;
+    }
+ 
+    this.filterDate(fromDate, toDate);
+
+  }
+
+  // code for search items
+  getSerchItem(value){
+    this.currentPage = value;
+  }
 }
