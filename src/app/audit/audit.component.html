@@ -197,15 +197,15 @@
                   <ng-container *ngIf="!advanSearchMode">
                     <div class="form-group mx-sm-2 mb-2">
                       <div class="form-group">
-                        <div class="input-group input-group_search">
+                        <!-- <div class="input-group input-group_search">
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="modal-search"><i class="fa fa-search"></i></span>
                           </div>
                           <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchData"
                             (keyup)="onSearch()">
-                        </div>
-                        <!-- <opsmx-search *ngIf="currentDatalength>0" [searchBoxParams]="searchParams" (filteredList)="getSerchItem($event)">
-                        </opsmx-search> -->
+                        </div> -->
+                        <opsmx-search *ngIf="currentDatalength>0" [searchBoxParams]="searchParams" (filteredList)="getSerchItem($event)">
+                        </opsmx-search>
                       </div>
                     </div>
                   </ng-container>

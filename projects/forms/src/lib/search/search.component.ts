@@ -22,17 +22,23 @@ export class OpsMxSearchComponent implements OnInit {
   onSearch(){
     
     if(Array.isArray(this.searchBoxParams.optionsList)){
-      
       let keys // stores the keys for filtering
-      if(this.searchBoxParams.keys.length==0)
-      {
-        keys = Object.keys(this.searchBoxParams.optionsList[0]); // for getting keys
-      }
-      else{
-        keys = this.searchBoxParams.keys;
-      }
+      // if(this.searchBoxParams.keys.length==0)
+      // {
+      //   keys = Object.keys(this.searchBoxParams.optionsList[0]); // for getting keys
+      // }
+      // else{
+      //   keys = this.searchBoxParams.keys;
       
-      this.outputList =  this.searchBoxParams.optionsList.filter((option) => {
+      this.outputList =  this.searchBoxParams.optionsList.filter((option,i) => {
+        if(this.searchBoxParams.keys.length==0)
+        {
+          keys = Object.keys(option); // for getting keys
+        }
+        else{
+          keys = this.searchBoxParams.keys;
+        }
+        console.log(option);
         return keys.find((key) => {
           const valueString = option[key].toString().toLowerCase();
           return valueString.includes(this.searchData.toLowerCase());
@@ -40,6 +46,7 @@ export class OpsMxSearchComponent implements OnInit {
         ? option
         : null;
       });
+   // }
       this.filteredList.emit(this.outputList);
     }
     else{
