@@ -192,11 +192,7 @@ export class AuditComponent implements OnInit{
           this.filtersData = this.tableData['filters'];
           this.currentTabData = this.tableData;
             // common search component code goes here
-    this.searchParams = {
-      optionsList: this.tableData['results'],
-      keys: []
-      
-    }
+   
           this.createHeaders(this.tableData['headerOrder']);
           this.savedFilters = this.tableData['savedFilters']['filters']
           if(typeof (this.tableData['savedFilters']['selectedFilter']) === 'string'){
@@ -268,7 +264,7 @@ export class AuditComponent implements OnInit{
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = responseData.allRunningPipelineData['results'].length;
-            this.searchData = this.tableData['results'];
+           // this.searchData = this.tableData['results'];
             this.totalPipelineRunsCount = this.pipelineCountValue;
             this.relatedApi = 'pipeline';
             this.successfulPipelineRuns = [];
@@ -740,6 +736,11 @@ export class AuditComponent implements OnInit{
         this.treeView.push(false);
       })
     }
+    this.searchParams = {
+      optionsList: this.currentPage,
+      keys: []
+      
+    }
   }
 
   // Below function is execute on change of perPage dropdown value
@@ -837,6 +838,6 @@ export class AuditComponent implements OnInit{
 
   // code for search items
   getSerchItem(value){
-    this.searchData = value;
+    this.currentPage = value;
   }
 }
