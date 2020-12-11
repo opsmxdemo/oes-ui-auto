@@ -12,7 +12,10 @@
           
           <span> <mat-icon *ngIf="j === 0" class="{{element.child && j === 0?'showCarret':'hiddenCarret'}} expand-carret"
             [class.active]="element[referenceId] === expandedId"
-            (click)="toggleExpandableSymbol(element[referenceId])">play_arrow</mat-icon>{{ element[key] }}</span>   
+            (click)="toggleExpandableSymbol(element[referenceId])">play_arrow</mat-icon>
+            <span *ngIf="key.includes('Time')">{{ element[key] | date:'medium' }}</span>
+            <span *ngIf="!key.includes('Time')">{{element[key]}}</span>
+          </span>   
           
         </mat-cell>
       </ng-container>

@@ -172,15 +172,31 @@ export class AuditComponent implements OnInit{
       (auditData) => {
         this.cursorWaiting = auditData.cursorWait;
         this.auditLoading = auditData.loadingAudit;
-       
-        if (auditData.allPipelineData !== null) {
-          this.pipelineCountValue = auditData.allPipelineData['results'].length;
+       console.log(this.auditLoading);
+        if (auditData.allRunningPipelineData !== null) {
+          this.pipelineCountValue = auditData.allRunningPipelineData['results'].length;
           switch(this.relatedApi){
             case 'pipelineconfig':
               this.tableData = auditData.allPipelineData;
               break;
             case 'pipeline':
               this.tableData = auditData.allRunningPipelineData;
+              this.successfulPipelineRuns = [];
+              this.failedPipelineRuns = [];
+              this.cancelledPipelineRuns = [];
+              this.totalPipelineRunsCount = auditData.allRunningPipelineData['results'].length;
+              auditData.allRunningPipelineData.results.forEach(element => {
+                if(element.status === 'SUCCEEDED'){
+                  this.successfulPipelineRuns.push(element);
+                  this.successfulPipelineRunsCount = this.successfulPipelineRuns.length;
+                }else if(element.status == 'TERMINAL'){
+                  this.failedPipelineRuns.push(element);
+                  this.failedPipelineRunsCount = this.failedPipelineRuns.length;
+                }else if(element.status == 'CANCELED'){
+                  this.cancelledPipelineRuns.push(element);
+                  this.cancelledPipelineRunsCount = this.cancelledPipelineRuns.length;
+                }
+              });
               break;
             case 'policies':
               this.tableData = auditData.allpolicy;
@@ -264,13 +280,11 @@ export class AuditComponent implements OnInit{
             this.currentTabData = responseData.allRunningPipelineData;
             this.pipelineCountName = 'Pipeline Runs';
             this.pipelineCountValue = responseData.allRunningPipelineData['results'].length;
-           // this.searchData = this.tableData['results'];
             this.totalPipelineRunsCount = this.pipelineCountValue;
             this.relatedApi = 'pipeline';
             this.successfulPipelineRuns = [];
             this.failedPipelineRuns = [];
             this.cancelledPipelineRuns = [];
-            //this.allPipelineRuns
             responseData.allRunningPipelineData.results.forEach(element => {
               if(element.status === 'SUCCEEDED'){
                 this.successfulPipelineRuns.push(element);
