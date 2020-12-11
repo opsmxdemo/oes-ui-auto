@@ -17,39 +17,47 @@
 
     <!-- code for displaying the pipeline overallinfo starts here -->
 
-    <div class="pt-3 col-12"
+    <div class="pt-3"
       *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
       <div class="summary-list">
         <div class="summary-item">
-          <div class="pull-left">
-            <h4>Pipeline Runs</h4>
+          <div class="row">
+          <div class="col-md-9">
+            <h5>Pipeline Runs</h5>
           </div>
-          <div class="pull-right">
+          <div class="col-md-2">
             <h3>{{totalPipelineRunsCount}}</h3>
           </div>
+          </div>
         </div>
         <div class="summary-item">
-          <div class="pull-left">
-            <h4>Successful Runs</h4>
+          <div class="row">
+          <div  class="col-md-9">
+            <h5>Successful Runs</h5>
           </div>
-          <div class="pull-right">
+          <div class="col-md-2">
             <h3>{{successfulPipelineRunsCount}}</h3>
           </div>
+          </div>
         </div>
         <div class="summary-item">
-          <div class="pull-left">
-            <h4>Failed Runs</h4>
+          <div class="row">
+          <div  class="col-md-9">
+            <h5>Failed Runs</h5>
           </div>
-          <div class="pull-right">
+          <div class="col-md-2">
             <h3>{{failedPipelineRunsCount}}</h3>
           </div>
+          </div>
         </div>
         <div class="summary-item">
-          <div class="pull-left">
-            <h4>Canceled Runs</h4>
+          <div class="row">
+          <div class="col-md-9">
+            <h5>Canceled Runs</h5>
           </div>
-          <div class="pull-right">
+          <div class="col-md-2">
             <h3>{{cancelledPipelineRunsCount}}</h3>
+          </div>
           </div>
         </div>
       </div>
@@ -64,11 +72,13 @@
       *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipelineconfig'">
       <div class="summary-list">
         <div class="summary-item">
-          <div class="pull-left">
-            <h4>{{pipelineCountName}}</h4>
+          <div class="row">
+          <div class="col-md-9">
+            <h5>{{pipelineCountName}}</h5>
           </div>
-          <div class="pull-right">
+          <div class="col-md-2">
             <h3>{{pipelineCountValue}}</h3>
+          </div>
           </div>
         </div>
       </div>
@@ -82,11 +92,13 @@
         *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'policies'">
         <div class="summary-list">
           <div class="summary-item">
-            <div class="pull-left">
-              <h4>{{pipelineCountName}}</h4>
+            <div class="row">
+            <div class="col-md-9">
+              <h5>{{pipelineCountName}}</h5>
             </div>
-            <div class="pull-right">
+            <div class="col-md-2">
               <h3>{{pipelineCountValue}}</h3>
+            </div>
             </div>
           </div>
         </div>
