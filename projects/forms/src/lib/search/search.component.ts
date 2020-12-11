@@ -23,20 +23,26 @@ export class OpsMxSearchComponent implements OnInit {
     
     if(Array.isArray(this.searchBoxParams.optionsList)){
       let keys // stores the keys for filtering
-      // if(this.searchBoxParams.keys.length==0)
-      // {
-      //   keys = Object.keys(this.searchBoxParams.optionsList[0]); // for getting keys
-      // }
-      // else{
-      //   keys = this.searchBoxParams.keys;
       
       this.outputList =  this.searchBoxParams.optionsList.filter((option,i) => {
-        if(this.searchBoxParams.keys.length==0)
+        if( this.searchBoxParams.keys==undefined || this.searchBoxParams.keys==null)
         {
           keys = Object.keys(option); // for getting keys
         }
         else{
-          keys = this.searchBoxParams.keys;
+          if(Array.isArray(this.searchBoxParams.keys))
+          {
+            if(this.searchBoxParams.keys.length > 0){
+              keys = this.searchBoxParams.keys;
+            }
+            else{
+              keys = Object.keys(option);
+            }
+          }
+          else{
+            console.error("OpsMxSearch accepts only Arrays for keys")
+          }
+          
         }
         console.log(option);
         return keys.find((key) => {
@@ -50,9 +56,9 @@ export class OpsMxSearchComponent implements OnInit {
       this.filteredList.emit(this.outputList);
     }
     else{
-      console.error("OpsMxSearch accepts only Arrays")
+      console.error("OpsMxSearch accepts only Arrays for optionsList")
     }
     
   }
-
+// @author:Nitish Dhawan
 }

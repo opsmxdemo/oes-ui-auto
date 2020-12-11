@@ -40,6 +40,7 @@ export class DataSourceComponent implements OnInit {
   accountData = null;                                                                  // It is use to store value of datasource need to be edited.
   isUserAdmin: boolean; // check if the user is admin or not - to enable and disable fields
    authUserDetails: any;  // Required to get the details of the User details from login
+   searchBoxParams:any;
 
 
   constructor(public store: Store<fromFeature.State>, public notifications: NotificationService,
@@ -116,6 +117,10 @@ export class DataSourceComponent implements OnInit {
       for (let i = this.page.startingPoint; i < this.datasourceListLength; i++) {
         this.currentPage.push(this.datasourceListData[i]);
       }
+    }
+    this.searchBoxParams={
+      optionsList:this.currentPage,
+      keys:[]
     }
   }
 
@@ -258,6 +263,10 @@ export class DataSourceComponent implements OnInit {
           this.isUserAdmin = userDetail.admin;
           
           });
+  }
+
+  getFilteredList(filteredList){
+    this.currentPage = filteredList
   }
   
 }
