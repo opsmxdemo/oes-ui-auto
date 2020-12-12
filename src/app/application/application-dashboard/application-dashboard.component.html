@@ -212,8 +212,8 @@
                       </div>
                       <div class="booking-demo" (click)="routeToV(application, 'qa')" [ngStyle]="{'background': setBackgroundApproval('qa', i), 'color': setColor('staging', i), 'border': setColor('prod', i) == 'white' ? '' : '1px solid #999'}">
                         <div class="dl_value_count_demo" >
-                          <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('qa', i) == '#4fa845'"></span>
-                          <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('qa', i) == '#cb5347'"></span>
+                          <span class="far fa-check-circle" *ngIf="setBackgroundApproval('qa', i) == '#4fa845'"></span>
+                          <span class="far fa-times-circle" *ngIf="setBackgroundApproval('qa', i) == '#cb5347'"></span>
                           <span *ngIf="setBackgroundApproval('qa', i) == ''">-</span>
                         </div>
                         <!-- <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
@@ -235,8 +235,8 @@
                       </div>
                       <div class="booking-demo" (click)="routeToV(application, 'staging')" [ngStyle]="{'background': setBackgroundApproval('staging', i), 'color': setColor('staging', i), 'border': setColor('prod', i) == 'white' ? '' : '1px solid #999'}">
                         <div class="dl_value_count_demo" >
-                          <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('staging', i) == '#4fa845'"></span>
-                          <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('staging', i) == '#cb5347'"></span>
+                          <span class="far fa-check-circle" *ngIf="setBackgroundApproval('staging', i) == '#4fa845'"></span>
+                          <span class="far fa-times-circle" *ngIf="setBackgroundApproval('staging', i) == '#cb5347'"></span>
                           <span *ngIf="setBackgroundApproval('staging', i) == ''">-</span>
                         </div>
                         <!-- <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
@@ -255,8 +255,8 @@
                       </div>
                       <div class="booking-demo" (click)="routeToV(application, 'prod')" [ngStyle]="{'background': setBackgroundApproval('prod', i), 'color': setColor('prod', i), 'border': setColor('prod', i) == 'white' ? '' : '1px solid #999'}">
                         <div class="dl_value_count_demo">
-                          <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('prod', i) == '#4fa845'"></span>
-                          <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('prod', i) == '#cb5347'"></span>
+                          <span class="far fa-check-circle" *ngIf="setBackgroundApproval('prod', i) == '#4fa845'"></span>
+                          <span class="far fa-times-circle" *ngIf="setBackgroundApproval('prod', i) == '#cb5347'"></span>
                           <span *ngIf="setBackgroundApproval('prod', i) == ''">-</span>
                         </div>
                         <!-- <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->

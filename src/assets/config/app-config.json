@@ -1,4 +1,4 @@
 {
-    "endPointUrl":"http://oes-master-gate.engineering.opsmx.net/",
+    "endPointUrl":"http://ninja-oes-api.opsmx.com:8084/",
     "setApplicationInterval": 300000
 }

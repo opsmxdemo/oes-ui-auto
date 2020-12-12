@@ -473,7 +473,7 @@ export class ApplicationDashboardComponent implements OnInit {
 
   getScoreOfCanary(envir, index) {
     let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
-    let val = '-';
+    let val;
     switch (envir) {
       case 'prod':
         if(length >= 3) {
@@ -497,6 +497,7 @@ export class ApplicationDashboardComponent implements OnInit {
         }
         break;
     }
+    if(val == 0) return val;
     return val || '-';
   }
 
