@@ -497,7 +497,7 @@ export class ApplicationDashboardComponent implements OnInit {
         }
         break;
     }
-    return val;
+    return val || '-';
   }
 
   setBackground(envir, index) {
@@ -532,6 +532,44 @@ export class ApplicationDashboardComponent implements OnInit {
       } else if (+val <= 80) {
         return '#f2b017'
       } else if (+val > 80) {
+        return '#4fa845';
+      }
+    } else  {
+      return '';
+    }
+    
+  }
+
+  setBackgroundApproval(envir, index) {
+    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+    let val = '-';
+    switch (envir) {
+      case 'prod':
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        break;
+      case 'staging':
+        if (length >= 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        break;
+      case 'qa':
+        if (length == 1) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        if (length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[2].finalScore;
+        }
+        break;
+    }
+    if (+val == 0 || val != '-') {
+      if (+val <= 60) {
+        return '#cb5347';
+      } else {
         return '#4fa845';
       }
     } else  {

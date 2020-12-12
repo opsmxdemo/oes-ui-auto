@@ -9,7 +9,136 @@
     <!-- /.page_access ml-auto -->
   </div>
   <!-- /.page_title d-flex -->
+  <div class="col-sm-4" style="position: fixed;z-index: 1000;transition: all 1s ease 0s;" [ngStyle]="{'right': serviceSidebar || releaseSidebar ? '0px' : '-600px'}" *ngIf="applicationData.length != 0">
+    <div style="z-index: 31;left: 595px;position: relative;top: 34px;">
+      <span (click)="hideSidebar()"><i class="fas fa-times"></i></span>
+    </div>
+    <div class="rightBox position-sticky" *ngIf="!showReleaseTable">
+      <div class="rightBox_header d-flex align-items-center">
+        <h3>{{selectedApplicationName}}</h3>
+      </div>
+      <!-- /.rightBox_header -->
+      <div class="rightBox_body">
+        <!-- <div id="particle_chart" *ngIf="nodes.length>0">
+                 <app-network-chart [nodes]="nodes" [clusters]="clusters" [links]="links"></app-network-chart>
 
+                </div> -->
+        <!-- /#particle_chart -->
+
+        <div class="table-responsive" *ngIf="showAppDataType === 'Services'">
+          <table class="table table-pet-service mb-0">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Release Management</th>
+                <th>Visibility</th>
+                <th>Deployment Verification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let service of servicesInfoData; let i=index">
+              <td>{{service.name}}</td>
+                <td class="text-center">
+                  <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['sapor']"><b>-</b></span>
+                  <span>
+                    <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['sapor']" class="fa fa-check color-green" aria-hidden="true"></i>
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['visibility']"><b>-</b></span>
+                  <span>
+                    <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['visibility']" class="fa fa-check color-green" aria-hidden="true"></i>
+                  </span>
+                </td> 
+                <td class="text-center">
+                  <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['deployment_verification']"><b>-</b></span>
+                  <span>
+                    <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['deployment_verification']" class="fa fa-check color-green" aria-hidden="true"></i>
+                  </span>
+                </td>               
+              </tr>
+            </tbody>
+          </table>
+        </div><br>
+            
+        <!-- /.chart_ratio -->
+        <!-- <div *ngIf="oesServiceData && oesServiceData.length === 0 &&  showAppDataType === 'Services' || oesServiceData === null && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
+          <p class="error-service-msg">{{serviceErrorMessageSapor}}</p>
+        </div> -->
+        <!-- <div *ngIf="showAppDataType === 'Services' && statusMessage === 'error'" class="alert alert-danger" role="alert">
+          <p class="error-service-msg">{{serviceErrorMessage}}</p>
+        </div> -->
+       
+        <div class="table-responsive" *ngIf="showAppDataType === 'Services' && oesServiceData && oesServiceData.length>0">
+          <table class="table table-pet-service mb-0">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Score</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let service of oesServiceData; let i=index">
+                <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}"><a target="_blank" href="{{service.href}}">{{service.serviceName}}</a></td>
+                <td>{{service.finalScore}}</td>
+                <td
+                  [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">
+                  <a target="_blank" href="{{service.href}}">{{service.status}}</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0  && showAppDataType === 'Deployment Verification' || autoPilotServiceData === null && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
+          <p class="error-service-msg">No data found.</p>
+        </div>
+        <!-- <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
+          <p class="error-service-msg">{{serviceErrorMessage}}</p>
+        </div> -->
+        
+        <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData && autoPilotServiceData.length>0">
+          <table class="table table-pet-service text-center mb-0">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Overall Score</th>
+              <th>Metric</th>
+              <th>Logs</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr *ngFor="let service of autoPilotServiceData;let i=index;">
+              <td href="" class="{{service.canaryId == -1 ? 'disabledLink': ''}}" (click)="getServiceCanaryReport(service.canaryId)" class="showElementHover">
+               <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId,service.serviceId]" >{{service.serviceName}} </a></td>
+              <td>
+                <span *ngIf="service.finalScore == -1 || service.finalScore == null">-</span>
+                <span *ngIf="service.finalScore != -1 && service.finalScore != null">{{service.finalScore}}</span>
+               </td>
+              <td> 
+                <span *ngIf="service.metricsScore == -1 || service.metricsScore === null">-</span>
+                <span *ngIf="service.metricsScore != -1 && service.metricsScore != null"> {{service.metricsScore}} </span>
+              </td>
+              <td>
+                <span *ngIf="service.logsScore == -1 || service.logsScore === null">- </span>
+               <span *ngIf="service.logsScore != -1 && service.logsScore != null">{{service.logsScore}} </span>
+                </td>
+              <td class="showElementHover {{service.canaryId == -1 ? 'disabledLink': ''}}" [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED', 'text-warning': service.status == 'Review'}" (click)="getServiceCanaryReport(service.canaryId)">
+                <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId,service.serviceId]" >{{service.status}}</a></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <!-- /.table-responsive -->
+      </div>
+      <!-- /.rightBox_body -->
+    </div>
+    <div class="position-sticky" *ngIf="showReleaseTable">
+      <app-release [releaseDataFromParent]="parentReleaseData"></app-release>
+    </div>
+    <!-- /.rightBox -->
+  </div>
   <div class="no-gutters">
     <div *ngIf="applicationFinalData.length === 0" class="col-md-12">
       <div>
@@ -21,139 +150,11 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-4" style="float: right;z-index: 1;transition: all 1s ease 0s;" [ngStyle]="{'left': serviceSidebar ? '0px' : '520px'}" *ngIf="!showReleaseTable && applicationData.length != 0">
-      <div class="rightBox position-sticky">
-        <div class="rightBox_header d-flex align-items-center">
-          <h3>{{selectedApplicationName}}</h3>
-          <span class="float-right" (click)="hideSidebar()"><i class="fas fa-times"></i></span>
-        </div>
-        <!-- /.rightBox_header -->
-        <div class="rightBox_body">
-          <!-- <div id="particle_chart" *ngIf="nodes.length>0">
-                   <app-network-chart [nodes]="nodes" [clusters]="clusters" [links]="links"></app-network-chart>
-
-                  </div> -->
-          <!-- /#particle_chart -->
-
-          <div class="table-responsive" *ngIf="showAppDataType === 'Services'">
-            <table class="table table-pet-service mb-0">
-              <thead>
-                <tr>
-                  <th>Service</th>
-                  <th>Release Management</th>
-                  <th>Visibility</th>
-                  <th>Deployment Verification</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let service of servicesInfoData; let i=index">
-                <td>{{service.name}}</td>
-                  <td class="text-center">
-                    <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['sapor']"><b>-</b></span>
-                    <span>
-                      <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['sapor']" class="fa fa-check color-green" aria-hidden="true"></i>
-                    </span>
-                  </td>
-                  <td class="text-center">
-                    <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['visibility']"><b>-</b></span>
-                    <span>
-                      <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['visibility']" class="fa fa-check color-green" aria-hidden="true"></i>
-                    </span>
-                  </td> 
-                  <td class="text-center">
-                    <span *ngIf="!isFeaturePresent[service.id] || !isFeaturePresent[service.id]['deployment_verification']"><b>-</b></span>
-                    <span>
-                      <i *ngIf="isFeaturePresent[service.id] && isFeaturePresent[service.id]['deployment_verification']" class="fa fa-check color-green" aria-hidden="true"></i>
-                    </span>
-                  </td>               
-                </tr>
-              </tbody>
-            </table>
-          </div><br>
-              
-          <!-- /.chart_ratio -->
-          <!-- <div *ngIf="oesServiceData && oesServiceData.length === 0 &&  showAppDataType === 'Services' || oesServiceData === null && showAppDataType === 'Services'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessageSapor}}</p>
-          </div> -->
-          <!-- <div *ngIf="showAppDataType === 'Services' && statusMessage === 'error'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessage}}</p>
-          </div> -->
-         
-          <div class="table-responsive" *ngIf="showAppDataType === 'Services' && oesServiceData && oesServiceData.length>0">
-            <table class="table table-pet-service mb-0">
-              <thead>
-                <tr>
-                  <th>Service</th>
-                  <th>Score</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let service of oesServiceData; let i=index">
-                  <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}"><a target="_blank" href="{{service.href}}">{{service.serviceName}}</a></td>
-                  <td>{{service.finalScore}}</td>
-                  <td
-                    [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">
-                    <a target="_blank" href="{{service.href}}">{{service.status}}</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        <div *ngIf="autoPilotServiceData && autoPilotServiceData.length === 0  && showAppDataType === 'Deployment Verification' || autoPilotServiceData === null && showAppDataType === 'Deployment Verification'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">No data found.</p>
-          </div>
-          <!-- <div *ngIf="showAppDataType === 'Deployment Verification' && statusMessage === 'error'" class="alert alert-danger" role="alert">
-            <p class="error-service-msg">{{serviceErrorMessage}}</p>
-          </div> -->
-          
-          <div class="table-responsive" *ngIf="showAppDataType === 'Deployment Verification'  && autoPilotServiceData && autoPilotServiceData.length>0">
-            <table class="table table-pet-service text-center mb-0">
-            <thead>
-              <tr>
-                <th>Service</th>
-                <th>Overall Score</th>
-                <th>Metric</th>
-                <th>Logs</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody >
-              <tr *ngFor="let service of autoPilotServiceData;let i=index;">
-                <td href="" class="{{service.canaryId == -1 ? 'disabledLink': ''}}" (click)="getServiceCanaryReport(service.canaryId)" class="showElementHover">
-                 <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId,service.serviceId]" >{{service.serviceName}} </a></td>
-                <td>
-                  <span *ngIf="service.finalScore == -1 || service.finalScore == null">-</span>
-                  <span *ngIf="service.finalScore != -1 && service.finalScore != null">{{service.finalScore}}</span>
-                 </td>
-                <td> 
-                  <span *ngIf="service.metricsScore == -1 || service.metricsScore === null">-</span>
-                  <span *ngIf="service.metricsScore != -1 && service.metricsScore != null"> {{service.metricsScore}} </span>
-                </td>
-                <td>
-                  <span *ngIf="service.logsScore == -1 || service.logsScore === null">- </span>
-                 <span *ngIf="service.logsScore != -1 && service.logsScore != null">{{service.logsScore}} </span>
-                  </td>
-                <td class="showElementHover {{service.canaryId == -1 ? 'disabledLink': ''}}" [ngClass]="{'text-danger':service.status == 'Fail' || service.status == 'TERMINAL' || service.status == 'RUNNING','text-success':service.status == 'Pass'|| service.status == 'SUCCEEDED', 'text-warning': service.status == 'Review'}" (click)="getServiceCanaryReport(service.canaryId)">
-                  <a [routerLink]="['/application/deploymentverification/',selectedApplicationName,service.canaryId,service.serviceId]" >{{service.status}}</a></td>
-              </tr>
-            </tbody>
-          </table>
-          </div>
-
-          <!-- /.table-responsive -->
-        </div>
-        <!-- /.rightBox_body -->
-      </div>
-      <!-- /.rightBox -->
-    </div>
     <div class="">
       <div class="data_listArea">
         <ng-container *ngFor="let application of applicationFinalData; let i=index">
           <div *ngIf="application" class="data_list" (click)="selectedApplication(i,application, finalLabelArray[i])"
-          [ngClass]="{'active':i === finalSelectedTabNumber,'application-lastrun-inprogress':application.applicationStatus === 'RUNNING',
-          'application-lastrun-success':(application.applicationStatus === 'PASS' || application.applicationStatus === 'Pass'),'application-lastrun-fail':application.applicationStatus === 'Fail',
-          'application-lastrun-review':application.applicationStatus === 'Review',
-          'application-lastrun-empty': application.applicationStatus === ''}">
+          [ngClass]="{'active':i === finalSelectedTabNumber}">
                         
                         <div class="data_list_header d-flex align-items-center">
               <div class="data_list_title">
@@ -165,7 +166,7 @@
               </div>
               <!-- /.data_list_title -->
               <div class="data_list_actionsc d-flex align-items-center ml-auto">
-               <div class="card_indigators d-flex" *ngFor="let canaries of application.recentCanaries; let i=index">
+               <!-- <div class="card_indigators d-flex" *ngFor="let canaries of application.recentCanaries; let i=index">
                     <button type="button" class="btn p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Score: {{canaries.finalScore}}, RunID: {{canaries.canaryId}}">
                       <a  [routerLink]="['/application/deploymentverification/',application.applicationName,canaries.canaryId]" class="ml-2" 
                       [ngClass]= "{'ci_check':canaries.finalScore >= canaries.maximumCanaryScore,
@@ -180,7 +181,7 @@
                         'fas fa-circle-notch fa-spin': canaries.status === 'RUNNING'}"></i></a>
                     </button>
 
-              </div>
+              </div> -->
                         <div class="dropdown dropdown-icon-remove">
                           <button class="btn btn-default ml-3 px-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v"></i>
@@ -208,6 +209,18 @@
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
+                      <div class="booking-demo" (click)="routeToDV('qa', i)" [ngStyle]="{'background': setBackgroundApproval('qa', i), 'color': setColor('staging', i)}">
+                        <div class="dl_value_count" >
+                          <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('qa', i) == '#4fa845'"></span>
+                          <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('qa', i) == '#cb5347'"></span>
+                          <span *ngIf="setBackgroundApproval('qa', i) == ''">-</span>
+                        </div>
+                        <!-- <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
+                        <div class="dl_value_text" style="font-size: 14px;">QA Approval</div> 
+                        <!-- <span
+                          *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
+                            class="fa fa-angle-up"></i></span> -->
+                      </div>
                       <!-- <div style="display: inline-block;padding: 0px 16px;color: white;height: 60px;padding-top: 10px;font-weight: 600;" (click)="routeToDV('qa', i)">
                         <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('qa', i)}}</div>
                       </div> -->
@@ -219,10 +232,34 @@
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
-                      <div class="booking-demo" (click)="routeToDV('prod', i)" [ngStyle]="{'background': setBackground('prod', i), 'color': setColor('staging', i)}">
+                      <div class="booking-demo" (click)="routeToDV('staging', i)" [ngStyle]="{'background': setBackgroundApproval('staging', i), 'color': setColor('staging', i)}">
+                        <div class="dl_value_count" >
+                          <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('staging', i) == '#4fa845'"></span>
+                          <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('staging', i) == '#cb5347'"></span>
+                          <span *ngIf="setBackgroundApproval('staging', i) == ''">-</span>
+                        </div>
+                        <!-- <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
+                        <div class="dl_value_text" style="font-size: 14px;">Staging Approval</div> 
+                        <!-- <span
+                          *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
+                            class="fa fa-angle-up"></i></span> -->
+                      </div>
+                      <div class="booking-demo" (click)="routeToDV('prod', i)" [ngStyle]="{'background': setBackground('prod', i), 'color': setColor('prod', i)}">
                         <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('prod', i)}}</div>
                         <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                         <div class="dl_value_text" style="font-size: 14px;">Prod Verification</div>
+                        <!-- <span
+                          *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
+                            class="fa fa-angle-up"></i></span> -->
+                      </div>
+                      <div class="booking-demo" (click)="routeToDV('prod', i)" [ngStyle]="{'background': setBackgroundApproval('prod', i), 'color': setColor('prod', i)}">
+                        <div class="dl_value_count">
+                          <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('prod', i) == '#4fa845'"></span>
+                          <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('prod', i) == '#cb5347'"></span>
+                          <span *ngIf="setBackgroundApproval('prod', i) == ''">-</span>
+                        </div>
+                        <!-- <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
+                        <div class="dl_value_text" style="font-size: 14px;">Prod Approval</div> 
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
@@ -231,7 +268,7 @@
                     <div class="booking-demo" style="border: 1px solid #999;" *ngIf="applicationInfo.applicationInfolabel != 'Deployment Verification'">
                         <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
                         <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
-                        <div class="dl_value_text">{{applicationInfo.applicationInfolabel}} </div>
+                        <div class="dl_value_text">{{applicationInfo.applicationInfolabel == 'Releases' ? 'Deployment' : applicationInfo.applicationInfolabel }} </div>
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
@@ -252,14 +289,14 @@
       <!-- /.data_listArea -->
     </div>
     <!-- /.col-sm-8 -->
-    <div class="col-md-4" style="float: right;z-index: 1;" [ngStyle]="{'left': releaseSidebar ? '0px' : '520px'}" *ngIf="showReleaseTable">
-      <div class="position-sticky">
-        <app-release [releaseDataFromParent]="parentReleaseData"></app-release>
-      </div>
-      
-    </div>
     <!-- /.col-sm-4 -->
   </div>
+  <!-- <div class="col-md-4" style="float: right;z-index: 1;" [ngStyle]="{'left': releaseSidebar ? '0px' : '520px'}">
+    <div class="position-sticky">
+      <app-release [releaseDataFromParent]="parentReleaseData"></app-release>
+    </div>
+    
+  </div> -->
   <!-- /.row -->
 </div>
 <!-- /.main_content -->
