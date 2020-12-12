@@ -619,4 +619,15 @@ export class ApplicationDashboardComponent implements OnInit {
     }, 200);
   }
 
+  depVerExist(applicationInfo: any, index) {
+    if(index == 0) 
+      console.log(this.applicationFinalData);
+      
+    return index == 1 && applicationInfo.applicationInfolabel == 'Deployment Verification';
+  }
+
+  routeToV(application: any, envir) {
+    this.router.navigate(['/application/visibility',application.applicationName,application.applicationId]);
+  }
+
 }
