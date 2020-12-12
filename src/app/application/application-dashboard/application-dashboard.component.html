@@ -196,69 +196,69 @@
             <!-- /.data_list_header -->
             <div class="data_list_body d-flex">
               <div class="data_list_values text-center" style="min-width: 100%;">
-                <ul class="list-unstyled m-0 d-flex flex-wrap">
-                  <li class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let j=index" style="padding:0px !important"
+                <div class="list-unstyled m-0 d-flex flex-wrap">
+                  <div class="showElementHover padd-label" *ngFor="let applicationInfo of application.appInfo; let j=index" style="padding:0px !important"
                     [ngClass]="{'active':application.applicationName === selectedApplicationName && applicationInfo.applicationInfolabel === showAppDataType && applicationInfo.applicationInfoValue != 'N/A'}"
                     (click)="getAppDataDetails(i,application,applicationInfo.applicationInfolabel,$event,j)">
                     <div *ngIf="applicationInfo.applicationInfolabel == 'Deployment Verification'">
                       <div class="booking-demo" (click)="routeToDV('qa', i)" [ngStyle]="{'background': setBackground('qa', i), 'color': setColor('staging', i)}">
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('qa', i)}}</div>
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('qa', i)}}</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                         <div class="dl_value_text" style="font-size: 14px;">QA Verification</div>
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
                       <div class="booking-demo" (click)="routeToDV('qa', i)" [ngStyle]="{'background': setBackgroundApproval('qa', i), 'color': setColor('staging', i)}">
-                        <div class="dl_value_count" >
+                        <div class="dl_value_count_demo" >
                           <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('qa', i) == '#4fa845'"></span>
                           <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('qa', i) == '#cb5347'"></span>
                           <span *ngIf="setBackgroundApproval('qa', i) == ''">-</span>
                         </div>
-                        <!-- <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
+                        <!-- <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
                         <div class="dl_value_text" style="font-size: 14px;">QA Approval</div> 
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
                       <!-- <div style="display: inline-block;padding: 0px 16px;color: white;height: 60px;padding-top: 10px;font-weight: 600;" (click)="routeToDV('qa', i)">
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('qa', i)}}</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('qa', i)}}</div>
                       </div> -->
                       <div class="booking-demo" (click)="routeToDV('staging', i)" [ngStyle]="{'background': setBackground('staging', i), 'color': setColor('staging', i)}">
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('staging', i)}}</div>
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('staging', i)}}</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                         <div class="dl_value_text" style="font-size: 14px;">Staging Verification</div>
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
                       <div class="booking-demo" (click)="routeToDV('staging', i)" [ngStyle]="{'background': setBackgroundApproval('staging', i), 'color': setColor('staging', i)}">
-                        <div class="dl_value_count" >
+                        <div class="dl_value_count_demo" >
                           <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('staging', i) == '#4fa845'"></span>
                           <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('staging', i) == '#cb5347'"></span>
                           <span *ngIf="setBackgroundApproval('staging', i) == ''">-</span>
                         </div>
-                        <!-- <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
+                        <!-- <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
                         <div class="dl_value_text" style="font-size: 14px;">Staging Approval</div> 
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
                       <div class="booking-demo" (click)="routeToDV('prod', i)" [ngStyle]="{'background': setBackground('prod', i), 'color': setColor('prod', i)}">
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('prod', i)}}</div>
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue != -1" >{{getScoreOfCanary('prod', i)}}</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                         <div class="dl_value_text" style="font-size: 14px;">Prod Verification</div>
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                       </div>
                       <div class="booking-demo" (click)="routeToDV('prod', i)" [ngStyle]="{'background': setBackgroundApproval('prod', i), 'color': setColor('prod', i)}">
-                        <div class="dl_value_count">
+                        <div class="dl_value_count_demo">
                           <span class="fas fa-check-circle" *ngIf="setBackgroundApproval('prod', i) == '#4fa845'"></span>
                           <span class="fas fa-times-circle" *ngIf="setBackgroundApproval('prod', i) == '#cb5347'"></span>
                           <span *ngIf="setBackgroundApproval('prod', i) == ''">-</span>
                         </div>
-                        <!-- <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
+                        <!-- <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>-->
                         <div class="dl_value_text" style="font-size: 14px;">Prod Approval</div> 
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
@@ -266,16 +266,16 @@
                       </div>
                     </div>
                     <div class="booking-demo" style="border: 1px solid #999;" *ngIf="applicationInfo.applicationInfolabel != 'Deployment Verification'">
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
-                        <div class="dl_value_count" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue != -1" >{{applicationInfo.applicationInfoValue}}</div>
+                        <div class="dl_value_count_demo" *ngIf="applicationInfo.applicationInfoValue == '-1'">-</div>
                         <div class="dl_value_text">{{applicationInfo.applicationInfolabel == 'Releases' ? 'Deployment' : applicationInfo.applicationInfolabel }} </div>
                         <!-- <span
                           *ngIf="applicationInfo.applicationInfolabel === showAppDataType && application.applicationName === selectedApplicationName && applicationInfo.applicationInfoValue != 'N/A' "><i
                             class="fa fa-angle-up"></i></span> -->
                     </div>
                     
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
          
               <!-- /.data_list_score -->
