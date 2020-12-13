@@ -143,8 +143,8 @@ export class ApplicationDashboardComponent implements OnInit {
           // this.store.dispatch(new LayoutAction.(this.applicationData.length));
         }
       });
-    const source = interval(this.environment.config.setApplicationInterval);
-    this.subscription = source.subscribe(val => this.getApplications());
+    // const source = interval(this.environment.config.setApplicationInterval);
+    // this.subscription = source.subscribe(val => this.getApplications());
 
     //fetching data from layout state
     this.store.select('layout').subscribe(
@@ -158,7 +158,7 @@ export class ApplicationDashboardComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   // code to load applications
@@ -355,7 +355,7 @@ export class ApplicationDashboardComponent implements OnInit {
       }, 200);
       //  this.selectedApplication(index, app);
     } else if (labelType === 'Releases') {
-      this.subscription.unsubscribe();
+      // this.subscription.unsubscribe();
       this.getReleases(labelType, app, subIndex, event);
       setTimeout(() => {
         this.releaseSidebar = true;
@@ -452,7 +452,9 @@ export class ApplicationDashboardComponent implements OnInit {
         }
         break;
       case 'staging':
-        if(length >= 2) {
+        if(length == 2) {
+          url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[0].canaryId}`
+        } else if(length > 2) {
           url = `/application/deploymentverification/${this.applicationFinalData[index].applicationName}/${this.applicationFinalData[index].recentCanaries[1].canaryId}`
         }
         break;
@@ -471,29 +473,31 @@ export class ApplicationDashboardComponent implements OnInit {
     this.router.navigate([url]);
   }
 
-  getScoreOfCanary(envir, index) {
-    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+  getScoreOfCanary(envir, app) {
+    let length = app.recentCanaries ? app.recentCanaries.length : 0;
     let val;
     switch (envir) {
       case 'prod':
         if(length >= 3) {
-          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+          val = app.recentCanaries[0].finalScore;
         }
         break;
       case 'staging':
-        if(length >= 2) {
-          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        if(length == 2) {
+          val = app.recentCanaries[0].finalScore;
+        } else if(length > 2) {
+          val = app.recentCanaries[1].finalScore;
         }
         break;
       case 'qa':
         if(length == 1) {
-          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+          val = app.recentCanaries[0].finalScore;
         }
         if(length == 2) {
-          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+          val = app.recentCanaries[1].finalScore;
         }
         if(length >= 3) {
-          val = this.applicationFinalData[index].recentCanaries[2].finalScore;
+          val = app.recentCanaries[2].finalScore;
         }
         break;
     }
@@ -511,7 +515,9 @@ export class ApplicationDashboardComponent implements OnInit {
         }
         break;
       case 'staging':
-        if (length >= 2) {
+        if(length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        } else if(length > 2) {
           val = this.applicationFinalData[index].recentCanaries[1].finalScore;
         }
         break;
@@ -551,7 +557,9 @@ export class ApplicationDashboardComponent implements OnInit {
         }
         break;
       case 'staging':
-        if (length >= 2) {
+        if(length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        } else if(length > 2) {
           val = this.applicationFinalData[index].recentCanaries[1].finalScore;
         }
         break;
@@ -568,9 +576,7 @@ export class ApplicationDashboardComponent implements OnInit {
         break;
     }
     if (+val == 0 || val != '-') {
-      if (+val <= 60) {
-        return '#cb5347';
-      } else {
+      if (+val > 60) {
         return '#4fa845';
       }
     } else  {
@@ -589,7 +595,9 @@ export class ApplicationDashboardComponent implements OnInit {
         }
         break;
       case 'staging':
-        if (length >= 2) {
+        if(length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        } else if(length > 2) {
           val = this.applicationFinalData[index].recentCanaries[1].finalScore;
         }
         break;
@@ -606,6 +614,42 @@ export class ApplicationDashboardComponent implements OnInit {
         break;
     }
     if (+val == 0 || val != '-') {
+      return 'white';
+    } else  {
+      return '';
+    }
+    
+  }
+
+  setColorApproval(envir, index) {
+    let length = this.applicationFinalData[index].recentCanaries ? this.applicationFinalData[index].recentCanaries.length : 0;
+    let val = '-';
+    switch (envir) {
+      case 'prod':
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        break;
+      case 'staging':
+        if(length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        } else if(length > 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        break;
+      case 'qa':
+        if (length == 1) {
+          val = this.applicationFinalData[index].recentCanaries[0].finalScore;
+        }
+        if (length == 2) {
+          val = this.applicationFinalData[index].recentCanaries[1].finalScore;
+        }
+        if (length >= 3) {
+          val = this.applicationFinalData[index].recentCanaries[2].finalScore;
+        }
+        break;
+    }
+    if (+val > 60 && val != '-') {
       return 'white';
     } else  {
       return '';

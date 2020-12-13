@@ -147,15 +147,16 @@ span{
 	min-width: 100%;
 }
 .content_section{
-	margin-left: 310px;
+	margin-left: 325px;
 	transition: margin-left linear 0.5s;
+	width: calc(100% - 310px);
 }
 .view_in .content_section{
 	margin-left: 60px;
 	transition: margin-left linear 0.5s;
 }
 .main-topBar{
-	z-index: 1000;
+	z-index: 999;
 	background: #fff;
 	padding: 8px 25px;
 	position: relative;
@@ -519,7 +520,7 @@ span{
 	opacity: 0.3;
 }
 .sidebar_nav a{
-	color: #789;
+	color: rgb(238, 238, 238) !important;
 	display: block;
 	font-size: 14px;
 	font-weight: 400;
