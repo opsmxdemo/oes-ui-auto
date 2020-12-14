@@ -290,18 +290,20 @@
               <!-- /.card-heading -->
               <div class="card-body p-0">
                 <div class="table-responsive">
-                  <table class="table table-sticky table-collaps table-dark-head mb-0">
-                    <thead>
+                  <table class="table table-sticky table-collaps mb-0">
+                    <thead class="grid-header">
                       <tr class="nestedrow">
                         <ng-container *ngFor="let key of currentHeaderKeys; let i=index">
-                          <th *ngIf="showColumn[i] === 'true'"><i class="fa fa-caret-right showCarret"
-                              *ngIf="i === 0"></i>{{currentTableHeader[key]}}</th>
+                          <th *ngIf="showColumn[i] === 'true'" class="grid-header">
+                            <i class="fa fa-caret-right showCarret" *ngIf="i === 0" [ngStyle]="{'margin-right': i == 0 ? '13px' : '0px', 'color':'#2f4151'}"></i>
+                            {{currentTableHeader[key]}}
+                          </th>
                         </ng-container>
                       </tr>
                     </thead>
                     <tbody class="table_body_audit">
                       <ng-container *ngFor="let pageData of currentPage | filter:searchData; let i=index">
-                        <tr class="nestedrow">
+                        <tr class="nestedrow" class="grid-row">
                           <ng-container *ngFor="let dataKey of currentHeaderKeys; let j=index">
                             <td *ngIf="showColumn[j] === 'true'">
                               <div *ngIf="dataKey.includes('Time'); then thenBlock else elseBlock"></div>
@@ -311,7 +313,7 @@
                                     class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}"
                                     id="treeview{{i}}"
                                     (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])"
-                                    style="transition: transform 400ms ease-in-out;"></i>{{pageData[dataKey]}}</span>
+                                    style="transition: transform 400ms ease-in-out;margin-right: 15px;"></i>{{pageData[dataKey]}}</span>
                               </ng-template>
                             </td>
                           </ng-container>
