@@ -17,7 +17,7 @@
 
     <!-- code for displaying the pipeline overallinfo starts here -->
 
-    <div class="pt-3"
+    <div class="audit-2"
       *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipeline'">
       <div class="summary-list">
         <div class="summary-item">
@@ -68,7 +68,7 @@
 
     <!-- code for displaying the pipeline config overallinfo starts here -->
 
-    <div class="pt-3 col-12"
+    <div class="audit-2 col-12"
       *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'pipelineconfig'">
       <div class="summary-list">
         <div class="summary-item">
@@ -88,7 +88,7 @@
 
         <!-- code for displaying the policy audi overallinfo starts here -->
 
-        <div class="pt-3 col-12"
+        <div class="audit-2 col-12"
         *ngIf="currentTabData !== null && currentTabData['results'].length > 0 && relatedApi === 'policies'">
         <div class="summary-list">
           <div class="summary-item">
@@ -106,7 +106,7 @@
   
       <!-- code for displaying the policy audit overallinfo ends here -->
 
-    <div class="p-3">
+    <div class="audit-2">
       <div class="row no-gutters">
         <div class="col-12">
           <ng-container *ngIf="!auditLoading">
@@ -312,7 +312,7 @@
                                   class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}"><i *ngIf="j === 0"
                                     class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}"
                                     id="treeview{{i}}"
-                                    (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])"
+                                    (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['executionId'])"
                                     style="transition: transform 400ms ease-in-out;margin-right: 15px;"></i>{{pageData[dataKey]}}</span>
                               </ng-template>
                             </td>

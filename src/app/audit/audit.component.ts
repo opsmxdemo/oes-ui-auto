@@ -172,9 +172,7 @@ export class AuditComponent implements OnInit{
       (auditData) => {
         this.cursorWaiting = auditData.cursorWait;
         this.auditLoading = auditData.loadingAudit;
-       console.log(this.auditLoading);
-        if (auditData.allRunningPipelineData !== null) {
-          this.pipelineCountValue = auditData.allRunningPipelineData['results'].length;
+        if (auditData.allRunningPipelineData !== null && auditData.loadingAudit) {
           switch(this.relatedApi){
             case 'pipelineconfig':
               this.tableData = auditData.allPipelineData;
@@ -220,17 +218,11 @@ export class AuditComponent implements OnInit{
           this.showHideColumn();
           this.selectedFilter();
           if(!auditData.treeViewMode){
-            this.renderPage();
+          this.renderPage();
           }
        
           // hide tooltip if visible
           $("[data-toggle='tooltip']").tooltip('hide');
-        }
-        if(auditData.pipelineCount != null){
-          // this.failedPipelineRunsCount = auditData.pipelineCount.totalFailedPipelinesCount;
-          // this.successfulPipelineRunsCount = auditData.pipelineCount.totalSuccessfulPipelinesCount;
-          // this.cancelledPipelineRunsCount = auditData.pipelineCount.totalCanceledPipelinesCount;
-          // this.totalPipelineRunsCount = auditData.pipelineCount.totalPipelinesRunCount;
         }
       }
     )
@@ -365,7 +357,7 @@ export class AuditComponent implements OnInit{
 
   // Below function is use to see nested row 
   onClickNestedRow(index,event,application,pipelineconfigId,eventId){
-    
+    debugger
     if(this.treeView.indexOf(true) === -1){
       this.treeView[index] = true;
       this.treeView_rowanimation = 'expanded';
@@ -373,7 +365,7 @@ export class AuditComponent implements OnInit{
       const treeViewObj = {
         appName:application,
         pipelineConfigId:pipelineconfigId,
-        eventId:eventId !== undefined?eventId:''
+        executionId:eventId !== undefined?eventId:''
       }
      this.store.dispatch(AuditActions.loadTreeView({callingApiData:treeViewObj,relatedApi:this.relatedApi}));
     }else{
