@@ -17,7 +17,7 @@ import * as $ from 'jquery';
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationDetailsService {
+export class ApplicationDetailsService extends ApplicationSetupService {
 
   $dataLoaded = new BehaviorSubject(false);
   
@@ -37,6 +37,7 @@ export class ApplicationDetailsService {
   editMode: boolean = this.appListService.editMode;       //used in enabling and diabling the features
 
   constructor(public http: HttpClient, public environment: AppConfigService, private appListService: ApplicationListService, public sharedService: SharedService, public toastr: NotificationService, public appRoadMapService: ApplicationRoadMapService,  public appSetupService: ApplicationSetupService) {
+    super(http);
    }
 
    init(){

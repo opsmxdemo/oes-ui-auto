@@ -8,6 +8,7 @@ import * as $ from 'jquery';
 import { NotificationService } from 'src/app/services/notification.service';
 import Swal from 'sweetalert2'
 import {ApplicationListService} from './application-list.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appliaction-list',
@@ -32,7 +33,7 @@ export class AppliactionListComponent implements OnInit {
   loading = false;                                                                     // It is use to show and hide loading screen
 
   constructor(public store: Store<fromFeature.State>,
-              public toastr: NotificationService, public appListService: ApplicationListService ) { }
+              public toastr: NotificationService, public appListService: ApplicationListService, private router: Router ) { }
   
   ngOnInit(): void {
 
@@ -73,7 +74,7 @@ export class AppliactionListComponent implements OnInit {
 
   // Below function is use to redirect to create application page
   createApplication() {
-    this.store.dispatch(ApplicationActions.loadApp({page:'/setup/applications'}));
+    this.router.navigate(['/setup/application']);
     this.appListService.editMode = false;
     this.appListService.callSetupComponent();
   }

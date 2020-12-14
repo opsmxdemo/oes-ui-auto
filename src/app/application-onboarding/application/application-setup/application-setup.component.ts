@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ApplicationSetupService } from './application-setup.service';
 
 @Component({
@@ -8,9 +9,13 @@ import { ApplicationSetupService } from './application-setup.service';
 })
 export class ApplicationSetupComponent implements OnInit {
   
-  constructor(public appSetupService: ApplicationSetupService) { } 
+  constructor(public service: ApplicationSetupService, private activatedRoute: ActivatedRoute) { } 
 
   ngOnInit(): void {
+    if(this.activatedRoute.snapshot.params.id) {
+      ApplicationSetupService.id = this.activatedRoute.snapshot.params.id;
+    }
+    this.service.init();
 
   }
 
