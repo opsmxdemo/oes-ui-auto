@@ -94,7 +94,7 @@ export class LogProviderService extends LogTemplateConfigService {
       kibanaIndex  : new FormControl(LogTemplateConfigService.logTemplateData.kibanaIndex),
       responsekey  : new FormControl(LogTemplateConfigService.logTemplateData.regExResponseKey),
       regularExpression  : new FormControl(LogTemplateConfigService.logTemplateData.regularExpression),
-      sensitivity  : new FormControl(LogTemplateConfigService.logTemplateData.sensitivity),
+      sensitivity  : new FormControl(LogTemplateConfigService.logTemplateData.sensitivity ? LogTemplateConfigService.logTemplateData.sensitivity : 'high'),
       regExFilter : new FormControl(LogTemplateConfigService.logTemplateData.regExFilter),
       autoBaseline : new FormControl(LogTemplateConfigService.logTemplateData.autoBaseline)
     });

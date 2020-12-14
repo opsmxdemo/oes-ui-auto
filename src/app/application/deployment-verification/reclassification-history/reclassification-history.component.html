@@ -1,7 +1,7 @@
 <mat-tab-group>
   <mat-tab label="Logs Reclassification History">
-    <div>
-      <div style="height: 530px;overflow: auto;">
+    <div style="padding: 20px 0px;">
+      <div style="max-height: 495px;overflow: auto;">
           <div *ngIf="reclassificationHistory != null">
               <div *ngFor='let feedbackHistory of reclassificationHistory?.feedbackHistory' style="border: 1px solid black;  margin-top: 5px; margin-bottom: 5px; ">
               <div style="padding-top:10px ; background-color: #eef8fc; padding: 3px;">{{feedbackHistory.clusterString}}</div>

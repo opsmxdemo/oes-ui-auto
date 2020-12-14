@@ -886,7 +886,10 @@ deleteLogService(query,index){
           }
           this.latestCanaryCounter++;
           this.control.setValue(resData.canaryId);
-          this.controlDummy.setValue(resData.canaryId);
+          if(this.firstLoad) {
+            this.controlDummy.setValue(resData.canaryId);
+            this.firstLoad = false;
+          }
 
         }
       }
@@ -1139,7 +1142,7 @@ deleteLogService(query,index){
   getReclassifiactionHistory() {
     console.log(this.canaryId);
     const dialogRef = this.dialog.open(ReclassificationHistoryComponent,{
-      height: '650px',
+      maxHeight: '650px',
       width: '900px',
       disableClose: true,
       data: { logTemplateName: this.deploymentServiceInformation['logTemplateName'], canaryId: this.canaryId, serviceId: this.selectedServiceId },
