@@ -17,7 +17,13 @@
               <div class="col-6" >
                  <!-- [formGroup]="createApplicationForm" -->
                 <form>
-                  <app-application-details></app-application-details>
+                  <div *ngIf="appSetupService.showApplicationDetailsComp">
+                    <app-application-details></app-application-details>
+                  </div>
+                  <div *ngIf="appSetupService.showServiceDetailsComp">
+                    <app-application-service></app-application-service>
+                  </div>
+                  
                 </form><br>
                   <!-- *ngIf="showApplicationForm" -->
                 <div class="col-10">

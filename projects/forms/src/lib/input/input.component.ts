@@ -24,7 +24,7 @@ export class OpsMxInputComponent extends EmitUserEvents implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.params);
+    // console.log(this.params);
     if(!this.params.errorMessages) {
       this.params.errorMessages = [];
     }

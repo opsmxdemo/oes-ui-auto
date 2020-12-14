@@ -55,7 +55,7 @@
                       <td>{{listData.description}}</td>
                       <td>{{listData.email}}</td>
                       <td>
-                        <a routerLink="/setup/newApplication" routerLinkActive="active"  class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editApplication(listData)"><i style="color:#4797de !important;" class="fas fa-pencil-alt"></i></a>
+                        <a routerLink="/setup/newApplication" routerLinkActive="active"  class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="appListService.editApplication(listData)"><i style="color:#4797de !important;" class="fas fa-pencil-alt"></i></a>
                         <!-- <a  class="text-muted"  data-toggle="tooltip" data-placement="top" title="Edit" (click)="editApplication(listData)">
                           </a> -->
                         <a  (click)="appDelete(listData.name,i,listData.applicationId)"  class="text-muted ml-2"  data-toggle="tooltip" data-placement="top" title="Delete" ><i style="color: red;" class="far fa-trash-alt"></i></a>

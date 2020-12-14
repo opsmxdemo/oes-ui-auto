@@ -8,7 +8,7 @@ import { ApplicationSetupService } from './application-setup.service';
 })
 export class ApplicationSetupComponent implements OnInit {
   
-  constructor() { }
+  constructor(public appSetupService: ApplicationSetupService) { } 
 
   ngOnInit(): void {
 

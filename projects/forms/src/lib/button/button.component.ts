@@ -17,7 +17,7 @@ export class OpsMxButtonComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.params);
+    // console.log(this.params);
     switch(this.params.color){
       case 'blue' : this.class = "btn-primary"; break;
       case 'red' : this.class = "btn-danger"; break;
