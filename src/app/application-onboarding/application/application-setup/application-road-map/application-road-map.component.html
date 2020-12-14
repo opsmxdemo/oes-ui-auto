@@ -1,11 +1,13 @@
 
   <div class="col-sm-3">
           <div class="sidebar-tree">
-               <!-- {{createApplicationForm.invalid == false ?'tree-active':''}} -->
-            <ul class="tree-inset list-unstyled tree-active" (click)="appRoadMapService.loadApplicationForm()">
+               <!-- -->
+            <ul class="tree-inset list-unstyled {{appRoadMapService.applicationDetails?.status == 'VALID' ?'tree-active':''}}" (click)="appRoadMapService.loadApplicationForm()">
               <li class="ti-title showElementHover">
-                  <!-- {{createApplicationForm.invalid == false ?'fas fa-check-circle':'far fa-dot-circle'}} -->
-                <i  class="fas fa-check-circle"></i>
+                <!-- {{appRoadMapService.applicationName}} -->
+                  <!--   -->
+                <i  class="{{appRoadMapService.applicationDetails?.status == 'VALID' ? 'fas fa-check-circle' : 'far fa-dot-circle'}} " ></i>
+                <!-- <i class="far fa-dot-circle"></i> -->
                 <span>Application Details</span>
               </li>
               <li class="ti-item showElementHover" (click)="appRoadMapService.loadApplicationForm()">
@@ -13,12 +15,34 @@
                 <i class="fas fa-check-circle"></i>
                 <span>Application Name :</span>
                 <!-- {{createApplicationForm.value.name}} -->
-                <strong>Name</strong>
+                <strong class="showElementHover" *ngIf="appRoadMapService.applicationDetails" (click)="appRoadMapService.showApplicationDetails()"> {{appRoadMapService.applicationDetails?.controls.name.value}} </strong>
+                <!-- {{appRoadMapService.applicationDetails?.controls.name.value | json}} -->
               </li>
               <br>
               <br>
             </ul>
             <!-- /.tree-inset -->
+
+
+
+            <ul class="tree-inset list-unstyled {{appRoadMapService.checkServiceFields ?'tree-active':''}}">
+              <li class="ti-title showElementHover">
+                <i  class="{{appRoadMapService.checkServiceFields ? 'fas fa-check-circle' : 'far fa-dot-circle'}} " ></i>
+                  <!-- <i class="far fa-dot-circle"></i> -->
+                  <span>Services</span>
+                </li>
+              <ng-container *ngFor="let serviceArr of appRoadMapService.services; let i = index">
+              <li class="ti-item">
+                <i class="{{serviceArr.serviceName !== '' ? 'fas fa-check-circle' : 'far fa-dot-circle'}}"></i>
+                <span *ngIf="!editMode">Service name</span>
+                <strong (click)="editServiceClick(serviceArr, i)" style="cursor: pointer;">{{serviceArr.name}}</strong>
+              </li>
+            </ng-container>
+
+            </ul>
+
+
+
             <!-- <ul class="tree-inset  list-unstyled {{servicesForm.invalid == false ?'tree-active':''}}">
               <li class="ti-title showElementHover" (click)="loadServiceForm()">
                 <i class="{{servicesForm.invalid == false ? 'fas fa-check-circle':'far fa-dot-circle'}}"></i>

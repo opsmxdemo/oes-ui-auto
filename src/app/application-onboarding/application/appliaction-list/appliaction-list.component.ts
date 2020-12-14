@@ -32,7 +32,7 @@ export class AppliactionListComponent implements OnInit {
   loading = false;                                                                     // It is use to show and hide loading screen
 
   constructor(public store: Store<fromFeature.State>,
-              public toastr: NotificationService, private appListService: ApplicationListService ) { }
+              public toastr: NotificationService, public appListService: ApplicationListService ) { }
   
   ngOnInit(): void {
 
@@ -75,6 +75,7 @@ export class AppliactionListComponent implements OnInit {
   createApplication() {
     this.store.dispatch(ApplicationActions.loadApp({page:'/setup/applications'}));
     this.appListService.editMode = false;
+    this.appListService.callSetupComponent();
   }
 
   //Below function is used to implement pagination
@@ -174,12 +175,7 @@ export class AppliactionListComponent implements OnInit {
     // this.store.dispatch(ApplicationActions.getImageSource({ applicationId: appData.applicationId }));
   // }
 
-  editApplication(appData){
-    // this.store.dispatch(ApplicationActions.enableEditMode({ editMode: true, applicationName: appData.name,page:'/setup/applications',applicationId:appData.applicationId}));
-    this.appListService.editMode = true;
-    this.appListService.applicationId = appData.applicationId;
-    this.appListService.applicationName = appData.name;
-  }
+  
 
 
 }

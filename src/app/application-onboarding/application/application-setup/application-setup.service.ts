@@ -6,6 +6,10 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 })
 export class ApplicationSetupService {
 
+  applicationDetails: any = {};
+  showApplicationDetailsComp: boolean = true;
+  showServiceDetailsComp: boolean;
+
   constructor() { }
 
 }
