@@ -172,9 +172,7 @@ export class AuditComponent implements OnInit{
       (auditData) => {
         this.cursorWaiting = auditData.cursorWait;
         this.auditLoading = auditData.loadingAudit;
-       console.log(this.auditLoading);
-        if (auditData.allRunningPipelineData !== null) {
-          this.pipelineCountValue = auditData.allRunningPipelineData['results'].length;
+        if (auditData.allRunningPipelineData !== null && auditData.loadingAudit) {
           switch(this.relatedApi){
             case 'pipelineconfig':
               this.tableData = auditData.allPipelineData;
@@ -220,17 +218,11 @@ export class AuditComponent implements OnInit{
           this.showHideColumn();
           this.selectedFilter();
           if(!auditData.treeViewMode){
-            this.renderPage();
+          this.renderPage();
           }
        
           // hide tooltip if visible
           $("[data-toggle='tooltip']").tooltip('hide');
-        }
-        if(auditData.pipelineCount != null){
-          // this.failedPipelineRunsCount = auditData.pipelineCount.totalFailedPipelinesCount;
-          // this.successfulPipelineRunsCount = auditData.pipelineCount.totalSuccessfulPipelinesCount;
-          // this.cancelledPipelineRunsCount = auditData.pipelineCount.totalCanceledPipelinesCount;
-          // this.totalPipelineRunsCount = auditData.pipelineCount.totalPipelinesRunCount;
         }
       }
     )
