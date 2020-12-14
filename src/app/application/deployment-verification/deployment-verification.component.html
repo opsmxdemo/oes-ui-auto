@@ -37,8 +37,8 @@
           </div>
           <form class="example-form">
             <input type="text" class="form-control text-center"
-                   [formControl]="control"
-                   [matAutocomplete]="autoCanaries" name="inputVar" >
+                   [formControl]="controlDummy"
+                   [matAutocomplete]="autoCanaries" name="inputVar" (keyup.enter)="onSelectionChangeCanaryRun($event.target.value)" >
             <mat-autocomplete #autoCanaries="matAutocomplete" (optionSelected)="onSelectionChangeCanaryRun($event.option.value)">
               <mat-option *ngFor="let canaryId of filteredCanaries | async" [value]="canaryId" >
                 {{canaryId}}
