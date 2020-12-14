@@ -43,16 +43,18 @@ export class DeploymentVerificationComponent implements OnInit {
   @ViewChild(JsonEditorComponent, { static: false }) editor: JsonEditorComponent;
   @ViewChild('manualTrigerModal') manualTrigerModal: ElementRef;
   public editorOptions: JsonEditorOptions;
+  @ViewChild(MatAutocompleteTrigger) canaryAutocomplete: MatAutocompleteTrigger;
   // public data: any = null;
   data = {}
 
   size = 5343454545;
   applicationForm: FormGroup;
-  deployementRun: any;
+  deployementRun: any = '';
   reclassificationHistory: any;
   canaries: string[] = [];
   filteredCanaries: Observable<string[]>;
-  control = new FormControl(this.deployementRun);
+  control = new FormControl('');
+  controlDummy = new FormControl('');
   canaryList: string[];
   incredementDisable = false;
   decrementDisable = false;
@@ -214,12 +216,12 @@ export class DeploymentVerificationComponent implements OnInit {
     }
 
 
-    if (this.canaries.length > 0) {
-      this.filteredCanaries = this.control.valueChanges.pipe(
+    // if (this.canaries.length > 0) {
+      this.filteredCanaries = this.controlDummy.valueChanges.pipe(
         startWith(''),
         map(value => this._filterCanaries(value))
       );
-    }
+    // }
 
     // Below code get the feature data from state
 
@@ -228,6 +230,7 @@ export class DeploymentVerificationComponent implements OnInit {
         if (resData.manualTriggerResponse != null) {
           this.manualTriggerLatestRun = resData['canaryId'];
           this.control.setValue(resData['canaryId']);
+          this.controlDummy.setValue(resData['canaryId']);
           this.canaryId = resData['canaryId'];
         }
 
@@ -264,10 +267,10 @@ export class DeploymentVerificationComponent implements OnInit {
             this.canaries = d['canaryIdList'].toString().split(",");
             this.canaries.sort();
             this.canaries = [...new Set(this.canaries)];
-            this.filteredCanaries = this.control.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filterCanaries(value))
-            );
+            // this.filteredCanaries = this.control.valueChanges.pipe(
+            //   startWith(''),
+            //   map(value => this._filterCanaries(value))
+            // );
             }
          }
          this.prepopulateTriggerCanaryForm();
@@ -652,18 +655,20 @@ deleteLogService(query,index){
         if (d['canaryIdList'].length === 0) {
           this.canaries = [];
           this.control.setValue('');
+          this.controlDummy.setValue('');
           this.notifications.showError(this.selectedApplicationName, 'No Canaries found for the Selected Application');
         } else {
           this.canaries = d['canaryIdList'].toString().split(",");
           this.canaries.sort();
           this.canaries = [...new Set(this.canaries)];
-          this.filteredCanaries = this.control.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filterCanaries(value))
-          );
+          // this.filteredCanaries = this.control.valueChanges.pipe(
+          //   startWith(''),
+          //   map(value => this._filterCanaries(value))
+          // );
           let selectedCan = this.canaries.map(parseFloat).sort();
           if (this.control.value != Math.max.apply(null, selectedCan)) {
             this.control.setValue(Math.max.apply(null, selectedCan));
+            this.controlDummy.setValue(Math.max.apply(null, selectedCan));
           }
           this.canaryId = Math.max.apply(null, selectedCan);
           this.getApplicationHelathAndServiceDetails(Math.max.apply(null, selectedCan));
@@ -674,8 +679,10 @@ deleteLogService(query,index){
   //code for change the canary
 
   onSelectionChangeCanaryRun(canary) {
+    console.log(canary);
     this.control.setValue(canary);
     this.canaryId = canary;
+    this.canaryAutocomplete.closePanel();
     this.checkIfCanaryExists(this.canaryId);  // to check if canary exists or not
     this.getApplicationHelathAndServiceDetails(canary);
     //this.onClickService(this.deploymentServices.services[0]);
@@ -743,10 +750,12 @@ deleteLogService(query,index){
       } else {
         if (this.route.params['_value'].canaryId != null) {
           this.control.setValue(this.canaryList[index + 1]);
+          this.controlDummy.setValue(this.canaryList[index + 1]);
 
         } else {
           this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: this.canaryList[index + 1] }));
           this.control.setValue(this.canaryList[index + 1]);
+          this.controlDummy.setValue(this.canaryList[index + 1]);
         }
         this.getApplicationHelathAndServiceDetails(Number(this.canaryList[index + 1]));
         this.canaryId = Number(this.canaryList[index + 1]);
@@ -775,15 +784,18 @@ deleteLogService(query,index){
     if (index != -1 && index != 0) {
       if (this.route.params['_value'].canaryId != null) {
         this.control.setValue(this.canaryList[index - 1]);
+        this.controlDummy.setValue(this.canaryList[index - 1]);
       } else {
         this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: this.canaryList[index - 1] }));
         this.control.setValue(this.canaryList[index - 1]);
+        this.controlDummy.setValue(this.canaryList[index - 1]);
       }
       this.getApplicationHelathAndServiceDetails(Number(this.canaryList[index - 1]));
       this.canaryId = Number(this.canaryList[index - 1]);
 
     } else if (index === 0) {
       this.control.setValue(this.canaryList[index]);
+      this.controlDummy.setValue(this.canaryList[index]);
       this.canaryId = Number(this.canaryList[index]);
     }
   }
@@ -868,10 +880,12 @@ deleteLogService(query,index){
           if (this.latestCanaryCounter === 1) {
             this.deployementRun = resData.canaryId;
             this.control.setValue(resData.canaryId);
+            this.controlDummy.setValue(resData.canaryId);
             this.store.dispatch(DeploymentAction.updateCanaryRun({ canaryId: resData.canaryId }));
           }
           this.latestCanaryCounter++;
           this.control.setValue(resData.canaryId);
+          // this.controlDummy.setValue(resData.canaryId);
 
         }
       }
@@ -903,10 +917,10 @@ deleteLogService(query,index){
               this.canaries = d['canaryIdList'].toString().split(",");
               this.canaries.sort();
               this.canaries = [...new Set(this.canaries)];
-              this.filteredCanaries = this.control.valueChanges.pipe(
-                startWith(''),
-                map(value => this._filterCanaries(value))
-              );
+              // this.filteredCanaries = this.control.valueChanges.pipe(
+              //   startWith(''),
+              //   map(value => this._filterCanaries(value))
+              // );
             }
         
       }
@@ -1051,6 +1065,7 @@ deleteLogService(query,index){
 
     // default selection of canary id
     this.control.setValue(runId);
+    // this.controlDummy.setValue(runId);
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: runId }));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: runId }));
   }
@@ -1118,6 +1133,7 @@ deleteLogService(query,index){
 
   // code to load modal popup for reclassification history
   getReclassifiactionHistory() {
+    console.log(this.canaryId);
     const dialogRef = this.dialog.open(ReclassificationHistoryComponent,{
       height: '650px',
       width: '900px',
