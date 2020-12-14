@@ -214,13 +214,21 @@ export class LogTagService extends LogTemplateConfigService {
 
   saveClusterTagName() {
     let tagDetails = this.tagForm.value;
-    return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/tags', tagDetails);
+    return this.http.post<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/tags', tagDetails).pipe(
+      map((resp : any) => {
+        this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+      })
+    );    
   }
 
   updateClusterTagName() {
     let tagId = this.tagForm.get('id').value;
     let tagDetails = this.tagForm.value;
-    return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+LogTemplateConfigService.applicationId+'/tags/' + tagId, tagDetails);
+    return this.http.put<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/'+LogTemplateConfigService.applicationId+'/tags/' + tagId, tagDetails).pipe(
+      map((resp : any) => {
+        this.toastr.showSuccess('Saved Successfully', 'SUCCESS');
+      })
+    );
   }
 
   addFormRow() {
@@ -238,6 +246,10 @@ export class LogTagService extends LogTemplateConfigService {
 
   deleteClusterTag() {
     let tagDetails = this.tagForm.value;
-    return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/tags/'+ tagDetails.id);    
+    return this.http.delete<any>(this.environment.config.endPointUrl + 'autopilot/api/v1/applications/' + LogTemplateConfigService.applicationId + '/tags/'+ tagDetails.id).pipe(
+      map((resp : any) => {
+        this.toastr.showSuccess('Deleted Successfully', 'SUCCESS');
+      })
+    );
   }
 }
