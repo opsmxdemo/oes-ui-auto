@@ -114,15 +114,15 @@ export class LayoutEffect {
                             "disabled": false,
                             "subMenu": [
                               {
-                                "id": 22,
-                                "name": "CD Dashboard",
-                                "link": "cddashboard",
+                                "id": 21,
+                                "name": "Application Dashboard",
+                                "link": "application",
                                 "disabled": false
                               },
                               {
                                 "id": 22,
-                                "name": "Verification Dashboard",
-                                "link": "application",
+                                "name": "Delivery Dashboard",
+                                "link": "cddashboard",
                                 "disabled": false
                               },
                               {
@@ -155,6 +155,12 @@ export class LayoutEffect {
                                 "id": 27,
                                 "name": "Visibility and Approval",
                                 "link": "/application/visibility",
+                                "disabled": false
+                              },
+                              {
+                                "id": 27,
+                                "name": "Spinnaker",
+                                "link": "/spinnaker",
                                 "disabled": false
                               }
                             ]
@@ -245,7 +251,7 @@ export class LayoutEffect {
                           },
                           {
                             "id": 6,
-                            "name": "System Setup",
+                            "name": "Config",
                             "link": "setup",
                             "disabled": false,
                             "subMenu": []

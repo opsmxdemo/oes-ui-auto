@@ -1,6 +1,6 @@
 <div class="main_content" *ngIf="!dashboardLoading">
   <div class="page_title d-flex align-items-center">
-    <h2>Verification Dashboard </h2> <i (click)="getApplications()" data-toggle="tooltip" data-placement="top" title="Refresh Application List" class="refresh-icon fa">&#xf021;</i>
+    <h2>Application Dashboard </h2> <i (click)="getApplications()" data-toggle="tooltip" data-placement="top" title="Refresh Application List" class="refresh-icon fa">&#xf021;</i>
     <div class="page_access ml-auto">
       <!-- <button class="btn btn-white"><img src="../../../assets/setting_icon.png" alt="icon" /></button> -->
       <button class="btn btn-primary ml-2" (click)="addNewApplication()" data-backdrop="static" data-keyboard="false"><i
@@ -9,9 +9,9 @@
     <!-- /.page_access ml-auto -->
   </div>
   <!-- /.page_title d-flex -->
-  <div class="col-sm-4" style="position: fixed;z-index: 1000;transition: all 1s ease 0s;" [ngStyle]="{'right': serviceSidebar || releaseSidebar ? '0px' : '-600px'}" *ngIf="applicationData.length != 0">
-    <div style="z-index: 31;left: 595px;position: relative;top: 34px;">
-      <span (click)="hideSidebar()"><i class="fas fa-times"></i></span>
+  <div class="col-sm-4" style="position: fixed;z-index: 1000;transition: all 1s ease 0s;" [ngStyle]="{'right': serviceSidebar || releaseSidebar ? '0px' : '-630px'}" *ngIf="applicationData.length != 0">
+    <div (click)="hideSidebar()" style="z-index: 31;position: relative;top: 34px;text-align: right;padding-right: 15px;cursor: pointer;">
+      <span><i class="fas fa-times"></i></span>
     </div>
     <div class="rightBox position-sticky" *ngIf="!showReleaseTable">
       <div class="rightBox_header d-flex align-items-center">
@@ -80,11 +80,13 @@
             </thead>
             <tbody>
               <tr *ngFor="let service of oesServiceData; let i=index">
-                <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}"><a target="_blank" href="{{service.href}}">{{service.serviceName}}</a></td>
+                <td class="{{service.status === 'N/A' ? 'disabledLink': ''}}">
+                  <a [routerLink]="['/spinnaker/',service.href]">{{service.serviceName}}</a>
+                </td>
                 <td>{{service.finalScore}}</td>
                 <td
                   [ngClass]="{'text-danger':service.status == 'FAIL' || service.status == 'TERMINAL','text-success':service.status == 'PASS'|| service.status == 'SUCCEEDED'}">
-                  <a target="_blank" href="{{service.href}}">{{service.status}}</a></td>
+                  <a [routerLink]="['/spinnaker/',service.href]">{{service.status}}</a></td>
               </tr>
             </tbody>
           </table>

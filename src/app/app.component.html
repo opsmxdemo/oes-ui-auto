@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" style="height: 100vh;">
   <div class="col-md-12 {{addclass == true ? 'view_in' : ''}}">
     <div class="sidebar" *ngIf="isAuthenticate && !apiError">
       <div class="sidebar_header d-flex align-items-center justify-content-between">
@@ -29,9 +29,9 @@
                   <i class="icon-new fa fa-eye" aria-hidden="true" matTooltip="{{submenu.name}}" [matTooltipDisabled]="hideTooltip == true" [matTooltipPosition]="'right'" *ngIf="submenu.link === '/application/visibility'"></i>
                   <!-- <i class="{{subMenuclass(submenu.link)}}"></i>  -->
                   <span>{{submenu.name}}
-                    <ng-template [ngIf]="submenu.name === 'Verification Dashboard' ?true:false">
-                      <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Applications">{{applicationCount}}</span>
-                      <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Num of Active gates">{{approvalGateInstanceCount}}</span>
+                    <ng-template [ngIf]="submenu.name === 'Application Dashboard' ?true:false">
+                      <span class="badge badge-primary p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Total Applications">{{applicationCount}}</span>
+                      <span class="badge badge-info p-0 popover-hover" data-toggle="tooltip" data-placement="top" title="Total Active Gates">{{approvalGateInstanceCount}}</span>
                     </ng-template>
                   </span></a></li>
               </ul>

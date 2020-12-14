@@ -211,9 +211,9 @@ export class AppComponent implements OnInit, AfterViewChecked {
   // Below function is use ro disabled link by checking featureType 
   disabledLink(linkName) {
     let className = 'disabled_menu';
-    let deployment_verification = ['Dashboard', 'Verification Dashboard', 'Continuous Verification', 'Deployment', 'Trend Analysis', 'System Setup'];
-    let visibility = ['Dashboard', 'Verification Dashboard', 'Continuous Delivery', 'Visibility and Approval', 'System Setup'];
-    let sapor = ['Dashboard', 'Verification Dashboard', 'CD Dashboard', 'Continuous Delivery', 'Security', 'System Setup', 'Audit Trail', 'Compliance', 'Policy Management'];
+    let deployment_verification = ['Dashboard', 'Application Dashboard', 'Continuous Verification', 'Deployment', 'Trend Analysis', 'Config'];
+    let visibility = ['Dashboard', 'Application Dashboard', 'Continuous Delivery', 'Visibility and Approval', 'Config'];
+    let sapor = ['Dashboard', 'Application Dashboard', 'Delivery Dashboard', 'Continuous Delivery', 'Security', 'Config', 'Audit Trail', 'Compliance', 'Policy Management'];
 
     if (this.featureList && this.featureList.includes('deployment_verification')) {
       if (deployment_verification.includes(linkName)) {
@@ -232,6 +232,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
         className = '';
       }
     }
+
+    if(linkName == 'Spinnaker') {
+      className = '';
+    }
+    
     return className;
   }
 
@@ -278,7 +283,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       case 'Dashboard':
         className = faTachometerAlt;
         break;
-      case 'CD Dashboard':
+      case 'Delivery Dashboard':
         className = faProjectDiagram;
         break;
       case 'Analytics':
@@ -320,7 +325,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
       case 'Production':
         className = faStroopwafel;
         break;
-      case 'Verification Dashboard':
+      case 'Application Dashboard':
         className = faCheckSquare;
         break;
       case 'Visibility and Approval':
