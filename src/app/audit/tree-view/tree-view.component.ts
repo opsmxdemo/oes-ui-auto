@@ -48,15 +48,16 @@ export class TreeViewComponent implements OnInit {
         } else {
           this.loading = false;
           if (auditdata.treeViewData !== null) {
+            debugger
             this.treeViewData = auditdata.treeViewData;
-            if (this.treeViewData.length > 0 && this.treeViewData[0].child.length > 0) {
-              var key = Object.keys(this.treeViewData[0].child[0]);
+            if (this.treeViewData.results.length > 0 && this.treeViewData.results[0].child.length > 0) {
+              var key = Object.keys(this.treeViewData.results[0].child[0]);
               key.forEach(ArrKeys => {
                 if (ArrKeys !== 'child' && ArrKeys !== 'configId' && ArrKeys !== 'childOf') {
                   this.displayedColumns.push(ArrKeys);
                 }
               })
-              this.childData = this.treeViewData[0].child;
+              this.childData = this.treeViewData.results[0].child;
               this.dataAvaliable = true;
             } else {
               this.dataAvaliable = false;

@@ -312,7 +312,7 @@
                                   class="{{dataKey === 'status' ? getClass(pageData[dataKey]) : ''}}"><i *ngIf="j === 0"
                                     class="fa fa-caret-right carret {{j === 0 && pageData[treeView_currentKey] ?'showCarret':'hiddenCarret'}}"
                                     id="treeview{{i}}"
-                                    (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['eventId'])"
+                                    (click)="onClickNestedRow(i,$event,pageData['applicationName'],pageData['pipelineConfigId'],pageData['executionId'])"
                                     style="transition: transform 400ms ease-in-out;margin-right: 15px;"></i>{{pageData[dataKey]}}</span>
                               </ng-template>
                             </td>
