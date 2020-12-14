@@ -156,6 +156,7 @@ export class DeploymentVerificationComponent implements OnInit {
   public stepSeconds = [1, 5, 10, 15, 20, 25];
 
   reclassificationButtonParams : any;
+  firstLoad = true;
   // App form end
 
   constructor(private route: ActivatedRoute, public sharedService: SharedService, public store: Store<fromFeature.State>,
@@ -885,7 +886,7 @@ deleteLogService(query,index){
           }
           this.latestCanaryCounter++;
           this.control.setValue(resData.canaryId);
-          // this.controlDummy.setValue(resData.canaryId);
+          this.controlDummy.setValue(resData.canaryId);
 
         }
       }
@@ -1065,7 +1066,10 @@ deleteLogService(query,index){
 
     // default selection of canary id
     this.control.setValue(runId);
-    // this.controlDummy.setValue(runId);
+    if(this.firstLoad) {
+      this.controlDummy.setValue(runId);
+      this.firstLoad = false;
+    }
     this.store.dispatch(DeploymentAction.loadServices({ canaryId: runId }));
     this.store.dispatch(DeploymentAction.loadApplicationHelath({ canaryId: runId }));
   }
