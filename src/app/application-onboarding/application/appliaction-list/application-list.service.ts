@@ -25,12 +25,29 @@ export class ApplicationListService {
     this.editMode = true;
     this.applicationId = appData.applicationId;
     this.applicationName = appData.name;
-    this.appSetupService.showApplicationDetailsComp = true;
-    this.appSetupService.showServiceDetailsComp = false;
+    // this.showApplicationComp(true);
+        ApplicationSetupService.showApplicationDetailsComp = true;
+            ApplicationSetupService.showServiceDetailsComp = false;
+
+
+    // this.showServiceComp(false);
+    
+    // this.appSetupService.showApplicationDetailsComp = true;
+    // this.appSetupService.showServiceDetailsComp = false;
   }
+//   set showApplicationComp(show) {
+//     ApplicationSetupService.showApplicationDetailsComp = show;
+// }
+//   set showServiceComp(show) {
+//     ApplicationSetupService.showServiceDetailsComp = show;
+// }
   callSetupComponent(){
-          this.appSetupService.showApplicationDetailsComp = true;
-          this.appSetupService.showServiceDetailsComp = false;
+          // this.appSetupService.showApplicationDetailsComp = true;
+          // this.appSetupService.showServiceDetailsComp = false;
+    // this.showApplicationComp(true);
+    // this.showServiceComp(false);
+        ApplicationSetupService.showApplicationDetailsComp = true;
+            ApplicationSetupService.showServiceDetailsComp = false;
 
   }
 

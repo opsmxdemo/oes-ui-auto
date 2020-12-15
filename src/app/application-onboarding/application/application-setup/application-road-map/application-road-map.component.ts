@@ -3,6 +3,7 @@ import { interval } from 'rxjs';
 import { createApplication } from './../../store/application.actions';
 import { Component, OnInit } from '@angular/core';
 import { ApplicationRoadMapService } from './application-road-map.service'
+import { ApplicationSetupService } from '../application-setup.service';
 
 @Component({
   selector: 'app-application-road-map',
@@ -14,7 +15,7 @@ export class ApplicationRoadMapComponent implements OnInit {
   servicesForm:any;
   editMode: any;
 
-  constructor(public appRoadMapService: ApplicationRoadMapService) { }
+  constructor(public appRoadMapService: ApplicationRoadMapService, public appSetupService: ApplicationSetupService) { }
   ngOnChanges(){
   }
 
@@ -32,11 +33,11 @@ export class ApplicationRoadMapComponent implements OnInit {
 
     this.appRoadMapService.init();
   }
+  get getApplicationDetails(){
+    return ApplicationSetupService.applicationDetails;
+  }
 
   loadServiceForm(){
-
-  }
-  editServiceClick(serviceArr, i){
 
   }
 

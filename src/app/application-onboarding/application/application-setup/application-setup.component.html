@@ -15,12 +15,16 @@
               <!-- ###################### Application Section Starts #####################################-->
   <!-- *ngIf="showApplicationForm" -->
               <div class="col-6" >
+                <div>
+                service.showApplicationDetailsComp - {{callShowAppComp}}
+                service.showServiceDetailsComp - {{callShowServiceComp}} <br>
+              </div>
                  <!-- [formGroup]="createApplicationForm" -->
                 <form>
-                  <div *ngIf="service.showApplicationDetailsComp">
+                  <div *ngIf="callShowAppComp">
                     <app-application-details></app-application-details>
                   </div>
-                  <div *ngIf="service.showServiceDetailsComp">
+                  <div *ngIf="callShowServiceComp">
                     <app-application-service></app-application-service>
                   </div>
                   

@@ -3,14 +3,15 @@ import { AppConfigService } from 'src/app/services/app-config.service';
 import { ApplicationSetupService } from '../application-setup.service';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { SharedService } from 'src/app/services/shared.service';
 // import { ApplicationDetailsService } from "../application-details/application-details.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationRoadMapService {
+export class ApplicationRoadMapService extends ApplicationSetupService {
 
-  applicationDetails: FormGroup = null; // Data will be form the Application Details
+  // applicationDetails: FormGroup = null; // Data will be form the Application Details
   services: any;
   checkServiceFields: boolean;
   servicesForm: any;
@@ -18,8 +19,10 @@ export class ApplicationRoadMapService {
   groupPermissionForm: any;
   editMode: any;
   applicationName: any;
+  newObj: any;
 
-  constructor(public http: HttpClient, public environment: AppConfigService, public appSetupService: ApplicationSetupService) {
+  constructor(public http: HttpClient, public environment: AppConfigService, public appSetupService: ApplicationSetupService, public sharedService: SharedService,) {
+    super(http, environment, sharedService);
   }
 
   initChanges(){
@@ -37,10 +40,9 @@ export class ApplicationRoadMapService {
 
 
 
-if(this.applicationDetails != undefined  ){
-  console.log("RoadMap App Details: ", this.applicationDetails);
+if(ApplicationSetupService.applicationDetails != undefined  ){
   
-    if(this.applicationDetails.status == 'VALID' ){
+    if(ApplicationSetupService.applicationDetails.status == 'VALID' ){
       this.applicationName = 'VALID';
     }else{
       this.applicationName = 'INVALID';
@@ -55,19 +57,21 @@ if(this.applicationDetails != undefined  ){
     }
 
     showApplicationDetails(){
-      this.appSetupService.showApplicationDetailsComp = true;
-      this.appSetupService.showServiceDetailsComp = false;
+      ApplicationSetupService.showApplicationDetailsComp = true;
+      ApplicationSetupService.showServiceDetailsComp = false;
     }
 
+  showServiceDetails(serviceArr, i){
+    this.newObj = serviceArr;
+    ApplicationSetupService.showApplicationDetailsComp = false;
+    ApplicationSetupService.showServiceDetailsComp = true;
+  }
 
   loadApplicationForm(){
 
   }
 
   loadServiceForm(){
-
-  }
-  editServiceClick(serviceArr, i){
 
   }
   loadEnvironmentsForm(){

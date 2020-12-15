@@ -12,7 +12,7 @@ import * as $ from 'jquery';
   selector: 'app-application-details',
   templateUrl: './application-details.component.html',
   styleUrls: ['./application-details.component.less'],
-  providers :[ApplicationDetailsService]
+  providers :[ApplicationDetailsService, ApplicationSetupService]
 })
 export class ApplicationDetailsComponent implements OnInit {
 
@@ -44,6 +44,11 @@ export class ApplicationDetailsComponent implements OnInit {
     console.log('App Detail: ', this.appDetailService);
     
 }
+
+  get checkEditMode(){
+    return ApplicationSetupService.editMode;
+  } 
+
 cancelForm(){
   this.router.navigate(['/setup/applications']);
     $("[data-toggle='tooltip']").tooltip('hide');
@@ -52,21 +57,21 @@ cancelForm(){
 
   // Below function is use to submit applicatio form
   submitApplicationForm() {
-    this.appDetailService.applicationDetails.markAllAsTouched();    //Touch the fields to see if its invalid
-    let createAppData = this.appDetailService.applicationDetails;
+    ApplicationSetupService.applicationDetails.markAllAsTouched();    //Touch the fields to see if its invalid
+    let createAppData = ApplicationSetupService.applicationDetails;
 
-    if(this.appDetailService.applicationDetails.status != "INVALID"){
+    if(ApplicationSetupService.applicationDetails.status != "INVALID"){
     this.appDetailService.submitApplicationForm(createAppData).subscribe();
     }else{
       this.toastr.showError('Please check if all the entered fields are correct', 'ERROR');
     }
-    console.log("Print Application Detail: ", this.appDetailService.applicationDetails);
+    console.log("Print Application Detail: ", ApplicationSetupService.applicationDetails);
   }
 
 updateApplicationForm(){
-  this.appDetailService.applicationDetails.markAllAsTouched();
-  if(this.appDetailService.applicationDetails.status != "INVALID"){
-    let createAppData = this.appDetailService.applicationDetails;
+  ApplicationSetupService.applicationDetails.markAllAsTouched();
+  if(ApplicationSetupService.applicationDetails.status != "INVALID"){
+    let createAppData = ApplicationSetupService.applicationDetails;
     this.appDetailService.updateApplicationForm(createAppData).subscribe();
     // .subscribe(resp => {
     //   this.toastr.showSuccess('Updated application Successfully', 'SUCCESS');

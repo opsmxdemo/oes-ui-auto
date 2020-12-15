@@ -27,8 +27,8 @@
                     <opsmx-button [params]="appDetailService.applicationDetailsCancelParams" (click)="cancelForm()"></opsmx-button>
                   </div>
                    <div class="alignBtnRight">
-                    <opsmx-button [params]="appDetailService.applicationDetailsSaveParams" (click)="submitApplicationForm()" *ngIf="!appDetailService.editMode" class="detailsButton"></opsmx-button>
-                    <opsmx-button [params]="appDetailService.applicationDetailsUpdateParams" (click)="updateApplicationForm()" *ngIf="appDetailService.editMode"></opsmx-button>
+                    <opsmx-button [params]="appDetailService.applicationDetailsSaveParams" (click)="submitApplicationForm()" *ngIf="!checkEditMode" class="detailsButton"></opsmx-button>
+                    <opsmx-button [params]="appDetailService.applicationDetailsUpdateParams" (click)="updateApplicationForm()" *ngIf="checkEditMode"></opsmx-button>
                   </div>
 
 

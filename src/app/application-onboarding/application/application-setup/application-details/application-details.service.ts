@@ -37,7 +37,7 @@ export class ApplicationDetailsService extends ApplicationSetupService {
   editMode: boolean = this.appListService.editMode;       //used in enabling and diabling the features
 
   constructor(public http: HttpClient, public environment: AppConfigService, private appListService: ApplicationListService, public sharedService: SharedService, public toastr: NotificationService, public appRoadMapService: ApplicationRoadMapService,  public appSetupService: ApplicationSetupService) {
-    super(http);
+    super(http, environment, sharedService);
    }
 
    init(){
@@ -47,32 +47,14 @@ export class ApplicationDetailsService extends ApplicationSetupService {
       removeElements( document.querySelectorAll(".tooltip.fade") );
     }
 
-     this.applicationDetails = undefined;
-     this.appRoadMapService.applicationDetails = this.applicationDetails;
-      if(this.editMode){
-        this.appListService.editApplicationAPI(this.appListService.applicationId).subscribe(resp => {
-          this.appSetupService.showApplicationDetailsComp = true;
-          this.appSetupService.showServiceDetailsComp = false;
-          this.defineApplicationForm(resp);
-          setTimeout(() => {
+    //  ApplicationSetupService.applicationDetails = undefined;
+    setTimeout(() => {
             this.initParametersForComponents();
-            this.appRoadMapService.applicationDetails = this.applicationDetails;
-          }, 100);
-          console.log("Application Details: ", this.applicationDetails);
-        });       
+            // this.appRoadMapService.applicationDetails = this.applicationDetails;
+          }, 1000);
 
-      }else{
-          let appDetailObj = {
-              "name": "",
-              "description": "",
-              "emailId": "",
-              "imageSource": "",
-            };
-          this.defineApplicationForm(appDetailObj);
-          setTimeout(() => {
-          this.initParametersForComponents();
-          }, 100);
-      }
+    //  this.appRoadMapService.applicationDetails = this.applicationDetails;
+      
       this.applicationDetailsCancelParams = {
         text: "Cancel",
         type: 'button',
@@ -81,41 +63,20 @@ export class ApplicationDetailsService extends ApplicationSetupService {
       };
   }
 
-  defineApplicationForm(resp){
-    this.applicationDetails = new FormGroup({
-      name : new FormControl(resp.name, [Validators.required, this.cannotContainSpace.bind(this),this.valitateApplicationName.bind(this)]),
-      emailId :  this.editMode ?  new FormControl(resp.email, [Validators.required, Validators.email]) : new FormControl(resp.emailId, [Validators.required, Validators.email]), 
-      description: new FormControl(resp.description),
-      imageSource  : new FormControl(resp.imageSource),
-      lastUpdatedTimestamp: resp.lastUpdatedTimestamp != undefined ? new FormControl(resp.lastUpdatedTimestamp) : new FormControl()
-    });
-    // if(this.editMode){
-    //   this.applicationDetails.controls.emailId = new FormControl(resp.email, [Validators.required, Validators.email])
+  editApplicationAPI(appId){
+               return this.http.get<any>(this.environment.config.endPointUrl + 'platformservice/v1/applications/' + appId);
 
-    // }else{
-    //   this.applicationDetails.controls.emailId = new FormControl(resp.emailId, [Validators.required, Validators.email])
-    // }
-    this.services = resp.services != undefined ? resp.services : [];
-    if(this.services.length > 0){
-      this.checkServiceFields = this.services.every(item => item.name != '');
-      this.appRoadMapService.checkServiceFields = this.checkServiceFields;
-    }
-
-    console.log("Check serivce Fields", this.checkServiceFields);
-    
-
-    this.appRoadMapService.services = this.services;
-      console.log("Details Fn: ", resp);
-      console.log("Services Fn: ", this.services);
-      
   }
 
 
+
    initParametersForComponents(){
+     console.log("Init params: ", ApplicationSetupService.applicationDetails);
+     
     this.applicationNameParams = {
       label: "Application Name",
       type: 'text',
-      formControl: this.applicationDetails.get('name'),
+      formControl: ApplicationSetupService.applicationDetails.get('name'),
       hidden: false,
       disabled: false,
       id: 'input-applicationName',
@@ -123,7 +84,7 @@ export class ApplicationDetailsService extends ApplicationSetupService {
       placeholder: "Application Name",
       margin : "10px 0px"
     }; 
-    if(this.editMode){
+    if(ApplicationSetupService.editMode){
       this.applicationNameParams.disabled = true;
     }
     console.log("app Name: ", this.applicationNameParams);
@@ -132,7 +93,7 @@ export class ApplicationDetailsService extends ApplicationSetupService {
     this.applicationDescriptionParams = {
       label: "Application Description",
       type: 'text',
-      formControl:this.applicationDetails.get('description'),
+      formControl:ApplicationSetupService.applicationDetails.get('description'),
       hidden: false,
       id: 'input-applicationDescription',
       required: false,
@@ -143,7 +104,7 @@ export class ApplicationDetailsService extends ApplicationSetupService {
     this.applicationEmailParams = {
       label: "Email Id",
       type: 'text',
-      formControl:this.applicationDetails.get('emailId'),
+      formControl:ApplicationSetupService.applicationDetails.get('emailId'),
       hidden: false,
       id: 'input-emailId',
       required: true,
@@ -154,7 +115,7 @@ export class ApplicationDetailsService extends ApplicationSetupService {
     this.imageSourceParams = {
       label: 'Image Source',
       disabled: false,
-      formControl:this.applicationDetails.get('imageSource'),
+      formControl:ApplicationSetupService.applicationDetails.get('imageSource'),
       hidden: false,
       id: 'select-imageSource',
       required : false,
@@ -168,7 +129,7 @@ export class ApplicationDetailsService extends ApplicationSetupService {
 
     //Show the buttons based on the Mode
 
-    if(!this.editMode){
+    if(!ApplicationSetupService.editMode){
       this.applicationDetailsSaveParams = {
         text: "Save & Next",
         type: 'button',
@@ -194,11 +155,11 @@ updateApplicationForm(application){
   console.log("updateApplicationForm()", application); 
   return this.http.put<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application/' + this.appListService.applicationId, application.value).pipe(
     map(resdata => {
-        this.appRoadMapService.applicationDetails = this.applicationDetails;
+        // this.appRoadMapService.applicationDetails = this.applicationDetails;
         this.toastr.showSuccess(resdata.name + ' updated Successfully','SUCCESS');
         // this.toastr.showSuccess('Updated application Successfully', 'SUCCESS');
-        this.appSetupService.showApplicationDetailsComp = false;
-        this.appSetupService.showServiceDetailsComp = true;
+        ApplicationSetupService.showApplicationDetailsComp = false;
+        ApplicationSetupService.showServiceDetailsComp = true; 
       //  return ApplicationAction.updateApplicationDone();
     }),
     catchError(errorRes => {
@@ -213,11 +174,20 @@ updateApplicationForm(application){
   submitApplicationForm(application) {
       // return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application', application);
       return this.http.post<any>(this.environment.config.endPointUrl + 'dashboardservice/v2/application', application.value).pipe(
-          map(resdata => {
-            this.appRoadMapService.applicationDetails = this.applicationDetails;
+          map(resp => {
+            // this.appRoadMapService.applicationDetails = this.applicationDetails;
             this.toastr.showSuccess('Application saved successfully','SUCCESS');
-            this.appSetupService.showApplicationDetailsComp = false;
-            this.appSetupService.showServiceDetailsComp = true;
+            ApplicationSetupService.showApplicationDetailsComp = false;
+            ApplicationSetupService.showServiceDetailsComp = true;
+
+            ApplicationSetupService.applicationDetails =  new FormGroup({
+            name : new FormControl(resp.name, [Validators.required, this.cannotContainSpace.bind(this),this.valitateApplicationName.bind(this)]),
+            emailId :  ApplicationSetupService.editMode ?  new FormControl(resp.email, [Validators.required, Validators.email]) : new FormControl(resp.emailId, [Validators.required, Validators.email]), 
+            description: new FormControl(resp.description),
+            imageSource  : new FormControl(resp.imageSource),
+            lastUpdatedTimestamp: resp.lastUpdatedTimestamp != undefined ? new FormControl(resp.lastUpdatedTimestamp) : new FormControl(),
+            services: resp.services.length > 0 ? resp.services : []
+          });
             console.log("App setup service: ", this.appSetupService);
 
             // return ApplicationAction.savedApplication({ savedApplicationResponse: resdata, dataType: 'createApplication' });
@@ -229,45 +199,5 @@ updateApplicationForm(application){
   }
 
 
-  //Below function is custom valiadator which is use to validate application name through API call, if name is not exist then it allows us to proceed.
-  valitateApplicationName(control: FormControl): Promise<any> | Observable<any> {
-    if(control.value != null && control.value != undefined && control.value!="" && !this.editMode){
-      let validateapp = this.cannotContainSpace(control)
-      if(validateapp==null){
-        const promise = new Promise<any>((resolve, reject) => {
-          this.sharedService.validateApplicationName(control.value, 'name').subscribe(
-            (response) => {
-              if (response['nameExists'] === true) {
-                this.applicationDetails.get('name').setErrors({ 'nameExists': true });
-              } else {
-                this.applicationDetails.get('name').setErrors(null);
-              }
-            },
-            (error) => {
-              resolve(null);
-            }
-          )
-        });
-        return promise;
-      }
-    }
-   }
-
-  //Below function is custom valiadator which is use to validate inpute contain space or not. If input contain space then it will return error
-  cannotContainSpace(control: FormControl): { [s: string]: boolean } {
-    if (control.value !== null) {
-      let startingValue = control.value.split('');
-      if (startingValue.length > 0 && (control.value as string).indexOf(' ') >= 0) {
-        return { containSpace: true }
-      }
-      if (+startingValue[0] > -1 && startingValue.length > 0) {
-        return { startingFromNumber: true }
-      }
-      if (!/^[^`~!@#$%\^&*()_+={}|[\]\\:';"<>?,./]*$/.test(control.value)) {
-        return { symbols: true };
-      }
-    }
-    return null;
-  }
     
   }

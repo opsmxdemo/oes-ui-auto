@@ -75,8 +75,8 @@ export class AppliactionListComponent implements OnInit {
   // Below function is use to redirect to create application page
   createApplication() {
     this.router.navigate(['/setup/application']);
-    this.appListService.editMode = false;
-    this.appListService.callSetupComponent();
+    // this.appListService.editMode = false;
+    // this.appListService.callSetupComponent();
   }
 
   //Below function is used to implement pagination
